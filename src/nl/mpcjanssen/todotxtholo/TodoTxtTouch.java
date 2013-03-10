@@ -119,7 +119,7 @@ public class TodoTxtTouch extends ListActivity implements
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_ACTION_LOGOUT)) {
 					Log.v(TAG, "Logging out from Dropbox");
-					m_app.getmDbxAcctMgr().unlink();
+					m_app.getDbxAcctMgr().unlink();
 					Intent i = new Intent(context, LoginScreen.class);
 					startActivity(i);
 					finish();
@@ -477,9 +477,8 @@ public class TodoTxtTouch extends ListActivity implements
 
 	private MultiComparator getActiveSort() {
 		List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
-		if (m_app.completedLast()) {
-			comparators.add(new CompletedComparator());
-		}
+        // Sort completed last
+		comparators.add(new CompletedComparator());
 		switch (sort) {
 		case Constants.SORT_UNSORTED:
 			break;
