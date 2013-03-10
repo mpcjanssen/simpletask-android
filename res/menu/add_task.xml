@@ -1,0 +1,27 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/menu_clear_task"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom|withText"
+            android:title="@string/cleartask"
+            android:icon="@drawable/delete"
+            />
+    <item
+            android:id="@+id/menu_add_task_help"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/add_task_help_btn"
+            android:icon="@drawable/help"
+            />
+
+    <item
+            android:id="@+id/menu_add_task"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom|withText"
+            android:title="@string/add"
+            android:icon="@drawable/content_new"
+            />
+</menu>
