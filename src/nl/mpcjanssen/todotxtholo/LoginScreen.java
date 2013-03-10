@@ -51,15 +51,11 @@ public class LoginScreen extends Activity {
         
         m_app = (TodoApplication) getApplication();
         // Already authenticated
-        dbxAcctMgr = m_app.getmDbxAcctMgr();
+        dbxAcctMgr = m_app.getDbxAcctMgr();
         if (dbxAcctMgr!=null && dbxAcctMgr.hasLinkedAccount()) {
         	switchToTodolist();
         }
         setContentView(R.layout.login);
-
-
-
-
         Button m_LoginButton = (Button) findViewById(R.id.login);
         m_LoginButton.setOnClickListener(new OnClickListener() {
             @Override
