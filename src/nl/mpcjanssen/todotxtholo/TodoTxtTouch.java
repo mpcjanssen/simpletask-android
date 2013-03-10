@@ -136,7 +136,7 @@ public class TodoTxtTouch extends ListActivity implements
 		m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
 
 		taskBag = m_app.getTaskBag();
-		taskBag.reload();
+		//taskBag.reload();
 		taskBag.listenForDropboxChanges(true);
 
 		

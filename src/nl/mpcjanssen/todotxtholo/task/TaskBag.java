@@ -73,7 +73,7 @@ public class TaskBag implements PathListener {
     public TaskBag(Preferences taskBagPreferences, DbxAccountManager dbxAcctMgr) {
         this.preferences = taskBagPreferences;
         this.dbxAcctMgr = dbxAcctMgr;
-
+        reload();
     }
 
 
@@ -97,6 +97,7 @@ public class TaskBag implements PathListener {
     }
     
     public void reload () {
+        Log.v(TAG, "Taskbag reloaded");
     	try {
 			dbxFs = DbxFileSystem.forAccount(dbxAcctMgr.getLinkedAccount());
 			if (!dbxFs.hasSynced()) {
