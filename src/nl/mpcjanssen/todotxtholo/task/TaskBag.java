@@ -57,7 +57,7 @@ import com.dropbox.sync.android.DbxPath.InvalidPathException;
  *         It is loaded from and stored to the local copy of the todo.txt file and
  *         it is global to the application so all activities operate on the same copy
  */
-public class TaskBag implements PathListener {
+public class TaskBag  {
     final static String TAG = TodoTxtTouch.class.getSimpleName();
     
     
@@ -68,7 +68,7 @@ public class TaskBag implements PathListener {
 	private DbxFileSystem dbxFs;
 
 
-	private ArrayList<Activity> obs = new ArrayList<Activity>();
+	private ArrayList<TodoTxtTouch> obs = new ArrayList<TodoTxtTouch>();
 
     public TaskBag(Preferences taskBagPreferences, DbxAccountManager dbxAcctMgr) {
         this.preferences = taskBagPreferences;
@@ -76,18 +76,6 @@ public class TaskBag implements PathListener {
         reload();
     }
 
-
-    public void listenForDropboxChanges(boolean listen) {
-    	Log.v(TAG, "App is listening for background DropBox changes: " + listen );
-    	if (listen) {
-  		  dbxFs.addPathListener(this, new DbxPath("todo.txt"),
-		            DbxFileSystem.PathListener.Mode.PATH_ONLY);
-    	} else {
-  		  dbxFs.removePathListener(this, new DbxPath("todo.txt"),
-		            DbxFileSystem.PathListener.Mode.PATH_ONLY);
-    	}
-    	
-    }
     public int size() {
         return tasks.size();
     }
@@ -111,7 +99,6 @@ public class TaskBag implements PathListener {
 			e.printStackTrace();
 		}
     	loadTodoFile();
-    	dataSetChanged();
     }
 
     public Task getTaskAt(int position) {
@@ -256,7 +243,6 @@ public class TaskBag implements PathListener {
 
 	public void store() {
 		saveTodoFile();		
-		dataSetChanged();
 	}
 	
 	public void archive() {
@@ -288,30 +274,5 @@ public class TaskBag implements PathListener {
 			e.printStackTrace();
 		}
 		
-	}
-
-
-	@Override
-	public void onPathChange(DbxFileSystem arg0, DbxPath arg1, Mode arg2) {
-		Log.v(TAG, "Dropbox file changed, reloading");
-		loadTodoFile();
-		dataSetChanged();
-	}
-
-	
-	public void dataSetChanged () {
-		for (Activity ob : obs) {
-			// TODO Auto-generated method stub
-			Intent i = new Intent();
-			i.setAction(Constants.INTENT_UPDATE_UI);
-			ob.sendBroadcast(i);
-		}	
-	}
-	public void registerDataSetObserver(Activity act) {
-		obs.add(act);		
-	}
-	
-	public void unRegisterDataSetObserver(Activity act) {
-		obs.remove(act);		
 	}
 }
