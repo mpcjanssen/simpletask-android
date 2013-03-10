@@ -42,6 +42,9 @@ import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.*;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxPath;
 import nl.mpcjanssen.todotxtholo.sort.*;
 import nl.mpcjanssen.todotxtholo.task.*;
 import nl.mpcjanssen.todotxtholo.util.Strings;
@@ -51,7 +54,7 @@ import java.net.URL;
 import java.util.*;
 
 public class TodoTxtTouch extends ListActivity implements
-		OnSharedPreferenceChangeListener {
+		OnSharedPreferenceChangeListener, DbxFileSystem.PathListener {
 
 	final static String TAG = TodoTxtTouch.class.getSimpleName();
 
@@ -81,8 +84,9 @@ public class TodoTxtTouch extends ListActivity implements
 	private boolean m_priosNot;
 
 	private boolean m_contextsNot;
+    private DbxFileSystem dbxFs;
 
-	@Override
+    @Override
 	public View onCreateView(View parent, String name, Context context,
 			AttributeSet attrs) {
 		// Log.v(TAG,"onCreateView");
@@ -104,7 +108,6 @@ public class TodoTxtTouch extends ListActivity implements
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(Constants.INTENT_ACTION_ARCHIVE);
 		intentFilter.addAction(Constants.INTENT_ACTION_LOGOUT);
-		intentFilter.addAction(Constants.INTENT_UPDATE_UI);
 
 		m_broadcastReceiver = new BroadcastReceiver() {
 			@Override
@@ -123,9 +126,6 @@ public class TodoTxtTouch extends ListActivity implements
 					Intent i = new Intent(context, LoginScreen.class);
 					startActivity(i);
 					finish();
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_UPDATE_UI)) {
-					m_adapter.setFilteredTasks();
 				}
 			}
 		};
@@ -137,26 +137,24 @@ public class TodoTxtTouch extends ListActivity implements
 
 		taskBag = m_app.getTaskBag();
 		taskBag.reload();
-		taskBag.listenForDropboxChanges(true);
-
-		
+        try {
+            dbxFs = DbxFileSystem.forAccount(m_app.getDbxAcctMgr().getLinkedAccount());
+        } catch (DbxException.Unauthorized unauthorized) {
+            unauthorized.printStackTrace();
+            return;
+        }
+        dbxFs.addPathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
+        		
 		sort = m_app.m_prefs.getInt("sort", Constants.SORT_UNSORTED);
 
-		// Show search or filter results
-        handleIntent(getIntent(), savedInstanceState);
 
 		// Initialize Adapter
 
 		m_adapter = new TaskAdapter(this, R.layout.list_item,
 				getLayoutInflater(), getListView());
-		m_adapter.setFilteredTasks();
-
-		
-		taskBag.registerDataSetObserver(this);
-		// listen to the ACTION_LOGOUT intent, if heard display LoginScreen
-		// and finish() current activity
-
 		setListAdapter(this.m_adapter);
+        // Show search or filter results
+        handleIntent(getIntent(), savedInstanceState);
 
 		ListView lv = getListView();
 		lv.setTextFilterEnabled(false);
@@ -223,6 +221,7 @@ public class TodoTxtTouch extends ListActivity implements
             sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
 
         }
+        m_adapter.setFilteredTasks();
     }
 
     private void updateFilterBar() {
@@ -267,15 +266,14 @@ public class TodoTxtTouch extends ListActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		m_app.m_prefs.unregisterOnSharedPreferenceChangeListener(this);
-		unregisterReceiver(m_broadcastReceiver);
-		taskBag.listenForDropboxChanges(false);
-		taskBag.unRegisterDataSetObserver(this);
+        dbxFs.removePathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        unregisterReceiver(m_broadcastReceiver);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		taskBag.listenForDropboxChanges(true);
+        dbxFs.addPathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
 	}
 
     @Override
@@ -304,7 +302,7 @@ public class TodoTxtTouch extends ListActivity implements
 		SharedPreferences.Editor editor = m_app.m_prefs.edit();
 		editor.putInt("sort", sort);
 		editor.commit();
-		taskBag.listenForDropboxChanges(false);
+        dbxFs.removePathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
 	}
 
 	@Override
@@ -504,7 +502,14 @@ public class TodoTxtTouch extends ListActivity implements
 		return (new MultiComparator(comparators));
 	}
 
-	public class TaskAdapter extends BaseAdapter implements ListAdapter {
+    @Override
+    public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
+        Log.v(TAG, "file changed restarting activity");
+        taskBag.reload();
+        startActivity(getIntent());
+    }
+
+    public class TaskAdapter extends BaseAdapter implements ListAdapter {
 
 		private LayoutInflater m_inflater;
 		int vt;
