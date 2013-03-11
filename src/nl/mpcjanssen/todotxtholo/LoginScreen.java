@@ -48,6 +48,7 @@ public class LoginScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        m_app = (TodoApplication)getApplication();
         setContentView(R.layout.login);
         Button m_LoginButton = (Button) findViewById(R.id.login);
         m_LoginButton.setOnClickListener(new OnClickListener() {
@@ -59,15 +60,12 @@ public class LoginScreen extends Activity {
     }
     
     public void linkToDropBox () {
-        dbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
-                getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
-    	if (dbxAcctMgr!=null) {
-    			dbxAcctMgr.startLink(this, REQUEST_LINK_TO_DBX);
-    	}
+    		m_app.getDbxAcctMgr().startLink(this, REQUEST_LINK_TO_DBX);
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == Activity.RESULT_OK) {
+                m_app.initTaskBag();
                 switchToTodolist();
             } else {
                 // ... Link failed or was cancelled by the user.
@@ -78,7 +76,7 @@ public class LoginScreen extends Activity {
     
     }
     private void switchToTodolist() {
-        Intent intent = new Intent(Constants.INTENT_SHOW_TASK_LIST);
+        Intent intent = new Intent(LoginScreen.this, TodoTxtTouch.class);
         startActivity(intent);
         finish();
     }

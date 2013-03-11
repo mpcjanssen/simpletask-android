@@ -30,9 +30,12 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 
 public class Preferences extends PreferenceActivity {
+    private TodoApplication m_app;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        m_app = (TodoApplication)getApplication();
         addPreferencesFromResource(R.xml.preferences);
     }
 
@@ -48,11 +51,11 @@ public class Preferences extends PreferenceActivity {
 			getApplicationContext().sendBroadcast(i);
 			finish();
 		} else if(preference.getKey().equals("logout_dropbox")) {
-			Log.v("PREFERENCES", "Logging out from Dropbox");
-			Intent i = new Intent();
-			i.setAction(Constants.INTENT_ACTION_LOGOUT);
-			getApplicationContext().sendBroadcast(i);
-			finish();		
+
+			Log.v(m_app.TAG, "Logging out from Dropbox");
+            m_app.logout();
+			startActivity(new Intent(TodoTxtTouch.class.getName()));
+            finish();
 		}
 		return true;
 	}
