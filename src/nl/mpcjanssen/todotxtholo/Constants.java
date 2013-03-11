@@ -56,6 +56,9 @@ public class Constants {
     public final static String EXTRA_CONTEXTS_SELECTED = "CONTEXTS_SELECTED";
     public final static String EXTRA_TASK = "TASK";
 
+    // Intents for main app
+    public static final String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
+    public static final String INTENT_RELOAD_TASKBAG = "nl.mpcjanssen.todotxtholo.RELOAD_TASK_BAG";
     public final static String INTENT_ACTION_ARCHIVE = "nl.mpcjanssen.todotxtholo.ACTION_ARCHIVE";
     public final static String INTENT_ACTION_LOGOUT = "nl.mpcjanssen.todotxtholo.ACTION_LOGOUT";
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.todotxtholo.START_WITH_FILTER";
@@ -65,4 +68,6 @@ public class Constants {
     public static final String FILTER_ITEMS = "items";
     public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
     public static final String INITIAL_NOT = "initialNot";
+
+
 }

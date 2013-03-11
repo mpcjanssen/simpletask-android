@@ -38,13 +38,12 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 import java.io.IOException;
 
 
-public class TodoApplication extends Application {
+public class TodoApplication extends Application implements DbxFileSystem.PathListener {
     final static String TAG = TodoTxtTouch.class.getSimpleName();
 
     private Context mAppContext;
     private DbxAccountManager mDbxAcctMgr;
     private TaskBag mTaskBag;
-    private DbxFile mTodoFile;
     private DbxPath mTodoPath = new DbxPath("todo.txt");
     private DbxFileSystem dbxFs ;
 
@@ -66,8 +65,12 @@ public class TodoApplication extends Application {
         try {
             dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
             dbxFs.awaitFirstSync();
-            mTodoFile = dbxFs.open(mTodoPath);
-            mTaskBag = new TaskBag(mTodoFile.readString());
+            synchronized (this) {
+                DbxFile mTodoFile = dbxFs.open(mTodoPath);
+                mTaskBag = new TaskBag();
+                mTaskBag.init(mTodoFile.readString());
+                mTodoFile.close();
+            }
         } catch (DbxException.Unauthorized unauthorized) {
             unauthorized.printStackTrace();
         } catch (DbxException e) {
@@ -96,7 +99,11 @@ public class TodoApplication extends Application {
     public void storeTaskbag() {
         String output = "";
         try {
-            mTodoFile.writeString(mTaskBag.getTodoContents());
+            synchronized (this) {
+                DbxFile mTodoFile = dbxFs.open(mTodoPath);
+                mTodoFile.writeString(mTaskBag.getTodoContents());
+                mTodoFile.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -104,5 +111,28 @@ public class TodoApplication extends Application {
 
     public void logout() {
         mDbxAcctMgr.unlink();
+    }
+
+    public void archive() {
+
+    }
+
+    public void watchDropbox(boolean watch) {
+        Log.v(TAG, "Watching for dropbox changes: " + watch);
+        if (dbxFs == null) {
+            return;
+        }
+        if (watch) {
+            dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        }  else {
+            dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        }
+    }
+
+    @Override
+    public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
+        Log.v(TAG, "File changed on dropbox reloading");
+        Intent i = new Intent(Constants.INTENT_RELOAD_TASKBAG);
+        sendBroadcast(i);
     }
 }
