@@ -130,7 +130,11 @@ public class TodoTxtTouch extends ListActivity implements
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
-		
+		if(!m_app.getDbxAcctMgr().hasLinkedAccount()) {
+            Intent intent = new Intent(this, LoginScreen.class);
+            startActivity(intent);
+            finish();
+        }
 
 		setContentView(R.layout.main);
 		m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
@@ -160,7 +164,7 @@ public class TodoTxtTouch extends ListActivity implements
 		lv.setTextFilterEnabled(false);
 		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lv.setMultiChoiceModeListener(new ActionBarListener());
-		updateFilterBar();
+
 
 	}
 
@@ -222,6 +226,7 @@ public class TodoTxtTouch extends ListActivity implements
 
         }
         m_adapter.setFilteredTasks();
+        updateFilterBar();
     }
 
     private void updateFilterBar() {
@@ -302,7 +307,7 @@ public class TodoTxtTouch extends ListActivity implements
 		SharedPreferences.Editor editor = m_app.m_prefs.edit();
 		editor.putInt("sort", sort);
 		editor.commit();
-        dbxFs.removePathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        dbxFs.removePathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
 	}
 
 	@Override
