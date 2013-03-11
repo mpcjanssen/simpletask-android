@@ -57,10 +57,11 @@ import java.util.*;
 
 public class TodoTxtTouch extends ListActivity  {
 
-	private TaskBag taskBag;
 	Menu options_menu;
 
-	// filter variables
+    private BroadcastReceiver m_broadcastReceiver;
+
+    // filter variables
 	private ArrayList<Priority> m_prios = new ArrayList<Priority>();
 	private ArrayList<String> m_contexts = new ArrayList<String>();
 	private ArrayList<String> m_projects = new ArrayList<String>();
@@ -77,8 +78,39 @@ public class TodoTxtTouch extends ListActivity  {
 	private boolean m_contextsNot;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(m_broadcastReceiver);
+        m_app.watchDropbox(false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        m_app.watchDropbox(false);
+    }
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.INTENT_UPDATE_UI);
+        intentFilter.addAction(Constants.INTENT_RELOAD_TASKBAG);
+        m_broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equalsIgnoreCase(
+                        Constants.INTENT_UPDATE_UI)) {
+                    m_adapter.setFilteredTasks();
+                } else if (intent.getAction().equalsIgnoreCase(
+                            Constants.INTENT_RELOAD_TASKBAG)) {
+                    m_app.initTaskBag();
+                    sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
+                }
+            }
+        };
+        registerReceiver(m_broadcastReceiver, intentFilter);
 		Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
         m_app = (TodoApplication)getApplication();
 
@@ -89,7 +121,7 @@ public class TodoTxtTouch extends ListActivity  {
             return;
         }
 
-        this.taskBag = m_app.getTaskBag();
+        m_app.watchDropbox(true);
         handleIntent(getIntent(), savedInstanceState);
 	}
 
@@ -231,10 +263,17 @@ public class TodoTxtTouch extends ListActivity  {
     protected void onNewIntent(Intent intent) {
         Log.v(m_app.TAG, "Called with new intent");
         super.onNewIntent(intent);
+        m_app.watchDropbox(true);
         handleIntent(intent, null);
     }
 
-	@Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        m_app.watchDropbox(true);
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
@@ -243,7 +282,7 @@ public class TodoTxtTouch extends ListActivity  {
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
 		searchView.setSearchableInfo(searchManager
-				.getSearchableInfo(getComponentName()));
+                .getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false); // Do not iconify the widget;
 													// expand it by default
 
@@ -298,6 +337,7 @@ public class TodoTxtTouch extends ListActivity  {
                     }
 				}
                 m_app.storeTaskbag();
+                m_adapter.setFilteredTasks();
 			}
 		});
 		builder.show();
@@ -321,6 +361,7 @@ public class TodoTxtTouch extends ListActivity  {
 			}
 		}
 		m_app.storeTaskbag();
+        m_adapter.setFilteredTasks();
 	}
 
 	private void editTask(Task task) {
@@ -330,7 +371,7 @@ public class TodoTxtTouch extends ListActivity  {
 	}
 
 	private void deleteTasks(List<Task> tasks) {
-		taskBag.deleteTasks(tasks);
+		m_app.getTaskBag().deleteTasks(tasks);
         m_app.storeTaskbag();
         m_adapter.setFilteredTasks();
 	}
@@ -444,11 +485,10 @@ public class TodoTxtTouch extends ListActivity  {
 		}
 
 		void setFilteredTasks() {
-			Log.v(m_app.TAG, "setFilteredTasks called");
-
+			//Log.v(m_app.TAG, "setFilteredTasks called");
 			AndFilter filter = new AndFilter();
 			visibleTasks.clear();
-			for (Task t : taskBag.getTasks()) {
+			for (Task t : m_app.getTaskBag().getTasks()) {
 				if (filter.apply(t)) {
 					visibleTasks.add(t);
 				}
@@ -661,11 +701,11 @@ public class TodoTxtTouch extends ListActivity  {
 		Intent i = new Intent(this, FilterActivity.class);
 
 		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
-				Priority.inCode(taskBag.getPriorities()));
+				Priority.inCode(m_app.getTaskBag().getPriorities()));
 		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
-				taskBag.getProjects());
+                m_app.getTaskBag().getProjects());
 		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
-				taskBag.getContexts());
+                m_app.getTaskBag().getContexts());
 
 		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED,
 				Priority.inCode(m_prios));

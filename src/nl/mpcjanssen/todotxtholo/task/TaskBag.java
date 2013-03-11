@@ -68,7 +68,7 @@ public class TaskBag  {
 
 	private ArrayList<TodoTxtTouch> obs = new ArrayList<TodoTxtTouch>();
 
-    public TaskBag(String todoContents) {
+    public void init (String todoContents) {
         tasks = new ArrayList<Task>();
         long lineNr = 0;
         for (String line : todoContents.split("\n")) {
@@ -135,6 +135,10 @@ public class TaskBag  {
             output = output + t.inFileFormat() + "\n";
         }
         return output;
+    }
+
+    public void reload (String contents) {
+
     }
 
     public ArrayList<Priority> getPriorities() {

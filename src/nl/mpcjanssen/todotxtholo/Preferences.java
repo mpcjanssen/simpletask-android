@@ -45,16 +45,14 @@ public class Preferences extends PreferenceActivity {
 	@Override
 	public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
 		if(preference.getKey().equals("archive_now")) {
-			Log.v("PREFERENCES", "Archiving completed items from preferences");
-			Intent i = new Intent();
-			i.setAction(Constants.INTENT_ACTION_ARCHIVE);
-			getApplicationContext().sendBroadcast(i);
-			finish();
+			Log.v(m_app.TAG, "Archiving completed items from preferences");
+			m_app.archive();
+            startActivity(new Intent(this, TodoTxtTouch.class));
+            finish();
 		} else if(preference.getKey().equals("logout_dropbox")) {
-
 			Log.v(m_app.TAG, "Logging out from Dropbox");
             m_app.logout();
-			startActivity(new Intent(TodoTxtTouch.class.getName()));
+			startActivity(new Intent(this, TodoTxtTouch.class));
             finish();
 		}
 		return true;
