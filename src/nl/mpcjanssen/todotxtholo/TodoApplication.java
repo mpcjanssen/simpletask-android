@@ -36,6 +36,7 @@ import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class TodoApplication extends Application implements DbxFileSystem.PathListener {
@@ -45,6 +46,7 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
     private DbxAccountManager mDbxAcctMgr;
     private TaskBag mTaskBag;
     private DbxPath mTodoPath = new DbxPath("todo.txt");
+    private DbxPath mDonePath = new DbxPath("done.txt");
     private DbxFileSystem dbxFs ;
 
     public Context getAppContext() {
@@ -66,7 +68,12 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
             dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
             dbxFs.awaitFirstSync();
             synchronized (this) {
-                DbxFile mTodoFile = dbxFs.open(mTodoPath);
+                DbxFile mTodoFile;
+                if (dbxFs.isFile(mTodoPath)) {
+                    mTodoFile = dbxFs.open(mTodoPath);
+                } else {
+                    mTodoFile = dbxFs.create(mTodoPath);
+                }
                 mTaskBag = new TaskBag();
                 mTaskBag.init(mTodoFile.readString());
                 mTodoFile.close();
@@ -114,7 +121,31 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
     }
 
     public void archive() {
-
+        // Read current done
+        ArrayList<Task> completeTasks = new ArrayList<Task>();
+        DbxFile doneFile;
+        String contents = "";
+        try {
+            for (Task task : mTaskBag.getTasks()) {
+                if (task.isCompleted()) {
+                    completeTasks.add(task);
+                    contents = contents + "\n" + task.inFileFormat();
+                }
+            }
+            if (dbxFs.isFile(mDonePath)) {
+                doneFile = dbxFs.open(mDonePath);
+                contents =  doneFile.readString();
+            } else {
+                doneFile = dbxFs.create(mDonePath);
+            }
+            doneFile.writeString(contents);
+            doneFile.close();
+            mTaskBag.deleteTasks(completeTasks);
+            storeTaskbag();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void watchDropbox(boolean watch) {
