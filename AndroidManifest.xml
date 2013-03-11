@@ -75,7 +75,7 @@ You should have received a copy of the GNU General Public License along with Sim
             android:label="@string/set_preferences" />
         <activity
             android:name="nl.mpcjanssen.todotxtholo.AddTask"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/addtask"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
@@ -83,16 +83,6 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-        <activity-alias
-            android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name"
-            android:targetActivity=".AddTask" >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity-alias>
         <activity-alias
             android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
             android:label="@string/share_addtask_name"
@@ -110,20 +100,31 @@ You should have received a copy of the GNU General Public License along with Sim
             android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
             android:exported="true"
             android:launchMode="singleTop">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER" />
+                <action android:name="nl.mpcjanssen.todotxtholo.ADD_TASK" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+
+        <activity-alias
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
+                android:label="@string/shortcut_addtask_name"
+                android:targetActivity=".AddTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name="nl.mpcjanssen.todotxtholo.FilterActivity"
             android:label="@string/title_activity_filter" 
