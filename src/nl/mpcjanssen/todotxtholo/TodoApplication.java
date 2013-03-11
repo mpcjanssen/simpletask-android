@@ -22,7 +22,7 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.*;
 
 import android.app.Application;
 import android.content.*;
@@ -31,20 +31,78 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import nl.mpcjanssen.todotxtholo.task.Task;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
 
+import java.io.IOException;
+
 
 public class TodoApplication extends Application {
-    Context appContext;
+    final static String TAG = TodoTxtTouch.class.getSimpleName();
+
+    private Context mAppContext;
+    private DbxAccountManager mDbxAcctMgr;
+    private TaskBag mTaskBag;
+    private DbxFile mTodoFile;
+    private DbxPath mTodoPath = new DbxPath("todo.txt");
+    private DbxFileSystem dbxFs ;
 
     public Context getAppContext() {
-        return appContext;
+        return mAppContext;
+    }
+
+    public DbxAccountManager getDbxAcctMgr() {
+        return mDbxAcctMgr;
+    }
+
+    public TaskBag getTaskBag() {
+        return mTaskBag;
+    }
+
+    public void initTaskBag() {
+        Log.v(TAG, "Initializing TaskBag from dropbox");
+        // Initialize the taskbag
+        try {
+            dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            dbxFs.awaitFirstSync();
+            mTodoFile = dbxFs.open(mTodoPath);
+            mTaskBag = new TaskBag(mTodoFile.readString());
+        } catch (DbxException.Unauthorized unauthorized) {
+            unauthorized.printStackTrace();
+        } catch (DbxException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        appContext = getApplicationContext();
+        mAppContext = getApplicationContext();
+        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
+                getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
+        if (mDbxAcctMgr.hasLinkedAccount()) {
+            initTaskBag();
+        }
+
+    }
+
+    public boolean isAuthenticated() {
+        return mDbxAcctMgr.hasLinkedAccount();
+    }
+
+    public void storeTaskbag() {
+        String output = "";
+        try {
+            mTodoFile.writeString(mTaskBag.getTodoContents());
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    public void logout() {
+        mDbxAcctMgr.unlink();
     }
 }

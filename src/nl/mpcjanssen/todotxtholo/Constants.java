@@ -60,7 +60,6 @@ public class Constants {
     public final static String INTENT_ACTION_LOGOUT = "nl.mpcjanssen.todotxtholo.ACTION_LOGOUT";
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.todotxtholo.START_WITH_FILTER";
     public final static String INTENT_ADD_TASK = "nl.mpcjanssen.todotxtholo.ADD_TASK";
-    public final static String INTENT_SHOW_TASK_LIST = "nl.mpcjanssen.todotxtholo.SHOW_TASK_LIST";
 
     // Constants for saving state
     public static final String FILTER_ITEMS = "items";

@@ -49,6 +49,8 @@ public class AddTask extends Activity {
 
     private Task m_backup;
 
+    private TodoApplication m_app;
+
     private String share_text;
 
     private EditText textInputField;
@@ -95,12 +97,14 @@ public class AddTask extends Activity {
     }
 
     private void addTask(String input, Task m_backup) {
-        Intent i = new Intent();
-        i.setAction(Constants.INTENT_ADD_TASK);
-        i.putExtra("task", input);
         if (m_backup!=null) {
-            i.putExtra("old",m_backup.inFileFormat());
+            Task t = m_app.getTaskBag().find(m_backup);
+            t.init(input,null);
+        } else {
+            m_app.getTaskBag().addAsTask(input);
         }
+        m_app.storeTaskbag();
+        Intent i = new Intent(this,TodoTxtTouch.class);
         startActivity(i);
     }
 
@@ -108,6 +112,7 @@ public class AddTask extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
+        m_app = (TodoApplication)getApplication();
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
@@ -135,7 +140,7 @@ public class AddTask extends Activity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 Menu menu = popupMenu.getMenu();
-                for (String ctx : getContexts()) {
+                for (String ctx : m_app.getTaskBag().getContexts()) {
                     menu.add(ctx);
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -155,7 +160,7 @@ public class AddTask extends Activity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 Menu menu = popupMenu.getMenu();
-                for (String prj : getProjects()) {
+                for (String prj : m_app.getTaskBag().getProjects()) {
                     menu.add(prj);
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -236,14 +241,6 @@ public class AddTask extends Activity {
 
         int textIndex = 0;
         textInputField.setSelection(textIndex);
-    }
-
-    private List<String> getContexts() {
-        return new ArrayList<String>();
-    }
-
-    private List<String> getProjects() {
-        return new ArrayList<String>();
     }
 
     private void replacePriority(CharSequence newPrio) {

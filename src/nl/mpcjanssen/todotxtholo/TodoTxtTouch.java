@@ -55,9 +55,7 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 import java.net.URL;
 import java.util.*;
 
-public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathListener {
-
-	final static String TAG = TodoTxtTouch.class.getSimpleName();
+public class TodoTxtTouch extends ListActivity  {
 
 	private TaskBag taskBag;
 	Menu options_menu;
@@ -74,61 +72,33 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 	private int sort = 0;
 
 	private boolean m_priosNot;
+    private TodoApplication m_app;
 
 	private boolean m_contextsNot;
-    private DbxFileSystem dbxFs;
-    private DbxAccountManager mDbxAcctMgr;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.v(TAG, "onCreate");
+		Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
+        m_app = (TodoApplication)getApplication();
 
-        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
-                getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
-
-         if(!mDbxAcctMgr.hasLinkedAccount()) {
+        if (!m_app.isAuthenticated()) {
             Intent intent = new Intent(this, LoginScreen.class);
             startActivity(intent);
             finish();
             return;
         }
 
-        this.taskBag = new TaskBag(mDbxAcctMgr);
-		taskBag.reload();
-
-        if (getIntent().getAction()==null) {
-            getIntent().setAction(Constants.INTENT_SHOW_TASK_LIST);
-        }
-
+        this.taskBag = m_app.getTaskBag();
         handleIntent(getIntent(), savedInstanceState);
 	}
 
     private void handleIntent(Intent intent, Bundle savedInstanceState) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
-            Log.v(TAG, "Searched for " + m_search);
-        } else if (Constants.INTENT_ADD_TASK.equals(intent.getAction())) {
-            Log.v(TAG, "Adding task");
-            String newTask = intent.getStringExtra("task");
-            String oldTask = intent.getStringExtra("old");
-            if (newTask==null) {
-                startAddTaskActivity();
-                finish();
-                return;
-            }
-            if (oldTask == null) {
-                taskBag.addAsTask(newTask);
-            } else {
-                taskBag.updateTask(taskBag.find(oldTask),newTask);
-            }
-            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
-            startActivity(i);
-            finish();
-            return;
+            Log.v(m_app.TAG, "Searched for " + m_search);
         } else if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
-            Log.v(TAG, "Launched with new filter:");
-
+            Log.v(m_app.TAG, "Launched with new filter:");
             // handle different versions of shortcuts
             String prios;
             String projects;
@@ -153,55 +123,27 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
                             Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
                     break;
             }
-            Log.v(TAG, "\t sort:" + sort);
+            Log.v(m_app.TAG, "\t sort:" + sort);
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
-                Log.v(TAG, "\t prio:" + m_prios);
+                Log.v(m_app.TAG, "\t prio:" + m_prios);
             }
             if (projects != null && !projects.equals("")) {
                 m_projects = new ArrayList<String>(Arrays.asList(projects
                         .split("\n")));
-                Log.v(TAG, "\t projects:" + m_projects);
+                Log.v(m_app.TAG, "\t projects:" + m_projects);
             }
             if (contexts != null && !contexts.equals("")) {
                 m_contexts = new ArrayList<String>(Arrays.asList(contexts
                         .split("\n")));
-                Log.v(TAG, "\t contexts:" + m_contexts);
+                Log.v(m_app.TAG, "\t contexts:" + m_contexts);
             }
             // Store new filter in preferences
             saveFilterToPreferences();
-            finish();
-            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
-            startActivity(i);
-        } else if (intent.getAction().equalsIgnoreCase(
-                Constants.INTENT_ACTION_ARCHIVE)) {
-            // archive
-            // refresh screen to remove completed tasks
-            // push to remote
-            taskBag.archive();
-            Log.v(TAG, "Archiving all tasks");
-            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
-            startActivity(i);
-            finish();
-        } else if (intent.getAction().equalsIgnoreCase(
-                Constants.INTENT_ACTION_LOGOUT)) {
-            Log.v(TAG, "Logging out from Dropbox");
-            mDbxAcctMgr.unlink();
-            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
-            startActivity(i);
-            finish();
-        } else if (intent.getAction().equalsIgnoreCase(
-                Constants.INTENT_SHOW_TASK_LIST)) {
-            loadFilterFromPreferences();
-            setContentView(R.layout.main);
-            try {
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            } catch (DbxException.Unauthorized unauthorized) {
-                unauthorized.printStackTrace();
-                return;
-            }
-            dbxFs.addPathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
+        }
 
+        loadFilterFromPreferences();
+        setContentView(R.layout.main);
             // Initialize Adapter
             m_adapter = new TaskAdapter(this, R.layout.list_item,
                     getLayoutInflater(), getListView());
@@ -214,7 +156,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
             lv.setMultiChoiceModeListener(new ActionBarListener());
             m_adapter.setFilteredTasks();
             updateFilterBar();
-        }
+
     }
 
     private void saveFilterToPreferences() {
@@ -224,6 +166,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
         editor.putInt("sort", sort);
         editor.putString("m_search", m_search);
         editor.putString("m_contexts", Util.join(m_contexts, "\n"));
+        editor.putString("m_projects", Util.join(m_projects, "\n"));
         editor.commit();
     }
 
@@ -231,12 +174,17 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
         SharedPreferences filter =
                 getSharedPreferences("Filter", MODE_PRIVATE);
         String contextsFilter = filter.getString("m_contexts","");
+        String priosFilter = filter.getString("m_prios","");
+        String projectsFilter = filter.getString("m_projects","");
         m_contexts = new ArrayList<String>();
+        m_projects= new ArrayList<String>();
         if (!contextsFilter.equals("")) {
             m_contexts.addAll(Arrays.asList(contextsFilter.split("\n")));
         }
+        if (!projectsFilter.equals("")) {
+            m_projects.addAll(Arrays.asList(projectsFilter.split("\n")));
+        }
         m_prios = new ArrayList<Priority>();
-        m_projects= new ArrayList<String>();
         m_priosNot = false;
         m_projectsNot = false;
         m_contextsNot = false;
@@ -279,41 +227,12 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 		}
 	}
 
-
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-        if (dbxFs!=null) {
-            dbxFs.removePathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
-        }
-    }
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-        if (dbxFs!=null) {
-            dbxFs.addPathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
-        }
-	}
-
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.v(TAG, "Called with new intent");
+        Log.v(m_app.TAG, "Called with new intent");
         super.onNewIntent(intent);
         handleIntent(intent, null);
-        m_adapter.setFilteredTasks();
-        updateFilterBar();
     }
-
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-        if (dbxFs!=null) {
-            dbxFs.removePathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
-        }
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -378,7 +297,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 					    task.setPriority(Priority.toPriority(prioArr[which]));
                     }
 				}
-				taskBag.store();
+                m_app.storeTaskbag();
 			}
 		});
 		builder.show();
@@ -391,7 +310,8 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 				t.markComplete(new Date());
 			}
 		}
-		taskBag.store();
+        m_app.storeTaskbag();
+        m_adapter.setFilteredTasks();
 	}
 
 	private void undoCompleteTasks(List<Task> tasks) {
@@ -400,7 +320,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 				t.markIncomplete();
 			}
 		}
-		taskBag.store();
+		m_app.storeTaskbag();
 	}
 
 	private void editTask(Task task) {
@@ -411,11 +331,13 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 
 	private void deleteTasks(List<Task> tasks) {
 		taskBag.deleteTasks(tasks);
+        m_app.storeTaskbag();
+        m_adapter.setFilteredTasks();
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		Log.v(TAG, "onMenuItemSelected: " + item.getItemId());
+		Log.v(m_app.TAG, "onMenuItemSelected: " + item.getItemId());
 		switch (item.getItemId()) {
 		case R.id.add_new:
 			startAddTaskActivity();
@@ -438,7 +360,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 	}
 
 	private void startAddTaskActivity() {
-		Log.v(TAG, "Starting addTask activity");
+		Log.v(m_app.TAG, "Starting addTask activity");
 		Intent intent = new Intent(this, AddTask.class);
 		intent.putExtra(Constants.EXTRA_PRIORITIES_SELECTED, m_prios);
 		intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
@@ -473,9 +395,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
         m_projectsNot = false;
         m_contextsNot = false;
         saveFilterToPreferences();
-        finish();
-        Intent intent = new Intent(Constants.INTENT_SHOW_TASK_LIST);
-        startActivity(intent);
+        m_adapter.setFilteredTasks();
 	}
 
 	private MultiComparator getActiveSort() {
@@ -507,13 +427,6 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 		return (new MultiComparator(comparators));
 	}
 
-    @Override
-    public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-        Log.v(TAG, "file changed restarting activity");
-        taskBag.reload();
-        startActivity(getIntent());
-    }
-
     public class TaskAdapter extends BaseAdapter implements ListAdapter {
 
 		private LayoutInflater m_inflater;
@@ -531,7 +444,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 		}
 
 		void setFilteredTasks() {
-			Log.v(TAG, "setFilteredTasks called");
+			Log.v(m_app.TAG, "setFilteredTasks called");
 
 			AndFilter filter = new AndFilter();
 			visibleTasks.clear();
@@ -575,7 +488,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 					}
 					if (!header.equals(newHeader)) {
 						header = newHeader;
-						Log.v(TAG, "Start of header: " + header
+						Log.v(m_app.TAG, "Start of header: " + header
 								+ " at position: " + position);
 						headerAtPostion.put(position, header);
 						position++;
@@ -708,9 +621,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 			if (headerAtPostion.get(position) != null) {
 				return 0;
 			} else {
-				return 1; // To change body of implemented methods use File |
-							// Settings | File Templates.
-
+				return 1;
 			}
 		}
 
@@ -830,7 +741,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 				if (checkedTasks.size() == 1) {
 					editTask(checkedTasks.get(0));
 				} else {
-					Log.w(TAG,
+					Log.w(m_app.TAG,
 							"More than one task was selected while hanling update menu");
 				}
 				break;
@@ -871,13 +782,13 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 				startActivity(intent);
 				break;
 			case R.id.url:
-				Log.v(TAG, "url: " + item.getTitle().toString());
+				Log.v(m_app.TAG, "url: " + item.getTitle().toString());
 				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
 						.getTitle().toString()));
 				startActivity(intent);
 				break;
 			case R.id.mail:
-				Log.v(TAG, "mail: " + item.getTitle().toString());
+				Log.v(m_app.TAG, "mail: " + item.getTitle().toString());
 				intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
 						.getTitle().toString()));
 				intent.putExtra(android.content.Intent.EXTRA_EMAIL,
@@ -886,7 +797,7 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 				startActivity(intent);
 				break;
 			case R.id.phone_number:
-				Log.v(TAG, "phone_number");
+				Log.v(m_app.TAG, "phone_number");
 				intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
 						+ item.getTitle().toString()));
 				startActivity(intent);

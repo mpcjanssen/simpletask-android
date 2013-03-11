@@ -104,11 +104,7 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="nl.mpcjanssen.todotxtholo.SHOW_TASK_LIST" />
                 <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER" />
-                <action android:name="nl.mpcjanssen.todotxtholo.ADD_TASK" />
-                <action android:name="nl.mpcjanssen.todotxtholo.ACTION_LOGOUT" />
-                <action android:name="nl.mpcjanssen.todotxtholo.ACTION_ARCHIVE" />
             </intent-filter>
 
             <meta-data
