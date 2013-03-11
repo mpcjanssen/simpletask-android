@@ -130,10 +130,11 @@ public class TodoTxtTouch extends ListActivity implements
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
-		if(!m_app.getDbxAcctMgr().hasLinkedAccount()) {
+        if(!m_app.getDbxAcctMgr().hasLinkedAccount()) {
             Intent intent = new Intent(this, LoginScreen.class);
             startActivity(intent);
             finish();
+            return;
         }
 
 		setContentView(R.layout.main);
