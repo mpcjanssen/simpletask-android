@@ -230,7 +230,16 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
     private void loadFilterFromPreferences() {
         SharedPreferences filter =
                 getSharedPreferences("Filter", MODE_PRIVATE);
-        m_contexts = new ArrayList<String>(Arrays.asList(filter.getString("m_contexts","").split("\n")));
+        String contextsFilter = filter.getString("m_contexts","");
+        m_contexts = new ArrayList<String>();
+        if (!contextsFilter.equals("")) {
+            m_contexts.addAll(Arrays.asList(contextsFilter.split("\n")));
+        }
+        m_prios = new ArrayList<Priority>();
+        m_projects= new ArrayList<String>();
+        m_priosNot = false;
+        m_projectsNot = false;
+        m_contextsNot = false;
         sort = filter.getInt("sort", Constants.SORT_UNSORTED);
     }
 
@@ -457,9 +466,16 @@ public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathList
 	}
 
 	void clearFilter() {
-		Intent intent = new Intent(Constants.INTENT_START_FILTER);
-		intent.putExtra(Constants.INTENT_ACTIVE_SORT_v1, sort);
-		startActivity(intent);
+        m_contexts = new ArrayList<String>();
+        m_prios = new ArrayList<Priority>();
+        m_projects= new ArrayList<String>();
+        m_priosNot = false;
+        m_projectsNot = false;
+        m_contextsNot = false;
+        saveFilterToPreferences();
+        finish();
+        Intent intent = new Intent(Constants.INTENT_SHOW_TASK_LIST);
+        startActivity(intent);
 	}
 
 	private MultiComparator getActiveSort() {
