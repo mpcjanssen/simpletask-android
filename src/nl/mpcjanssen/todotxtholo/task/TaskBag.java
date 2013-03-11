@@ -70,8 +70,7 @@ public class TaskBag  {
 
 	private ArrayList<TodoTxtTouch> obs = new ArrayList<TodoTxtTouch>();
 
-    public TaskBag(Preferences taskBagPreferences, DbxAccountManager dbxAcctMgr) {
-        this.preferences = taskBagPreferences;
+    public TaskBag(DbxAccountManager dbxAcctMgr) {
         this.dbxAcctMgr = dbxAcctMgr;
     }
 

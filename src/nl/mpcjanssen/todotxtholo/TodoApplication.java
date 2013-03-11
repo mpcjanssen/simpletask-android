@@ -36,42 +36,15 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 
 
 public class TodoApplication extends Application {
-    private final static String TAG = TodoApplication.class.getSimpleName();
-    public SharedPreferences m_prefs;
-    private TaskBag taskBag;
-    public static Context appContext;
-	private DbxAccountManager mDbxAcctMgr;
+    Context appContext;
+
+    public Context getAppContext() {
+        return appContext;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        TodoApplication.appContext = getApplicationContext();
-        m_prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
-                m_prefs);
-		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), 
-				getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
-
-		this.taskBag = new TaskBag(taskBagPreferences, mDbxAcctMgr);
-    }
-
-    public DbxAccountManager getDbxAcctMgr() {
-		return mDbxAcctMgr;
-	}
-
-    public TaskBag getTaskBag() {
-        return taskBag;
-    }
-
-    public static Context getAppContext() {
-        return appContext;
-    }
-
-    public void showToast(int resid) {
-        Util.showToastLong(this, resid);
-    }
-
-    public void showToast(String string) {
-        Util.showToastLong(this, string);
+        appContext = getApplicationContext();
     }
 }

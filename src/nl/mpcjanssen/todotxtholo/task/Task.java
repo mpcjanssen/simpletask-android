@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
+import android.content.Context;
 import nl.mpcjanssen.todotxtholo.util.RelativeDate;
 import nl.mpcjanssen.todotxtholo.util.Strings;
 
@@ -49,7 +50,6 @@ public class Task implements Serializable, Comparable<Task> {
     private String text;
     private String completionDate;
     private String prependedDate;
-    private String relativeAge = "";
     private List<String> contexts;
     private List<String> projects;
     private List<String> mailAddresses;
@@ -58,6 +58,7 @@ public class Task implements Serializable, Comparable<Task> {
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
+        this.contexts = contexts;
         this.init(rawText, defaultPrependedDate);
         this.originalPriority = priority;
         this.originalText = text;
@@ -94,16 +95,23 @@ public class Task implements Serializable, Comparable<Task> {
             this.prependedDate = formatter.format(defaultPrependedDate);
         }
 
+
+    }
+
+    public String getRelativeAge(Context ctx) {
+        String relativeAge = "";
         if (!Strings.isEmptyOrNull(this.prependedDate)) {
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.US);
             try {
                 Date d = sdf.parse(this.prependedDate);
-                this.relativeAge = RelativeDate.getRelativeDate(d);
+                relativeAge = RelativeDate.getRelativeDate(ctx, d);
             } catch (ParseException e) {
                 // e.printStackTrace();
             }
         }
+        return relativeAge;
     }
+
 
     public Priority getOriginalPriority() {
         return originalPriority;
@@ -151,10 +159,6 @@ public class Task implements Serializable, Comparable<Task> {
 
     public String getPrependedDate() {
         return prependedDate;
-    }
-
-    public String getRelativeAge() {
-        return relativeAge;
     }
 
     public boolean isDeleted() {
@@ -260,8 +264,6 @@ public class Task implements Serializable, Comparable<Task> {
                 + ((priority == null) ? 0 : priority.hashCode());
         result = prime * result
                 + ((projects == null) ? 0 : projects.hashCode());
-        result = prime * result
-                + ((relativeAge == null) ? 0 : relativeAge.hashCode());
         result = prime * result + ((text == null) ? 0 : text.hashCode());
         return result;
     }

@@ -34,6 +34,7 @@ import android.database.DataSetObserver;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Events;
 import android.text.SpannableString;
 import android.util.AttributeSet;
@@ -42,6 +43,7 @@ import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.*;
+import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
@@ -53,20 +55,12 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 import java.net.URL;
 import java.util.*;
 
-public class TodoTxtTouch extends ListActivity implements
-		OnSharedPreferenceChangeListener, DbxFileSystem.PathListener {
+public class TodoTxtTouch extends ListActivity implements DbxFileSystem.PathListener {
 
 	final static String TAG = TodoTxtTouch.class.getSimpleName();
 
-	private final static int REQUEST_PREFERENCES = 2;
 	private TaskBag taskBag;
-	ProgressDialog m_ProgressDialog = null;
-	String m_DialogText = "";
-	Boolean m_DialogActive = false;
 	Menu options_menu;
-	TodoApplication m_app;
-	
-
 
 	// filter variables
 	private ArrayList<Priority> m_prios = new ArrayList<Priority>();
@@ -77,96 +71,37 @@ public class TodoTxtTouch extends ListActivity implements
 
 	TaskAdapter m_adapter;
 
-	private BroadcastReceiver m_broadcastReceiver;
-
 	private int sort = 0;
 
 	private boolean m_priosNot;
 
 	private boolean m_contextsNot;
     private DbxFileSystem dbxFs;
+    private DbxAccountManager mDbxAcctMgr;
 
     @Override
-	public View onCreateView(View parent, String name, Context context,
-			AttributeSet attrs) {
-		// Log.v(TAG,"onCreateView");
-		return super.onCreateView(parent, name, context, attrs);
-	}
-
-	@Override
-	public void onContentChanged() {
-		super.onContentChanged();
-		Log.v(TAG, "onContentChanged");
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(TAG, "onCreate");
-		m_app = (TodoApplication) getApplication();
 
-		final IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(Constants.INTENT_ACTION_ARCHIVE);
-		intentFilter.addAction(Constants.INTENT_ACTION_LOGOUT);
+        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
+                getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
 
-		m_broadcastReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_ACTION_ARCHIVE)) {
-					// archive
-					// refresh screen to remove completed tasks
-					// push to remote
-					taskBag.archive();
-					Log.v(TAG, "Archiving all tasks");
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_ACTION_LOGOUT)) {
-					Log.v(TAG, "Logging out from Dropbox");
-					m_app.getDbxAcctMgr().unlink();
-					Intent i = new Intent(context, LoginScreen.class);
-					startActivity(i);
-					finish();
-				}
-			}
-		};
-		registerReceiver(m_broadcastReceiver, intentFilter);
-        if(!m_app.getDbxAcctMgr().hasLinkedAccount()) {
+         if(!mDbxAcctMgr.hasLinkedAccount()) {
             Intent intent = new Intent(this, LoginScreen.class);
             startActivity(intent);
             finish();
             return;
         }
 
-		setContentView(R.layout.main);
-		m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
-
-		taskBag = m_app.getTaskBag();
+        this.taskBag = new TaskBag(mDbxAcctMgr);
 		taskBag.reload();
-        try {
-            dbxFs = DbxFileSystem.forAccount(m_app.getDbxAcctMgr().getLinkedAccount());
-        } catch (DbxException.Unauthorized unauthorized) {
-            unauthorized.printStackTrace();
-            return;
+
+        if (getIntent().getAction()==null) {
+            getIntent().setAction(Constants.INTENT_SHOW_TASK_LIST);
         }
-        dbxFs.addPathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
-        		
-		sort = m_app.m_prefs.getInt("sort", Constants.SORT_UNSORTED);
 
-
-		// Initialize Adapter
-
-		m_adapter = new TaskAdapter(this, R.layout.list_item,
-				getLayoutInflater(), getListView());
-		setListAdapter(this.m_adapter);
-        // Show search or filter results
         handleIntent(getIntent(), savedInstanceState);
-
-		ListView lv = getListView();
-		lv.setTextFilterEnabled(false);
-		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		lv.setMultiChoiceModeListener(new ActionBarListener());
-
-
 	}
 
     private void handleIntent(Intent intent, Bundle savedInstanceState) {
@@ -187,8 +122,7 @@ public class TodoTxtTouch extends ListActivity implements
             } else {
                 taskBag.updateTask(taskBag.find(oldTask),newTask);
             }
-            Intent i = getIntent();
-            i.setAction("");
+            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
             startActivity(i);
             finish();
             return;
@@ -234,19 +168,70 @@ public class TodoTxtTouch extends ListActivity implements
                         .split("\n")));
                 Log.v(TAG, "\t contexts:" + m_contexts);
             }
-        } else if (savedInstanceState != null) {
-            // Called without explicit filter try to reload last active one
-            m_prios = Priority.toPriority(savedInstanceState
-                    .getStringArrayList("m_prios"));
-            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-            m_projects = savedInstanceState.getStringArrayList("m_projects");
-            m_search = savedInstanceState.getString("m_search");
+            // Store new filter in preferences
+            saveFilterToPreferences();
+            finish();
+            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
+            startActivity(i);
+        } else if (intent.getAction().equalsIgnoreCase(
+                Constants.INTENT_ACTION_ARCHIVE)) {
+            // archive
+            // refresh screen to remove completed tasks
+            // push to remote
+            taskBag.archive();
+            Log.v(TAG, "Archiving all tasks");
+            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
+            startActivity(i);
+            finish();
+        } else if (intent.getAction().equalsIgnoreCase(
+                Constants.INTENT_ACTION_LOGOUT)) {
+            Log.v(TAG, "Logging out from Dropbox");
+            mDbxAcctMgr.unlink();
+            Intent i = new Intent(Constants.INTENT_SHOW_TASK_LIST);
+            startActivity(i);
+            finish();
+        } else if (intent.getAction().equalsIgnoreCase(
+                Constants.INTENT_SHOW_TASK_LIST)) {
+            loadFilterFromPreferences();
+            setContentView(R.layout.main);
+            try {
+                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            } catch (DbxException.Unauthorized unauthorized) {
+                unauthorized.printStackTrace();
+                return;
+            }
+            dbxFs.addPathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
 
-            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
-
+            // Initialize Adapter
+            m_adapter = new TaskAdapter(this, R.layout.list_item,
+                    getLayoutInflater(), getListView());
+            setListAdapter(this.m_adapter);
+            // Show search or filter results
+            loadFilterFromPreferences();
+            ListView lv = getListView();
+            lv.setTextFilterEnabled(false);
+            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            lv.setMultiChoiceModeListener(new ActionBarListener());
+            m_adapter.setFilteredTasks();
+            updateFilterBar();
         }
-        m_adapter.setFilteredTasks();
-        updateFilterBar();
+    }
+
+    private void saveFilterToPreferences() {
+        SharedPreferences filter =
+                getSharedPreferences("Filter", MODE_PRIVATE);
+        Editor editor = filter.edit();
+        editor.putInt("sort", sort);
+        editor.putString("m_search", m_search);
+        editor.putString("m_contexts", Util.join(m_contexts, "\n"));
+        editor.commit();
+    }
+
+    private void loadFilterFromPreferences() {
+        SharedPreferences filter =
+                getSharedPreferences("Filter", MODE_PRIVATE);
+        m_contexts = new ArrayList<String>(Arrays.asList(filter.getString("m_contexts","").split("\n")));
+        sort = filter.getInt("sort", Constants.SORT_UNSORTED);
     }
 
     private void updateFilterBar() {
@@ -290,15 +275,17 @@ public class TodoTxtTouch extends ListActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		m_app.m_prefs.unregisterOnSharedPreferenceChangeListener(this);
-        dbxFs.removePathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
-        unregisterReceiver(m_broadcastReceiver);
-	}
+        if (dbxFs!=null) {
+            dbxFs.removePathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        }
+    }
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-        dbxFs.addPathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        if (dbxFs!=null) {
+            dbxFs.addPathListener(this, new DbxPath("todo.txt"), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        }
 	}
 
     @Override
@@ -311,35 +298,12 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
 
-    @Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
-		outState.putStringArrayList("m_contexts", m_contexts);
-		outState.putStringArrayList("m_projects", m_projects);
-		outState.putString("m_search", m_search);
-		outState.putInt("sort", sort);
-	}
-
 	@Override
 	protected void onPause() {
 		super.onPause();
-		SharedPreferences.Editor editor = m_app.m_prefs.edit();
-		editor.putInt("sort", sort);
-		editor.commit();
-        dbxFs.removePathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
-		Log.v(TAG, "Called restore instance state");
-		// m_prios = Priority.toPriority(state.getStringArrayList("m_prios"));
-		// m_contexts = state.getStringArrayList("m_contexts");
-		// m_projects = state.getStringArrayList("m_projects");
-		// m_search = state.getString("m_search");
-		//
-		// sort = state.getInt("sort", Constants.SORT_UNSORTED);
+        if (dbxFs!=null) {
+            dbxFs.removePathListener(this, new DbxPath("todo.txt"), Mode.PATH_ONLY);
+        }
 	}
 
 	@Override
@@ -476,7 +440,7 @@ public class TodoTxtTouch extends ListActivity implements
 	private void startPreferencesActivity() {
 		Intent settingsActivity = new Intent(getBaseContext(),
 				Preferences.class);
-		startActivityForResult(settingsActivity, REQUEST_PREFERENCES);
+		startActivity(settingsActivity);
 	}
 
 	/**
@@ -705,8 +669,8 @@ public class TodoTxtTouch extends ListActivity implements
 										& ~Paint.STRIKE_THRU_TEXT_FLAG);
 					}
 
-					if (!Strings.isEmptyOrNull(task.getRelativeAge())) {
-						holder.taskage.setText(task.getRelativeAge());
+					if (!Strings.isEmptyOrNull(task.getRelativeAge(getApplicationContext()))) {
+						holder.taskage.setText(task.getRelativeAge(getApplicationContext()));
 						holder.taskage.setVisibility(View.VISIBLE);
 					} else {
 						holder.tasktext.setPadding(
@@ -764,17 +728,6 @@ public class TodoTxtTouch extends ListActivity implements
 		private TextView taskprio;
 		private TextView tasktext;
 		private TextView taskage;
-	}
-
-	public void storeKeys(String accessTokenKey, String accessTokenSecret) {
-		Editor editor = m_app.m_prefs.edit();
-		editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
-		editor.putString(Constants.PREF_ACCESSTOKEN_SECRET, accessTokenSecret);
-		editor.commit();
-	}
-
-	public void showToast(String string) {
-		Util.showToastLong(this, string);
 	}
 
 	public void startFilterActivity() {
@@ -988,9 +941,4 @@ public class TodoTxtTouch extends ListActivity implements
 		}
 	}
 
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -47,14 +47,9 @@ public class AddTask extends Activity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private ProgressDialog m_ProgressDialog = null;
-
     private Task m_backup;
 
-    private TaskBag taskBag;
-
     private String share_text;
-
 
     private EditText textInputField;
 
@@ -132,9 +127,6 @@ public class AddTask extends Activity {
 
         setContentView(R.layout.add_task);
 
-        TodoApplication m_app = (TodoApplication) getApplication();
-        taskBag = m_app.getTaskBag();
-
         Button btnPriority = (Button) findViewById(R.id.btnPriority);
         Button btnContexts = (Button) findViewById(R.id.btnContext);
         Button btnProjects = (Button) findViewById(R.id.btnProject);
@@ -143,14 +135,14 @@ public class AddTask extends Activity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 Menu menu = popupMenu.getMenu();
-                for (String ctx : taskBag.getContexts()) {
+                for (String ctx : getContexts()) {
                     menu.add(ctx);
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         replaceTextAtSelection("@" + item.getTitle() + " ");
-                        return true;  //To change body of implemented methods use File | Settings | File Templates.
+                        return true;
                     }
                 }
 
@@ -163,7 +155,7 @@ public class AddTask extends Activity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 Menu menu = popupMenu.getMenu();
-                for (String prj : taskBag.getProjects()) {
+                for (String prj : getProjects()) {
                     menu.add(prj);
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -212,7 +204,7 @@ public class AddTask extends Activity {
         Task task = (Task) getIntent().getSerializableExtra(
                 Constants.EXTRA_TASK);
         if (task != null) {
-            m_backup = taskBag.find(task);
+            m_backup = null;
             textInputField.setText(task.inFileFormat());
             textInputField.setSelection(task.inFileFormat().length());
             return;
@@ -246,6 +238,14 @@ public class AddTask extends Activity {
         textInputField.setSelection(textIndex);
     }
 
+    private List<String> getContexts() {
+        return new ArrayList<String>();
+    }
+
+    private List<String> getProjects() {
+        return new ArrayList<String>();
+    }
+
     private void replacePriority(CharSequence newPrio) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
@@ -274,14 +274,6 @@ public class AddTask extends Activity {
         }
         textInputField.getText().replace(Math.min(start, end), Math.max(start, end),
                 title, 0, title.length());
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (m_ProgressDialog != null) {
-            m_ProgressDialog.dismiss();
-        }
     }
 
     private void setupShortcut() {
