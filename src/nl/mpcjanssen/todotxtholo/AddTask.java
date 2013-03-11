@@ -98,8 +98,7 @@ public class AddTask extends Activity {
 
     private void addTask(String input, Task m_backup) {
         if (m_backup!=null) {
-            Task t = m_app.getTaskBag().find(m_backup);
-            t.init(input,null);
+            m_app.getTaskBag().updateTask(m_backup,input);
         } else {
             m_app.getTaskBag().addAsTask(input);
         }
@@ -274,8 +273,7 @@ public class AddTask extends Activity {
     }
 
     private void setupShortcut() {
-        Intent shortcutIntent = new Intent();
-        shortcutIntent.setAction(Constants.INTENT_ADD_TASK);
+        Intent shortcutIntent = new Intent(this, AddTask.class);
 
         Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

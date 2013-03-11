@@ -22,30 +22,11 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import nl.mpcjanssen.todotxtholo.Constants;
-import nl.mpcjanssen.todotxtholo.TodoTxtTouch;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxException.Unauthorized;
-import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxFileSystem.PathListener;
-import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxPath.InvalidPathException;
-import nl.mpcjanssen.todotxtholo.util.Util;
+import nl.mpcjanssen.todotxtholo.TodoTxtTouch;
+
+import java.util.*;
 
 
 /**
@@ -193,5 +174,10 @@ public class TaskBag  {
             }
         }
         return null;
+    }
+
+    public void init(ArrayList<Task> newTasks) {
+        tasks.clear();
+        tasks.addAll(newTasks);
     }
 }

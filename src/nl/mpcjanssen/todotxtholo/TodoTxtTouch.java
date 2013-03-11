@@ -24,29 +24,21 @@ package nl.mpcjanssen.todotxtholo;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.DataSetObserver;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Events;
 import android.text.SpannableString;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.*;
-import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxPath;
 import nl.mpcjanssen.todotxtholo.sort.*;
 import nl.mpcjanssen.todotxtholo.task.*;
 import nl.mpcjanssen.todotxtholo.util.Strings;
@@ -55,27 +47,27 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 import java.net.URL;
 import java.util.*;
 
-public class TodoTxtTouch extends ListActivity  {
+public class TodoTxtTouch extends ListActivity {
 
-	Menu options_menu;
+    Menu options_menu;
 
     private BroadcastReceiver m_broadcastReceiver;
 
     // filter variables
-	private ArrayList<Priority> m_prios = new ArrayList<Priority>();
-	private ArrayList<String> m_contexts = new ArrayList<String>();
-	private ArrayList<String> m_projects = new ArrayList<String>();
-	private boolean m_projectsNot = false;
-	private String m_search;
+    private ArrayList<Priority> m_prios = new ArrayList<Priority>();
+    private ArrayList<String> m_contexts = new ArrayList<String>();
+    private ArrayList<String> m_projects = new ArrayList<String>();
+    private boolean m_projectsNot = false;
+    private String m_search;
 
-	TaskAdapter m_adapter;
+    TaskAdapter m_adapter;
 
-	private int sort = 0;
+    private int sort = 0;
 
-	private boolean m_priosNot;
+    private boolean m_priosNot;
     private TodoApplication m_app;
 
-	private boolean m_contextsNot;
+    private boolean m_contextsNot;
 
     @Override
     protected void onDestroy() {
@@ -91,8 +83,8 @@ public class TodoTxtTouch extends ListActivity  {
     }
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
@@ -104,31 +96,30 @@ public class TodoTxtTouch extends ListActivity  {
                         Constants.INTENT_UPDATE_UI)) {
                     m_adapter.setFilteredTasks();
                 } else if (intent.getAction().equalsIgnoreCase(
-                            Constants.INTENT_RELOAD_TASKBAG)) {
+                        Constants.INTENT_RELOAD_TASKBAG)) {
                     m_app.initTaskBag();
                     sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
                 }
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
-		Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
-        m_app = (TodoApplication)getApplication();
+        Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
+        m_app = (TodoApplication) getApplication();
+        handleIntent(getIntent(), savedInstanceState);
+    }
 
+    private void handleIntent(Intent intent, Bundle savedInstanceState) {
         if (!m_app.isAuthenticated()) {
-            Intent intent = new Intent(this, LoginScreen.class);
-            startActivity(intent);
+            Intent i = new Intent(this, LoginScreen.class);
+            startActivity(i);
             finish();
             return;
         }
-
         m_app.watchDropbox(true);
-        handleIntent(getIntent(), savedInstanceState);
-	}
-
-    private void handleIntent(Intent intent, Bundle savedInstanceState) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(m_app.TAG, "Searched for " + m_search);
+            saveFilterToPreferences();
         } else if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
             Log.v(m_app.TAG, "Launched with new filter:");
             // handle different versions of shortcuts
@@ -176,19 +167,17 @@ public class TodoTxtTouch extends ListActivity  {
 
         loadFilterFromPreferences();
         setContentView(R.layout.main);
-            // Initialize Adapter
-            m_adapter = new TaskAdapter(this, R.layout.list_item,
-                    getLayoutInflater(), getListView());
-            setListAdapter(this.m_adapter);
-            // Show search or filter results
-            loadFilterFromPreferences();
-            ListView lv = getListView();
-            lv.setTextFilterEnabled(false);
-            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-            lv.setMultiChoiceModeListener(new ActionBarListener());
-            m_adapter.setFilteredTasks();
-            updateFilterBar();
-
+        // Initialize Adapter
+        m_adapter = new TaskAdapter(this, R.layout.list_item,
+                getLayoutInflater(), getListView());
+        setListAdapter(this.m_adapter);
+        // Show search or filter results
+        loadFilterFromPreferences();
+        ListView lv = getListView();
+        lv.setTextFilterEnabled(false);
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setMultiChoiceModeListener(new ActionBarListener());
+        m_adapter.setFilteredTasks();
     }
 
     private void saveFilterToPreferences() {
@@ -199,17 +188,20 @@ public class TodoTxtTouch extends ListActivity  {
         editor.putString("m_search", m_search);
         editor.putString("m_contexts", Util.join(m_contexts, "\n"));
         editor.putString("m_projects", Util.join(m_projects, "\n"));
+        editor.putString("m_search", m_search);
         editor.commit();
     }
 
     private void loadFilterFromPreferences() {
         SharedPreferences filter =
                 getSharedPreferences("Filter", MODE_PRIVATE);
-        String contextsFilter = filter.getString("m_contexts","");
-        String priosFilter = filter.getString("m_prios","");
-        String projectsFilter = filter.getString("m_projects","");
+        sort = filter.getInt("sort", Constants.SORT_UNSORTED);
+        m_search = filter.getString("m_search", null);
+        String contextsFilter = filter.getString("m_contexts", "");
+        String priosFilter = filter.getString("m_prios", "");
+        String projectsFilter = filter.getString("m_projects", "");
         m_contexts = new ArrayList<String>();
-        m_projects= new ArrayList<String>();
+        m_projects = new ArrayList<String>();
         if (!contextsFilter.equals("")) {
             m_contexts.addAll(Arrays.asList(contextsFilter.split("\n")));
         }
@@ -220,44 +212,43 @@ public class TodoTxtTouch extends ListActivity  {
         m_priosNot = false;
         m_projectsNot = false;
         m_contextsNot = false;
-        sort = filter.getInt("sort", Constants.SORT_UNSORTED);
     }
 
     private void updateFilterBar() {
-		ListView lv = getListView();
-		int index = lv.getFirstVisiblePosition();
-		View v = lv.getChildAt(0);
-		int top = (v == null) ? 0 : v.getTop();
-		lv.setSelectionFromTop(index, top);
+        ListView lv = getListView();
+        int index = lv.getFirstVisiblePosition();
+        View v = lv.getChildAt(0);
+        int top = (v == null) ? 0 : v.getTop();
+        lv.setSelectionFromTop(index, top);
 
-		final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
-		final TextView filterText = (TextView) findViewById(R.id.filter_text);
-		if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
-				|| m_search != null) {
-			String filterTitle = getString(R.string.title_filter_applied);
-			if (m_prios.size() > 0) {
-				filterTitle += " " + getString(R.string.priority_prompt);
-			}
+        final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
+        final TextView filterText = (TextView) findViewById(R.id.filter_text);
+        if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
+                || m_search != null) {
+            String filterTitle = getString(R.string.title_filter_applied);
+            if (m_prios.size() > 0) {
+                filterTitle += " " + getString(R.string.priority_prompt);
+            }
 
-			if (m_projects.size() > 0) {
-				filterTitle += " " + getString(R.string.project_prompt);
-			}
+            if (m_projects.size() > 0) {
+                filterTitle += " " + getString(R.string.project_prompt);
+            }
 
-			if (m_contexts.size() > 0) {
-				filterTitle += " " + getString(R.string.context_prompt);
-			}
-			if (m_search != null) {
-				filterTitle += " " + getString(R.string.search);
-			}
+            if (m_contexts.size() > 0) {
+                filterTitle += " " + getString(R.string.context_prompt);
+            }
+            if (m_search != null) {
+                filterTitle += " " + getString(R.string.search);
+            }
 
-			actionbar_clear.setVisibility(View.VISIBLE);
-			filterText.setText(filterTitle);
+            actionbar_clear.setVisibility(View.VISIBLE);
+            filterText.setText(filterTitle);
 
-		} else {
-			actionbar_clear.setVisibility(View.GONE);
-			filterText.setText("No filter");
-		}
-	}
+        } else {
+            actionbar_clear.setVisibility(View.GONE);
+            filterText.setText("No filter");
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -274,638 +265,638 @@ public class TodoTxtTouch extends ListActivity  {
     }
 
     @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
 
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.search)
-				.getActionView();
-		searchView.setSearchableInfo(searchManager
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(false); // Do not iconify the widget;
-													// expand it by default
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget;
+        // expand it by default
 
 
-		this.options_menu = menu;
-		return super.onCreateOptionsMenu(menu);
-	}
+        this.options_menu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// start the action bar instead
-		l.setItemChecked(position, true);
-	}
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        // start the action bar instead
+        l.setItemChecked(position, true);
+    }
 
-	private Task getTaskAt(final int pos) {
-		Task task = m_adapter.getItem(pos);
-		return task;
-	}
+    private Task getTaskAt(final int pos) {
+        Task task = m_adapter.getItem(pos);
+        return task;
+    }
 
-	private void shareTodoList() {
-		String text = "";
-		for (int i = 0; i < m_adapter.getCount(); i++) {
+    private void shareTodoList() {
+        String text = "";
+        for (int i = 0; i < m_adapter.getCount(); i++) {
             Task task = m_adapter.getItem(i);
-            if (task!=null) {
-			    text = text + (task.inFileFormat()) + "\n";
+            if (task != null) {
+                text = text + (task.inFileFormat()) + "\n";
             }
-		}
+        }
 
-		Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-		shareIntent.setType("text/plain");
-		shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-				"Simpletask list");
-		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                "Simpletask list");
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
 
-		startActivity(Intent.createChooser(shareIntent, "Share"));
-	}
+        startActivity(Intent.createChooser(shareIntent, "Share"));
+    }
 
-	private void prioritizeTasks(final List<Task> tasks) {
-		final String[] prioArr = Priority
-				.rangeInCode(Priority.NONE, Priority.E).toArray(new String[0]);
+    private void prioritizeTasks(final List<Task> tasks) {
+        final String[] prioArr = Priority
+                .rangeInCode(Priority.NONE, Priority.E).toArray(new String[0]);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Select priority");
-		builder.setSingleChoiceItems(prioArr, 0, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, final int which) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select priority");
+        builder.setSingleChoiceItems(prioArr, 0, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, final int which) {
 
-				dialog.dismiss();
-				for (Task task : tasks) {
-                    if (task!=null) {
-					    task.setPriority(Priority.toPriority(prioArr[which]));
+                dialog.dismiss();
+                for (Task task : tasks) {
+                    if (task != null) {
+                        task.setPriority(Priority.toPriority(prioArr[which]));
                     }
-				}
+                }
                 m_app.storeTaskbag();
                 m_adapter.setFilteredTasks();
-			}
-		});
-		builder.show();
+            }
+        });
+        builder.show();
 
-	}
+    }
 
-	private void completeTasks(List<Task> tasks) {
-		for (Task t : tasks) {
-			if (t!=null && !t.isCompleted()) {
-				t.markComplete(new Date());
-			}
-		}
+    private void completeTasks(List<Task> tasks) {
+        for (Task t : tasks) {
+            if (t != null && !t.isCompleted()) {
+                t.markComplete(new Date());
+            }
+        }
         m_app.storeTaskbag();
         m_adapter.setFilteredTasks();
-	}
+    }
 
-	private void undoCompleteTasks(List<Task> tasks) {
-		for (Task t : tasks) {
-			if (t!=null && t.isCompleted()) {
-				t.markIncomplete();
-			}
-		}
-		m_app.storeTaskbag();
-        m_adapter.setFilteredTasks();
-	}
-
-	private void editTask(Task task) {
-		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_TASK, task);
-		startActivity(intent);
-	}
-
-	private void deleteTasks(List<Task> tasks) {
-		m_app.getTaskBag().deleteTasks(tasks);
+    private void undoCompleteTasks(List<Task> tasks) {
+        for (Task t : tasks) {
+            if (t != null && t.isCompleted()) {
+                t.markIncomplete();
+            }
+        }
         m_app.storeTaskbag();
         m_adapter.setFilteredTasks();
-	}
+    }
 
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		Log.v(m_app.TAG, "onMenuItemSelected: " + item.getItemId());
-		switch (item.getItemId()) {
-		case R.id.add_new:
-			startAddTaskActivity();
-			break;
-		case R.id.search:
-			break;
-		case R.id.preferences:
-			startPreferencesActivity();
-			break;
-		case R.id.filter:
-			startFilterActivity();
-			break;
-		case R.id.share:
-			shareTodoList();
-			break;
-		default:
-			return super.onMenuItemSelected(featureId, item);
-		}
-		return true;
-	}
+    private void editTask(Task task) {
+        Intent intent = new Intent(this, AddTask.class);
+        intent.putExtra(Constants.EXTRA_TASK, task);
+        startActivity(intent);
+    }
 
-	private void startAddTaskActivity() {
-		Log.v(m_app.TAG, "Starting addTask activity");
-		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_PRIORITIES_SELECTED, m_prios);
-		intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-		intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
-		startActivity(intent);
-	}
+    private void deleteTasks(List<Task> tasks) {
+        m_app.getTaskBag().deleteTasks(tasks);
+        m_app.storeTaskbag();
+        m_adapter.setFilteredTasks();
+    }
 
-	private void startPreferencesActivity() {
-		Intent settingsActivity = new Intent(getBaseContext(),
-				Preferences.class);
-		startActivity(settingsActivity);
-	}
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        Log.v(m_app.TAG, "onMenuItemSelected: " + item.getItemId());
+        switch (item.getItemId()) {
+            case R.id.add_new:
+                startAddTaskActivity();
+                break;
+            case R.id.search:
+                break;
+            case R.id.preferences:
+                startPreferencesActivity();
+                break;
+            case R.id.filter:
+                startFilterActivity();
+                break;
+            case R.id.share:
+                shareTodoList();
+                break;
+            default:
+                return super.onMenuItemSelected(featureId, item);
+        }
+        return true;
+    }
 
-	/**
-	 * Handle clear filter click *
-	 */
-	public void onClearClick(View v) {
-		// End current activity if it's search results
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			finish();
-		} else { // otherwise just clear the filter in the current activity
-			clearFilter();
-		}
-	}
+    private void startAddTaskActivity() {
+        Log.v(m_app.TAG, "Starting addTask activity");
+        Intent intent = new Intent(this, AddTask.class);
+        intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
+        intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
+        startActivity(intent);
+    }
 
-	void clearFilter() {
+    private void startPreferencesActivity() {
+        Intent settingsActivity = new Intent(getBaseContext(),
+                Preferences.class);
+        startActivity(settingsActivity);
+    }
+
+    /**
+     * Handle clear filter click *
+     */
+    public void onClearClick(View v) {
+        // End current activity if it's search results
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            finish();
+        } else { // otherwise just clear the filter in the current activity
+            clearFilter();
+        }
+    }
+
+    void clearFilter() {
         m_contexts = new ArrayList<String>();
         m_prios = new ArrayList<Priority>();
-        m_projects= new ArrayList<String>();
+        m_projects = new ArrayList<String>();
         m_priosNot = false;
         m_projectsNot = false;
         m_contextsNot = false;
+        m_search = null;
         saveFilterToPreferences();
         m_adapter.setFilteredTasks();
-	}
+    }
 
-	private MultiComparator getActiveSort() {
-		List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
+    private MultiComparator getActiveSort() {
+        List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
         // Sort completed last
-		comparators.add(new CompletedComparator());
-		switch (sort) {
-		case Constants.SORT_UNSORTED:
-			break;
-		case Constants.SORT_REVERSE:
-			comparators.add(Collections.reverseOrder());
-			break;
-		case Constants.SORT_ALPHABETICAL:
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_CONTEXT:
-			comparators.add(new ContextComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_PRIORITY:
-			comparators.add(new PriorityComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_PROJECT:
-			comparators.add(new ProjectComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		}
-		return (new MultiComparator(comparators));
-	}
+        comparators.add(new CompletedComparator());
+        switch (sort) {
+            case Constants.SORT_UNSORTED:
+                break;
+            case Constants.SORT_REVERSE:
+                comparators.add(Collections.reverseOrder());
+                break;
+            case Constants.SORT_ALPHABETICAL:
+                comparators.add(new AlphabeticalComparator());
+                break;
+            case Constants.SORT_CONTEXT:
+                comparators.add(new ContextComparator());
+                comparators.add(new AlphabeticalComparator());
+                break;
+            case Constants.SORT_PRIORITY:
+                comparators.add(new PriorityComparator());
+                comparators.add(new AlphabeticalComparator());
+                break;
+            case Constants.SORT_PROJECT:
+                comparators.add(new ProjectComparator());
+                comparators.add(new AlphabeticalComparator());
+                break;
+        }
+        return (new MultiComparator(comparators));
+    }
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter {
 
-		private LayoutInflater m_inflater;
-		int vt;
-		ArrayList<Task> visibleTasks = new ArrayList<Task>();
-		Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
-		ArrayList<String> headerTitles = new ArrayList<String>();
-		SparseArray<String> headerAtPostion = new SparseArray<String>();
-		int headersShow = 0;
+        private LayoutInflater m_inflater;
+        int vt;
+        ArrayList<Task> visibleTasks = new ArrayList<Task>();
+        Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
+        ArrayList<String> headerTitles = new ArrayList<String>();
+        SparseArray<String> headerAtPostion = new SparseArray<String>();
+        int headersShow = 0;
 
-		public TaskAdapter(Context context, int textViewResourceId,
-				LayoutInflater inflater, ListView view) {
-			this.m_inflater = inflater;
-			this.vt = textViewResourceId;
-		}
+        public TaskAdapter(Context context, int textViewResourceId,
+                           LayoutInflater inflater, ListView view) {
+            this.m_inflater = inflater;
+            this.vt = textViewResourceId;
+        }
 
-		void setFilteredTasks() {
-			//Log.v(m_app.TAG, "setFilteredTasks called");
-			AndFilter filter = new AndFilter();
-			visibleTasks.clear();
-			for (Task t : m_app.getTaskBag().getTasks()) {
-				if (filter.apply(t)) {
-					visibleTasks.add(t);
-				}
-			}
-			Collections.sort(visibleTasks, getActiveSort());
-			headerAtPostion.clear();
-			String header = "";
-			int position = 0;
-			switch (sort) {
-			case Constants.SORT_CONTEXT:
-				for (Task t : visibleTasks) {
-					List<String> taskItems = t.getContexts();
-					String newHeader;
-					if (taskItems == null || taskItems.size() == 0) {
-						newHeader = getString(R.string.no_context);
-					} else {
-						newHeader = taskItems.get(0);
-					}
-					if (!header.equals(newHeader)) {
-						header = newHeader;
-						// Log.v(TAG, "Start of header: " + header +
-						// " at position: " + position);
-						headerAtPostion.put(position, header);
-						position++;
-					}
-					position++;
-				}
-				break;
-			case Constants.SORT_PROJECT:
-				for (Task t : visibleTasks) {
-					List<String> taskItems = t.getProjects();
-					String newHeader;
-					if (taskItems == null || taskItems.size() == 0) {
-						newHeader = getString(R.string.no_project);
-					} else {
-						newHeader = taskItems.get(0);
-					}
-					if (!header.equals(newHeader)) {
-						header = newHeader;
-						Log.v(m_app.TAG, "Start of header: " + header
-								+ " at position: " + position);
-						headerAtPostion.put(position, header);
-						position++;
-					}
-					position++;
-				}
-				break;
+        void setFilteredTasks() {
+            //Log.v(m_app.TAG, "setFilteredTasks called");
+            AndFilter filter = new AndFilter();
+            visibleTasks.clear();
+            for (Task t : m_app.getTaskBag().getTasks()) {
+                if (filter.apply(t)) {
+                    visibleTasks.add(t);
+                }
+            }
+            Collections.sort(visibleTasks, getActiveSort());
+            headerAtPostion.clear();
+            String header = "";
+            int position = 0;
+            switch (sort) {
+                case Constants.SORT_CONTEXT:
+                    for (Task t : visibleTasks) {
+                        List<String> taskItems = t.getContexts();
+                        String newHeader;
+                        if (taskItems == null || taskItems.size() == 0) {
+                            newHeader = getString(R.string.no_context);
+                        } else {
+                            newHeader = taskItems.get(0);
+                        }
+                        if (!header.equals(newHeader)) {
+                            header = newHeader;
+                            // Log.v(TAG, "Start of header: " + header +
+                            // " at position: " + position);
+                            headerAtPostion.put(position, header);
+                            position++;
+                        }
+                        position++;
+                    }
+                    break;
+                case Constants.SORT_PROJECT:
+                    for (Task t : visibleTasks) {
+                        List<String> taskItems = t.getProjects();
+                        String newHeader;
+                        if (taskItems == null || taskItems.size() == 0) {
+                            newHeader = getString(R.string.no_project);
+                        } else {
+                            newHeader = taskItems.get(0);
+                        }
+                        if (!header.equals(newHeader)) {
+                            header = newHeader;
+                            Log.v(m_app.TAG, "Start of header: " + header
+                                    + " at position: " + position);
+                            headerAtPostion.put(position, header);
+                            position++;
+                        }
+                        position++;
+                    }
+                    break;
 
-			}
-			for (DataSetObserver ob : obs) {
-				ob.onChanged();
-			}
+            }
+            for (DataSetObserver ob : obs) {
+                ob.onChanged();
+            }
+            updateFilterBar();
+        }
 
-		}
+        @Override
+        public void registerDataSetObserver(DataSetObserver observer) {
+            obs.add(observer);
+            return;
+        }
 
-		@Override
-		public void registerDataSetObserver(DataSetObserver observer) {
-			obs.add(observer);
-			return;
-		}
+        @Override
+        public void unregisterDataSetObserver(DataSetObserver observer) {
+            obs.remove(observer);
+            return;
+        }
 
-		@Override
-		public void unregisterDataSetObserver(DataSetObserver observer) {
-			obs.remove(observer);
-			return;
-		}
+        @Override
+        public int getCount() {
+            return visibleTasks.size() + headerAtPostion.size();
+        }
 
-		@Override
-		public int getCount() {
-			return visibleTasks.size() + headerAtPostion.size();
-		}
+        private int headersBeforePosition(int position) {
+            int smaller = 0;
+            for (int index = 0; index < headerAtPostion.size(); index++) {
+                if (headerAtPostion.keyAt(index) < position) {
+                    smaller++;
+                }
+            }
+            return smaller;
+        }
 
-		private int headersBeforePosition(int position) {
-			int smaller = 0;
-			for (int index = 0; index < headerAtPostion.size(); index++) {
-				if (headerAtPostion.keyAt(index) < position) {
-					smaller++;
-				}
-			}
-			return smaller;
-		}
+        @Override
+        public Task getItem(int position) {
+            if (headerAtPostion.get(position) != null) {
+                return null;
+            }
+            return visibleTasks.get(position - headersBeforePosition(position));
+        }
 
-		@Override
-		public Task getItem(int position) {
-			if (headerAtPostion.get(position) != null) {
-				return null;
-			}
-			return visibleTasks.get(position - headersBeforePosition(position));
-		}
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
+        @Override
+        public boolean hasStableIds() {
+            return true; // To change body of implemented methods use File |
+            // Settings | File Templates.
+        }
 
-		@Override
-		public boolean hasStableIds() {
-			return true; // To change body of implemented methods use File |
-							// Settings | File Templates.
-		}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (headerAtPostion.get(position) != null) {
+                convertView = m_inflater.inflate(R.layout.list_header, null);
+                TextView t = (TextView) convertView
+                        .findViewById(R.id.list_header_title);
+                t.setText(headerAtPostion.get(position));
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (headerAtPostion.get(position) != null) {
-				convertView = m_inflater.inflate(R.layout.list_header, null);
-				TextView t = (TextView) convertView
-						.findViewById(R.id.list_header_title);
-				t.setText(headerAtPostion.get(position));
+            } else {
+                final ViewHolder holder;
+                if (convertView == null) {
+                    convertView = m_inflater.inflate(R.layout.list_item, null);
+                    holder = new ViewHolder();
+                    holder.taskprio = (TextView) convertView
+                            .findViewById(R.id.taskprio);
+                    holder.tasktext = (TextView) convertView
+                            .findViewById(R.id.tasktext);
+                    holder.taskage = (TextView) convertView
+                            .findViewById(R.id.taskage);
 
-			} else {
-				final ViewHolder holder;
-				if (convertView == null) {
-					convertView = m_inflater.inflate(R.layout.list_item, null);
-					holder = new ViewHolder();
-					holder.taskprio = (TextView) convertView
-							.findViewById(R.id.taskprio);
-					holder.tasktext = (TextView) convertView
-							.findViewById(R.id.tasktext);
-					holder.taskage = (TextView) convertView
-							.findViewById(R.id.taskage);
+                    convertView.setTag(holder);
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+                Task task;
+                task = getItem(position);
 
-					convertView.setTag(holder);
-				} else {
-					holder = (ViewHolder) convertView.getTag();
-				}
-				Task task;
-				task = getItem(position);
+                if (task != null) {
+                    holder.taskprio.setText(task.getPriority().inListFormat());
+                    SpannableString ss = new SpannableString(
+                            task.inScreenFormat());
+                    holder.tasktext.setText(ss);
 
-				if (task != null) {
-					holder.taskprio.setText(task.getPriority().inListFormat());
-					SpannableString ss = new SpannableString(
-							task.inScreenFormat());
-					holder.tasktext.setText(ss);
+                    if (task.isCompleted()) {
+                        // Log.v(TAG, "Striking through " + task.getText());
+                        holder.tasktext.setPaintFlags(holder.tasktext
+                                .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        holder.taskage.setPaintFlags(holder.taskage
+                                .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    } else {
+                        holder.tasktext
+                                .setPaintFlags(holder.tasktext.getPaintFlags()
+                                        & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                        holder.taskage
+                                .setPaintFlags(holder.taskage.getPaintFlags()
+                                        & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                    }
 
-					if (task.isCompleted()) {
-						// Log.v(TAG, "Striking through " + task.getText());
-						holder.tasktext.setPaintFlags(holder.tasktext
-								.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-						holder.taskage.setPaintFlags(holder.taskage
-								.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-					} else {
-						holder.tasktext
-								.setPaintFlags(holder.tasktext.getPaintFlags()
-										& ~Paint.STRIKE_THRU_TEXT_FLAG);
-						holder.taskage
-								.setPaintFlags(holder.taskage.getPaintFlags()
-										& ~Paint.STRIKE_THRU_TEXT_FLAG);
-					}
+                    if (!Strings.isEmptyOrNull(task.getRelativeAge(getApplicationContext()))) {
+                        holder.taskage.setText(task.getRelativeAge(getApplicationContext()));
+                        holder.taskage.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.tasktext.setPadding(
+                                holder.tasktext.getPaddingLeft(),
+                                holder.tasktext.getPaddingTop(),
+                                holder.tasktext.getPaddingRight(), 4);
+                        holder.taskage.setText("");
+                        holder.taskage.setVisibility(View.GONE);
+                    }
 
-					if (!Strings.isEmptyOrNull(task.getRelativeAge(getApplicationContext()))) {
-						holder.taskage.setText(task.getRelativeAge(getApplicationContext()));
-						holder.taskage.setVisibility(View.VISIBLE);
-					} else {
-						holder.tasktext.setPadding(
-								holder.tasktext.getPaddingLeft(),
-								holder.tasktext.getPaddingTop(),
-								holder.tasktext.getPaddingRight(), 4);
-						holder.taskage.setText("");
-						holder.taskage.setVisibility(View.GONE);
-					}
+                }
 
-				}
+            }
+            return convertView;
+        }
 
-			}
-			return convertView;
-		}
+        @Override
+        public int getItemViewType(int position) {
+            if (headerAtPostion.get(position) != null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
 
-		@Override
-		public int getItemViewType(int position) {
-			if (headerAtPostion.get(position) != null) {
-				return 0;
-			} else {
-				return 1;
-			}
-		}
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
 
-		@Override
-		public int getViewTypeCount() {
-			return 2;
-		}
+        @Override
+        public boolean isEmpty() {
+            return visibleTasks.size() == 0;
+        }
 
-		@Override
-		public boolean isEmpty() {
-			return visibleTasks.size() == 0;
-		}
+        @Override
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
 
-		@Override
-		public boolean areAllItemsEnabled() {
-			return false;
-		}
+        @Override
+        public boolean isEnabled(int position) {
+            if (headerAtPostion.get(position) != null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
 
-		@Override
-		public boolean isEnabled(int position) {
-			if (headerAtPostion.get(position) != null) {
-				return false;
-			} else {
-				return true;
-			}
-		}
+    }
 
-	}
+    private static class ViewHolder {
+        private TextView taskprio;
+        private TextView tasktext;
+        private TextView taskage;
+    }
 
-	private static class ViewHolder {
-		private TextView taskprio;
-		private TextView tasktext;
-		private TextView taskage;
-	}
+    public void startFilterActivity() {
+        Intent i = new Intent(this, FilterActivity.class);
 
-	public void startFilterActivity() {
-		Intent i = new Intent(this, FilterActivity.class);
-
-		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
-				Priority.inCode(m_app.getTaskBag().getPriorities()));
-		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
+        i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
+                Priority.inCode(m_app.getTaskBag().getPriorities()));
+        i.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
                 m_app.getTaskBag().getProjects());
-		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
+        i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
                 m_app.getTaskBag().getContexts());
 
-		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED,
-				Priority.inCode(m_prios));
-		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
-		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-		i.putExtra(Constants.ACTIVE_SORT, sort);
-		i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
-		i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
-		i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
-		i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-		startActivity(i);
-	}
+        i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED,
+                Priority.inCode(m_prios));
+        i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
+        i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
+        i.putExtra(Constants.ACTIVE_SORT, sort);
+        i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
+        i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
+        i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(i);
+    }
 
-	class ActionBarListener implements AbsListView.MultiChoiceModeListener {
+    class ActionBarListener implements AbsListView.MultiChoiceModeListener {
 
-		@Override
-		public void onItemCheckedStateChanged(ActionMode mode, int position,
-				long id, boolean checked) {
-			rebuildMenuWithSelection(mode, mode.getMenu());
-		}
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position,
+                                              long id, boolean checked) {
+            rebuildMenuWithSelection(mode, mode.getMenu());
+        }
 
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.task_context, menu);
-			rebuildMenuWithSelection(mode, menu);
-			return true;
-		}
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.task_context, menu);
+            rebuildMenuWithSelection(mode, menu);
+            return true;
+        }
 
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			return false; // To change body of implemented methods use File |
-							// Settings | File Templates.
-		}
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // To change body of implemented methods use File |
+            // Settings | File Templates.
+        }
 
-		private void rebuildMenuWithSelection(ActionMode mode, Menu menu) {
-			List<Task> checkedTasks = getCheckedTasks();
-			int numSelected = checkedTasks.size();
-			String title = "";
-			title = title + numSelected;
-			title = title + " " + getString(R.string.selected);
-			mode.setTitle(title);
-			if (numSelected == 1) {
-				Task task = checkedTasks.get(0);
-				menu.findItem(R.id.update).setVisible(true);
-				for (URL url : task.getLinks()) {
-					menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
-							url.toString());
-				}
-				for (String s1 : task.getMailAddresses()) {
-					menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s1);
-				}
-				for (String s : task.getPhoneNumbers()) {
-					menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
-							Menu.NONE, s);
-				}
-			} else {
-				menu.findItem(R.id.update).setVisible(false);
-				menu.removeGroup(Menu.CATEGORY_SECONDARY);
-			}
-		}
+        private void rebuildMenuWithSelection(ActionMode mode, Menu menu) {
+            List<Task> checkedTasks = getCheckedTasks();
+            int numSelected = checkedTasks.size();
+            String title = "";
+            title = title + numSelected;
+            title = title + " " + getString(R.string.selected);
+            mode.setTitle(title);
+            if (numSelected == 1) {
+                Task task = checkedTasks.get(0);
+                menu.findItem(R.id.update).setVisible(true);
+                for (URL url : task.getLinks()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
+                            url.toString());
+                }
+                for (String s1 : task.getMailAddresses()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s1);
+                }
+                for (String s : task.getPhoneNumbers()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
+                            Menu.NONE, s);
+                }
+            } else {
+                menu.findItem(R.id.update).setVisible(false);
+                menu.removeGroup(Menu.CATEGORY_SECONDARY);
+            }
+        }
 
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			List<Task> checkedTasks = getCheckedTasks();
-			int menuid = item.getItemId();
-			Intent intent;
-			switch (menuid) {
-			case R.id.done:
-				completeTasks(checkedTasks);
-				break;
-			case R.id.update:
-				if (checkedTasks.size() == 1) {
-					editTask(checkedTasks.get(0));
-				} else {
-					Log.w(m_app.TAG,
-							"More than one task was selected while hanling update menu");
-				}
-				break;
-			case R.id.delete:
-				deleteTasks(checkedTasks);
-				break;
-			case R.id.uncomplete:
-				undoCompleteTasks(checkedTasks);
-				break;
-			case R.id.priority:
-				prioritizeTasks(checkedTasks);
-				break;
-			case R.id.share:
-				String shareText = selectedTasksAsString();
-				intent = new Intent(android.content.Intent.ACTION_SEND)
-						.setType("text/plain")
-						.putExtra(android.content.Intent.EXTRA_SUBJECT,
-								"Todo.txt task")
-						.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
-				startActivity(Intent.createChooser(intent, "Share"));
-				break;
-			case R.id.calendar:
-				List<Task> selectedTasks = getCheckedTasks();
-				String calendarTitle = getString(R.string.calendar_title);
-				String calendarDescription = "";
-				if (selectedTasks.size() == 1) {
-					// Set the task as title
-					calendarTitle = selectedTasks.get(0).getText();
-				} else {
-					// Set the tasks as description
-					calendarDescription = selectedTasksAsString();
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            List<Task> checkedTasks = getCheckedTasks();
+            int menuid = item.getItemId();
+            Intent intent;
+            switch (menuid) {
+                case R.id.done:
+                    completeTasks(checkedTasks);
+                    break;
+                case R.id.update:
+                    if (checkedTasks.size() == 1) {
+                        editTask(checkedTasks.get(0));
+                    } else {
+                        Log.w(m_app.TAG,
+                                "More than one task was selected while hanling update menu");
+                    }
+                    break;
+                case R.id.delete:
+                    deleteTasks(checkedTasks);
+                    break;
+                case R.id.uncomplete:
+                    undoCompleteTasks(checkedTasks);
+                    break;
+                case R.id.priority:
+                    prioritizeTasks(checkedTasks);
+                    break;
+                case R.id.share:
+                    String shareText = selectedTasksAsString();
+                    intent = new Intent(android.content.Intent.ACTION_SEND)
+                            .setType("text/plain")
+                            .putExtra(android.content.Intent.EXTRA_SUBJECT,
+                                    "Todo.txt task")
+                            .putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+                    startActivity(Intent.createChooser(intent, "Share"));
+                    break;
+                case R.id.calendar:
+                    List<Task> selectedTasks = getCheckedTasks();
+                    String calendarTitle = getString(R.string.calendar_title);
+                    String calendarDescription = "";
+                    if (selectedTasks.size() == 1) {
+                        // Set the task as title
+                        calendarTitle = selectedTasks.get(0).getText();
+                    } else {
+                        // Set the tasks as description
+                        calendarDescription = selectedTasksAsString();
 
-				}
-				intent = new Intent(android.content.Intent.ACTION_INSERT)
-						.setData(Events.CONTENT_URI)
-						.putExtra(Events.TITLE, calendarTitle)
-						.putExtra(Events.DESCRIPTION, calendarDescription);
-				startActivity(intent);
-				break;
-			case R.id.url:
-				Log.v(m_app.TAG, "url: " + item.getTitle().toString());
-				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
-						.getTitle().toString()));
-				startActivity(intent);
-				break;
-			case R.id.mail:
-				Log.v(m_app.TAG, "mail: " + item.getTitle().toString());
-				intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
-						.getTitle().toString()));
-				intent.putExtra(android.content.Intent.EXTRA_EMAIL,
-						new String[] { item.getTitle().toString() });
-				intent.setType("text/plain");
-				startActivity(intent);
-				break;
-			case R.id.phone_number:
-				Log.v(m_app.TAG, "phone_number");
-				intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-						+ item.getTitle().toString()));
-				startActivity(intent);
-				break;
-			}
-			// Not sure why this is explicitly needed
-			mode.finish();
-			return true;
-		}
+                    }
+                    intent = new Intent(android.content.Intent.ACTION_INSERT)
+                            .setData(Events.CONTENT_URI)
+                            .putExtra(Events.TITLE, calendarTitle)
+                            .putExtra(Events.DESCRIPTION, calendarDescription);
+                    startActivity(intent);
+                    break;
+                case R.id.url:
+                    Log.v(m_app.TAG, "url: " + item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
+                            .getTitle().toString()));
+                    startActivity(intent);
+                    break;
+                case R.id.mail:
+                    Log.v(m_app.TAG, "mail: " + item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
+                            .getTitle().toString()));
+                    intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                            new String[]{item.getTitle().toString()});
+                    intent.setType("text/plain");
+                    startActivity(intent);
+                    break;
+                case R.id.phone_number:
+                    Log.v(m_app.TAG, "phone_number");
+                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+                            + item.getTitle().toString()));
+                    startActivity(intent);
+                    break;
+            }
+            // Not sure why this is explicitly needed
+            mode.finish();
+            return true;
+        }
 
-		private String selectedTasksAsString() {
-			List<String> result = new ArrayList<String>();
-			for (Task t : getCheckedTasks()) {
-				result.add(t.inFileFormat());
-			}
-			return Util.join(result, "\n");
-		}
+        private String selectedTasksAsString() {
+            List<String> result = new ArrayList<String>();
+            for (Task t : getCheckedTasks()) {
+                result.add(t.inFileFormat());
+            }
+            return Util.join(result, "\n");
+        }
 
-		private List<Task> getCheckedTasks() {
-			ArrayList<Task> checkedTasks = new ArrayList<Task>();
-			SparseBooleanArray checkedItems = getListView()
-					.getCheckedItemPositions();
-			for (int i = 0; i < checkedItems.size(); i++) {
-				if (checkedItems.valueAt(i) == true) {
-					checkedTasks.add(getTaskAt(checkedItems.keyAt(i)));
-				}
-			}
-			return checkedTasks;
-		}
+        private List<Task> getCheckedTasks() {
+            ArrayList<Task> checkedTasks = new ArrayList<Task>();
+            SparseBooleanArray checkedItems = getListView()
+                    .getCheckedItemPositions();
+            for (int i = 0; i < checkedItems.size(); i++) {
+                if (checkedItems.valueAt(i) == true) {
+                    checkedTasks.add(getTaskAt(checkedItems.keyAt(i)));
+                }
+            }
+            return checkedTasks;
+        }
 
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			return;
-		}
-	}
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            return;
+        }
+    }
 
-	private class AndFilter {
-		private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
+    private class AndFilter {
+        private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
 
-		public void addFilter(TaskFilter filter) {
-			if (filter != null) {
-				filters.add(filter);
-			}
-		}
+        public void addFilter(TaskFilter filter) {
+            if (filter != null) {
+                filters.add(filter);
+            }
+        }
 
-		private boolean apply(Task input) {
-			filters.clear();
-			if (m_prios.size() > 0) {
-				addFilter(new ByPriorityFilter(m_prios, m_priosNot));
-			}
+        private boolean apply(Task input) {
+            filters.clear();
+            if (m_prios.size() > 0) {
+                addFilter(new ByPriorityFilter(m_prios, m_priosNot));
+            }
 
-			if (m_contexts.size() > 0) {
-				addFilter(new ByContextFilter(m_contexts, m_contextsNot));
-			}
-			if (m_projects.size() > 0) {
-				addFilter(new ByProjectFilter(m_projects, m_projectsNot));
-			}
+            if (m_contexts.size() > 0) {
+                addFilter(new ByContextFilter(m_contexts, m_contextsNot));
+            }
+            if (m_projects.size() > 0) {
+                addFilter(new ByProjectFilter(m_projects, m_projectsNot));
+            }
 
-			if (!Strings.isEmptyOrNull(m_search)) {
-				addFilter(new ByTextFilter(m_search, false));
-			}
-			for (TaskFilter f : filters) {
-				if (!f.apply(input)) {
-					return false;
-				}
-			}
-			return true;
-		}
-	}
+            if (!Strings.isEmptyOrNull(m_search)) {
+                addFilter(new ByTextFilter(m_search, false));
+            }
+            for (TaskFilter f : filters) {
+                if (!f.apply(input)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 
 }
