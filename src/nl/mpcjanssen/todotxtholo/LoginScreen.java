@@ -50,7 +50,6 @@ public class LoginScreen extends Activity {
         super.onCreate(savedInstanceState);
         
         m_app = (TodoApplication) getApplication();
-        // Already authenticated
         dbxAcctMgr = m_app.getDbxAcctMgr();
         if (dbxAcctMgr!=null && dbxAcctMgr.hasLinkedAccount()) {
         	switchToTodolist();

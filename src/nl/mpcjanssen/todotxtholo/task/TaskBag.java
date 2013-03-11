@@ -73,7 +73,6 @@ public class TaskBag  {
     public TaskBag(Preferences taskBagPreferences, DbxAccountManager dbxAcctMgr) {
         this.preferences = taskBagPreferences;
         this.dbxAcctMgr = dbxAcctMgr;
-        reload();
     }
 
     public int size() {
