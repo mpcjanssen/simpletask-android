@@ -41,8 +41,6 @@ public class FilterActivity extends Activity {
 		actionbar = getActionBar();
 		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		TaskBag taskBag = ((TodoApplication) getApplication()).getTaskBag();
-
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
