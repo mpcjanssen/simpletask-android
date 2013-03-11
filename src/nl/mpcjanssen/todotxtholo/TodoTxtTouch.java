@@ -173,8 +173,27 @@ public class TodoTxtTouch extends ListActivity implements
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(TAG, "Searched for " + m_search);
+        } else if (Constants.INTENT_ADD_TASK.equals(intent.getAction())) {
+            Log.v(TAG, "Adding task");
+            String newTask = intent.getStringExtra("task");
+            String oldTask = intent.getStringExtra("old");
+            if (newTask==null) {
+                startAddTaskActivity();
+                finish();
+                return;
+            }
+            if (oldTask == null) {
+                taskBag.addAsTask(newTask);
+            } else {
+                taskBag.updateTask(taskBag.find(oldTask),newTask);
+            }
+            Intent i = getIntent();
+            i.setAction("");
+            startActivity(i);
+            finish();
+            return;
         } else if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
-            Log.v(TAG, "Launched with filter:");
+            Log.v(TAG, "Launched with new filter:");
 
             // handle different versions of shortcuts
             String prios;

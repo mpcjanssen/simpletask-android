@@ -127,7 +127,13 @@ public class TaskBag  {
         return found;
     }
 
-	public void deleteTasks(List<Task> toDelete) {
+    public Task find(String text) {
+        Task found = TaskBag.find(tasks, text);
+        return found;
+    }
+
+
+    public void deleteTasks(List<Task> toDelete) {
 		for (Task task : toDelete) {
 			Task found = TaskBag.find(tasks, task);
 			if (found != null) {
@@ -220,6 +226,15 @@ public class TaskBag  {
         for (Task task2 : tasks) {
             if (task2 == task || (task2.getText().equals(task.getOriginalText())
                     && task2.getPriority() == task.getOriginalPriority())) {
+                return task2;
+            }
+        }
+        return null;
+    }
+
+    private static Task find(List<Task> tasks, String text) {
+        for (Task task2 : tasks) {
+            if (task2.inFileFormat().equals(text)) {
                 return task2;
             }
         }

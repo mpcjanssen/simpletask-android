@@ -81,11 +81,7 @@ public class AddTask extends Activity {
                 textInputField = (EditText) findViewById(R.id.taskText);
                 final String input = textInputField.getText().toString()
                         .replaceAll("\\r\\n|\\r|\\n", " ");
-                if (m_backup != null) {
-                    taskBag.updateTask(m_backup, input);
-                } else {
-                    taskBag.addAsTask(input);
-                }
+                addTask(input,m_backup);
                 finish();
                 break;
             case R.id.menu_add_task_help:
@@ -101,6 +97,16 @@ public class AddTask extends Activity {
                 break;
         }
         return true;
+    }
+
+    private void addTask(String input, Task m_backup) {
+        Intent i = new Intent();
+        i.setAction(Constants.INTENT_ADD_TASK);
+        i.putExtra("task", input);
+        if (m_backup!=null) {
+            i.putExtra("old",m_backup.inFileFormat());
+        }
+        startActivity(i);
     }
 
     @Override
@@ -279,8 +285,8 @@ public class AddTask extends Activity {
     }
 
     private void setupShortcut() {
-        Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
-        shortcutIntent.setClassName(this, this.getClass().getName());
+        Intent shortcutIntent = new Intent();
+        shortcutIntent.setAction(Constants.INTENT_ADD_TASK);
 
         Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
