@@ -85,7 +85,8 @@ public class TaskBag  {
     }
 
     public void updateTask(Task task, String input) {
-        task.init(input, null);
+        Task toUpdate = find(task);
+        toUpdate.init(input, null);
     }
 
     public Task find(Task task) {
