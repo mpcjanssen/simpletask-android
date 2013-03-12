@@ -60,10 +60,6 @@ public class Constants {
     // Intents for main app
     public static final String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
     public static final String INTENT_RELOAD_TASKBAG = "nl.mpcjanssen.todotxtholo.RELOAD_TASK_BAG";
-    public final static String INTENT_ACTION_ARCHIVE = "nl.mpcjanssen.todotxtholo.ACTION_ARCHIVE";
-    public final static String INTENT_ACTION_LOGOUT = "nl.mpcjanssen.todotxtholo.ACTION_LOGOUT";
-    public final static String INTENT_START_FILTER = "nl.mpcjanssen.todotxtholo.START_WITH_FILTER";
-    public final static String INTENT_ADD_TASK = "nl.mpcjanssen.todotxtholo.ADD_TASK";
 
     // Constants for saving state
     public static final String FILTER_ITEMS = "items";
