@@ -49,7 +49,7 @@ public class FilterListFragment extends Fragment {
         Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
-        ArrayList<String> items = arguments.getStringArrayList(Constants.FILTER_ITEMS);
+        ArrayList<String> items = arguments.getStringArrayList(Constants.ITEMS);
         actionbar = getActivity().getActionBar();
 
         if (savedInstanceState != null) {

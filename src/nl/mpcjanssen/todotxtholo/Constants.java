@@ -31,24 +31,18 @@ public class Constants {
     public static final int SORT_PROJECT = 4;
     public static final int SORT_CONTEXT = 5;
 
-    public static final String PREF_ACCESSTOKEN_KEY = "accesstokenkey";
-    public static final String PREF_ACCESSTOKEN_SECRET = "accesstokensecret";
-
     // Constants for creating shortcuts
-    public final static String INTENT_ACTIVE_SORT_v1 = "SORT";
-    public final static String INTENT_STRING_FILTER_v1 = "STRING";
-    public final static String INTENT_CONTEXTS_FILTER_v1 = "CONTEXTS";
-    public final static String INTENT_PROJECTS_FILTER_v1 = "PROJECTS";
-    public final static String INTENT_PRIORITIES_FILTER_v1 = "PRIORITIES";
-    public final static String INTENT_CONTEXTS_FILTER_NOT_v1 = "CONTEXTSnot";
-    public final static String INTENT_PROJECTS_FILTER_NOT_v1 = "PROJECTSnot";
-    public final static String INTENT_PRIORITIES_FILTER_NOT_v1 = "PRIORITIESnot";
-    public final static String INTENT_VERSION = "version";
-    public final static int INTENT_CURRENT_VERSION = 1;
+    public final static String INTENT_ACTIVE_SORT = "SORT";
+    public final static String INTENT_STRING_FILTER = "STRING";
+    public final static String INTENT_CONTEXTS_FILTER = "CONTEXTS";
+    public final static String INTENT_PROJECTS_FILTER = "PROJECTS";
+    public final static String INTENT_PRIORITIES_FILTER = "PRIORITIES";
+    public final static String INTENT_CONTEXTS_FILTER_NOT = "CONTEXTSnot";
+    public final static String INTENT_PROJECTS_FILTER_NOT = "PROJECTSnot";
+    public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
 
-
-    public final static String ACTIVE_SORT = "SORT";
-
+    // Constants for passing data
+    public final static String EXTRA_SORT_SELECTED = "SORT";
     public final static String EXTRA_PRIORITIES = "PRIORITIES";
     public final static String EXTRA_PRIORITIES_SELECTED = "PRIORITIES_SELECTED";
     public final static String EXTRA_PROJECTS = "PROJECTS";
@@ -57,15 +51,13 @@ public class Constants {
     public final static String EXTRA_CONTEXTS_SELECTED = "CONTEXTS_SELECTED";
     public final static String EXTRA_TASK = "TASK";
 
+    // Constants for fragment arguments
+    public final static String ITEMS = "ITEMS";
+    public final static String INITIAL_SELECTED_ITEMS = "INITIAL_SELECTED_ITEMS";
+    public final static String INITIAL_NOT = "INITIAL_NOT";
+
     // Intents for main app
     public static final String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
     public static final String INTENT_RELOAD_TASKBAG = "nl.mpcjanssen.todotxtholo.RELOAD_TASK_BAG";
     public static final String INTENT_START_FROM_SHORTCUT = "nl.mpcjanssen.todotxtholo.START_FROM_SHORTCUT";
-
-    // Constants for saving state
-    public static final String FILTER_ITEMS = "items";
-    public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
-    public static final String INITIAL_NOT = "initialNot";
-
-
 }
