@@ -92,7 +92,6 @@ public class TodoApplication extends Application implements
         try {
             dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
             dbxFs.awaitFirstSync();
-            dbxFs.addSyncStatusListener(this);
             synchronized (this) {
                 DbxFile mTodoFile;
                 if (dbxFs.isFile(mTodoPath)) {
@@ -148,10 +147,16 @@ public class TodoApplication extends Application implements
         if (dbxFs == null) {
             return;
         }
-        if (watch) {
-            dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
-        }  else {
-            dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        try {
+            if (watch) {
+
+                dbxFs.addSyncStatusListener(this);
+                dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+            } else
+                dbxFs.removeSyncStatusListener(this);
+                dbxFs.removePathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        } catch (DbxException e) {
+        e.printStackTrace();
         }
     }
 
