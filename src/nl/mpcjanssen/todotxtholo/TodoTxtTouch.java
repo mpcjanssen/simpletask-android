@@ -125,7 +125,7 @@ public class TodoTxtTouch extends ListActivity {
 
         handleIntent(getIntent(), savedInstanceState);
 
-        lv.setTextFilterEnabled(false);
+        lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
         m_adapter.setFilteredTasks();
@@ -191,7 +191,7 @@ public class TodoTxtTouch extends ListActivity {
         final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
         final TextView filterText = (TextView) findViewById(R.id.filter_text);
         if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
-                || m_search != null) {
+                || !Strings.isEmptyOrNull(m_search)) {
             String filterTitle = getString(R.string.title_filter_applied);
             if (m_prios.size() > 0) {
                 filterTitle += " " + getString(R.string.priority_prompt);
@@ -204,7 +204,7 @@ public class TodoTxtTouch extends ListActivity {
             if (m_contexts.size() > 0) {
                 filterTitle += " " + getString(R.string.context_prompt);
             }
-            if (m_search != null) {
+            if (!Strings.isEmptyOrNull(m_search) ) {
                 filterTitle += " " + getString(R.string.search);
             }
 
@@ -412,6 +412,18 @@ public class TodoTxtTouch extends ListActivity {
         }
     }
 
+    void clearSelection() {
+        ListView lv = getListView();
+        lv.getCheckedItemPositions();
+        SparseBooleanArray checkedItems = getListView()
+                .getCheckedItemPositions();
+        for (int i = 0; i < checkedItems.size(); i++) {
+            if (checkedItems.valueAt(i)) {
+                lv.setItemChecked(checkedItems.keyAt(i), false);
+            }
+        }
+    }
+
     void clearFilter() {
         m_contexts = new ArrayList<String>();
         m_prios = new ArrayList<Priority>();
@@ -452,7 +464,7 @@ public class TodoTxtTouch extends ListActivity {
         return (new MultiComparator(comparators));
     }
 
-    public class TaskAdapter extends BaseAdapter implements ListAdapter {
+    public class TaskAdapter extends BaseAdapter implements ListAdapter, Filterable {
 
         private LayoutInflater m_inflater;
         int vt;
@@ -469,6 +481,7 @@ public class TodoTxtTouch extends ListActivity {
         }
 
         void setFilteredTasks() {
+            clearSelection();
             AndFilter filter = new AndFilter();
             visibleTasks.clear();
             for (Task t : m_app.getTaskBag().getTasks()) {
@@ -661,6 +674,22 @@ public class TodoTxtTouch extends ListActivity {
             return (headerAtPostion.get(position)==null);
         }
 
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    m_search = charSequence.toString();
+                    Log.v(TAG,"performFiltering: " + charSequence.toString());
+                    return null;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    setFilteredTasks();
+                }
+            };
+        }
     }
 
     private static class ViewHolder {
