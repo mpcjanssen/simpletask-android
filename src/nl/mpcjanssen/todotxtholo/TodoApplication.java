@@ -158,6 +158,8 @@ public class TodoApplication extends Application implements
     @Override
     public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
         Log.v(TAG, "File changed on dropbox reloading: " + dbxPath.getName());
+        // Don't reload the taskbag here.
+        // It will result in File already open errors from the Sync API
         Intent i = new Intent(Constants.INTENT_RELOAD_TASKBAG);
         sendBroadcast(i);
     }
