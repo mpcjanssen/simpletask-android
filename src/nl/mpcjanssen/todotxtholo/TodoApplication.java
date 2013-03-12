@@ -23,7 +23,10 @@
 package nl.mpcjanssen.todotxtholo;
 
 import android.app.Application;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.dropbox.sync.android.*;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
@@ -31,8 +34,43 @@ import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import java.io.IOException;
 
 
-public class TodoApplication extends Application implements DbxFileSystem.PathListener {
+public class TodoApplication extends Application implements
+        DbxFileSystem.PathListener, DbxFileSystem.SyncStatusListener {
+
     public final static String TAG = TodoTxtTouch.class.getSimpleName();
+    final int SYNC_NOTIFICATION_ID = 0x0;
+
+    @Override
+    public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+        try {
+            DbxSyncStatus status = dbxFileSystem.getSyncStatus();
+            Intent i ;
+            if (status.anyInProgress()) {
+                Log.v(TAG, "Synchronizing with dropbox");
+                i = new Intent(Constants.INTENT_SYNC_IN_PROGRESS);
+            }  else {
+                i = new Intent(Constants.INTENT_SYNC_DONE);
+            }
+            sendBroadcast(i);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSyncNotification(boolean show) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.navigation_refresh)
+                        .setContentTitle("Simpletask")
+                        .setContentText("Synchronizing with dropbox");
+        NotificationManager mNotificationManager =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (show) {
+            mNotificationManager.notify(SYNC_NOTIFICATION_ID, mBuilder.build());
+        } else {
+            mNotificationManager.cancel(SYNC_NOTIFICATION_ID);
+        }
+    }
 
     private DbxAccountManager mDbxAcctMgr;
     private TaskBag mTaskBag;
@@ -53,6 +91,7 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
         try {
             dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
             dbxFs.awaitFirstSync();
+            dbxFs.addSyncStatusListener(this);
             synchronized (this) {
                 DbxFile mTodoFile;
                 if (dbxFs.isFile(mTodoPath)) {

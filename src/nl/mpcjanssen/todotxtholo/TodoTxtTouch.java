@@ -74,6 +74,12 @@ public class TodoTxtTouch extends ListActivity {
         m_app.watchDropbox(false);
     }
 
+    private void setProgressVisibility (boolean show) {
+        getWindow().setFeatureInt(
+                Window.FEATURE_INDETERMINATE_PROGRESS,
+                show ? Window.PROGRESS_VISIBILITY_ON : Window.PROGRESS_VISIBILITY_OFF);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -86,17 +92,13 @@ public class TodoTxtTouch extends ListActivity {
 
         Log.v(TAG, "onCreate with intent: " + getIntent());
         m_app = (TodoApplication) getApplication();
-        if (!m_app.isAuthenticated()) {
-            Intent i = new Intent(this, LoginScreen.class);
-            startActivity(i);
-            finish();
-            return;
-        }
+        getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        setContentView(R.layout.main);
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
         intentFilter.addAction(Constants.INTENT_RELOAD_TASKBAG);
+        intentFilter.addAction(Constants.INTENT_SYNC_IN_PROGRESS);
+        intentFilter.addAction(Constants.INTENT_SYNC_DONE);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -107,10 +109,28 @@ public class TodoTxtTouch extends ListActivity {
                         Constants.INTENT_RELOAD_TASKBAG)) {
                     m_app.initTaskBag();
                     sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
+                } else if (intent.getAction().equalsIgnoreCase(
+                        Constants.INTENT_SYNC_IN_PROGRESS)) {
+                    Log.v(TAG,"Sync in progress");
+                    setProgressVisibility(true);
+                } else if (intent.getAction().equalsIgnoreCase(
+                        Constants.INTENT_SYNC_DONE)) {
+                    setProgressVisibility(false);
+                    Log.v(TAG,"Sync done");
                 }
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
+
+        if (!m_app.isAuthenticated()) {
+            Intent i = new Intent(this, LoginScreen.class);
+            startActivity(i);
+            finish();
+            return;
+        }
+
+        setContentView(R.layout.main);
+
         m_app.watchDropbox(true);
 
         // Initialize Adapter
