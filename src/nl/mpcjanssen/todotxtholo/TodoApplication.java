@@ -156,6 +156,7 @@ public class TodoApplication extends Application implements
             } else {
                 dbxFs.removeSyncStatusListener(this);
                 dbxFs.removePathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+                showSyncNotification(false);
             }
         } catch (DbxException e) {
         e.printStackTrace();
