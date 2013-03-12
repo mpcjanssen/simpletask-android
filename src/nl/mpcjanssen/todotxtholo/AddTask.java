@@ -24,7 +24,6 @@ package nl.mpcjanssen.todotxtholo;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -37,7 +36,6 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.Task;
-import nl.mpcjanssen.todotxtholo.task.TaskBag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +96,7 @@ public class AddTask extends Activity {
 
     private void addTask(String input, Task m_backup) {
         if (m_backup!=null) {
-            m_app.getTaskBag().updateTask(m_backup,input);
+            m_app.getTaskBag().updateTask(m_backup, input);
         } else {
             m_app.getTaskBag().addAsTask(input);
         }
@@ -166,7 +164,7 @@ public class AddTask extends Activity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         replaceTextAtSelection("+" + item.getTitle() + " ");
-                        return true;  //To change body of implemented methods use File | Settings | File Templates.
+                        return true;
                     }
                 }
 
