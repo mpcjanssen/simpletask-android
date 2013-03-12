@@ -99,6 +99,8 @@ public class TodoApplication extends Application implements
                 } else {
                     mTodoFile = dbxFs.create(mTodoPath);
                 }
+                // Reflect changes we might have missed
+                mTodoFile.update();
                 mTaskBag = new TaskBag();
                 mTaskBag.init(mTodoFile.readString());
                 mTodoFile.close();
@@ -143,18 +145,18 @@ public class TodoApplication extends Application implements
     }
 
     public void watchDropbox(boolean watch) {
-        Log.v(TAG, "Watching for dropbox changes: " + watch);
+        Log.v(TAG, "Actively monitoring for dropbox changes: " + watch);
         if (dbxFs == null) {
             return;
         }
         try {
             if (watch) {
-
                 dbxFs.addSyncStatusListener(this);
                 dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
-            } else
+            } else {
                 dbxFs.removeSyncStatusListener(this);
                 dbxFs.removePathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+            }
         } catch (DbxException e) {
         e.printStackTrace();
         }
