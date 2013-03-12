@@ -31,6 +31,7 @@ import android.database.DataSetObserver;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.provider.CalendarContract.Events;
 import android.text.SpannableString;
 import android.util.Log;
@@ -74,12 +75,6 @@ public class TodoTxtTouch extends ListActivity {
         m_app.watchDropbox(false);
     }
 
-    private void setProgressVisibility (boolean show) {
-        getWindow().setFeatureInt(
-                Window.FEATURE_INDETERMINATE_PROGRESS,
-                show ? Window.PROGRESS_VISIBILITY_ON : Window.PROGRESS_VISIBILITY_OFF);
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -97,8 +92,6 @@ public class TodoTxtTouch extends ListActivity {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
         intentFilter.addAction(Constants.INTENT_RELOAD_TASKBAG);
-        intentFilter.addAction(Constants.INTENT_SYNC_IN_PROGRESS);
-        intentFilter.addAction(Constants.INTENT_SYNC_DONE);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -109,14 +102,6 @@ public class TodoTxtTouch extends ListActivity {
                         Constants.INTENT_RELOAD_TASKBAG)) {
                     m_app.initTaskBag();
                     sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
-                } else if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_SYNC_IN_PROGRESS)) {
-                    Log.v(TAG,"Sync in progress");
-                    setProgressVisibility(true);
-                } else if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_SYNC_DONE)) {
-                    setProgressVisibility(false);
-                    Log.v(TAG,"Sync done");
                 }
             }
         };

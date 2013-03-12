@@ -60,6 +60,4 @@ public class Constants {
     public static final String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
     public static final String INTENT_RELOAD_TASKBAG = "nl.mpcjanssen.todotxtholo.RELOAD_TASK_BAG";
     public static final String INTENT_START_FROM_SHORTCUT = "nl.mpcjanssen.todotxtholo.START_FROM_SHORTCUT";
-    public static final String INTENT_SYNC_IN_PROGRESS = "nl.mpcjanssen.todotxtholo.SYNC_IN_PROGRESS";
-    public static final String INTENT_SYNC_DONE = "nl.mpcjanssen.todotxtholo.SYNC_DONE";
 }
