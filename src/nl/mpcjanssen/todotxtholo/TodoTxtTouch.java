@@ -58,17 +58,14 @@ public class TodoTxtTouch extends ListActivity {
     private ArrayList<String> m_contexts = new ArrayList<String>();
     private ArrayList<String> m_projects = new ArrayList<String>();
     private boolean m_projectsNot = false;
+    private boolean m_priosNot;
+    private boolean m_contextsNot;
     private String m_search;
+    private int sort = 0;
 
     TaskAdapter m_adapter;
 
-    private int sort = 0;
-
-    private boolean m_priosNot;
     private TodoApplication m_app;
-
-    private boolean m_contextsNot;
-    private ActionBarListener m_cab;
 
     @Override
     protected void onDestroy() {
@@ -87,7 +84,8 @@ public class TodoTxtTouch extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
+        m_app = (TodoApplication) getApplication();
         if (!m_app.isAuthenticated()) {
             Intent i = new Intent(this, LoginScreen.class);
             startActivity(i);
@@ -115,8 +113,6 @@ public class TodoTxtTouch extends ListActivity {
         registerReceiver(m_broadcastReceiver, intentFilter);
         m_app.watchDropbox(true);
 
-        Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
-        m_app = (TodoApplication) getApplication();
         // Initialize Adapter
         ListView lv = getListView();
         m_adapter = new TaskAdapter(this, R.layout.list_item,
@@ -135,8 +131,8 @@ public class TodoTxtTouch extends ListActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(m_app.TAG, "Searched for " + m_search);
-        } else if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
-            Log.v(m_app.TAG, "Launched with new filter:");
+        } else if (intent.getExtras()!=null) {
+            Log.v(m_app.TAG, "Launched with extras, setting filter");
             // handle different versions of shortcuts
             String prios;
             String projects;
@@ -176,17 +172,6 @@ public class TodoTxtTouch extends ListActivity {
                         .split("\n")));
                 Log.v(m_app.TAG, "\t contexts:" + m_contexts);
             }
-        }  else if (savedInstanceState != null) {
-            // Called without explicit filter try to reload last active one
-            m_prios = Priority.toPriority(savedInstanceState
-                    .getStringArrayList("m_prios"));
-            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-            m_projects = savedInstanceState.getStringArrayList("m_projects");
-            m_search = savedInstanceState.getString("m_search");
-            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
-            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
-            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
-            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
         }
     }
 
@@ -224,19 +209,6 @@ public class TodoTxtTouch extends ListActivity {
             actionbar_clear.setVisibility(View.GONE);
             filterText.setText("No filter");
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
-        outState.putStringArrayList("m_contexts", m_contexts);
-        outState.putStringArrayList("m_projects", m_projects);
-        outState.putBoolean("m_projectsNot", m_projectsNot);
-        outState.putBoolean("m_priosNot", m_priosNot);
-        outState.putBoolean("m_contextsNot", m_contextsNot);
-        outState.putString("m_search", m_search);
-        outState.putInt("sort", sort);
     }
 
     @Override
