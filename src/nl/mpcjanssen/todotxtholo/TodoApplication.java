@@ -162,7 +162,7 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
 
     @Override
     public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-        Log.v(TAG, "File changed on dropbox reloading");
+        Log.v(TAG, "File changed on dropbox reloading: " + dbxPath.getName());
         Intent i = new Intent(Constants.INTENT_RELOAD_TASKBAG);
         sendBroadcast(i);
     }

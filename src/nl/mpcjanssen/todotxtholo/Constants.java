@@ -36,6 +36,7 @@ public class Constants {
 
     // Constants for creating shortcuts
     public final static String INTENT_ACTIVE_SORT_v1 = "SORT";
+    public final static String INTENT_STRING_FILTER_v1 = "STRING";
     public final static String INTENT_CONTEXTS_FILTER_v1 = "CONTEXTS";
     public final static String INTENT_PROJECTS_FILTER_v1 = "PROJECTS";
     public final static String INTENT_PRIORITIES_FILTER_v1 = "PRIORITIES";
