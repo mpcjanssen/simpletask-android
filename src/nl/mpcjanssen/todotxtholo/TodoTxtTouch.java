@@ -68,6 +68,7 @@ public class TodoTxtTouch extends ListActivity {
     private TodoApplication m_app;
 
     private boolean m_contextsNot;
+    private ActionBarListener m_cab;
 
     @Override
     protected void onDestroy() {
@@ -162,22 +163,18 @@ public class TodoTxtTouch extends ListActivity {
                 Log.v(m_app.TAG, "\t contexts:" + m_contexts);
             }
             // Store new filter in preferences
-            saveFilterToPreferences();
         }
 
-        loadFilterFromPreferences();
         setContentView(R.layout.main);
         // Initialize Adapter
         m_adapter = new TaskAdapter(this, R.layout.list_item,
                 getLayoutInflater(), getListView());
-        setListAdapter(this.m_adapter);
-        // Show search or filter results
-        loadFilterFromPreferences();
         ListView lv = getListView();
-        lv.setTextFilterEnabled(false);
+        lv.setTextFilterEnabled(true);
+        m_adapter.setFilteredTasks();
+        setListAdapter(this.m_adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
-        m_adapter.setFilteredTasks();
     }
 
     private void saveFilterToPreferences() {
@@ -257,14 +254,6 @@ public class TodoTxtTouch extends ListActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        Log.v(m_app.TAG, "Called with new intent");
-        super.onNewIntent(intent);
-        m_app.watchDropbox(true);
-        handleIntent(intent, null);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         m_app.watchDropbox(true);
@@ -291,6 +280,13 @@ public class TodoTxtTouch extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         // start the action bar instead
+        SparseBooleanArray checkedItems = l.getCheckedItemPositions();
+        boolean isChecked = false;
+
+        int index = checkedItems.indexOfKey(position);
+        if (index >= 0 ) {
+            isChecked = checkedItems.valueAt(index);
+        }
         l.setItemChecked(position, true);
     }
 
@@ -734,6 +730,7 @@ public class TodoTxtTouch extends ListActivity {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            Log.v(m_app.TAG, "Debug..invalidated");
             return false; // To change body of implemented methods use File |
             // Settings | File Templates.
         }
@@ -745,6 +742,7 @@ public class TodoTxtTouch extends ListActivity {
             title = title + numSelected;
             title = title + " " + getString(R.string.selected);
             mode.setTitle(title);
+            Log.v(m_app.TAG, "Debug.." + numSelected);
             if (numSelected == 1) {
                 Task task = checkedTasks.get(0);
                 menu.findItem(R.id.update).setVisible(true);
@@ -840,7 +838,7 @@ public class TodoTxtTouch extends ListActivity {
                     startActivity(intent);
                     break;
             }
-            // Not sure why this is explicitly needed
+            // Close CAB
             mode.finish();
             return true;
         }
