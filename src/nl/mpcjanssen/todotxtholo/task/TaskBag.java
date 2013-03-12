@@ -49,6 +49,11 @@ public class TaskBag  {
 
 	private ArrayList<TodoTxtTouch> obs = new ArrayList<TodoTxtTouch>();
 
+    public void init(ArrayList<Task> newTasks) {
+        tasks.clear();
+        tasks.addAll(newTasks);
+    }
+
     public void init (String todoContents) {
         tasks = new ArrayList<Task>();
         long lineNr = 0;
@@ -90,19 +95,27 @@ public class TaskBag  {
     }
 
     public Task find(Task task) {
-        Task found = TaskBag.find(tasks, task);
-        return found;
+        for (Task t : tasks) {
+            if (t.inFileFormat().equals(task.inFileFormat())) {
+                return t;
+            }
+        }
+        return null;
     }
 
     public Task find(String text) {
-        Task found = TaskBag.find(tasks, text);
-        return found;
+        for (Task t : tasks) {
+            if (t.inFileFormat().equals(text)) {
+                return t;
+            }
+        }
+        return null;
     }
 
 
     public void deleteTasks(List<Task> toDelete) {
 		for (Task task : toDelete) {
-			Task found = TaskBag.find(tasks, task);
+			Task found = find(task);
 			if (found != null) {
 				tasks.remove(found);
 			} else {
@@ -156,29 +169,5 @@ public class TaskBag  {
         Collections.sort(ret);
         ret.add(0, "-");
         return ret;
-    }
-
-    private static Task find(List<Task> tasks, Task task) {
-        for (Task task2 : tasks) {
-            if (task2 == task || (task2.getText().equals(task.getOriginalText())
-                    && task2.getPriority() == task.getOriginalPriority())) {
-                return task2;
-            }
-        }
-        return null;
-    }
-
-    private static Task find(List<Task> tasks, String text) {
-        for (Task task2 : tasks) {
-            if (task2.inFileFormat().equals(text)) {
-                return task2;
-            }
-        }
-        return null;
-    }
-
-    public void init(ArrayList<Task> newTasks) {
-        tasks.clear();
-        tasks.addAll(newTasks);
     }
 }
