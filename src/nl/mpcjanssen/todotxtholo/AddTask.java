@@ -208,7 +208,7 @@ public class AddTask extends Activity {
         Task task = (Task) getIntent().getSerializableExtra(
                 Constants.EXTRA_TASK);
         if (task != null) {
-            m_backup = m_app.getTaskBag().find(task);
+            m_backup = task;
             textInputField.setText(task.inFileFormat());
             textInputField.setSelection(task.inFileFormat().length());
             return;
