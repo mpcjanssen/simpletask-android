@@ -93,7 +93,8 @@ You should have received a copy of the GNU General Public License along with Sim
 
         <activity
                 android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
-                android:exported="true">
+                android:exported="true"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -103,6 +104,7 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="nl.mpcjanssen.todotxtholo.START_FROM_SHORTCUT"/>
             </intent-filter>
 
             <meta-data
