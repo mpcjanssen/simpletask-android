@@ -87,6 +87,7 @@ public class TodoTxtTouch extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.main);
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
         intentFilter.addAction(Constants.INTENT_RELOAD_TASKBAG);
@@ -106,7 +107,17 @@ public class TodoTxtTouch extends ListActivity {
         registerReceiver(m_broadcastReceiver, intentFilter);
         Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
         m_app = (TodoApplication) getApplication();
+        // Initialize Adapter
+
+        m_adapter = new TaskAdapter(this, R.layout.list_item,
+                getLayoutInflater(), getListView());
+        setListAdapter(this.m_adapter);
         handleIntent(getIntent(), savedInstanceState);
+        ListView lv = getListView();
+        lv.setTextFilterEnabled(false);
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setMultiChoiceModeListener(new ActionBarListener());
+        m_adapter.setFilteredTasks();
     }
 
     private void handleIntent(Intent intent, Bundle savedInstanceState) {
@@ -120,7 +131,6 @@ public class TodoTxtTouch extends ListActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(m_app.TAG, "Searched for " + m_search);
-            saveFilterToPreferences();
         } else if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
             Log.v(m_app.TAG, "Launched with new filter:");
             // handle different versions of shortcuts
@@ -164,57 +174,6 @@ public class TodoTxtTouch extends ListActivity {
             }
             // Store new filter in preferences
         }
-
-        setContentView(R.layout.main);
-        // Initialize Adapter
-        m_adapter = new TaskAdapter(this, R.layout.list_item,
-                getLayoutInflater(), getListView());
-        ListView lv = getListView();
-        lv.setTextFilterEnabled(true);
-        m_adapter.setFilteredTasks();
-        setListAdapter(this.m_adapter);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        lv.setMultiChoiceModeListener(new ActionBarListener());
-    }
-
-    private void saveFilterToPreferences() {
-        SharedPreferences filter =
-                getSharedPreferences("Filter", MODE_PRIVATE);
-        Editor editor = filter.edit();
-        editor.putInt(Constants.INTENT_ACTIVE_SORT_v1, sort);
-        editor.putString(Constants.INTENT_STRING_FILTER_v1, m_search);
-        editor.putString(Constants.INTENT_CONTEXTS_FILTER_v1, Util.join(m_contexts, "\n"));
-        editor.putString(Constants.INTENT_PROJECTS_FILTER_v1, Util.join(m_projects, "\n"));
-        editor.putString(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(Priority.inCode(m_prios), "\n"));
-        editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, m_priosNot);
-        editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, m_projectsNot);
-        editor.putBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, m_contextsNot);
-        editor.commit();
-    }
-
-    private void loadFilterFromPreferences() {
-        SharedPreferences filter =
-                getSharedPreferences("Filter", MODE_PRIVATE);
-        sort = filter.getInt(Constants.INTENT_ACTIVE_SORT_v1, Constants.SORT_UNSORTED);
-        m_search = filter.getString(Constants.INTENT_STRING_FILTER_v1, null);
-        String contextsFilter = filter.getString(Constants.INTENT_CONTEXTS_FILTER_v1, "");
-        String priosFilter = filter.getString(Constants.INTENT_PRIORITIES_FILTER_v1, "");
-        String projectsFilter = filter.getString(Constants.INTENT_PROJECTS_FILTER_v1, "");
-        m_contexts = new ArrayList<String>();
-        m_projects = new ArrayList<String>();
-        m_prios = new ArrayList<Priority>();
-        if (!contextsFilter.equals("")) {
-            m_contexts.addAll(Arrays.asList(contextsFilter.split("\n")));
-        }
-        if (!projectsFilter.equals("")) {
-            m_projects.addAll(Arrays.asList(projectsFilter.split("\n")));
-        }
-        if (!priosFilter.equals("")) {
-            m_prios = Priority.toPriority(Arrays.asList(priosFilter.split("\n")));
-        }
-        m_priosNot = filter.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
-        m_projectsNot = filter.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
-        m_contextsNot = filter.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
     }
 
     private void updateFilterBar() {
@@ -279,20 +238,12 @@ public class TodoTxtTouch extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // start the action bar instead
-        SparseBooleanArray checkedItems = l.getCheckedItemPositions();
-        boolean isChecked = false;
-
-        int index = checkedItems.indexOfKey(position);
-        if (index >= 0 ) {
-            isChecked = checkedItems.valueAt(index);
-        }
+        Log.v("Debug....", "List item checked");
         l.setItemChecked(position, true);
     }
 
     private Task getTaskAt(final int pos) {
-        Task task = m_adapter.getItem(pos);
-        return task;
+        return m_adapter.getItem(pos);
     }
 
     private void shareTodoList() {
@@ -428,7 +379,6 @@ public class TodoTxtTouch extends ListActivity {
         m_projectsNot = false;
         m_contextsNot = false;
         m_search = null;
-        saveFilterToPreferences();
         m_adapter.setFilteredTasks();
     }
 
@@ -540,13 +490,11 @@ public class TodoTxtTouch extends ListActivity {
         @Override
         public void registerDataSetObserver(DataSetObserver observer) {
             obs.add(observer);
-            return;
         }
 
         @Override
         public void unregisterDataSetObserver(DataSetObserver observer) {
             obs.remove(observer);
-            return;
         }
 
         @Override
@@ -675,11 +623,7 @@ public class TodoTxtTouch extends ListActivity {
 
         @Override
         public boolean isEnabled(int position) {
-            if (headerAtPostion.get(position) != null) {
-                return false;
-            } else {
-                return true;
-            }
+            return (headerAtPostion.get(position)==null);
         }
 
     }
@@ -856,7 +800,7 @@ public class TodoTxtTouch extends ListActivity {
             SparseBooleanArray checkedItems = getListView()
                     .getCheckedItemPositions();
             for (int i = 0; i < checkedItems.size(); i++) {
-                if (checkedItems.valueAt(i) == true) {
+                if (checkedItems.valueAt(i)) {
                     checkedTasks.add(getTaskAt(checkedItems.keyAt(i)));
                 }
             }
@@ -865,7 +809,7 @@ public class TodoTxtTouch extends ListActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            return;
+            // Nothing to do here
         }
     }
 
