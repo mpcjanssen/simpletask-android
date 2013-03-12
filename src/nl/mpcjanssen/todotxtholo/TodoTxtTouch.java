@@ -184,34 +184,40 @@ public class TodoTxtTouch extends ListActivity {
         SharedPreferences filter =
                 getSharedPreferences("Filter", MODE_PRIVATE);
         Editor editor = filter.edit();
-        editor.putInt("sort", sort);
-        editor.putString("m_search", m_search);
-        editor.putString("m_contexts", Util.join(m_contexts, "\n"));
-        editor.putString("m_projects", Util.join(m_projects, "\n"));
-        editor.putString("m_search", m_search);
+        editor.putInt(Constants.INTENT_ACTIVE_SORT_v1, sort);
+        editor.putString(Constants.INTENT_STRING_FILTER_v1, m_search);
+        editor.putString(Constants.INTENT_CONTEXTS_FILTER_v1, Util.join(m_contexts, "\n"));
+        editor.putString(Constants.INTENT_PROJECTS_FILTER_v1, Util.join(m_projects, "\n"));
+        editor.putString(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(Priority.inCode(m_prios), "\n"));
+        editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, m_priosNot);
+        editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, m_projectsNot);
+        editor.putBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, m_contextsNot);
         editor.commit();
     }
 
     private void loadFilterFromPreferences() {
         SharedPreferences filter =
                 getSharedPreferences("Filter", MODE_PRIVATE);
-        sort = filter.getInt("sort", Constants.SORT_UNSORTED);
-        m_search = filter.getString("m_search", null);
-        String contextsFilter = filter.getString("m_contexts", "");
-        String priosFilter = filter.getString("m_prios", "");
-        String projectsFilter = filter.getString("m_projects", "");
+        sort = filter.getInt(Constants.INTENT_ACTIVE_SORT_v1, Constants.SORT_UNSORTED);
+        m_search = filter.getString(Constants.INTENT_STRING_FILTER_v1, null);
+        String contextsFilter = filter.getString(Constants.INTENT_CONTEXTS_FILTER_v1, "");
+        String priosFilter = filter.getString(Constants.INTENT_PRIORITIES_FILTER_v1, "");
+        String projectsFilter = filter.getString(Constants.INTENT_PROJECTS_FILTER_v1, "");
         m_contexts = new ArrayList<String>();
         m_projects = new ArrayList<String>();
+        m_prios = new ArrayList<Priority>();
         if (!contextsFilter.equals("")) {
             m_contexts.addAll(Arrays.asList(contextsFilter.split("\n")));
         }
         if (!projectsFilter.equals("")) {
             m_projects.addAll(Arrays.asList(projectsFilter.split("\n")));
         }
-        m_prios = new ArrayList<Priority>();
-        m_priosNot = false;
-        m_projectsNot = false;
-        m_contextsNot = false;
+        if (!priosFilter.equals("")) {
+            m_prios = Priority.toPriority(Arrays.asList(priosFilter.split("\n")));
+        }
+        m_priosNot = filter.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
+        m_projectsNot = filter.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
+        m_contextsNot = filter.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
     }
 
     private void updateFilterBar() {
@@ -898,5 +904,4 @@ public class TodoTxtTouch extends ListActivity {
             return true;
         }
     }
-
 }
