@@ -87,6 +87,14 @@ public class TodoTxtTouch extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        if (!m_app.isAuthenticated()) {
+            Intent i = new Intent(this, LoginScreen.class);
+            startActivity(i);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.main);
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
@@ -105,15 +113,18 @@ public class TodoTxtTouch extends ListActivity {
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
+        m_app.watchDropbox(true);
+
         Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
         m_app = (TodoApplication) getApplication();
         // Initialize Adapter
-
-        m_adapter = new TaskAdapter(this, R.layout.list_item,
-                getLayoutInflater(), getListView());
-        setListAdapter(this.m_adapter);
-        handleIntent(getIntent(), savedInstanceState);
         ListView lv = getListView();
+        m_adapter = new TaskAdapter(this, R.layout.list_item,
+                getLayoutInflater(), lv);
+        setListAdapter(this.m_adapter);
+
+        handleIntent(getIntent(), savedInstanceState);
+
         lv.setTextFilterEnabled(false);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
@@ -121,13 +132,6 @@ public class TodoTxtTouch extends ListActivity {
     }
 
     private void handleIntent(Intent intent, Bundle savedInstanceState) {
-        if (!m_app.isAuthenticated()) {
-            Intent i = new Intent(this, LoginScreen.class);
-            startActivity(i);
-            finish();
-            return;
-        }
-        m_app.watchDropbox(true);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(m_app.TAG, "Searched for " + m_search);
@@ -172,7 +176,17 @@ public class TodoTxtTouch extends ListActivity {
                         .split("\n")));
                 Log.v(m_app.TAG, "\t contexts:" + m_contexts);
             }
-            // Store new filter in preferences
+        }  else if (savedInstanceState != null) {
+            // Called without explicit filter try to reload last active one
+            m_prios = Priority.toPriority(savedInstanceState
+                    .getStringArrayList("m_prios"));
+            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+            m_projects = savedInstanceState.getStringArrayList("m_projects");
+            m_search = savedInstanceState.getString("m_search");
+            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
+            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
+            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
+            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
         }
     }
 
@@ -210,6 +224,19 @@ public class TodoTxtTouch extends ListActivity {
             actionbar_clear.setVisibility(View.GONE);
             filterText.setText("No filter");
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
+        outState.putStringArrayList("m_contexts", m_contexts);
+        outState.putStringArrayList("m_projects", m_projects);
+        outState.putBoolean("m_projectsNot", m_projectsNot);
+        outState.putBoolean("m_priosNot", m_priosNot);
+        outState.putBoolean("m_contextsNot", m_contextsNot);
+        outState.putString("m_search", m_search);
+        outState.putInt("sort", sort);
     }
 
     @Override
