@@ -87,7 +87,6 @@ public class TodoTxtTouch extends ListActivity {
 
         Log.v(TAG, "onCreate with intent: " + getIntent());
         m_app = (TodoApplication) getApplication();
-        getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
