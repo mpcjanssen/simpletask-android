@@ -153,14 +153,16 @@ public class TodoApplication extends Application implements
             if (watch) {
                 dbxFs.addSyncStatusListener(this);
                 dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+                // Download pending changes we missed
+                initTaskBag();
             } else {
                 dbxFs.removeSyncStatusListener(this);
                 dbxFs.removePathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
                 showSyncNotification(false);
             }
         } catch (DbxException e) {
-        e.printStackTrace();
-        }
+          e.printStackTrace();
+        } 
     }
 
     @Override
