@@ -26,6 +26,8 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.dropbox.sync.android.*;
@@ -47,11 +49,10 @@ public class TodoApplication extends Application implements
             Intent i ;
             if (status.anyInProgress()) {
                 Log.v(TAG, "Synchronizing with dropbox");
-                i = new Intent(Constants.INTENT_SYNC_IN_PROGRESS);
+                showSyncNotification(true);
             }  else {
-                i = new Intent(Constants.INTENT_SYNC_DONE);
+                showSyncNotification(false);
             }
-            sendBroadcast(i);
         } catch (DbxException e) {
             e.printStackTrace();
         }
@@ -120,7 +121,6 @@ public class TodoApplication extends Application implements
         if (mDbxAcctMgr.hasLinkedAccount()) {
             initTaskBag();
         }
-
     }
 
     public boolean isAuthenticated() {
