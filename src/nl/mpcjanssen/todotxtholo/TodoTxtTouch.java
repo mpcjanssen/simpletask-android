@@ -133,30 +133,26 @@ public class TodoTxtTouch extends ListActivity {
             Log.v(m_app.TAG, "Searched for " + m_search);
         } else if (intent.getExtras()!=null) {
             Log.v(m_app.TAG, "Launched with extras, setting filter");
-            // handle different versions of shortcuts
+
             String prios;
             String projects;
             String contexts;
-            int version = intent.getIntExtra(Constants.INTENT_VERSION, 1);
-            switch (version) {
-                case 1:
-                default:
-                    prios = intent
-                            .getStringExtra(Constants.INTENT_PRIORITIES_FILTER_v1);
-                    projects = intent
-                            .getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
-                    contexts = intent
-                            .getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
-                    sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT_v1,
-                            Constants.SORT_UNSORTED);
-                    m_priosNot = intent.getBooleanExtra(
-                            Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
-                    m_projectsNot = intent.getBooleanExtra(
-                            Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
-                    m_contextsNot = intent.getBooleanExtra(
-                            Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
-                    break;
-            }
+
+            prios = intent
+                    .getStringExtra(Constants.INTENT_PRIORITIES_FILTER);
+            projects = intent
+                    .getStringExtra(Constants.INTENT_PROJECTS_FILTER);
+            contexts = intent
+                    .getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
+            sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT,
+                    Constants.SORT_UNSORTED);
+            m_priosNot = intent.getBooleanExtra(
+                    Constants.INTENT_PRIORITIES_FILTER_NOT, false);
+            m_projectsNot = intent.getBooleanExtra(
+                    Constants.INTENT_PROJECTS_FILTER_NOT, false);
+            m_contextsNot = intent.getBooleanExtra(
+                    Constants.INTENT_CONTEXTS_FILTER_NOT, false);
+
             Log.v(m_app.TAG, "\t sort:" + sort);
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
@@ -699,7 +695,7 @@ public class TodoTxtTouch extends ListActivity {
                 Priority.inCode(m_prios));
         i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
         i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-        i.putExtra(Constants.ACTIVE_SORT, sort);
+        i.putExtra(Constants.EXTRA_SORT_SELECTED, sort);
         i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
         i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
         i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);

@@ -31,8 +31,8 @@ public class FilterItemFragment extends Fragment {
             items = savedInstanceState.getInt(STATE_ITEMS);
             selectedItem = savedInstanceState.getInt(STATE_SELECTED);
         } else {
-            selectedItem = arguments.getInt(Constants.ACTIVE_SORT);
-            items = arguments.getInt(Constants.FILTER_ITEMS);
+            selectedItem = arguments.getInt(Constants.INITIAL_SELECTED_ITEMS);
+            items = arguments.getInt(Constants.ITEMS);
         }
 
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.single_filter,

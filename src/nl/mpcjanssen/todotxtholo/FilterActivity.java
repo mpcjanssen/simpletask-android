@@ -44,7 +44,7 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
-		arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent()
+		arguments.putStringArrayList(Constants.ITEMS, getIntent()
 				.getStringArrayListExtra(Constants.EXTRA_CONTEXTS));
 
 		arguments.putStringArrayList(
@@ -64,7 +64,7 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
-		arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent()
+		arguments.putStringArrayList(Constants.ITEMS, getIntent()
 				.getStringArrayListExtra(Constants.EXTRA_PROJECTS));
 
 		arguments.putStringArrayList(
@@ -84,7 +84,7 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
-		arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent()
+		arguments.putStringArrayList(Constants.ITEMS, getIntent()
 				.getStringArrayListExtra(Constants.EXTRA_PRIORITIES));
 
 		arguments.putStringArrayList(
@@ -103,10 +103,10 @@ public class FilterActivity extends Activity {
 
 		// Fill arguments for fragment
 		arguments = new Bundle();
-		arguments.putInt(Constants.FILTER_ITEMS, R.array.sort);
+		arguments.putInt(Constants.ITEMS, R.array.sort);
 		arguments.putInt(
-				Constants.ACTIVE_SORT,
-				getIntent().getIntExtra(Constants.ACTIVE_SORT,
+				Constants.INITIAL_SELECTED_ITEMS,
+				getIntent().getIntExtra(Constants.INTENT_ACTIVE_SORT,
 						Constants.SORT_UNSORTED));
 		actionbar.addTab(actionbar
 				.newTab()
@@ -190,26 +190,24 @@ public class FilterActivity extends Activity {
 		appliedFilters.addAll(prioritiesFilter);
 		appliedFilters.addAll(projectsFilter);
 
-		target.putExtra(Constants.INTENT_VERSION,
-				Constants.INTENT_CURRENT_VERSION);
-		target.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1,
+		target.putExtra(Constants.INTENT_CONTEXTS_FILTER,
 				Util.join(contextFilter, "\n"));
-		target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT_v1,
+		target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT,
 				getNot(Constants.EXTRA_CONTEXTS));
-		target.putExtra(Constants.INTENT_PROJECTS_FILTER_v1,
+		target.putExtra(Constants.INTENT_PROJECTS_FILTER,
 				Util.join(projectsFilter, "\n"));
-		target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1,
+		target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT,
 				getNot(Constants.EXTRA_PROJECTS));
-		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1,
+		target.putExtra(Constants.INTENT_PRIORITIES_FILTER,
 				Util.join(prioritiesFilter, "\n"));
-		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,
+		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT,
 				getNot(Constants.EXTRA_PRIORITIES));
 		target.putExtra(
-				Constants.INTENT_ACTIVE_SORT_v1,
+				Constants.INTENT_ACTIVE_SORT,
 				getSelectedItem(
 						getString(R.string.sort),
 						getIntent().getIntExtra(
-								Constants.INTENT_ACTIVE_SORT_v1,
+								Constants.INTENT_ACTIVE_SORT,
 								Constants.SORT_UNSORTED)));
 
 		if (appliedFilters.size() == 1) {
