@@ -172,6 +172,18 @@ public class TodoTxtTouch extends ListActivity {
                         .split("\n")));
                 Log.v(m_app.TAG, "\t contexts:" + m_contexts);
             }
+        }  else if (savedInstanceState != null) {
+            //
+            Log.v("Debug..", "Loading from saved instance state");
+            m_prios = Priority.toPriority(savedInstanceState
+                    .getStringArrayList("m_prios"));
+            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+            m_projects = savedInstanceState.getStringArrayList("m_projects");
+            m_search = savedInstanceState.getString("m_search");
+            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
+            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
+            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
+            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
         }
     }
 
@@ -212,9 +224,49 @@ public class TodoTxtTouch extends ListActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
+        outState.putStringArrayList("m_contexts", m_contexts);
+        outState.putStringArrayList("m_projects", m_projects);
+        outState.putBoolean("m_projectsNot", m_projectsNot);
+        outState.putBoolean("m_priosNot", m_priosNot);
+        outState.putBoolean("m_contextsNot", m_contextsNot);
+        outState.putString("m_search", m_search);
+        outState.putInt("sort", sort);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);    //To change body of overridden methods use File | Settings | File Templates.
+        Log.v(m_app.TAG, "Calling with new intent: " + intent);
+        if(intent.getExtras()!=null) {
+            handleIntent(intent, null);
+        }
+        m_adapter.setFilteredTasks();
+        updateFilterBar();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.v("Debug..", "Loading from saved instance state");
+        m_prios = Priority.toPriority(savedInstanceState
+                .getStringArrayList("m_prios"));
+        m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+        m_projects = savedInstanceState.getStringArrayList("m_projects");
+        m_search = savedInstanceState.getString("m_search");
+        m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
+        m_priosNot = savedInstanceState.getBoolean("m_priosNot");
+        m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
+        sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         m_app.watchDropbox(true);
+        handleIntent(getIntent(),null);
     }
 
     @Override
