@@ -42,16 +42,10 @@ import java.util.ArrayList;
 public class TodoApplication extends Application implements DbxFileSystem.PathListener {
     final static String TAG = TodoTxtTouch.class.getSimpleName();
 
-    private Context mAppContext;
     private DbxAccountManager mDbxAcctMgr;
     private TaskBag mTaskBag;
     private DbxPath mTodoPath = new DbxPath("todo.txt");
-    private DbxPath mDonePath = new DbxPath("done.txt");
     private DbxFileSystem dbxFs ;
-
-    public Context getAppContext() {
-        return mAppContext;
-    }
 
     public DbxAccountManager getDbxAcctMgr() {
         return mDbxAcctMgr;
@@ -81,16 +75,15 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
         } catch (DbxException.Unauthorized unauthorized) {
             unauthorized.printStackTrace();
         } catch (DbxException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mAppContext = getApplicationContext();
         mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
                 getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
         if (mDbxAcctMgr.hasLinkedAccount()) {
@@ -118,34 +111,6 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
 
     public void logout() {
         mDbxAcctMgr.unlink();
-    }
-
-    public void archive() {
-        // Read current done
-        ArrayList<Task> completeTasks = new ArrayList<Task>();
-        DbxFile doneFile;
-        String contents = "";
-        try {
-            for (Task task : mTaskBag.getTasks()) {
-                if (task.isCompleted()) {
-                    completeTasks.add(task);
-                    contents = contents + "\n" + task.inFileFormat();
-                }
-            }
-            if (dbxFs.isFile(mDonePath)) {
-                doneFile = dbxFs.open(mDonePath);
-                contents =  doneFile.readString();
-            } else {
-                doneFile = dbxFs.create(mDonePath);
-            }
-            doneFile.writeString(contents);
-            doneFile.close();
-            mTaskBag.deleteTasks(completeTasks);
-            storeTaskbag();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     public void watchDropbox(boolean watch) {
