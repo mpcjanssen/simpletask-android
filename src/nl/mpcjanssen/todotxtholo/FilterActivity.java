@@ -2,35 +2,22 @@ package nl.mpcjanssen.todotxtholo;
 
 import android.app.*;
 import android.app.ActionBar.Tab;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.RemoteViews;
-import nl.mpcjanssen.todotxtholo.task.Priority;
-import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class FilterActivity extends Activity {
 
 	final static String TAG = FilterActivity.class.getSimpleName();
 	Menu menu;
 	private ActionBar actionbar;
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

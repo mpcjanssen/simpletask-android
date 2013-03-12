@@ -22,6 +22,8 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
+import nl.mpcjanssen.todotxtholo.TodoException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,8 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nl.mpcjanssen.todotxtholo.TodoException;
 
 
 public class LinkParser {

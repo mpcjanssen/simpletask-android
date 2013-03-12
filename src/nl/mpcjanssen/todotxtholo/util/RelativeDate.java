@@ -5,15 +5,13 @@
  */
 package nl.mpcjanssen.todotxtholo.util;
 
+import android.content.Context;
+import nl.mpcjanssen.todotxtholo.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import android.content.res.Resources;
-import nl.mpcjanssen.todotxtholo.R;
-import nl.mpcjanssen.todotxtholo.TodoApplication;
-import android.content.Context;
 
 
 public class RelativeDate {

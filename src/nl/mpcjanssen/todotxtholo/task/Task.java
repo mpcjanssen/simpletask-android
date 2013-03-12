@@ -58,7 +58,6 @@ public class Task implements Serializable, Comparable<Task> {
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
-        this.contexts = contexts;
         this.init(rawText, defaultPrependedDate);
         this.originalPriority = priority;
         this.originalText = text;

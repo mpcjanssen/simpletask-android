@@ -31,6 +31,7 @@ import android.util.Log;
 
 public class Preferences extends PreferenceActivity {
     private TodoApplication m_app;
+    final static String TAG = TodoApplication.TAG;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class Preferences extends PreferenceActivity {
 	@Override
 	public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
 		if(preference.getKey()!=null && preference.getKey().equals("logout_dropbox")) {
-			Log.v(m_app.TAG, "Logging out from Dropbox");
+			Log.v(TAG, "Logging out from Dropbox");
             m_app.logout();
 			startActivity(new Intent(this, TodoTxtTouch.class));
             finish();

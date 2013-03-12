@@ -132,10 +132,6 @@ public class TaskBag  {
         return output;
     }
 
-    public void reload (String contents) {
-
-    }
-
     public ArrayList<Priority> getPriorities() {
         // TODO cache this after reloads?
         Set<Priority> res = new HashSet<Priority>();

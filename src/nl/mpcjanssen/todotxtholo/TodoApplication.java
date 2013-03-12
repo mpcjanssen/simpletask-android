@@ -22,25 +22,17 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import com.dropbox.sync.android.*;
-
 import android.app.Application;
-import android.content.*;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.preference.PreferenceManager;
+import android.content.Intent;
 import android.util.Log;
-import nl.mpcjanssen.todotxtholo.task.Task;
+import com.dropbox.sync.android.*;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
-import nl.mpcjanssen.todotxtholo.util.Util;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class TodoApplication extends Application implements DbxFileSystem.PathListener {
-    final static String TAG = TodoTxtTouch.class.getSimpleName();
+    public final static String TAG = TodoTxtTouch.class.getSimpleName();
 
     private DbxAccountManager mDbxAcctMgr;
     private TaskBag mTaskBag;
@@ -97,7 +89,6 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
     }
 
     public void storeTaskbag() {
-        String output = "";
         try {
             synchronized (this) {
                 DbxFile mTodoFile = dbxFs.open(mTodoPath);
@@ -105,7 +96,7 @@ public class TodoApplication extends Application implements DbxFileSystem.PathLi
                 mTodoFile.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 

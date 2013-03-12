@@ -27,7 +27,6 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences.Editor;
 import android.database.DataSetObserver;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -49,6 +48,7 @@ import java.util.*;
 
 public class TodoTxtTouch extends ListActivity {
 
+    final static String TAG = TodoApplication.TAG;
     Menu options_menu;
 
     private BroadcastReceiver m_broadcastReceiver;
@@ -84,7 +84,7 @@ public class TodoTxtTouch extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v(m_app.TAG, "onCreate with intent: " + getIntent());
+        Log.v(TAG, "onCreate with intent: " + getIntent());
         m_app = (TodoApplication) getApplication();
         if (!m_app.isAuthenticated()) {
             Intent i = new Intent(this, LoginScreen.class);
@@ -130,9 +130,9 @@ public class TodoTxtTouch extends ListActivity {
     private void handleIntent(Intent intent, Bundle savedInstanceState) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
-            Log.v(m_app.TAG, "Searched for " + m_search);
+            Log.v(TAG, "Searched for " + m_search);
         } else if (intent.getExtras()!=null) {
-            Log.v(m_app.TAG, "Launched with extras, setting filter");
+            Log.v(TAG, "Launched with extras, setting filter");
 
             String prios;
             String projects;
@@ -153,24 +153,18 @@ public class TodoTxtTouch extends ListActivity {
             m_contextsNot = intent.getBooleanExtra(
                     Constants.INTENT_CONTEXTS_FILTER_NOT, false);
 
-            Log.v(m_app.TAG, "\t sort:" + sort);
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
-                Log.v(m_app.TAG, "\t prio:" + m_prios);
             }
             if (projects != null && !projects.equals("")) {
                 m_projects = new ArrayList<String>(Arrays.asList(projects
                         .split("\n")));
-                Log.v(m_app.TAG, "\t projects:" + m_projects);
             }
             if (contexts != null && !contexts.equals("")) {
                 m_contexts = new ArrayList<String>(Arrays.asList(contexts
                         .split("\n")));
-                Log.v(m_app.TAG, "\t contexts:" + m_contexts);
             }
         }  else if (savedInstanceState != null) {
-            //
-            Log.v("Debug..", "Loading from saved instance state");
             m_prios = Priority.toPriority(savedInstanceState
                     .getStringArrayList("m_prios"));
             m_contexts = savedInstanceState.getStringArrayList("m_contexts");
@@ -234,19 +228,18 @@ public class TodoTxtTouch extends ListActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);    //To change body of overridden methods use File | Settings | File Templates.
-        Log.v(m_app.TAG, "Calling with new intent: " + intent);
+        super.onNewIntent(intent);
+        Log.v(TAG, "Calling with new intent: " + intent );
         if(intent.getExtras()!=null) {
             handleIntent(intent, null);
         }
         m_adapter.setFilteredTasks();
-        updateFilterBar();
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.v("Debug..", "Loading from saved instance state");
+        Log.v(TAG, "Loading from saved instance state");
         m_prios = Priority.toPriority(savedInstanceState
                 .getStringArrayList("m_prios"));
         m_contexts = savedInstanceState.getStringArrayList("m_contexts");
@@ -285,7 +278,6 @@ public class TodoTxtTouch extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Log.v("Debug....", "List item checked");
         l.setItemChecked(position, true);
     }
 
@@ -313,7 +305,7 @@ public class TodoTxtTouch extends ListActivity {
 
     private void prioritizeTasks(final List<Task> tasks) {
         final String[] prioArr = Priority
-                .rangeInCode(Priority.NONE, Priority.E).toArray(new String[0]);
+                .rangeInCodeArray(Priority.NONE, Priority.E);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select priority");
@@ -369,7 +361,6 @@ public class TodoTxtTouch extends ListActivity {
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        Log.v(m_app.TAG, "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.add_new:
                 startAddTaskActivity();
@@ -392,7 +383,6 @@ public class TodoTxtTouch extends ListActivity {
     }
 
     private void startAddTaskActivity() {
-        Log.v(m_app.TAG, "Starting addTask activity");
         Intent intent = new Intent(this, AddTask.class);
         intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
         intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
@@ -475,7 +465,6 @@ public class TodoTxtTouch extends ListActivity {
         }
 
         void setFilteredTasks() {
-            //Log.v(m_app.TAG, "setFilteredTasks called");
             AndFilter filter = new AndFilter();
             visibleTasks.clear();
             for (Task t : m_app.getTaskBag().getTasks()) {
@@ -499,8 +488,6 @@ public class TodoTxtTouch extends ListActivity {
                         }
                         if (!header.equals(newHeader)) {
                             header = newHeader;
-                            // Log.v(TAG, "Start of header: " + header +
-                            // " at position: " + position);
                             headerAtPostion.put(position, header);
                             position++;
                         }
@@ -518,8 +505,6 @@ public class TodoTxtTouch extends ListActivity {
                         }
                         if (!header.equals(newHeader)) {
                             header = newHeader;
-                            Log.v(m_app.TAG, "Start of header: " + header
-                                    + " at position: " + position);
                             headerAtPostion.put(position, header);
                             position++;
                         }
@@ -612,7 +597,6 @@ public class TodoTxtTouch extends ListActivity {
                     holder.tasktext.setText(ss);
 
                     if (task.isCompleted()) {
-                        // Log.v(TAG, "Striking through " + task.getText());
                         holder.tasktext.setPaintFlags(holder.tasktext
                                 .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         holder.taskage.setPaintFlags(holder.taskage
@@ -721,7 +705,6 @@ public class TodoTxtTouch extends ListActivity {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            Log.v(m_app.TAG, "Debug..invalidated");
             return false; // To change body of implemented methods use File |
             // Settings | File Templates.
         }
@@ -733,7 +716,6 @@ public class TodoTxtTouch extends ListActivity {
             title = title + numSelected;
             title = title + " " + getString(R.string.selected);
             mode.setTitle(title);
-            Log.v(m_app.TAG, "Debug.." + numSelected);
             if (numSelected == 1) {
                 Task task = checkedTasks.get(0);
                 menu.findItem(R.id.update).setVisible(true);
@@ -767,8 +749,8 @@ public class TodoTxtTouch extends ListActivity {
                     if (checkedTasks.size() == 1) {
                         editTask(checkedTasks.get(0));
                     } else {
-                        Log.w(m_app.TAG,
-                                "More than one task was selected while hanling update menu");
+                        Log.w(TAG,
+                                "More than one task was selected while handling update menu");
                     }
                     break;
                 case R.id.delete:
@@ -808,13 +790,11 @@ public class TodoTxtTouch extends ListActivity {
                     startActivity(intent);
                     break;
                 case R.id.url:
-                    Log.v(m_app.TAG, "url: " + item.getTitle().toString());
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
                             .getTitle().toString()));
                     startActivity(intent);
                     break;
                 case R.id.mail:
-                    Log.v(m_app.TAG, "mail: " + item.getTitle().toString());
                     intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
                             .getTitle().toString()));
                     intent.putExtra(android.content.Intent.EXTRA_EMAIL,
@@ -823,7 +803,6 @@ public class TodoTxtTouch extends ListActivity {
                     startActivity(intent);
                     break;
                 case R.id.phone_number:
-                    Log.v(m_app.TAG, "phone_number");
                     intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
                             + item.getTitle().toString()));
                     startActivity(intent);
