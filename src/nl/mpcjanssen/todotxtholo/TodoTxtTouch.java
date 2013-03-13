@@ -81,6 +81,17 @@ public class TodoTxtTouch extends ListActivity {
         m_app.watchDropbox(false);
     }
 
+    private boolean loginIfNeeded() {
+        m_app = (TodoApplication) getApplication();
+        if (!m_app.isAuthenticated()) {
+            Intent i = new Intent(this, LoginScreen.class);
+            startActivity(i);
+            finish();
+            return true;
+        }
+	return false;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,33 +100,26 @@ public class TodoTxtTouch extends ListActivity {
         m_app = (TodoApplication) getApplication();
 
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.INTENT_UPDATE_UI);
         intentFilter.addAction(Constants.INTENT_RELOAD_TASKBAG);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_UPDATE_UI)) {
-                    m_adapter.setFilteredTasks();
-                } else if (intent.getAction().equalsIgnoreCase(
                         Constants.INTENT_RELOAD_TASKBAG)) {
                     m_app.initTaskBag();
-                    sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
+                    m_adapter.setFilteredTasks();
                 }
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
 
-        if (!m_app.isAuthenticated()) {
-            Intent i = new Intent(this, LoginScreen.class);
-            startActivity(i);
-            finish();
-            return;
-        }
-
+	if(loginIfNeeded()) {
+		return;
+	}
         setContentView(R.layout.main);
 
         m_app.watchDropbox(true);
+
 
         // Initialize Adapter
         ListView lv = getListView();
@@ -234,9 +238,13 @@ public class TodoTxtTouch extends ListActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.v(TAG, "Calling with new intent: " + intent );
+	if(loginIfNeeded()) {
+		return;
+	}
         if(intent.getExtras()!=null) {
             handleIntent(intent, null);
         }
+	m_app.watchDropbox(true);
         m_adapter.setFilteredTasks();
     }
 
@@ -258,8 +266,12 @@ public class TodoTxtTouch extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
+	if (loginIfNeeded()) {
+		return;
+	}
         m_app.watchDropbox(true);
         handleIntent(getIntent(),null);
+        m_adapter.setFilteredTasks();
     }
 
     @Override
