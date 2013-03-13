@@ -61,6 +61,7 @@ public class LoginScreen extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == Activity.RESULT_OK) {
+		m_app.initFiles();
                 m_app.initTaskBag();
                 switchToTodolist();
             } else {

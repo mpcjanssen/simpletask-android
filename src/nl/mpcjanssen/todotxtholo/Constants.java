@@ -57,7 +57,6 @@ public class Constants {
     public final static String INITIAL_NOT = "INITIAL_NOT";
 
     // Intents for main app
-    public static final String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
     public static final String INTENT_RELOAD_TASKBAG = "nl.mpcjanssen.todotxtholo.RELOAD_TASK_BAG";
     public static final String INTENT_START_FROM_SHORTCUT = "nl.mpcjanssen.todotxtholo.START_FROM_SHORTCUT";
 }
