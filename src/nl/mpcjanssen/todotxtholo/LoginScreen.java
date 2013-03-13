@@ -36,10 +36,8 @@ public class LoginScreen extends Activity {
     final static String TAG = LoginScreen.class.getSimpleName();
 
     private TodoApplication m_app;
-
-	private DbxAccountManager dbxAcctMgr;
     
-    static final int REQUEST_LINK_TO_DBX = 0;
+    static final int REQUEST_LINK_TO_DBX = 0x0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +59,7 @@ public class LoginScreen extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == Activity.RESULT_OK) {
-		m_app.initFiles();
-                m_app.initTaskBag();
+                m_app.loginDone();
                 switchToTodolist();
             } else {
                 // ... Link failed or was cancelled by the user.

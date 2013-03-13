@@ -71,14 +71,16 @@ public class TodoTxtTouch extends ListActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.v(TAG, "onDestroy: " + getIntent() );
         unregisterReceiver(m_broadcastReceiver);
-        m_app.watchDropbox(false);
+        m_app.updateFromDropbox(false);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        m_app.watchDropbox(false);
+        Log.v(TAG, "onPause: " + getIntent() );
+        m_app.updateFromDropbox(false);
     }
 
     private boolean loginIfNeeded() {
@@ -118,8 +120,7 @@ public class TodoTxtTouch extends ListActivity {
 		return;
 	}
         setContentView(R.layout.main);
-	m_app.initTaskBag();
-        m_app.watchDropbox(true);
+        m_app.updateFromDropbox(true);
 
 
         // Initialize Adapter
@@ -245,7 +246,7 @@ public class TodoTxtTouch extends ListActivity {
         if(intent.getExtras()!=null) {
             handleIntent(intent, null);
         }
-	m_app.watchDropbox(true);
+	    m_app.updateFromDropbox(true);
         m_adapter.setFilteredTasks();
     }
 
@@ -267,10 +268,11 @@ public class TodoTxtTouch extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
-	if (loginIfNeeded()) {
+        Log.v(TAG, "onResume: " + getIntent() );
+        if (loginIfNeeded()) {
 		return;
 	}
-        m_app.watchDropbox(true);
+        m_app.updateFromDropbox(true);
         handleIntent(getIntent(),null);
         m_adapter.setFilteredTasks();
     }
