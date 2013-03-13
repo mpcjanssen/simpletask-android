@@ -106,6 +106,7 @@ public class TodoTxtTouch extends ListActivity {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equalsIgnoreCase(
                         Constants.INTENT_RELOAD_TASKBAG)) {
+                    Log.v(TAG, "received INTENT_RELOAD_TASKBAG");
                     m_app.initTaskBag();
                     m_adapter.setFilteredTasks();
                 }
@@ -117,7 +118,7 @@ public class TodoTxtTouch extends ListActivity {
 		return;
 	}
         setContentView(R.layout.main);
-
+	m_app.initTaskBag();
         m_app.watchDropbox(true);
 
 
