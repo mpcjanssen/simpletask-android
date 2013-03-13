@@ -107,7 +107,10 @@ DbxFileSystem.PathListener, DbxFileSystem.SyncStatusListener {
     // Initialize the taskbag
     try {
       dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-      Log.v(TAG, "hasSynced = ", dbxFs.hasSynced()); 
+      Log.v(TAG, "hasSynced = " + dbxFs.hasSynced()); 
+      if (!dbxFs.hasSynced()) {
+	dbxFs.awaitFirstSync();
+      }
       mTodoFile = dbxFs.open(mTodoPath);
       // Reflect changes we might have missed
       mTodoFile.update();
@@ -150,10 +153,10 @@ DbxFileSystem.PathListener, DbxFileSystem.SyncStatusListener {
 
   public void watchDropbox(boolean watch) {
     Log.v(TAG, "Actively monitoring for dropbox changes: " + watch);
-    if (dbxFs == null) {
-      return;
-    }
     try {
+	    if (dbxFs == null) {
+		    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+	    }
       if (watch) {
         dbxFs.addSyncStatusListener(this);
         dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
