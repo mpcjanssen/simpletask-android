@@ -107,6 +107,7 @@ DbxFileSystem.PathListener, DbxFileSystem.SyncStatusListener {
     // Initialize the taskbag
     try {
       dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+      Log.v(TAG, "hasSynced = ", dbxFs.hasSynced()); 
       mTodoFile = dbxFs.open(mTodoPath);
       // Reflect changes we might have missed
       mTodoFile.update();
