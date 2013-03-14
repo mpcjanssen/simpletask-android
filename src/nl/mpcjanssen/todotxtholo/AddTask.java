@@ -110,6 +110,12 @@ public class AddTask extends Activity {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
         m_app = (TodoApplication)getApplication();
+        if (!m_app.isAuthenticated()) {
+            Intent i = new Intent(this, LoginScreen.class);
+            startActivity(i);
+            finish();
+        }
+        m_app.initTaskBag();
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
