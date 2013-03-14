@@ -114,6 +114,7 @@ public class AddTask extends Activity {
             Intent i = new Intent(this, LoginScreen.class);
             startActivity(i);
             finish();
+            return;
         }
         m_app.initTaskBag();
 
