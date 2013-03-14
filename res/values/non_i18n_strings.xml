@@ -2,4 +2,5 @@
 
 <!--suppress ALL -->
 <resources>
+    <string name="default_sort_pref_key">default_sort</string>
 </resources>

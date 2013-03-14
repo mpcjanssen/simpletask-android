@@ -91,10 +91,9 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 		arguments.putInt(Constants.ITEMS, R.array.sort);
-		arguments.putInt(
+		arguments.putString(
 				Constants.INITIAL_SELECTED_ITEMS,
-				getIntent().getIntExtra(Constants.INTENT_ACTIVE_SORT,
-						Constants.SORT_UNSORTED));
+				getIntent().getStringExtra(Constants.INTENT_ACTIVE_SORT));
 		actionbar.addTab(actionbar
 				.newTab()
 				.setText(getString(R.string.sort))
@@ -193,9 +192,8 @@ public class FilterActivity extends Activity {
 				Constants.INTENT_ACTIVE_SORT,
 				getSelectedItem(
 						getString(R.string.sort),
-						getIntent().getIntExtra(
-								Constants.INTENT_ACTIVE_SORT,
-								Constants.SORT_UNSORTED)));
+						getIntent().getStringExtra(
+								Constants.INTENT_ACTIVE_SORT)));
 
 		if (appliedFilters.size() == 1) {
 			name = appliedFilters.get(0);
@@ -221,7 +219,7 @@ public class FilterActivity extends Activity {
 		return filter;
 	}
 
-	private int getSelectedItem(String tag, int defaultSelected) {
+	private String getSelectedItem(String tag, String defaultSelected) {
 		FilterItemFragment fr;
 		fr = (FilterItemFragment) this.getFragmentManager().findFragmentByTag(
 				tag);

@@ -62,7 +62,7 @@ public class TodoTxtTouch extends ListActivity {
     private boolean m_priosNot;
     private boolean m_contextsNot;
     private String m_search;
-    private int sort = 0;
+    private String m_sort = null;
 
     TaskAdapter m_adapter;
 
@@ -71,7 +71,7 @@ public class TodoTxtTouch extends ListActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy: " + getIntent() );
+        Log.v(TAG, "onDestroy: " + getIntent());
         unregisterReceiver(m_broadcastReceiver);
         m_app.updateFromDropbox(false);
     }
@@ -79,7 +79,7 @@ public class TodoTxtTouch extends ListActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v(TAG, "onPause: " + getIntent() );
+        Log.v(TAG, "onPause: " + getIntent());
         m_app.updateFromDropbox(false);
     }
 
@@ -91,7 +91,7 @@ public class TodoTxtTouch extends ListActivity {
             finish();
             return true;
         }
-	return false;
+        return false;
     }
 
     @Override
@@ -116,9 +116,9 @@ public class TodoTxtTouch extends ListActivity {
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
 
-	if(loginIfNeeded()) {
-		return;
-	}
+        if (loginIfNeeded()) {
+            return;
+        }
         setContentView(R.layout.main);
         m_app.updateFromDropbox(true);
 
@@ -141,7 +141,7 @@ public class TodoTxtTouch extends ListActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(TAG, "Searched for " + m_search);
-        } else if (intent.getExtras()!=null) {
+        } else if (intent.getExtras() != null) {
             Log.v(TAG, "Launched with extras, setting filter");
 
             String prios;
@@ -154,8 +154,7 @@ public class TodoTxtTouch extends ListActivity {
                     .getStringExtra(Constants.INTENT_PROJECTS_FILTER);
             contexts = intent
                     .getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
-            sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT,
-                    Constants.SORT_UNSORTED);
+            m_sort = intent.getStringExtra(Constants.INTENT_ACTIVE_SORT);
             m_priosNot = intent.getBooleanExtra(
                     Constants.INTENT_PRIORITIES_FILTER_NOT, false);
             m_projectsNot = intent.getBooleanExtra(
@@ -174,16 +173,6 @@ public class TodoTxtTouch extends ListActivity {
                 m_contexts = new ArrayList<String>(Arrays.asList(contexts
                         .split("\n")));
             }
-        }  else if (savedInstanceState != null) {
-            m_prios = Priority.toPriority(savedInstanceState
-                    .getStringArrayList("m_prios"));
-            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-            m_projects = savedInstanceState.getStringArrayList("m_projects");
-            m_search = savedInstanceState.getString("m_search");
-            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
-            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
-            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
-            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
         }
     }
 
@@ -210,7 +199,7 @@ public class TodoTxtTouch extends ListActivity {
             if (m_contexts.size() > 0) {
                 filterTitle += " " + getString(R.string.context_prompt);
             }
-            if (!Strings.isEmptyOrNull(m_search) ) {
+            if (!Strings.isEmptyOrNull(m_search)) {
                 filterTitle += " " + getString(R.string.search);
             }
 
@@ -223,57 +212,30 @@ public class TodoTxtTouch extends ListActivity {
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
-        outState.putStringArrayList("m_contexts", m_contexts);
-        outState.putStringArrayList("m_projects", m_projects);
-        outState.putBoolean("m_projectsNot", m_projectsNot);
-        outState.putBoolean("m_priosNot", m_priosNot);
-        outState.putBoolean("m_contextsNot", m_contextsNot);
-        outState.putString("m_search", m_search);
-        outState.putInt("sort", sort);
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.v(TAG, "Calling with new intent: " + intent );
-	if(loginIfNeeded()) {
-		return;
-	}
-        if(intent.getExtras()!=null) {
+        Log.v(TAG, "Calling with new intent: " + intent);
+        if (loginIfNeeded()) {
+            return;
+        }
+        if (intent.getExtras() != null) {
             handleIntent(intent, null);
         }
-	    m_app.updateFromDropbox(true);
+        m_app.updateFromDropbox(true);
         m_adapter.setFilteredTasks();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.v(TAG, "Loading from saved instance state");
-        m_prios = Priority.toPriority(savedInstanceState
-                .getStringArrayList("m_prios"));
-        m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-        m_projects = savedInstanceState.getStringArrayList("m_projects");
-        m_search = savedInstanceState.getString("m_search");
-        m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
-        m_priosNot = savedInstanceState.getBoolean("m_priosNot");
-        m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
-        sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume: " + getIntent() );
+        Log.v(TAG, "onResume: " + getIntent());
         if (loginIfNeeded()) {
-		return;
-	}
+            return;
+        }
         m_app.updateFromDropbox(true);
-        handleIntent(getIntent(),null);
+        handleIntent(getIntent(), null);
         m_adapter.setFilteredTasks();
     }
 
@@ -454,27 +416,27 @@ public class TodoTxtTouch extends ListActivity {
         List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
         // Sort completed last
         comparators.add(new CompletedComparator());
-        switch (sort) {
-            case Constants.SORT_UNSORTED:
-                break;
-            case Constants.SORT_REVERSE:
-                comparators.add(Collections.reverseOrder());
-                break;
-            case Constants.SORT_ALPHABETICAL:
-                comparators.add(new AlphabeticalComparator());
-                break;
-            case Constants.SORT_CONTEXT:
-                comparators.add(new ContextComparator());
-                comparators.add(new AlphabeticalComparator());
-                break;
-            case Constants.SORT_PRIORITY:
-                comparators.add(new PriorityComparator());
-                comparators.add(new AlphabeticalComparator());
-                break;
-            case Constants.SORT_PROJECT:
-                comparators.add(new ProjectComparator());
-                comparators.add(new AlphabeticalComparator());
-                break;
+        if (m_sort == null) {
+            m_sort = m_app.getDefaultSort();
+        }
+        if (m_sort.equals("sort_file_order")) {
+            // no additional sorting
+        } else if (m_sort.equals("sort_file_reversed")) {
+            comparators.add(Collections.reverseOrder());
+        } else if (m_sort.equals("sort_by_context")) {
+            comparators.add(new ContextComparator());
+            comparators.add(new AlphabeticalComparator());
+        } else if (m_sort.equals("sort_by_project")) {
+            comparators.add(new ProjectComparator());
+            comparators.add(new AlphabeticalComparator());
+        } else if (m_sort.equals("sort_alphabetical")) {
+            comparators.add(new AlphabeticalComparator());
+            comparators.add(new AlphabeticalComparator());
+        } else if (m_sort.equals("sort_by_prio")) {
+            comparators.add(new PriorityComparator());
+            comparators.add(new AlphabeticalComparator());
+        } else {
+            Log.w(TAG, "Unknown sort: " + m_sort);
         }
         return (new MultiComparator(comparators));
     }
@@ -508,42 +470,38 @@ public class TodoTxtTouch extends ListActivity {
             headerAtPostion.clear();
             String header = "";
             int position = 0;
-            switch (sort) {
-                case Constants.SORT_CONTEXT:
-                    for (Task t : visibleTasks) {
-                        List<String> taskItems = t.getContexts();
-                        String newHeader;
-                        if (taskItems == null || taskItems.size() == 0) {
-                            newHeader = getString(R.string.no_context);
-                        } else {
-                            newHeader = taskItems.get(0);
-                        }
-                        if (!header.equals(newHeader)) {
-                            header = newHeader;
-                            headerAtPostion.put(position, header);
-                            position++;
-                        }
+            if (m_sort.equals("sort_by_context")) {
+                for (Task t : visibleTasks) {
+                    List<String> taskItems = t.getContexts();
+                    String newHeader;
+                    if (taskItems == null || taskItems.size() == 0) {
+                        newHeader = getString(R.string.no_context);
+                    } else {
+                        newHeader = taskItems.get(0);
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+                        headerAtPostion.put(position, header);
                         position++;
                     }
-                    break;
-                case Constants.SORT_PROJECT:
-                    for (Task t : visibleTasks) {
-                        List<String> taskItems = t.getProjects();
-                        String newHeader;
-                        if (taskItems == null || taskItems.size() == 0) {
-                            newHeader = getString(R.string.no_project);
-                        } else {
-                            newHeader = taskItems.get(0);
-                        }
-                        if (!header.equals(newHeader)) {
-                            header = newHeader;
-                            headerAtPostion.put(position, header);
-                            position++;
-                        }
+                    position++;
+                }
+            } else if (m_sort.equals("sort_by_project")) {
+                for (Task t : visibleTasks) {
+                    List<String> taskItems = t.getProjects();
+                    String newHeader;
+                    if (taskItems == null || taskItems.size() == 0) {
+                        newHeader = getString(R.string.no_project);
+                    } else {
+                        newHeader = taskItems.get(0);
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+                        headerAtPostion.put(position, header);
                         position++;
                     }
-                    break;
-
+                    position++;
+                }
             }
             for (DataSetObserver ob : obs) {
                 ob.onChanged();
@@ -686,7 +644,7 @@ public class TodoTxtTouch extends ListActivity {
 
         @Override
         public boolean isEnabled(int position) {
-            return (headerAtPostion.get(position)==null);
+            return (headerAtPostion.get(position) == null);
         }
 
         @Override
@@ -695,7 +653,7 @@ public class TodoTxtTouch extends ListActivity {
                 @Override
                 protected FilterResults performFiltering(CharSequence charSequence) {
                     m_search = charSequence.toString();
-                    Log.v(TAG,"performFiltering: " + charSequence.toString());
+                    Log.v(TAG, "performFiltering: " + charSequence.toString());
                     return null;
                 }
 
@@ -727,7 +685,7 @@ public class TodoTxtTouch extends ListActivity {
                 Priority.inCode(m_prios));
         i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
         i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-        i.putExtra(Constants.EXTRA_SORT_SELECTED, sort);
+        i.putExtra(Constants.EXTRA_SORT_SELECTED, m_sort);
         i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
         i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
         i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);

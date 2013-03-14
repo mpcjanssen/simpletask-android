@@ -27,8 +27,10 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.FileObserver;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.dropbox.sync.android.*;
@@ -48,6 +50,8 @@ public class TodoApplication extends Application implements
     private final TaskBag mTaskBag = new TaskBag();
     private DbxFileSystem dbxFs;
     private DbxPath mTodoPath = new DbxPath("todo.txt");
+    private SharedPreferences mPrefs;
+
 
     @Override
     public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
@@ -133,6 +137,7 @@ public class TodoApplication extends Application implements
         super.onCreate();
         mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
                 getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     public boolean isAuthenticated() {
@@ -197,5 +202,10 @@ public class TodoApplication extends Application implements
         // It will result in File already open errors from the Sync API
         Intent i = new Intent(Constants.INTENT_RELOAD_TASKBAG);
         sendBroadcast(i);
+    }
+
+    public String getDefaultSort() {
+        String[] sortValues = getResources().getStringArray(R.array.sortValues);
+        return mPrefs.getString(getString(R.string.default_sort_pref_key), sortValues[0]);
     }
 }

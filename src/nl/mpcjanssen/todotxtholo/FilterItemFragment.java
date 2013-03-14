@@ -10,12 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.util.Arrays;
+
 public class FilterItemFragment extends Fragment {
     private final static String TAG = TodoTxtTouch.class.getSimpleName();
     private final static String STATE_ITEMS = "items";
     private final static String STATE_SELECTED = "selectedItem";
 
-    private int selectedItem;
+    private String selectedItem;
     private int items;
     private ListView lv;
     private GestureDetector gestureDetector;
@@ -29,9 +31,9 @@ public class FilterItemFragment extends Fragment {
         actionbar = getActivity().getActionBar();
         if (savedInstanceState != null) {
             items = savedInstanceState.getInt(STATE_ITEMS);
-            selectedItem = savedInstanceState.getInt(STATE_SELECTED);
+            selectedItem = savedInstanceState.getString(STATE_SELECTED);
         } else {
-            selectedItem = arguments.getInt(Constants.INITIAL_SELECTED_ITEMS);
+            selectedItem = arguments.getString(Constants.INITIAL_SELECTED_ITEMS);
             items = arguments.getInt(Constants.ITEMS);
         }
 
@@ -44,7 +46,8 @@ public class FilterItemFragment extends Fragment {
         lv.setAdapter(new ArrayAdapter<String>(getActivity(),
                 R.layout.simple_list_item_single_choice, getResources().getStringArray(items)));
 
-        lv.setItemChecked(selectedItem, true);
+        int index = Arrays.asList(getResources().getStringArray(R.array.sortValues)).indexOf(selectedItem);
+        lv.setItemChecked(index, true);
         return layout;
     }
 
@@ -52,49 +55,16 @@ public class FilterItemFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_ITEMS, items);
-        outState.putInt(STATE_SELECTED, selectedItem);
+        outState.putString(STATE_SELECTED, selectedItem);
     }
 
 
-    public int getSelectedItem() {
+    public String getSelectedItem() {
         if (lv != null) {
-            return lv.getCheckedItemPosition();
+            return getResources().getStringArray(R.array.sortValues)[lv.getCheckedItemPosition()];
         } else {
             return selectedItem;
         }
     }
 
-    class FilterGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_MAX_OFF_PATH = 250;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                               float velocityY) {
-
-            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                return false;
-
-            int index = actionbar.getSelectedNavigationIndex();
-            // right to left swipe
-            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                Log.v(TAG, "Fling left");
-                if (index < actionbar.getTabCount() - 1)
-                    index++;
-                actionbar.setSelectedNavigationItem(index);
-                return true;
-            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                // left to right swipe
-                Log.v(TAG, "Fling right");
-                if (index > 0)
-                    index--;
-                actionbar.setSelectedNavigationItem(index);
-                return true;
-            }
-            return false;
-        }
-    }
 }

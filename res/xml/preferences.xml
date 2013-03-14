@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+            android:key="@string/default_sort_pref_key"
+            android:title="@string/default_sort_pref_title"
+            android:summary="@string/default_sort_pref_summary"
+            android:entries="@array/sort"
+            android:entryValues="@array/sortValues"
+            />
     <Preference
             android:key="logout_dropbox"
             android:title="@string/dropbox_logout_pref_title"
@@ -15,10 +22,11 @@
     </Preference>
 
     <Preference
-                android:title="@string/donate_title"
-                android:summary="@string/donate_summary">
+            android:title="@string/donate_title"
+            android:summary="@string/donate_summary">
 
-            <intent android:action="android.intent.action.VIEW"
-                    android:data="@string/visit_donate_data" />
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/visit_donate_data"/>
     </Preference>
 </PreferenceScreen>
