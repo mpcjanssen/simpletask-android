@@ -173,6 +173,16 @@ public class TodoTxtTouch extends ListActivity {
                 m_contexts = new ArrayList<String>(Arrays.asList(contexts
                         .split("\n")));
             }
+        }  else if (savedInstanceState != null) {
+            m_prios = Priority.toPriority(savedInstanceState
+                    .getStringArrayList("m_prios"));
+            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+            m_projects = savedInstanceState.getStringArrayList("m_projects");
+            m_search = savedInstanceState.getString("m_search");
+            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
+            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
+            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
+            m_sort = savedInstanceState.getString("sort");
         }
     }
 
@@ -212,6 +222,18 @@ public class TodoTxtTouch extends ListActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
+        outState.putStringArrayList("m_contexts", m_contexts);
+        outState.putStringArrayList("m_projects", m_projects);
+        outState.putBoolean("m_projectsNot", m_projectsNot);
+        outState.putBoolean("m_priosNot", m_priosNot);
+        outState.putBoolean("m_contextsNot", m_contextsNot);
+        outState.putString("m_search", m_search);
+        outState.putString("sort", m_sort);
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -238,6 +260,7 @@ public class TodoTxtTouch extends ListActivity {
         handleIntent(getIntent(), null);
         m_adapter.setFilteredTasks();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
