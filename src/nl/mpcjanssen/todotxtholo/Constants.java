@@ -24,13 +24,6 @@ package nl.mpcjanssen.todotxtholo;
 
 public class Constants {
 
-    public static final int SORT_UNSORTED = 0;
-    public static final int SORT_REVERSE = 1;
-    public static final int SORT_ALPHABETICAL = 2;
-    public static final int SORT_PRIORITY = 3;
-    public static final int SORT_PROJECT = 4;
-    public static final int SORT_CONTEXT = 5;
-
     // Constants for creating shortcuts
     public final static String INTENT_ACTIVE_SORT = "SORT";
     public final static String INTENT_STRING_FILTER = "STRING";
