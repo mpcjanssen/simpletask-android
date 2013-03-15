@@ -162,6 +162,10 @@ public class TodoTxtTouch extends ListActivity {
             m_contextsNot = intent.getBooleanExtra(
                     Constants.INTENT_CONTEXTS_FILTER_NOT, false);
 
+            m_prios = new ArrayList<Priority>();
+            m_projects = new ArrayList<String>();
+            m_contexts = new ArrayList<String>();
+
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
             }
