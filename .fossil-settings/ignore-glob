@@ -7,3 +7,4 @@ build.bat
 *~
 .idea/workspace.xml
 .idea/tasks.xml
+local.properties
