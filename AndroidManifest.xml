@@ -20,124 +20,123 @@ You should have received a copy of the GNU General Public License along with Sim
 -->
 <!-- suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nl.mpcjanssen.todotxtholo"
-    android:versionCode="105"
-    android:versionName="1.0.5" >
+          package="nl.mpcjanssen.todotxtholo"
+          android:versionCode="200"
+          android:versionName="2.0.0">
 
     <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="17" />
+            android:minSdkVersion="15"
+            android:targetSdkVersion="17"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
 
     <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
+            android:anyDensity="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:resizeable="true"
+            android:smallScreens="true"
+            android:xlargeScreens="true"/>
 
     <application
-        android:name="nl.mpcjanssen.todotxtholo.TodoApplication"
-        android:allowBackup="false"
-        android:icon="@drawable/icon"
-        android:label="@string/app_label"
-        android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
-        android:uiOptions="splitActionBarWhenNarrow" >
-        <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
+            android:name="nl.mpcjanssen.todotxtholo.TodoApplication"
+            android:allowBackup="false"
+            android:icon="@drawable/icon"
+            android:label="@string/app_label"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+            android:uiOptions="splitActionBarWhenNarrow">
+        <activity android:name="com.dropbox.sync.android.DbxAuthActivity"/>
         <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:exported="true"
-            android:launchMode="singleTask" >
+                android:name="com.dropbox.client2.android.AuthActivity"
+                android:exported="true"
+                android:launchMode="singleTask">
             <intent-filter>
-                <data android:scheme="@string/dropbox_manifest_key" />
+                <data android:scheme="@string/dropbox_manifest_key"/>
 
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.LoginScreen"
-            android:label="@string/app_label" >
-                        <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                android:name="nl.mpcjanssen.todotxtholo.LoginScreen"
+                android:label="@string/app_label">
         </activity>
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.Preferences"
-            android:label="@string/set_preferences" />
+                android:name="nl.mpcjanssen.todotxtholo.Preferences"
+                android:label="@string/set_preferences"/>
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.AddTask"
-            android:exported="true"
-            android:label="@string/addtask"
-            android:windowSoftInputMode="adjustResize" >
+                android:name="nl.mpcjanssen.todotxtholo.AddTask"
+                android:exported="true"
+                android:label="@string/addtask"
+                android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
         <activity-alias
-            android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name"
-            android:targetActivity=".AddTask" >
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
+                android:label="@string/share_addtask_name"
+                android:targetActivity=".AddTask">
             <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <action android:name="android.intent.action.SEND"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity-alias>
-        <activity-alias
-            android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
-            android:label="@string/share_addtask_name"
-            android:targetActivity=".AddTask" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity-alias>
 
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
-            android:exported="true"
-            android:launchMode="singleTop">
-
+                android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
+                android:exported="true"
+                android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER" />
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="nl.mpcjanssen.todotxtholo.START_FROM_SHORTCUT"/>
             </intent-filter>
 
             <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                    android:name="android.app.searchable"
+                    android:resource="@xml/searchable"/>
         </activity>
-        <activity
-            android:name="nl.mpcjanssen.todotxtholo.FilterActivity"
-            android:label="@string/title_activity_filter" 
-            android:exported="true">
+
+
+        <activity-alias
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
+                android:label="@string/shortcut_addtask_name"
+                android:targetActivity=".AddTask">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+                android:name="nl.mpcjanssen.todotxtholo.FilterActivity"
+                android:label="@string/title_activity_filter"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
         <service
-            android:name="com.dropbox.sync.android.DbxSyncService"
-            android:enabled="true"
-            android:exported="false"
-            android:label="Dropbox Sync" />
+                android:name="com.dropbox.sync.android.DbxSyncService"
+                android:enabled="true"
+                android:exported="false"
+                android:label="Dropbox Sync"/>
 
     </application>
 

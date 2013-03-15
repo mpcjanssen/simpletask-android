@@ -22,30 +22,11 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import nl.mpcjanssen.todotxtholo.Constants;
-import nl.mpcjanssen.todotxtholo.TodoTxtTouch;
-import nl.mpcjanssen.todotxtholo.util.TaskIo;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxException.Unauthorized;
-import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxFileSystem.PathListener;
-import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxPath.InvalidPathException;
+import nl.mpcjanssen.todotxtholo.TodoTxtTouch;
+
+import java.util.*;
 
 
 /**
@@ -59,9 +40,7 @@ import com.dropbox.sync.android.DbxPath.InvalidPathException;
  */
 public class TaskBag  {
     final static String TAG = TodoTxtTouch.class.getSimpleName();
-    
-    
-    private Preferences preferences;
+
     private ArrayList<Task> tasks = new ArrayList<Task>();
 
 	private DbxAccountManager dbxAcctMgr;
@@ -70,9 +49,22 @@ public class TaskBag  {
 
 	private ArrayList<TodoTxtTouch> obs = new ArrayList<TodoTxtTouch>();
 
-    public TaskBag(Preferences taskBagPreferences, DbxAccountManager dbxAcctMgr) {
-        this.preferences = taskBagPreferences;
-        this.dbxAcctMgr = dbxAcctMgr;
+    public void init(ArrayList<Task> newTasks) {
+        tasks.clear();
+        tasks.addAll(newTasks);
+    }
+
+    public void init (String todoContents) {
+        tasks = new ArrayList<Task>();
+        long lineNr = 0;
+        for (String line : todoContents.split("\n")) {
+            lineNr++;
+            line = line.trim();
+            if (!line.equals("")) {
+                Task t = new Task(lineNr, line);
+                tasks.add(t);
+            }
+        }
     }
 
     public int size() {
@@ -82,23 +74,6 @@ public class TaskBag  {
     public ArrayList<Task> getTasks() {
         return tasks;
     }
-    
-    public void reload () {
-        Log.v(TAG, "Taskbag reloaded");
-    	try {
-			dbxFs = DbxFileSystem.forAccount(dbxAcctMgr.getLinkedAccount());
-			if (!dbxFs.hasSynced()) {
-				dbxFs.awaitFirstSync();
-			}
-		} catch (Unauthorized e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DbxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	loadTodoFile();
-    }
 
     public Task getTaskAt(int position) {
         return tasks.get(position);
@@ -106,11 +81,8 @@ public class TaskBag  {
 
     public void addAsTask(String input) {
         try {
-            Task task = new Task(tasks.size(), input,
-                    (preferences.isPrependDateEnabled() ? new Date() : null));
-            reload();
+            Task task = new Task(tasks.size(), input, new Date());
             tasks.add(task);
-            store();
         } catch (Exception e) {
             throw new TaskPersistException("An error occurred while adding {"
                     + input + "}", e);
@@ -118,67 +90,46 @@ public class TaskBag  {
     }
 
     public void updateTask(Task task, String input) {
-        task.init(input, null);
-        store();
+        Task toUpdate = find(task);
+        toUpdate.init(input, null);
     }
 
     public Task find(Task task) {
-        Task found = TaskBag.find(tasks, task);
-        return found;
+        for (Task t : tasks) {
+            if (t.inFileFormat().equals(task.inFileFormat())) {
+                return t;
+            }
+        }
+        return null;
     }
 
-	public void deleteTasks(List<Task> toDelete) {
+    public Task find(String text) {
+        for (Task t : tasks) {
+            if (t.inFileFormat().equals(text)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+
+    public void deleteTasks(List<Task> toDelete) {
 		for (Task task : toDelete) {
-			Task found = TaskBag.find(tasks, task);
+			Task found = find(task);
 			if (found != null) {
 				tasks.remove(found);
 			} else {
 				throw new TaskPersistException("Task not found, not deleted");
 			}
 		}
-		store();
 	}
 
-    private void saveTodoFile() {
-	    	DbxFile todoFile;
-	    	try {
-				if (dbxFs.isFile(new DbxPath("todo.txt"))) {
-					todoFile = dbxFs.open(new DbxPath("todo.txt"));
-				} else {
-					todoFile = dbxFs.create(new DbxPath("todo.txt"));
-				}
-		        TaskIo.writeTasksToFile(tasks, todoFile);
-		        todoFile.close();
-			} catch (InvalidPathException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DbxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    }
-
-    private void loadTodoFile() {
-    	DbxFile todoFile;
-    	try {
-			if (dbxFs.isFile(new DbxPath("todo.txt"))) {
-				todoFile = dbxFs.open(new DbxPath("todo.txt"));
-			} else {
-				todoFile = dbxFs.create(new DbxPath("todo.txt"));
-			}
-			tasks = TaskIo.loadTasksFromFile(todoFile);
-	        todoFile.close();
-		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DbxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+    public String getTodoContents() {
+        String output = "";
+        for (Task t : tasks) {
+            output = output + t.inFileFormat() + "\n";
+        }
+        return output;
     }
 
     public ArrayList<Priority> getPriorities() {
@@ -215,63 +166,4 @@ public class TaskBag  {
         ret.add(0, "-");
         return ret;
     }
-
-    private static Task find(List<Task> tasks, Task task) {
-        for (Task task2 : tasks) {
-            if (task2 == task || (task2.getText().equals(task.getOriginalText())
-                    && task2.getPriority() == task.getOriginalPriority())) {
-                return task2;
-            }
-        }
-        return null;
-    }
-
-    public static class Preferences {
-        private final SharedPreferences sharedPreferences;
-
-        public Preferences(SharedPreferences sharedPreferences) {
-            this.sharedPreferences = sharedPreferences;
-        }
-
-
-        public boolean isPrependDateEnabled() {
-            return sharedPreferences.getBoolean("todotxtprependdate", true);
-        }
-
-    }
-
-	public void store() {
-		saveTodoFile();		
-	}
-	
-	public void archive() {
-		// Read current done
-		ArrayList<Task> incompleteTasks = new ArrayList<Task>();
-    	DbxFile doneFile;
-    	String contents = "";
-    	try {
-			if (dbxFs.isFile(new DbxPath("done.txt"))) {
-				doneFile = dbxFs.open(new DbxPath("done.txt"));
-				contents =  doneFile.readString();
-			} else {
-				doneFile = dbxFs.create(new DbxPath("done.txt"));
-			}
-	        
-			for (Task task : tasks) {
-				if (task.isCompleted()) {
-					contents = contents + "\n" + task.inFileFormat();
-				} else {
-					incompleteTasks.add(task);
-				}
-			}
-			doneFile.writeString(contents);
-	        doneFile.close();
-	        tasks = incompleteTasks;
-	        store();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 }

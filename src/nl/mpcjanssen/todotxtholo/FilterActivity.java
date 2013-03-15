@@ -2,35 +2,22 @@ package nl.mpcjanssen.todotxtholo;
 
 import android.app.*;
 import android.app.ActionBar.Tab;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.RemoteViews;
-import nl.mpcjanssen.todotxtholo.task.Priority;
-import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class FilterActivity extends Activity {
 
 	final static String TAG = FilterActivity.class.getSimpleName();
 	Menu menu;
 	private ActionBar actionbar;
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +28,10 @@ public class FilterActivity extends Activity {
 		actionbar = getActionBar();
 		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		TaskBag taskBag = ((TodoApplication) getApplication()).getTaskBag();
-
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
-		arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent()
+		arguments.putStringArrayList(Constants.ITEMS, getIntent()
 				.getStringArrayListExtra(Constants.EXTRA_CONTEXTS));
 
 		arguments.putStringArrayList(
@@ -66,7 +51,7 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
-		arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent()
+		arguments.putStringArrayList(Constants.ITEMS, getIntent()
 				.getStringArrayListExtra(Constants.EXTRA_PROJECTS));
 
 		arguments.putStringArrayList(
@@ -86,7 +71,7 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 
-		arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent()
+		arguments.putStringArrayList(Constants.ITEMS, getIntent()
 				.getStringArrayListExtra(Constants.EXTRA_PRIORITIES));
 
 		arguments.putStringArrayList(
@@ -105,11 +90,10 @@ public class FilterActivity extends Activity {
 
 		// Fill arguments for fragment
 		arguments = new Bundle();
-		arguments.putInt(Constants.FILTER_ITEMS, R.array.sort);
-		arguments.putInt(
-				Constants.ACTIVE_SORT,
-				getIntent().getIntExtra(Constants.ACTIVE_SORT,
-						Constants.SORT_UNSORTED));
+		arguments.putInt(Constants.ITEMS, R.array.sort);
+		arguments.putString(
+				Constants.INITIAL_SELECTED_ITEMS,
+				getIntent().getStringExtra(Constants.INTENT_ACTIVE_SORT));
 		actionbar.addTab(actionbar
 				.newTab()
 				.setText(getString(R.string.sort))
@@ -182,7 +166,7 @@ public class FilterActivity extends Activity {
 	}
 
 	private Intent createFilterIntent() {
-		Intent target = new Intent(Constants.INTENT_START_FILTER);
+		Intent target = new Intent(Constants.INTENT_START_FROM_SHORTCUT);
 		String name = "";
 		ArrayList<String> appliedFilters = new ArrayList<String>();
 		ArrayList<String> contextFilter = getFilter(Constants.EXTRA_CONTEXTS);
@@ -192,27 +176,24 @@ public class FilterActivity extends Activity {
 		appliedFilters.addAll(prioritiesFilter);
 		appliedFilters.addAll(projectsFilter);
 
-		target.putExtra(Constants.INTENT_VERSION,
-				Constants.INTENT_CURRENT_VERSION);
-		target.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1,
+		target.putExtra(Constants.INTENT_CONTEXTS_FILTER,
 				Util.join(contextFilter, "\n"));
-		target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT_v1,
+		target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT,
 				getNot(Constants.EXTRA_CONTEXTS));
-		target.putExtra(Constants.INTENT_PROJECTS_FILTER_v1,
+		target.putExtra(Constants.INTENT_PROJECTS_FILTER,
 				Util.join(projectsFilter, "\n"));
-		target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1,
+		target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT,
 				getNot(Constants.EXTRA_PROJECTS));
-		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1,
+		target.putExtra(Constants.INTENT_PRIORITIES_FILTER,
 				Util.join(prioritiesFilter, "\n"));
-		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,
+		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT,
 				getNot(Constants.EXTRA_PRIORITIES));
 		target.putExtra(
-				Constants.INTENT_ACTIVE_SORT_v1,
+				Constants.INTENT_ACTIVE_SORT,
 				getSelectedItem(
 						getString(R.string.sort),
-						getIntent().getIntExtra(
-								Constants.INTENT_ACTIVE_SORT_v1,
-								Constants.SORT_UNSORTED)));
+						getIntent().getStringExtra(
+								Constants.INTENT_ACTIVE_SORT)));
 
 		if (appliedFilters.size() == 1) {
 			name = appliedFilters.get(0);
@@ -238,7 +219,7 @@ public class FilterActivity extends Activity {
 		return filter;
 	}
 
-	private int getSelectedItem(String tag, int defaultSelected) {
+	private String getSelectedItem(String tag, String defaultSelected) {
 		FilterItemFragment fr;
 		fr = (FilterItemFragment) this.getFragmentManager().findFragmentByTag(
 				tag);

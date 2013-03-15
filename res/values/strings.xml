@@ -95,6 +95,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="manual_sync_pref_title">Manual sync</string>
     <string name="manual_sync_pref_summary">Don\'t automatically upload every change to Dropbox.</string>
 
+    <string name="default_sort_pref_title">Default sort</string>
+    <string name="default_sort_pref_summary">Sort order when there is no active filter specifying the sort.</string>
+
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -103,7 +106,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_website_data">http://github.com/mpcjanssen/Simpletask</string>
 
     <string name="donate_title">Donate</string>
-    <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be
+    <string name="donate_summary">Donate if you like simpletask.\nNOTE: Donation is voluntary, simpletask will always be
         free.
     </string>
     <string name="visit_donate_data">http://bit.ly/VYR7Fq</string>

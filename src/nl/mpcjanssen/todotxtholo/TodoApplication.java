@@ -22,56 +22,190 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import com.dropbox.sync.android.DbxAccountManager;
-
+import android.app.Activity;
 import android.app.Application;
-import android.content.*;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.os.Handler;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import com.dropbox.sync.android.*;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
-import nl.mpcjanssen.todotxtholo.util.Util;
+
+import java.io.IOException;
 
 
-public class TodoApplication extends Application {
-    private final static String TAG = TodoApplication.class.getSimpleName();
-    public SharedPreferences m_prefs;
-    private TaskBag taskBag;
-    public static Context appContext;
-	private DbxAccountManager mDbxAcctMgr;
+public class TodoApplication extends Application implements
+        DbxFileSystem.PathListener, DbxFileSystem.SyncStatusListener {
+
+    public final static String TAG = TodoTxtTouch.class.getSimpleName();
+    final int SYNC_NOTIFICATION_ID = 0x0;
+    final int REQUEST_LINK_TO_DBX = 0x0;
+
+    private DbxAccountManager mDbxAcctMgr;
+    private final TaskBag mTaskBag = new TaskBag();
+    private DbxFileSystem dbxFs;
+    private DbxPath mTodoPath = new DbxPath("todo.txt");
+    private SharedPreferences mPrefs;
+
+
+    @Override
+    public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+        try {
+            DbxSyncStatus status = dbxFileSystem.getSyncStatus();
+            Intent i;
+            if (status.anyInProgress()) {
+                Log.v(TAG, "Synchronizing with dropbox");
+                showSyncNotification(true);
+            } else {
+                showSyncNotification(false);
+            }
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSyncNotification(boolean show) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.navigation_refresh)
+                        .setContentTitle("Simpletask")
+                        .setContentText("Synchronizing with dropbox");
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (show) {
+            mNotificationManager.notify(SYNC_NOTIFICATION_ID, mBuilder.build());
+        } else {
+            mNotificationManager.cancel(SYNC_NOTIFICATION_ID);
+        }
+    }
+
+    public DbxAccountManager getDbxAcctMgr() {
+        return mDbxAcctMgr;
+    }
+
+    public TaskBag getTaskBag() {
+        return mTaskBag;
+    }
+
+    public DbxFile createOrOpenFile(DbxPath path) {
+        try {
+            if (dbxFs == null) {
+                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            }
+            if (!dbxFs.hasSynced()) {
+                dbxFs.awaitFirstSync();
+            }
+            if (!dbxFs.isFile(path)) {
+                Log.v(TAG, "file: " + path + " doesn't exist, creating");
+                return dbxFs.create(path);
+            } else {
+                return dbxFs.open(path);
+            }
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public void initTaskBag() {
+        Log.v(TAG, "Initializing TaskBag from dropbox");
+        DbxFile mTodoFile;
+        // Initialize the taskbag
+        try {
+            mTodoFile = createOrOpenFile(mTodoPath);
+            // Reflect changes we might have missed
+            mTodoFile.update();
+            mTaskBag.init(mTodoFile.readString());
+            mTodoFile.close();
+        } catch (DbxException.Unauthorized unauthorized) {
+            unauthorized.printStackTrace();
+        } catch (DbxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        TodoApplication.appContext = getApplicationContext();
-        m_prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
-                m_prefs);
-		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), 
-				getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
-
-		this.taskBag = new TaskBag(taskBagPreferences, mDbxAcctMgr);
+        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
+                getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
-    public DbxAccountManager getDbxAcctMgr() {
-		return mDbxAcctMgr;
-	}
-
-    public TaskBag getTaskBag() {
-        return taskBag;
+    public boolean isAuthenticated() {
+        return mDbxAcctMgr.hasLinkedAccount();
     }
 
-    public static Context getAppContext() {
-        return appContext;
+    public void storeTaskbag() {
+        try {
+            DbxFile mTodoFile = createOrOpenFile(mTodoPath);
+            mTodoFile.writeString(mTaskBag.getTodoContents());
+            mTodoFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void showToast(int resid) {
-        Util.showToastLong(this, resid);
+    public void logout() {
+        dbxFs.shutDown();
+        mDbxAcctMgr.unlink();
     }
 
-    public void showToast(String string) {
-        Util.showToastLong(this, string);
+    public void loginDone() {
+        try {
+            dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            initTaskBag();
+        } catch (DbxException.Unauthorized unauthorized) {
+            unauthorized.printStackTrace();
+        }
+
+    }
+
+    public void updateFromDropbox (boolean watch) {
+        try {
+            if (!mDbxAcctMgr.hasLinkedAccount()) {
+                Log.v(TAG, "Unauthenticated: Not changing Dropbox handlers to: " + watch);
+                return;
+            }
+            if (dbxFs == null) {
+                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            }
+            if (watch) {
+                Log.v(TAG, "Registering Dropbox handlers: " + watch);
+                dbxFs.addSyncStatusListener(this);
+                dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+                // Download pending changes we missed
+                initTaskBag();
+            } else {
+                Log.v(TAG, "Registering Dropbox handlers: " + watch);
+                dbxFs.removeSyncStatusListener(this);
+                dbxFs.removePathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+                showSyncNotification(false);
+            }
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
+        Log.v(TAG, "File changed on dropbox reloading: " + dbxPath.getName());
+        // Don't reload the taskbag here.
+        // It will result in File already open errors from the Sync API
+        Intent i = new Intent(Constants.INTENT_RELOAD_TASKBAG);
+        sendBroadcast(i);
+    }
+
+    public String getDefaultSort() {
+        String[] sortValues = getResources().getStringArray(R.array.sortValues);
+        return mPrefs.getString(getString(R.string.default_sort_pref_key), sortValues[0]);
     }
 }
