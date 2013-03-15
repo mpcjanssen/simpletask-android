@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--suppress ALL -->
-<resources>
-    <string name="sort_complete_last_pref_key">todotxtsortcompletelast</string>
-    <string name="prepend_date_pref_key">todotxtprependdate</string>
-</resources>

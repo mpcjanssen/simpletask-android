@@ -22,17 +22,13 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import com.dropbox.sync.android.DbxAccountManager;
-
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import com.dropbox.sync.android.DbxAccountManager;
 
 
 public class LoginScreen extends Activity {
@@ -40,20 +36,13 @@ public class LoginScreen extends Activity {
     final static String TAG = LoginScreen.class.getSimpleName();
 
     private TodoApplication m_app;
-
-	private DbxAccountManager dbxAcctMgr;
     
-    static final int REQUEST_LINK_TO_DBX = 0;
+    static final int REQUEST_LINK_TO_DBX = 0x0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        m_app = (TodoApplication) getApplication();
-        dbxAcctMgr = m_app.getDbxAcctMgr();
-        if (dbxAcctMgr!=null && dbxAcctMgr.hasLinkedAccount()) {
-        	switchToTodolist();
-        }
+        m_app = (TodoApplication)getApplication();
         setContentView(R.layout.login);
         Button m_LoginButton = (Button) findViewById(R.id.login);
         m_LoginButton.setOnClickListener(new OnClickListener() {
@@ -65,13 +54,12 @@ public class LoginScreen extends Activity {
     }
     
     public void linkToDropBox () {
-    	if (dbxAcctMgr!=null) {
-    			dbxAcctMgr.startLink(this, REQUEST_LINK_TO_DBX);
-    	}
+    		m_app.getDbxAcctMgr().startLink(this, REQUEST_LINK_TO_DBX);
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == Activity.RESULT_OK) {
+                m_app.loginDone();
                 switchToTodolist();
             } else {
                 // ... Link failed or was cancelled by the user.
@@ -82,7 +70,7 @@ public class LoginScreen extends Activity {
     
     }
     private void switchToTodolist() {
-        Intent intent = new Intent(this, TodoTxtTouch.class);
+        Intent intent = new Intent(LoginScreen.this, TodoTxtTouch.class);
         startActivity(intent);
         finish();
     }

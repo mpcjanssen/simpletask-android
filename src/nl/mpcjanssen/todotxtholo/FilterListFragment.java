@@ -4,9 +4,9 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.View.OnTouchListener;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class FilterListFragment extends Fragment {
         Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
-        ArrayList<String> items = arguments.getStringArrayList(Constants.FILTER_ITEMS);
+        ArrayList<String> items = arguments.getStringArrayList(Constants.ITEMS);
         actionbar = getActivity().getActionBar();
 
         if (savedInstanceState != null) {

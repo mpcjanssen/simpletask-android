@@ -30,9 +30,13 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 
 public class Preferences extends PreferenceActivity {
+    private TodoApplication m_app;
+    final static String TAG = TodoApplication.TAG;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        m_app = (TodoApplication)getApplication();
         addPreferencesFromResource(R.xml.preferences);
     }
 
@@ -41,19 +45,13 @@ public class Preferences extends PreferenceActivity {
     
 	@Override
 	public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
-		if(preference.getKey().equals("archive_now")) {
-			Log.v("PREFERENCES", "Archiving completed items from preferences");
-			Intent i = new Intent();
-			i.setAction(Constants.INTENT_ACTION_ARCHIVE);
-			getApplicationContext().sendBroadcast(i);
-			finish();
-		} else if(preference.getKey().equals("logout_dropbox")) {
-			Log.v("PREFERENCES", "Logging out from Dropbox");
-			Intent i = new Intent();
-			i.setAction(Constants.INTENT_ACTION_LOGOUT);
-			getApplicationContext().sendBroadcast(i);
-			finish();		
+		if(preference.getKey()!=null && preference.getKey().equals("logout_dropbox")) {
+			Log.v(TAG, "Logging out from Dropbox");
+            m_app.logout();
+			startActivity(new Intent(this, TodoTxtTouch.class));
+            finish();
+            return true;
 		}
-		return true;
+        return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
 }

@@ -1,44 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-            android:key="@string/sort_complete_last_pref_key"
-            android:title="@string/sort_complete_last_pref_title"
-            android:summary="@string/sort_complete_last_pref_summary"
-            android:defaultValue="true"/>
-    <CheckBoxPreference
-            android:key="@string/prepend_date_pref_key"
-            android:title="@string/prepend_date_pref_title"
-            android:summary="@string/prepend_date_pref_summary"
-            android:defaultValue="true"/>
-
-    
-
+    <ListPreference
+            android:key="@string/default_sort_pref_key"
+            android:title="@string/default_sort_pref_title"
+            android:summary="@string/default_sort_pref_summary"
+            android:entries="@array/sort"
+            android:entryValues="@array/sortValues"
+            />
     <Preference
             android:key="logout_dropbox"
             android:title="@string/dropbox_logout_pref_title"
             android:summary="@string/dropbox_logout_pref_summary"/>
     <Preference
-            android:key="archive_now"
-            android:title="@string/archive_now_pref_title"
-            android:summary="@string/archive_now_pref_summary"
-            />
-    <PreferenceScreen
             android:title="@string/visit_website_title"
             android:summary="@string/visit_website_summary">
 
         <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/visit_website_data"/>
-    </PreferenceScreen>
+    </Preference>
 
-    <!--        <PreferenceScreen
-                android:title="@string/donate_title"
-                android:summary="@string/donate_summary">
+    <Preference
+            android:title="@string/donate_title"
+            android:summary="@string/donate_summary">
 
-            <intent android:action="android.intent.action.VIEW"
-                    android:data="@string/visit_donate_data" />
-            </PreferenceScreen>
-    -->
-
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/visit_donate_data"/>
+    </Preference>
 </PreferenceScreen>
