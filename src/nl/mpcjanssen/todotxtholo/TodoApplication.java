@@ -206,6 +206,6 @@ public class TodoApplication extends Application implements
 
     public String getDefaultSort() {
         String[] sortValues = getResources().getStringArray(R.array.sortValues);
-        return mPrefs.getString(getString(R.string.default_sort_pref_key), sortValues[0]);
+        return mPrefs.getString(getString(R.string.default_sort_pref_key), "sort_by_context");
     }
 }
