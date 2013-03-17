@@ -3,4 +3,5 @@
 <!--suppress ALL -->
 <resources>
     <string name="default_sort_pref_key">default_sort</string>
+    <string name="windows_line_breaks_pref_key">line_break</string>
 </resources>

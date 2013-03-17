@@ -124,10 +124,10 @@ public class TaskBag  {
 		}
 	}
 
-    public String getTodoContents() {
+    public String getTodoContents(String lineBreak) {
         String output = "";
         for (Task t : tasks) {
-            output = output + t.inFileFormat() + "\n";
+            output = output + t.inFileFormat() + lineBreak;
         }
         return output;
     }
