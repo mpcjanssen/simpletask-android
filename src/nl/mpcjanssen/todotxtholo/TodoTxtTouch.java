@@ -816,6 +816,7 @@ public class TodoTxtTouch extends ListActivity {
                         calendarDescription = selectedTasksAsString();
 
                     }
+                    Log.v(TAG,"Creating event: " + calendarTitle);
                     intent = new Intent(android.content.Intent.ACTION_INSERT)
                             .setData(Events.CONTENT_URI)
                             .putExtra(Events.TITLE, calendarTitle)
