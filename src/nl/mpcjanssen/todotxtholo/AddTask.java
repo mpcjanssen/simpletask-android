@@ -109,15 +109,6 @@ public class AddTask extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
-        m_app = (TodoApplication)getApplication();
-        if (!m_app.isAuthenticated()) {
-            Intent i = new Intent(this, LoginScreen.class);
-            startActivity(i);
-            finish();
-            return;
-        }
-        m_app.initTaskBag();
-
         final Intent intent = getIntent();
         final String action = intent.getAction();
         // create shortcut and exit
@@ -133,6 +124,14 @@ public class AddTask extends Activity {
             Log.d(TAG, share_text);
         }
 
+        m_app = (TodoApplication)getApplication();
+        if (!m_app.isAuthenticated()) {
+            Intent i = new Intent(this, LoginScreen.class);
+            startActivity(i);
+            finish();
+            return;
+        }
+        m_app.initTaskBag();
 
         setContentView(R.layout.add_task);
 
