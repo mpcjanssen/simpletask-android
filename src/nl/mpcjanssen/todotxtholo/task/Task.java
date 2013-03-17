@@ -23,6 +23,7 @@
 package nl.mpcjanssen.todotxtholo.task;
 
 import android.content.Context;
+import android.util.Log;
 import nl.mpcjanssen.todotxtholo.util.RelativeDate;
 import nl.mpcjanssen.todotxtholo.util.Strings;
 
@@ -224,6 +225,18 @@ public class Task implements Serializable, Comparable<Task> {
     public void copyInto(Task destination) {
         destination.id = this.id;
         destination.init(this.inFileFormat(), null);
+    }
+
+    public void setContext(String context) {
+        if(contexts.size()==0) {
+            String newContent = inFileFormat() + " @" + context;
+            this.init(newContent, null);
+        } else if (contexts.size()>0) {
+            // Replace first context
+            String oldContext = contexts.get(0);
+            String newContent = inFileFormat().replace(oldContext, context);
+            this.init(newContent, null);
+        }
     }
 
     @Override

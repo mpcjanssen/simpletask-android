@@ -46,6 +46,7 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class TodoTxtTouch extends ListActivity {
 
@@ -325,6 +326,33 @@ public class TodoTxtTouch extends ListActivity {
                 for (Task task : tasks) {
                     if (task != null) {
                         task.setPriority(Priority.toPriority(prioArr[which]));
+                    }
+                }
+                m_app.storeTaskbag();
+                m_adapter.setFilteredTasks();
+            }
+        });
+        builder.show();
+
+    }
+
+    private void changeTasksContext(final List<Task> tasks) {
+        ArrayList<String> contexts = m_app.getTaskBag().getContexts();
+        Collections.sort(contexts);
+        final String [] arrContexts = contexts.toArray(new String[0]);
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select priority");
+        builder.setSingleChoiceItems(arrContexts, 0, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, final int which) {
+
+                dialog.dismiss();
+                for (Task task : tasks) {
+                    if (task != null) {
+                        task.setContext(arrContexts[which]);
                     }
                 }
                 m_app.storeTaskbag();
@@ -795,6 +823,9 @@ public class TodoTxtTouch extends ListActivity {
                 case R.id.priority:
                     prioritizeTasks(checkedTasks);
                     break;
+                case R.id.context:
+                    changeTasksContext(checkedTasks);
+                    break;
                 case R.id.share:
                     String shareText = selectedTasksAsString();
                     intent = new Intent(android.content.Intent.ACTION_SEND)
@@ -872,6 +903,8 @@ public class TodoTxtTouch extends ListActivity {
             // Nothing to do here
         }
     }
+
+
 
     private class AndFilter {
         private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
