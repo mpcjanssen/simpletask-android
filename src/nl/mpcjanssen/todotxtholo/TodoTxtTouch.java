@@ -501,7 +501,7 @@ public class TodoTxtTouch extends ListActivity {
                 for (Task t : visibleTasks) {
                     List<String> taskItems = t.getContexts();
                     String newHeader;
-                    if (taskItems == null || taskItems.size() == 0 || taskItems.get(0).equals("")) {
+                    if (taskItems == null || taskItems.size() == 0) {
                         newHeader = getString(R.string.no_context);
                     } else {
                         newHeader = taskItems.get(0);
@@ -517,7 +517,7 @@ public class TodoTxtTouch extends ListActivity {
                 for (Task t : visibleTasks) {
                     List<String> taskItems = t.getProjects();
                     String newHeader;
-                    if (taskItems == null || taskItems.size() == 0 || taskItems.get(0).equals("")) {
+                    if (taskItems == null || taskItems.size() == 0) {
                         newHeader = getString(R.string.no_project);
                     } else {
                         newHeader = taskItems.get(0);
