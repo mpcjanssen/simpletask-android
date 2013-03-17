@@ -147,7 +147,7 @@ public class TodoApplication extends Application implements
     public void storeTaskbag() {
         try {
             DbxFile mTodoFile = createOrOpenFile(mTodoPath);
-            mTodoFile.writeString(mTaskBag.getTodoContents());
+            mTodoFile.writeString(mTaskBag.getTodoContents(getLineBreak()));
             mTodoFile.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -207,5 +207,13 @@ public class TodoApplication extends Application implements
     public String getDefaultSort() {
         String[] sortValues = getResources().getStringArray(R.array.sortValues);
         return mPrefs.getString(getString(R.string.default_sort_pref_key), "sort_by_context");
+    }
+
+    public String getLineBreak() {
+        if (mPrefs.getBoolean(getString(R.string.windows_line_breaks_pref_key), true)) {
+          return "\r\n";
+        } else {
+          return "\n";
+        }
     }
 }
