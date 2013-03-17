@@ -47,6 +47,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete">Delete</string>
     <string name="share">Share</string>
     <string name="unComplete">Undo complete</string>
+    <string name="changecontext">Change context</string>
+
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear_filter">Clear filter</string>
