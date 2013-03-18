@@ -317,7 +317,7 @@ public class TodoTxtTouch extends ListActivity {
                 .rangeInCodeArray(Priority.NONE, Priority.E);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select priority");
+        builder.setTitle(R.string.changeprio);
         builder.setSingleChoiceItems(prioArr, 0, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, final int which) {
@@ -344,7 +344,7 @@ public class TodoTxtTouch extends ListActivity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select priority");
+        builder.setTitle(R.string.changecontext);
         builder.setSingleChoiceItems(arrContexts, 0, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, final int which) {
