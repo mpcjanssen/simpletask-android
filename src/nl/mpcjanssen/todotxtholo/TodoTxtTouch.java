@@ -59,11 +59,12 @@ public class TodoTxtTouch extends ListActivity {
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
     private ArrayList<String> m_contexts = new ArrayList<String>();
     private ArrayList<String> m_projects = new ArrayList<String>();
+    private ArrayList<String> m_sorts = new ArrayList<String>();
     private boolean m_projectsNot = false;
     private boolean m_priosNot;
     private boolean m_contextsNot;
     private String m_search;
-    private String m_sort = null;
+
 
     TaskAdapter m_adapter;
 
@@ -148,6 +149,7 @@ public class TodoTxtTouch extends ListActivity {
             String prios;
             String projects;
             String contexts;
+            String sorts;
 
             prios = intent
                     .getStringExtra(Constants.INTENT_PRIORITIES_FILTER);
@@ -155,7 +157,7 @@ public class TodoTxtTouch extends ListActivity {
                     .getStringExtra(Constants.INTENT_PROJECTS_FILTER);
             contexts = intent
                     .getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
-            m_sort = intent.getStringExtra(Constants.INTENT_ACTIVE_SORT);
+            sorts = intent.getStringExtra(Constants.INTENT_ACTIVE_SORT);
             m_priosNot = intent.getBooleanExtra(
                     Constants.INTENT_PRIORITIES_FILTER_NOT, false);
             m_projectsNot = intent.getBooleanExtra(
@@ -166,6 +168,7 @@ public class TodoTxtTouch extends ListActivity {
             m_prios = new ArrayList<Priority>();
             m_projects = new ArrayList<String>();
             m_contexts = new ArrayList<String>();
+            m_sorts = new ArrayList<String>();
 
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
@@ -178,6 +181,12 @@ public class TodoTxtTouch extends ListActivity {
                 m_contexts = new ArrayList<String>(Arrays.asList(contexts
                         .split("\n")));
             }
+            if (sorts != null && !sorts.equals("")) {
+                m_sorts = new ArrayList<String>(Arrays.asList(sorts
+                        .split("\n")));
+            } else {
+                m_sorts.add(m_app.getDefaultSort());
+            }
         }  else if (savedInstanceState != null) {
             m_prios = Priority.toPriority(savedInstanceState
                     .getStringArrayList("m_prios"));
@@ -187,7 +196,7 @@ public class TodoTxtTouch extends ListActivity {
             m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
             m_priosNot = savedInstanceState.getBoolean("m_priosNot");
             m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
-            m_sort = savedInstanceState.getString("sort");
+            m_sorts = savedInstanceState.getStringArrayList("sort");
         }
     }
 
@@ -237,7 +246,7 @@ public class TodoTxtTouch extends ListActivity {
         outState.putBoolean("m_priosNot", m_priosNot);
         outState.putBoolean("m_contextsNot", m_contextsNot);
         outState.putString("m_search", m_search);
-        outState.putString("sort", m_sort);
+        outState.putStringArrayList("sort", m_sorts);
     }
 
     @Override
@@ -460,6 +469,8 @@ public class TodoTxtTouch extends ListActivity {
         m_contexts = new ArrayList<String>();
         m_prios = new ArrayList<Priority>();
         m_projects = new ArrayList<String>();
+        m_sorts  = new ArrayList<String>();
+        m_sorts.add(m_app.getDefaultSort());
         m_priosNot = false;
         m_projectsNot = false;
         m_contextsNot = false;
@@ -470,28 +481,26 @@ public class TodoTxtTouch extends ListActivity {
     private MultiComparator getActiveSort() {
         List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
         // Sort completed last
-        comparators.add(new CompletedComparator());
-        if (m_sort == null) {
-            m_sort = m_app.getDefaultSort();
+        if (m_sorts.size()==0) {
+            m_sorts.add(m_app.getDefaultSort());
         }
-        if (m_sort.equals("sort_file_order")) {
-            // no additional sorting
-        } else if (m_sort.equals("sort_file_reversed")) {
-            comparators.add(Collections.reverseOrder());
-        } else if (m_sort.equals("sort_by_context")) {
-            comparators.add(new ContextComparator());
-            comparators.add(new AlphabeticalComparator());
-        } else if (m_sort.equals("sort_by_project")) {
-            comparators.add(new ProjectComparator());
-            comparators.add(new AlphabeticalComparator());
-        } else if (m_sort.equals("sort_alphabetical")) {
-            comparators.add(new AlphabeticalComparator());
-            comparators.add(new AlphabeticalComparator());
-        } else if (m_sort.equals("sort_by_prio")) {
-            comparators.add(new PriorityComparator());
-            comparators.add(new AlphabeticalComparator());
-        } else {
-            Log.w(TAG, "Unknown sort: " + m_sort);
+        comparators.add(new CompletedComparator());
+        for (String sort : m_sorts) {
+            if (sort.equals("sort_file_order")) {
+                // no additional sorting
+            } else if (sort.equals("sort_file_reversed")) {
+                comparators.add(Collections.reverseOrder());
+            } else if (sort.equals("sort_by_context")) {
+                comparators.add(new ContextComparator());
+            } else if (sort.equals("sort_by_project")) {
+                comparators.add(new ProjectComparator());
+            } else if (sort.equals("sort_alphabetical")) {
+                comparators.add(new AlphabeticalComparator());
+            } else if (sort.equals("sort_by_prio")) {
+                comparators.add(new PriorityComparator());
+            } else {
+                Log.w(TAG, "Unknown sort: " + sort);
+            }
         }
         return (new MultiComparator(comparators));
     }
@@ -525,7 +534,7 @@ public class TodoTxtTouch extends ListActivity {
             headerAtPostion.clear();
             String header = "";
             int position = 0;
-            if (m_sort.equals("sort_by_context")) {
+            if (m_sorts.get(0).equals("sort_by_context")) {
                 for (Task t : visibleTasks) {
                     List<String> taskItems = t.getContexts();
                     String newHeader;
@@ -541,7 +550,7 @@ public class TodoTxtTouch extends ListActivity {
                     }
                     position++;
                 }
-            } else if (m_sort.equals("sort_by_project")) {
+            } else if (m_sorts.get(0).equals("sort_by_project")) {
                 for (Task t : visibleTasks) {
                     List<String> taskItems = t.getProjects();
                     String newHeader;
@@ -740,11 +749,10 @@ public class TodoTxtTouch extends ListActivity {
                 Priority.inCode(m_prios));
         i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
         i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-        i.putExtra(Constants.EXTRA_SORT_SELECTED, m_sort);
+        i.putStringArrayListExtra(Constants.EXTRA_SORT_SELECTED, m_sorts);
         i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
         i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
         i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
     }
 

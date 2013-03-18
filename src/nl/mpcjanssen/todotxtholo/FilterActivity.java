@@ -91,9 +91,9 @@ public class FilterActivity extends Activity {
 		// Fill arguments for fragment
 		arguments = new Bundle();
 		arguments.putInt(Constants.ITEMS, R.array.sort);
-		arguments.putString(
+		arguments.putStringArrayList(
 				Constants.INITIAL_SELECTED_ITEMS,
-				getIntent().getStringExtra(Constants.INTENT_ACTIVE_SORT));
+				getIntent().getStringArrayListExtra(Constants.EXTRA_SORT_SELECTED));
 		actionbar.addTab(actionbar
 				.newTab()
 				.setText(getString(R.string.sort))
@@ -162,7 +162,7 @@ public class FilterActivity extends Activity {
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		actionbar.setSelectedNavigationItem(savedInstanceState
-				.getInt("active_tab"));
+                .getInt("active_tab"));
 	}
 
 	private Intent createFilterIntent() {
@@ -172,6 +172,7 @@ public class FilterActivity extends Activity {
 		ArrayList<String> contextFilter = getFilter(Constants.EXTRA_CONTEXTS);
 		ArrayList<String> projectsFilter = getFilter(Constants.EXTRA_PROJECTS);
 		ArrayList<String> prioritiesFilter = getFilter(Constants.EXTRA_PRIORITIES);
+        ArrayList<String> selectedSortFilters = getSortFilter(getString(R.string.sort));
 		appliedFilters.addAll(contextFilter);
 		appliedFilters.addAll(prioritiesFilter);
 		appliedFilters.addAll(projectsFilter);
@@ -188,12 +189,8 @@ public class FilterActivity extends Activity {
 				Util.join(prioritiesFilter, "\n"));
 		target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT,
 				getNot(Constants.EXTRA_PRIORITIES));
-		target.putExtra(
-				Constants.INTENT_ACTIVE_SORT,
-				getSelectedItem(
-						getString(R.string.sort),
-						getIntent().getStringExtra(
-								Constants.INTENT_ACTIVE_SORT)));
+		target.putExtra(Constants.INTENT_ACTIVE_SORT,
+                Util.join(selectedSortFilters, "\n"));
 
 		if (appliedFilters.size() == 1) {
 			name = appliedFilters.get(0);
@@ -202,7 +199,24 @@ public class FilterActivity extends Activity {
 		return target;
 	}
 
-	private ArrayList<String> getFilter(String tag) {
+    private ArrayList<String> getSortFilter(String tag) {
+        FilterItemFragment fr;
+        fr = (FilterItemFragment) this.getFragmentManager().findFragmentByTag(
+                tag);
+        ArrayList<String> filter;
+        if (fr == null) {
+            // fragment was never intialized
+            filter = getIntent().getStringArrayListExtra(tag + "_SELECTED");
+        } else {
+            filter = fr.getSelectedItems();
+        }
+        if (filter == null) {
+            filter = new ArrayList<String>();
+        }
+        return filter;
+    }
+
+    private ArrayList<String> getFilter(String tag) {
 		FilterListFragment fr;
 		fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(
 				tag);
@@ -217,18 +231,6 @@ public class FilterActivity extends Activity {
 			filter = new ArrayList<String>();
 		}
 		return filter;
-	}
-
-	private String getSelectedItem(String tag, String defaultSelected) {
-		FilterItemFragment fr;
-		fr = (FilterItemFragment) this.getFragmentManager().findFragmentByTag(
-				tag);
-		if (fr == null) {
-			// fragment was never intialized
-			return defaultSelected;
-		} else {
-			return fr.getSelectedItem();
-		}
 	}
 
 	private boolean getNot(String tag) {

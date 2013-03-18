@@ -3,13 +3,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:id="@+id/filterlayout"
               android:orientation="vertical">
-
-
-    <ListView
-            android:id="@+id/listview"
+    <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:cacheColorHint="#00000000"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:divider="?android:attr/dividerHorizontal"
+            style="?android:attr/buttonBarStyle"
+            android:showDividers="middle">
+
+        <ImageButton
+                android:id="@+id/btnAdd"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/borderlessButtonStyle"
+                android:src="@drawable/new_light"
+                />
+
+
+        <ImageButton
+                android:id="@+id/btnRemove"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/context_prompt"
+                style="?android:attr/borderlessButtonStyle"
+                android:src="@drawable/cancel_light"
+                />
+
+    </LinearLayout>
 
 </LinearLayout>
