@@ -69,6 +69,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_title">Auto archive</string>
     <string name="auto_archive_pref_summary">Automatically archive tasks to done.txt on completion.</string>
     <string name="archive_now_pref_title">Archive now</string>
+    <string name="archiving_toast">Archiving tasks...</string>
     <string name="archive_now_pref_summary">Move completed tasks from todo.txt to done.txt.</string>
     <string name="dropbox_logout_pref_title">Log out</string>
     <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>

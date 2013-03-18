@@ -34,9 +34,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.dropbox.sync.android.*;
+import nl.mpcjanssen.todotxtholo.task.Task;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class TodoApplication extends Application implements
@@ -50,6 +53,7 @@ public class TodoApplication extends Application implements
     private final TaskBag mTaskBag = new TaskBag();
     private DbxFileSystem dbxFs;
     private DbxPath mTodoPath = new DbxPath("todo.txt");
+    private DbxPath mDonePath = new DbxPath("done.txt");
     private SharedPreferences mPrefs;
 
 
@@ -113,15 +117,15 @@ public class TodoApplication extends Application implements
     }
 
 
-    public void initTaskBag() {
+    public void initTaskBag(TaskBag bag , DbxPath path) {
         Log.v(TAG, "Initializing TaskBag from dropbox");
         DbxFile mTodoFile;
         // Initialize the taskbag
         try {
-            mTodoFile = createOrOpenFile(mTodoPath);
+            mTodoFile = createOrOpenFile(path);
             // Reflect changes we might have missed
             mTodoFile.update();
-            mTaskBag.init(mTodoFile.readString());
+            bag.init(mTodoFile.readString());
             mTodoFile.close();
         } catch (DbxException.Unauthorized unauthorized) {
             unauthorized.printStackTrace();
@@ -144,10 +148,10 @@ public class TodoApplication extends Application implements
         return mDbxAcctMgr.hasLinkedAccount();
     }
 
-    public void storeTaskbag() {
+    public void storeTaskbag(TaskBag bag, DbxPath path) {
         try {
-            DbxFile mTodoFile = createOrOpenFile(mTodoPath);
-            mTodoFile.writeString(mTaskBag.getTodoContents());
+            DbxFile mTodoFile = createOrOpenFile(path);
+            mTodoFile.writeString(bag.getTodoContents());
             mTodoFile.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -162,7 +166,7 @@ public class TodoApplication extends Application implements
     public void loginDone() {
         try {
             dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            initTaskBag();
+            initTaskBag(mTaskBag, mTodoPath);
         } catch (DbxException.Unauthorized unauthorized) {
             unauthorized.printStackTrace();
         }
@@ -183,7 +187,7 @@ public class TodoApplication extends Application implements
                 dbxFs.addSyncStatusListener(this);
                 dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
                 // Download pending changes we missed
-                initTaskBag();
+                initTaskBag(mTaskBag, mTodoPath);
             } else {
                 Log.v(TAG, "Registering Dropbox handlers: " + watch);
                 dbxFs.removeSyncStatusListener(this);
@@ -207,5 +211,27 @@ public class TodoApplication extends Application implements
     public String getDefaultSort() {
         String[] sortValues = getResources().getStringArray(R.array.sortValues);
         return mPrefs.getString(getString(R.string.default_sort_pref_key), sortValues[0]);
+    }
+
+    public void archiveTasks() {
+        List<Task> completedTasks = getTaskBag().completedTasks();
+        // Create a new completed taskbag
+        // Dont't update tasks while archiving
+        updateFromDropbox(false);
+        TaskBag doneBag = new TaskBag();
+        initTaskBag(doneBag, mDonePath);
+        doneBag.addTasks(completedTasks);
+        mTaskBag.deleteTasks(completedTasks);
+        storeTaskbag(doneBag,mDonePath);
+        storeTaskbag();
+        updateFromDropbox(true);
+    }
+
+    public void initTaskBag() {
+        this.initTaskBag(mTaskBag,mTodoPath);
+    }
+
+    public void storeTaskbag() {
+        storeTaskbag(mTaskBag,mTodoPath);
     }
 }
