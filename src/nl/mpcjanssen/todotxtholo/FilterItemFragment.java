@@ -40,7 +40,7 @@ public class FilterItemFragment extends Fragment {
         for (String item : selectedItems) {
             Spinner spin = new Spinner(this.getActivity(), Spinner.MODE_DROPDOWN);
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(),
-                    android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sort));
+                    android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.sort));
             int index = Arrays.asList(itemValues).indexOf(item);
             spin.setAdapter(dataAdapter);
             spin.setSelection(index);
@@ -56,7 +56,7 @@ public class FilterItemFragment extends Fragment {
                 // End current activity if it's search results
                 Spinner spin = new Spinner(getActivity(), Spinner.MODE_DROPDOWN);
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sort));
+                        android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.sort));
                 spin.setAdapter(dataAdapter);
                 selectedFilters.add(spin);
                 layout.addView(spin);
@@ -82,9 +82,11 @@ public class FilterItemFragment extends Fragment {
 
     private void updateRemoveBtn() {
         if (selectedFilters.size()>1) {
-            layout.findViewById(R.id.btnRemove).setEnabled(true);
+            layout.findViewById(R.id.btnRemove).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.btnBlank).setVisibility(View.GONE);
         } else {
-            layout.findViewById(R.id.btnRemove).setEnabled(false);
+            layout.findViewById(R.id.btnRemove).setVisibility(View.GONE);
+            layout.findViewById(R.id.btnBlank).setVisibility(View.VISIBLE);
         }
     }
 

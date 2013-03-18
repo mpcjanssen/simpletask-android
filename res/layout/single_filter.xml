@@ -32,6 +32,15 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:src="@drawable/cancel_light"
                 />
+        <ImageButton
+                android:id="@+id/btnBlank"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:clickable="false"
+                style="?android:attr/borderlessButtonStyle"
+                />
 
     </LinearLayout>
 
