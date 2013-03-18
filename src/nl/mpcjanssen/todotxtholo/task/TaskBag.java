@@ -166,4 +166,19 @@ public class TaskBag  {
         ret.add(0, "-");
         return ret;
     }
+
+    public List<Task> completedTasks() {
+        // Return the completed tasks
+        ArrayList<Task> completedTasks = new ArrayList<Task>();
+        for (Task t : tasks) {
+            if (t.isCompleted()) {
+                completedTasks.add(t);
+            }
+        }
+        return completedTasks;
+    }
+
+    public void addTasks(List<Task> tasksToAdd) {
+        tasks.addAll(tasksToAdd);
+    }
 }
