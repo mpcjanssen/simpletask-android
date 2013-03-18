@@ -40,7 +40,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
             android:title="@string/changecontext"
             android:id="@+id/context"
-            android:icon="@drawable/labels"/>
+            android:icon="@drawable/new_label"/>
     <item
             android:title="@string/share"
             android:id="@+id/share"
