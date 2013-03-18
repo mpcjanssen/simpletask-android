@@ -20,6 +20,7 @@ public class FilterItemFragment extends Fragment {
     ArrayList<Spinner> selectedFilters = new ArrayList<Spinner>();;
     private int itemsId;
     private LinearLayout layout;
+    private LinearLayout spinnerLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +37,8 @@ public class FilterItemFragment extends Fragment {
 
         layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
                 container, false);
+
+        spinnerLayout = (LinearLayout)layout.findViewById(R.id.spinnerlayout);
         String[] itemValues = getResources().getStringArray(R.array.sortValues);
         for (String item : selectedItems) {
             Spinner spin = new Spinner(this.getActivity(), Spinner.MODE_DROPDOWN);
@@ -45,7 +48,7 @@ public class FilterItemFragment extends Fragment {
             spin.setAdapter(dataAdapter);
             spin.setSelection(index);
             selectedFilters.add(spin);
-            layout.addView(spin);
+            spinnerLayout.addView(spin);
         }
 
 
@@ -59,7 +62,7 @@ public class FilterItemFragment extends Fragment {
                         android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.sort));
                 spin.setAdapter(dataAdapter);
                 selectedFilters.add(spin);
-                layout.addView(spin);
+                spinnerLayout.addView(spin);
                 updateRemoveBtn();
             }
         });
@@ -71,7 +74,7 @@ public class FilterItemFragment extends Fragment {
                 // End current activity if it's search results
                 int last = selectedFilters.size()-1;
                 Spinner lastSpin = selectedFilters.get(last);
-                layout.removeView(lastSpin);
+                spinnerLayout.removeView(lastSpin);
                 selectedFilters.remove(lastSpin);
                 updateRemoveBtn();
             }

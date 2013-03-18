@@ -41,7 +41,15 @@
                 android:clickable="false"
                 style="?android:attr/borderlessButtonStyle"
                 />
-
     </LinearLayout>
-
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fastScrollEnabled="true">
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:id="@+id/spinnerlayout"
+                      android:orientation="vertical"/>
+            </ScrollView>
 </LinearLayout>
