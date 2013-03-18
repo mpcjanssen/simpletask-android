@@ -28,6 +28,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+import nl.mpcjanssen.todotxtholo.util.Util;
 
 public class Preferences extends PreferenceActivity {
     private TodoApplication m_app;
@@ -51,7 +52,13 @@ public class Preferences extends PreferenceActivity {
 			startActivity(new Intent(this, TodoTxtTouch.class));
             finish();
             return true;
-		}
+		} else if(preference.getKey()!=null && preference.getKey().equals("archive_now")) {
+            Log.v(TAG, "Archiving completed tasks to done.txt");
+            Util.showToastLong(this,getString(R.string.archiving_toast));
+            m_app.archiveTasks();
+            finish();
+            return true;
+        }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
 }
