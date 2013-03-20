@@ -415,6 +415,7 @@ public class TodoTxtTouch extends ListActivity implements
                     }
 				}
 				taskBag.store();
+                m_app.updateWidgets();
 				m_app.setNeedToPush(true);
 				// We have change the data, views should refresh
 				m_adapter.setFilteredTasks(false);
@@ -432,6 +433,7 @@ public class TodoTxtTouch extends ListActivity implements
 			}
 		}
 		taskBag.store();
+        m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
 		m_adapter.setFilteredTasks(true);
@@ -445,6 +447,7 @@ public class TodoTxtTouch extends ListActivity implements
 			}
 		}
 		taskBag.store();
+        m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
 		m_adapter.setFilteredTasks(true);
@@ -465,6 +468,7 @@ public class TodoTxtTouch extends ListActivity implements
 		}
 		m_adapter.setFilteredTasks(false);
 		taskBag.store();
+        m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
 		sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
