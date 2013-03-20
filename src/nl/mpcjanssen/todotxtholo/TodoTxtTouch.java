@@ -701,7 +701,13 @@ public class TodoTxtTouch extends ListActivity implements
 		}
 	}
 
-	void clearFilter() {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.v(TAG, "onNewIntent: " + intent);
+    }
+
+    void clearFilter() {
 		Intent intent = new Intent(Constants.INTENT_START_FILTER);
 		intent.putExtra(Constants.INTENT_ACTIVE_SORT_v1, sort);
 		startActivity(intent);
