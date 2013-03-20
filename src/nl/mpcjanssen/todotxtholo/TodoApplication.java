@@ -39,15 +39,19 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 
 public class TodoApplication extends Application {
     private final static String TAG = TodoApplication.class.getSimpleName();
+    public static Context appContext;
     public SharedPreferences m_prefs;
-    private RemoteClientManager remoteClientManager;
     public boolean m_pulling = false;
     public boolean m_pushing = false;
+    private RemoteClientManager remoteClientManager;
     private TaskBag taskBag;
     private BroadcastReceiver m_broadcastReceiver;
-    public static Context appContext;
     private Handler handler = new Handler();
     private Runnable runnable;
+
+    public static Context getAppContext() {
+        return appContext;
+    }
 
     @Override
     public void onCreate() {
@@ -159,11 +163,11 @@ public class TodoApplication extends Application {
     public RemoteClientManager getRemoteClientManager() {
         return remoteClientManager;
     }
-
+    
     public boolean isManualMode() {
         return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
     }
-    
+
     public void setManualMode(boolean manual) {
     	Editor edit = m_prefs.edit();
         edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);
@@ -178,10 +182,6 @@ public class TodoApplication extends Application {
         Editor editor = m_prefs.edit();
         editor.putBoolean(Constants.PREF_NEED_TO_PUSH, needToPush);
         editor.commit();
-    }
-
-    public static Context getAppContext() {
-        return appContext;
     }
 
     public void showToast(int resid) {
@@ -201,7 +201,7 @@ public class TodoApplication extends Application {
             i.setAction(Constants.INTENT_SYNC_START);
             sendBroadcast(i);
             m_pushing = true;
-            updateSyncUI();
+            updateUI();
 
             new AsyncTask<Void, Void, Integer>() {
                 static final int SUCCESS = 0;
@@ -233,7 +233,7 @@ public class TodoApplication extends Application {
                         Log.d(TAG, "taskBag.pushToRemote done");
                         m_pushing = false;
                         setNeedToPush(false);
-                        updateSyncUI();
+                        updateUI();
                         // Push is complete. Now do a pull in case the remote
                         // done.txt has changed.
                         pullFromRemote(true);
@@ -267,7 +267,7 @@ public class TodoApplication extends Application {
             m_pulling = true;
             // Comment out next line to avoid resetting list position at top;
             // should maintain position of last action
-            // updateSyncUI();
+            // updateUI();
 
             new AsyncTask<Void, Void, Boolean>() {
 
@@ -290,7 +290,7 @@ public class TodoApplication extends Application {
                     if (result) {
                         Log.d(TAG, "taskBag.pullFromRemote done");
                         m_pulling = false;
-                        updateSyncUI();
+                        updateUI();
                     } else {
                         sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
                     }
@@ -306,18 +306,28 @@ public class TodoApplication extends Application {
         }
     }
 
-    private void updateSyncUI() {
+    /**
+     * Update user interface
+     *
+     * Update the elements of the user interface. The listview with tasks will be updated
+     * if it is visible (by broadcasting an intent). All widgets will be updated as well.
+     * This method should be called whenever the TaskBag changes.
+     */
+    private void updateUI() {
         sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
         updateWidgets();
     }
 
     private void updateWidgets() {
-        // Update widgets
         AppWidgetManager mgr = AppWidgetManager.getInstance(getApplicationContext());
         for (int appWidgetId : mgr.getAppWidgetIds(new ComponentName(getApplicationContext(), MyAppWidgetProvider.class))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
             Log.v(TAG, "Updating widget: " + appWidgetId);
         }
+    }
+
+    public boolean completedLast() {
+        return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
     }
 
     private final class BroadcastReceiverExtension extends BroadcastReceiver {
@@ -341,13 +351,9 @@ public class TodoApplication extends Application {
                 showToast("Synchronizing Failed");
                 m_pulling = false;
                 m_pushing = false;
-                updateSyncUI();
+                updateUI();
             }
         }
-    }
-
-    public boolean completedLast() {
-        return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
     }
 
 }

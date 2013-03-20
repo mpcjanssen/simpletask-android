@@ -2,6 +2,7 @@
 bin/*
 gen/*
 out/*
+tests/gen/*
 *.apk
 build.bat
 *~
