@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="libs">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/commons-logging-1.1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/dropbox-android-sdk-1.5.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/httpclient-4.0.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/httpcore-4.0.1.jar!/" />
