@@ -87,6 +87,7 @@ public class AddTask extends Activity {
                     taskBag.addAsTask(input);
                 }
                 ((TodoApplication) getApplication()).setNeedToPush(true);
+                ((TodoApplication) getApplication()).updateWidgets();
                 sendBroadcast(new Intent(
                         Constants.INTENT_START_SYNC_TO_REMOTE));
                 finish();

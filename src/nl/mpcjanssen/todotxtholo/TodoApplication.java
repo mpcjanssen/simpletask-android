@@ -318,7 +318,7 @@ public class TodoApplication extends Application {
         updateWidgets();
     }
 
-    private void updateWidgets() {
+    public void updateWidgets() {
         AppWidgetManager mgr = AppWidgetManager.getInstance(getApplicationContext());
         for (int appWidgetId : mgr.getAppWidgetIds(new ComponentName(getApplicationContext(), MyAppWidgetProvider.class))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
