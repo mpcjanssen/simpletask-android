@@ -5,19 +5,22 @@
  */
 package nl.mpcjanssen.todotxtholo.util;
 
-import android.content.Context;
-import nl.mpcjanssen.todotxtholo.R;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import nl.mpcjanssen.todotxtholo.R;
+import nl.mpcjanssen.todotxtholo.TodoApplication;
+import android.content.Context;
+
 
 public class RelativeDate {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
+	private static Context context = TodoApplication.getAppContext();
+	
+	
 	/**
 	 * This method computes the relative date according to the Calendar being
 	 * passed in and the number of years, months, days, etc. that differ. This
@@ -42,28 +45,30 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	private static String computeRelativeDate(Context res, Calendar calendar, int years,
+	private static String computeRelativeDate(Calendar calendar, int years,
 			int months, int days, int hours, int minutes, int seconds) {
+		
 		String date = sdf.format(calendar.getTime());
+
 		if (years == 0 && months == 0) {
 			if (days < -1)
-				return res.getString(R.string.dates_days_ago, Math.abs(days));
+				return context.getString(R.string.dates_days_ago, Math.abs(days));
 			else if (days == -1)
-				return res.getString(R.string.dates_one_day_ago);
+				return context.getString(R.string.dates_one_day_ago);
 			else if (days == 0)
-				return res.getString(R.string.dates_today);		} else if (years == 0 || years == -1) {
+				return context.getString(R.string.dates_today);		} else if (years == 0 || years == -1) {
 			if (years == -1) {
 				months = 11 - months
 						+ Calendar.getInstance().get(Calendar.MONTH);
 				if (months == 1)
-					return res.getString(R.string.dates_one_month_ago);
+					return context.getString(R.string.dates_one_month_ago);
 				else
-					return res.getString(R.string.dates_months_ago, months);
+					return context.getString(R.string.dates_months_ago, months);
 			} else {
 				if (months != -1)
-					return res.getString(R.string.dates_months_ago,Math.abs(months));
+					return context.getString(R.string.dates_months_ago,Math.abs(months));
 				else
-					return res.getString(R.string.dates_one_month_ago);
+					return context.getString(R.string.dates_one_month_ago);
 			}
 		} else {
 			return date;
@@ -80,7 +85,7 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	public static String getRelativeDate(Context context, Calendar calendar) {
+	public static String getRelativeDate(Calendar calendar) {
 
 		Calendar now = Calendar.getInstance();
 
@@ -93,7 +98,7 @@ public class RelativeDate {
 		int minutes = calendar.get(Calendar.MINUTE) - now.get(Calendar.MINUTE);
 		int seconds = calendar.get(Calendar.SECOND) - now.get(Calendar.SECOND);
 
-		return computeRelativeDate(context, calendar, years, months, days, hours,
+		return computeRelativeDate(calendar, years, months, days, hours,
 				minutes, seconds);
 
 	}
@@ -106,10 +111,10 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	public static String getRelativeDate(Context context, Date date) {
+	public static String getRelativeDate(Date date) {
 		Calendar converted = Calendar.getInstance();
 		converted.setTime(date);
-		return getRelativeDate(context, converted);
+		return getRelativeDate(converted);
 	}
 
 	/**

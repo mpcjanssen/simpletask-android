@@ -24,6 +24,7 @@ package nl.mpcjanssen.todotxtholo;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -36,6 +37,7 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.Task;
+import nl.mpcjanssen.todotxtholo.task.TaskBag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +47,14 @@ public class AddTask extends Activity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
+    private ProgressDialog m_ProgressDialog = null;
+
     private Task m_backup;
 
-    private TodoApplication m_app;
+    private TaskBag taskBag;
 
     private String share_text;
+
 
     private EditText textInputField;
 
@@ -76,7 +81,14 @@ public class AddTask extends Activity {
                 textInputField = (EditText) findViewById(R.id.taskText);
                 final String input = textInputField.getText().toString()
                         .replaceAll("\\r\\n|\\r|\\n", " ");
-                addTask(input,m_backup);
+                if (m_backup != null) {
+                    taskBag.updateTask(m_backup, input);
+                } else {
+                    taskBag.addAsTask(input);
+                }
+                ((TodoApplication) getApplication()).setNeedToPush(true);
+                sendBroadcast(new Intent(
+                        Constants.INTENT_START_SYNC_TO_REMOTE));
                 finish();
                 break;
             case R.id.menu_add_task_help:
@@ -94,21 +106,11 @@ public class AddTask extends Activity {
         return true;
     }
 
-    private void addTask(String input, Task m_backup) {
-        if (m_backup!=null) {
-            m_app.getTaskBag().updateTask(m_backup, input);
-        } else {
-            m_app.getTaskBag().addAsTask(input);
-        }
-        m_app.storeTaskbag();
-        Intent i = new Intent(this,TodoTxtTouch.class);
-        startActivity(i);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
+
         final Intent intent = getIntent();
         final String action = intent.getAction();
         // create shortcut and exit
@@ -124,16 +126,11 @@ public class AddTask extends Activity {
             Log.d(TAG, share_text);
         }
 
-        m_app = (TodoApplication)getApplication();
-        if (!m_app.isAuthenticated()) {
-            Intent i = new Intent(this, LoginScreen.class);
-            startActivity(i);
-            finish();
-            return;
-        }
-        m_app.initTaskBag();
 
         setContentView(R.layout.add_task);
+
+        TodoApplication m_app = (TodoApplication) getApplication();
+        taskBag = m_app.getTaskBag();
 
         Button btnPriority = (Button) findViewById(R.id.btnPriority);
         Button btnContexts = (Button) findViewById(R.id.btnContext);
@@ -143,14 +140,14 @@ public class AddTask extends Activity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 Menu menu = popupMenu.getMenu();
-                for (String ctx : m_app.getTaskBag().getContexts()) {
+                for (String ctx : taskBag.getContexts()) {
                     menu.add(ctx);
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         replaceTextAtSelection("@" + item.getTitle() + " ");
-                        return true;
+                        return true;  //To change body of implemented methods use File | Settings | File Templates.
                     }
                 }
 
@@ -163,14 +160,14 @@ public class AddTask extends Activity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 Menu menu = popupMenu.getMenu();
-                for (String prj : m_app.getTaskBag().getProjects()) {
+                for (String prj : taskBag.getProjects()) {
                     menu.add(prj);
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         replaceTextAtSelection("+" + item.getTitle() + " ");
-                        return true;
+                        return true;  //To change body of implemented methods use File | Settings | File Templates.
                     }
                 }
 
@@ -212,7 +209,7 @@ public class AddTask extends Activity {
         Task task = (Task) getIntent().getSerializableExtra(
                 Constants.EXTRA_TASK);
         if (task != null) {
-            m_backup = task;
+            m_backup = taskBag.find(task);
             textInputField.setText(task.inFileFormat());
             textInputField.setSelection(task.inFileFormat().length());
             return;
@@ -276,8 +273,17 @@ public class AddTask extends Activity {
                 title, 0, title.length());
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (m_ProgressDialog != null) {
+            m_ProgressDialog.dismiss();
+        }
+    }
+
     private void setupShortcut() {
-        Intent shortcutIntent = new Intent(this, AddTask.class);
+        Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+        shortcutIntent.setClassName(this, this.getClass().getName());
 
         Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

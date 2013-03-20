@@ -22,224 +22,321 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import android.app.Activity;
 import android.app.Application;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Environment;
-import android.os.FileObserver;
+import android.content.*;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import com.dropbox.sync.android.*;
-import nl.mpcjanssen.todotxtholo.task.Task;
+import nl.mpcjanssen.todotxtholo.remote.RemoteClientManager;
+import nl.mpcjanssen.todotxtholo.remote.RemoteConflictException;
+import nl.mpcjanssen.todotxtholo.task.LocalFileTaskRepository;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import nl.mpcjanssen.todotxtholo.util.Util;
 
 
-public class TodoApplication extends Application implements
-        DbxFileSystem.PathListener, DbxFileSystem.SyncStatusListener {
-
-    public final static String TAG = TodoTxtTouch.class.getSimpleName();
-    final int SYNC_NOTIFICATION_ID = 0x0;
-    final int REQUEST_LINK_TO_DBX = 0x0;
-
-    private DbxAccountManager mDbxAcctMgr;
-    private final TaskBag mTaskBag = new TaskBag();
-    private DbxFileSystem dbxFs;
-    private DbxPath mTodoPath = new DbxPath("todo.txt");
-    private DbxPath mDonePath = new DbxPath("done.txt");
-    private SharedPreferences mPrefs;
-
-
-    @Override
-    public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
-        try {
-            DbxSyncStatus status = dbxFileSystem.getSyncStatus();
-            Intent i;
-            if (status.anyInProgress()) {
-                Log.v(TAG, "Synchronizing with dropbox");
-                showSyncNotification(true);
-            } else {
-                showSyncNotification(false);
-            }
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showSyncNotification(boolean show) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.navigation_refresh)
-                        .setContentTitle("Simpletask")
-                        .setContentText("Synchronizing with dropbox");
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (show) {
-            mNotificationManager.notify(SYNC_NOTIFICATION_ID, mBuilder.build());
-        } else {
-            mNotificationManager.cancel(SYNC_NOTIFICATION_ID);
-        }
-    }
-
-    public DbxAccountManager getDbxAcctMgr() {
-        return mDbxAcctMgr;
-    }
-
-    public TaskBag getTaskBag() {
-        return mTaskBag;
-    }
-
-    public DbxFile createOrOpenFile(DbxPath path) {
-        try {
-            if (dbxFs == null) {
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            }
-            if (!dbxFs.hasSynced()) {
-                dbxFs.awaitFirstSync();
-            }
-            if (!dbxFs.isFile(path)) {
-                Log.v(TAG, "file: " + path + " doesn't exist, creating");
-                return dbxFs.create(path);
-            } else {
-                return dbxFs.open(path);
-            }
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    public void initTaskBag(TaskBag bag , DbxPath path) {
-        Log.v(TAG, "Initializing TaskBag from dropbox");
-        DbxFile mTodoFile;
-        // Initialize the taskbag
-        try {
-            mTodoFile = createOrOpenFile(path);
-            // Reflect changes we might have missed
-            mTodoFile.update();
-            bag.init(mTodoFile.readString());
-            mTodoFile.close();
-        } catch (DbxException.Unauthorized unauthorized) {
-            unauthorized.printStackTrace();
-        } catch (DbxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+public class TodoApplication extends Application {
+    private final static String TAG = TodoApplication.class.getSimpleName();
+    public SharedPreferences m_prefs;
+    private RemoteClientManager remoteClientManager;
+    public boolean m_pulling = false;
+    public boolean m_pushing = false;
+    private TaskBag taskBag;
+    private BroadcastReceiver m_broadcastReceiver;
+    public static Context appContext;
+    private Handler handler = new Handler();
+    private Runnable runnable;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
-                getString(R.string.dropbox_consumer_key), getString(R.string.dropbox_consumer_secret));
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-    }
+        TodoApplication.appContext = getApplicationContext();
+        m_prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        remoteClientManager = new RemoteClientManager(this, m_prefs);
+        TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
+                m_prefs);
+        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(taskBagPreferences);
+        this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, remoteClientManager);
 
-    public boolean isAuthenticated() {
-        return mDbxAcctMgr.hasLinkedAccount();
-    }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.INTENT_SET_MANUAL);
+        intentFilter.addAction(Constants.INTENT_START_SYNC_WITH_REMOTE);
+        intentFilter.addAction(Constants.INTENT_START_SYNC_TO_REMOTE);
+        intentFilter.addAction(Constants.INTENT_START_SYNC_FROM_REMOTE);
+        intentFilter.addAction(Constants.INTENT_ASYNC_FAILED);
 
-    public void storeTaskbag(TaskBag bag, DbxPath path) {
-        try {
-            DbxFile mTodoFile = createOrOpenFile(path);
-            mTodoFile.writeString(bag.getTodoContents(getLineBreak()));
-            mTodoFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void logout() {
-        dbxFs.shutDown();
-        mDbxAcctMgr.unlink();
-    }
-
-    public void loginDone() {
-        try {
-            dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            initTaskBag(mTaskBag, mTodoPath);
-        } catch (DbxException.Unauthorized unauthorized) {
-            unauthorized.printStackTrace();
+        if (null == m_broadcastReceiver) {
+            m_broadcastReceiver = new BroadcastReceiverExtension();
+            registerReceiver(m_broadcastReceiver, intentFilter);
         }
 
-    }
+        taskBag.reload();
+        // Pull from dropbox every 5 minutes
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+      /* do what you need to do */
+                if (!isManualMode()) {
+                    backgroundPullFromRemote();
+                }
+      /* reschedule next */
+                handler.postDelayed(this, 5 * 60 * 1000);
+                Log.v(TAG, "Pulling from remote");
+            }
+        };
 
-    public void updateFromDropbox (boolean watch) {
-        try {
-            if (!mDbxAcctMgr.hasLinkedAccount()) {
-                Log.v(TAG, "Unauthenticated: Not changing Dropbox handlers to: " + watch);
-                return;
-            }
-            if (dbxFs == null) {
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            }
-            if (watch) {
-                Log.v(TAG, "Registering Dropbox handlers: " + watch);
-                dbxFs.addSyncStatusListener(this);
-                dbxFs.addPathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
-                // Download pending changes we missed
-                initTaskBag(mTaskBag, mTodoPath);
-            } else {
-                Log.v(TAG, "Registering Dropbox handlers: " + watch);
-                dbxFs.removeSyncStatusListener(this);
-                dbxFs.removePathListener(this, mTodoPath, DbxFileSystem.PathListener.Mode.PATH_ONLY);
-                showSyncNotification(false);
-            }
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
+        handler.postDelayed(runnable, 100);
+
     }
 
     @Override
-    public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-        Log.v(TAG, "File changed on dropbox reloading: " + dbxPath.getName());
-        // Don't reload the taskbag here.
-        // It will result in File already open errors from the Sync API
-        Intent i = new Intent(Constants.INTENT_RELOAD_TASKBAG);
-        sendBroadcast(i);
+    public void onTerminate() {
+        unregisterReceiver(m_broadcastReceiver);
+        super.onTerminate();
     }
 
-    public String getDefaultSort() {
-        String[] sortValues = getResources().getStringArray(R.array.sortValues);
-        return mPrefs.getString(getString(R.string.default_sort_pref_key), "sort_by_context");
-    }
-
-    public String getLineBreak() {
-        if (mPrefs.getBoolean(getString(R.string.windows_line_breaks_pref_key), true)) {
-          return "\r\n";
+    /**
+     * If we previously tried to push and failed, then attempt to push again
+     * now. Otherwise, pull.
+     */
+    private void syncWithRemote(boolean force) {
+        taskBag.store();
+        if (needToPush()) {
+            Log.d(TAG, "needToPush = true; pushing.");
+            pushToRemote(force, false);
         } else {
-          return "\n";
+            Log.d(TAG, "needToPush = false; pulling.");
+            pullFromRemote(force);
+        }
+
+    }
+
+    /**
+     * Check network status, then push.
+     */
+    private void pushToRemote(boolean force, boolean overwrite) {
+        setNeedToPush(true);
+        if (!force && isManualMode()) {
+            Log.i(TAG, "Working offline, don't push now");
+        } else if (!m_pulling) {
+            Log.i(TAG, "Working online; should push if file revisions match");
+            backgroundPushToRemote(overwrite);
+        } else {
+            Log.d(TAG, "app is pulling right now. don't start push."); // TODO
         }
     }
 
-    public void archiveTasks() {
-        List<Task> completedTasks = getTaskBag().completedTasks();
-        // Create a new completed taskbag
-        // Dont't update tasks while archiving
-        updateFromDropbox(false);
-        TaskBag doneBag = new TaskBag();
-        initTaskBag(doneBag, mDonePath);
-        doneBag.addTasks(completedTasks);
-        mTaskBag.deleteTasks(completedTasks);
-        storeTaskbag(doneBag,mDonePath);
-        storeTaskbag();
-        updateFromDropbox(true);
+    /**
+     * Check network status, then pull.
+     */
+    private void pullFromRemote(boolean force) {
+        if (!force && isManualMode()) {
+            Log.i(TAG, "Working offline, don't pull now");
+            return;
+        }
+
+        setNeedToPush(false);
+
+        if (!m_pushing) {
+            Log.i(TAG, "Working online; should pull file");
+            backgroundPullFromRemote();
+        } else {
+            Log.d(TAG, "app is pushing right now. don't start pull."); // TODO
+            // remove
+            // after
+            // AsyncTask
+            // bug
+            // fixed
+        }
     }
 
-    public void initTaskBag() {
-        this.initTaskBag(mTaskBag,mTodoPath);
+    public TaskBag getTaskBag() {
+        return taskBag;
     }
 
-    public void storeTaskbag() {
-        storeTaskbag(mTaskBag,mTodoPath);
+    public RemoteClientManager getRemoteClientManager() {
+        return remoteClientManager;
     }
+
+    public boolean isManualMode() {
+        return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
+    }
+    
+    public void setManualMode(boolean manual) {
+    	Editor edit = m_prefs.edit();
+        edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);
+        edit.commit();
+    }
+
+    public boolean needToPush() {
+        return m_prefs.getBoolean(Constants.PREF_NEED_TO_PUSH, false);
+    }
+
+    public void setNeedToPush(boolean needToPush) {
+        Editor editor = m_prefs.edit();
+        editor.putBoolean(Constants.PREF_NEED_TO_PUSH, needToPush);
+        editor.commit();
+    }
+
+    public static Context getAppContext() {
+        return appContext;
+    }
+
+    public void showToast(int resid) {
+        Util.showToastLong(this, resid);
+    }
+
+    public void showToast(String string) {
+        Util.showToastLong(this, string);
+    }
+
+    /**
+     * Do asynchronous push with gui changes. Do availability check first.
+     */
+    void backgroundPushToRemote(final boolean overwrite) {
+        if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
+            Intent i = new Intent();
+            i.setAction(Constants.INTENT_SYNC_START);
+            sendBroadcast(i);
+            m_pushing = true;
+            updateSyncUI();
+
+            new AsyncTask<Void, Void, Integer>() {
+                static final int SUCCESS = 0;
+                static final int CONFLICT = 1;
+                static final int ERROR = 2;
+
+                @Override
+                protected Integer doInBackground(Void... params) {
+                    try {
+                        Log.d(TAG, "start taskBag.pushToRemote");
+                        taskBag.pushToRemote(true, overwrite);
+                    } catch (RemoteConflictException c) {
+                        Log.e(TAG, c.getMessage());
+                        return CONFLICT;
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                        return ERROR;
+                    }
+                    return SUCCESS;
+                }
+
+                @Override
+                protected void onPostExecute(Integer result) {
+                    Log.d(TAG, "post taskBag.pushToremote");
+                    Intent i = new Intent();
+                    i.setAction(Constants.INTENT_SYNC_DONE);
+                    sendBroadcast(i);
+                    if (result == SUCCESS) {
+                        Log.d(TAG, "taskBag.pushToRemote done");
+                        m_pushing = false;
+                        setNeedToPush(false);
+                        updateSyncUI();
+                        // Push is complete. Now do a pull in case the remote
+                        // done.txt has changed.
+                        pullFromRemote(true);
+                    } else if (result == CONFLICT) {
+                        // FIXME: need to know which file had conflict
+                        sendBroadcast(new Intent(Constants.INTENT_SYNC_CONFLICT));
+                    } else {
+                        sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
+                    }
+                    super.onPostExecute(result);
+                }
+
+            }.execute();
+
+        } else {
+            Log.e(TAG, "NOT AUTHENTICATED!");
+            showToast("NOT AUTHENTICATED!");
+        }
+
+    }
+
+    /**
+     * Do an asynchronous pull from remote. Check network availability before
+     * calling this.
+     */
+    private void backgroundPullFromRemote() {
+        if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
+            Intent i = new Intent();
+            i.setAction(Constants.INTENT_SYNC_START);
+            sendBroadcast(i);
+            m_pulling = true;
+            // Comment out next line to avoid resetting list position at top;
+            // should maintain position of last action
+            // updateSyncUI();
+
+            new AsyncTask<Void, Void, Boolean>() {
+
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    try {
+                        Log.d(TAG, "start taskBag.pullFromRemote");
+                        taskBag.pullFromRemote(true);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                        return false;
+                    }
+                    return true;
+                }
+
+                @Override
+                protected void onPostExecute(Boolean result) {
+                    Log.d(TAG, "post taskBag.pullFromRemote");
+                    super.onPostExecute(result);
+                    if (result) {
+                        Log.d(TAG, "taskBag.pullFromRemote done");
+                        m_pulling = false;
+                        updateSyncUI();
+                    } else {
+                        sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
+                    }
+                    super.onPostExecute(result);
+                    Intent i = new Intent();
+                    i.setAction(Constants.INTENT_SYNC_DONE);
+                    sendBroadcast(i);
+                }
+
+            }.execute();
+        } else {
+            Log.e(TAG, "NOT AUTHENTICATED!");
+        }
+    }
+
+    private void updateSyncUI() {
+        sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
+    }
+
+    private final class BroadcastReceiverExtension extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean force_sync = intent.getBooleanExtra(
+                    Constants.EXTRA_FORCE_SYNC, false);
+            boolean overwrite = intent.getBooleanExtra(
+                    Constants.EXTRA_OVERWRITE, false);
+            if (intent.getAction().equalsIgnoreCase(
+                    Constants.INTENT_START_SYNC_WITH_REMOTE)) {
+                syncWithRemote(force_sync);
+            } else if (intent.getAction().equalsIgnoreCase(
+                    Constants.INTENT_START_SYNC_TO_REMOTE)) {
+                pushToRemote(force_sync, overwrite);
+            } else if (intent.getAction().equalsIgnoreCase(
+                    Constants.INTENT_START_SYNC_FROM_REMOTE)) {
+                pullFromRemote(force_sync);
+            } else if (intent.getAction().equalsIgnoreCase(
+                    Constants.INTENT_ASYNC_FAILED)) {
+                showToast("Synchronizing Failed");
+                m_pulling = false;
+                m_pushing = false;
+                updateSyncUI();
+            }
+        }
+    }
+
+    public boolean completedLast() {
+        return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
+    }
+
 }

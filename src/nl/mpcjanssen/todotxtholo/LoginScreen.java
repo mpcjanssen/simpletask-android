@@ -23,12 +23,15 @@
 package nl.mpcjanssen.todotxtholo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import com.dropbox.sync.android.DbxAccountManager;
+import nl.mpcjanssen.todotxtholo.remote.RemoteClient;
 
 
 public class LoginScreen extends Activity {
@@ -36,43 +39,94 @@ public class LoginScreen extends Activity {
     final static String TAG = LoginScreen.class.getSimpleName();
 
     private TodoApplication m_app;
-    
-    static final int REQUEST_LINK_TO_DBX = 0x0;
+    private BroadcastReceiver m_broadcastReceiver;
+    private boolean m_loginStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        m_app = (TodoApplication)getApplication();
+
         setContentView(R.layout.login);
+
+        m_app = (TodoApplication) getApplication();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("nl.mpcjanssen.todotxtholo.ACTION_LOGIN");
+        m_broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Intent i = new Intent(context, TodoTxtTouch.class);
+                startActivity(i);
+                finish();
+            }
+        };
+        registerReceiver(m_broadcastReceiver, intentFilter);
+
         Button m_LoginButton = (Button) findViewById(R.id.login);
         m_LoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            	linkToDropBox();
+                startLogin();
             }
         });
-    }
-    
-    public void linkToDropBox () {
-    		m_app.getDbxAcctMgr().startLink(this, REQUEST_LINK_TO_DBX);
-    }
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_LINK_TO_DBX) {
-            if (resultCode == Activity.RESULT_OK) {
-                m_app.loginDone();
-                switchToTodolist();
-            } else {
-                // ... Link failed or was cancelled by the user.
-            }            
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        
+        Button m_offlineButton = (Button) findViewById(R.id.work_offline);
+        m_offlineButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                workOffline();
+            }
+        });
+
+
+        RemoteClient remoteClient = m_app.getRemoteClientManager()
+                .getRemoteClient();
+        if (remoteClient.isAuthenticated()) {
+            switchToTodolist();
         }
-    
     }
+
     private void switchToTodolist() {
-        Intent intent = new Intent(LoginScreen.this, TodoTxtTouch.class);
+        Intent intent = new Intent(this, TodoTxtTouch.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (m_loginStarted) {
+            finishLogin();
+        }
+    }
+
+    private void finishLogin() {
+        RemoteClient remoteClient = m_app.getRemoteClientManager()
+                .getRemoteClient();
+        remoteClient.finishLogin();
+        if (remoteClient.isAuthenticated()) {
+            switchToTodolist();
+            sendBroadcast(new Intent(Constants.INTENT_START_SYNC_FROM_REMOTE));
+        }
+        m_loginStarted = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(m_broadcastReceiver);
+    }
+    
+    void workOffline() {
+        m_app.setManualMode(true);
+        switchToTodolist();
+    }
+
+    void startLogin() {
+        final RemoteClient client = m_app.getRemoteClientManager()
+                .getRemoteClient();
+        client.startLogin();
+        m_loginStarted = true;
     }
 
 }

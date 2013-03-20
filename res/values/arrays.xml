@@ -24,6 +24,7 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 <!--suppress ALL -->
 <resources>
+
     <string-array name="sort">
         <item>@string/file_order</item>
         <item>@string/file_reversed</item>
@@ -31,13 +32,5 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>@string/by_prio</item>
         <item>@string/by_project</item>
         <item>@string/by_context</item>
-    </string-array>
-    <string-array name="sortValues">
-        <item>sort_file_order</item>
-        <item>sort_file_reversed</item>
-        <item>sort_alphabetical</item>
-        <item>sort_by_prio</item>
-        <item>sort_by_project</item>
-        <item>sort_by_context</item>
     </string-array>
 </resources>

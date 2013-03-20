@@ -22,15 +22,16 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
-import android.os.Build;
-import com.google.i18n.phonenumbers.PhoneNumberMatch;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import android.os.Build;
+
+import com.google.i18n.phonenumbers.PhoneNumberMatch;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 
 public class PhoneNumberParser {
 	// private static final Pattern NUMBER_PATTERN = android.util.Patterns.

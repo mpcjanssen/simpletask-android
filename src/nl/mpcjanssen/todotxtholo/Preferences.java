@@ -22,43 +22,135 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
-import android.util.Log;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.util.Arrays;
+import java.util.List;
+
 import nl.mpcjanssen.todotxtholo.util.Util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
+import android.util.Log;
+
 public class Preferences extends PreferenceActivity {
-    private TodoApplication m_app;
-    final static String TAG = TodoApplication.TAG;
+	final static String TAG = Preferences.class.getSimpleName();
+	public static final int RESULT_LOGOUT = RESULT_FIRST_USER + 1 ;
+	public static final int RESULT_ARCHIVE = RESULT_FIRST_USER + 2 ;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        m_app = (TodoApplication)getApplication();
-        addPreferencesFromResource(R.xml.preferences);
-    }
+	private void broadcastIntentAndClose(String intent, int result) {
+		
+		Intent broadcastIntent = new Intent(intent);
+		sendBroadcast(broadcastIntent);
+		
+		// Close preferences screen
+		setResult(result);
+		finish();
+	}
 
-    
-    
-    
 	@Override
-	public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
-		if(preference.getKey()!=null && preference.getKey().equals("logout_dropbox")) {
-			Log.v(TAG, "Logging out from Dropbox");
-            m_app.logout();
-			startActivity(new Intent(this, TodoTxtTouch.class));
-            finish();
-            return true;
-		} else if(preference.getKey()!=null && preference.getKey().equals("archive_now")) {
-            Log.v(TAG, "Archiving completed tasks to done.txt");
-            Util.showToastLong(this,getString(R.string.archiving_toast));
-            m_app.archiveTasks();
-            finish();
-            return true;
-        }
-        return super.onPreferenceTreeClick(preferenceScreen, preference);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	public void onBuildHeaders(List<Header> target) {
+		loadHeadersFromResource(R.xml.preference_headers, target);
+	}
+	
+	public static class TodoTxtPrefFragment extends PreferenceFragment
+	{
+		@Override
+		public void onCreate(final Bundle savedInstanceState)
+		{
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.todotxt_preferences);
+		}
+	}	
+	public static class ArchivePrefFragment extends PreferenceFragment
+	{
+		@Override
+		public void onCreate(final Bundle savedInstanceState)
+		{
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.archive_preferences);
+		}
+		
+		@Override
+		public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
+			if(preference.getKey().equals("archive_now")) {
+				Log.v("PREFERENCES", "Archiving completed items from preferences");
+				((Preferences)this.getActivity()).broadcastIntentAndClose(
+						Constants.INTENT_ACTION_ARCHIVE,
+						Preferences.RESULT_ARCHIVE);			
+			}
+			return true;
+		}
+	}
+	public static class DropboxPrefFragment extends PreferenceFragment
+	{
+		@Override
+		public void onCreate(final Bundle savedInstanceState)
+		{
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.dropbox_preferences);
+		}
+		
+		@Override
+		public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
+			if(preference.getKey().equals("logout_dropbox")) {
+				Log.v("PREFERENCES", "Logging out from Dropbox");				
+				((Preferences)this.getActivity()).broadcastIntentAndClose(
+						Constants.INTENT_ACTION_LOGOUT,
+						Preferences.RESULT_LOGOUT);			
+			}
+			return true;
+		}
+	}
+	public static class AboutPrefFragment extends PreferenceFragment
+	{
+		@Override
+		public void onCreate(final Bundle savedInstanceState)
+		{
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.about_preferences);
+			PreferenceActivity act = (PreferenceActivity) getActivity();
+			PackageInfo packageInfo;
+			String git_version;
+			final Preference versionPref = findPreference("app_version");
+			try {
+				packageInfo = act.getPackageManager().getPackageInfo(act.getPackageName(),
+						0);
+				versionPref.setSummary("v" + packageInfo.versionName);
+			} catch (NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			versionPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					ClipboardManager clipboard = (ClipboardManager)
+					        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					Util.showToastShort(getActivity(), R.string.version_copied);
+					ClipData clip = ClipData.newPlainText("version info", versionPref.getSummary());
+					clipboard.setPrimaryClip(clip);
+					return true;
+				}
+			}) ;
+		}
 	}
 }

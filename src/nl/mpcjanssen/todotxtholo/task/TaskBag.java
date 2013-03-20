@@ -22,10 +22,14 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
-import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxFileSystem;
+import android.content.SharedPreferences;
 import nl.mpcjanssen.todotxtholo.TodoTxtTouch;
+import nl.mpcjanssen.todotxtholo.remote.PullTodoResult;
+import nl.mpcjanssen.todotxtholo.remote.RemoteClientManager;
+import nl.mpcjanssen.todotxtholo.util.TaskIo;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -38,32 +42,53 @@ import java.util.*;
  *         It is loaded from and stored to the local copy of the todo.txt file and
  *         it is global to the application so all activities operate on the same copy
  */
-public class TaskBag  {
+public class TaskBag {
     final static String TAG = TodoTxtTouch.class.getSimpleName();
-
+    private Preferences preferences;
+    private final LocalFileTaskRepository localRepository;
+    private final RemoteClientManager remoteClientManager;
     private ArrayList<Task> tasks = new ArrayList<Task>();
+    private Date lastReload = null;
+    private Date lastSync = null;
 
-	private DbxAccountManager dbxAcctMgr;
-	private DbxFileSystem dbxFs;
-
-
-	private ArrayList<TodoTxtTouch> obs = new ArrayList<TodoTxtTouch>();
-
-    public void init(ArrayList<Task> newTasks) {
-        tasks.clear();
-        tasks.addAll(newTasks);
+    public TaskBag(Preferences taskBagPreferences,
+                   LocalFileTaskRepository localTaskRepository,
+                   RemoteClientManager remoteClientManager) {
+        this.preferences = taskBagPreferences;
+        this.localRepository = localTaskRepository;
+        this.remoteClientManager = remoteClientManager;
     }
 
-    public void init (String todoContents) {
-        tasks = new ArrayList<Task>();
-        long lineNr = 0;
-        for (String line : todoContents.split("\n")) {
-            lineNr++;
-            line = line.trim();
-            if (!line.equals("")) {
-                Task t = new Task(lineNr, line);
-                tasks.add(t);
-            }
+    public void updatePreferences(Preferences preferences) {
+        this.preferences = preferences;
+    }
+
+    private void store(ArrayList<Task> tasks) {
+        localRepository.store(tasks);
+        lastReload = null;
+    }
+
+    public void store() {
+        store(this.tasks);
+    }
+
+    public void archive() {
+        try {
+            reload();
+            localRepository.archive(tasks);
+            lastReload = null;
+            reload();
+        } catch (Exception e) {
+            throw new TaskPersistException(
+                    "An error occurred while archiving", e);
+        }
+    }
+
+    public void reload() {
+        if (lastReload == null || localRepository.todoFileModifiedSince(lastReload)) {
+            localRepository.init();
+            this.tasks = localRepository.load();
+            lastReload = new Date();
         }
     }
 
@@ -81,8 +106,11 @@ public class TaskBag  {
 
     public void addAsTask(String input) {
         try {
-            Task task = new Task(tasks.size(), input, new Date());
+            reload();
+            Task task = new Task(tasks.size(), input,
+                    (preferences.isPrependDateEnabled() ? new Date() : null));
             tasks.add(task);
+            store();
         } catch (Exception e) {
             throw new TaskPersistException("An error occurred while adding {"
                     + input + "}", e);
@@ -90,46 +118,71 @@ public class TaskBag  {
     }
 
     public void updateTask(Task task, String input) {
-        Task toUpdate = find(task);
-        toUpdate.init(input, null);
+        task.init(input, null);
+        store();
     }
 
     public Task find(Task task) {
-        for (Task t : tasks) {
-            if (t.inFileFormat().equals(task.inFileFormat())) {
-                return t;
-            }
-        }
-        return null;
+        Task found = TaskBag.find(tasks, task);
+        return found;
     }
 
-    public Task find(String text) {
-        for (Task t : tasks) {
-            if (t.inFileFormat().equals(text)) {
-                return t;
+    public void delete(Task task) {
+        try {
+            Task found = TaskBag.find(tasks, task);
+            if (found != null) {
+                tasks.remove(found);
+            } else {
+                throw new TaskPersistException("Task not found, not deleted");
             }
+        } catch (Exception e) {
+            throw new TaskPersistException(
+                    "An error occurred while deleting Task {" + task + "}", e);
         }
-        return null;
     }
 
+    /* REMOTE APIS */
+    public void pushToRemote(boolean overwrite) {
+        pushToRemote(false, overwrite);
+    }
 
-    public void deleteTasks(List<Task> toDelete) {
-		for (Task task : toDelete) {
-			Task found = find(task);
-			if (found != null) {
-				tasks.remove(found);
-			} else {
-				throw new TaskPersistException("Task not found, not deleted");
-			}
-		}
-	}
-
-    public String getTodoContents(String lineBreak) {
-        String output = "";
-        for (Task t : tasks) {
-            output = output + t.inFileFormat() + lineBreak;
+    public void pushToRemote(boolean overridePreference, boolean overwrite) {
+        if (this.preferences.isOnline() || overridePreference) {
+            File doneFile = null;
+            if (localRepository.doneFileModifiedSince(lastSync)) {
+                doneFile = LocalFileTaskRepository.DONE_TXT_FILE;
+            }
+            remoteClientManager.getRemoteClient().pushTodo(
+                    LocalFileTaskRepository.TODO_TXT_FILE,
+                    doneFile,
+                    overwrite);
+            lastSync = new Date();
         }
-        return output;
+    }
+
+    public void pullFromRemote(boolean overridePreference) {
+        try {
+            if (this.preferences.isOnline() || overridePreference) {
+                PullTodoResult result = remoteClientManager.getRemoteClient()
+                        .pullTodo();
+                File todoFile = result.getTodoFile();
+                if (todoFile != null && todoFile.exists()) {
+                    ArrayList<Task> remoteTasks = TaskIo
+                            .loadTasksFromFile(todoFile);
+                    store(remoteTasks);
+                    reload();
+                }
+
+                File doneFile = result.getDoneFile();
+                if (doneFile != null && doneFile.exists()) {
+                    localRepository.loadDoneTasks(doneFile);
+                }
+                lastSync = new Date();
+            }
+        } catch (IOException e) {
+            throw new TaskPersistException(
+                    "Error loading tasks from remote file", e);
+        }
     }
 
     public ArrayList<Priority> getPriorities() {
@@ -167,18 +220,34 @@ public class TaskBag  {
         return ret;
     }
 
-    public List<Task> completedTasks() {
-        // Return the completed tasks
-        ArrayList<Task> completedTasks = new ArrayList<Task>();
-        for (Task t : tasks) {
-            if (t.isCompleted()) {
-                completedTasks.add(t);
+    private static Task find(List<Task> tasks, Task task) {
+        for (Task task2 : tasks) {
+            if (task2 == task || (task2.getText().equals(task.getOriginalText())
+                    && task2.getPriority() == task.getOriginalPriority())) {
+                return task2;
             }
         }
-        return completedTasks;
+        return null;
     }
 
-    public void addTasks(List<Task> tasksToAdd) {
-        tasks.addAll(tasksToAdd);
+    public static class Preferences {
+        private final SharedPreferences sharedPreferences;
+
+        public Preferences(SharedPreferences sharedPreferences) {
+            this.sharedPreferences = sharedPreferences;
+        }
+
+        public boolean isUseWindowsLineBreaksEnabled() {
+            return sharedPreferences.getBoolean("linebreakspref", false);
+        }
+
+        public boolean isPrependDateEnabled() {
+            return sharedPreferences.getBoolean("todotxtprependdate", true);
+        }
+
+        public boolean isOnline() {
+            return !sharedPreferences.getBoolean("workofflinepref", false);
+        }
     }
+
 }

@@ -38,26 +38,21 @@ You should have received a copy of the GNU General Public License along with Tod
             android:id="@+id/priority"
             android:icon="@drawable/prio"/>
     <item
-            android:title="@string/changecontext"
-            android:id="@+id/context"
-            android:icon="@drawable/new_label"/>
+            android:title="@string/delete"
+            android:id="@+id/delete"
+            android:icon="@drawable/delete"/>
+
     <item
             android:title="@string/share"
             android:id="@+id/share"
             android:icon="@drawable/share"/>
-
-    <item
-            android:title="@string/add_to_calendar"
-            android:id="@+id/calendar"
-            android:icon="@drawable/event"/>
     <item
             android:title="@string/unComplete"
             android:id="@+id/uncomplete"/>
     <item
-            android:title="@string/delete"
-            android:id="@+id/delete"
+            android:title="@string/add_to_calendar"
             android:showAsAction="never"
-            android:icon="@drawable/delete"/>
+            android:id="@+id/calendar"/>
     <item
             android:visible="false"
             android:id="@+id/url"/>

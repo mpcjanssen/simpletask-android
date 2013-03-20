@@ -7,22 +7,11 @@
             android:summary="@string/default_sort_pref_summary"
             android:entries="@array/sort"
             android:entryValues="@array/sortValues"
-            android:defaultValue="sort_by_context"
             />
-    <CheckBoxPreference
-            android:key="@string/windows_line_breaks_pref_key"
-            android:title="@string/line_breaks_pref_title"
-            android:defaultValue="true"
-            android:summary="@string/line_breaks_pref_summary"/>
     <Preference
             android:key="logout_dropbox"
             android:title="@string/dropbox_logout_pref_title"
             android:summary="@string/dropbox_logout_pref_summary"/>
-    <Preference
-            android:key="archive_now"
-            android:title="@string/archive_now_pref_title"
-            android:summary="@string/archive_now_pref_summary"
-            />
     <Preference
             android:title="@string/visit_website_title"
             android:summary="@string/visit_website_summary">
