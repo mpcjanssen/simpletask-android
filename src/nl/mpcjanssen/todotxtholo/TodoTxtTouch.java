@@ -23,7 +23,6 @@
 package nl.mpcjanssen.todotxtholo;
 
 import android.app.*;
-import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
