@@ -23,6 +23,7 @@
 package nl.mpcjanssen.todotxtholo;
 
 import android.app.Application;
+import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -307,6 +308,16 @@ public class TodoApplication extends Application {
 
     private void updateSyncUI() {
         sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
+        updateWidgets();
+    }
+
+    private void updateWidgets() {
+        // Update widgets
+        AppWidgetManager mgr = AppWidgetManager.getInstance(getApplicationContext());
+        for (int appWidgetId : mgr.getAppWidgetIds(new ComponentName(getApplicationContext(), MyAppWidgetProvider.class))) {
+            mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
+            Log.v(TAG, "Updating widget: " + appWidgetId);
+        }
     }
 
     private final class BroadcastReceiverExtension extends BroadcastReceiver {
