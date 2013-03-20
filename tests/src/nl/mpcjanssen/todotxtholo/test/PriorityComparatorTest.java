@@ -40,7 +40,7 @@ public class PriorityComparatorTest extends TestCase {
         assertEquals(1, comp.compare(b, a));
     }
 
-    public void testCompareDifferenctPrio() throws Exception {
+    public void testCompareDifferentPrio() throws Exception {
         Task a = new Task(1, "");
         Task b = new Task(2, "");
         a.setPriority(Priority.A);
