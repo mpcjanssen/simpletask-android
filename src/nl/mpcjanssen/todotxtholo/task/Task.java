@@ -22,8 +22,6 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
-import android.content.Context;
-import android.util.Log;
 import nl.mpcjanssen.todotxtholo.util.RelativeDate;
 import nl.mpcjanssen.todotxtholo.util.Strings;
 
@@ -51,6 +49,7 @@ public class Task implements Serializable, Comparable<Task> {
     private String text;
     private String completionDate;
     private String prependedDate;
+    private String relativeAge = "";
     private List<String> contexts;
     private List<String> projects;
     private List<String> mailAddresses;
@@ -95,23 +94,16 @@ public class Task implements Serializable, Comparable<Task> {
             this.prependedDate = formatter.format(defaultPrependedDate);
         }
 
-
-    }
-
-    public String getRelativeAge(Context ctx) {
-        String relativeAge = "";
         if (!Strings.isEmptyOrNull(this.prependedDate)) {
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.US);
             try {
                 Date d = sdf.parse(this.prependedDate);
-                relativeAge = RelativeDate.getRelativeDate(ctx, d);
+                this.relativeAge = RelativeDate.getRelativeDate(d);
             } catch (ParseException e) {
                 // e.printStackTrace();
             }
         }
-        return relativeAge;
     }
-
 
     public Priority getOriginalPriority() {
         return originalPriority;
@@ -159,6 +151,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public String getPrependedDate() {
         return prependedDate;
+    }
+
+    public String getRelativeAge() {
+        return relativeAge;
     }
 
     public boolean isDeleted() {
@@ -227,18 +223,6 @@ public class Task implements Serializable, Comparable<Task> {
         destination.init(this.inFileFormat(), null);
     }
 
-    public void setContext(String context) {
-        if(contexts.size()==0) {
-            String newContent = inFileFormat() + " @" + context;
-            this.init(newContent, null);
-        } else if (contexts.size()>0) {
-            // Replace first context
-            String oldContext = contexts.get(0);
-            String newContent = inFileFormat().replace(oldContext, context);
-            this.init(newContent, null);
-        }
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -276,6 +260,8 @@ public class Task implements Serializable, Comparable<Task> {
                 + ((priority == null) ? 0 : priority.hashCode());
         result = prime * result
                 + ((projects == null) ? 0 : projects.hashCode());
+        result = prime * result
+                + ((relativeAge == null) ? 0 : relativeAge.hashCode());
         result = prime * result + ((text == null) ? 0 : text.hashCode());
         return result;
     }

@@ -2,115 +2,116 @@ package nl.mpcjanssen.todotxtholo;
 
 import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
-import android.widget.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 public class FilterItemFragment extends Fragment {
     private final static String TAG = TodoTxtTouch.class.getSimpleName();
     private final static String STATE_ITEMS = "items";
     private final static String STATE_SELECTED = "selectedItem";
 
-    private ArrayList<String> selectedItems;
-    ArrayList<Spinner> selectedFilters = new ArrayList<Spinner>();;
-    private int itemsId;
-    private LinearLayout layout;
-    private LinearLayout spinnerLayout;
+    private int selectedItem;
+    private int items;
+    private ListView lv;
+    private GestureDetector gestureDetector;
+    private ActionBar actionbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
+        actionbar = getActivity().getActionBar();
         if (savedInstanceState != null) {
-            itemsId = savedInstanceState.getInt(STATE_ITEMS);
-            selectedItems = savedInstanceState.getStringArrayList(STATE_SELECTED);
+            items = savedInstanceState.getInt(STATE_ITEMS);
+            selectedItem = savedInstanceState.getInt(STATE_SELECTED);
         } else {
-            selectedItems = arguments.getStringArrayList(Constants.INITIAL_SELECTED_ITEMS);
-            itemsId = arguments.getInt(Constants.ITEMS);
+            selectedItem = arguments.getInt(Constants.ACTIVE_SORT);
+            items = arguments.getInt(Constants.FILTER_ITEMS);
         }
 
-        layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
                 container, false);
 
-        spinnerLayout = (LinearLayout)layout.findViewById(R.id.spinnerlayout);
-        String[] itemValues = getResources().getStringArray(R.array.sortValues);
-        for (String item : selectedItems) {
-            Spinner spin = new Spinner(this.getActivity(), Spinner.MODE_DROPDOWN);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(),
-                    android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.sort));
-            int index = Arrays.asList(itemValues).indexOf(item);
-            spin.setAdapter(dataAdapter);
-            spin.setSelection(index);
-            selectedFilters.add(spin);
-            spinnerLayout.addView(spin);
-        }
+        lv = (ListView) layout.findViewById(R.id.listview);
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
+        lv.setAdapter(new ArrayAdapter<String>(getActivity(),
+                R.layout.simple_list_item_single_choice, getResources().getStringArray(items)));
 
+        lv.setItemChecked(selectedItem, true);
 
-        layout.findViewById(R.id.btnAdd).setOnClickListener(new View.OnClickListener() {
+        gestureDetector = new GestureDetector(TodoApplication.appContext,
+                new FilterGestureDetector());
+        View.OnTouchListener gestureListener = new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                // End current activity if it's search results
-                Spinner spin = new Spinner(getActivity(), Spinner.MODE_DROPDOWN);
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.sort));
-                spin.setAdapter(dataAdapter);
-                selectedFilters.add(spin);
-                spinnerLayout.addView(spin);
-                updateRemoveBtn();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (gestureDetector.onTouchEvent(event)) {
+                    MotionEvent cancelEvent = MotionEvent.obtain(event);
+                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
+                    v.onTouchEvent(cancelEvent);
+                    return true;
+                }
+                return false;
             }
-        });
+        };
 
-
-        layout.findViewById(R.id.btnRemove).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // End current activity if it's search results
-                int last = selectedFilters.size()-1;
-                Spinner lastSpin = selectedFilters.get(last);
-                spinnerLayout.removeView(lastSpin);
-                selectedFilters.remove(lastSpin);
-                updateRemoveBtn();
-            }
-        });
-        updateRemoveBtn();
+        lv.setOnTouchListener(gestureListener);
         return layout;
-    }
-
-    private void updateRemoveBtn() {
-        if (selectedFilters.size()>1) {
-            layout.findViewById(R.id.btnRemove).setVisibility(View.VISIBLE);
-            layout.findViewById(R.id.btnBlank).setVisibility(View.GONE);
-        } else {
-            layout.findViewById(R.id.btnRemove).setVisibility(View.GONE);
-            layout.findViewById(R.id.btnBlank).setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STATE_ITEMS, itemsId);
-        outState.putStringArrayList(STATE_SELECTED, selectedItems);
+        outState.putInt(STATE_ITEMS, items);
+        outState.putInt(STATE_SELECTED, selectedItem);
     }
 
 
-    public ArrayList<String> getSelectedItems() {
-        ArrayList<String> arr = new ArrayList<String>();
-        String[] itemValues = getResources().getStringArray(R.array.sortValues);
-        if (selectedFilters.size()!=0) {
-            for (Spinner spin : selectedFilters) {
-                arr.add(itemValues[spin.getSelectedItemPosition()]);
-            }
+    public int getSelectedItem() {
+        if (lv != null) {
+            return lv.getCheckedItemPosition();
         } else {
-            arr.addAll(selectedItems);
+            return selectedItem;
         }
-        return arr;
+    }
+
+    class FilterGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                               float velocityY) {
+
+            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                return false;
+
+            int index = actionbar.getSelectedNavigationIndex();
+            // right to left swipe
+            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                Log.v(TAG, "Fling left");
+                if (index < actionbar.getTabCount() - 1)
+                    index++;
+                actionbar.setSelectedNavigationItem(index);
+                return true;
+            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                // left to right swipe
+                Log.v(TAG, "Fling right");
+                if (index > 0)
+                    index--;
+                actionbar.setSelectedNavigationItem(index);
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -4,9 +4,9 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View.OnTouchListener;
 import android.widget.*;
 
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ public class FilterListFragment extends Fragment {
     final static String TAG = FilterListFragment.class.getSimpleName();
     private ListView lv;
     private CheckBox cb;
+    private GestureDetector gestureDetector;
     ActionBar actionbar;
     private ArrayList<String> selectedItems;
     private boolean not;
@@ -49,7 +50,7 @@ public class FilterListFragment extends Fragment {
         Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
-        ArrayList<String> items = arguments.getStringArrayList(Constants.ITEMS);
+        ArrayList<String> items = arguments.getStringArrayList(Constants.FILTER_ITEMS);
         actionbar = getActivity().getActionBar();
 
         if (savedInstanceState != null) {
@@ -80,6 +81,23 @@ public class FilterListFragment extends Fragment {
         }
 
         cb.setChecked(not);
+
+        gestureDetector = new GestureDetector(TodoApplication.appContext,
+                new FilterGestureDetector());
+        OnTouchListener gestureListener = new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (gestureDetector.onTouchEvent(event)) {
+                    MotionEvent cancelEvent = MotionEvent.obtain(event);
+                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
+                    v.onTouchEvent(cancelEvent);
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        lv.setOnTouchListener(gestureListener);
         return layout;
     }
 
@@ -105,6 +123,40 @@ public class FilterListFragment extends Fragment {
             }
         }
         return arr;
+    }
+
+    class FilterGestureDetector extends SimpleOnGestureListener {
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                               float velocityY) {
+
+            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                return false;
+
+            int index = actionbar.getSelectedNavigationIndex();
+            // right to left swipe
+            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                Log.v(TAG, "Fling left");
+                if (index < actionbar.getTabCount() - 1)
+                    index++;
+                actionbar.setSelectedNavigationItem(index);
+                return true;
+            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                // left to right swipe
+                Log.v(TAG, "Fling right");
+                if (index > 0)
+                    index--;
+                actionbar.setSelectedNavigationItem(index);
+                return true;
+            }
+            return false;
+        }
     }
 
     public void selectAll() {

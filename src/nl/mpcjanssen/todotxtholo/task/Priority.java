@@ -105,15 +105,6 @@ public enum Priority {
         return result;
     }
 
-    public static String[] rangeInCodeArray(Priority p1, Priority p2) {
-        List<Priority> priorities = Priority.range(p1, p2);
-        String[] result = new String[priorities.size()];
-        for (int i=0 ; i < priorities.size() ; i++) {
-            result[i] = priorities.get(i).getCode();
-        }
-        return result;
-    }
-
     public static ArrayList<String> inCode(List<Priority> priorities) {
         ArrayList<String> strings = new ArrayList<String>();
         for (Priority p : priorities) {
