@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.content.ComponentName;
 import nl.mpcjanssen.todotxtholo.util.Util;
 
 import android.app.PendingIntent;
@@ -31,7 +32,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
-        
+        SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
+        view.setTextViewText(R.id.title,preferences.getString(Constants.INTENT_TITLE, "Simpletask"));
 		// Create an Intent to launch ExampleActivity
         intent = new Intent(Constants.INTENT_START_FILTER);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -43,18 +45,28 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-		SharedPreferences preferences;
-		for (int widgetId : appWidgetIds) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        for (int i = 0; i < appWidgetIds.length; i++) {
+            int widgetId = appWidgetIds[i];
 			Log.v(TAG, "Updating widget:" + widgetId);
-			
 			RemoteViews views = updateView(widgetId, context);
-			
-            
+
 			appWidgetManager.updateAppWidget(widgetId, views);			
 		}
 		// TODO Auto-generated method stub
-		super.onUpdate(context, appWidgetManager, appWidgetIds);
+
 
 	}
 
+
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String name) {
+        Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+
+        // Construct the RemoteViews object.  It takes the package name (in our case, it's our
+        // package, but it needs this because on the other side it's the widget host inflating
+        // the layout from our package).
+        RemoteViews views = updateView(appWidgetId,context);
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
 }

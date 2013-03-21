@@ -28,6 +28,4 @@ You should have received a copy of the GNU General Public License along with Tod
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
                  android:gravity="center_vertical"
-
-                 android:paddingLeft="6dip"
-                 android:paddingRight="6dip"/>
+                 android:textColor="#000000"/>

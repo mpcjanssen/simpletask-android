@@ -2,14 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@android:style/Theme.Holo"
-    android:background="#AA000000"
-    android:orientation="vertical" >
-	
+    style="@android:style/Theme.Holo"
+    android:background="@drawable/appwidget_bg"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="26sp"
+            android:id="@+id/title"
+            style="@android:style/Widget.Holo.Light.ActionBar"
+            android:textColor="#0099cc"/>
+
+
     <ListView
         android:id="@+id/widgetlv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:textColor="#000000"
+        android:background="#FFFFFF"
+      />
 
 </LinearLayout>
