@@ -4,6 +4,7 @@ import android.app.*;
 import android.app.ActionBar.Tab;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -116,7 +117,7 @@ public class FilterActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_apply_filter:
             	if (asWidgetConfigure) {
-            		configureWidget();
+            		askWidgetName();
             	} else {
             		applyFilter();
             	}
@@ -235,18 +236,20 @@ public class FilterActivity extends Activity {
     }
 
     
-    private void configureWidget() {
-    	int mAppWidgetId; 
+    private void createWidget(String name) {
+    	int mAppWidgetId;
+
     	Intent intent = getIntent();
     	Bundle extras = intent.getExtras();
     	if (extras != null) {
     		mAppWidgetId = extras.getInt(
     				AppWidgetManager.EXTRA_APPWIDGET_ID, 
     				AppWidgetManager.INVALID_APPWIDGET_ID);
-    		
+
     		// Store widget filter
     		SharedPreferences preferences = getApplicationContext().getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
     		Editor editor = preferences.edit();
+            editor.putString(Constants.INTENT_TITLE, name);
     		editor.putStringSet(Constants.INTENT_CONTEXTS_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_CONTEXTS)));
     		editor.putBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, getNot(Constants.EXTRA_CONTEXTS));
     		editor.putStringSet(Constants.INTENT_PROJECTS_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_PROJECTS)));
@@ -255,9 +258,16 @@ public class FilterActivity extends Activity {
     		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
     		editor.putInt(Constants.INTENT_ACTIVE_SORT_v1, getSelectedItem(getString(R.string.sort),Constants.SORT_UNSORTED));
     		editor.commit();
-	    		    		
+
+            // onUpdate is not called on adding, launch it manually
+            Context context = FilterActivity.this;
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
+                    mAppWidgetId, name);
+
     		Intent resultValue = new Intent(getApplicationContext(), AppWidgetService.class);
     		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            resultValue.putExtra(Constants.INTENT_TITLE, name);
     		setResult(RESULT_OK, resultValue);
     		finish();
     	}
@@ -267,6 +277,54 @@ public class FilterActivity extends Activity {
    		Intent data = createFilterIntent();
    		startActivity(data);
     }
+
+    private void askWidgetName() {
+        String name;
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Create widget");
+        alert.setMessage("Widget title");
+
+        ArrayList<String> appliedFilters = new ArrayList<String>();
+        ArrayList<String> contextFilter = getFilter(Constants.EXTRA_CONTEXTS);
+        ArrayList<String> projectsFilter = getFilter(Constants.EXTRA_PROJECTS);
+        ArrayList<String> prioritiesFilter = getFilter(Constants.EXTRA_PRIORITIES);
+        appliedFilters.addAll(contextFilter);
+        appliedFilters.addAll(prioritiesFilter);
+        appliedFilters.addAll(projectsFilter);
+        if (appliedFilters.size() == 1) {
+            name = appliedFilters.get(0);
+        } else {
+            name = "";
+        }
+
+// Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        input.setText(name);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                if (value.equals("")) {
+                    Util.showToastShort(getApplicationContext(), R.string.shortcut_name_empty);
+                } else {
+                    createWidget(value);
+                }
+            }
+        }
+        );
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+
+    }
+
 
     private void createFilterShortcut() {
         final Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");

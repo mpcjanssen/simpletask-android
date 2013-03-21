@@ -51,6 +51,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	private boolean m_projectsNot;
 	private boolean m_contextsNot;
 	private int m_sort;
+    private String m_title;
 	
 	private Context mContext;
 	private int widgetId;
@@ -79,6 +80,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1,false);
 		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,false);
 		m_sort = preferences.getInt(Constants.INTENT_ACTIVE_SORT_v1,Constants.SORT_UNSORTED);
+        m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
 		setFilteredTasks(true);
 		
@@ -153,6 +155,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 	@Override
 	public void onCreate() {
+        Log.v(TAG, "OnCreate called in ViewFactory");
 		// TODO Auto-generated method stub
 
 	}

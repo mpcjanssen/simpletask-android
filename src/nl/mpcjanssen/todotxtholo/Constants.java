@@ -51,6 +51,7 @@ public class Constants {
     public final static String INTENT_CONTEXTS_FILTER_NOT_v1 = "CONTEXTSnot";
     public final static String INTENT_PROJECTS_FILTER_NOT_v1 = "PROJECTSnot";
     public final static String INTENT_PRIORITIES_FILTER_NOT_v1 = "PRIORITIESnot";
+    public final static String INTENT_TITLE = "TITLE";
     public final static String INTENT_VERSION = "version";
     public final static int INTENT_CURRENT_VERSION = 1;
 
