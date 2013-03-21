@@ -248,7 +248,7 @@ public class TodoTxtTouch extends ListActivity implements
 		setListAdapter(this.m_adapter);
 
 		ListView lv = getListView();
-		lv.setTextFilterEnabled(false);
+		lv.setTextFilterEnabled(true);
 		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lv.setMultiChoiceModeListener(new ActionBarListener());
 		updateFilterBar();
@@ -746,7 +746,7 @@ public class TodoTxtTouch extends ListActivity implements
 		return (new MultiComparator(comparators));
 	}
 
-	public class TaskAdapter extends BaseAdapter implements ListAdapter {
+	public class TaskAdapter extends BaseAdapter implements ListAdapter, Filterable {
 
 		private LayoutInflater m_inflater;
 		int vt;
@@ -974,7 +974,23 @@ public class TodoTxtTouch extends ListActivity implements
 			}
 		}
 
-	}
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    m_search = charSequence.toString();
+                    Log.v(TAG, "performFiltering: " + charSequence.toString());
+                    return null;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    setFilteredTasks(false);
+                }
+            };
+        }
+    }
 
 	private static class ViewHolder {
 		private TextView taskprio;
