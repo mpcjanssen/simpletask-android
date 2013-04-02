@@ -171,97 +171,101 @@ public class TodoTxtTouch extends ListActivity implements
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
 
-		RemoteClient remoteClient = m_app.getRemoteClientManager()
-				.getRemoteClient();
-		if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
-			startLogin();
-			return;
-		}
-		setContentView(R.layout.main);
-		m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
-
-		taskBag = m_app.getTaskBag();
-
-		sort = m_app.m_prefs.getInt("sort", Constants.SORT_UNSORTED);
-
-		// Show search or filter results
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			m_search = intent.getStringExtra(SearchManager.QUERY);
-			Log.v(TAG, "Searched for " + m_search);
-		} else if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
-			Log.v(TAG, "Launched with filter:");
-
-			// handle different versions of shortcuts
-			String prios;
-			String projects;
-			String contexts;
-			int version = intent.getIntExtra(Constants.INTENT_VERSION, 1);
-			switch (version) {
-			case 1:
-			default:
-				prios = intent
-						.getStringExtra(Constants.INTENT_PRIORITIES_FILTER_v1);
-				projects = intent
-						.getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
-				contexts = intent
-						.getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
-				sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT_v1,
-						Constants.SORT_UNSORTED);
-				m_priosNot = intent.getBooleanExtra(
-						Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
-				m_projectsNot = intent.getBooleanExtra(
-						Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
-				m_contextsNot = intent.getBooleanExtra(
-						Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
-				break;
-			}
-			Log.v(TAG, "\t sort:" + sort);
-			if (prios != null && !prios.equals("")) {
-				m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
-				Log.v(TAG, "\t prio:" + m_prios);
-			}
-			if (projects != null && !projects.equals("")) {
-				m_projects = new ArrayList<String>(Arrays.asList(projects
-						.split("\n")));
-				Log.v(TAG, "\t projects:" + m_projects);
-			}
-			if (contexts != null && !contexts.equals("")) {
-				m_contexts = new ArrayList<String>(Arrays.asList(contexts
-						.split("\n")));
-				Log.v(TAG, "\t contexts:" + m_contexts);
-			}
-		} else if (savedInstanceState != null) {
-			// Called without explicit filter try to reload last active one
-			m_prios = Priority.toPriority(savedInstanceState
-					.getStringArrayList("m_prios"));
-			m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-			m_projects = savedInstanceState.getStringArrayList("m_projects");
-			m_search = savedInstanceState.getString("m_search");
-
-			sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
-
-		}
-		// Initialize Adapter
-
-		m_adapter = new TaskAdapter(this, R.layout.list_item,
-				getLayoutInflater(), getListView());
-		m_adapter.setFilteredTasks(true);
-
-		// listen to the ACTION_LOGOUT intent, if heard display LoginScreen
-		// and finish() current activity
-
-		setListAdapter(this.m_adapter);
-
-		ListView lv = getListView();
-		lv.setTextFilterEnabled(true);
-		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		lv.setMultiChoiceModeListener(new ActionBarListener());
-		updateFilterBar();
+        handleIntent(savedInstanceState);
 
 	}
 
-	private void updateFilterBar() {
+    private void handleIntent(Bundle savedInstanceState) {
+        RemoteClient remoteClient = m_app.getRemoteClientManager()
+                .getRemoteClient();
+        if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
+            startLogin();
+            return;
+        }
+        setContentView(R.layout.main);
+        m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
+
+        taskBag = m_app.getTaskBag();
+
+        sort = m_app.m_prefs.getInt("sort", Constants.SORT_UNSORTED);
+
+        // Show search or filter results
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            m_search = intent.getStringExtra(SearchManager.QUERY);
+            Log.v(TAG, "Searched for " + m_search);
+        } else if (intent.getExtras()!=null) {
+            Log.v(TAG, "Launched with filter:");
+
+            // handle different versions of shortcuts
+            String prios;
+            String projects;
+            String contexts;
+            int version = intent.getIntExtra(Constants.INTENT_VERSION, 1);
+            switch (version) {
+            case 1:
+            default:
+                prios = intent
+                        .getStringExtra(Constants.INTENT_PRIORITIES_FILTER_v1);
+                projects = intent
+                        .getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
+                contexts = intent
+                        .getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
+                sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT_v1,
+                        Constants.SORT_UNSORTED);
+                m_priosNot = intent.getBooleanExtra(
+                        Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
+                m_projectsNot = intent.getBooleanExtra(
+                        Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
+                m_contextsNot = intent.getBooleanExtra(
+                        Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
+                break;
+            }
+            Log.v(TAG, "\t sort:" + sort);
+            if (prios != null && !prios.equals("")) {
+                m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
+                Log.v(TAG, "\t prio:" + m_prios);
+            }
+            if (projects != null && !projects.equals("")) {
+                m_projects = new ArrayList<String>(Arrays.asList(projects
+                        .split("\n")));
+                Log.v(TAG, "\t projects:" + m_projects);
+            }
+            if (contexts != null && !contexts.equals("")) {
+                m_contexts = new ArrayList<String>(Arrays.asList(contexts
+                        .split("\n")));
+                Log.v(TAG, "\t contexts:" + m_contexts);
+            }
+        } else if (savedInstanceState != null) {
+            // Called without explicit filter try to reload last active one
+            m_prios = Priority.toPriority(savedInstanceState
+                    .getStringArrayList("m_prios"));
+            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+            m_projects = savedInstanceState.getStringArrayList("m_projects");
+            m_search = savedInstanceState.getString("m_search");
+
+            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
+
+        }
+        // Initialize Adapter
+
+        m_adapter = new TaskAdapter(this, R.layout.list_item,
+                getLayoutInflater(), getListView());
+        m_adapter.setFilteredTasks(true);
+
+        // listen to the ACTION_LOGOUT intent, if heard display LoginScreen
+        // and finish() current activity
+
+        setListAdapter(this.m_adapter);
+
+        ListView lv = getListView();
+        lv.setTextFilterEnabled(true);
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setMultiChoiceModeListener(new ActionBarListener());
+        updateFilterBar();
+    }
+
+    private void updateFilterBar() {
 		ListView lv = getListView();
 		int index = lv.getFirstVisiblePosition();
 		View v = lv.getChildAt(0);
@@ -550,10 +554,9 @@ public class TodoTxtTouch extends ListActivity implements
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                m_contexts.clear();
-                m_contexts.add(item.getTitle().toString());
-                m_adapter.setFilteredTasks(false);
-                updateFilterBar();
+                Intent intent = new Intent(getApplicationContext(), TodoTxtTouch.class);
+                intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, item.getTitle());
+                startActivity(intent);
                 return true;  //To change body of implemented methods use File | Settings | File Templates.
             }
         }
@@ -740,12 +743,11 @@ public class TodoTxtTouch extends ListActivity implements
         super.onNewIntent(intent);
         setIntent(intent);
         Log.v(TAG, "onNewIntent: " + intent);
+        handleIntent(null);
     }
 
     void clearFilter() {
-		Intent intent = new Intent(Constants.INTENT_START_FILTER);
-		intent.putExtra(Constants.INTENT_ACTIVE_SORT_v1, sort);
-		startActivity(intent);
+		startActivity(new Intent(getApplicationContext(), TodoTxtTouch.class));
 	}
 
 	private MultiComparator getActiveSort() {

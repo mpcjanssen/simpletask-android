@@ -35,7 +35,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
         view.setTextViewText(R.id.title,preferences.getString(Constants.INTENT_TITLE, "Simpletask"));
 		// Create an Intent to launch ExampleActivity
-        intent = new Intent(Constants.INTENT_START_FILTER);
+        intent = new Intent(context, TodoTxtTouch.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
