@@ -102,7 +102,13 @@ public class TodoTxtTouch extends ListActivity implements
 		Log.v(TAG, "onContentChanged");
 	}
 
-	@Override
+    @Override
+    protected void onStart() {
+        super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
+        Log.v(TAG, "onStart: " + getIntent().getExtras());
+    }
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(TAG, "onCreate");
@@ -307,6 +313,7 @@ public class TodoTxtTouch extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+        Log.v(TAG, "onResume: " + getIntent().getExtras());
 		m_adapter.setFilteredTasks(false);
 	}
 
@@ -525,13 +532,37 @@ public class TodoTxtTouch extends ListActivity implements
 		case R.id.share:
 			shareTodoList();
 			break;
+        case R.id.changelist:
+            changeList();
+            break;
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
 		return true;
 	}
 
-	private void startAddTaskActivity() {
+    private void changeList() {
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.changelist));
+        Menu menu = popupMenu.getMenu();
+        for (String ctx : taskBag.getContexts()) {
+            menu.add(ctx);
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                m_contexts.clear();
+                m_contexts.add(item.getTitle().toString());
+                m_adapter.setFilteredTasks(false);
+                updateFilterBar();
+                return true;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        }
+
+        );
+        popupMenu.show();
+    }
+
+    private void startAddTaskActivity() {
 		Log.v(TAG, "Starting addTask activity");
 		Intent intent = new Intent(this, AddTask.class);
 		intent.putExtra(Constants.EXTRA_PRIORITIES_SELECTED, m_prios);
@@ -707,6 +738,7 @@ public class TodoTxtTouch extends ListActivity implements
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         Log.v(TAG, "onNewIntent: " + intent);
     }
 

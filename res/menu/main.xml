@@ -27,11 +27,10 @@ You should have received a copy of the GNU General Public License along with Tod
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:title="@string/search"
-            android:id="@+id/search"
-            android:icon="@drawable/action_search"
-            android:showAsAction="ifRoom|collapseActionView"
-            android:actionViewClass="android.widget.SearchView"/>
+            android:title="@string/changelist"
+            android:id="@+id/changelist"
+            android:icon="@drawable/content_paste"
+            android:showAsAction="always"/>
 
     <item
             android:title="@string/sync"
@@ -52,6 +51,12 @@ You should have received a copy of the GNU General Public License along with Tod
             android:showAsAction="ifRoom"
             android:icon="@drawable/content_new"/>
 
+    <item
+            android:title="@string/search"
+            android:id="@+id/search"
+            android:icon="@drawable/action_search"
+            android:showAsAction="never|collapseActionView"
+            android:actionViewClass="android.widget.SearchView"/>
     <item
             android:title="@string/share"
             android:showAsAction="never"
