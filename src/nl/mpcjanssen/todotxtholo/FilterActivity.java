@@ -165,7 +165,7 @@ public class FilterActivity extends Activity {
     }
 
     private Intent createFilterIntent() {
-        Intent target = new Intent(getApplicationContext(),TodoTxtTouch.class);
+        Intent target = new Intent(Constants.INTENT_START_FILTER);
         String name = "";
         ArrayList<String> appliedFilters = new ArrayList<String>();
         ArrayList<String> contextFilter = getFilter(Constants.EXTRA_CONTEXTS);
@@ -383,9 +383,6 @@ public class FilterActivity extends Activity {
             mTag = tag;
             mArguments = arguments;
             mClz = clz;
-            // Check to see if we already have a fragment for this tab, probably
-            // from a previously saved state.
-            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
         }
 
         @Override
@@ -395,7 +392,9 @@ public class FilterActivity extends Activity {
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            // Check if the fragment is already initialized
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state.
+            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
                 mFragment = Fragment.instantiate(mActivity, mClz.getName(), mArguments);
@@ -413,7 +412,6 @@ public class FilterActivity extends Activity {
                 ft.detach(mFragment);
             }
         }
-
     }
 }
 
