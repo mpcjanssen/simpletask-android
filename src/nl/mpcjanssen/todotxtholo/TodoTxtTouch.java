@@ -443,6 +443,9 @@ public class TodoTxtTouch extends ListActivity implements
 				t.markComplete(new Date());
 			}
 		}
+        if (m_app.isAutoArchive()) {
+           taskBag.archive();
+        }
 		taskBag.store();
         m_app.updateWidgets();
 		m_app.setNeedToPush(true);

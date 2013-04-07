@@ -65,6 +65,7 @@ public class TaskBag {
 
     private void store(ArrayList<Task> tasks) {
         localRepository.store(tasks);
+
         lastReload = null;
     }
 
