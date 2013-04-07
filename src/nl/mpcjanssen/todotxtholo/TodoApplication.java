@@ -168,6 +168,10 @@ public class TodoApplication extends Application {
         return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
     }
 
+    public boolean isAutoArchive() {
+        return m_prefs.getBoolean(getString(R.string.auto_archive_pref_key), false);
+    }
+
     public void setManualMode(boolean manual) {
     	Editor edit = m_prefs.edit();
         edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);
