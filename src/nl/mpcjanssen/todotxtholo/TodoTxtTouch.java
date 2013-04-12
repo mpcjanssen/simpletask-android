@@ -818,6 +818,25 @@ public class TodoTxtTouch extends ListActivity implements
 			String header = "";
 			int position = 0;
 			switch (sort) {
+                case Constants.SORT_PRIORITY:
+                    for (Task t : visibleTasks) {
+                        Priority prio = t.getPriority();
+                        String newHeader;
+                        if (prio == null) {
+                            newHeader = getString(R.string.no_prio);
+                        } else {
+                            newHeader = prio.getCode();
+                        }
+                        if (!header.equals(newHeader)) {
+                            header = newHeader;
+                            // Log.v(TAG, "Start of header: " + header +
+                            // " at position: " + position);
+                            headerAtPostion.put(position, header);
+                            position++;
+                        }
+                        position++;
+                    }
+                    break;
 			case Constants.SORT_CONTEXT:
 				for (Task t : visibleTasks) {
 					List<String> taskItems = t.getContexts();
