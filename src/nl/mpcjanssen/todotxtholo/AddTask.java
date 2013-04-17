@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -69,11 +70,11 @@ public class AddTask extends Activity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_task:
-                // Start new add task activity
+                // Open new tasks add activity
                 Intent intent = getIntent();
                 intent.removeExtra(Constants.EXTRA_TASK);
-                startActivity(getIntent());
-                // And save current one
+                startActivity(intent);
+                // And save current task
             case R.id.menu_save_task:
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
@@ -101,9 +102,14 @@ public class AddTask extends Activity {
                 dialog.setTitle("Task format");
                 dialog.show();
                 break;
-            case R.id.menu_clear_task:
-                textInputField = (EditText) findViewById(R.id.taskText);
-                textInputField.setText("");
+            case R.id.menu_add_prio:
+                showPrioMenu(findViewById(R.id.menu_add_prio));
+                break;
+            case R.id.menu_add_list:
+                showContextMenu(findViewById(R.id.menu_add_list));
+                break;
+            case R.id.menu_add_tag:
+                showTagMenu(findViewById(R.id.menu_add_tag));
                 break;
         }
         return true;
@@ -130,74 +136,12 @@ public class AddTask extends Activity {
         }
 
 
+
         setContentView(R.layout.add_task);
+
 
         TodoApplication m_app = (TodoApplication) getApplication();
         taskBag = m_app.getTaskBag();
-
-        Button btnPriority = (Button) findViewById(R.id.btnPriority);
-        Button btnContexts = (Button) findViewById(R.id.btnContext);
-        Button btnProjects = (Button) findViewById(R.id.btnProject);
-
-        btnContexts.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                Menu menu = popupMenu.getMenu();
-                for (String ctx : taskBag.getContexts()) {
-                    menu.add(ctx);
-                }
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        replaceTextAtSelection("@" + item.getTitle() + " ");
-                        return true;  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                }
-
-                );
-                popupMenu.show();
-            }
-        });
-
-        btnProjects.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                Menu menu = popupMenu.getMenu();
-                for (String prj : taskBag.getProjects()) {
-                    menu.add(prj);
-                }
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        replaceTextAtSelection("+" + item.getTitle() + " ");
-                        return true;  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                }
-
-                );
-                popupMenu.show();
-            }
-        });
-
-        btnPriority.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                Menu menu = popupMenu.getMenu();
-                for (Priority prio : Priority.values()) {
-                    menu.add(prio.getCode());
-                }
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        replacePriority(item.getTitle());
-                        return true;
-                    }
-                }
-
-                );
-                popupMenu.show();
-            }
-        });
 
         // text
         textInputField = (EditText) findViewById(R.id.taskText);
@@ -244,6 +188,60 @@ public class AddTask extends Activity {
 
         int textIndex = 0;
         textInputField.setSelection(textIndex);
+    }
+
+    private void showTagMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+        Menu menu = popupMenu.getMenu();
+        for (String prj : taskBag.getProjects()) {
+            menu.add(prj);
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                replaceTextAtSelection("+" + item.getTitle() + " ");
+                return true;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        }
+
+        );
+        popupMenu.show();
+    }
+
+    private void showPrioMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+        Menu menu = popupMenu.getMenu();
+        for (Priority prio : Priority.values()) {
+            menu.add(prio.getCode());
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                replacePriority(item.getTitle());
+                return true;
+            }
+        }
+
+        );
+        popupMenu.show();
+    }
+
+    private void showContextMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+        Menu menu = popupMenu.getMenu();
+        for (String ctx : taskBag.getContexts()) {
+            menu.add(ctx);
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                replaceTextAtSelection("@" + item.getTitle() + " ");
+                return true;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        }
+
+        );
+        popupMenu.show();
     }
 
     private void replacePriority(CharSequence newPrio) {
