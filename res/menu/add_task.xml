@@ -24,4 +24,11 @@
             android:title="@string/add"
             android:icon="@drawable/content_new"
             />
+    <item
+            android:id="@+id/menu_save_task"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom|withText"
+            android:title="@string/save_task"
+            android:icon="@drawable/content_save"
+            />
 </menu>

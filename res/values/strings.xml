@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="app_label">Simpletask</string>
     <string name="added_task">Added task</string>
     <string name="add_task_failed">Could not add task</string>
-    <string name="updated_task">Updated task</string>
+    <string name="save_task">Save task</string>
     <string name="update_task_failed">Could not update task</string>
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>

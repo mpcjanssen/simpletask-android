@@ -62,14 +62,6 @@ public class AddTask extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_task, menu);
-
-        if (m_backup != null) {
-            MenuItem m = menu.findItem(R.id.menu_add_task);
-            if (m != null) {
-                m.setTitle(R.string.update);
-                m.setIcon(R.drawable.content_save);
-            }
-        }
         return true;
     }
 
@@ -77,6 +69,12 @@ public class AddTask extends Activity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_task:
+                // Start new add task activity
+                Intent intent = getIntent();
+                intent.removeExtra(Constants.EXTRA_TASK);
+                startActivity(getIntent());
+                // And save current one
+            case R.id.menu_save_task:
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
                 final String input = textInputField.getText().toString()
