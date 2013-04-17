@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
             android:title="@string/changelist"
             android:id="@+id/changelist"
-            android:icon="@drawable/content_paste"
+            android:icon="@drawable/list"
             android:showAsAction="always"/>
 
     <item
