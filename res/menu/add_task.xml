@@ -3,11 +3,35 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/menu_clear_task"
+            android:id="@+id/menu_add_list"
             android:orderInCategory="100"
-            android:showAsAction="ifRoom|withText"
-            android:title="@string/cleartask"
-            android:icon="@drawable/delete"
+            android:showAsAction="ifRoom"
+            android:title="@string/context_prompt"
+            android:icon="@drawable/list"
+            />
+    <item
+            android:id="@+id/menu_add_prio"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom"
+            android:title="@string/priority_prompt"
+            android:icon="@drawable/prio"
+            />
+
+    <item
+            android:id="@+id/menu_add_tag"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom"
+            android:title="@string/project_prompt"
+            android:icon="@drawable/labels"
+            />
+
+
+    <item
+            android:id="@+id/menu_save_task"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom"
+            android:title="@string/save_task"
+            android:icon="@drawable/content_save"
             />
     <item
             android:id="@+id/menu_add_task_help"
@@ -16,19 +40,11 @@
             android:title="@string/add_task_help_btn"
             android:icon="@drawable/help"
             />
-
     <item
             android:id="@+id/menu_add_task"
             android:orderInCategory="100"
-            android:showAsAction="ifRoom|withText"
-            android:title="@string/add"
+            android:showAsAction="never"
+            android:title="@string/addtask"
             android:icon="@drawable/content_new"
-            />
-    <item
-            android:id="@+id/menu_save_task"
-            android:orderInCategory="100"
-            android:showAsAction="ifRoom|withText"
-            android:title="@string/save_task"
-            android:icon="@drawable/content_save"
             />
 </menu>
