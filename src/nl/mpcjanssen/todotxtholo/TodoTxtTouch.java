@@ -262,6 +262,21 @@ public class TodoTxtTouch extends ListActivity implements
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
+                onListItemClick(getListView(), v,pos,id);
+            }
+        });
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) {
+                onListItemLongClick(getListView(), v,pos,id);
+                return true;
+            }
+        });
+
+
         updateFilterBar();
     }
 
@@ -383,8 +398,14 @@ public class TodoTxtTouch extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// start the action bar instead
-		l.setItemChecked(position, true);
+		startAddTaskActivity(getTaskAt(position),false);
 	}
+
+
+    protected void onListItemLongClick(ListView l, View v, int position, long id) {
+        // start the action bar instead
+        l.setItemChecked(position, true);
+    }
 
 	private Task getTaskAt(final int pos) {
 		Task task = m_adapter.getItem(pos);
@@ -468,12 +489,6 @@ public class TodoTxtTouch extends ListActivity implements
 		sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
 	}
 
-	private void editTask(Task task) {
-		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_TASK, task);
-		startActivity(intent);
-	}
-
 	private void deleteTasks(List<Task> tasks) {
 		for (Task t : tasks) {
             if(t!=null) {
@@ -522,7 +537,7 @@ public class TodoTxtTouch extends ListActivity implements
 		Log.v(TAG, "onMenuItemSelected: " + item.getItemId());
 		switch (item.getItemId()) {
 		case R.id.add_new:
-			startAddTaskActivity();
+			startAddTaskActivity(null,true);
 			break;
 		case R.id.sync:
 			Log.v(TAG, "onMenuItemSelected: sync");
@@ -568,10 +583,11 @@ public class TodoTxtTouch extends ListActivity implements
         popupMenu.show();
     }
 
-    private void startAddTaskActivity() {
+    private void startAddTaskActivity(Task task, boolean edit) {
 		Log.v(TAG, "Starting addTask activity");
 		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_PRIORITIES_SELECTED, m_prios);
+        intent.putExtra(Constants.EXTRA_TASK, task);
+        intent.putExtra(Constants.EXTRA_EDIT, edit);
 		intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
 		intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
 		startActivity(intent);
@@ -1116,24 +1132,6 @@ public class TodoTxtTouch extends ListActivity implements
 			title = title + numSelected;
 			title = title + " " + getString(R.string.selected);
 			mode.setTitle(title);
-			if (numSelected == 1) {
-				Task task = checkedTasks.get(0);
-				menu.findItem(R.id.update).setVisible(true);
-				for (URL url : task.getLinks()) {
-					menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
-							url.toString());
-				}
-				for (String s1 : task.getMailAddresses()) {
-					menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s1);
-				}
-				for (String s : task.getPhoneNumbers()) {
-					menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
-							Menu.NONE, s);
-				}
-			} else {
-				menu.findItem(R.id.update).setVisible(false);
-				menu.removeGroup(Menu.CATEGORY_SECONDARY);
-			}
 		}
 
 		@Override
@@ -1144,14 +1142,6 @@ public class TodoTxtTouch extends ListActivity implements
 			switch (menuid) {
 			case R.id.done:
 				completeTasks(checkedTasks);
-				break;
-			case R.id.update:
-				if (checkedTasks.size() == 1) {
-					editTask(checkedTasks.get(0));
-				} else {
-					Log.w(TAG,
-							"More than one task was selected while hanling update menu");
-				}
 				break;
 			case R.id.delete:
 				deleteTasks(checkedTasks);
@@ -1187,27 +1177,6 @@ public class TodoTxtTouch extends ListActivity implements
 						.setData(Events.CONTENT_URI)
 						.putExtra(Events.TITLE, calendarTitle)
 						.putExtra(Events.DESCRIPTION, calendarDescription);
-				startActivity(intent);
-				break;
-			case R.id.url:
-				Log.v(TAG, "url: " + item.getTitle().toString());
-				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
-						.getTitle().toString()));
-				startActivity(intent);
-				break;
-			case R.id.mail:
-				Log.v(TAG, "mail: " + item.getTitle().toString());
-				intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
-						.getTitle().toString()));
-				intent.putExtra(android.content.Intent.EXTRA_EMAIL,
-						new String[] { item.getTitle().toString() });
-				intent.setType("text/plain");
-				startActivity(intent);
-				break;
-			case R.id.phone_number:
-				Log.v(TAG, "phone_number");
-				intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-						+ item.getTitle().toString()));
 				startActivity(intent);
 				break;
 			}
