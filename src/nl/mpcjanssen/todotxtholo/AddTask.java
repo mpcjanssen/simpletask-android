@@ -29,6 +29,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.Task;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
@@ -63,13 +65,26 @@ public class AddTask extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_task, menu);
+        boolean edit = getIntent().getBooleanExtra(Constants.EXTRA_EDIT, true);
+        if(!edit) {
+            for (int i=0 ; i< menu.size() ; i++) {
+                menu.getItem(i).setVisible(false);
+            }
+            menu.findItem(R.id.menu_edit).setVisible(true);
+        }
         return true;
     }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add_task:
+            case R.id.menu_edit:
+                Intent originalIntent = getIntent();
+                originalIntent.putExtra(Constants.EXTRA_EDIT,true);
+                startActivity(originalIntent);
+                finish();
+                break;
+             case R.id.menu_add_task:
                 // Open new tasks add activity
                 Intent intent = getIntent();
                 intent.removeExtra(Constants.EXTRA_TASK);
@@ -153,13 +168,14 @@ public class AddTask extends Activity {
         Task iniTask = null;
         setTitle(R.string.task);
 
-        Task task = (Task) getIntent().getSerializableExtra(
+        boolean edit = intent.getBooleanExtra(Constants.EXTRA_EDIT, true);
+
+        Task task = (Task) intent.getSerializableExtra(
                 Constants.EXTRA_TASK);
         if (task != null) {
             m_backup = taskBag.find(task);
             textInputField.setText(task.inFileFormat());
             textInputField.setSelection(task.inFileFormat().length());
-            return;
         } else {
             if (textInputField.getText().length() == 0) {
                 ArrayList<String> projects = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_PROJECTS_SELECTED);
@@ -188,6 +204,13 @@ public class AddTask extends Activity {
 
         int textIndex = 0;
         textInputField.setSelection(textIndex);
+        if(!edit) {
+            textInputField.setVisibility(View.GONE);
+            TextView textView = (TextView)findViewById(R.id.taskView);
+            textView.setText(textInputField.getText());
+            textView.setVisibility(View.VISIBLE);
+            textView.requestFocus();
+        }
     }
 
     private void showTagMenu(View v) {
