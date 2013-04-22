@@ -2,18 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@android:style/Theme.Holo"
     android:background="@drawable/appwidget_bg"
     android:orientation="vertical"
+    android:layout_weight="1"
     android:padding="8dp">
 
-    <TextView
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="26sp"
-            android:id="@+id/title"
-            style="@android:style/Widget.Holo.Light.ActionBar"
-            android:textColor="#0099cc"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
 
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title"
+                android:textColor="#0099cc"
+                android:layout_gravity="center_vertical|left"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textIsSelectable="true"/>
+
+        <Button
+                android:layout_width="22dp"
+                android:layout_height="fill_parent"
+                android:text="+"
+                android:id="@+id/widgetadd"
+                android:textColor="#0099cc"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                android:clickable="true"
+                android:enabled="true"
+                android:height="10sp"
+                android:width="10sp"
+                android:layout_marginLeft="-20dp"
+                android:textAlignment="viewEnd"
+                android:singleLine="false"/>
+
+    </LinearLayout>
+
+
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="2px"
+            android:id="@+id/imageView"
+            android:layout_gravity="left|right|top"
+            android:background="#0099cc"
+            android:layout_weight="0"/>
 
     <ListView
         android:id="@+id/widgetlv"
@@ -21,6 +58,6 @@
         android:layout_height="match_parent"
         android:textColor="#000000"
         android:background="#FFFFFF"
-      />
+        android:layout_weight="1"/>
 
 </LinearLayout>
