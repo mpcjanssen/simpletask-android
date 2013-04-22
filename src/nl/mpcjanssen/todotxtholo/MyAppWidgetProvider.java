@@ -39,6 +39,10 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
+        intent = new Intent(context, AddTask.class);
+        PendingIntent pi = PendingIntent.getActivity(
+                context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        view.setOnClickPendingIntent(R.id.widgetadd,pi);
         return view;
 	}
 	
@@ -50,10 +54,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             int widgetId = appWidgetIds[i];
 			Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
-            Intent intent = new Intent(context, AddTask.class);
-            PendingIntent pi = PendingIntent.getActivity(
-                    context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setOnClickPendingIntent(R.id.widgetadd,pi);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
 		}
