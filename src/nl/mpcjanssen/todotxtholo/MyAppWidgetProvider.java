@@ -50,12 +50,13 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             int widgetId = appWidgetIds[i];
 			Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
+            Intent intent = new Intent(context, AddTask.class);
+            PendingIntent pi = PendingIntent.getActivity(
+                    context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setOnClickPendingIntent(R.id.widgetadd,pi);
+			appWidgetManager.updateAppWidget(widgetId, views);
 
-			appWidgetManager.updateAppWidget(widgetId, views);			
 		}
-		// TODO Auto-generated method stub
-
-
 	}
 
 
@@ -68,5 +69,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = updateView(appWidgetId,context);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
     }
 }
