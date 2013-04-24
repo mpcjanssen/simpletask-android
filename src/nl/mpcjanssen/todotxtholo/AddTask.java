@@ -29,11 +29,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -93,12 +95,15 @@ public class AddTask extends Activity {
             case R.id.menu_save_task:
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
-                final String input = textInputField.getText().toString()
-                        .replaceAll("\\r\\n|\\r|\\n", " ");
+                String input = textInputField.getText().toString();
                 if (m_backup != null) {
+                    // When updating we can only have one line
+                    input = input.replaceAll("\\r\\n|\\r|\\n", " ");
                     taskBag.updateTask(m_backup, input);
                 } else {
-                    taskBag.addAsTask(input);
+                    for (String taskText : input.split("\\r\\n|\\r|\\n")) {
+                        taskBag.addAsTask(taskText);
+                    }
                 }
                 TodoApplication m_app = (TodoApplication) getApplication();
                 m_app.setNeedToPush(true);
@@ -166,7 +171,7 @@ public class AddTask extends Activity {
         }
 
         Task iniTask = null;
-        setTitle(R.string.task);
+        setTitle(R.string.addtask);
 
         boolean edit = intent.getBooleanExtra(Constants.EXTRA_EDIT, true);
 
@@ -175,6 +180,7 @@ public class AddTask extends Activity {
         if (task != null) {
             m_backup = taskBag.find(task);
             textInputField.setText(task.inFileFormat());
+            setTitle(R.string.updatetask);
             textInputField.setSelection(task.inFileFormat().length());
         } else {
             if (textInputField.getText().length() == 0) {
@@ -205,6 +211,7 @@ public class AddTask extends Activity {
         int textIndex = 0;
         textInputField.setSelection(textIndex);
         if(!edit) {
+            setTitle(R.string.viewtask);
             textInputField.setVisibility(View.GONE);
             TextView textView = (TextView)findViewById(R.id.taskView);
             textView.setText(textInputField.getText());
