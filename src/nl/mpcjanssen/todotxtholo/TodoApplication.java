@@ -172,6 +172,43 @@ public class TodoApplication extends Application {
         return m_prefs.getBoolean(getString(R.string.auto_archive_pref_key), false);
     }
 
+    public int fontSizeDelta() {
+        int val;
+        String value =  m_prefs.getString(getString(R.string.font_size_delta_pref_key), "0");
+        try
+        {
+            val = Integer.parseInt(value);
+        }
+        catch (NumberFormatException nfe)
+        {
+            // bad data - set to sentinel
+            Log.v(TAG,nfe.getMessage());
+            val = 5;
+        }
+        return val;
+
+    }
+
+    public float prioFontSize () {
+        float defaultSize = Float.parseFloat (getResources ().getString (R.string.taskPrioTextSize));
+        return (float)Math.max(5.0, defaultSize+fontSizeDelta());
+    }
+
+    public float taskTextFontSize () {
+        float defaultSize = Float.parseFloat (getResources ().getString (R.string.taskTextSize));
+        return (float)Math.max(5.0, defaultSize+fontSizeDelta());
+    }
+
+    public float taskAgeFontSize () {
+        float defaultSize = Float.parseFloat (getResources ().getString (R.string.taskAgeTextSize));
+        return (float)Math.max(5.0, defaultSize+fontSizeDelta());
+    }
+
+    public float headerFontSize () {
+        float defaultSize = Float.parseFloat (getResources ().getString (R.string.headerTextSize));
+        return (float)Math.max(5.0, defaultSize+fontSizeDelta());
+    }
+
     public void setManualMode(boolean manual) {
     	Editor edit = m_prefs.edit();
         edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);

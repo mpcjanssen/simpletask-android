@@ -952,6 +952,7 @@ public class TodoTxtTouch extends ListActivity implements
 				TextView t = (TextView) convertView
 						.findViewById(R.id.list_header_title);
 				t.setText(headerAtPostion.get(position));
+                t.setTextSize(m_app.headerFontSize());
 
 			} else {
 				final ViewHolder holder;
@@ -1004,9 +1005,11 @@ public class TodoTxtTouch extends ListActivity implements
 						holder.taskage.setText("");
 						holder.taskage.setVisibility(View.GONE);
 					}
-
 				}
 
+                holder.taskprio.setTextSize(m_app.prioFontSize());
+                holder.tasktext.setTextSize(m_app.taskTextFontSize());
+                holder.taskage.setTextSize(m_app.taskAgeFontSize());
 			}
 			return convertView;
 		}
