@@ -44,4 +44,9 @@
             android:key="@string/line_breaks_pref_key"
             android:title="@string/line_breaks_pref_title"
             android:summary="@string/line_breaks_pref_summary"/>
+    <EditTextPreference
+            android:numeric="integer"
+            android:key="@string/font_size_delta_pref_key"
+            android:title="@string/font_size_delta_pref_title"
+            android:summary="@string/font_size_delta_pref_summary"/>
 </PreferenceScreen>

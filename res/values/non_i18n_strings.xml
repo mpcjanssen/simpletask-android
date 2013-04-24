@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--suppress ALL -->
-<resources>
-    <string name="default_sort_pref_key">default_sort</string>
-</resources>
