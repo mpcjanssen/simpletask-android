@@ -30,7 +30,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.DataSetObserver;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
@@ -48,7 +47,6 @@ import nl.mpcjanssen.todotxtholo.util.Strings;
 import nl.mpcjanssen.todotxtholo.util.Util;
 import nl.mpcjanssen.todotxtholo.util.Util.OnMultiChoiceDialogListener;
 
-import java.net.URL;
 import java.util.*;
 
 public class TodoTxtTouch extends ListActivity implements
@@ -83,7 +81,7 @@ public class TodoTxtTouch extends ListActivity implements
 	private MenuItem refreshItem; // reference to actionbar menu item we want to
 									// swap
 
-	private int sort = 0;
+	private int m_sort = 0;
 
 	private boolean m_priosNot;
 
@@ -187,7 +185,7 @@ public class TodoTxtTouch extends ListActivity implements
 
         taskBag = m_app.getTaskBag();
 
-        sort = m_app.m_prefs.getInt("sort", Constants.SORT_UNSORTED);
+        m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
 
         // Show search or filter results
         Intent intent = getIntent();
@@ -211,7 +209,7 @@ public class TodoTxtTouch extends ListActivity implements
                         .getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
                 contexts = intent
                         .getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
-                sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT_v1,
+                m_sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT_v1,
                         Constants.SORT_UNSORTED);
                 m_priosNot = intent.getBooleanExtra(
                         Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
@@ -221,7 +219,7 @@ public class TodoTxtTouch extends ListActivity implements
                         Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
                 break;
             }
-            Log.v(TAG, "\t sort:" + sort);
+            Log.v(TAG, "\t m_sort:" + m_sort);
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
                 Log.v(TAG, "\t prio:" + m_prios);
@@ -244,7 +242,7 @@ public class TodoTxtTouch extends ListActivity implements
             m_projects = savedInstanceState.getStringArrayList("m_projects");
             m_search = savedInstanceState.getString("m_search");
 
-            sort = savedInstanceState.getInt("sort", Constants.SORT_UNSORTED);
+            m_sort = savedInstanceState.getInt("m_sort", Constants.SORT_UNSORTED);
 
         }
         // Initialize Adapter
@@ -353,14 +351,14 @@ public class TodoTxtTouch extends ListActivity implements
 		outState.putStringArrayList("m_contexts", m_contexts);
 		outState.putStringArrayList("m_projects", m_projects);
 		outState.putString("m_search", m_search);
-		outState.putInt("sort", sort);
+		outState.putInt("m_sort", m_sort);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		SharedPreferences.Editor editor = m_app.m_prefs.edit();
-		editor.putInt("sort", sort);
+		editor.putInt("m_sort", m_sort);
 		editor.commit();
 	}
 
@@ -373,7 +371,7 @@ public class TodoTxtTouch extends ListActivity implements
 		// m_projects = state.getStringArrayList("m_projects");
 		// m_search = state.getString("m_search");
 		//
-		// sort = state.getInt("sort", Constants.SORT_UNSORTED);
+		// m_sort = state.getInt("m_sort", Constants.SORT_UNSORTED);
 	}
 
 	@Override
@@ -574,6 +572,8 @@ public class TodoTxtTouch extends ListActivity implements
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent(getApplicationContext(), TodoTxtTouch.class);
                 intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, item.getTitle());
+                // Keep m_sort when switching
+                intent.putExtra(Constants.INTENT_ACTIVE_SORT_v1, m_sort);
                 startActivity(intent);
                 return true;  //To change body of implemented methods use File | Settings | File Templates.
             }
@@ -774,7 +774,7 @@ public class TodoTxtTouch extends ListActivity implements
 		if (m_app.completedLast()) {
 			comparators.add(new CompletedComparator());
 		}
-		switch (sort) {
+		switch (m_sort) {
 		case Constants.SORT_UNSORTED:
 			break;
 		case Constants.SORT_REVERSE:
@@ -833,7 +833,7 @@ public class TodoTxtTouch extends ListActivity implements
 			headerAtPostion.clear();
 			String header = "";
 			int position = 0;
-			switch (sort) {
+			switch (m_sort) {
                 case Constants.SORT_PRIORITY:
                     for (Task t : visibleTasks) {
                         Priority prio = t.getPriority();
@@ -1098,7 +1098,7 @@ public class TodoTxtTouch extends ListActivity implements
 				Priority.inCode(m_prios));
 		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
 		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-		i.putExtra(Constants.ACTIVE_SORT, sort);
+		i.putExtra(Constants.ACTIVE_SORT, m_sort);
 		i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
 		i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
 		i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
