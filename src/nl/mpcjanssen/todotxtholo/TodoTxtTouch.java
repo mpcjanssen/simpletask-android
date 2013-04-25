@@ -28,7 +28,9 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -1003,9 +1005,39 @@ public class TodoTxtTouch extends ListActivity implements
                     holder.taskprio.setText(task.getPriority().inListFormat());
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat());
-                    Util.setGray(ss, task.getProjects());
-                    Util.setGray(ss, task.getContexts());
+
+                    ArrayList<String> colorizeStrings = new ArrayList<String>();
+                    for (String context : task.getContexts()) {
+                        colorizeStrings.add("@"+context);
+                    }
+                    Util.setColor(ss, Color.GRAY, colorizeStrings);
+                    colorizeStrings.clear();
+                    for (String project : task.getProjects()) {
+                        colorizeStrings.add("+"+project);
+                    }
+                    Util.setColor(ss, Color.GRAY, colorizeStrings);
+
+                    Resources res = getResources();
+                    int prioColor ;
+                    switch (task.getPriority()) {
+                        case A:
+                           prioColor = res.getColor(R.color.green);
+                            break;
+                        case B:
+                            prioColor = res.getColor(R.color.blue);
+                            break;
+                        case C:
+                            prioColor = res.getColor(R.color.orange);
+                            break;
+                        case D:
+                            prioColor = res.getColor(R.color.gold);
+                            break;
+                        default:
+                           prioColor = res.getColor(R.color.black);
+                    }
+                    Util.setColor(ss,prioColor, task.getPriority().inFileFormat());
                     holder.tasktext.setText(ss);
+                    holder.tasktext.setTextColor(res.getColor(R.color.black));
 
                     if (task.isCompleted()) {
                         // Log.v(TAG, "Striking through " + task.getText());
