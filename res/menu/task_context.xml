@@ -33,10 +33,6 @@ You should have received a copy of the GNU General Public License along with Tod
             android:title="@string/priority"
             android:id="@+id/priority"
             android:icon="@drawable/prio"/>
-    <item
-            android:title="@string/delete"
-            android:id="@+id/delete"
-            android:icon="@drawable/delete"/>
 
     <item
             android:title="@string/share"
@@ -45,8 +41,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
             android:title="@string/unComplete"
             android:id="@+id/uncomplete"/>
+
     <item
             android:title="@string/add_to_calendar"
             android:showAsAction="never"
             android:id="@+id/calendar"/>
+    <item
+            android:title="@string/delete"
+            android:id="@+id/delete"
+            android:showAsAction="never"
+            android:icon="@drawable/delete"/>
+
 </menu>
