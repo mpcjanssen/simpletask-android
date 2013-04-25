@@ -27,6 +27,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -315,6 +319,23 @@ public class Util {
             builder.append(delimiter);
         }
         return builder.toString();
+    }
+    public static void setGray(SpannableString ss, List<String> items) {
+        String data = ss.toString();
+        for (String item : items) {
+            int i = data.indexOf("@" + item);
+            if (i != -1) {
+                ss.setSpan(new ForegroundColorSpan(Color.GRAY), i,
+                        i + 1 + item.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            int j = data.indexOf("+" + item);
+            if (j != -1) {
+                ss.setSpan(new ForegroundColorSpan(Color.GRAY), j,
+                        j + 1 + item.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
     }
 
 }
