@@ -986,8 +986,6 @@ public class TodoTxtTouch extends ListActivity implements
                 if (convertView == null) {
                     convertView = m_inflater.inflate(R.layout.list_item, null);
                     holder = new ViewHolder();
-                    holder.taskprio = (TextView) convertView
-                            .findViewById(R.id.taskprio);
                     holder.tasktext = (TextView) convertView
                             .findViewById(R.id.tasktext);
                     holder.taskage = (TextView) convertView
@@ -1002,7 +1000,6 @@ public class TodoTxtTouch extends ListActivity implements
                 task = getItem(position);
 
                 if (task != null) {
-                    holder.taskprio.setText(task.getPriority().inListFormat());
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat());
 
@@ -1067,7 +1064,6 @@ public class TodoTxtTouch extends ListActivity implements
                     }
                 }
                 holder.taskselect.setChecked(getListView().isItemChecked(position));
-                holder.taskprio.setTextSize(m_app.prioFontSize());
                 holder.tasktext.setTextSize(m_app.taskTextFontSize());
                 holder.taskage.setTextSize(m_app.taskAgeFontSize());
             }
@@ -1128,7 +1124,6 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     private static class ViewHolder {
-        private TextView taskprio;
         private TextView tasktext;
         private TextView taskage;
         private CheckBox taskselect;

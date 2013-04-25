@@ -38,17 +38,6 @@ You should have received a copy of the GNU General Public License along with Tod
             />
 
     <TextView
-            android:id="@+id/taskprio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dip"
-            android:focusable="false"
-            android:textSize="16sp"
-            android:visibility="gone"
-            android:layout_toRightOf="@id/checkBox"
-            android:textStyle="bold"/>
-
-    <TextView
             android:id="@+id/tasktext"
             android:focusable="false"
             android:layout_width="wrap_content"
@@ -59,7 +48,8 @@ You should have received a copy of the GNU General Public License along with Tod
             android:textSize="16sp"
             android:autoLink="all"
             android:linksClickable="false"
-            android:layout_toRightOf="@id/taskprio"/>
+            android:layout_toRightOf="@id/checkBox"
+            />
 
     <TextView
             android:id="@+id/taskage"
@@ -70,7 +60,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:paddingBottom="4dip"
             android:textSize="11sp"
             android:layout_below="@id/tasktext"
-            android:layout_toRightOf="@id/taskprio"
+            android:layout_toRightOf="@id/checkBox"
             android:visibility="gone"/>
 
 </RelativeLayout>
