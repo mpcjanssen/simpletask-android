@@ -45,6 +45,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -157,6 +158,8 @@ public class Util {
     public static void showToastShort(Context cxt, String msg) {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
+
+
 
     public interface OnMultiChoiceDialogListener {
         void onClick(boolean[] selected);
@@ -320,19 +323,20 @@ public class Util {
         }
         return builder.toString();
     }
-    public static void setGray(SpannableString ss, List<String> items) {
+
+    public static void setColor(SpannableString ss, int color, String s) {
+        ArrayList<String> strList = new ArrayList<String>();
+        strList.add(s);
+        setColor(ss,color,strList);
+    }
+
+    public static void setColor(SpannableString ss, int color ,  List<String> items) {
         String data = ss.toString();
         for (String item : items) {
-            int i = data.indexOf("@" + item);
+            int i = data.indexOf(item);
             if (i != -1) {
-                ss.setSpan(new ForegroundColorSpan(Color.GRAY), i,
-                        i + 1 + item.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            int j = data.indexOf("+" + item);
-            if (j != -1) {
-                ss.setSpan(new ForegroundColorSpan(Color.GRAY), j,
-                        j + 1 + item.length(),
+                ss.setSpan(new ForegroundColorSpan(color), i,
+                        i + item.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }

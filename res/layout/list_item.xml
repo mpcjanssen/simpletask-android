@@ -44,6 +44,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:padding="2dip"
             android:focusable="false"
             android:textSize="16sp"
+            android:visibility="gone"
             android:layout_toRightOf="@id/checkBox"
             android:textStyle="bold"/>
 
