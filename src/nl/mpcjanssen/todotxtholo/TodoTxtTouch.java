@@ -1003,6 +1003,8 @@ public class TodoTxtTouch extends ListActivity implements
                     holder.taskprio.setText(task.getPriority().inListFormat());
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat());
+                    Util.setGray(ss, task.getProjects());
+                    Util.setGray(ss, task.getContexts());
                     holder.tasktext.setText(ss);
 
                     if (task.isCompleted()) {
