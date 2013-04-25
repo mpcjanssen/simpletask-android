@@ -29,14 +29,22 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_width="match_parent"
                 android:background="?android:attr/activatedBackgroundIndicator"
         >
+    <CheckBox
+            android:id="@+id/checkBox"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
     <TextView
             android:id="@+id/taskprio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dip"
+            android:padding="2dip"
             android:focusable="false"
             android:textSize="16sp"
+            android:layout_toRightOf="@id/checkBox"
             android:textStyle="bold"/>
 
     <TextView
