@@ -863,6 +863,8 @@ public class TodoTxtTouch extends ListActivity {
                             .findViewById(R.id.tasktext);
                     holder.taskage = (TextView) convertView
                             .findViewById(R.id.taskage);
+    				holder.taskprio = (TextView) convertView
+    						.findViewById(R.id.taskprio);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -873,7 +875,7 @@ public class TodoTxtTouch extends ListActivity {
                 if (task != null) {
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat());
-
+                    
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getContexts()) {
                         colorizeStrings.add("@"+context);
@@ -903,7 +905,8 @@ public class TodoTxtTouch extends ListActivity {
                         default:
                            prioColor = res.getColor(R.color.black);
                     }
-                    Util.setColor(ss,prioColor, task.getPriority().inFileFormat());
+                    holder.taskprio.setText(task.getPriority().inListFormat());
+                    holder.taskprio.setTextColor(prioColor);
                     holder.tasktext.setText(ss);
                     holder.tasktext.setTextColor(res.getColor(R.color.black));
 
@@ -936,6 +939,7 @@ public class TodoTxtTouch extends ListActivity {
                 }
                 holder.tasktext.setTextSize(m_app.taskTextFontSize());
                 holder.taskage.setTextSize(m_app.taskAgeFontSize());
+                holder.taskprio.setTextSize(m_app.taskTextFontSize());
             }
             return convertView;
         }
@@ -994,6 +998,7 @@ public class TodoTxtTouch extends ListActivity {
     }
 
     private static class ViewHolder {
+    	private TextView taskprio;
         private TextView tasktext;
         private TextView taskage;
     }

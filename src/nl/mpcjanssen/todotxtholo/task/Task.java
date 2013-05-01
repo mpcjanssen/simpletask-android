@@ -197,9 +197,6 @@ public class Task implements Serializable, Comparable<Task> {
         if (this.completed) {
             sb.append(COMPLETED).append(this.completionDate).append(" ");
         }
-        if (this.getPriority()!=Priority.NONE) {
-            sb.append(this.getPriority().inFileFormat()).append(" ");
-        }
         sb.append(this.text);
         return sb.toString();
     }
