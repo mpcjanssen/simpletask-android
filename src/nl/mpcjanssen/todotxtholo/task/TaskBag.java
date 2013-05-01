@@ -23,13 +23,9 @@
 package nl.mpcjanssen.todotxtholo.task;
 
 import android.content.SharedPreferences;
+import nl.mpcjanssen.todotxtholo.TodoApplication;
 import nl.mpcjanssen.todotxtholo.TodoTxtTouch;
-import nl.mpcjanssen.todotxtholo.remote.PullTodoResult;
-import nl.mpcjanssen.todotxtholo.remote.RemoteClientManager;
-import nl.mpcjanssen.todotxtholo.util.TaskIo;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -46,17 +42,14 @@ public class TaskBag {
     final static String TAG = TodoTxtTouch.class.getSimpleName();
     private Preferences preferences;
     private final LocalFileTaskRepository localRepository;
-    private final RemoteClientManager remoteClientManager;
     private ArrayList<Task> tasks = new ArrayList<Task>();
-    private Date lastReload = null;
-    private Date lastSync = null;
+	private TodoApplication application;
 
-    public TaskBag(Preferences taskBagPreferences,
-                   LocalFileTaskRepository localTaskRepository,
-                   RemoteClientManager remoteClientManager) {
+    public TaskBag(TodoApplication todoApplication, Preferences taskBagPreferences,
+                   LocalFileTaskRepository localTaskRepository) {
         this.preferences = taskBagPreferences;
         this.localRepository = localTaskRepository;
-        this.remoteClientManager = remoteClientManager;
+        this.application = todoApplication;
     }
 
     public void updatePreferences(Preferences preferences) {
@@ -65,8 +58,6 @@ public class TaskBag {
 
     private void store(ArrayList<Task> tasks) {
         localRepository.store(tasks);
-
-        lastReload = null;
     }
 
     public void store() {
@@ -77,7 +68,6 @@ public class TaskBag {
         try {
             reload();
             localRepository.archive(tasks);
-            lastReload = null;
             reload();
         } catch (Exception e) {
             throw new TaskPersistException(
@@ -85,13 +75,9 @@ public class TaskBag {
         }
     }
 
-    public void reload() {
-        if (lastReload == null || localRepository.todoFileModifiedSince(lastReload)) {
-            localRepository.init();
-            this.tasks = localRepository.load();
-            lastReload = new Date();
-        }
-    }
+	public void reload() {
+		this.tasks = localRepository.load();
+	}
 
     public int size() {
         return tasks.size();
@@ -142,49 +128,6 @@ public class TaskBag {
         }
     }
 
-    /* REMOTE APIS */
-    public void pushToRemote(boolean overwrite) {
-        pushToRemote(false, overwrite);
-    }
-
-    public void pushToRemote(boolean overridePreference, boolean overwrite) {
-        if (this.preferences.isOnline() || overridePreference) {
-            File doneFile = null;
-            if (localRepository.doneFileModifiedSince(lastSync)) {
-                doneFile = LocalFileTaskRepository.DONE_TXT_FILE;
-            }
-            remoteClientManager.getRemoteClient().pushTodo(
-                    LocalFileTaskRepository.TODO_TXT_FILE,
-                    doneFile,
-                    overwrite);
-            lastSync = new Date();
-        }
-    }
-
-    public void pullFromRemote(boolean overridePreference) {
-        try {
-            if (this.preferences.isOnline() || overridePreference) {
-                PullTodoResult result = remoteClientManager.getRemoteClient()
-                        .pullTodo();
-                File todoFile = result.getTodoFile();
-                if (todoFile != null && todoFile.exists()) {
-                    ArrayList<Task> remoteTasks = TaskIo
-                            .loadTasksFromFile(todoFile);
-                    store(remoteTasks);
-                    reload();
-                }
-
-                File doneFile = result.getDoneFile();
-                if (doneFile != null && doneFile.exists()) {
-                    localRepository.loadDoneTasks(doneFile);
-                }
-                lastSync = new Date();
-            }
-        } catch (IOException e) {
-            throw new TaskPersistException(
-                    "Error loading tasks from remote file", e);
-        }
-    }
 
     public ArrayList<Priority> getPriorities() {
         // TODO cache this after reloads?

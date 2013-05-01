@@ -12,4 +12,5 @@
     <string name="line_breaks_pref_key">linebreakspref</string>
     <string name="manual_sync_pref_key">workofflinepref</string>
     <string name="font_size_delta_pref_key">fontsizedelta</string>
+    <string name="dropbox_default_path">todo</string>
 </resources>

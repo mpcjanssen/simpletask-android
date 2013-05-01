@@ -27,7 +27,6 @@ import android.content.*;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -42,7 +41,6 @@ import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.*;
-import nl.mpcjanssen.todotxtholo.remote.RemoteClient;
 import nl.mpcjanssen.todotxtholo.sort.*;
 import nl.mpcjanssen.todotxtholo.task.*;
 import nl.mpcjanssen.todotxtholo.util.Strings;
@@ -51,8 +49,7 @@ import nl.mpcjanssen.todotxtholo.util.Util.OnMultiChoiceDialogListener;
 
 import java.util.*;
 
-public class TodoTxtTouch extends ListActivity implements
-        OnSharedPreferenceChangeListener {
+public class TodoTxtTouch extends ListActivity {
 
     final static String TAG = TodoTxtTouch.class.getSimpleName();
 
@@ -117,11 +114,8 @@ public class TodoTxtTouch extends ListActivity implements
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_ACTION_ARCHIVE);
-        intentFilter.addAction(Constants.INTENT_SYNC_CONFLICT);
-        intentFilter.addAction(Constants.INTENT_ACTION_LOGOUT);
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
-        intentFilter.addAction(Constants.INTENT_SYNC_START);
-        intentFilter.addAction(Constants.INTENT_SYNC_DONE);
+
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -133,41 +127,9 @@ public class TodoTxtTouch extends ListActivity implements
                     // push to remote
                     archiveTasks();
                 } else if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_ACTION_LOGOUT)) {
-                    Log.v(TAG, "Logging out from Dropbox");
-                    m_app.getRemoteClientManager().getRemoteClient()
-                            .deauthenticate();
-                    Intent i = new Intent(context, LoginScreen.class);
-                    startActivity(i);
-                    finish();
-                } else if (intent.getAction().equalsIgnoreCase(
                         Constants.INTENT_UPDATE_UI)) {
-                    m_adapter.setFilteredTasks(false);
-                } else if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_SYNC_CONFLICT)) {
-                    handleSyncConflict();
-                } else if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_SYNC_START)) {
-                    Log.v(TAG, "Start sync");
-                    if (mRefreshIndeterminateProgressView == null) {
-                        mRefreshIndeterminateProgressView = getLayoutInflater()
-                                .inflate(R.layout.main_progress, null);
-                    }
-                    if (refreshItem != null) {
-                        refreshItem
-                                .setActionView(mRefreshIndeterminateProgressView);
-                    }
-                } else if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_SYNC_DONE)) {
-                    Log.v(TAG, "Sync done");
-                    if (refreshItem != null) {
-                        refreshItem.setActionView(null);
-                    }
-                    m_adapter.setFilteredTasks(true);
-                    Intent i = new Intent();
-                    i.setAction(Constants.INTENT_UPDATE_UI);
-                    sendBroadcast(i);
-                }
+                    m_adapter.setFilteredTasks();
+                } 
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
@@ -177,15 +139,9 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     private void handleIntent(Bundle savedInstanceState) {
-        RemoteClient remoteClient = m_app.getRemoteClientManager()
-                .getRemoteClient();
-        if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
-            startLogin();
-            return;
-        }
-        setContentView(R.layout.main);
-        m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
 
+        setContentView(R.layout.main);
+ 
         taskBag = m_app.getTaskBag();
 
         m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
@@ -252,7 +208,7 @@ public class TodoTxtTouch extends ListActivity implements
 
         m_adapter = new TaskAdapter(this, R.layout.list_item,
                 getLayoutInflater(), getListView());
-        m_adapter.setFilteredTasks(true);
+        m_adapter.setFilteredTasks();
 
         // listen to the ACTION_LOGOUT intent, if heard display LoginScreen
         // and finish() current activity
@@ -340,34 +296,17 @@ public class TodoTxtTouch extends ListActivity implements
         }
     }
 
-    private void startLogin() {
-        Intent intent = new Intent(this, LoginScreen.class);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        m_app.m_prefs.unregisterOnSharedPreferenceChangeListener(this);
-        unregisterReceiver(m_broadcastReceiver);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume: " + getIntent().getExtras());
-        m_adapter.setFilteredTasks(false);
+        m_adapter.setFilteredTasks();
     }
-
+    
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
-        Log.v(TAG, "onSharedPreferenceChanged key=" + key);
-        if (Constants.PREF_ACCESSTOKEN_SECRET.equals(key)) {
-            Log.i(TAG, "New access token secret. Syncing!");
-            syncClient(false);
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(m_broadcastReceiver);
     }
 
     @Override
@@ -412,8 +351,6 @@ public class TodoTxtTouch extends ListActivity implements
                 .getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget;
         // expand it by default
-
-        refreshItem = menu.findItem(R.id.sync);
 
         this.options_menu = menu;
         return super.onCreateOptionsMenu(menu);
@@ -473,10 +410,8 @@ public class TodoTxtTouch extends ListActivity implements
                 }
                 taskBag.store();
                 m_app.updateWidgets();
-                m_app.setNeedToPush(true);
                 // We have change the data, views should refresh
-                m_adapter.setFilteredTasks(false);
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                m_adapter.setFilteredTasks();
             }
         });
         builder.show();
@@ -494,10 +429,8 @@ public class TodoTxtTouch extends ListActivity implements
         }
         taskBag.store();
         m_app.updateWidgets();
-        m_app.setNeedToPush(true);
         // We have change the data, views should refresh
-        m_adapter.setFilteredTasks(true);
-        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+        m_adapter.setFilteredTasks();
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -508,10 +441,8 @@ public class TodoTxtTouch extends ListActivity implements
         }
         taskBag.store();
         m_app.updateWidgets();
-        m_app.setNeedToPush(true);
         // We have change the data, views should refresh
-        m_adapter.setFilteredTasks(true);
-        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+        m_adapter.setFilteredTasks();
     }
 
     private void deleteTasks(List<Task> tasks) {
@@ -520,12 +451,9 @@ public class TodoTxtTouch extends ListActivity implements
                 taskBag.delete(t);
             }
         }
-        m_adapter.setFilteredTasks(false);
         taskBag.store();
+        m_adapter.setFilteredTasks();
         m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
     private void archiveTasks() {
@@ -563,10 +491,6 @@ public class TodoTxtTouch extends ListActivity implements
         switch (item.getItemId()) {
             case R.id.add_new:
                 startAddTaskActivity(null, true);
-                break;
-            case R.id.sync:
-                Log.v(TAG, "onMenuItemSelected: sync");
-                syncClient(false);
                 break;
             case R.id.search:
                 break;
@@ -624,46 +548,6 @@ public class TodoTxtTouch extends ListActivity implements
         Intent settingsActivity = new Intent(getBaseContext(),
                 Preferences.class);
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES);
-    }
-
-    /**
-     * Called when we can't sync due to a merge conflict. Prompts the user to
-     * force an upload or download.
-     */
-    private void handleSyncConflict() {
-        m_app.m_pushing = false;
-        m_app.m_pulling = false;
-        showDialog(SYNC_CONFLICT_DIALOG);
-    }
-
-    /**
-     * Sync with remote client.
-     * <p/>
-     * <ul>
-     * <li>Will Pull in auto mode.
-     * <li>Will ask "push or pull" in manual mode.
-     * </ul>
-     *
-     * @param force true to force pull
-     */
-    private void syncClient(boolean force) {
-        if (isManualMode()) {
-            Log.v(TAG,
-                    "Manual mode, choice forced; prompt user to ask which way to sync");
-            showDialog(SYNC_CHOICE_DIALOG);
-        } else {
-            Log.i(TAG, "auto sync mode; should automatically sync; force = "
-                    + force);
-            Intent i = new Intent(Constants.INTENT_START_SYNC_WITH_REMOTE);
-            if (force) {
-                i.putExtra(Constants.EXTRA_FORCE_SYNC, true);
-            }
-            sendBroadcast(i);
-        }
-    }
-
-    private boolean isManualMode() {
-        return m_app.isManualMode();
     }
 
     @Override
@@ -841,11 +725,7 @@ public class TodoTxtTouch extends ListActivity implements
             this.vt = textViewResourceId;
         }
 
-        void setFilteredTasks(boolean reload) {
-            Log.v(TAG, "setFilteredTasks called, reload: " + reload);
-            if (reload) {
-                taskBag.reload();
-            }
+        void setFilteredTasks() {
             Log.v(TAG, "setFilteredTasks called");
 
             AndFilter filter = new AndFilter();
@@ -1117,7 +997,7 @@ public class TodoTxtTouch extends ListActivity implements
 
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                    setFilteredTasks(false);
+                    setFilteredTasks();
                 }
             };
         }
@@ -1242,7 +1122,7 @@ public class TodoTxtTouch extends ListActivity implements
             }
             // Not sure why this is explicitly needed
             mode.finish();
-            m_adapter.setFilteredTasks(false);
+            m_adapter.setFilteredTasks();
             return true;
         }
 
@@ -1268,7 +1148,7 @@ public class TodoTxtTouch extends ListActivity implements
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            m_adapter.setFilteredTasks(false);
+            m_adapter.setFilteredTasks();
             return;
         }
     }

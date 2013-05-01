@@ -26,11 +26,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 import nl.mpcjanssen.todotxtholo.TodoApplication;
 import nl.mpcjanssen.todotxtholo.TodoException;
 import nl.mpcjanssen.todotxtholo.util.TaskIo;
 import nl.mpcjanssen.todotxtholo.util.Util;
+import android.app.Application;
+import android.content.Intent;
+import android.os.Environment;
+import android.os.FileObserver;
+import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 
 
@@ -42,19 +49,24 @@ import android.util.Log;
 public class LocalFileTaskRepository {
 	private static final String TAG = LocalFileTaskRepository.class
 			.getSimpleName();
-	final static File TODO_TXT_FILE = new File(
-			TodoApplication.appContext.getFilesDir(),
-			"todo.txt");
-	final static File DONE_TXT_FILE = new File(
-			TodoApplication.appContext.getFilesDir(),
-			"done.txt");
-	private final TaskBag.Preferences preferences;
-
-	public LocalFileTaskRepository(TaskBag.Preferences m_prefs) {
-		this.preferences = m_prefs;
+	File TODO_TXT_FILE;
+	
+	public File get_todo_file() {
+		return TODO_TXT_FILE;
 	}
 
-	public void init() {
+	File DONE_TXT_FILE;
+	private final TaskBag.Preferences preferences;
+	
+	public LocalFileTaskRepository(TaskBag.Preferences m_prefs) {
+		this.preferences = m_prefs;
+
+		TODO_TXT_FILE = new File(
+				Environment.getExternalStorageDirectory(),
+				"data/nl.mpcjanssen.simpletask/todo.txt");
+		DONE_TXT_FILE = new File(
+				Environment.getExternalStorageDirectory(),
+				"data/nl.mpcjanssen.simpletask/todo.txt");
 		try {
 			if (!TODO_TXT_FILE.exists()) {
 				Util.createParentDirectory(TODO_TXT_FILE);
@@ -63,6 +75,7 @@ public class LocalFileTaskRepository {
 		} catch (IOException e) {
 			throw new TodoException("Error initializing LocalFile", e);
 		}
+
 	}
 
 	public void purge() {
@@ -70,7 +83,6 @@ public class LocalFileTaskRepository {
 	}
 
 	public ArrayList<Task> load() {
-		init();
 		if (!TODO_TXT_FILE.exists()) {
 			Log.w(TAG, TODO_TXT_FILE.getAbsolutePath() + " does not exist!");
 			throw new TodoException(TODO_TXT_FILE.getAbsolutePath()

@@ -25,13 +25,9 @@ package nl.mpcjanssen.todotxtholo;
 import android.app.Application;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.os.Handler;
+import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import nl.mpcjanssen.todotxtholo.remote.RemoteClientManager;
-import nl.mpcjanssen.todotxtholo.remote.RemoteConflictException;
 import nl.mpcjanssen.todotxtholo.task.LocalFileTaskRepository;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
@@ -41,13 +37,8 @@ public class TodoApplication extends Application {
     private final static String TAG = TodoApplication.class.getSimpleName();
     public static Context appContext;
     public SharedPreferences m_prefs;
-    public boolean m_pulling = false;
-    public boolean m_pushing = false;
-    private RemoteClientManager remoteClientManager;
     private TaskBag taskBag;
-    private BroadcastReceiver m_broadcastReceiver;
-    private Handler handler = new Handler();
-    private Runnable runnable;
+    private FileObserver m_observer;
 
     public static Context getAppContext() {
         return appContext;
@@ -58,114 +49,29 @@ public class TodoApplication extends Application {
         super.onCreate();
         TodoApplication.appContext = getApplicationContext();
         m_prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        remoteClientManager = new RemoteClientManager(this, m_prefs);
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(taskBagPreferences);
-        this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, remoteClientManager);
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.INTENT_SET_MANUAL);
-        intentFilter.addAction(Constants.INTENT_START_SYNC_WITH_REMOTE);
-        intentFilter.addAction(Constants.INTENT_START_SYNC_TO_REMOTE);
-        intentFilter.addAction(Constants.INTENT_START_SYNC_FROM_REMOTE);
-        intentFilter.addAction(Constants.INTENT_ASYNC_FAILED);
-
-        if (null == m_broadcastReceiver) {
-            m_broadcastReceiver = new BroadcastReceiverExtension();
-            registerReceiver(m_broadcastReceiver, intentFilter);
-        }
+        set_observer(new FileObserver(localTaskRepository.get_todo_file().getParent(),
+        				FileObserver.CLOSE_WRITE + FileObserver.MOVED_TO) {
+			
+			@Override
+			public void onEvent(int event, String path) {
+				Log.v(TAG, path + " event: " + event);
+				if (path!=null && path.equals("todo.txt") && (event == FileObserver.CLOSE_WRITE || event == FileObserver.MOVED_TO)) {
+					Log.v(TAG, path + " modified reloading taskbag");
+					taskBag.reload();
+					updateUI();
+				}
+			}
+		});
+        this.taskBag = new TaskBag(this, taskBagPreferences, localTaskRepository);
 
         taskBag.reload();
-        // Pull from dropbox every 5 minutes
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-      /* do what you need to do */
-                if (!isManualMode()) {
-                    backgroundPullFromRemote();
-                }
-      /* reschedule next */
-                handler.postDelayed(this, 5 * 60 * 1000);
-                Log.v(TAG, "Pulling from remote");
-            }
-        };
-
-        handler.postDelayed(runnable, 100);
-
-    }
-
-    @Override
-    public void onTerminate() {
-        unregisterReceiver(m_broadcastReceiver);
-        super.onTerminate();
-    }
-
-    /**
-     * If we previously tried to push and failed, then attempt to push again
-     * now. Otherwise, pull.
-     */
-    private void syncWithRemote(boolean force) {
-        taskBag.store();
-        if (needToPush()) {
-            Log.d(TAG, "needToPush = true; pushing.");
-            pushToRemote(force, false);
-        } else {
-            Log.d(TAG, "needToPush = false; pulling.");
-            pullFromRemote(force);
-        }
-
-    }
-
-    /**
-     * Check network status, then push.
-     */
-    private void pushToRemote(boolean force, boolean overwrite) {
-        setNeedToPush(true);
-        if (!force && isManualMode()) {
-            Log.i(TAG, "Working offline, don't push now");
-        } else if (!m_pulling) {
-            Log.i(TAG, "Working online; should push if file revisions match");
-            backgroundPushToRemote(overwrite);
-        } else {
-            Log.d(TAG, "app is pulling right now. don't start push."); // TODO
-        }
-    }
-
-    /**
-     * Check network status, then pull.
-     */
-    private void pullFromRemote(boolean force) {
-        if (!force && isManualMode()) {
-            Log.i(TAG, "Working offline, don't pull now");
-            return;
-        }
-
-        setNeedToPush(false);
-
-        if (!m_pushing) {
-            Log.i(TAG, "Working online; should pull file");
-            backgroundPullFromRemote();
-        } else {
-            Log.d(TAG, "app is pushing right now. don't start pull."); // TODO
-            // remove
-            // after
-            // AsyncTask
-            // bug
-            // fixed
-        }
     }
 
     public TaskBag getTaskBag() {
         return taskBag;
-    }
-
-    public RemoteClientManager getRemoteClientManager() {
-        return remoteClientManager;
-    }
-    
-    public boolean isManualMode() {
-        return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
     }
 
     public boolean isAutoArchive() {
@@ -209,22 +115,6 @@ public class TodoApplication extends Application {
         return (float)Math.max(5.0, defaultSize+fontSizeDelta());
     }
 
-    public void setManualMode(boolean manual) {
-    	Editor edit = m_prefs.edit();
-        edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);
-        edit.commit();
-    }
-
-    public boolean needToPush() {
-        return m_prefs.getBoolean(Constants.PREF_NEED_TO_PUSH, false);
-    }
-
-    public void setNeedToPush(boolean needToPush) {
-        Editor editor = m_prefs.edit();
-        editor.putBoolean(Constants.PREF_NEED_TO_PUSH, needToPush);
-        editor.commit();
-    }
-
     public void showToast(int resid) {
         Util.showToastLong(this, resid);
     }
@@ -234,127 +124,13 @@ public class TodoApplication extends Application {
     }
 
     /**
-     * Do asynchronous push with gui changes. Do availability check first.
-     */
-    void backgroundPushToRemote(final boolean overwrite) {
-        if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
-            Intent i = new Intent();
-            i.setAction(Constants.INTENT_SYNC_START);
-            sendBroadcast(i);
-            m_pushing = true;
-            updateUI();
-
-            new AsyncTask<Void, Void, Integer>() {
-                static final int SUCCESS = 0;
-                static final int CONFLICT = 1;
-                static final int ERROR = 2;
-
-                @Override
-                protected Integer doInBackground(Void... params) {
-                    try {
-                        Log.d(TAG, "start taskBag.pushToRemote");
-                        taskBag.pushToRemote(true, overwrite);
-                    } catch (RemoteConflictException c) {
-                        Log.e(TAG, c.getMessage());
-                        return CONFLICT;
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                        return ERROR;
-                    }
-                    return SUCCESS;
-                }
-
-                @Override
-                protected void onPostExecute(Integer result) {
-                    Log.d(TAG, "post taskBag.pushToremote");
-                    Intent i = new Intent();
-                    i.setAction(Constants.INTENT_SYNC_DONE);
-                    sendBroadcast(i);
-                    if (result == SUCCESS) {
-                        Log.d(TAG, "taskBag.pushToRemote done");
-                        m_pushing = false;
-                        setNeedToPush(false);
-                        updateUI();
-                        // Push is complete. Now do a pull in case the remote
-                        // done.txt has changed.
-                        pullFromRemote(true);
-                    } else if (result == CONFLICT) {
-                        // FIXME: need to know which file had conflict
-                        sendBroadcast(new Intent(Constants.INTENT_SYNC_CONFLICT));
-                    } else {
-                        sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
-                    }
-                    super.onPostExecute(result);
-                }
-
-            }.execute();
-
-        } else {
-            Log.e(TAG, "NOT AUTHENTICATED!");
-            showToast("NOT AUTHENTICATED!");
-        }
-
-    }
-
-    /**
-     * Do an asynchronous pull from remote. Check network availability before
-     * calling this.
-     */
-    private void backgroundPullFromRemote() {
-        if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
-            Intent i = new Intent();
-            i.setAction(Constants.INTENT_SYNC_START);
-            sendBroadcast(i);
-            m_pulling = true;
-            // Comment out next line to avoid resetting list position at top;
-            // should maintain position of last action
-            // updateUI();
-
-            new AsyncTask<Void, Void, Boolean>() {
-
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        Log.d(TAG, "start taskBag.pullFromRemote");
-                        taskBag.pullFromRemote(true);
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                        return false;
-                    }
-                    return true;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    Log.d(TAG, "post taskBag.pullFromRemote");
-                    super.onPostExecute(result);
-                    if (result) {
-                        Log.d(TAG, "taskBag.pullFromRemote done");
-                        m_pulling = false;
-                        updateUI();
-                    } else {
-                        sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
-                    }
-                    super.onPostExecute(result);
-                    Intent i = new Intent();
-                    i.setAction(Constants.INTENT_SYNC_DONE);
-                    sendBroadcast(i);
-                }
-
-            }.execute();
-        } else {
-            Log.e(TAG, "NOT AUTHENTICATED!");
-        }
-    }
-
-    /**
      * Update user interface
      *
      * Update the elements of the user interface. The listview with tasks will be updated
      * if it is visible (by broadcasting an intent). All widgets will be updated as well.
      * This method should be called whenever the TaskBag changes.
      */
-    private void updateUI() {
+    public void updateUI() {
         sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
         updateWidgets();
     }
@@ -371,30 +147,12 @@ public class TodoApplication extends Application {
         return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
     }
 
-    private final class BroadcastReceiverExtension extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            boolean force_sync = intent.getBooleanExtra(
-                    Constants.EXTRA_FORCE_SYNC, false);
-            boolean overwrite = intent.getBooleanExtra(
-                    Constants.EXTRA_OVERWRITE, false);
-            if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_START_SYNC_WITH_REMOTE)) {
-                syncWithRemote(force_sync);
-            } else if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_START_SYNC_TO_REMOTE)) {
-                pushToRemote(force_sync, overwrite);
-            } else if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_START_SYNC_FROM_REMOTE)) {
-                pullFromRemote(force_sync);
-            } else if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_ASYNC_FAILED)) {
-                showToast("Synchronizing Failed");
-                m_pulling = false;
-                m_pushing = false;
-                updateUI();
-            }
-        }
-    }
+	public FileObserver get_observer() {
+		return m_observer;
+	}
 
+	public void set_observer(FileObserver m_observer) {
+		this.m_observer = m_observer;
+		m_observer.startWatching();
+	}
 }

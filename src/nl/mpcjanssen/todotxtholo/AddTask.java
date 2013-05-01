@@ -106,13 +106,11 @@ public class AddTask extends Activity {
                     }
                 }
                 TodoApplication m_app = (TodoApplication) getApplication();
-                m_app.setNeedToPush(true);
                 m_app.updateWidgets();
                 if (m_app.isAutoArchive()) {
                     taskBag.archive();
                 }
-                sendBroadcast(new Intent(
-                        Constants.INTENT_START_SYNC_TO_REMOTE));
+                taskBag.store();
                 finish();
                 break;
             case R.id.menu_add_task_help:
