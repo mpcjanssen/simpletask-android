@@ -31,6 +31,7 @@ import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
@@ -47,6 +48,8 @@ import nl.mpcjanssen.todotxtholo.util.Strings;
 import nl.mpcjanssen.todotxtholo.util.Util;
 import nl.mpcjanssen.todotxtholo.util.Util.OnMultiChoiceDialogListener;
 
+import java.io.Serializable;
+import java.net.URL;
 import java.util.*;
 
 public class TodoTxtTouch extends ListActivity {
@@ -129,13 +132,13 @@ public class TodoTxtTouch extends ListActivity {
                 } else if (intent.getAction().equalsIgnoreCase(
                         Constants.INTENT_UPDATE_UI)) {
                     m_adapter.setFilteredTasks();
+                    updateFilterBar();
                 } 
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
 
         handleIntent(savedInstanceState);
-
     }
 
     private void handleIntent(Bundle savedInstanceState) {
@@ -222,37 +225,14 @@ public class TodoTxtTouch extends ListActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
-                onListItemClick(getListView(), v, pos, id);
+            	onListItemChecked(getListView(), v, pos, id);
             }
         });
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) {
-                onListItemLongClick(getListView(), v, pos, id);
+                onListItemChecked(getListView(), v, pos, id);
                 return true;
-            }
-        });
-        lv.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                ListView lv = (ListView) view;
-                if (lv.getCheckedItemCount() != 0) {
-                    // Let CAB handle other clicks
-                    return false;
-                }
-                if (motionEvent.getX() < lv.getWidth() / 7 && motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    int position = lv.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (!m_swiping) {
-                        onListItemLongClick(lv, view, position, 0);
-                    }
-                    return true;
-                } else if (motionEvent.getX() < lv.getWidth() / 7 && motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    m_swiping = true;
-                } else if (motionEvent.getX() < lv.getWidth() / 7 && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    m_swiping = false;
-                    return false;
-                }
-                return false;
             }
         });
 
@@ -360,11 +340,11 @@ public class TodoTxtTouch extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         // start the action bar instead
 
-        startAddTaskActivity(getTaskAt(position), false);
+        startAddTaskActivity(getTaskAt(position));
     }
 
 
-    protected void onListItemLongClick(ListView l, View v, int position, long id) {
+    protected void onListItemChecked(ListView l, View v, int position, long id) {
         // start the action bar instead
         l.setItemChecked(position, !l.isItemChecked(position));
     }
@@ -455,6 +435,12 @@ public class TodoTxtTouch extends ListActivity {
         m_adapter.setFilteredTasks();
         m_app.updateWidgets();
     }
+    
+	private void editTask(Task task) {
+		Intent intent = new Intent(this, AddTask.class);
+		intent.putExtra(Constants.EXTRA_TASK, (Serializable)task);
+		startActivity(intent);
+	}
 
     private void archiveTasks() {
         new AsyncTask<Void, Void, Boolean>() {
@@ -490,7 +476,7 @@ public class TodoTxtTouch extends ListActivity {
         Log.v(TAG, "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.add_new:
-                startAddTaskActivity(null, true);
+                startAddTaskActivity(null);
                 break;
             case R.id.search:
                 break;
@@ -503,8 +489,8 @@ public class TodoTxtTouch extends ListActivity {
             case R.id.share:
                 shareTodoList();
                 break;
-            case R.id.changelist:
-                changeList();
+            case R.id.quickfilter:
+                quickFilter();
                 break;
             default:
                 return super.onMenuItemSelected(featureId, item);
@@ -512,21 +498,29 @@ public class TodoTxtTouch extends ListActivity {
         return true;
     }
 
-    private void changeList() {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.changelist));
+    private void quickFilter() {
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.quickfilter));
         Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts()) {
-            menu.add(ctx);
+        for (String ctx : taskBag.getContexts(false)) {
+            menu.add("@" + ctx);
+        }
+        
+        for (String tag : taskBag.getProjects(false)) {
+            menu.add("+" + tag);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(getApplicationContext(), TodoTxtTouch.class);
-                intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, item.getTitle());
-                // Keep m_sort when switching
-                intent.putExtra(Constants.INTENT_ACTIVE_SORT_v1, m_sort);
-                startActivity(intent);
-                return true;  //To change body of implemented methods use File | Settings | File Templates.
+				String itemTitle = item.getTitle().toString();
+				if (itemTitle.substring(0, 1).equals("@")) {
+					m_contexts = new ArrayList<String>();
+					m_contexts.add(itemTitle.substring(1));
+				} else {
+					m_projects = new ArrayList<String>();
+					m_projects.add(itemTitle.substring(1));
+				}
+				m_app.updateUI();
+				return true;  //To change body of implemented methods use File | Settings | File Templates.
             }
         }
 
@@ -534,11 +528,10 @@ public class TodoTxtTouch extends ListActivity {
         popupMenu.show();
     }
 
-    private void startAddTaskActivity(Task task, boolean edit) {
+    private void startAddTaskActivity(Task task) {
         Log.v(TAG, "Starting addTask activity");
         Intent intent = new Intent(this, AddTask.class);
         intent.putExtra(Constants.EXTRA_TASK, task);
-        intent.putExtra(Constants.EXTRA_EDIT, edit);
         intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
         intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
         startActivity(intent);
@@ -870,8 +863,6 @@ public class TodoTxtTouch extends ListActivity {
                             .findViewById(R.id.tasktext);
                     holder.taskage = (TextView) convertView
                             .findViewById(R.id.taskage);
-                    holder.taskselect = (CheckBox) convertView
-                            .findViewById(R.id.checkBox);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -943,7 +934,6 @@ public class TodoTxtTouch extends ListActivity {
                         holder.taskage.setVisibility(View.GONE);
                     }
                 }
-                holder.taskselect.setChecked(getListView().isItemChecked(position));
                 holder.tasktext.setTextSize(m_app.taskTextFontSize());
                 holder.taskage.setTextSize(m_app.taskAgeFontSize());
             }
@@ -1006,7 +996,6 @@ public class TodoTxtTouch extends ListActivity {
     private static class ViewHolder {
         private TextView tasktext;
         private TextView taskage;
-        private CheckBox taskselect;
     }
 
     public void storeKeys(String accessTokenKey, String accessTokenSecret) {
@@ -1026,9 +1015,9 @@ public class TodoTxtTouch extends ListActivity {
         i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
                 Priority.inCode(taskBag.getPriorities()));
         i.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
-                taskBag.getProjects());
+                taskBag.getProjects(true));
         i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
-                taskBag.getContexts());
+                taskBag.getContexts(true));
 
         i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED,
                 Priority.inCode(m_prios));
@@ -1072,6 +1061,38 @@ public class TodoTxtTouch extends ListActivity {
             title = title + numSelected;
             title = title + " " + getString(R.string.selected);
             mode.setTitle(title);
+    		MenuItem updateAction = menu.findItem(R.id.update);
+    		MenuItem completeAction = menu.findItem(R.id.done);
+    		MenuItem uncompleteAction = menu.findItem(R.id.uncomplete);
+
+    		// Only show update action with a single task selected
+    		if (numSelected == 1) {
+    			updateAction.setVisible(true);
+    			Task task = checkedTasks.get(0);
+    			if (task.isCompleted()) {
+    				completeAction.setVisible(false);
+    			} else {
+    				uncompleteAction.setVisible(false);
+    			}
+
+    			for (URL url : task.getLinks()) {
+    				menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
+    						url.toString());
+    			}
+    			for (String s1 : task.getMailAddresses()) {
+    				menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s1);
+    			}
+    			for (String s : task.getPhoneNumbers()) {
+    				menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number, Menu.NONE,
+    						s);
+    			}
+    		} else {
+    			updateAction.setVisible(false);
+    			completeAction.setVisible(true);
+    			uncompleteAction.setVisible(true);
+    			menu.removeGroup(Menu.CATEGORY_SECONDARY);
+    		}
+    		
         }
 
         @Override
@@ -1080,6 +1101,14 @@ public class TodoTxtTouch extends ListActivity {
             int menuid = item.getItemId();
             Intent intent;
             switch (menuid) {
+				case R.id.update:
+				if (checkedTasks.size() == 1) {
+					editTask(checkedTasks.get(0));
+				} else {
+					Log.w(TAG,
+							"More than one task was selected while handling update menu");
+				}
+				break;
                 case R.id.done:
                     completeTasks(checkedTasks);
                     break;
@@ -1119,6 +1148,27 @@ public class TodoTxtTouch extends ListActivity {
                             .putExtra(Events.DESCRIPTION, calendarDescription);
                     startActivity(intent);
                     break;
+				case R.id.url:
+					Log.v(TAG, "url: " + item.getTitle().toString());
+					intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
+							.getTitle().toString()));
+					startActivity(intent);
+					break;
+				case R.id.mail:
+					Log.v(TAG, "mail: " + item.getTitle().toString());
+					intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
+							.getTitle().toString()));
+					intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+							new String[] { item.getTitle().toString() });
+					intent.setType("text/plain");
+					startActivity(intent);
+					break;
+				case R.id.phone_number:
+					Log.v(TAG, "phone_number");
+					intent = new Intent(Intent.ACTION_DIAL,
+							Uri.parse("tel:" + item.getTitle().toString()));
+					startActivity(intent);
+					break;
             }
             // Not sure why this is explicitly needed
             mode.finish();

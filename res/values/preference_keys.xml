@@ -4,13 +4,8 @@
 <resources>
     <string name="sort_complete_last_pref_key">todotxtsortcompletelast</string>
     <string name="auto_archive_pref_key">todotxtautoarchive</string>
-    <string name="todotxt_path__key">todotxtpath</string>
-    <string name="todotxt_file_key">todotxtfile</string>
-    <string name="donetxt_file_key">donetxtfile</string>
     <string name="default_sort_pref_key">default_sort</string>
     <string name="prepend_date_pref_key">todotxtprependdate</string>
     <string name="line_breaks_pref_key">linebreakspref</string>
-    <string name="manual_sync_pref_key">workofflinepref</string>
     <string name="font_size_delta_pref_key">fontsizedelta</string>
-    <string name="dropbox_default_path">todo</string>
 </resources>

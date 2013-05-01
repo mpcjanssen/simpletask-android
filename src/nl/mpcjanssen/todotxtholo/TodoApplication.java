@@ -147,10 +147,6 @@ public class TodoApplication extends Application {
         return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
     }
 
-	public FileObserver get_observer() {
-		return m_observer;
-	}
-
 	public void set_observer(FileObserver m_observer) {
 		this.m_observer = m_observer;
 		m_observer.startWatching();

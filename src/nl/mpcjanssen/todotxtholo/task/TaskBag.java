@@ -140,7 +140,7 @@ public class TaskBag {
         return ret;
     }
 
-    public ArrayList<String> getContexts() {
+    public ArrayList<String> getContexts(boolean includeEmpty) {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
         for (Task item : tasks) {
@@ -148,11 +148,13 @@ public class TaskBag {
         }
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
-        ret.add(0, "-");
+        if (includeEmpty) {
+        	ret.add(0, "-");
+        }
         return ret;
     }
 
-    public ArrayList<String> getProjects() {
+    public ArrayList<String> getProjects(boolean includeEmpty) {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
         for (Task item : tasks) {
@@ -160,7 +162,9 @@ public class TaskBag {
         }
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
-        ret.add(0, "-");
+        if (includeEmpty) {
+        	ret.add(0, "-");
+        }
         return ret;
     }
 

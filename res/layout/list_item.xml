@@ -29,14 +29,6 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_width="match_parent"
                 android:background="?android:attr/activatedBackgroundIndicator"
         >
-    <CheckBox
-            android:id="@+id/checkBox"
-            android:clickable="false"
-            android:focusable="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
     <TextView
             android:id="@+id/tasktext"
             android:focusable="false"
@@ -46,9 +38,6 @@ You should have received a copy of the GNU General Public License along with Tod
             android:paddingRight="4dip"
             android:paddingTop="4dip"
             android:textSize="16sp"
-            android:autoLink="all"
-            android:linksClickable="false"
-            android:layout_toRightOf="@id/checkBox"
             />
 
     <TextView
@@ -60,7 +49,6 @@ You should have received a copy of the GNU General Public License along with Tod
             android:paddingBottom="4dip"
             android:textSize="11sp"
             android:layout_below="@id/tasktext"
-            android:layout_toRightOf="@id/checkBox"
             android:visibility="gone"/>
 
 </RelativeLayout>

@@ -66,7 +66,6 @@ public class Constants {
     public final static String EXTRA_CONTEXTS_SELECTED = "CONTEXTS_SELECTED";
     public final static String EXTRA_SEARCH = "SEARCH";
     public final static String EXTRA_TASK = "TASK";
-    public final static String EXTRA_EDIT = "EDIT";
     public final static String EXTRA_APPLIED_FILTERS = "APPLIED_FITERS";
     public final static String EXTRA_FORCE_SYNC = "FORCE_SYNC";
     public final static String EXTRA_OVERWRITE = "OVERWRITE";

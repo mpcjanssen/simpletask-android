@@ -51,7 +51,7 @@ public class FilterActivity extends Activity {
         // Fill arguments for fragment
         arguments = new Bundle();        
         if(asWidgetConfigure) { 
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getContexts());        	
+        	arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getContexts(true));        	
         } else {
         	arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_CONTEXTS));
         }
@@ -65,7 +65,7 @@ public class FilterActivity extends Activity {
         // Fill arguments for fragment
         arguments = new Bundle();
         if(asWidgetConfigure) { 
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getProjects());        	
+        	arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getProjects(true));        	
         } else {
         	arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_PROJECTS));
         }

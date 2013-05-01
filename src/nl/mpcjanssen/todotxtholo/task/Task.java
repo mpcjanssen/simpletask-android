@@ -52,6 +52,9 @@ public class Task implements Serializable, Comparable<Task> {
     private String relativeAge = "";
     private List<String> contexts;
     private List<String> projects;
+	private List<String> mailAddresses;
+	private List<URL> links;
+	private List<String> phoneNumbers;
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
@@ -81,6 +84,11 @@ public class Task implements Serializable, Comparable<Task> {
         this.contexts = ContextParser.getInstance().parse(text);
         this.projects = ProjectParser.getInstance().parse(text);
         this.deleted = Strings.isEmptyOrNull(text);
+        
+		this.mailAddresses = MailAddressParser.getInstance().parse(text);
+		this.links = LinkParser.getInstance().parse(text);
+		this.phoneNumbers = PhoneNumberParser.getInstance().parse(text);
+
 
         if (defaultPrependedDate != null
                 && Strings.isEmptyOrNull(this.prependedDate)) {
@@ -114,6 +122,18 @@ public class Task implements Serializable, Comparable<Task> {
     public long getId() {
         return id;
     }
+    
+	public List<URL> getLinks() {
+		return links;
+	}
+
+	public List<String> getPhoneNumbers() {
+		return phoneNumbers;
+	}
+
+	public List<String> getMailAddresses() {
+		return mailAddresses;
+	}
 
     public void setPriority(Priority priority) {
         this.priority = priority;

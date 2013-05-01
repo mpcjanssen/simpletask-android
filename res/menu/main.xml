@@ -39,13 +39,12 @@ You should have received a copy of the GNU General Public License along with Tod
    <item
             android:title="@string/filter"
             android:id="@+id/filter"
-            android:icon="@drawable/labels"
-            android:showAsAction="always"
+            android:showAsAction="never"
             />
    <item
-            android:title="@string/changelist"
-            android:id="@+id/changelist"
-            android:icon="@drawable/list"
+            android:title="@string/quickfilter"
+            android:id="@+id/quickfilter"
+            android:icon="@drawable/labels"
             android:showAsAction="always"/>
     <item
             android:title="@string/addtask"
