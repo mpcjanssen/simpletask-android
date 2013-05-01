@@ -49,4 +49,8 @@
             android:key="@string/font_size_delta_pref_key"
             android:title="@string/font_size_delta_pref_title"
             android:summary="@string/font_size_delta_pref_summary"/>
+     <Preference
+            android:key="logout_storage"
+            android:title="@string/storage_disconnect_pref_title"
+            android:summary="@string/storage_disconnect_pref_summary"/>
 </PreferenceScreen>

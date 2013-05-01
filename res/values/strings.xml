@@ -74,13 +74,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_summary">Automatically archive tasks to done.txt on completion.</string>
     <string name="archive_now_pref_title">Archive now</string>
     <string name="archive_now_pref_summary">Move completed tasks from todo.txt to done.txt.</string>
-    <string name="dropbox_logout_pref_title">Log out</string>
-    <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>
-    <string name="TODOTXTPATH_title">File location</string>
-    <string name="TODOTXTPATH_summary">The Dropbox folder where todo.txt is stored.</string>
-    <string name="TODOTXTPATH_defaultPath">/todo</string>
-    <string name="DROPBOX_settings_header">Dropbox</string>
-    <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
 
     <string name="todotxt_settings_header">Main</string>
     <string name="todotxt_settings_summary">Application wide settings</string>
@@ -96,12 +89,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
     <string name="swipe_complete_pref_title">Swipe to complete</string>
     <string name="swipe_complete_pref_summary">Swipe over a task to complete it.</string>
-    <string name="manual_sync_pref_title">Manual sync</string>
-    <string name="manual_sync_pref_summary">Don\'t automatically upload every change to Dropbox.</string>
     <string name="font_size_delta_pref_title">Change font size</string>
     <string name="font_size_delta_pref_summary">Change the font size in units of sp.
         Use negative values to decrease the font size</string>
-
+    <string name="storage_disconnect_pref_title">Disconnect</string>
+    <string name="storage_disconnect_pref_summary">Disconnect from current storage</string>
+    
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>

@@ -11,10 +11,6 @@
             android:title="@string/ARCHIVE_settings_header"
             android:summary="@string/ARCHIVE_settings_summary"/>
     <header
-            android:fragment="nl.mpcjanssen.todotxtholo.Preferences$DropboxPrefFragment"
-            android:title="@string/DROPBOX_settings_header"
-            android:summary="@string/DROPBOX_settings_summary"/>
-    <header
             android:fragment="nl.mpcjanssen.todotxtholo.Preferences$AboutPrefFragment"
             android:title="@string/about_settings_header"
             android:summary="@string/about_settings_summary"/>

@@ -100,26 +100,7 @@ public class Preferences extends PreferenceActivity {
 			return true;
 		}
 	}
-	public static class DropboxPrefFragment extends PreferenceFragment
-	{
-		@Override
-		public void onCreate(final Bundle savedInstanceState)
-		{
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.dropbox_preferences);
-		}
-		
-		@Override
-		public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
-			if(preference.getKey().equals("logout_dropbox")) {
-				Log.v("PREFERENCES", "Logging out from Dropbox");				
-				((Preferences)this.getActivity()).broadcastIntentAndClose(
-						Constants.INTENT_ACTION_LOGOUT,
-						Preferences.RESULT_LOGOUT);			
-			}
-			return true;
-		}
-	}
+	
 	public static class AboutPrefFragment extends PreferenceFragment
 	{
 		@Override
