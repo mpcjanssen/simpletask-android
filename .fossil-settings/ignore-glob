@@ -1,5 +1,6 @@
 */dropbox.xml
 bin/*
+tests/bin/*
 gen/*
 out/*
 tests/gen/*
