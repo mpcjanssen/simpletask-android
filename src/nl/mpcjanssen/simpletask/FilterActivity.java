@@ -306,7 +306,8 @@ public class FilterActivity extends Activity {
         input.setText(name);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+            @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 if (value.equals("")) {
                     Util.showToastShort(getApplicationContext(), R.string.shortcut_name_empty);
@@ -318,7 +319,8 @@ public class FilterActivity extends Activity {
         );
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+            @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
         });
@@ -350,7 +352,8 @@ public class FilterActivity extends Activity {
         input.setText(target.getStringExtra("name"));
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+            @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 if (value.equals("")) {
                     Util.showToastShort(getApplicationContext(), R.string.shortcut_name_empty);
@@ -363,7 +366,8 @@ public class FilterActivity extends Activity {
         );
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+            @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
         });

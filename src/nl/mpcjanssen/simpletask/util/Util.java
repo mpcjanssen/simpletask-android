@@ -49,6 +49,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -341,7 +342,7 @@ public class Util {
             if (i != -1) {
                 ss.setSpan(new ForegroundColorSpan(color), i,
                         i + item.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }

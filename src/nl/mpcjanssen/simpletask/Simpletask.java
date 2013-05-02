@@ -208,7 +208,7 @@ public class Simpletask extends ListActivity {
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -426,7 +426,7 @@ public class Simpletask extends ListActivity {
     
 	private void editTask(Task task) {
 		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_TASK, (Serializable)task);
+		intent.putExtra(Constants.EXTRA_TASK, task);
 		startActivity(intent);
 	}
 

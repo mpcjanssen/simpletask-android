@@ -70,10 +70,6 @@ public class LocalFileTaskRepository {
 
 	}
 
-	public void purge() {
-		TODO_TXT_FILE.delete();
-	}
-
 	public ArrayList<Task> load() {
 		if (!TODO_TXT_FILE.exists()) {
 			Log.e(TAG, TODO_TXT_FILE.getAbsolutePath() + " does not exist!");
@@ -113,25 +109,5 @@ public class LocalFileTaskRepository {
 		// write incomplete tasks back to todo.txt
 		TaskIo.writeToFile(incompleteTasks, TODO_TXT_FILE, false,
 				windowsLineBreaks);
-	}
-
-	public void loadDoneTasks(File file) {
-		Util.renameFile(file, DONE_TXT_FILE, true);
-	}
-
-	public boolean todoFileModifiedSince(Date date) {
-		long date_ms = 0l;
-		if (date != null) {
-			date_ms = date.getTime();
-		}
-		return date_ms < TODO_TXT_FILE.lastModified();
-	}
-
-	public boolean doneFileModifiedSince(Date date) {
-		long date_ms = 0l;
-		if (date != null) {
-			date_ms = date.getTime();
-		}
-		return date_ms < DONE_TXT_FILE.lastModified();
 	}
 }

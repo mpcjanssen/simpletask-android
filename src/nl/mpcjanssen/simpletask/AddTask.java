@@ -155,7 +155,7 @@ public class AddTask extends Activity {
         Task task = (Task) intent.getSerializableExtra(
                 Constants.EXTRA_TASK);
         if (task != null) {
-            m_backup = taskBag.find(task);
+            m_backup = task;
             textInputField.setText(task.inFileFormat());
             setTitle(R.string.updatetask);
             textInputField.setSelection(task.inFileFormat().length());
@@ -172,19 +172,13 @@ public class AddTask extends Activity {
 
         if (iniTask != null && iniTask.getProjects().size() == 1) {
             List<String> ps = iniTask.getProjects();
-
-
             textInputField.append(" +" + ps.get(0));
-
         }
 
 
         if (iniTask != null && iniTask.getContexts().size() == 1) {
             List<String> cs = iniTask.getContexts();
-
-
             textInputField.append(" @" + cs.get(0));
-
         }
 
         int textIndex = 0;

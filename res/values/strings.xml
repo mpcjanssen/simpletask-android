@@ -26,24 +26,16 @@ You should have received a copy of the GNU General Public License along with Tod
 <resources>
 
     <string name="app_label">Simpletask</string>
-    <string name="added_task">Added task</string>
-    <string name="add_task_failed">Could not add task</string>
     <string name="save_task">Save task</string>
-    <string name="update_task_failed">Could not update task</string>
     <string name="sort">Sort</string>
     <string name="filter">Advanced filter</string>
     <string name="main_no_items">No tasks to display.</string>
     <string name="set_preferences">Settings</string>
     <string name="preferences">Settings</string>
-    <string name="sync">Refresh</string>
     <string name="quickfilter">Filter on context or tag</string>
     <string name="search">Search</string>
-    <string name="add">Add</string>
-    <string name="task">Task</string>
     <string name="addtask">Add Task</string>
     <string name="updatetask">Update Task</string>
-    <string name="viewtask">View Task</string>
-    <string name="cleartask">Clear Task</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
     <string name="update">Update</string>
@@ -79,21 +71,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
-    <string name="use_prio_pref_title">Enable priorities</string>
-    <string name="use_prio_pref_summary">GTD does not promote using of priorities, but you can use it if needed.
-    </string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
-    <string name="swipe_complete_pref_title">Swipe to complete</string>
-    <string name="swipe_complete_pref_summary">Swipe over a task to complete it.</string>
     <string name="font_size_delta_pref_title">Change font size</string>
     <string name="font_size_delta_pref_summary">Change the font size in units of sp.
         Use negative values to decrease the font size</string>
-    <string name="storage_disconnect_pref_title">Disconnect</string>
-    <string name="storage_disconnect_pref_summary">Disconnect from current storage</string>
-    
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -101,27 +85,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_website_summary">Visit the Simpletask website</string>
     <string name="visit_website_data">http://mpcjanssen.nl/cgi-bin/simpletask</string>
 
-    <string name="donate_title">Donate</string>
-    <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be
-        free.
-    </string>
-    <string name="visit_donate_data">http://bit.ly/VYR7Fq</string>
-    <!-- sync dialog -->
-    <string name="sync_dialog_title">Manual Sync</string>
-    <string name="sync_dialog_msg">Do you want to upload or download your todo.txt file?</string>
-    <string name="sync_dialog_upload">Upload to Dropbox</string>
-    <string name="sync_dialog_download">Download to device</string>
-    <string name="sync_upload_message">Uploading todo.txt…</string>
-    <string name="sync_download_message">Downloading todo.txt…</string>
-    <!-- sync conflict dialog -->
-    <string name="sync_conflict_dialog_title">File Conflict</string>
-    <string name="sync_conflict_dialog_msg">Oops! There is a newer version of your todo.txt file in Dropbox. \nDo you
-        want to upload your local changes, or download the Dropbox version?
-    </string>
-    <!-- login -->
-    <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Log in to Dropbox</string>
-    <string name="login_screen_offline_button">Work offline</string>
     <!-- delete -->
     <string name="delete_task_title">Delete Task</string>
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
@@ -149,7 +112,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="priority_short_prompt">Prio</string>
     <string name="project_prompt">Tag</string>
     <string name="context_prompt">Context</string>
-    <string name="separator">Separator</string>
 
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Add Task</string>

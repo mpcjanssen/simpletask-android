@@ -11,5 +11,3 @@ build.bat
 .idea/tasks.xml
 local.properties
 *.bat
-*.iml
-.idea/*.xml

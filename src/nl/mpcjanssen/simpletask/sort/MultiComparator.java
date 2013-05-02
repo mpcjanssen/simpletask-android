@@ -10,7 +10,8 @@ public class MultiComparator<Task> implements Comparator<Task> {
         m_comparators = comparators;
     }
 
-    public int compare(Task o1, Task o2) {
+    @Override
+	public int compare(Task o1, Task o2) {
         for (Comparator<Task> comparator : m_comparators) {
             int comparison = comparator.compare(o1, o2);
             if (comparison != 0) return comparison;

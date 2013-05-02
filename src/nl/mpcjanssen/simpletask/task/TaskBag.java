@@ -49,10 +49,6 @@ public class TaskBag {
         this.localRepository = localTaskRepository;
     }
 
-    public void updatePreferences(Preferences preferences) {
-        this.preferences = preferences;
-    }
-
     private void store(ArrayList<Task> tasks) {
         localRepository.store(tasks);
     }
@@ -62,19 +58,13 @@ public class TaskBag {
     }
 
     public void archive() {
-        try {
-            reload();
-            localRepository.archive(tasks);
-            reload();
-        } catch (Exception e) {
-            throw new TaskPersistException(
-                    "An error occurred while archiving", e);
-        }
+        localRepository.archive(tasks);
+        reload();
     }
 
-	public void reload() {
-		this.tasks = localRepository.load();
-	}
+    public void reload() {
+        this.tasks = localRepository.load();
+    }
 
     public int size() {
         return tasks.size();
@@ -84,45 +74,22 @@ public class TaskBag {
         return tasks;
     }
 
-    public Task getTaskAt(int position) {
-        return tasks.get(position);
-    }
-
     public void addAsTask(String input) {
-        try {
-            reload();
-            Task task = new Task(tasks.size(), input,
-                    (preferences.isPrependDateEnabled() ? new Date() : null));
-            tasks.add(task);
-            store();
-        } catch (Exception e) {
-            throw new TaskPersistException("An error occurred while adding {"
-                    + input + "}", e);
-        }
-    }
-
-    public void updateTask(Task task, String input) {
-        task.init(input, null);
+        Task task = new Task(tasks.size(), input,
+                (preferences.isPrependDateEnabled() ? new Date() : null));
+        tasks.add(task);
         store();
     }
 
-    public Task find(Task task) {
-        Task found = TaskBag.find(tasks, task);
-        return found;
+    public void updateTask(Task task, String input) {
+        tasks.remove(task);
+        task.init(input, null);
+        tasks.add(task);
+        store();
     }
 
     public void delete(Task task) {
-        try {
-            Task found = TaskBag.find(tasks, task);
-            if (found != null) {
-                tasks.remove(found);
-            } else {
-                throw new TaskPersistException("Task not found, not deleted");
-            }
-        } catch (Exception e) {
-            throw new TaskPersistException(
-                    "An error occurred while deleting Task {" + task + "}", e);
-        }
+        tasks.remove(task);
     }
 
 
@@ -144,7 +111,7 @@ public class TaskBag {
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
         if (includeEmpty) {
-        	ret.add(0, "-");
+            ret.add(0, "-");
         }
         return ret;
     }
@@ -157,19 +124,9 @@ public class TaskBag {
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
         if (includeEmpty) {
-        	ret.add(0, "-");
+            ret.add(0, "-");
         }
         return ret;
-    }
-
-    private static Task find(List<Task> tasks, Task task) {
-        for (Task task2 : tasks) {
-            if (task2 == task || (task2.getText().equals(task.getOriginalText())
-                    && task2.getPriority() == task.getOriginalPriority())) {
-                return task2;
-            }
-        }
-        return null;
     }
 
     public static class Preferences {
@@ -186,10 +143,5 @@ public class TaskBag {
         public boolean isPrependDateEnabled() {
             return sharedPreferences.getBoolean("todotxtprependdate", true);
         }
-
-        public boolean isOnline() {
-            return !sharedPreferences.getBoolean("workofflinepref", false);
-        }
     }
-
 }
