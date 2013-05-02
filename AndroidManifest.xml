@@ -47,17 +47,6 @@ You should have received a copy of the GNU General Public License along with Sim
         android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
         android:uiOptions="splitActionBarWhenNarrow" >
         <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:exported="true"
-            android:launchMode="singleTask" >
-            <intent-filter>
-                <data android:scheme="@string/dropbox_manifest_key" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="nl.mpcjanssen.simpletask.LoginScreen"
             android:label="@string/app_label" >
         </activity>
