@@ -450,7 +450,7 @@ public class Simpletask extends ListActivity {
                     Util.showToastLong(Simpletask.this,
                             "Archived completed tasks");
                     sendBroadcast(new Intent(
-                            Constants.INTENT_START_SYNC_TO_REMOTE));
+                            Constants.INTENT_UPDATE_UI));
                 } else {
                     Util.showToastLong(Simpletask.this,
                             "Could not archive tasks");
@@ -896,17 +896,6 @@ public class Simpletask extends ListActivity {
     	private TextView taskprio;
         private TextView tasktext;
         private TextView taskage;
-    }
-
-    public void storeKeys(String accessTokenKey, String accessTokenSecret) {
-        Editor editor = m_app.m_prefs.edit();
-        editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
-        editor.putString(Constants.PREF_ACCESSTOKEN_SECRET, accessTokenSecret);
-        editor.commit();
-    }
-
-    public void showToast(String string) {
-        Util.showToastLong(this, string);
     }
 
     public void startFilterActivity() {
