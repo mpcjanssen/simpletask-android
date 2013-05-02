@@ -72,7 +72,7 @@ public class Simpletask extends ListActivity {
     private boolean m_contextsNot;
     private int m_sort = 0;
 
-    private String m_search;
+    private String m_search = "";
 
     TaskAdapter m_adapter;
 
@@ -238,7 +238,7 @@ public class Simpletask extends ListActivity {
         final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
         final TextView filterText = (TextView) findViewById(R.id.filter_text);
         if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
-                || m_search != null) {
+                || !m_search.equals("")) {
             String filterTitle = getString(R.string.title_filter_applied);
             if (m_prios.size() > 0) {
                 filterTitle += " " + getString(R.string.priority_prompt);
@@ -251,7 +251,7 @@ public class Simpletask extends ListActivity {
             if (m_contexts.size() > 0) {
                 filterTitle += " " + getString(R.string.context_prompt);
             }
-            if (m_search != null) {
+            if (!m_search.equals("")) {
                 filterTitle += " " + getString(R.string.search);
             }
 
@@ -560,6 +560,7 @@ public class Simpletask extends ListActivity {
     	m_contextsNot = false;
     	m_projectsNot = false;
     	m_priosNot = false;
+		m_search = "";
     	m_adapter.setFilteredTasks();
     	updateFilterBar();
     }
@@ -877,7 +878,7 @@ public class Simpletask extends ListActivity {
             return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence charSequence) {
-                    m_search = charSequence.toString();
+					m_search = charSequence.toString();
                     Log.v(TAG, "performFiltering: " + charSequence.toString());
                     return null;
                 }
@@ -885,6 +886,7 @@ public class Simpletask extends ListActivity {
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     setFilteredTasks();
+					updateFilterBar();
                 }
             };
         }
