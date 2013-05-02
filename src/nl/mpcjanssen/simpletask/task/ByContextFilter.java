@@ -65,9 +65,4 @@ public class ByContextFilter implements TaskFilter {
         return input.getContexts().size() == 0 && contexts.contains("-");
 
     }
-
-    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    ArrayList<String> getContexts() {
-        return contexts;
-    }
 }

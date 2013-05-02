@@ -56,13 +56,4 @@ public class ByTextFilter implements TaskFilter {
 
         return true;
     }
-
-    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    String getText() {
-        return text;
-    }
-
-    boolean isCaseSensitive() {
-        return caseSensitive;
-    }
 }
