@@ -6,5 +6,6 @@
     android:initialKeyguardLayout="@layout/appwidget"
     android:widgetCategory="home_screen|keyguard"
     android:configure="nl.mpcjanssen.simpletask.FilterActivity" 
+    android:previewImage="@drawable/appwidget_preview"
     android:resizeMode="horizontal|vertical">
 </appwidget-provider>
