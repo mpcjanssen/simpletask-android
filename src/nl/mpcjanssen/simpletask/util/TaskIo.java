@@ -38,28 +38,6 @@ import java.util.List;
 public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
 
-    public static ArrayList<Task> loadTasksFromStream(InputStream is)
-            throws IOException {
-        ArrayList<Task> items = new ArrayList<Task>();
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new InputStreamReader(is));
-            String line;
-            long counter = 0L;
-            while ((line = in.readLine()) != null) {
-                line = line.trim();
-                if (line.length() > 0) {
-                    items.add(new Task(counter, line));
-                }
-                counter++;
-            }
-        } finally {
-            Util.closeStream(in);
-            Util.closeStream(is);
-        }
-        return items;
-    }
-
     public static ArrayList<Task> loadTasksFromFile(File file)
             throws IOException {
         ArrayList<Task> items = new ArrayList<Task>();
