@@ -1,9 +1,9 @@
-package nl.mpcjanssen.todotxtholo.test;
+package nl.mpcjanssen.simpletask.test;
 
 import junit.framework.TestCase;
-import nl.mpcjanssen.todotxtholo.sort.PriorityComparator;
-import nl.mpcjanssen.todotxtholo.task.Priority;
-import nl.mpcjanssen.todotxtholo.task.Task;
+import nl.mpcjanssen.simpletask.sort.PriorityComparator;
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.Task;
 
 /**
  * Created with IntelliJ IDEA.

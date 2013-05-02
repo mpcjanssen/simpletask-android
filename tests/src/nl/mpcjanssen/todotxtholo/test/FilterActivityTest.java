@@ -1,7 +1,7 @@
-package nl.mpcjanssen.todotxtholo.test;
+package nl.mpcjanssen.simpletask.test;
 
 import android.test.ActivityInstrumentationTestCase2;
-import nl.mpcjanssen.todotxtholo.FilterActivity;
+import nl.mpcjanssen.simpletask.FilterActivity;
 
 public class FilterActivityTest extends ActivityInstrumentationTestCase2<FilterActivity> {
 
