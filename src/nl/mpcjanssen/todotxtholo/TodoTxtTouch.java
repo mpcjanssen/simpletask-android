@@ -669,7 +669,14 @@ public class TodoTxtTouch extends ListActivity {
     }
 
     void clearFilter() {
-        startActivity(new Intent(getApplicationContext(), TodoTxtTouch.class));
+    	m_contexts = new ArrayList<String>();
+    	m_projects = new ArrayList<String>();
+    	m_prios = new ArrayList<Priority>();
+    	m_contextsNot = false;
+    	m_projectsNot = false;
+    	m_priosNot = false;
+    	m_adapter.setFilteredTasks();
+    	updateFilterBar();
     }
 
     private MultiComparator getActiveSort() {
