@@ -939,8 +939,7 @@ public class Simpletask extends ListActivity {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false; // To change body of implemented methods use File |
-            // Settings | File Templates.
+            return false;
         }
 
         private void rebuildMenuWithSelection(ActionMode mode, Menu menu) {
