@@ -79,13 +79,11 @@ public class AddTask extends Activity {
                 textInputField = (EditText) findViewById(R.id.taskText);
                 String input = textInputField.getText().toString();
                 if (m_backup != null) {
-                    // When updating we can only have one line
-                    input = input.replaceAll("\\r\\n|\\r|\\n", " ");
-                    taskBag.updateTask(m_backup, input);
-                } else {
-                    for (String taskText : input.split("\\r\\n|\\r|\\n")) {
-                        taskBag.addAsTask(taskText);
-                    }
+					taskBag.delete(m_backup);
+                }
+				
+               for (String taskText : input.split("\\r\\n|\\r|\\n")) {
+                    taskBag.addAsTask(taskText);
                 }
                 MainApplication m_app = (MainApplication) getApplication();
                 m_app.updateWidgets();
