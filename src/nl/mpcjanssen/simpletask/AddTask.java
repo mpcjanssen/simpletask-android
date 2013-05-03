@@ -23,6 +23,7 @@
 package nl.mpcjanssen.simpletask;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -67,7 +68,7 @@ public class AddTask extends Activity {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-             case R.id.menu_add_task:
+            case R.id.menu_add_task:
                 // Open new tasks add activity
                 Intent intent = getIntent();
                 intent.removeExtra(Constants.EXTRA_TASK);
@@ -135,7 +136,6 @@ public class AddTask extends Activity {
         }
 
 
-
         setContentView(R.layout.add_task);
 
 
@@ -162,9 +162,9 @@ public class AddTask extends Activity {
         } else {
             if (textInputField.getText().length() == 0) {
                 @SuppressWarnings("unchecked")
-				ArrayList<String> projects = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_PROJECTS_SELECTED);
+                ArrayList<String> projects = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_PROJECTS_SELECTED);
                 @SuppressWarnings("unchecked")
-				ArrayList<String> contexts = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_CONTEXTS_SELECTED);
+                ArrayList<String> contexts = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_CONTEXTS_SELECTED);
                 iniTask = new Task(1, "");
                 iniTask.initWithFilters(contexts, projects);
             }
@@ -188,7 +188,7 @@ public class AddTask extends Activity {
     private void showTagMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
         Menu menu = popupMenu.getMenu();
-        for (String prj : taskBag.getProjects(false)) {
+        for (String prj : projectsInTaskbagAndText()) {
             menu.add(prj);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -197,9 +197,7 @@ public class AddTask extends Activity {
                 replaceTextAtSelection("+" + item.getTitle() + " ");
                 return true;  //To change body of implemented methods use File | Settings | File Templates.
             }
-        }
-
-        );
+        });
         popupMenu.show();
     }
 
@@ -215,16 +213,14 @@ public class AddTask extends Activity {
                 replacePriority(item.getTitle());
                 return true;
             }
-        }
-
-        );
+        });
         popupMenu.show();
     }
 
     private void showContextMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
         Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts(false)) {
+        for (String ctx : contextsInTaskbagAndText()) {
             menu.add(ctx);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -233,9 +229,7 @@ public class AddTask extends Activity {
                 replaceTextAtSelection("@" + item.getTitle() + " ");
                 return true;  //To change body of implemented methods use File | Settings | File Templates.
             }
-        }
-
-        );
+        });
         popupMenu.show();
     }
 
@@ -290,5 +284,39 @@ public class AddTask extends Activity {
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         setResult(RESULT_OK, intent);
+    }
+
+    private ArrayList<String> contextsInTaskbagAndText() {
+     /* Returns the defined labels in the taskbag
+     * and the current task being added.
+     * This way when adding multiple tasks labels from
+     * previous lines will be available for dropdown
+     */
+        ArrayList<String> labels = new ArrayList<String>();
+        Task temp = new Task(1, textInputField.getText().toString());
+        ArrayList<String> contexts = taskBag.getContexts(false);
+        contexts.addAll(temp.getContexts());
+        Collections.sort(contexts);
+        for (String item : contexts) {
+            labels.add("@" + item);
+        }
+        return labels;
+    }
+
+    private ArrayList<String> projectsInTaskbagAndText() {
+     /* Returns the defined labels in the taskbag
+     * and the current task being added.
+     * This way when adding multiple tasks labels from
+     * previous lines will be available for dropdown
+     */
+        ArrayList<String> labels = new ArrayList<String>();
+        Task temp = new Task(1, textInputField.getText().toString());
+        ArrayList<String> projects = taskBag.getProjects(false);
+        projects.addAll(temp.getContexts());
+        Collections.sort(projects);
+        for (String item : projects) {
+            labels.add("+" + item);
+        }
+        return labels;
     }
 }
