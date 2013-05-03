@@ -1,6 +1,7 @@
 /**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
- *
+ * This file is heavily based on Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
+ * 
+ * Copyright (c) 2013 Mark Janssen (mpc.janssen@gmail.com)
  * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
  *
  * LICENSE:
@@ -19,33 +20,29 @@
  * @author Todo.txt contributors <todotxt@yahoogroups.com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * @copyright 2013 Mark Janssen (mpc.janssen@gmail.com)
  */
 package nl.mpcjanssen.todotxtholo;
 
-import android.app.ActionBar;
+import java.util.ArrayList;
+import java.util.List;
+
+import nl.mpcjanssen.todotxtholo.task.Priority;
+import nl.mpcjanssen.todotxtholo.task.Task;
+import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.text.InputType;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import nl.mpcjanssen.todotxtholo.task.Priority;
-import nl.mpcjanssen.todotxtholo.task.Task;
-import nl.mpcjanssen.todotxtholo.task.TaskBag;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class AddTask extends Activity {
@@ -59,7 +56,6 @@ public class AddTask extends Activity {
     private TaskBag taskBag;
 
     private String share_text;
-
 
     private EditText textInputField;
 
