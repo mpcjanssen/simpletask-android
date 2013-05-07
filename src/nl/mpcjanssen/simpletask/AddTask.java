@@ -296,7 +296,7 @@ public class AddTask extends Activity {
         contexts.addAll(temp.getContexts());
         Collections.sort(contexts);
         for (String item : contexts) {
-            labels.add("@" + item);
+            labels.add(item);
         }
         return labels;
     }
@@ -313,7 +313,7 @@ public class AddTask extends Activity {
         projects.addAll(temp.getContexts());
         Collections.sort(projects);
         for (String item : projects) {
-            labels.add("+" + item);
+            labels.add(item);
         }
         return labels;
     }
