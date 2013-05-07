@@ -5,7 +5,5 @@
         <color name="gold">#FFD800</color>
         <color name="orange">#E86850</color>
         <color name="black">#000000</color>
-        <color name="white">#FFFFFF</color>
         <color name="grey">#888888</color>
-        <color name="black_trans">#bb000000</color>
 </resources>

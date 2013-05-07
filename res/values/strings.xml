@@ -26,24 +26,16 @@ You should have received a copy of the GNU General Public License along with Tod
 <resources>
 
     <string name="app_label">Simpletask</string>
-    <string name="added_task">Added task</string>
-    <string name="add_task_failed">Could not add task</string>
     <string name="save_task">Save task</string>
-    <string name="update_task_failed">Could not update task</string>
     <string name="sort">Sort</string>
-    <string name="filter">Filter</string>
+    <string name="filter">Advanced filter</string>
     <string name="main_no_items">No tasks to display.</string>
     <string name="set_preferences">Settings</string>
     <string name="preferences">Settings</string>
-    <string name="sync">Refresh</string>
-    <string name="changelist">Select list</string>
+    <string name="quickfilter">Filter on context or tag</string>
     <string name="search">Search</string>
-    <string name="add">Add</string>
-    <string name="task">Task</string>
-    <string name="addtask">Add Task</string>
+    <string name="addtask">Add Task(s)</string>
     <string name="updatetask">Update Task</string>
-    <string name="viewtask">View Task</string>
-    <string name="cleartask">Clear Task</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
     <string name="update">Update</string>
@@ -53,18 +45,17 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear_filter">Clear filter</string>
-    <string name="tasktexthint">Call Mom @phone +Birthday\n\n</string>
+    <string name="tasktexthint">Create a task with @contexts or +tags\nCreate a new project or tag with @.. or +..\nAdd another task for every line</string>
     <string name="shortcut_name_empty">No name specified, not creating shortcut</string>
-    <string name="add_task_help">Add or update a task to the task list. When adding tasks,
-        each line is a separate task for quick adding.\n
+    <string name="add_task_help">Add or update a task or tasks.
+		Each line creates a separate task for quick adding.\n
         <b>Priority</b>\n
         start the line with (.), like (A)\n
         <b>Tags</b>
         start with a + sign, like +Kitchen\n
-        <b>Lists</b>
+        <b>Contexts</b>
         start with an @ sign, like @home\n
-        A task can include any number of tags or be on multiple
-        lists.
+        A task can include any number of tags or contexts.
     </string>
 
     <!-- preferences -->
@@ -74,34 +65,19 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_summary">Automatically archive tasks to done.txt on completion.</string>
     <string name="archive_now_pref_title">Archive now</string>
     <string name="archive_now_pref_summary">Move completed tasks from todo.txt to done.txt.</string>
-    <string name="dropbox_logout_pref_title">Log out</string>
-    <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>
-    <string name="TODOTXTPATH_title">File location</string>
-    <string name="TODOTXTPATH_summary">The Dropbox folder where todo.txt is stored.</string>
-    <string name="TODOTXTPATH_defaultPath">/todo</string>
-    <string name="DROPBOX_settings_header">Dropbox</string>
-    <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
 
     <string name="todotxt_settings_header">Main</string>
     <string name="todotxt_settings_summary">Application wide settings</string>
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
-    <string name="use_prio_pref_title">Enable priorities</string>
-    <string name="use_prio_pref_summary">GTD does not promote using of priorities, but you can use it if needed.
-    </string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
-    <string name="swipe_complete_pref_title">Swipe to complete</string>
-    <string name="swipe_complete_pref_summary">Swipe over a task to complete it.</string>
-    <string name="manual_sync_pref_title">Manual sync</string>
-    <string name="manual_sync_pref_summary">Don\'t automatically upload every change to Dropbox.</string>
     <string name="font_size_delta_pref_title">Change font size</string>
     <string name="font_size_delta_pref_summary">Change the font size in units of sp.
         Use negative values to decrease the font size</string>
-
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -109,27 +85,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_website_summary">Visit the Simpletask website</string>
     <string name="visit_website_data">http://mpcjanssen.nl/cgi-bin/simpletask</string>
 
-    <string name="donate_title">Donate</string>
-    <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be
-        free.
-    </string>
-    <string name="visit_donate_data">http://bit.ly/VYR7Fq</string>
-    <!-- sync dialog -->
-    <string name="sync_dialog_title">Manual Sync</string>
-    <string name="sync_dialog_msg">Do you want to upload or download your todo.txt file?</string>
-    <string name="sync_dialog_upload">Upload to Dropbox</string>
-    <string name="sync_dialog_download">Download to device</string>
-    <string name="sync_upload_message">Uploading todo.txt…</string>
-    <string name="sync_download_message">Downloading todo.txt…</string>
-    <!-- sync conflict dialog -->
-    <string name="sync_conflict_dialog_title">File Conflict</string>
-    <string name="sync_conflict_dialog_msg">Oops! There is a newer version of your todo.txt file in Dropbox. \nDo you
-        want to upload your local changes, or download the Dropbox version?
-    </string>
-    <!-- login -->
-    <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Log in to Dropbox</string>
-    <string name="login_screen_offline_button">Work offline</string>
     <!-- delete -->
     <string name="delete_task_title">Delete Task</string>
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
@@ -142,7 +97,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="alphabetical">Alphabetical</string>
     <string name="by_prio">By Priority</string>
     <string name="by_project">By Tag</string>
-    <string name="by_context">By List</string>
+    <string name="by_context">By Context</string>
 
     <!-- filter tabs -->
     <string name="filter_select_all">Select all</string>
@@ -156,8 +111,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="priority_prompt">Priority</string>
     <string name="priority_short_prompt">Prio</string>
     <string name="project_prompt">Tag</string>
-    <string name="context_prompt">List</string>
-    <string name="separator">Separator</string>
+    <string name="context_prompt">Context</string>
 
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Add Task</string>
