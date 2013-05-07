@@ -34,7 +34,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preferences">Settings</string>
     <string name="quickfilter">Filter on context or tag</string>
     <string name="search">Search</string>
-    <string name="addtask">Add Task</string>
+    <string name="addtask">Add Task(s)</string>
     <string name="updatetask">Update Task</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
@@ -45,9 +45,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear_filter">Clear filter</string>
-    <string name="tasktexthint">Call Mom @phone +Birthday\n\n</string>
+    <string name="tasktexthint">Create a task with @contexts or +tags\nCreate a new project or tag with @.. or +..\nAdd another task for every line</string>
     <string name="shortcut_name_empty">No name specified, not creating shortcut</string>
-    <string name="add_task_help">Add or update a task to the task list.
+    <string name="add_task_help">Add or update a task or tasks.
 		Each line creates a separate task for quick adding.\n
         <b>Priority</b>\n
         start the line with (.), like (A)\n

@@ -214,6 +214,5 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 			return true;
 		}
 	}
-
 }
 
