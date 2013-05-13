@@ -64,6 +64,10 @@ public class LocalFileTaskRepository {
 				Util.createParentDirectory(TODO_TXT_FILE);
 				TODO_TXT_FILE.createNewFile();
 			}
+			if (!DONE_TXT_FILE.exists()) {
+				Util.createParentDirectory(DONE_TXT_FILE);
+				DONE_TXT_FILE.createNewFile();
+			}
 		} catch (IOException e) {
 			Log.e (TAG, "Error initializing LocalFile " + e);
 		}
