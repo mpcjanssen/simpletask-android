@@ -54,12 +54,13 @@ public class MainApplication extends Application {
                 m_prefs);
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(taskBagPreferences);
         set_observer(new FileObserver(localTaskRepository.get_todo_file().getParent(),
-        				FileObserver.CLOSE_WRITE + FileObserver.MOVED_TO) {
+        				FileObserver.ALL_EVENTS - 
+						FileObserver.ACCESS - FileObserver.CLOSE_NOWRITE - FileObserver.OPEN) {
 			
 			@Override
 			public void onEvent(int event, String path) {
 				Log.v(TAG, path + " event: " + event);
-				if (path!=null && path.equals("todo.txt") && (event == FileObserver.CLOSE_WRITE || event == FileObserver.MOVED_TO)) {
+				if (path!=null && path.equals("todo.txt")) {
 					Log.v(TAG, path + " modified reloading taskbag");
 					taskBag.reload();
 					updateUI();
