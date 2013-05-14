@@ -78,14 +78,6 @@ public class TaskBag {
         Task task = new Task(tasks.size(), input,
                 (preferences.isPrependDateEnabled() ? new Date() : null));
         tasks.add(task);
-        store();
-    }
-
-    public void updateTask(Task task, String input) {
-        tasks.remove(task);
-        task.init(input, null);
-        tasks.add(task);
-        store();
     }
 
     public void delete(Task task) {

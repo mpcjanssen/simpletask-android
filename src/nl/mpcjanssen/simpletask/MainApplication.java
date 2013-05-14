@@ -53,20 +53,24 @@ public class MainApplication extends Application {
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(taskBagPreferences);
-        set_observer(new FileObserver(localTaskRepository.get_todo_file().getParent(),
-        				FileObserver.ALL_EVENTS - 
-						FileObserver.ACCESS - FileObserver.CLOSE_NOWRITE - FileObserver.OPEN) {
-			
+        m_observer = new FileObserver(localTaskRepository.get_todo_file().getParent(),
+        				FileObserver.ALL_EVENTS) {
+
 			@Override
 			public void onEvent(int event, String path) {
-				Log.v(TAG, path + " event: " + event);
-				if (path!=null && path.equals("todo.txt")) {
-					Log.v(TAG, path + " modified reloading taskbag");
-					taskBag.reload();
-					updateUI();
+				if (path!=null && path.equals("todo.txt") ) {
+                    Log.v(TAG, path + " event: " + event);
+                    if( event == FileObserver.CLOSE_WRITE ||
+                        event == FileObserver.MOVED_TO) {
+					    Log.v(TAG, path + " modified reloading taskbag");
+					    taskBag.reload();
+					    updateUI();
+                    }
 				}
 			}
-		});
+		};
+        m_observer.startWatching();
+        localTaskRepository.setFileObserver(m_observer);
         this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
 
         taskBag.reload();
@@ -148,9 +152,4 @@ public class MainApplication extends Application {
     public boolean completedLast() {
         return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
     }
-
-	public void set_observer(FileObserver observer) {
-		m_observer = observer;
-		m_observer.startWatching();
-	}
 }

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.os.FileObserver;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import android.os.Environment;
@@ -41,7 +42,8 @@ import android.util.Log;
 public class LocalFileTaskRepository {
 	private static final String TAG = LocalFileTaskRepository.class
 			.getSimpleName();
-	File TODO_TXT_FILE;
+    private FileObserver mFileObserver;
+    File TODO_TXT_FILE;
 	
 	public File get_todo_file() {
 		return TODO_TXT_FILE;
@@ -49,10 +51,14 @@ public class LocalFileTaskRepository {
 
 	File DONE_TXT_FILE;
 	private final TaskBag.Preferences preferences;
-	
+
+    public void setFileObserver (FileObserver observer) {
+        this.mFileObserver = observer;
+    }
+
 	public LocalFileTaskRepository(TaskBag.Preferences m_prefs) {
 		this.preferences = m_prefs;
-
+        this.mFileObserver = null;
 		TODO_TXT_FILE = new File(
 				Environment.getExternalStorageDirectory(),
 				"data/nl.mpcjanssen.simpletask/todo.txt");
@@ -88,8 +94,16 @@ public class LocalFileTaskRepository {
 	}
 
 	public void store(ArrayList<Task> tasks) {
+        if (mFileObserver!=null) {
+            mFileObserver.stopWatching();
+            Log.v(TAG, "Stop watching " + TODO_TXT_FILE + " when storing taskbag");
+        }
 		TaskIo.writeToFile(tasks, TODO_TXT_FILE,
 				preferences.isUseWindowsLineBreaksEnabled());
+        if (mFileObserver!=null) {
+            Log.v(TAG, "Start watching " + TODO_TXT_FILE + " storing taskbag done");
+            mFileObserver.startWatching();
+        }
 	}
 
 	public void archive(ArrayList<Task> tasks) {
