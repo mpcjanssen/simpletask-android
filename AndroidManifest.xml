@@ -143,6 +143,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <service android:name="AppWidgetService"
 			android:permission="android.permission.BIND_REMOTEVIEWS"
 			 android:exported="false"  />
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/>
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
         <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_defaultsize_w" />
         <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_defaultsize_h" />
