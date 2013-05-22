@@ -197,7 +197,7 @@ public class TaskBag {
         return ret;
     }
 
-    public ArrayList<String> getContexts() {
+    public ArrayList<String> getContexts(boolean includeNone) {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
         for (Task item : tasks) {
@@ -205,11 +205,13 @@ public class TaskBag {
         }
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
-        ret.add(0, "-");
+        if (includeNone) {
+            ret.add(0, "-");
+        }
         return ret;
     }
 
-    public ArrayList<String> getProjects() {
+    public ArrayList<String> getProjects(boolean includeNone) {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
         for (Task item : tasks) {
@@ -217,7 +219,9 @@ public class TaskBag {
         }
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
-        ret.add(0, "-");
+        if (includeNone) {
+            ret.add(0, "-");
+        }
         return ret;
     }
 

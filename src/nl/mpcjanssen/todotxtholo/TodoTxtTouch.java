@@ -591,7 +591,7 @@ public class TodoTxtTouch extends ListActivity implements
     private void changeList() {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.changelist));
         Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts()) {
+        for (String ctx : taskBag.getContexts(false)) {
             menu.add(ctx);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -1146,9 +1146,9 @@ public class TodoTxtTouch extends ListActivity implements
         i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
                 Priority.inCode(taskBag.getPriorities()));
         i.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
-                taskBag.getProjects());
+                taskBag.getProjects(true));
         i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
-                taskBag.getContexts());
+                taskBag.getContexts(true));
 
         i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED,
                 Priority.inCode(m_prios));

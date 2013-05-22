@@ -223,7 +223,7 @@ public class AddTask extends Activity {
     private void showTagMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
         Menu menu = popupMenu.getMenu();
-        for (String prj : taskBag.getProjects()) {
+        for (String prj : taskBag.getProjects(false)) {
             menu.add(prj);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -259,7 +259,7 @@ public class AddTask extends Activity {
     private void showContextMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
         Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts()) {
+        for (String ctx : taskBag.getContexts(false)) {
             menu.add(ctx);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
