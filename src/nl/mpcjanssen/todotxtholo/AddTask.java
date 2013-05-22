@@ -195,19 +195,19 @@ public class AddTask extends Activity {
 
         if (iniTask != null && iniTask.getProjects().size() == 1) {
             List<String> ps = iniTask.getProjects();
-
-
-            textInputField.append(" +" + ps.get(0));
-
+            String project = ps.get(0);
+            if(!project.equals("-")) {
+                textInputField.append(" +" + project);
+            }
         }
 
 
         if (iniTask != null && iniTask.getContexts().size() == 1) {
             List<String> cs = iniTask.getContexts();
-
-
-            textInputField.append(" @" + cs.get(0));
-
+            String context = cs.get(0);
+            if(!context.equals("-")) {
+                textInputField.append(" @" + context);
+            }
         }
 
         int textIndex = 0;
@@ -294,7 +294,7 @@ public class AddTask extends Activity {
         int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<String>();
-        for (String line : textInputField.getText().toString().split("\\r\\n|\\r|\\n")) {
+        for (String line : textInputField.getText().toString().split("\\n",-1)) {
             lines.add(line);
         }
         int currentLine = getCurrentCursorLine(textInputField);
@@ -309,6 +309,7 @@ public class AddTask extends Activity {
         sizeDelta = newLength - length;
         int newStart = Math.max(0,start+sizeDelta);
         int newEnd = Math.min(end + sizeDelta,newLength);
+        newEnd = Math.max(newStart,newEnd);
         textInputField.setSelection(newStart,newEnd);
 
     }
