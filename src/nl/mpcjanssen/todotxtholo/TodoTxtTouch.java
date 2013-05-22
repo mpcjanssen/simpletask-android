@@ -591,7 +591,7 @@ public class TodoTxtTouch extends ListActivity implements
     private void changeList() {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.changelist));
         Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts(false)) {
+        for (String ctx : taskBag.getContexts(true)) {
             menu.add(ctx);
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
