@@ -30,6 +30,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.InputType;
+import android.text.Layout;
+import android.text.Selection;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +45,7 @@ import android.widget.TextView;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.Task;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
+import nl.mpcjanssen.todotxtholo.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +71,8 @@ public class AddTask extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_task, menu);
         boolean edit = getIntent().getBooleanExtra(Constants.EXTRA_EDIT, true);
-        if(!edit) {
-            for (int i=0 ; i< menu.size() ; i++) {
+        if (!edit) {
+            for (int i = 0; i < menu.size(); i++) {
                 menu.getItem(i).setVisible(false);
             }
             menu.findItem(R.id.menu_edit).setVisible(true);
@@ -82,11 +85,11 @@ public class AddTask extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_edit:
                 Intent originalIntent = getIntent();
-                originalIntent.putExtra(Constants.EXTRA_EDIT,true);
+                originalIntent.putExtra(Constants.EXTRA_EDIT, true);
                 startActivity(originalIntent);
                 finish();
                 break;
-             case R.id.menu_add_task:
+            case R.id.menu_add_task:
                 // Open new tasks add activity
                 Intent intent = getIntent();
                 intent.removeExtra(Constants.EXTRA_TASK);
@@ -156,7 +159,6 @@ public class AddTask extends Activity {
         }
 
 
-
         setContentView(R.layout.add_task);
 
 
@@ -210,10 +212,10 @@ public class AddTask extends Activity {
 
         int textIndex = 0;
         textInputField.setSelection(textIndex);
-        if(!edit) {
+        if (!edit) {
             setTitle(R.string.viewtask);
             textInputField.setVisibility(View.GONE);
-            TextView textView = (TextView)findViewById(R.id.taskView);
+            TextView textView = (TextView) findViewById(R.id.taskView);
             textView.setText(textInputField.getText());
             textView.setVisibility(View.VISIBLE);
             textView.requestFocus();
@@ -274,20 +276,40 @@ public class AddTask extends Activity {
         popupMenu.show();
     }
 
+    public int getCurrentCursorLine(EditText editText) {
+        int selectionStart = Selection.getSelectionStart(editText.getText());
+        Layout layout = editText.getLayout();
+
+        if (!(selectionStart == -1)) {
+            return layout.getLineForOffset(selectionStart);
+        }
+
+        return -1;
+    }
+
     private void replacePriority(CharSequence newPrio) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
         int length = textInputField.getText().length();
         int sizeDelta;
-
-        Task t = new Task(0, textInputField.getText().toString());
-        t.setPriority(Priority.toPriority(newPrio.toString()));
-        textInputField.setText(t.inFileFormat());
-
+        ArrayList<String> lines = new ArrayList<String>();
+        for (String line : textInputField.getText().toString().split("\\r\\n|\\r|\\n")) {
+            lines.add(line);
+        }
+        int currentLine = getCurrentCursorLine(textInputField);
+        if (currentLine != -1) {
+            Task t = new Task(0, lines.get(currentLine));
+            t.setPriority(Priority.toPriority(newPrio.toString()));
+            lines.set(currentLine, t.inFileFormat());
+            textInputField.setText(Util.join(lines, "\n"));
+        }
         // restore selection
-        sizeDelta = textInputField.getText().length() - length;
-        textInputField.setSelection(start + sizeDelta, end + sizeDelta);
+        int newLength = textInputField.getText().length();
+        sizeDelta = newLength - length;
+        int newStart = Math.max(0,start+sizeDelta);
+        int newEnd = Math.min(end + sizeDelta,newLength);
+        textInputField.setSelection(newStart,newEnd);
 
     }
 
