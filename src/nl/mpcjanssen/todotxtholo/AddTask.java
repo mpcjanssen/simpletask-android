@@ -70,25 +70,12 @@ public class AddTask extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_task, menu);
-        boolean edit = getIntent().getBooleanExtra(Constants.EXTRA_EDIT, true);
-        if (!edit) {
-            for (int i = 0; i < menu.size(); i++) {
-                menu.getItem(i).setVisible(false);
-            }
-            menu.findItem(R.id.menu_edit).setVisible(true);
-        }
         return true;
     }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_edit:
-                Intent originalIntent = getIntent();
-                originalIntent.putExtra(Constants.EXTRA_EDIT, true);
-                startActivity(originalIntent);
-                finish();
-                break;
             case R.id.menu_add_task:
                 // Open new tasks add activity
                 Intent intent = getIntent();
@@ -175,8 +162,6 @@ public class AddTask extends Activity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        boolean edit = intent.getBooleanExtra(Constants.EXTRA_EDIT, true);
-
         Task task = (Task) intent.getSerializableExtra(
                 Constants.EXTRA_TASK);
         if (task != null) {
@@ -212,14 +197,6 @@ public class AddTask extends Activity {
 
         int textIndex = 0;
         textInputField.setSelection(textIndex);
-        if (!edit) {
-            setTitle(R.string.viewtask);
-            textInputField.setVisibility(View.GONE);
-            TextView textView = (TextView) findViewById(R.id.taskView);
-            textView.setText(textInputField.getText());
-            textView.setVisibility(View.VISIBLE);
-            textView.requestFocus();
-        }
     }
 
     private void showTagMenu(View v) {

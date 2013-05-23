@@ -263,44 +263,6 @@ public class TodoTxtTouch extends ListActivity implements
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
-                onListItemClick(getListView(), v, pos, id);
-            }
-        });
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) {
-                onListItemLongClick(getListView(), v, pos, id);
-                return true;
-            }
-        });
-        lv.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                ListView lv = (ListView) view;
-                if (lv.getCheckedItemCount() != 0) {
-                    // Let CAB handle other clicks
-                    return false;
-                }
-                if (motionEvent.getX() < lv.getWidth() / 7 && motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    int position = lv.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (!m_swiping) {
-                        onListItemLongClick(lv, view, position, 0);
-                    }
-                    return true;
-                } else if (motionEvent.getX() < lv.getWidth() / 7 && motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    m_swiping = true;
-                } else if (motionEvent.getX() < lv.getWidth() / 7 && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    m_swiping = false;
-                    return false;
-                }
-                return false;
-            }
-        });
-
-
         updateFilterBar();
     }
 
@@ -421,14 +383,7 @@ public class TodoTxtTouch extends ListActivity implements
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // start the action bar instead
-
-        startAddTaskActivity(getTaskAt(position), false);
-    }
-
-
-    protected void onListItemLongClick(ListView l, View v, int position, long id) {
-        // start the action bar instead
+        // toggle selected state
         l.setItemChecked(position, !l.isItemChecked(position));
     }
 
@@ -562,7 +517,7 @@ public class TodoTxtTouch extends ListActivity implements
         Log.v(TAG, "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.add_new:
-                startAddTaskActivity(null, true);
+                startAddTaskActivity(null);
                 break;
             case R.id.sync:
                 Log.v(TAG, "onMenuItemSelected: sync");
@@ -610,11 +565,10 @@ public class TodoTxtTouch extends ListActivity implements
         popupMenu.show();
     }
 
-    private void startAddTaskActivity(Task task, boolean edit) {
+    private void startAddTaskActivity(Task task) {
         Log.v(TAG, "Starting addTask activity");
         Intent intent = new Intent(this, AddTask.class);
         intent.putExtra(Constants.EXTRA_TASK, task);
-        intent.putExtra(Constants.EXTRA_EDIT, edit);
         intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
         intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
         startActivity(intent);
@@ -990,8 +944,6 @@ public class TodoTxtTouch extends ListActivity implements
                             .findViewById(R.id.tasktext);
                     holder.taskage = (TextView) convertView
                             .findViewById(R.id.taskage);
-                    holder.taskselect = (CheckBox) convertView
-                            .findViewById(R.id.checkBox);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -1063,7 +1015,6 @@ public class TodoTxtTouch extends ListActivity implements
                         holder.taskage.setVisibility(View.GONE);
                     }
                 }
-                holder.taskselect.setChecked(getListView().isItemChecked(position));
                 holder.tasktext.setTextSize(m_app.taskTextFontSize());
                 holder.taskage.setTextSize(m_app.taskAgeFontSize());
             }
@@ -1126,7 +1077,6 @@ public class TodoTxtTouch extends ListActivity implements
     private static class ViewHolder {
         private TextView tasktext;
         private TextView taskage;
-        private CheckBox taskselect;
     }
 
     public void storeKeys(String accessTokenKey, String accessTokenSecret) {
@@ -1192,6 +1142,19 @@ public class TodoTxtTouch extends ListActivity implements
             title = title + numSelected;
             title = title + " " + getString(R.string.selected);
             mode.setTitle(title);
+            if  (numSelected==1) {
+                // show the edit menu item and hide the appropriate complete/uncomplete item
+                menu.findItem(R.id.update).setVisible(true);
+                if (checkedTasks.get(0).isCompleted()) {
+                    menu.findItem(R.id.done).setVisible(false);
+                } else {
+                    menu.findItem(R.id.uncomplete).setVisible(false);
+                }
+            } else {
+                menu.findItem(R.id.update).setVisible(false);
+                menu.findItem(R.id.done).setVisible(true);
+                menu.findItem(R.id.uncomplete).setVisible(true);
+            }
         }
 
         @Override
@@ -1200,6 +1163,9 @@ public class TodoTxtTouch extends ListActivity implements
             int menuid = item.getItemId();
             Intent intent;
             switch (menuid) {
+                case R.id.update:
+                    startAddTaskActivity(checkedTasks.get(0));
+                    break;
                 case R.id.done:
                     completeTasks(checkedTasks);
                     break;
@@ -1240,7 +1206,6 @@ public class TodoTxtTouch extends ListActivity implements
                     startActivity(intent);
                     break;
             }
-            // Not sure why this is explicitly needed
             mode.finish();
             m_adapter.setFilteredTasks(false);
             return true;
