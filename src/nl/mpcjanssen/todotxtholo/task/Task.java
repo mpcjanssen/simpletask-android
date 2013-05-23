@@ -55,7 +55,8 @@ public class Task implements Serializable, Comparable<Task> {
     private String relativeAge = "";
     private List<String> contexts;
     private List<String> projects;
-    private ArrayList<String> phoneNumbers;
+    private List<String> phoneNumbers;
+    private List<String> mailAddresses;
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
@@ -82,12 +83,8 @@ public class Task implements Serializable, Comparable<Task> {
         this.completionDate = splitResult.completedDate;
         this.originalText = rawText;
 
-        this.phoneNumbers = new ArrayList<String>();
-        Matcher m = Pattern.compile(Constants.PHONE_NUMBER_REGEXP)
-                .matcher(text);
-        while (m.find()) {
-            phoneNumbers.add(m.group());
-        }
+        this.phoneNumbers = PhoneNumberParser.getInstance().parse(text);
+        this.mailAddresses = MailAddressParser.getInstance().parse(text);
         this.contexts = ContextParser.getInstance().parse(text);
         this.projects = ProjectParser.getInstance().parse(text);
         this.deleted = Strings.isEmptyOrNull(text);
@@ -159,6 +156,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public List<String> getPhoneNumbers() {
         return phoneNumbers;
+    }
+
+    public List<String> getMailAddresses() {
+        return mailAddresses;
     }
 
     public String getCompletionDate() {
