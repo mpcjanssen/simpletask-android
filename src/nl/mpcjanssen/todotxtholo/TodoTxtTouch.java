@@ -50,6 +50,7 @@ import nl.mpcjanssen.todotxtholo.util.Strings;
 import nl.mpcjanssen.todotxtholo.util.Util;
 import nl.mpcjanssen.todotxtholo.util.Util.OnMultiChoiceDialogListener;
 
+import java.net.URL;
 import java.util.*;
 
 public class TodoTxtTouch extends ListActivity implements
@@ -1165,6 +1166,10 @@ public class TodoTxtTouch extends ListActivity implements
                 for (String s : t.getMailAddresses()) {
                     menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE,
                             s);
+                }
+                for (URL u : t.getLinks()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
+                            u.toString());
                 }
             }
 

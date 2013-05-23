@@ -57,6 +57,8 @@ public class Task implements Serializable, Comparable<Task> {
     private List<String> projects;
     private List<String> phoneNumbers;
     private List<String> mailAddresses;
+    private List<URL> links;
+
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
@@ -85,6 +87,7 @@ public class Task implements Serializable, Comparable<Task> {
 
         this.phoneNumbers = PhoneNumberParser.getInstance().parse(text);
         this.mailAddresses = MailAddressParser.getInstance().parse(text);
+        this.links = LinkParser.getInstance().parse(text);
         this.contexts = ContextParser.getInstance().parse(text);
         this.projects = ProjectParser.getInstance().parse(text);
         this.deleted = Strings.isEmptyOrNull(text);
@@ -160,6 +163,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public List<String> getMailAddresses() {
         return mailAddresses;
+    }
+
+    public List<URL> getLinks() {
+        return links;
     }
 
     public String getCompletionDate() {
