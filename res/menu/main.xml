@@ -55,7 +55,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:title="@string/search"
             android:id="@+id/search"
             android:icon="@drawable/action_search"
-            android:showAsAction="never|collapseActionView"
+            android:showAsAction="ifRoom|collapseActionView"
             android:actionViewClass="android.widget.SearchView"/>
     <item
             android:title="@string/share"

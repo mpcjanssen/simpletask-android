@@ -34,6 +34,10 @@ You should have received a copy of the GNU General Public License along with Tod
             android:id="@+id/uncomplete"
             android:icon="@drawable/ic_action_uncomplete"/>
     <item
+            android:title="@string/update"
+            android:id="@+id/update"
+            android:icon="@drawable/edit"/>
+    <item
             android:title="@string/priority"
             android:id="@+id/priority"
             android:icon="@drawable/prio"/>
