@@ -275,7 +275,8 @@ public class FilterActivity extends Activity {
 
 	private void applyFilter() {
    		Intent data = createFilterIntent();
-   		startActivity(data);
+   		setResult(RESULT_OK,data);
+        finish();
     }
 
     private void askWidgetName() {
