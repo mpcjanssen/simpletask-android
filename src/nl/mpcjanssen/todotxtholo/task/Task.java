@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.todotxtholo.task;
 
+import nl.mpcjanssen.todotxtholo.Constants;
 import nl.mpcjanssen.todotxtholo.util.RelativeDate;
 import nl.mpcjanssen.todotxtholo.util.Strings;
 
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
@@ -52,6 +55,7 @@ public class Task implements Serializable, Comparable<Task> {
     private String relativeAge = "";
     private List<String> contexts;
     private List<String> projects;
+    private ArrayList<String> phoneNumbers;
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
@@ -78,6 +82,12 @@ public class Task implements Serializable, Comparable<Task> {
         this.completionDate = splitResult.completedDate;
         this.originalText = rawText;
 
+        this.phoneNumbers = new ArrayList<String>();
+        Matcher m = Pattern.compile(Constants.PHONE_NUMBER_REGEXP)
+                .matcher(text);
+        while (m.find()) {
+            phoneNumbers.add(m.group());
+        }
         this.contexts = ContextParser.getInstance().parse(text);
         this.projects = ProjectParser.getInstance().parse(text);
         this.deleted = Strings.isEmptyOrNull(text);
@@ -145,6 +155,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public boolean isCompleted() {
         return completed;
+    }
+
+    public List<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
     public String getCompletionDate() {

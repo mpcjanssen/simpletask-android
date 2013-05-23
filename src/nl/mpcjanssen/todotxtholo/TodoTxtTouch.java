@@ -32,6 +32,7 @@ import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
@@ -1155,6 +1156,14 @@ public class TodoTxtTouch extends ListActivity implements
                 menu.findItem(R.id.done).setVisible(true);
                 menu.findItem(R.id.uncomplete).setVisible(true);
             }
+            menu.removeGroup(Menu.CATEGORY_SECONDARY);
+            for (Task t : getCheckedTasks()) {
+                for (String s : t.getPhoneNumbers()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number, Menu.NONE,
+                            s);
+                }
+            }
+
         }
 
         @Override
@@ -1203,6 +1212,27 @@ public class TodoTxtTouch extends ListActivity implements
                             .setData(Events.CONTENT_URI)
                             .putExtra(Events.TITLE, calendarTitle)
                             .putExtra(Events.DESCRIPTION, calendarDescription);
+                    startActivity(intent);
+                    break;
+                case R.id.url:
+                    Log.v(TAG, "url: " + item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
+                            .getTitle().toString()));
+                    startActivity(intent);
+                    break;
+                case R.id.mail:
+                    Log.v(TAG, "mail: " + item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
+                            .getTitle().toString()));
+                    intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                            new String[] { item.getTitle().toString() });
+                    intent.setType("text/plain");
+                    startActivity(intent);
+                    break;
+                case R.id.phone_number:
+                    Log.v(TAG, "phone_number");
+                    intent = new Intent(Intent.ACTION_DIAL,
+                            Uri.parse("tel:" + item.getTitle().toString()));
                     startActivity(intent);
                     break;
             }
