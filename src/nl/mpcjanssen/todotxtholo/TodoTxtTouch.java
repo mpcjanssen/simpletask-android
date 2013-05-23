@@ -755,7 +755,10 @@ public class TodoTxtTouch extends ListActivity implements
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        setIntent(intent);
+        if (intent.getExtras()!=null) {
+            // Only change intent if it actually contains a filter
+            setIntent(intent);
+        }
         Log.v(TAG, "onNewIntent: " + intent);
         handleIntent(null);
     }

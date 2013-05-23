@@ -21,8 +21,8 @@ You should have received a copy of the GNU General Public License along with Sim
 <!-- suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nl.mpcjanssen.todotxtholo"
-    android:versionCode="215"
-    android:versionName="2.1.5" >
+    android:versionCode="217"
+    android:versionName="2.1.7" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -105,10 +105,12 @@ You should have received a copy of the GNU General Public License along with Sim
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
