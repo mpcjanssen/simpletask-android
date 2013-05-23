@@ -54,5 +54,13 @@ You should have received a copy of the GNU General Public License along with Tod
             android:id="@+id/delete"
             android:showAsAction="never"
             android:icon="@drawable/delete"/>
-
+    <item
+            android:id="@+id/url"
+            android:visible="false"/>
+    <item
+            android:id="@+id/mail"
+            android:visible="false"/>
+    <item
+            android:id="@+id/phone_number"
+            android:visible="false"/>
 </menu>
