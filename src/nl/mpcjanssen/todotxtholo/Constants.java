@@ -92,6 +92,4 @@ public class Constants {
     public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
     public static final String INITIAL_NOT = "initialNot";
     public static final String SELECTION_MODE = "selection_mode";
-
-    public static final String PHONE_NUMBER_REGEXP = "[0\\+]?[0-9]{4,12}" ;
 }

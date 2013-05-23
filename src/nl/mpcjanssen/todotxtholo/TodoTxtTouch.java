@@ -1162,6 +1162,10 @@ public class TodoTxtTouch extends ListActivity implements
                     menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number, Menu.NONE,
                             s);
                 }
+                for (String s : t.getMailAddresses()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE,
+                            s);
+                }
             }
 
         }
