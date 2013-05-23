@@ -1264,8 +1264,9 @@ public class TodoTxtTouch extends ListActivity implements
                     break;
                 case R.id.phone_number:
                     Log.v(TAG, "phone_number");
+                    String encodedNumber = Uri.encode(item.getTitle().toString());
                     intent = new Intent(Intent.ACTION_DIAL,
-                            Uri.parse("tel:" + item.getTitle().toString()));
+                            Uri.parse("tel:" + encodedNumber));
                     startActivity(intent);
                     break;
             }
