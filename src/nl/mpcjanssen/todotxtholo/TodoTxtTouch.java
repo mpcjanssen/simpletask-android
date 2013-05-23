@@ -57,7 +57,7 @@ public class TodoTxtTouch extends ListActivity implements
         OnSharedPreferenceChangeListener {
 
     final static String TAG = TodoTxtTouch.class.getSimpleName();
-
+    private final static int REQUEST_FILTER = 1;
     private final static int REQUEST_PREFERENCES = 2;
     private TaskBag taskBag;
     ProgressDialog m_ProgressDialog = null;
@@ -72,6 +72,8 @@ public class TodoTxtTouch extends ListActivity implements
     private ArrayList<String> m_projects = new ArrayList<String>();
     private boolean m_projectsNot = false;
     private String m_search;
+    private boolean m_priosNot;
+    private boolean m_contextsNot;
 
     TaskAdapter m_adapter;
 
@@ -87,10 +89,7 @@ public class TodoTxtTouch extends ListActivity implements
 
     private int m_sort = 0;
 
-    private boolean m_priosNot;
 
-    private boolean m_contextsNot;
-    private boolean m_swiping;
 
     @Override
     public View onCreateView(View parent, String name, Context context,
@@ -109,6 +108,17 @@ public class TodoTxtTouch extends ListActivity implements
     protected void onStart() {
         super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
         Log.v(TAG, "onStart: " + getIntent().getExtras());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == REQUEST_FILTER) {
+            if (resultCode == RESULT_OK) {
+                setIntent(data);
+                handleIntent(null);
+            }
+        }
     }
 
     @Override
@@ -193,6 +203,8 @@ public class TodoTxtTouch extends ListActivity implements
         m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
 
         // Show search or filter results
+
+        clearFilter();
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
@@ -265,7 +277,6 @@ public class TodoTxtTouch extends ListActivity implements
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
-        updateFilterBar();
     }
 
     private void updateFilterBar() {
@@ -557,8 +568,9 @@ public class TodoTxtTouch extends ListActivity implements
                 Intent intent = new Intent(getApplicationContext(), TodoTxtTouch.class);
                 intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, item.getTitle());
                 // Keep m_sort when switching
-                intent.putExtra(Constants.INTENT_ACTIVE_SORT_v1, m_sort);
-                startActivity(intent);
+                clearFilter();
+                m_contexts.add(item.getTitle().toString());
+                m_adapter.setFilteredTasks(false);
                 return true;  //To change body of implemented methods use File | Settings | File Templates.
             }
         }
@@ -736,6 +748,7 @@ public class TodoTxtTouch extends ListActivity implements
             finish();
         } else { // otherwise just clear the filter in the current activity
             clearFilter();
+            m_adapter.setFilteredTasks(false);
         }
     }
 
@@ -748,7 +761,13 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     void clearFilter() {
-        startActivity(new Intent(getApplicationContext(), TodoTxtTouch.class));
+        m_prios = new ArrayList<Priority>();
+        m_contexts = new ArrayList<String>();
+        m_projects = new ArrayList<String>();
+        m_projectsNot = false;
+        m_search = null;
+        m_priosNot = false;
+        m_contextsNot = false;
     }
 
     private MultiComparator getActiveSort() {
@@ -878,6 +897,7 @@ public class TodoTxtTouch extends ListActivity implements
             for (DataSetObserver ob : obs) {
                 ob.onChanged();
             }
+            updateFilterBar();
 
         }
 
@@ -1111,7 +1131,7 @@ public class TodoTxtTouch extends ListActivity implements
         i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
         i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(i);
+        startActivityForResult(i, REQUEST_FILTER);
     }
 
     class ActionBarListener implements AbsListView.MultiChoiceModeListener {
@@ -1174,6 +1194,7 @@ public class TodoTxtTouch extends ListActivity implements
             }
 
         }
+
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
