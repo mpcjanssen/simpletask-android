@@ -82,7 +82,6 @@ public class Constants {
     public final static String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
     public final static String INTENT_SYNC_START = "nl.mpcjanssen.todotxtholo.SYNC_START";
     public final static String INTENT_SYNC_DONE = "nl.mpcjanssen.todotxtholo.SYNC_DONE";
-    public final static String INTENT_START_FILTER = "nl.mpcjanssen.todotxtholo.START_WITH_FILTER";
 
     // Constants for saving state
     public static final String LAYOUT_ID = "layoutId";
