@@ -90,26 +90,6 @@ public class TodoTxtTouch extends ListActivity implements
     private int m_sort = 0;
 
 
-
-    @Override
-    public View onCreateView(View parent, String name, Context context,
-                             AttributeSet attrs) {
-        // Log.v(TAG,"onCreateView");
-        return super.onCreateView(parent, name, context, attrs);
-    }
-
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        Log.v(TAG, "onContentChanged");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
-        Log.v(TAG, "onStart: " + getIntent().getExtras());
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
@@ -200,13 +180,24 @@ public class TodoTxtTouch extends ListActivity implements
 
         taskBag = m_app.getTaskBag();
 
-        m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
-
         // Show search or filter results
 
         clearFilter();
         Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (savedInstanceState != null) {
+            // Called without explicit filter try to reload last active one
+            m_prios = Priority.toPriority(savedInstanceState
+                    .getStringArrayList("m_prios"));
+            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+            m_projects = savedInstanceState.getStringArrayList("m_projects");
+            m_search = savedInstanceState.getString("m_search");
+            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
+            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
+            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
+
+            m_sort = savedInstanceState.getInt("m_sort", Constants.SORT_UNSORTED);
+
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(TAG, "Searched for " + m_search);
         } else if (intent.getExtras() != null) {
@@ -251,16 +242,17 @@ public class TodoTxtTouch extends ListActivity implements
                         .split("\n")));
                 Log.v(TAG, "\t contexts:" + m_contexts);
             }
-        } else if (savedInstanceState != null) {
-            // Called without explicit filter try to reload last active one
-            m_prios = Priority.toPriority(savedInstanceState
-                    .getStringArrayList("m_prios"));
-            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-            m_projects = savedInstanceState.getStringArrayList("m_projects");
-            m_search = savedInstanceState.getString("m_search");
+        } else  {
+            // Set previous filters and sort
+            m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
+            m_contexts = new ArrayList<String>( m_app.m_prefs.getStringSet("m_contexts", Collections.<String>emptySet()));
 
-            m_sort = savedInstanceState.getInt("m_sort", Constants.SORT_UNSORTED);
-
+            m_prios = Priority.toPriority(new ArrayList<String>(
+                    m_app.m_prefs.getStringSet("m_prios", Collections.<String>emptySet())));
+            m_projects = new ArrayList<String>( m_app.m_prefs.getStringSet("m_projects", Collections.<String>emptySet()));
+            m_contextsNot = m_app.m_prefs.getBoolean("m_contextsNot", false);
+            m_priosNot = m_app.m_prefs.getBoolean("m_priosNot", false);
+            m_projectsNot = m_app.m_prefs.getBoolean("m_projectsNot", false);
         }
         // Initialize Adapter
 
@@ -329,9 +321,23 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
+        outState.putStringArrayList("m_contexts", m_contexts);
+        outState.putStringArrayList("m_projects", m_projects);
+        outState.putBoolean("m_contextsNot", m_contextsNot);
+        outState.putBoolean("m_priosNot", m_priosNot);
+        outState.putBoolean("m_projectsNot", m_projectsNot);
+        outState.putString("m_search", m_search);
+        outState.putInt("m_sort", m_sort);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume: " + getIntent().getExtras());
+        handleIntent(null);
         m_adapter.setFilteredTasks(false);
     }
 
@@ -346,33 +352,17 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
-        outState.putStringArrayList("m_contexts", m_contexts);
-        outState.putStringArrayList("m_projects", m_projects);
-        outState.putString("m_search", m_search);
-        outState.putInt("m_sort", m_sort);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         SharedPreferences.Editor editor = m_app.m_prefs.edit();
         editor.putInt("m_sort", m_sort);
+        editor.putStringSet("m_contexts", new HashSet(m_contexts));
+        editor.putStringSet("m_prios", new HashSet(Priority.inCode(m_prios)));
+        editor.putStringSet("m_projects", new HashSet(m_projects));
+        editor.putBoolean("m_contextsNot", m_contextsNot);
+        editor.putBoolean("m_priosNot", m_priosNot);
+        editor.putBoolean("m_projectsNot", m_projectsNot);
         editor.commit();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
-        Log.v(TAG, "Called restore instance state");
-        // m_prios = Priority.toPriority(state.getStringArrayList("m_prios"));
-        // m_contexts = state.getStringArrayList("m_contexts");
-        // m_projects = state.getStringArrayList("m_projects");
-        // m_search = state.getString("m_search");
-        //
-        // m_sort = state.getInt("m_sort", Constants.SORT_UNSORTED);
     }
 
     @Override
@@ -1316,7 +1306,6 @@ public class TodoTxtTouch extends ListActivity implements
             if (m_prios.size() > 0) {
                 addFilter(new ByPriorityFilter(m_prios, m_priosNot));
             }
-
             if (m_contexts.size() > 0) {
                 addFilter(new ByContextFilter(m_contexts, m_contextsNot));
             }
