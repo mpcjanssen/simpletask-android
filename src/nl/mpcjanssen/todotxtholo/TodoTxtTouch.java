@@ -185,7 +185,6 @@ public class TodoTxtTouch extends ListActivity implements
         clearFilter();
         Intent intent = getIntent();
         if (savedInstanceState != null) {
-            // Called without explicit filter try to reload last active one
             m_prios = Priority.toPriority(savedInstanceState
                     .getStringArrayList("m_prios"));
             m_contexts = savedInstanceState.getStringArrayList("m_contexts");
