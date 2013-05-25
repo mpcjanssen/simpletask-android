@@ -257,7 +257,7 @@ public class AddTask extends Activity {
         int selectionStart = Selection.getSelectionStart(editText.getText());
         Layout layout = editText.getLayout();
 
-        if (!(selectionStart == -1)) {
+        if (selectionStart != -1) {
             return layout.getLineForOffset(selectionStart);
         }
 
@@ -275,6 +275,9 @@ public class AddTask extends Activity {
             lines.add(line);
         }
         int currentLine = getCurrentCursorLine(textInputField);
+        if (currentLine > lines.size()-1) {
+            currentLine = lines.size()-1;
+        }
         if (currentLine != -1) {
             Task t = new Task(0, lines.get(currentLine));
             t.setPriority(Priority.toPriority(newPrio.toString()));
