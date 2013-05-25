@@ -274,6 +274,8 @@ public class AddTask extends Activity {
         for (String line : textInputField.getText().toString().split("\\n",-1)) {
             lines.add(line);
         }
+        // For some reason the currentLine can be larger than the amount of lines in the EditText
+        // Check for this case to prevent any array index out of bounds errors
         int currentLine = getCurrentCursorLine(textInputField);
         if (currentLine > lines.size()-1) {
             currentLine = lines.size()-1;
