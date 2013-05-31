@@ -350,8 +350,8 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if (actionMode != null) {
             actionMode.finish();
         }
