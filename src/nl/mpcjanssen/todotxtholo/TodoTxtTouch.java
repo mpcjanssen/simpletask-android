@@ -87,6 +87,7 @@ public class TodoTxtTouch extends ListActivity implements
     // swap
 
     private int m_sort = 0;
+    private ActionMode actionMode;
 
 
     @Override
@@ -180,7 +181,6 @@ public class TodoTxtTouch extends ListActivity implements
         taskBag = m_app.getTaskBag();
 
         // Show search or filter results
-
         clearFilter();
         Intent intent = getIntent();
         if (savedInstanceState != null) {
@@ -253,9 +253,10 @@ public class TodoTxtTouch extends ListActivity implements
             m_projectsNot = m_app.m_prefs.getBoolean("m_projectsNot", false);
         }
         // Initialize Adapter
-
-        m_adapter = new TaskAdapter(this, R.layout.list_item,
+        if (m_adapter == null) {
+            m_adapter = new TaskAdapter(this, R.layout.list_item,
                 getLayoutInflater(), getListView());
+        }
         m_adapter.setFilteredTasks(true);
 
         // listen to the ACTION_LOGOUT intent, if heard display LoginScreen
@@ -332,11 +333,10 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume: " + getIntent().getExtras());
+    protected void onRestart() {
+        super.onRestart();
+        Log.v(TAG, "onRestart: " + getIntent().getExtras());
         handleIntent(null);
-        m_adapter.setFilteredTasks(false);
     }
 
     @Override
@@ -352,6 +352,9 @@ public class TodoTxtTouch extends ListActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        if (actionMode != null) {
+            actionMode.finish();
+        }
         SharedPreferences.Editor editor = m_app.m_prefs.edit();
         editor.putInt("m_sort", m_sort);
         editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
@@ -807,12 +810,13 @@ public class TodoTxtTouch extends ListActivity implements
             this.vt = textViewResourceId;
         }
 
+
+
         void setFilteredTasks(boolean reload) {
             Log.v(TAG, "setFilteredTasks called, reload: " + reload);
             if (reload) {
                 taskBag.reload();
             }
-            Log.v(TAG, "setFilteredTasks called");
 
             AndFilter filter = new AndFilter();
             visibleTasks.clear();
@@ -891,6 +895,8 @@ public class TodoTxtTouch extends ListActivity implements
             updateFilterBar();
 
         }
+
+
 
         @Override
         public void registerDataSetObserver(DataSetObserver observer) {
@@ -1139,6 +1145,7 @@ public class TodoTxtTouch extends ListActivity implements
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.task_context, menu);
             rebuildMenuWithSelection(mode, menu);
+            actionMode = mode;
             return true;
         }
 
@@ -1285,6 +1292,7 @@ public class TodoTxtTouch extends ListActivity implements
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
             m_adapter.setFilteredTasks(false);
             return;
         }
