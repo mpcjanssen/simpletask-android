@@ -92,4 +92,7 @@ public class Constants {
     public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
     public static final String INITIAL_NOT = "initialNot";
     public static final String SELECTION_MODE = "selection_mode";
+
+    // Android OS specific constants
+    public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
 }

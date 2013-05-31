@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.text.SpannableString;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -355,9 +354,9 @@ public class TodoTxtTouch extends ListActivity implements
         super.onPause();
         SharedPreferences.Editor editor = m_app.m_prefs.edit();
         editor.putInt("m_sort", m_sort);
-        editor.putStringSet("m_contexts", new HashSet(m_contexts));
-        editor.putStringSet("m_prios", new HashSet(Priority.inCode(m_prios)));
-        editor.putStringSet("m_projects", new HashSet(m_projects));
+        editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
+        editor.putStringSet("m_prios", new HashSet<String>(Priority.inCode(m_prios)));
+        editor.putStringSet("m_projects", new HashSet<String>(m_projects));
         editor.putBoolean("m_contextsNot", m_contextsNot);
         editor.putBoolean("m_priosNot", m_priosNot);
         editor.putBoolean("m_projectsNot", m_projectsNot);
@@ -390,8 +389,7 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     private Task getTaskAt(final int pos) {
-        Task task = m_adapter.getItem(pos);
-        return task;
+        return m_adapter.getItem(pos);
     }
 
     private void shareTodoList() {
@@ -413,8 +411,9 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     private void prioritizeTasks(final List<Task> tasks) {
-        final String[] prioArr = Priority
-                .rangeInCode(Priority.NONE, Priority.E).toArray(new String[0]);
+        List<String> strings = Priority
+                .rangeInCode(Priority.NONE, Priority.Z);
+        final String[] prioArr = strings.toArray(new String[strings.size()]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select priority");
@@ -1230,8 +1229,8 @@ public class TodoTxtTouch extends ListActivity implements
                         calendarDescription = selectedTasksAsString();
 
                     }
-                    intent = new Intent(android.content.Intent.ACTION_INSERT)
-                            .setData(Events.CONTENT_URI)
+                    intent = new Intent(android.content.Intent.ACTION_EDIT)
+                            .setType(Constants.ANDROID_EVENT)
                             .putExtra(Events.TITLE, calendarTitle)
                             .putExtra(Events.DESCRIPTION, calendarDescription);
                     startActivity(intent);
