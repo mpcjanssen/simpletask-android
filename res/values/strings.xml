@@ -143,6 +143,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_prio">By Priority</string>
     <string name="by_project">By Tag</string>
     <string name="by_context">By List</string>
+    <string name="by_creation_date">By Creation Date</string>
 
     <!-- filter tabs -->
     <string name="filter_select_all">Select all</string>
@@ -174,6 +175,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="selected">selected</string>
     <string name="no_context">Inbox</string>
     <string name="no_project">No tag</string>
+    <string name="no_creation_date">No date</string>
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Add reminder</string>
     <string name="calendar_title">Simpletask reminder</string>

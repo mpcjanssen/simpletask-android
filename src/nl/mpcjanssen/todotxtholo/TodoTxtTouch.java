@@ -240,14 +240,14 @@ public class TodoTxtTouch extends ListActivity implements
                         .split("\n")));
                 Log.v(TAG, "\t contexts:" + m_contexts);
             }
-        } else  {
+        } else {
             // Set previous filters and sort
             m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
-            m_contexts = new ArrayList<String>( m_app.m_prefs.getStringSet("m_contexts", Collections.<String>emptySet()));
+            m_contexts = new ArrayList<String>(m_app.m_prefs.getStringSet("m_contexts", Collections.<String>emptySet()));
 
             m_prios = Priority.toPriority(new ArrayList<String>(
                     m_app.m_prefs.getStringSet("m_prios", Collections.<String>emptySet())));
-            m_projects = new ArrayList<String>( m_app.m_prefs.getStringSet("m_projects", Collections.<String>emptySet()));
+            m_projects = new ArrayList<String>(m_app.m_prefs.getStringSet("m_projects", Collections.<String>emptySet()));
             m_contextsNot = m_app.m_prefs.getBoolean("m_contextsNot", false);
             m_priosNot = m_app.m_prefs.getBoolean("m_priosNot", false);
             m_projectsNot = m_app.m_prefs.getBoolean("m_projectsNot", false);
@@ -255,7 +255,7 @@ public class TodoTxtTouch extends ListActivity implements
         // Initialize Adapter
         if (m_adapter == null) {
             m_adapter = new TaskAdapter(this, R.layout.list_item,
-                getLayoutInflater(), getListView());
+                    getLayoutInflater(), getListView());
         }
         m_adapter.setFilteredTasks(true);
 
@@ -746,7 +746,7 @@ public class TodoTxtTouch extends ListActivity implements
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getExtras()!=null) {
+        if (intent.getExtras() != null) {
             // Only change intent if it actually contains a filter
             setIntent(intent);
         }
@@ -790,6 +790,10 @@ public class TodoTxtTouch extends ListActivity implements
                 comparators.add(new ProjectComparator());
                 comparators.add(new AlphabeticalComparator());
                 break;
+            case Constants.SORT_CREATION_DATE:
+                comparators.add(new CreationDateComparator());
+                comparators.add(new AlphabeticalComparator());
+                break;
         }
         return (new MultiComparator(comparators));
     }
@@ -809,8 +813,6 @@ public class TodoTxtTouch extends ListActivity implements
             this.m_inflater = inflater;
             this.vt = textViewResourceId;
         }
-
-
 
         void setFilteredTasks(boolean reload) {
             Log.v(TAG, "setFilteredTasks called, reload: " + reload);
@@ -887,7 +889,25 @@ public class TodoTxtTouch extends ListActivity implements
                         position++;
                     }
                     break;
-
+                case Constants.SORT_CREATION_DATE:
+                    for (Task t : visibleTasks) {
+                        String age = t.getRelativeAge();
+                        String newHeader;
+                        if (Strings.isEmptyOrNull(age)) {
+                            newHeader = getString(R.string.no_creation_date);
+                        } else {
+                            newHeader = age;
+                        }
+                        if (!header.equals(newHeader)) {
+                            header = newHeader;
+                            Log.v(TAG, "Start of header: " + header
+                                    + " at position: " + position);
+                            headerAtPostion.put(position, header);
+                            position++;
+                        }
+                        position++;
+                    }
+                    break;
             }
             for (DataSetObserver ob : obs) {
                 ob.onChanged();
@@ -895,7 +915,6 @@ public class TodoTxtTouch extends ListActivity implements
             updateFilterBar();
 
         }
-
 
 
         @Override
@@ -976,20 +995,20 @@ public class TodoTxtTouch extends ListActivity implements
 
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getContexts()) {
-                        colorizeStrings.add("@"+context);
+                        colorizeStrings.add("@" + context);
                     }
                     Util.setColor(ss, Color.GRAY, colorizeStrings);
                     colorizeStrings.clear();
                     for (String project : task.getProjects()) {
-                        colorizeStrings.add("+"+project);
+                        colorizeStrings.add("+" + project);
                     }
                     Util.setColor(ss, Color.GRAY, colorizeStrings);
 
                     Resources res = getResources();
-                    int prioColor ;
+                    int prioColor;
                     switch (task.getPriority()) {
                         case A:
-                           prioColor = res.getColor(R.color.green);
+                            prioColor = res.getColor(R.color.green);
                             break;
                         case B:
                             prioColor = res.getColor(R.color.blue);
@@ -1001,9 +1020,9 @@ public class TodoTxtTouch extends ListActivity implements
                             prioColor = res.getColor(R.color.gold);
                             break;
                         default:
-                           prioColor = res.getColor(R.color.black);
+                            prioColor = res.getColor(R.color.black);
                     }
-                    Util.setColor(ss,prioColor, task.getPriority().inFileFormat());
+                    Util.setColor(ss, prioColor, task.getPriority().inFileFormat());
                     holder.tasktext.setText(ss);
                     holder.tasktext.setTextColor(res.getColor(R.color.black));
 
@@ -1162,7 +1181,7 @@ public class TodoTxtTouch extends ListActivity implements
             title = title + numSelected;
             title = title + " " + getString(R.string.selected);
             mode.setTitle(title);
-            if  (numSelected==1) {
+            if (numSelected == 1) {
                 // show the edit menu item and hide the appropriate complete/uncomplete item
                 menu.findItem(R.id.update).setVisible(true);
                 if (checkedTasks.get(0).isCompleted()) {
@@ -1253,7 +1272,7 @@ public class TodoTxtTouch extends ListActivity implements
                     intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
                             .getTitle().toString()));
                     intent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                            new String[] { item.getTitle().toString() });
+                            new String[]{item.getTitle().toString()});
                     intent.setType("text/plain");
                     startActivity(intent);
                     break;
