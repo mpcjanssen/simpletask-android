@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
     private static final String COMPLETED = "x ";
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
     private String originalText;
     private final Priority originalPriority;
 
@@ -94,12 +93,12 @@ public class Task implements Serializable, Comparable<Task> {
 
         if (defaultPrependedDate != null
                 && Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT,Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT,Locale.US);
             this.prependedDate = formatter.format(defaultPrependedDate);
         }
 
         if (!Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             try {
                 Date d = sdf.parse(this.prependedDate);
                 this.relativeAge = RelativeDate.getRelativeDate(d);
@@ -175,7 +174,7 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void markComplete(Date date) {
         if (!this.completed) {
-            this.completionDate = new SimpleDateFormat(Task.DATE_FORMAT, Locale.US)
+            this.completionDate = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US)
                     .format(date);
             this.deleted = false;
             this.completed = true;
