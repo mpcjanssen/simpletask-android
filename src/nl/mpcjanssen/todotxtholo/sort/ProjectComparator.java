@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ProjectComparator implements Comparator<Task> {
+public class ProjectComparator extends ReversableComparator {
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         List<String> projectsA = a.getProjects();
         List<String> projectsB = b.getProjects();
 

@@ -5,9 +5,9 @@ import nl.mpcjanssen.todotxtholo.task.Task;
 
 import java.util.Comparator;
 
-public class PriorityComparator implements Comparator<Task> {
+public class PriorityComparator extends ReversableComparator {
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         Priority prioA = a.getPriority();
         Priority prioB = b.getPriority();
 

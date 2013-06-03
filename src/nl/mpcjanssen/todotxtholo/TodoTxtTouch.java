@@ -791,7 +791,7 @@ public class TodoTxtTouch extends ListActivity implements
                 comparators.add(new AlphabeticalComparator());
                 break;
             case Constants.SORT_CREATION_DATE:
-                comparators.add(new CreationDateComparator());
+                comparators.add(new CreationDateComparator(true));
                 comparators.add(new AlphabeticalComparator());
                 break;
         }
