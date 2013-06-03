@@ -6,11 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ContextComparator implements Comparator<Task> {
-
+public class ContextComparator extends ReversableComparator {
 
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         List<String> contextsA = a.getContexts();
         List<String> contextsB = b.getContexts();
 

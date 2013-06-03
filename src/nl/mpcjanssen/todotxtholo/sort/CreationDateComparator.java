@@ -10,28 +10,34 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
-public class CreationDateComparator implements Comparator<Task> {
+public class CreationDateComparator extends ReversableComparator {
+
+    public CreationDateComparator(boolean b) {
+        super(b);
+    }
+
     @Override
-    public int compare(Task b, Task a) {
-        // TODO Task b, Task a to get newest first. Replace with multisort with reverse
+    public int unreversedCompare(Task a, Task b) {
+        int result = 0;
         if (Strings.isEmptyOrNull(a.getPrependedDate()) && Strings.isEmptyOrNull(b.getPrependedDate())) {
-            return 0;
+            result = 0;
         } else if (Strings.isEmptyOrNull(a.getPrependedDate())) {
-            return 1;
+            result = 1;
         } else if (Strings.isEmptyOrNull(b.getPrependedDate())) {
-            return -1;
-        }
+            result = -1;
+        } else {
 
-        DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
-        // a and b are both not null
+            DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+            // a and b are both not null
 
-        try {
-            Date dateA = formatter.parse(a.getPrependedDate());
-            Date dateB = formatter.parse(b.getPrependedDate());
-            return dateA.compareTo(dateB);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return 0;
+            try {
+                Date dateA = formatter.parse(a.getPrependedDate());
+                Date dateB = formatter.parse(b.getPrependedDate());
+                result = dateA.compareTo(dateB);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+        return result;
     }
 }

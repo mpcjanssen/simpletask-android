@@ -4,9 +4,9 @@ import nl.mpcjanssen.todotxtholo.task.Task;
 
 import java.util.Comparator;
 
-public class AlphabeticalComparator implements Comparator<Task> {
+public class AlphabeticalComparator extends ReversableComparator {
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         return a.getOriginalText().compareToIgnoreCase(b.getOriginalText());
     }
 }
