@@ -75,7 +75,7 @@ public class FilterSortFragment extends Fragment {
         } else {
             originalItems = arguments.getStringArrayList(Constants.ACTIVE_SORT);
         }
-
+        adapterList.clear();
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
                 container, false);
         String[] values = getResources().getStringArray(R.array.sort);
