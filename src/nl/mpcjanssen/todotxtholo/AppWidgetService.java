@@ -94,7 +94,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 				visibleTasks.add(t);
 			}
 		}
-		Collections.sort(visibleTasks,getActiveSort());
+		Collections.sort(visibleTasks,MultiComparator.create(m_sorts));
 		}
 
 	@Override
@@ -154,13 +154,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 
-	}
-	
-	private MultiComparator getActiveSort() {
-		List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
-        // TODO redo\
-        comparators.add(new AlphabeticalComparator(false));
-		return (new MultiComparator(comparators));
 	}
 	
 	private class AndFilter {
