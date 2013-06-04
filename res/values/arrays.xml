@@ -26,8 +26,8 @@ You should have received a copy of the GNU General Public License along with Tod
 <resources>
 
     <string-array name="sort">
-        <item>@string/by_context</item>
         <item>@string/completed</item>
+        <item>@string/by_context</item>
         <item>@string/by_prio</item>
         <item>@string/alphabetical</item>
         <item>@string/file_order</item>
@@ -36,8 +36,8 @@ You should have received a copy of the GNU General Public License along with Tod
     </string-array>
     <!-- will be prepended with "u!" or "d!" depending on direction -->
     <string-array name="sortKeys">
-        <item>by_context</item>
         <item>completed</item>
+        <item>by_context</item>
         <item>by_prio</item>
         <item>alphabetical</item>
         <item>file_order</item>
