@@ -20,8 +20,8 @@ You should have received a copy of the GNU General Public License along with Tod
 @author Todo.txt contributors <todotxt@yahoogroups.com>
 @license http://www.gnu.org/licenses/gpl.html
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+@copyright 2013 Mark Janssen
 -->
-
 <!--suppress ALL -->
 <resources>
 
@@ -66,8 +66,6 @@ You should have received a copy of the GNU General Public License along with Tod
         A task can include any number of tags or be on multiple
         lists.
     </string>
-
-
 
     <!-- preferences -->
     <string name="ARCHIVE_settings_header">Archive</string>
@@ -140,7 +138,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="search_hint">Search todo.txt</string>
     <!-- sort -->
     <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.
-        \n\nItems are grouped by the top sort if that is \'By List\' or \'By Tag\'</string>
+        \n\nItems are grouped \'By List\' or \'By Tag\' if they are the first sort or the second after \'Completed\'
+    </string>
     <string name="file_order">File Order</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="by_prio">By Priority</string>
