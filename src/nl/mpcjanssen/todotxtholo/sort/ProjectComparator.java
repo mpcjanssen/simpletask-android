@@ -3,10 +3,13 @@ package nl.mpcjanssen.todotxtholo.sort;
 import nl.mpcjanssen.todotxtholo.task.Task;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ProjectComparator extends ReversableComparator {
+    public ProjectComparator(boolean reverse) {
+        super(reverse);
+    }
+
     @Override
     public int unreversedCompare(Task a, Task b) {
         List<String> projectsA = a.getProjects();

@@ -241,15 +241,28 @@ public class TodoTxtTouch extends ListActivity implements
             }
         } else {
             // Set previous filters and sort
-            m_sorts = new ArrayList<String>(m_app.m_prefs.getStringSet("m_sorts", Collections.<String>emptySet()));
-            m_contexts = new ArrayList<String>(m_app.m_prefs.getStringSet("m_contexts", Collections.<String>emptySet()));
+            m_sorts = new ArrayList<String>();
+            m_sorts.addAll(Arrays.asList(m_app.m_prefs.getString("m_sorts", "").split("\n")));
 
+            Log.v(TAG, "Got sort from app prefs: " + m_sorts);
+
+            m_contexts = new ArrayList<String>(m_app.m_prefs.getStringSet("m_contexts", Collections.<String>emptySet()));
             m_prios = Priority.toPriority(new ArrayList<String>(
                     m_app.m_prefs.getStringSet("m_prios", Collections.<String>emptySet())));
             m_projects = new ArrayList<String>(m_app.m_prefs.getStringSet("m_projects", Collections.<String>emptySet()));
             m_contextsNot = m_app.m_prefs.getBoolean("m_contextsNot", false);
             m_priosNot = m_app.m_prefs.getBoolean("m_priosNot", false);
             m_projectsNot = m_app.m_prefs.getBoolean("m_projectsNot", false);
+
+        }
+
+        if (m_sorts.size()==0 || Strings.isEmptyOrNull(m_sorts.get(0))) {
+            // Set a default sort
+            m_sorts = new ArrayList<String>();
+            for (String type : getResources().getStringArray(R.array.sortKeys)) {
+                m_sorts.add("u!" + type);
+            }
+
         }
         // Initialize Adapter
         if (m_adapter == null) {
@@ -355,7 +368,8 @@ public class TodoTxtTouch extends ListActivity implements
             actionMode.finish();
         }
         SharedPreferences.Editor editor = m_app.m_prefs.edit();
-        editor.putStringSet("m_sorts", new HashSet<String>(m_sorts));
+        Log.v(TAG, "Storing sort in prefs: " + m_sorts);
+        editor.putString("m_sorts", Util.join(m_sorts, "\n"));
         editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
         editor.putStringSet("m_prios", new HashSet<String>(Priority.inCode(m_prios)));
         editor.putStringSet("m_projects", new HashSet<String>(m_projects));
@@ -768,22 +782,35 @@ public class TodoTxtTouch extends ListActivity implements
 
 
         for (String sort : m_sorts) {
-            if (sort.equals("file_order")) {
-                // no additional sorting
-            } else if (sort.equals("file_reversed")) {
+            String parts[] = sort.split("!");
+            boolean reverse = false;
+            String sortType;
+            if(parts.length==1) {
+                // support older shortcuts and widgets
+                reverse = false;
+                sortType = parts[0];
+            } else {
+                sortType = parts[1];
+                if (parts[0].equals("d")) {
+                    reverse = true;
+                }
+            }
+            if (sortType.equals("file_order") && !reverse) {
+                // Nothing to sort
+            } else if (sortType.equals("file_order") && reverse) {
                 comparators.add(Collections.reverseOrder());
-            } else if (sort.equals("by_context")) {
-                comparators.add(new ContextComparator());
-            } else if (sort.equals("by_project")) {
-                comparators.add(new ProjectComparator());
-            } else if (sort.equals("alphabetical")) {
-                comparators.add(new AlphabeticalComparator());
-            } else if (sort.equals("by_prio")) {
-                comparators.add(new PriorityComparator());
-            } else if (sort.equals("completed_last")) {
-                comparators.add(new CompletedComparator());
-            } else if (sort.equals("by_creation_date")){
-                comparators.add(new CreationDateComparator(false));
+            } else if (sortType.equals("by_context")) {
+                comparators.add(new ContextComparator(reverse));
+            } else if (sortType.equals("by_project")) {
+                comparators.add(new ProjectComparator(reverse));
+            } else if (sortType.equals("alphabetical")) {
+                comparators.add(new AlphabeticalComparator(reverse));
+            } else if (sortType.equals("by_prio")) {
+                comparators.add(new PriorityComparator(reverse));
+            } else if (sortType.equals("completed")) {
+                comparators.add(new CompletedComparator(reverse));
+            } else if (sortType.equals("by_creation_date")){
+                comparators.add(new CreationDateComparator(reverse));
             } else {
                 Log.w(TAG, "Unknown sort: " + sort);
             }
@@ -824,9 +851,7 @@ public class TodoTxtTouch extends ListActivity implements
             headerAtPostion.clear();
             String header = "";
             int position = 0;
-            			int contextSortIdx = m_sorts.indexOf("by_context");
-                        int projectSortIdx = m_sorts.indexOf("by_project");
-                      if (contextSortIdx!=-1 && contextSortIdx < projectSortIdx && contextSortIdx < 2 ) {
+                      if (m_sorts.get(0).contains("by_context") ) {
                                 for (Task t : visibleTasks) {
                                         List<String> taskItems = t.getContexts();
                                       String newHeader;
@@ -844,7 +869,8 @@ public class TodoTxtTouch extends ListActivity implements
                                            }
                                         position++;
                                    }
-                          } else if (projectSortIdx!=-1 && projectSortIdx < contextSortIdx && projectSortIdx < 2 ) {                    for (Task t : visibleTasks) {
+                          } else if (m_sorts.get(0).contains("by_project") ) {
+                          for (Task t : visibleTasks) {
                         List<String> taskItems = t.getProjects();
                         String newHeader;
                         if (taskItems == null || taskItems.size() == 0) {

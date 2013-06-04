@@ -367,10 +367,6 @@ public class TodoApplication extends Application {
         }
     }
 
-    public boolean completedLast() {
-        return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
-    }
-
     private final class BroadcastReceiverExtension extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
