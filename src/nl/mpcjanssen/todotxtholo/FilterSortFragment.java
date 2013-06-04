@@ -38,8 +38,8 @@ public class FilterSortFragment extends Fragment {
                         adapter.remove(item);
                         adapter.insert(item, to);
                         String sortItem = directions.get(from);
-                        directions.remove(item);
-                        directions.add(to,item);
+                        directions.remove(from);
+                        directions.add(to,sortItem);
                     }
                 }
             };
@@ -90,7 +90,7 @@ public class FilterSortFragment extends Fragment {
             } else {
                 sortDirection = parts[0];
                 sortType = parts[1];
-                if (Strings.isEmptyOrNull(sortDirection)) {
+                if (Strings.isEmptyOrNull(sortDirection) || !sortDirection.equals("d")) {
                     sortDirection = "u";
                 }
             }
@@ -144,7 +144,7 @@ public class FilterSortFragment extends Fragment {
         ArrayList<String> multiSort = new ArrayList<String>();
         if (lv != null) {
             for (int i = 0 ; i< adapter.getCount() ; i++) {
-               multiSort.add(adapter.getDirection(i) + "!" + adapter.getSortType(i));
+               multiSort.add(directions.get(i) + "!" + adapter.getSortType(i));
             }
         } else {
             multiSort.addAll(originalItems);
@@ -170,9 +170,6 @@ public class FilterSortFragment extends Fragment {
             return row;
         }
 
-        public String getDirection(int position) {
-            return directions.get(position);
-        }
         public String getSortType(int position) {
             String[] values = getResources().getStringArray(R.array.sort);
             String[] keys = getResources().getStringArray(R.array.sortKeys);

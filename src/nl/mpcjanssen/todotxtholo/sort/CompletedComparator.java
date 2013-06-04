@@ -2,9 +2,11 @@ package nl.mpcjanssen.todotxtholo.sort;
 
 import nl.mpcjanssen.todotxtholo.task.Task;
 
-import java.util.Comparator;
-
 public class CompletedComparator extends ReversableComparator {
+
+    public CompletedComparator(boolean reverse) {
+        super(reverse);
+    }
 
     @Override
     public int unreversedCompare(Task a, Task b) {
