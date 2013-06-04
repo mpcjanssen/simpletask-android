@@ -140,7 +140,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="search_hint">Search todo.txt</string>
     <!-- sort -->
     <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.
-        \n\nItems are grouped by the top sort if that\'s supported</string>
+        \n\nItems are grouped by the top sort if that is \'By List\' or \'By Tag\'</string>
     <string name="file_order">File Order</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="by_prio">By Priority</string>
