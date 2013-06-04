@@ -67,6 +67,7 @@ public class Constants {
     public final static String EXTRA_PROJECTS_SELECTED = "PROJECTS_SELECTED";
     public final static String EXTRA_CONTEXTS = "CONTEXTS";
     public final static String EXTRA_CONTEXTS_SELECTED = "CONTEXTS_SELECTED";
+    public final static String EXTRA_SORTS_SELECTED = "SORTS_SELECTED";
     public final static String EXTRA_SEARCH = "SEARCH";
     public final static String EXTRA_TASK = "TASK";
     public final static String EXTRA_APPLIED_FILTERS = "APPLIED_FITERS";
