@@ -93,7 +93,7 @@ public class FilterActivity extends Activity {
         if(asWidgetConfigure) {
             ArrayList<String> defaultSorts = new ArrayList<String>();
             for (String type : getResources().getStringArray(R.array.sortKeys)) {
-                defaultSorts.add("u!" + type);
+                defaultSorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR +  type);
             }
             arguments.putStringArrayList(Constants.ACTIVE_SORT, defaultSorts);
         } else {

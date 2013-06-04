@@ -58,6 +58,7 @@ public class TodoTxtTouch extends ListActivity implements
     final static String TAG = TodoTxtTouch.class.getSimpleName();
     private final static int REQUEST_FILTER = 1;
     private final static int REQUEST_PREFERENCES = 2;
+
     private TaskBag taskBag;
     ProgressDialog m_ProgressDialog = null;
     String m_DialogText = "";
@@ -260,7 +261,7 @@ public class TodoTxtTouch extends ListActivity implements
             // Set a default sort
             m_sorts = new ArrayList<String>();
             for (String type : getResources().getStringArray(R.array.sortKeys)) {
-                m_sorts.add("u!" + type);
+                m_sorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR + type);
             }
 
         }
