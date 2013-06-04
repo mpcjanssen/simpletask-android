@@ -250,7 +250,7 @@ public class FilterActivity extends Activity {
     		editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
     		editor.putStringSet(Constants.INTENT_PRIORITIES_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_PRIORITIES)));
     		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-            editor.putStringSet(Constants.INTENT_ACTIVE_SORT_v1, new HashSet<String>(getSelectedSort()));
+            editor.putString(Constants.INTENT_ACTIVE_SORT_v1, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
             // onUpdate is not called on adding, launch it manually
