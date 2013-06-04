@@ -32,9 +32,15 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import nl.mpcjanssen.todotxtholo.remote.RemoteClientManager;
 import nl.mpcjanssen.todotxtholo.remote.RemoteConflictException;
+import nl.mpcjanssen.todotxtholo.sort.*;
 import nl.mpcjanssen.todotxtholo.task.LocalFileTaskRepository;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class TodoApplication extends Application {

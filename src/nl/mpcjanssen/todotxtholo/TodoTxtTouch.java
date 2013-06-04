@@ -43,7 +43,7 @@ import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.*;
 import nl.mpcjanssen.todotxtholo.remote.RemoteClient;
-import nl.mpcjanssen.todotxtholo.sort.*;
+import nl.mpcjanssen.todotxtholo.sort.MultiComparator;
 import nl.mpcjanssen.todotxtholo.task.*;
 import nl.mpcjanssen.todotxtholo.util.Strings;
 import nl.mpcjanssen.todotxtholo.util.Util;
@@ -777,46 +777,7 @@ public class TodoTxtTouch extends ListActivity implements
         m_contextsNot = false;
     }
 
-    private MultiComparator getActiveSort() {
-        List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
 
-
-        for (String sort : m_sorts) {
-            String parts[] = sort.split("!");
-            boolean reverse = false;
-            String sortType;
-            if(parts.length==1) {
-                // support older shortcuts and widgets
-                reverse = false;
-                sortType = parts[0];
-            } else {
-                sortType = parts[1];
-                if (parts[0].equals("d")) {
-                    reverse = true;
-                }
-            }
-            if (sortType.equals("file_order") && !reverse) {
-                // Nothing to sort
-            } else if (sortType.equals("file_order") && reverse) {
-                comparators.add(Collections.reverseOrder());
-            } else if (sortType.equals("by_context")) {
-                comparators.add(new ContextComparator(reverse));
-            } else if (sortType.equals("by_project")) {
-                comparators.add(new ProjectComparator(reverse));
-            } else if (sortType.equals("alphabetical")) {
-                comparators.add(new AlphabeticalComparator(reverse));
-            } else if (sortType.equals("by_prio")) {
-                comparators.add(new PriorityComparator(reverse));
-            } else if (sortType.equals("completed")) {
-                comparators.add(new CompletedComparator(reverse));
-            } else if (sortType.equals("by_creation_date")){
-                comparators.add(new CreationDateComparator(reverse));
-            } else {
-                Log.w(TAG, "Unknown sort: " + sort);
-            }
-        }
-        return (new MultiComparator(comparators));
-    }
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter, Filterable {
 
@@ -847,11 +808,15 @@ public class TodoTxtTouch extends ListActivity implements
                     visibleTasks.add(t);
                 }
             }
-            Collections.sort(visibleTasks, getActiveSort());
+            Collections.sort(visibleTasks, MultiComparator.create(m_sorts));
             headerAtPostion.clear();
             String header = "";
             int position = 0;
-                      if (m_sorts.get(0).contains("by_context") ) {
+            String firstSort = m_sorts.get(0);
+            if (m_sorts.get(0).contains("completed") && m_sorts.size()>1) {
+               firstSort = m_sorts.get(1);
+            }
+                      if (firstSort.contains("by_context") ) {
                                 for (Task t : visibleTasks) {
                                         List<String> taskItems = t.getContexts();
                                       String newHeader;
@@ -869,7 +834,7 @@ public class TodoTxtTouch extends ListActivity implements
                                            }
                                         position++;
                                    }
-                          } else if (m_sorts.get(0).contains("by_project") ) {
+                          } else if (firstSort.contains("by_project") ) {
                           for (Task t : visibleTasks) {
                         List<String> taskItems = t.getProjects();
                         String newHeader;

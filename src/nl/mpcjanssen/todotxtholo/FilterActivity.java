@@ -90,13 +90,20 @@ public class FilterActivity extends Activity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(Constants.ACTIVE_SORT, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
+        if(asWidgetConfigure) {
+            ArrayList<String> defaultSorts = new ArrayList<String>();
+            for (String type : getResources().getStringArray(R.array.sortKeys)) {
+                defaultSorts.add("u!" + type);
+            }
+            arguments.putStringArrayList(Constants.ACTIVE_SORT, defaultSorts);
+        } else {
+            arguments.putStringArrayList(Constants.ACTIVE_SORT, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
+        }
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.sort))
                 .setTabListener(new MyTabsListener(this, getString(R.string.sort), FilterSortFragment.class, arguments))
                 .setTag(getString(R.string.sort)));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
