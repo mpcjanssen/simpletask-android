@@ -256,7 +256,7 @@ public class TodoTxtTouch extends ListActivity implements
 
         }
 
-        if (m_sorts.size()==0 || Strings.isEmptyOrNull(m_sorts.get(0))) {
+        if (m_sorts==null || m_sorts.size()==0 || Strings.isEmptyOrNull(m_sorts.get(0))) {
             // Set a default sort
             m_sorts = new ArrayList<String>();
             for (String type : getResources().getStringArray(R.array.sortKeys)) {
