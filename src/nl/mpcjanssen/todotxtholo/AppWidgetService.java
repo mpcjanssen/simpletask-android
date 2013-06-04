@@ -1,28 +1,5 @@
 package nl.mpcjanssen.todotxtholo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-
-import nl.mpcjanssen.todotxtholo.sort.AlphabeticalComparator;
-import nl.mpcjanssen.todotxtholo.sort.CompletedComparator;
-import nl.mpcjanssen.todotxtholo.sort.ContextComparator;
-import nl.mpcjanssen.todotxtholo.sort.MultiComparator;
-import nl.mpcjanssen.todotxtholo.sort.PriorityComparator;
-import nl.mpcjanssen.todotxtholo.sort.ProjectComparator;
-import nl.mpcjanssen.todotxtholo.task.ByContextFilter;
-import nl.mpcjanssen.todotxtholo.task.ByPriorityFilter;
-import nl.mpcjanssen.todotxtholo.task.ByProjectFilter;
-import nl.mpcjanssen.todotxtholo.task.ByTextFilter;
-import nl.mpcjanssen.todotxtholo.task.Priority;
-import nl.mpcjanssen.todotxtholo.task.Task;
-import nl.mpcjanssen.todotxtholo.task.TaskBag;
-import nl.mpcjanssen.todotxtholo.task.TaskFilter;
-import nl.mpcjanssen.todotxtholo.util.Strings;
-import nl.mpcjanssen.todotxtholo.util.Util;
-
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +7,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import nl.mpcjanssen.todotxtholo.sort.*;
 import nl.mpcjanssen.todotxtholo.task.*;
+import nl.mpcjanssen.todotxtholo.util.Util;
+
+import java.util.*;
 
 public class AppWidgetService extends RemoteViewsService {
 
@@ -47,10 +28,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	private ArrayList<String> m_contexts;
 	private ArrayList<String> m_projects;
 	private ArrayList<Priority> m_prios;
+    private ArrayList<String> m_sorts;
 	private boolean m_priosNot;
 	private boolean m_projectsNot;
 	private boolean m_contextsNot;
-	private int m_sort;
     private String m_title;
 	
 	private Context mContext;
@@ -79,7 +60,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1,false);
 		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1,false);
 		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,false);
-		m_sort = preferences.getInt(Constants.INTENT_ACTIVE_SORT_v1,Constants.SORT_UNSORTED);
+		m_sorts = new ArrayList<String>();
+        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_ACTIVE_SORT_v1, "").split("\n")));
         m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
 		setFilteredTasks(true);
@@ -95,7 +77,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, m_projectsNot);
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(m_prios, "\n"));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, m_priosNot);
-        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1, m_sort);
+        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1, Util.join(m_sorts,"\n"));
         return target;
     }
 
@@ -112,7 +94,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 				visibleTasks.add(t);
 			}
 		}
-		Collections.sort(visibleTasks,getActiveSort());
+		Collections.sort(visibleTasks,MultiComparator.create(m_sorts));
 		}
 
 	@Override
@@ -172,33 +154,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 
-	}
-	
-	private MultiComparator getActiveSort() {
-		List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
-		switch (m_sort) {
-		case Constants.SORT_UNSORTED:
-			break;
-		case Constants.SORT_REVERSE:
-			comparators.add(Collections.reverseOrder());
-			break;
-		case Constants.SORT_ALPHABETICAL:
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_CONTEXT:
-			comparators.add(new ContextComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_PRIORITY:
-			comparators.add(new PriorityComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_PROJECT:
-			comparators.add(new ProjectComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		}
-		return (new MultiComparator(comparators));
 	}
 	
 	private class AndFilter {

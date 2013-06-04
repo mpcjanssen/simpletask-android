@@ -3,7 +3,6 @@ package nl.mpcjanssen.todotxtholo;
 import android.app.*;
 import android.app.ActionBar.Tab;
 import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.RemoteViews;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
 import nl.mpcjanssen.todotxtholo.util.Util;
@@ -92,14 +90,20 @@ public class FilterActivity extends Activity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putInt(Constants.FILTER_ITEMS, R.array.sort);
-        arguments.putInt(Constants.ACTIVE_SORT, getIntent().getIntExtra(Constants.ACTIVE_SORT, Constants.SORT_UNSORTED));
+        if(asWidgetConfigure) {
+            ArrayList<String> defaultSorts = new ArrayList<String>();
+            for (String type : getResources().getStringArray(R.array.sortKeys)) {
+                defaultSorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR +  type);
+            }
+            arguments.putStringArrayList(Constants.ACTIVE_SORT, defaultSorts);
+        } else {
+            arguments.putStringArrayList(Constants.ACTIVE_SORT, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
+        }
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.sort))
-                .setTabListener(new MyTabsListener(this, getString(R.string.sort), FilterItemFragment.class, arguments))
+                .setTabListener(new MyTabsListener(this, getString(R.string.sort), FilterSortFragment.class, arguments))
                 .setTag(getString(R.string.sort)));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -183,10 +187,7 @@ public class FilterActivity extends Activity {
         target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(prioritiesFilter, "\n"));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1,
-                getSelectedItem(getString(R.string.sort),
-                        getIntent().getIntExtra(Constants.INTENT_ACTIVE_SORT_v1, Constants.SORT_UNSORTED)
-                ));
+        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1, Util.join(getSelectedSort(), "\n"));
 
         if (appliedFilters.size() == 1) {
             name = appliedFilters.get(0);
@@ -211,12 +212,12 @@ public class FilterActivity extends Activity {
         return filter;
     }
 
-    private int getSelectedItem(String tag, int defaultSelected) {
-        FilterItemFragment fr;
-        fr = (FilterItemFragment) this.getFragmentManager().findFragmentByTag(tag);
+    private ArrayList<String> getSelectedSort() {
+        FilterSortFragment fr;
+        fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
         if (fr == null) {
             // fragment was never intialized
-            return defaultSelected;
+            return getIntent().getStringArrayListExtra(Constants.ACTIVE_SORT);
         } else {
             return fr.getSelectedItem();
         }
@@ -256,7 +257,7 @@ public class FilterActivity extends Activity {
     		editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
     		editor.putStringSet(Constants.INTENT_PRIORITIES_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_PRIORITIES)));
     		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-    		editor.putInt(Constants.INTENT_ACTIVE_SORT_v1, getSelectedItem(getString(R.string.sort),Constants.SORT_UNSORTED));
+            editor.putString(Constants.INTENT_ACTIVE_SORT_v1, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
             // onUpdate is not called on adding, launch it manually
