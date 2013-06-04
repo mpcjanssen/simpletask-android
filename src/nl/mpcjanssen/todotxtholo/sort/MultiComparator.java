@@ -1,6 +1,7 @@
 package nl.mpcjanssen.todotxtholo.sort;
 
 import android.util.Log;
+import nl.mpcjanssen.todotxtholo.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +16,7 @@ public class MultiComparator<Task> implements Comparator<Task> {
 
 
         for (String sort : sorts) {
-            String parts[] = sort.split("!");
+            String parts[] = sort.split(Constants.SORT_SEPARATOR);
             boolean reverse = false;
             String sortType;
             if(parts.length==1) {
@@ -24,7 +25,7 @@ public class MultiComparator<Task> implements Comparator<Task> {
                 sortType = parts[0];
             } else {
                 sortType = parts[1];
-                if (parts[0].equals("d")) {
+                if (parts[0].equals(Constants.REVERSED_SORT)) {
                     reverse = true;
                 }
             }
