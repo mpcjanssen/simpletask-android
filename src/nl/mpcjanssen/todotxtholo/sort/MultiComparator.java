@@ -4,7 +4,6 @@ import android.util.Log;
 import nl.mpcjanssen.todotxtholo.Constants;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,10 +28,8 @@ public class MultiComparator<Task> implements Comparator<Task> {
                     reverse = true;
                 }
             }
-            if (sortType.equals("file_order") && !reverse) {
-                // Nothing to sort
-            } else if (sortType.equals("file_order") && reverse) {
-                comparators.add(Collections.reverseOrder());
+            if (sortType.equals("file_order")) {
+                comparators.add(new FileOrderComparator(reverse));
             } else if (sortType.equals("by_context")) {
                 comparators.add(new ContextComparator(reverse));
             } else if (sortType.equals("by_project")) {
