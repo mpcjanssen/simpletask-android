@@ -3,9 +3,11 @@ package nl.mpcjanssen.todotxtholo.sort;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.Task;
 
-import java.util.Comparator;
-
 public class PriorityComparator extends ReversableComparator {
+    public PriorityComparator(boolean reverse) {
+        super(reverse);
+    }
+
     @Override
     public int unreversedCompare(Task a, Task b) {
         Priority prioA = a.getPriority();
