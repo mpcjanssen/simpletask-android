@@ -31,11 +31,6 @@
 <!--suppress ALL -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
-            android:key="@string/sort_complete_last_pref_key"
-            android:title="@string/sort_complete_last_pref_title"
-            android:summary="@string/sort_complete_last_pref_summary"
-            android:defaultValue="true"/>
-    <CheckBoxPreference
             android:key="@string/prepend_date_pref_key"
             android:title="@string/prepend_date_pref_title"
             android:summary="@string/prepend_date_pref_summary"

@@ -11,7 +11,7 @@
             xmlns:dslv="http://schemas.android.com/apk/res/nl.mpcjanssen.todotxtholo"
             android:id="@+id/listview"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:padding="3dp"
             android:layout_margin="3dp"
             android:dividerHeight="1px"
@@ -23,5 +23,10 @@
             dslv:drag_start_mode="onMove"
             dslv:drag_handle_id="@id/drag_handle"
             dslv:remove_enabled="false"/>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:padding="10sp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/sort_help"/>
 
 </LinearLayout>
