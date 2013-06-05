@@ -61,7 +61,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1,false);
 		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,false);
 		m_sorts = new ArrayList<String>();
-        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_ACTIVE_SORT_v1, "").split("\n")));
+        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER_v1, "").split("\n")));
         m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
 		setFilteredTasks(true);
@@ -77,7 +77,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, m_projectsNot);
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(m_prios, "\n"));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, m_priosNot);
-        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1, Util.join(m_sorts,"\n"));
+        target.putExtra(Constants.INTENT_SORT_ORDER_v1, Util.join(m_sorts,"\n"));
         return target;
     }
 

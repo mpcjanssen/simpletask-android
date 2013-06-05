@@ -95,9 +95,9 @@ public class FilterActivity extends Activity {
             for (String type : getResources().getStringArray(R.array.sortKeys)) {
                 defaultSorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR +  type);
             }
-            arguments.putStringArrayList(Constants.ACTIVE_SORT, defaultSorts);
+            arguments.putStringArrayList(Constants.ACTIVE_SORTS, defaultSorts);
         } else {
-            arguments.putStringArrayList(Constants.ACTIVE_SORT, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
+            arguments.putStringArrayList(Constants.ACTIVE_SORTS, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
         }
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.sort))
@@ -187,7 +187,7 @@ public class FilterActivity extends Activity {
         target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(prioritiesFilter, "\n"));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1, Util.join(getSelectedSort(), "\n"));
+        target.putExtra(Constants.INTENT_SORT_ORDER_v1, Util.join(getSelectedSort(), "\n"));
 
         if (appliedFilters.size() == 1) {
             name = appliedFilters.get(0);
@@ -217,7 +217,7 @@ public class FilterActivity extends Activity {
         fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
         if (fr == null) {
             // fragment was never intialized
-            return getIntent().getStringArrayListExtra(Constants.ACTIVE_SORT);
+            return getIntent().getStringArrayListExtra(Constants.ACTIVE_SORTS);
         } else {
             return fr.getSelectedItem();
         }
@@ -257,7 +257,7 @@ public class FilterActivity extends Activity {
     		editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
     		editor.putStringSet(Constants.INTENT_PRIORITIES_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_PRIORITIES)));
     		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-            editor.putString(Constants.INTENT_ACTIVE_SORT_v1, Util.join(getSelectedSort(),"\n"));
+            editor.putString(Constants.INTENT_SORT_ORDER_v1, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
             // onUpdate is not called on adding, launch it manually
