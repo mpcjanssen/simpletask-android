@@ -109,6 +109,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_website_summary">Visit the Simpletask website</string>
     <string name="visit_website_data">http://mpcjanssen.nl/cgi-bin/simpletask</string>
 
+    <string name="visit_tracker_title">Request a feature or log a bug</string>
+    <string name="visit_tracker_summary">Request a new feature or enhancement or report a problem.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/cgi-bin/simpletask/tktnew</string>
+
     <string name="donate_title">Donate</string>
     <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be
         free.
