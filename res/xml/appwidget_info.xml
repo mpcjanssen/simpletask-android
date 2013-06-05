@@ -6,5 +6,5 @@
     android:initialKeyguardLayout="@layout/appwidget"
     android:widgetCategory="home_screen|keyguard"
     android:configure="nl.mpcjanssen.todotxtholo.FilterActivity" 
-    android:resizeMode="horizontal|vertical">
-</appwidget-provider>
+    android:resizeMode="horizontal|vertical"
+    android:previewImage="@drawable/appwidget_preview"/>
