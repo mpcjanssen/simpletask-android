@@ -36,10 +36,16 @@
     <PreferenceScreen
             android:title="@string/visit_website_title"
             android:summary="@string/visit_website_summary">
-
         <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/visit_website_data"/>
+    </PreferenceScreen>
+    <PreferenceScreen
+            android:title="@string/visit_tracker_title"
+            android:summary="@string/visit_tracker_summary">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/visit_tracker_data"/>
     </PreferenceScreen>
 
     <PreferenceScreen
