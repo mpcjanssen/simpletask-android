@@ -20,133 +20,145 @@ You should have received a copy of the GNU General Public License along with Sim
 -->
 <!-- suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nl.mpcjanssen.todotxtholo"
-    android:versionCode="222"
-    android:versionName="2.2.2" >
+          package="nl.mpcjanssen.todotxtholo"
+          android:versionCode="222"
+          android:versionName="2.2.2">
 
     <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="17" />
+            android:minSdkVersion="15"
+            android:targetSdkVersion="17"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
 
     <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
+            android:anyDensity="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:resizeable="true"
+            android:smallScreens="true"
+            android:xlargeScreens="true"/>
 
     <application
-        android:name="nl.mpcjanssen.todotxtholo.TodoApplication"
-        android:allowBackup="false"
-        android:icon="@drawable/icon"
-        android:label="@string/app_label"
-        android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
-        android:uiOptions="splitActionBarWhenNarrow" >
+            android:name="nl.mpcjanssen.todotxtholo.TodoApplication"
+            android:allowBackup="false"
+            android:icon="@drawable/icon"
+            android:label="@string/app_label"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+            android:uiOptions="splitActionBarWhenNarrow">
+
         <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:exported="true"
-            android:launchMode="singleTask" >
+                android:name="com.dropbox.client2.android.AuthActivity"
+                android:exported="true"
+                android:launchMode="singleTask">
             <intent-filter>
-                <data android:scheme="@string/dropbox_manifest_key" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="@string/dropbox_manifest_key"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.LoginScreen"
-            android:label="@string/app_label" >
+                android:name="nl.mpcjanssen.todotxtholo.LoginScreen"
+                android:label="@string/app_label">
         </activity>
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.Preferences"
-            android:label="@string/set_preferences" />
+                android:name="nl.mpcjanssen.todotxtholo.Preferences"
+                android:label="@string/set_preferences"/>
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.AddTask"
-            android:exported="true"
-            android:label="@string/addtask"
-            android:windowSoftInputMode="adjustResize" >
+                android:name="nl.mpcjanssen.todotxtholo.AddTask"
+                android:exported="true"
+                android:label="@string/addtask"
+                android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
         <activity-alias
-            android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name"
-            android:targetActivity=".AddTask" >
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
+                android:label="@string/shortcut_addtask_name"
+                android:targetActivity=".AddTask">
             <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity-alias>
+
         <activity-alias
-            android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
-            android:label="@string/share_addtask_name"
-            android:targetActivity=".AddTask" >
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
+                android:label="@string/share_addtask_name"
+                android:targetActivity=".AddTask">
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity-alias>
 
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
-            android:exported="true"
-            android:launchMode="singleTask">
+                android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
+                android:exported="true"
+                android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                    android:name="android.app.searchable"
+                    android:resource="@xml/searchable"/>
         </activity>
+
         <activity
-            android:name="nl.mpcjanssen.todotxtholo.FilterActivity"
-            android:label="@string/title_activity_filter" 
-            android:exported="true">
+                android:name="nl.mpcjanssen.todotxtholo.FilterActivity"
+                android:label="@string/title_activity_filter"
+                android:exported="true">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
-        <receiver android:name="nl.mpcjanssen.todotxtholo.MyAppWidgetProvider" >
+        <receiver android:name="nl.mpcjanssen.todotxtholo.MyAppWidgetProvider">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
-
             <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info" />
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/appwidget_info"/>
         </receiver>
-        
-        <service android:name="AppWidgetService"
-			android:permission="android.permission.BIND_REMOTEVIEWS"
-			 android:exported="false"  />
-        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/>
-        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
-        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_defaultsize_w" />
-        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_defaultsize_h" />
-        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_minimumsize_w" />
-        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_minimumsize_h" />
+
+        <service
+                android:name="AppWidgetService"
+                android:permission="android.permission.BIND_REMOTEVIEWS"
+                android:exported="false"/>
+
+        <uses-library
+                android:required="false"
+                android:name="com.sec.android.app.multiwindow"/>
+        <meta-data
+                android:name="com.sec.android.support.multiwindow"
+                android:value="true"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
+                android:resource="@dimen/app_defaultsize_w"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
+                android:resource="@dimen/app_defaultsize_h"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
+                android:resource="@dimen/app_minimumsize_w"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
+                android:resource="@dimen/app_minimumsize_h"/>
     </application>
 
 </manifest>
