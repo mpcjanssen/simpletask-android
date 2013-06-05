@@ -211,7 +211,7 @@ public class TodoTxtTouch extends ListActivity implements
                     prios = intent.getStringExtra(Constants.INTENT_PRIORITIES_FILTER_v1);
                     projects = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
                     contexts = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
-                    sorts = intent.getStringExtra(Constants.INTENT_ACTIVE_SORT_v1);
+                    sorts = intent.getStringExtra(Constants.INTENT_SORT_ORDER_v1);
                     m_priosNot = intent.getBooleanExtra(
                             Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
                     m_projectsNot = intent.getBooleanExtra(
