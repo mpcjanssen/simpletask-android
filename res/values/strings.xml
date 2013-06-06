@@ -144,7 +144,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.
         \n\nItems are grouped \'By List\' or \'By Tag\' if they are the first sort or the second after \'Completed\'
     </string>
-    <string name="file_order">File Order</string>
+    <string name="file_order">File Order (unsorted)</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="by_prio">By Priority</string>
     <string name="by_project">By Tag</string>
