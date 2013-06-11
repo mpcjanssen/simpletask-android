@@ -22,26 +22,21 @@
  */
 package nl.mpcjanssen.todotxtholo;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 import nl.mpcjanssen.todotxtholo.task.Priority;
 import nl.mpcjanssen.todotxtholo.task.Task;
 import nl.mpcjanssen.todotxtholo.task.TaskBag;
@@ -181,7 +176,7 @@ public class AddTask extends Activity {
         if (iniTask != null && iniTask.getProjects().size() == 1) {
             List<String> ps = iniTask.getProjects();
             String project = ps.get(0);
-            if(!project.equals("-")) {
+            if (!project.equals("-")) {
                 textInputField.append(" +" + project);
             }
         }
@@ -190,7 +185,7 @@ public class AddTask extends Activity {
         if (iniTask != null && iniTask.getContexts().size() == 1) {
             List<String> cs = iniTask.getContexts();
             String context = cs.get(0);
-            if(!context.equals("-")) {
+            if (!context.equals("-")) {
                 textInputField.append(" @" + context);
             }
         }
@@ -200,57 +195,61 @@ public class AddTask extends Activity {
     }
 
     private void showTagMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        Menu menu = popupMenu.getMenu();
-        for (String prj : taskBag.getProjects(false)) {
-            menu.add(prj);
-        }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                replaceTextAtSelection("+" + item.getTitle() + " ");
-                return true;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        }
+        final ArrayList<String> projects = taskBag.getProjects(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(projects.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        replaceTextAtSelection("+" + projects.get(which) + " ");
+                    }
+                });
 
-        );
-        popupMenu.show();
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.project_prompt);
+        dialog.show();
     }
 
     private void showPrioMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        Menu menu = popupMenu.getMenu();
-        for (Priority prio : Priority.values()) {
-            menu.add(prio.getCode());
-        }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                replacePriority(item.getTitle());
-                return true;
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Priority[] priorities = Priority.values();
+        ArrayList<String> priorityCodes = new ArrayList<String>();
+
+        for (Priority prio : priorities) {
+            priorityCodes.add(prio.getCode());
         }
 
-        );
-        popupMenu.show();
+        builder.setItems(priorityCodes.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        replaceTextAtSelection("+" + priorities[which].getCode());
+                    }
+                });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.priority_prompt);
+        dialog.show();
     }
 
-    private void showContextMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts(false)) {
-            menu.add(ctx);
-        }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                replaceTextAtSelection("@" + item.getTitle() + " ");
-                return true;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        }
 
-        );
-        popupMenu.show();
+    private void showContextMenu(View v) {
+        final ArrayList<String> contexts = taskBag.getContexts(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(contexts.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        replaceTextAtSelection("@" + contexts.get(which) + " ");
+                    }
+                });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.context_prompt);
+        dialog.show();
     }
 
     public int getCurrentCursorLine(EditText editText) {
@@ -271,14 +270,14 @@ public class AddTask extends Activity {
         int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<String>();
-        for (String line : textInputField.getText().toString().split("\\n",-1)) {
+        for (String line : textInputField.getText().toString().split("\\n", -1)) {
             lines.add(line);
         }
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
         int currentLine = getCurrentCursorLine(textInputField);
-        if (currentLine > lines.size()-1) {
-            currentLine = lines.size()-1;
+        if (currentLine > lines.size() - 1) {
+            currentLine = lines.size() - 1;
         }
         if (currentLine != -1) {
             Task t = new Task(0, lines.get(currentLine));
@@ -289,10 +288,10 @@ public class AddTask extends Activity {
         // restore selection
         int newLength = textInputField.getText().length();
         sizeDelta = newLength - length;
-        int newStart = Math.max(0,start+sizeDelta);
-        int newEnd = Math.min(end + sizeDelta,newLength);
-        newEnd = Math.max(newStart,newEnd);
-        textInputField.setSelection(newStart,newEnd);
+        int newStart = Math.max(0, start + sizeDelta);
+        int newEnd = Math.min(end + sizeDelta, newLength);
+        newEnd = Math.max(newStart, newEnd);
+        textInputField.setSelection(newStart, newEnd);
 
     }
 
