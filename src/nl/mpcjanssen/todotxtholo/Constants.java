@@ -47,16 +47,14 @@ public class Constants {
 
 
     // Constants for creating shortcuts
-    public final static String INTENT_SORT_ORDER_v1 = "SORTS";
-    public final static String INTENT_CONTEXTS_FILTER_v1 = "CONTEXTS";
-    public final static String INTENT_PROJECTS_FILTER_v1 = "PROJECTS";
-    public final static String INTENT_PRIORITIES_FILTER_v1 = "PRIORITIES";
-    public final static String INTENT_CONTEXTS_FILTER_NOT_v1 = "CONTEXTSnot";
-    public final static String INTENT_PROJECTS_FILTER_NOT_v1 = "PROJECTSnot";
-    public final static String INTENT_PRIORITIES_FILTER_NOT_v1 = "PRIORITIESnot";
+    public final static String INTENT_SORT_ORDER = "SORTS";
+    public final static String INTENT_CONTEXTS_FILTER = "CONTEXTS";
+    public final static String INTENT_PROJECTS_FILTER = "PROJECTS";
+    public final static String INTENT_PRIORITIES_FILTER = "PRIORITIES";
+    public final static String INTENT_CONTEXTS_FILTER_NOT = "CONTEXTSnot";
+    public final static String INTENT_PROJECTS_FILTER_NOT = "PROJECTSnot";
+    public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
     public final static String INTENT_TITLE = "TITLE";
-    public final static String INTENT_VERSION = "version";
-    public final static int INTENT_CURRENT_VERSION = 1;
 
 
     public final static String ACTIVE_SORTS = "SORTS";

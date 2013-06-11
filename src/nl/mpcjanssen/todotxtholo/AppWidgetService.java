@@ -48,20 +48,20 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		mContext = TodoApplication.getAppContext();
 		preferences = mContext.getSharedPreferences(""+widgetId, 0);
 		m_contexts = new ArrayList<String>();
-		m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER_v1, new HashSet<String>()));
+		m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>()));
 		Log.v(TAG, "contexts: " + m_contexts);
 		ArrayList<String> prio_strings = new ArrayList<String>();
-		prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER_v1, new HashSet<String>()));
+		prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>()));
 		m_prios = Priority.toPriority(prio_strings);		
 		Log.v(TAG, "prios: " + m_prios);
 		m_projects = new ArrayList<String>();
-		m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER_v1, new HashSet<String>()));
+		m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>()));
 		Log.v(TAG, "tags: " + m_projects);
-		m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1,false);
-		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1,false);
-		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,false);
+		m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT,false);
+		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT,false);
+		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT,false);
 		m_sorts = new ArrayList<String>();
-        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER_v1, "").split("\n")));
+        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
         m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
 		setFilteredTasks(true);
@@ -70,14 +70,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	
     private Intent createFilterIntent() {
     	Intent target = new Intent();
-        target.putExtra(Constants.INTENT_VERSION, Constants.INTENT_CURRENT_VERSION);
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, Util.join(m_contexts, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, m_contextsNot);
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_v1, Util.join(m_projects, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, m_projectsNot);
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(m_prios, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, m_priosNot);
-        target.putExtra(Constants.INTENT_SORT_ORDER_v1, Util.join(m_sorts,"\n"));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
         return target;
     }
 

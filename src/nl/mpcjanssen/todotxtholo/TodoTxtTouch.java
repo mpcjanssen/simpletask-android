@@ -204,22 +204,18 @@ public class TodoTxtTouch extends ListActivity implements
             String projects;
             String contexts;
             String sorts;
-            int version = intent.getIntExtra(Constants.INTENT_VERSION, 1);
-            switch (version) {
-                case 1:
-                default:
-                    prios = intent.getStringExtra(Constants.INTENT_PRIORITIES_FILTER_v1);
-                    projects = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
-                    contexts = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
-                    sorts = intent.getStringExtra(Constants.INTENT_SORT_ORDER_v1);
-                    m_priosNot = intent.getBooleanExtra(
-                            Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
-                    m_projectsNot = intent.getBooleanExtra(
-                            Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
-                    m_contextsNot = intent.getBooleanExtra(
-                            Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
-                    break;
-            }
+
+            prios = intent.getStringExtra(Constants.INTENT_PRIORITIES_FILTER);
+            projects = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER);
+            contexts = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
+            sorts = intent.getStringExtra(Constants.INTENT_SORT_ORDER);
+            m_priosNot = intent.getBooleanExtra(
+                    Constants.INTENT_PRIORITIES_FILTER_NOT, false);
+            m_projectsNot = intent.getBooleanExtra(
+                    Constants.INTENT_PROJECTS_FILTER_NOT, false);
+            m_contextsNot = intent.getBooleanExtra(
+                    Constants.INTENT_CONTEXTS_FILTER_NOT, false);
+
             Log.v(TAG, "\t sort:" + sorts);
             if (sorts != null && !sorts.equals("")) {
                 m_sorts = new ArrayList<String>(Arrays.asList(sorts
