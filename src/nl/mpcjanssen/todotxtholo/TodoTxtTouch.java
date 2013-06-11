@@ -562,26 +562,22 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     private void changeList() {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.changelist));
-        Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts(true)) {
-            menu.add(ctx);
-        }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(getApplicationContext(), TodoTxtTouch.class);
-                intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, item.getTitle());
-                // Keep m_sort when switching
-                clearFilter();
-                m_contexts.add(item.getTitle().toString());
-                m_adapter.setFilteredTasks(false);
-                return true;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        }
+        final ArrayList<String> contexts = taskBag.getContexts(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(contexts.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        clearFilter();
+                        m_contexts.add(contexts.get(which));
+                        m_adapter.setFilteredTasks(false);
+                    }
+                });
 
-        );
-        popupMenu.show();
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.context_prompt);
+        dialog.show();
     }
 
     private void startAddTaskActivity(Task task) {
