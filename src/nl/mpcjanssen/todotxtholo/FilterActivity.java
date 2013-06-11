@@ -180,14 +180,13 @@ public class FilterActivity extends Activity {
         appliedFilters.addAll(projectsFilter);
 
 
-        target.putExtra(Constants.INTENT_VERSION, Constants.INTENT_CURRENT_VERSION);
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, Util.join(contextFilter, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, getNot(Constants.EXTRA_CONTEXTS));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_v1, Util.join(projectsFilter, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(prioritiesFilter, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-        target.putExtra(Constants.INTENT_SORT_ORDER_v1, Util.join(getSelectedSort(), "\n"));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(contextFilter, "\n"));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, getNot(Constants.EXTRA_CONTEXTS));
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(projectsFilter, "\n"));
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, getNot(Constants.EXTRA_PROJECTS));
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(prioritiesFilter, "\n"));
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, getNot(Constants.EXTRA_PRIORITIES));
+        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(), "\n"));
 
         if (appliedFilters.size() == 1) {
             name = appliedFilters.get(0);
@@ -251,13 +250,13 @@ public class FilterActivity extends Activity {
     		SharedPreferences preferences = getApplicationContext().getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
     		Editor editor = preferences.edit();
             editor.putString(Constants.INTENT_TITLE, name);
-    		editor.putStringSet(Constants.INTENT_CONTEXTS_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_CONTEXTS)));
-    		editor.putBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, getNot(Constants.EXTRA_CONTEXTS));
-    		editor.putStringSet(Constants.INTENT_PROJECTS_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_PROJECTS)));
-    		editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1, getNot(Constants.EXTRA_PROJECTS));
-    		editor.putStringSet(Constants.INTENT_PRIORITIES_FILTER_v1, new HashSet<String>(getFilter(Constants.EXTRA_PRIORITIES)));
-    		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, getNot(Constants.EXTRA_PRIORITIES));
-            editor.putString(Constants.INTENT_SORT_ORDER_v1, Util.join(getSelectedSort(),"\n"));
+    		editor.putStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_CONTEXTS)));
+    		editor.putBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT, getNot(Constants.EXTRA_CONTEXTS));
+    		editor.putStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_PROJECTS)));
+    		editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT, getNot(Constants.EXTRA_PROJECTS));
+    		editor.putStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_PRIORITIES)));
+    		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT, getNot(Constants.EXTRA_PRIORITIES));
+            editor.putString(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
             // onUpdate is not called on adding, launch it manually

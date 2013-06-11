@@ -141,11 +141,6 @@ class DropboxRemoteClient implements RemoteClient {
 		return dropboxApi.getSession().isLinked();
 	}
 
-	@Override
-	public boolean isLoggedIn() {
-		return dropboxApi.getSession().isLinked();
-	}
-
 	/**
 	 * Store the current 'rev' from the metadata retrieved from Dropbox.
 	 * 

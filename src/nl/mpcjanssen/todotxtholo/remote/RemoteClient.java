@@ -63,17 +63,6 @@ public interface RemoteClient {
 	boolean isAuthenticated();
 
 	/**
-	 * Check to see if we have enough information to authenticate with remote
-	 * api
-	 * 
-	 * @deprecated This is information internal to the remote service. Will be
-	 *             removed. Use {@link RemoteClient#isAuthenticated()} instead.
-	 * @return true if we have authToken, false if we need login information
-	 */
-	@Deprecated
-	boolean isLoggedIn();
-
-	/**
 	 * Pull the remote Todo.txt file
 	 * 
 	 * @return
