@@ -75,10 +75,9 @@ You should have received a copy of the GNU General Public License along with Sim
             android:targetActivity="nl.mpcjanssen.simpletask.AddTask" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
+                <action android:name="com.google.android.gm.action.AUTO_SEND" />
+                <data android:mimeType="text/*" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity-alias>
 

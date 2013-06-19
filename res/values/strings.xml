@@ -135,4 +135,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_title">Simpletask reminder</string>
     <string name="version_copied">Version info copied to clipboard</string>
 
+    <string name="task_added">Task added</string>
+
+
 </resources>

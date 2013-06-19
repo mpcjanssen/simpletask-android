@@ -53,7 +53,7 @@ public class AddTask extends Activity {
     private ProgressDialog m_ProgressDialog = null;
 
     private Task m_backup;
-
+    private MainApplication m_app;
     private TaskBag taskBag;
 
     private String share_text;
@@ -66,6 +66,15 @@ public class AddTask extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_task, menu);
         return true;
+    }
+
+    private void noteToSelf (Intent intent) {
+        String task = intent.getStringExtra(Intent.EXTRA_TEXT);
+        taskBag.addAsTask(task);
+        taskBag.store();
+        m_app.updateWidgets();
+        Log.v(TAG, "Note to self: " + task);
+        m_app.showToast(R.string.task_added);
     }
 
     @Override
@@ -121,6 +130,9 @@ public class AddTask extends Activity {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
 
+        m_app = (MainApplication) getApplication();
+        taskBag = m_app.getTaskBag();
+
         final Intent intent = getIntent();
         final String action = intent.getAction();
         // create shortcut and exit
@@ -134,14 +146,15 @@ public class AddTask extends Activity {
             share_text = (String) intent
                     .getCharSequenceExtra(Intent.EXTRA_TEXT);
             Log.d(TAG, share_text);
+        } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
+            // Called as note to self from google search/now
+            noteToSelf(intent);
+            finish();
+            return;
         }
 
 
         setContentView(R.layout.add_task);
-
-
-        MainApplication m_app = (MainApplication) getApplication();
-        taskBag = m_app.getTaskBag();
 
         // text
         textInputField = (EditText) findViewById(R.id.taskText);
@@ -220,7 +233,7 @@ public class AddTask extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("+" + priorities[which].getCode());
+                        replacePriority(priorities[which].getCode());
                     }
                 });
 
