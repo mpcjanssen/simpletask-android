@@ -120,7 +120,11 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         final int itemId = R.layout.widget_list_item;
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
         rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
-        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent());
+        // Set the click intent so that we can handle it
+        Intent fillInIntent = createFilterIntent();
+        fillInIntent.putExtra(Constants.INTENT_SELECTED_TASK_ID, visibleTasks.get(position).getId());
+        fillInIntent.putExtra(Constants.INTENT_SELECTED_TASK_TEXT, visibleTasks.get(position).inFileFormat());
+        rv.setOnClickFillInIntent(R.id.widget_item_text, fillInIntent);
         return rv;
 	}
 

@@ -1,63 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/appwidget_bg"
-    android:orientation="vertical"
-    android:layout_weight="1"
-    android:padding="8dp">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:layout_weight="1"
+              android:padding="0dp">
 
     <LinearLayout
+            android:id="@+id/titleBar"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/holo_blue_dark">
 
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
-                android:textColor="#0099cc"
+                android:textColor="@android:color/white"
                 android:layout_gravity="center_vertical|left"
                 android:layout_weight="1"
-                android:textStyle="bold"
                 android:textSize="20sp"
+                android:paddingLeft="6sp"
                 android:textIsSelectable="true"/>
 
-        <Button
-                android:layout_width="22dp"
-                android:layout_height="fill_parent"
-                android:text="+"
+        <ImageButton
+
                 android:id="@+id/widgetadd"
-                android:textColor="#0099cc"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                style="@android:style/Widget.Holo.Button.Borderless.Small"
-                android:clickable="true"
-                android:enabled="true"
-                android:height="10sp"
-                android:width="10sp"
-                android:layout_marginLeft="-20dp"
-                android:textAlignment="viewEnd"
-                android:singleLine="false"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:adjustViewBounds="true"
+                android:background="?android:selectableItemBackground"
+                android:padding="6dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/content_new"/>
 
     </LinearLayout>
 
 
-    <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="2px"
-            android:id="@+id/imageView"
-            android:layout_gravity="left|right|top"
-            android:background="#0099cc"
-            android:layout_weight="0"/>
-
     <ListView
-        android:id="@+id/widgetlv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="#000000"
-        android:background="#FFFFFF"
-        android:layout_weight="1"/>
+            android:id="@+id/widgetlv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#000000"
+            android:background="#FFFFFF"
+            android:paddingLeft="6sp"
+            android:paddingRight="6sp"
+            android:paddingBottom="6sp"
+
+            android:layout_weight="1"/>
 
 </LinearLayout>

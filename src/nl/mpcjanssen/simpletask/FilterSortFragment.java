@@ -73,7 +73,7 @@ public class FilterSortFragment extends Fragment {
         if (savedInstanceState != null) {
             originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED);
         } else {
-            originalItems = arguments.getStringArrayList(Constants.ACTIVE_SORTS);
+            originalItems = arguments.getStringArrayList(Constants.INTENT_SORT_ORDER);
         }
         adapterList.clear();
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.single_filter,

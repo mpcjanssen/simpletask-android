@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
@@ -237,11 +235,10 @@ public class Task implements Serializable, Comparable<Task> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Task other = (Task) obj;
 
-        if (id != other.id)
+        if (id != ((Task)obj).id)
             return false;
-        return (this.inFileFormat().equals(other.inFileFormat()));
+        return (this.inFileFormat().equals(((Task)obj).inFileFormat()));
     }
 
     @Override

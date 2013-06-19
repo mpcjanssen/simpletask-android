@@ -30,12 +30,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 		// Create an Intent to launch ExampleActivity
         intent = new Intent(context, Simpletask.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
+        view.setOnClickPendingIntent(R.id.title,pendingIntent);
+
         intent = new Intent(context, AddTask.class);
         PendingIntent pi = PendingIntent.getActivity(
                 context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pi);
+
         return view;
 	}
 	

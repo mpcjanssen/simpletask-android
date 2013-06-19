@@ -28,7 +28,6 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -64,6 +63,7 @@ public class Simpletask extends ListActivity  {
     Menu options_menu;
     MainApplication m_app;
 
+
     // filter variables
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
     private ArrayList<String> m_contexts = new ArrayList<String>();
@@ -81,6 +81,7 @@ public class Simpletask extends ListActivity  {
 
 
     private ActionMode actionMode;
+    private Task m_selectedTask;
 
 
     @Override
@@ -133,6 +134,7 @@ public class Simpletask extends ListActivity  {
 
         // Show search or filter results
         clearFilter();
+
         Intent intent = getIntent();
         if (savedInstanceState != null) {
             m_prios = Priority.toPriority(savedInstanceState
@@ -216,18 +218,29 @@ public class Simpletask extends ListActivity  {
         if (m_adapter == null) {
             m_adapter = new TaskAdapter(this, R.layout.list_item,
                     getLayoutInflater(), getListView());
+            setListAdapter(this.m_adapter);
         }
         m_adapter.setFilteredTasks(true);
 
         // listen to the ACTION_LOGOUT intent, if heard display LoginScreen
         // and finish() current activity
 
-        setListAdapter(this.m_adapter);
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
+
+        // Did we launch with a selected task set?
+        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_ID)) {
+            long taskId = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_ID, -1);
+            String taskText = intent.getStringExtra(Constants.INTENT_SELECTED_TASK_TEXT);
+            Log.v(TAG, "Task selected: #" + taskId + "," + taskText );
+            m_adapter.select(new Task(taskId, taskText));
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK_ID);
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK_TEXT);
+            this.setIntent(intent);
+        }
     }
 
     private void updateFilterBar() {
@@ -335,7 +348,7 @@ public class Simpletask extends ListActivity  {
     }
 
     private Task getTaskAt(final int pos) {
-        return m_adapter.getItem(pos);
+        return m_adapter.getTask(pos);
     }
 
     private void shareTodoList() {
@@ -539,7 +552,7 @@ public class Simpletask extends ListActivity  {
             setIntent(intent);
         }
         Log.v(TAG, "onNewIntent: " + intent);
-        handleIntent(null);
+        //handleIntent(null);
     }
 
     void clearFilter() {
@@ -560,14 +573,16 @@ public class Simpletask extends ListActivity  {
         int vt;
         ArrayList<Task> visibleTasks = new ArrayList<Task>();
         Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
-        ArrayList<String> headerTitles = new ArrayList<String>();
-        SparseArray<String> headerAtPostion = new SparseArray<String>();
-        int headersShow = 0;
+        SparseArray<String> headerTitles = new SparseArray<String>();
+        SparseArray<Long> positionToIndex = new SparseArray<Long>();
+        SparseArray<Long> indexToPosition = new SparseArray<Long>();
+        int size = 0;
 
         public TaskAdapter(Context context, int textViewResourceId,
                            LayoutInflater inflater, ListView view) {
             this.m_inflater = inflater;
             this.vt = textViewResourceId;
+
         }
 
         void setFilteredTasks(boolean reload) {
@@ -584,50 +599,58 @@ public class Simpletask extends ListActivity  {
                 }
             }
             Collections.sort(visibleTasks, MultiComparator.create(m_sorts));
-            headerAtPostion.clear();
+            positionToIndex.clear();
+            indexToPosition.clear();
+            headerTitles.clear();
             String header = "";
+            int index = 0;
             int position = 0;
             String firstSort = m_sorts.get(0);
-            if (m_sorts.get(0).contains("completed") && m_sorts.size()>1) {
-               firstSort = m_sorts.get(1);
+            if (m_sorts.get(0).contains("completed") && m_sorts.size() > 1) {
+                firstSort = m_sorts.get(1);
             }
-                      if (firstSort.contains("by_context") ) {
-                                for (Task t : visibleTasks) {
-                                        List<String> taskItems = t.getContexts();
-                                      String newHeader;
-                                     if (taskItems == null || taskItems.size() == 0) {
-                                               newHeader = getString(R.string.no_context);
-                                            } else {
-                                              newHeader = taskItems.get(0);
-                                            }
-                                        if (!header.equals(newHeader)) {
-                                                header = newHeader;
-                                               // Log.v(TAG, "Start of header: " + header +
-                                                        // " at position: " + position);
-                                                      headerAtPostion.put(position, header);
-                                              position++;
-                                           }
-                                        position++;
-                                   }
-                          } else if (firstSort.contains("by_project") ) {
-                          for (Task t : visibleTasks) {
-                        List<String> taskItems = t.getProjects();
-                        String newHeader;
-                        if (taskItems == null || taskItems.size() == 0) {
-                            newHeader = getString(R.string.no_project);
-                        } else {
-                            newHeader = taskItems.get(0);
-                        }
-                        if (!header.equals(newHeader)) {
-                            header = newHeader;
-                            Log.v(TAG, "Start of header: " + header
-                                    + " at position: " + position);
-                            headerAtPostion.put(position, header);
-                            position++;
-                        }
+            for (Task t : visibleTasks) {
+                if (firstSort.contains("by_context")) {
+                    List<String> taskItems = t.getContexts();
+                    String newHeader;
+                    if (taskItems == null || taskItems.size() == 0) {
+                        newHeader = getString(R.string.no_context);
+                    } else {
+                        newHeader = taskItems.get(0);
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+
+                        // Log.v(TAG, "Start of header: " + header +
+                        // " at position: " + position);
+                        headerTitles.put(position,header);
+                        positionToIndex.put(position,null);
                         position++;
                     }
+                } else if (firstSort.contains("by_project")) {
+                    List<String> taskItems = t.getProjects();
+                    String newHeader;
+                    if (taskItems == null || taskItems.size() == 0) {
+                        newHeader = getString(R.string.no_project);
+                    } else {
+                        newHeader = taskItems.get(0);
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+                        Log.v(TAG, "Start of header: " + header
+                                + " at position: " + position);
+                        headerTitles.put(position,header);
+                        positionToIndex.put(position,null);
+                        position++;
+                    }
+                }
+                positionToIndex.put(position,new Long(index));
+                indexToPosition.put(index,new Long(position));
+                index++;
+                position++;
+
             }
+            size = position;
             for (DataSetObserver ob : obs) {
                 ob.onChanged();
             }
@@ -650,25 +673,15 @@ public class Simpletask extends ListActivity  {
 
         @Override
         public int getCount() {
-            return visibleTasks.size() + headerAtPostion.size();
-        }
-
-        private int headersBeforePosition(int position) {
-            int smaller = 0;
-            for (int index = 0; index < headerAtPostion.size(); index++) {
-                if (headerAtPostion.keyAt(index) < position) {
-                    smaller++;
-                }
-            }
-            return smaller;
+            return size;
         }
 
         @Override
         public Task getItem(int position) {
-            if (headerAtPostion.get(position) != null) {
+            if (positionToIndex.get(position) == null) {
                 return null;
             }
-            return visibleTasks.get(position - headersBeforePosition(position));
+            return visibleTasks.get(positionToIndex.get(position).intValue());
         }
 
         @Override
@@ -678,18 +691,17 @@ public class Simpletask extends ListActivity  {
 
         @Override
         public boolean hasStableIds() {
-            return true; // To change body of implemented methods use File |
-            // Settings | File Templates.
+            return true;
         }
 
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (headerAtPostion.get(position) != null) {
+            if (headerTitles.get(position,null) != null) {
                 convertView = m_inflater.inflate(R.layout.list_header, null);
                 TextView t = (TextView) convertView
                         .findViewById(R.id.list_header_title);
-                t.setText(headerAtPostion.get(position));
+                t.setText(headerTitles.get(position));
                 t.setTextSize(m_app.headerFontSize());
 
             } else {
@@ -780,12 +792,10 @@ public class Simpletask extends ListActivity  {
 
         @Override
         public int getItemViewType(int position) {
-            if (headerAtPostion.get(position) != null) {
+            if (headerTitles.get(position) != null) {
                 return 0;
             } else {
-                return 1; // To change body of implemented methods use File |
-                // Settings | File Templates.
-
+                return 1;
             }
         }
 
@@ -806,7 +816,7 @@ public class Simpletask extends ListActivity  {
 
         @Override
         public boolean isEnabled(int position) {
-            if (headerAtPostion.get(position) != null) {
+            if (headerTitles.get(position,null) != null) {
                 return false;
             } else {
                 return true;
@@ -829,22 +839,24 @@ public class Simpletask extends ListActivity  {
                 }
             };
         }
+
+        public void select(Task selectedTask) {
+            int index = visibleTasks.indexOf(selectedTask);
+            Log.v(TAG, "Selected task found at: " + index);
+            int position = indexToPosition.get(index).intValue();
+            ListView lv = getListView();
+            lv.setItemChecked(position,true);
+            lv.smoothScrollToPosition(position);
+        }
+
+        public Task getTask(int pos) {
+            return visibleTasks.get(positionToIndex.get(pos).intValue());
+        }
     }
 
     private static class ViewHolder {
         private TextView tasktext;
         private TextView taskage;
-    }
-
-    public void storeKeys(String accessTokenKey, String accessTokenSecret) {
-        Editor editor = m_app.m_prefs.edit();
-        editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
-        editor.putString(Constants.PREF_ACCESSTOKEN_SECRET, accessTokenSecret);
-        editor.commit();
-    }
-
-    public void showToast(String string) {
-        Util.showToastLong(this, string);
     }
 
     public void startFilterActivity() {

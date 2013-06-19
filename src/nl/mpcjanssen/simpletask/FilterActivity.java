@@ -95,9 +95,9 @@ public class FilterActivity extends Activity {
             for (String type : getResources().getStringArray(R.array.sortKeys)) {
                 defaultSorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR +  type);
             }
-            arguments.putStringArrayList(Constants.ACTIVE_SORTS, defaultSorts);
+            arguments.putStringArrayList(Constants.INTENT_SORT_ORDER, defaultSorts);
         } else {
-            arguments.putStringArrayList(Constants.ACTIVE_SORTS, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
+            arguments.putStringArrayList(Constants.INTENT_SORT_ORDER, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
         }
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.sort))
@@ -216,7 +216,7 @@ public class FilterActivity extends Activity {
         fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
         if (fr == null) {
             // fragment was never intialized
-            return getIntent().getStringArrayListExtra(Constants.ACTIVE_SORTS);
+            return getIntent().getStringArrayListExtra(Constants.INTENT_SORT_ORDER);
         } else {
             return fr.getSelectedItem();
         }

@@ -47,6 +47,9 @@ public class Constants {
 
 
     // Constants for creating shortcuts
+    public final static String INTENT_SELECTED_TASK_ID = "SELECTED_TASK_ID";
+    public final static String INTENT_SELECTED_TASK_TEXT = "SELECTED_TASK_TEXT";
+
     public final static String INTENT_SORT_ORDER = "SORTS";
     public final static String INTENT_CONTEXTS_FILTER = "CONTEXTS";
     public final static String INTENT_PROJECTS_FILTER = "PROJECTS";
@@ -56,8 +59,6 @@ public class Constants {
     public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
     public final static String INTENT_TITLE = "TITLE";
 
-
-    public final static String ACTIVE_SORTS = "SORTS";
     public static final String NORMAL_SORT = "+";
     public static final String REVERSED_SORT = "-";
     public static final String SORT_SEPARATOR = "!";
