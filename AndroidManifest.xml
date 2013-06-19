@@ -84,7 +84,8 @@ You should have received a copy of the GNU General Public License along with Sim
 
         <activity
             android:name="nl.mpcjanssen.simpletask.Simpletask"
-            android:exported="true" >
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
