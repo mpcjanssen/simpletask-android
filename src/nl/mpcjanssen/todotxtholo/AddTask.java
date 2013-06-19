@@ -53,7 +53,7 @@ public class AddTask extends Activity {
     private ProgressDialog m_ProgressDialog = null;
 
     private Task m_backup;
-
+    private TodoApplication m_app;
     private TaskBag taskBag;
 
     private String share_text;
@@ -90,7 +90,7 @@ public class AddTask extends Activity {
                         taskBag.addAsTask(taskText);
                     }
                 }
-                TodoApplication m_app = (TodoApplication) getApplication();
+
                 m_app.setNeedToPush(true);
                 m_app.updateWidgets();
                 if (m_app.isAutoArchive()) {
@@ -120,11 +120,22 @@ public class AddTask extends Activity {
         return true;
     }
 
+    private void noteToSelf (Intent intent) {
+        String task = intent.getStringExtra(Intent.EXTRA_TEXT);
+        taskBag.addAsTask(task);
+        m_app.setNeedToPush(true);
+        m_app.updateWidgets();
+        sendBroadcast(new Intent(
+                Constants.INTENT_START_SYNC_TO_REMOTE));
+        m_app.showToast(R.string.task_added);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
-
+        m_app = (TodoApplication) getApplication();
+        taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
         final String action = intent.getAction();
         // create shortcut and exit
@@ -138,14 +149,15 @@ public class AddTask extends Activity {
             share_text = (String) intent
                     .getCharSequenceExtra(Intent.EXTRA_TEXT);
             Log.d(TAG, share_text);
+        } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
+            // Called as note to self from google search/now
+            noteToSelf(intent);
+            finish();
+            return;
         }
 
 
         setContentView(R.layout.add_task);
-
-
-        TodoApplication m_app = (TodoApplication) getApplication();
-        taskBag = m_app.getTaskBag();
 
         // text
         textInputField = (EditText) findViewById(R.id.taskText);
