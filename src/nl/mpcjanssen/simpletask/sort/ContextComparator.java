@@ -3,14 +3,16 @@ package nl.mpcjanssen.simpletask.sort;
 import nl.mpcjanssen.simpletask.task.Task;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class ContextComparator implements Comparator<Task> {
+public class ContextComparator extends ReversableComparator {
 
+    public ContextComparator(boolean reverse) {
+       super(reverse);
+    }
 
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         List<String> contextsA = a.getContexts();
         List<String> contextsB = b.getContexts();
 

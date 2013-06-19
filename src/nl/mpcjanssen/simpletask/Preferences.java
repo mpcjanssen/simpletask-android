@@ -22,9 +22,6 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import java.util.List;
-
-import nl.mpcjanssen.simpletask.util.Util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -38,6 +35,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+import nl.mpcjanssen.simpletask.util.Util;
+
+import java.util.List;
 
 public class Preferences extends PreferenceActivity {
 	final static String TAG = Preferences.class.getSimpleName();
@@ -93,7 +93,7 @@ public class Preferences extends PreferenceActivity {
 			return true;
 		}
 	}
-	
+
 	public static class AboutPrefFragment extends PreferenceFragment
 	{
 		@Override
@@ -103,6 +103,7 @@ public class Preferences extends PreferenceActivity {
 			addPreferencesFromResource(R.xml.about_preferences);
 			PreferenceActivity act = (PreferenceActivity) getActivity();
 			PackageInfo packageInfo;
+			String git_version;
 			final Preference versionPref = findPreference("app_version");
 			try {
 				packageInfo = act.getPackageManager().getPackageInfo(act.getPackageName(),

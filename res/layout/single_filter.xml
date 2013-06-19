@@ -6,10 +6,27 @@
               android:orientation="vertical">
 
 
-    <ListView
+    <com.mobeta.android.dslv.DragSortListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:dslv="http://schemas.android.com/apk/res/nl.mpcjanssen.simpletask"
             android:id="@+id/listview"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:cacheColorHint="#00000000"/>
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:layout_margin="3dp"
+            android:dividerHeight="1px"
+            dslv:drag_enabled="true"
+            dslv:collapsed_height="1px"
+            dslv:drag_scroll_start="0.33"
+            dslv:float_alpha="0.6"
+            dslv:slide_shuffle_speed="0.3"
+            dslv:drag_start_mode="onMove"
+            dslv:drag_handle_id="@id/drag_handle"
+            dslv:remove_enabled="false"/>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:padding="10sp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/sort_help"/>
 
 </LinearLayout>

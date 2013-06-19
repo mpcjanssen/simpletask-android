@@ -36,96 +36,96 @@ import android.util.Log;
 
 /**
  * A task repository for interacting with the local file system
- * 
+ *
  * @author Tim Barlotta
  */
 public class LocalFileTaskRepository {
-	private static final String TAG = LocalFileTaskRepository.class
-			.getSimpleName();
+    private static final String TAG = LocalFileTaskRepository.class
+            .getSimpleName();
     private FileObserver mFileObserver;
     File TODO_TXT_FILE;
-	
-	public File get_todo_file() {
-		return TODO_TXT_FILE;
-	}
 
-	File DONE_TXT_FILE;
-	private final TaskBag.Preferences preferences;
+    public File get_todo_file() {
+        return TODO_TXT_FILE;
+    }
+
+    File DONE_TXT_FILE;
+    private final TaskBag.Preferences preferences;
 
     public void setFileObserver (FileObserver observer) {
         this.mFileObserver = observer;
     }
 
-	public LocalFileTaskRepository(TaskBag.Preferences m_prefs) {
-		this.preferences = m_prefs;
+    public LocalFileTaskRepository(TaskBag.Preferences m_prefs) {
+        this.preferences = m_prefs;
         this.mFileObserver = null;
-		TODO_TXT_FILE = new File(
-				Environment.getExternalStorageDirectory(),
-				"data/nl.mpcjanssen.simpletask/todo.txt");
-		DONE_TXT_FILE = new File(
-				Environment.getExternalStorageDirectory(),
-				"data/nl.mpcjanssen.simpletask/todo.txt");
-		try {
-			if (!TODO_TXT_FILE.exists()) {
-				Util.createParentDirectory(TODO_TXT_FILE);
-				TODO_TXT_FILE.createNewFile();
-			}
-			if (!DONE_TXT_FILE.exists()) {
-				Util.createParentDirectory(DONE_TXT_FILE);
-				DONE_TXT_FILE.createNewFile();
-			}
-		} catch (IOException e) {
-			Log.e (TAG, "Error initializing LocalFile " + e);
-		}
+        TODO_TXT_FILE = new File(
+                Environment.getExternalStorageDirectory(),
+                "data/nl.mpcjanssen.simpletask/todo.txt");
+        DONE_TXT_FILE = new File(
+                Environment.getExternalStorageDirectory(),
+                "data/nl.mpcjanssen.simpletask/todo.txt");
+        try {
+            if (!TODO_TXT_FILE.exists()) {
+                Util.createParentDirectory(TODO_TXT_FILE);
+                TODO_TXT_FILE.createNewFile();
+            }
+            if (!DONE_TXT_FILE.exists()) {
+                Util.createParentDirectory(DONE_TXT_FILE);
+                DONE_TXT_FILE.createNewFile();
+            }
+        } catch (IOException e) {
+            Log.e (TAG, "Error initializing LocalFile " + e);
+        }
 
-	}
+    }
 
-	public ArrayList<Task> load() {
-		if (!TODO_TXT_FILE.exists()) {
-			Log.e(TAG, TODO_TXT_FILE.getAbsolutePath() + " does not exist!");
-		} else {
-			try {
-				return TaskIo.loadTasksFromFile(TODO_TXT_FILE);
-			} catch (IOException e) {
-				Log.e(TAG, "Error loading from local file" + e);
-			}			
-		}
-		return null;
-	}
+    public ArrayList<Task> load() {
+        if (!TODO_TXT_FILE.exists()) {
+            Log.e(TAG, TODO_TXT_FILE.getAbsolutePath() + " does not exist!");
+        } else {
+            try {
+                return TaskIo.loadTasksFromFile(TODO_TXT_FILE);
+            } catch (IOException e) {
+                Log.e(TAG, "Error loading from local file" + e);
+            }
+        }
+        return null;
+    }
 
-	public void store(ArrayList<Task> tasks) {
+    public void store(ArrayList<Task> tasks) {
         if (mFileObserver!=null) {
             mFileObserver.stopWatching();
             Log.v(TAG, "Stop watching " + TODO_TXT_FILE + " when storing taskbag");
         }
-		TaskIo.writeToFile(tasks, TODO_TXT_FILE,
-				preferences.isUseWindowsLineBreaksEnabled());
+        TaskIo.writeToFile(tasks, TODO_TXT_FILE,
+                preferences.isUseWindowsLineBreaksEnabled());
         if (mFileObserver!=null) {
             Log.v(TAG, "Start watching " + TODO_TXT_FILE + " storing taskbag done");
             mFileObserver.startWatching();
         }
-	}
+    }
 
-	public void archive(ArrayList<Task> tasks) {
-		boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
+    public void archive(ArrayList<Task> tasks) {
+        boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
-		ArrayList<Task> completedTasks = new ArrayList<Task>(tasks.size());
-		ArrayList<Task> incompleteTasks = new ArrayList<Task>(tasks.size());
+        ArrayList<Task> completedTasks = new ArrayList<Task>(tasks.size());
+        ArrayList<Task> incompleteTasks = new ArrayList<Task>(tasks.size());
 
-		for (Task task : tasks) {
-			if (task.isCompleted()) {
-				completedTasks.add(task);
-			} else {
-				incompleteTasks.add(task);
-			}
-		}
+        for (Task task : tasks) {
+            if (task.isCompleted()) {
+                completedTasks.add(task);
+            } else {
+                incompleteTasks.add(task);
+            }
+        }
 
-		// append completed tasks to done.txt
-		TaskIo.writeToFile(completedTasks, DONE_TXT_FILE, true,
-				windowsLineBreaks);
+        // append completed tasks to done.txt
+        TaskIo.writeToFile(completedTasks, DONE_TXT_FILE, true,
+                windowsLineBreaks);
 
-		// write incomplete tasks back to todo.txt
-		TaskIo.writeToFile(incompleteTasks, TODO_TXT_FILE, false,
-				windowsLineBreaks);
-	}
+        // write incomplete tasks back to todo.txt
+        TaskIo.writeToFile(incompleteTasks, TODO_TXT_FILE, false,
+                windowsLineBreaks);
+    }
 }

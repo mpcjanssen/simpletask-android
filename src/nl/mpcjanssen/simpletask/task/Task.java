@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Strings;
 
@@ -33,12 +34,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
     private static final String COMPLETED = "x ";
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
     private String originalText;
     private final Priority originalPriority;
 
@@ -52,9 +54,10 @@ public class Task implements Serializable, Comparable<Task> {
     private String relativeAge = "";
     private List<String> contexts;
     private List<String> projects;
-	private List<String> mailAddresses;
-	private List<URL> links;
-	private List<String> phoneNumbers;
+    private List<String> phoneNumbers;
+    private List<String> mailAddresses;
+    private List<URL> links;
+
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
@@ -81,23 +84,21 @@ public class Task implements Serializable, Comparable<Task> {
         this.completionDate = splitResult.completedDate;
         this.originalText = rawText;
 
+        this.phoneNumbers = PhoneNumberParser.getInstance().parse(text);
+        this.mailAddresses = MailAddressParser.getInstance().parse(text);
+        this.links = LinkParser.getInstance().parse(text);
         this.contexts = ContextParser.getInstance().parse(text);
         this.projects = ProjectParser.getInstance().parse(text);
         this.deleted = Strings.isEmptyOrNull(text);
-        
-		this.mailAddresses = MailAddressParser.getInstance().parse(text);
-		this.links = LinkParser.getInstance().parse(text);
-		this.phoneNumbers = PhoneNumberParser.getInstance().parse(text);
-
 
         if (defaultPrependedDate != null
                 && Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT,Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT,Locale.US);
             this.prependedDate = formatter.format(defaultPrependedDate);
         }
 
         if (!Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             try {
                 Date d = sdf.parse(this.prependedDate);
                 this.relativeAge = RelativeDate.getRelativeDate(d);
@@ -122,18 +123,6 @@ public class Task implements Serializable, Comparable<Task> {
     public long getId() {
         return id;
     }
-    
-	public List<URL> getLinks() {
-		return links;
-	}
-
-	public List<String> getPhoneNumbers() {
-		return phoneNumbers;
-	}
-
-	public List<String> getMailAddresses() {
-		return mailAddresses;
-	}
 
     public void setPriority(Priority priority) {
         this.priority = priority;
@@ -167,13 +156,25 @@ public class Task implements Serializable, Comparable<Task> {
         return completed;
     }
 
+    public List<String> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public List<String> getMailAddresses() {
+        return mailAddresses;
+    }
+
+    public List<URL> getLinks() {
+        return links;
+    }
+
     public String getCompletionDate() {
         return completionDate;
     }
 
     public void markComplete(Date date) {
         if (!this.completed) {
-            this.completionDate = new SimpleDateFormat(Task.DATE_FORMAT, Locale.US)
+            this.completionDate = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US)
                     .format(date);
             this.deleted = false;
             this.completed = true;
@@ -196,6 +197,9 @@ public class Task implements Serializable, Comparable<Task> {
         StringBuilder sb = new StringBuilder();
         if (this.completed) {
             sb.append(COMPLETED).append(this.completionDate).append(" ");
+        }
+        if (this.getPriority()!=Priority.NONE) {
+            sb.append(this.getPriority().inFileFormat()).append(" ");
         }
         sb.append(this.text);
         return sb.toString();

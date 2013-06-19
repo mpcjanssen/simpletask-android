@@ -64,4 +64,9 @@ public class ByProjectFilter implements TaskFilter {
 		 */
         return input.getProjects().size() == 0 && projects.contains("-");
     }
+
+    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
+    ArrayList<String> getProjects() {
+        return projects;
+    }
 }

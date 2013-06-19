@@ -22,18 +22,20 @@
  */
 package nl.mpcjanssen.simpletask.util;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 import nl.mpcjanssen.simpletask.R;
-
+import nl.mpcjanssen.simpletask.TodoException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -42,18 +44,11 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class Util {
@@ -264,9 +259,9 @@ public class Util {
         void onClick(String username, String password);
     }
 
-    public static void createParentDirectory(File dest)  {
+    public static void createParentDirectory(File dest) throws TodoException {
         if (dest == null) {
-           Log.e(TAG, "createParentDirectory: dest is null");
+            throw new TodoException("createParentDirectory: dest is null");
         }
         File dir = dest.getParentFile();
         if (dir != null && !dir.exists()) {
@@ -275,7 +270,7 @@ public class Util {
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 Log.e(TAG, "Could not create dirs: " + dir.getAbsolutePath());
-                Log.e(TAG, "Could not create dirs: "
+                throw new TodoException("Could not create dirs: "
                         + dir.getAbsolutePath());
             }
         }
@@ -284,7 +279,7 @@ public class Util {
     public static void renameFile(File origFile, File newFile, boolean overwrite) {
         if (!origFile.exists()) {
             Log.e(TAG, "Error renaming file: " + origFile + " does not exist");
-            Log.e (TAG, "Error renaming file: " + origFile
+            throw new TodoException("Error renaming file: " + origFile
                     + " does not exist");
         }
 
@@ -293,14 +288,14 @@ public class Util {
         if (overwrite && newFile.exists()) {
             if (!newFile.delete()) {
                 Log.e(TAG, "Error renaming file: failed to delete " + newFile);
-                Log.e (TAG,
+                throw new TodoException(
                         "Error renaming file: failed to delete " + newFile);
             }
         }
 
         if (!origFile.renameTo(newFile)) {
             Log.e(TAG, "Error renaming " + origFile + " to " + newFile);
-            Log.e(TAG, "Error renaming " + origFile + " to "
+            throw new TodoException("Error renaming " + origFile + " to "
                     + newFile);
         }
     }
@@ -342,7 +337,7 @@ public class Util {
             if (i != -1) {
                 ss.setSpan(new ForegroundColorSpan(color), i,
                         i + item.length(),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }

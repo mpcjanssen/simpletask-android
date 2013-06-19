@@ -3,11 +3,13 @@ package nl.mpcjanssen.simpletask.sort;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 
-import java.util.Comparator;
+public class PriorityComparator extends ReversableComparator {
+    public PriorityComparator(boolean reverse) {
+        super(reverse);
+    }
 
-public class PriorityComparator implements Comparator<Task> {
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         Priority prioA = a.getPriority();
         Priority prioB = b.getPriority();
 

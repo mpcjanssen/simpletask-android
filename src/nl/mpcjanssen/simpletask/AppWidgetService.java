@@ -1,24 +1,5 @@
 package nl.mpcjanssen.simpletask;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-
-import nl.mpcjanssen.simpletask.sort.AlphabeticalComparator;
-import nl.mpcjanssen.simpletask.sort.ContextComparator;
-import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.sort.PriorityComparator;
-import nl.mpcjanssen.simpletask.sort.ProjectComparator;
-import nl.mpcjanssen.simpletask.task.ByContextFilter;
-import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
-import nl.mpcjanssen.simpletask.task.ByProjectFilter;
-import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
-import nl.mpcjanssen.simpletask.task.TaskFilter;
-import nl.mpcjanssen.simpletask.util.Util;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -26,11 +7,17 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import nl.mpcjanssen.simpletask.sort.*;
+import nl.mpcjanssen.simpletask.task.*;
+import nl.mpcjanssen.simpletask.util.Util;
+
+import java.util.*;
 
 public class AppWidgetService extends RemoteViewsService {
 
 	@Override
 	public RemoteViewsFactory onGetViewFactory(Intent intent) {
+		// TODO Auto-generated method stub
 		return new AppWidgetRemoteViewsFactory((MainApplication)getApplication(), intent);
 	}
 
@@ -41,36 +28,41 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	private ArrayList<String> m_contexts;
 	private ArrayList<String> m_projects;
 	private ArrayList<Priority> m_prios;
+    private ArrayList<String> m_sorts;
 	private boolean m_priosNot;
 	private boolean m_projectsNot;
 	private boolean m_contextsNot;
-	private int m_sort;
+    private String m_title;
 	
 	private Context mContext;
 	private int widgetId;
 	private SharedPreferences preferences;
+	private MainApplication application;
 	private TaskBag taskBag;
 	ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
 	public AppWidgetRemoteViewsFactory(MainApplication application, Intent intent) {
+		// TODO Auto-generated constructor stub
 		widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
 		Log.v(TAG, "Creating view for widget: " + widgetId);
 		mContext = MainApplication.getAppContext();
 		preferences = mContext.getSharedPreferences(""+widgetId, 0);
 		m_contexts = new ArrayList<String>();
-		m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER_v1, new HashSet<String>()));
+		m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>()));
 		Log.v(TAG, "contexts: " + m_contexts);
 		ArrayList<String> prio_strings = new ArrayList<String>();
-		prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER_v1, new HashSet<String>()));
+		prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>()));
 		m_prios = Priority.toPriority(prio_strings);		
 		Log.v(TAG, "prios: " + m_prios);
 		m_projects = new ArrayList<String>();
-		m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER_v1, new HashSet<String>()));
+		m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>()));
 		Log.v(TAG, "tags: " + m_projects);
-		m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT_v1,false);
-		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT_v1,false);
-		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT_v1,false);
-		m_sort = preferences.getInt(Constants.INTENT_ACTIVE_SORT_v1,Constants.SORT_UNSORTED);
+		m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT,false);
+		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT,false);
+		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT,false);
+		m_sorts = new ArrayList<String>();
+        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
+        m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
 		setFilteredTasks(true);
 		
@@ -78,14 +70,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	
     private Intent createFilterIntent() {
     	Intent target = new Intent();
-        target.putExtra(Constants.INTENT_VERSION, Constants.INTENT_CURRENT_VERSION);
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_v1, Util.join(m_contexts, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT_v1, m_contextsNot);
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_v1, Util.join(m_projects, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT_v1, m_projectsNot);
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_v1, Util.join(m_prios, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT_v1, m_priosNot);
-        target.putExtra(Constants.INTENT_ACTIVE_SORT_v1, m_sort);
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
         return target;
     }
 
@@ -102,21 +93,24 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 				visibleTasks.add(t);
 			}
 		}
-		Collections.sort(visibleTasks,getActiveSort());
+		Collections.sort(visibleTasks,MultiComparator.create(m_sorts));
 		}
 
 	@Override
 	public int getCount() {
+		// TODO Auto-generated method stub
 		return visibleTasks.size();
 	}
 
 	@Override
 	public long getItemId(int arg0) {
+		// TODO Auto-generated method stub
 		return arg0;
 	}
 
 	@Override
 	public RemoteViews getLoadingView() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -143,10 +137,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	@Override
 	public void onCreate() {
         Log.v(TAG, "OnCreate called in ViewFactory");
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void onDataSetChanged() {
+		// TODO Auto-generated method stub
 		Log.v(TAG, "Data set changed, refresh");
 		setFilteredTasks(false);
 
@@ -154,34 +151,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 	@Override
 	public void onDestroy() {
-	}
-	
-	private MultiComparator<Task> getActiveSort() {
-		List<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
-		switch (m_sort) {
-		case Constants.SORT_UNSORTED:
-			break;
-		case Constants.SORT_REVERSE:
-			Comparator<Task> comp = Collections.reverseOrder();
-            comparators.add(comp);
-			break;
-		case Constants.SORT_ALPHABETICAL:
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_CONTEXT:
-			comparators.add(new ContextComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_PRIORITY:
-			comparators.add(new PriorityComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		case Constants.SORT_PROJECT:
-			comparators.add(new ProjectComparator());
-			comparators.add(new AlphabeticalComparator());
-			break;
-		}
-		return (new MultiComparator<Task>(comparators));
+		// TODO Auto-generated method stub
+
 	}
 	
 	private class AndFilter {
@@ -214,5 +185,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 			return true;
 		}
 	}
+
 }
 

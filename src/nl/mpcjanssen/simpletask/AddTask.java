@@ -22,25 +22,28 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Layout;
+import android.text.Selection;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.PopupMenu;
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AddTask extends Activity {
@@ -79,10 +82,10 @@ public class AddTask extends Activity {
                 textInputField = (EditText) findViewById(R.id.taskText);
                 String input = textInputField.getText().toString();
                 if (m_backup != null) {
-					taskBag.delete(m_backup);
+                    taskBag.delete(m_backup);
                 }
-				
-               for (String taskText : input.split("\\r\\n|\\r|\\n")) {
+
+                for (String taskText : input.split("\\r\\n|\\r|\\n")) {
                     taskBag.addAsTask(taskText);
                 }
                 MainApplication m_app = (MainApplication) getApplication();
@@ -159,9 +162,7 @@ public class AddTask extends Activity {
             textInputField.setSelection(task.inFileFormat().length());
         } else {
             if (textInputField.getText().length() == 0) {
-                @SuppressWarnings("unchecked")
                 ArrayList<String> projects = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_PROJECTS_SELECTED);
-                @SuppressWarnings("unchecked")
                 ArrayList<String> contexts = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_CONTEXTS_SELECTED);
                 iniTask = new Task(1, "");
                 iniTask.initWithFilters(contexts, projects);
@@ -170,13 +171,19 @@ public class AddTask extends Activity {
 
         if (iniTask != null && iniTask.getProjects().size() == 1) {
             List<String> ps = iniTask.getProjects();
-            textInputField.append(" +" + ps.get(0));
+            String project = ps.get(0);
+            if (!project.equals("-")) {
+                textInputField.append(" +" + project);
+            }
         }
 
 
         if (iniTask != null && iniTask.getContexts().size() == 1) {
             List<String> cs = iniTask.getContexts();
-            textInputField.append(" @" + cs.get(0));
+            String context = cs.get(0);
+            if (!context.equals("-")) {
+                textInputField.append(" @" + context);
+            }
         }
 
         int textIndex = 0;
@@ -184,51 +191,72 @@ public class AddTask extends Activity {
     }
 
     private void showTagMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        Menu menu = popupMenu.getMenu();
-        for (String prj : projectsInTaskbagAndText()) {
-            menu.add(prj);
-        }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                replaceTextAtSelection("+" + item.getTitle() + " ");
-                return true;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        popupMenu.show();
+        final ArrayList<String> projects = taskBag.getProjects(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(projects.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        replaceTextAtSelection("+" + projects.get(which) + " ");
+                    }
+                });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.project_prompt);
+        dialog.show();
     }
 
     private void showPrioMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        Menu menu = popupMenu.getMenu();
-        for (Priority prio : Priority.values()) {
-            menu.add(prio.getCode());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Priority[] priorities = Priority.values();
+        ArrayList<String> priorityCodes = new ArrayList<String>();
+
+        for (Priority prio : priorities) {
+            priorityCodes.add(prio.getCode());
         }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                replacePriority(item.getTitle());
-                return true;
-            }
-        });
-        popupMenu.show();
+
+        builder.setItems(priorityCodes.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        replaceTextAtSelection("+" + priorities[which].getCode());
+                    }
+                });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.priority_prompt);
+        dialog.show();
     }
 
+
     private void showContextMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        Menu menu = popupMenu.getMenu();
-        for (String ctx : contextsInTaskbagAndText()) {
-            menu.add(ctx);
+        final ArrayList<String> contexts = taskBag.getContexts(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(contexts.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        replaceTextAtSelection("@" + contexts.get(which) + " ");
+                    }
+                });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.context_prompt);
+        dialog.show();
+    }
+
+    public int getCurrentCursorLine(EditText editText) {
+        int selectionStart = Selection.getSelectionStart(editText.getText());
+        Layout layout = editText.getLayout();
+
+        if (selectionStart != -1) {
+            return layout.getLineForOffset(selectionStart);
         }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                replaceTextAtSelection("@" + item.getTitle() + " ");
-                return true;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        popupMenu.show();
+
+        return -1;
     }
 
     private void replacePriority(CharSequence newPrio) {
@@ -237,14 +265,29 @@ public class AddTask extends Activity {
         int end = textInputField.getSelectionEnd();
         int length = textInputField.getText().length();
         int sizeDelta;
-
-        Task t = new Task(0, textInputField.getText().toString());
-        t.setPriority(Priority.toPriority(newPrio.toString()));
-        textInputField.setText(t.inFileFormat());
-
+        ArrayList<String> lines = new ArrayList<String>();
+        for (String line : textInputField.getText().toString().split("\\n", -1)) {
+            lines.add(line);
+        }
+        // For some reason the currentLine can be larger than the amount of lines in the EditText
+        // Check for this case to prevent any array index out of bounds errors
+        int currentLine = getCurrentCursorLine(textInputField);
+        if (currentLine > lines.size() - 1) {
+            currentLine = lines.size() - 1;
+        }
+        if (currentLine != -1) {
+            Task t = new Task(0, lines.get(currentLine));
+            t.setPriority(Priority.toPriority(newPrio.toString()));
+            lines.set(currentLine, t.inFileFormat());
+            textInputField.setText(Util.join(lines, "\n"));
+        }
         // restore selection
-        sizeDelta = textInputField.getText().length() - length;
-        textInputField.setSelection(start + sizeDelta, end + sizeDelta);
+        int newLength = textInputField.getText().length();
+        sizeDelta = newLength - length;
+        int newStart = Math.max(0, start + sizeDelta);
+        int newEnd = Math.min(end + sizeDelta, newLength);
+        newEnd = Math.max(newStart, newEnd);
+        textInputField.setSelection(newStart, newEnd);
 
     }
 
@@ -282,39 +325,5 @@ public class AddTask extends Activity {
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         setResult(RESULT_OK, intent);
-    }
-
-    private ArrayList<String> contextsInTaskbagAndText() {
-     /* Returns the defined labels in the taskbag
-     * and the current task being added.
-     * This way when adding multiple tasks labels from
-     * previous lines will be available for dropdown
-     */
-        ArrayList<String> labels = new ArrayList<String>();
-        Task temp = new Task(1, textInputField.getText().toString());
-        ArrayList<String> contexts = taskBag.getContexts(false);
-        contexts.addAll(temp.getContexts());
-        Collections.sort(contexts);
-        for (String item : contexts) {
-            labels.add(item);
-        }
-        return labels;
-    }
-
-    private ArrayList<String> projectsInTaskbagAndText() {
-     /* Returns the defined labels in the taskbag
-     * and the current task being added.
-     * This way when adding multiple tasks labels from
-     * previous lines will be available for dropdown
-     */
-        ArrayList<String> labels = new ArrayList<String>();
-        Task temp = new Task(1, textInputField.getText().toString());
-        ArrayList<String> projects = taskBag.getProjects(false);
-        projects.addAll(temp.getContexts());
-        Collections.sort(projects);
-        for (String item : projects) {
-            labels.add(item);
-        }
-        return labels;
     }
 }

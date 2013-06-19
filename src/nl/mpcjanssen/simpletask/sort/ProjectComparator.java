@@ -3,12 +3,15 @@ package nl.mpcjanssen.simpletask.sort;
 import nl.mpcjanssen.simpletask.task.Task;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class ProjectComparator implements Comparator<Task> {
+public class ProjectComparator extends ReversableComparator {
+    public ProjectComparator(boolean reverse) {
+        super(reverse);
+    }
+
     @Override
-    public int compare(Task a, Task b) {
+    public int unreversedCompare(Task a, Task b) {
         List<String> projectsA = a.getProjects();
         List<String> projectsB = b.getProjects();
 

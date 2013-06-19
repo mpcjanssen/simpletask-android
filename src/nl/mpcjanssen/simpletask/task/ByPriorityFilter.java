@@ -57,4 +57,9 @@ public class ByPriorityFilter implements TaskFilter {
 
         return priorities.contains(input.getPriority());
     }
+
+    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
+    ArrayList<Priority> getPriorities() {
+        return priorities;
+    }
 }

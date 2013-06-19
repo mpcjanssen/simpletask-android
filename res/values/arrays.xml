@@ -26,11 +26,22 @@ You should have received a copy of the GNU General Public License along with Tod
 <resources>
 
     <string-array name="sort">
-        <item>@string/file_order</item>
-        <item>@string/file_reversed</item>
-        <item>@string/alphabetical</item>
-        <item>@string/by_prio</item>
-        <item>@string/by_project</item>
+        <item>@string/completed</item>
         <item>@string/by_context</item>
+        <item>@string/by_prio</item>
+        <item>@string/alphabetical</item>
+        <item>@string/file_order</item>
+        <item>@string/by_project</item>
+        <item>@string/by_creation_date</item>
+    </string-array>
+    <!-- will be prepended with "+!" or "-!" depending on direction -->
+    <string-array name="sortKeys">
+        <item>completed</item>
+        <item>by_context</item>
+        <item>by_prio</item>
+        <item>alphabetical</item>
+        <item>file_order</item>
+        <item>by_project</item>
+        <item>by_creation_date</item>
     </string-array>
 </resources>

@@ -30,39 +30,36 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.util.Log;
-
-import nl.mpcjanssen.simpletask.Simpletask;
+import nl.mpcjanssen.simpletask.TodoException;
 
 public class LinkParser {
-	final static String TAG = Simpletask.class.getSimpleName();
-	private static final Pattern LINK_PATTERN = Pattern
-			.compile("(http|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
-	private static final LinkParser INSTANCE = new LinkParser();
+    private static final Pattern LINK_PATTERN = Pattern
+            .compile("(http|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
+    private static final LinkParser INSTANCE = new LinkParser();
 
-	private LinkParser() {
-	}
+    private LinkParser() {
+    }
 
-	public static LinkParser getInstance() {
-		return INSTANCE;
-	}
+    public static LinkParser getInstance() {
+        return INSTANCE;
+    }
 
-	public List<URL> parse(String inputText) {
-		if (inputText == null) {
-			return Collections.emptyList();
-		}
+    public List<URL> parse(String inputText) {
+        if (inputText == null) {
+            return Collections.emptyList();
+        }
 
-		Matcher m = LINK_PATTERN.matcher(inputText);
-		List<URL> links = new ArrayList<URL>();
-		while (m.find()) {
-			URL link;
-			try {
-				link = new URL(m.group());
-				links.add(link);
-			} catch (MalformedURLException e) {
-				Log.e(TAG,"Malformed URL matched the regex:" +  e);
-			}
-		}
-		return links;
-	}
+        Matcher m = LINK_PATTERN.matcher(inputText);
+        List<URL> links = new ArrayList<URL>();
+        while (m.find()) {
+            URL link;
+            try {
+                link = new URL(m.group());
+                links.add(link);
+            } catch (MalformedURLException e) {
+                throw new TodoException("Malformed URL matched the regex", e);
+            }
+        }
+        return links;
+    }
 }

@@ -22,7 +22,10 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
@@ -35,27 +38,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.text.SpannableString;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.*;
-import nl.mpcjanssen.simpletask.sort.*;
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.R;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
-public class Simpletask extends ListActivity {
+public class Simpletask extends ListActivity  {
 
     final static String TAG = Simpletask.class.getSimpleName();
-
+    private final static int REQUEST_FILTER = 1;
     private final static int REQUEST_PREFERENCES = 2;
+
     private TaskBag taskBag;
     ProgressDialog m_ProgressDialog = null;
     String m_DialogText = "";
@@ -67,34 +68,30 @@ public class Simpletask extends ListActivity {
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
     private ArrayList<String> m_contexts = new ArrayList<String>();
     private ArrayList<String> m_projects = new ArrayList<String>();
+    private ArrayList<String> m_sorts = new ArrayList<String>();
     private boolean m_projectsNot = false;
+    private String m_search;
     private boolean m_priosNot;
     private boolean m_contextsNot;
-    private int m_sort = 0;
-
-    private String m_search = "";
 
     TaskAdapter m_adapter;
 
     private BroadcastReceiver m_broadcastReceiver;
 
-    @Override
-    public View onCreateView(View parent, String name, Context context,
-                             AttributeSet attrs) {
-        // Log.v(TAG,"onCreateView");
-        return super.onCreateView(parent, name, context, attrs);
-    }
+
+
+    private ActionMode actionMode;
+
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        Log.v(TAG, "onContentChanged");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
-        Log.v(TAG, "onStart: " + getIntent().getExtras());
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == REQUEST_FILTER) {
+            if (resultCode == RESULT_OK) {
+                setIntent(data);
+                handleIntent(null);
+            }
+        }
     }
 
     @Override
@@ -119,9 +116,8 @@ public class Simpletask extends ListActivity {
                     archiveTasks();
                 } else if (intent.getAction().equalsIgnoreCase(
                         Constants.INTENT_UPDATE_UI)) {
-                    m_adapter.setFilteredTasks();
-                    updateFilterBar();
-                } 
+                    m_adapter.setFilteredTasks(true);
+                }
             }
         };
         registerReceiver(m_broadcastReceiver, intentFilter);
@@ -132,14 +128,23 @@ public class Simpletask extends ListActivity {
     private void handleIntent(Bundle savedInstanceState) {
 
         setContentView(R.layout.main);
- 
+
         taskBag = m_app.getTaskBag();
 
-        m_sort = m_app.m_prefs.getInt("m_sort", Constants.SORT_UNSORTED);
-
         // Show search or filter results
+        clearFilter();
         Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (savedInstanceState != null) {
+            m_prios = Priority.toPriority(savedInstanceState
+                    .getStringArrayList("m_prios"));
+            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
+            m_projects = savedInstanceState.getStringArrayList("m_projects");
+            m_search = savedInstanceState.getString("m_search");
+            m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
+            m_priosNot = savedInstanceState.getBoolean("m_priosNot");
+            m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
+            m_sorts = savedInstanceState.getStringArrayList("m_sorts");
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(TAG, "Searched for " + m_search);
         } else if (intent.getExtras() != null) {
@@ -149,27 +154,25 @@ public class Simpletask extends ListActivity {
             String prios;
             String projects;
             String contexts;
-            int version = intent.getIntExtra(Constants.INTENT_VERSION, 1);
-            switch (version) {
-                case 1:
-                default:
-                    prios = intent
-                            .getStringExtra(Constants.INTENT_PRIORITIES_FILTER_v1);
-                    projects = intent
-                            .getStringExtra(Constants.INTENT_PROJECTS_FILTER_v1);
-                    contexts = intent
-                            .getStringExtra(Constants.INTENT_CONTEXTS_FILTER_v1);
-                    m_sort = intent.getIntExtra(Constants.INTENT_ACTIVE_SORT_v1,
-                            Constants.SORT_UNSORTED);
-                    m_priosNot = intent.getBooleanExtra(
-                            Constants.INTENT_PRIORITIES_FILTER_NOT_v1, false);
-                    m_projectsNot = intent.getBooleanExtra(
-                            Constants.INTENT_PROJECTS_FILTER_NOT_v1, false);
-                    m_contextsNot = intent.getBooleanExtra(
-                            Constants.INTENT_CONTEXTS_FILTER_NOT_v1, false);
-                    break;
+            String sorts;
+
+            prios = intent.getStringExtra(Constants.INTENT_PRIORITIES_FILTER);
+            projects = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER);
+            contexts = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
+            sorts = intent.getStringExtra(Constants.INTENT_SORT_ORDER);
+            m_priosNot = intent.getBooleanExtra(
+                    Constants.INTENT_PRIORITIES_FILTER_NOT, false);
+            m_projectsNot = intent.getBooleanExtra(
+                    Constants.INTENT_PROJECTS_FILTER_NOT, false);
+            m_contextsNot = intent.getBooleanExtra(
+                    Constants.INTENT_CONTEXTS_FILTER_NOT, false);
+
+            Log.v(TAG, "\t sort:" + sorts);
+            if (sorts != null && !sorts.equals("")) {
+                m_sorts = new ArrayList<String>(Arrays.asList(sorts
+                        .split("\n")));
+                Log.v(TAG, "\t sorts:" + m_sorts);
             }
-            Log.v(TAG, "\t m_sort:" + m_sort);
             if (prios != null && !prios.equals("")) {
                 m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
                 Log.v(TAG, "\t prio:" + m_prios);
@@ -184,22 +187,37 @@ public class Simpletask extends ListActivity {
                         .split("\n")));
                 Log.v(TAG, "\t contexts:" + m_contexts);
             }
-        } else if (savedInstanceState != null) {
-            // Called without explicit filter try to reload last active one
-            m_prios = Priority.toPriority(savedInstanceState
-                    .getStringArrayList("m_prios"));
-            m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-            m_projects = savedInstanceState.getStringArrayList("m_projects");
-            m_search = savedInstanceState.getString("m_search");
+        } else {
+            // Set previous filters and sort
+            m_sorts = new ArrayList<String>();
+            m_sorts.addAll(Arrays.asList(m_app.m_prefs.getString("m_sorts", "").split("\n")));
 
-            m_sort = savedInstanceState.getInt("m_sort", Constants.SORT_UNSORTED);
+            Log.v(TAG, "Got sort from app prefs: " + m_sorts);
+
+            m_contexts = new ArrayList<String>(m_app.m_prefs.getStringSet("m_contexts", Collections.<String>emptySet()));
+            m_prios = Priority.toPriority(new ArrayList<String>(
+                    m_app.m_prefs.getStringSet("m_prios", Collections.<String>emptySet())));
+            m_projects = new ArrayList<String>(m_app.m_prefs.getStringSet("m_projects", Collections.<String>emptySet()));
+            m_contextsNot = m_app.m_prefs.getBoolean("m_contextsNot", false);
+            m_priosNot = m_app.m_prefs.getBoolean("m_priosNot", false);
+            m_projectsNot = m_app.m_prefs.getBoolean("m_projectsNot", false);
+
+        }
+
+        if (m_sorts==null || m_sorts.size()==0 || Strings.isEmptyOrNull(m_sorts.get(0))) {
+            // Set a default sort
+            m_sorts = new ArrayList<String>();
+            for (String type : getResources().getStringArray(R.array.sortKeys)) {
+                m_sorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR + type);
+            }
 
         }
         // Initialize Adapter
-
-        m_adapter = new TaskAdapter(this, R.layout.list_item,
-                getLayoutInflater(), getListView());
-        m_adapter.setFilteredTasks();
+        if (m_adapter == null) {
+            m_adapter = new TaskAdapter(this, R.layout.list_item,
+                    getLayoutInflater(), getListView());
+        }
+        m_adapter.setFilteredTasks(true);
 
         // listen to the ACTION_LOGOUT intent, if heard display LoginScreen
         // and finish() current activity
@@ -208,24 +226,8 @@ public class Simpletask extends ListActivity {
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
-        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
-            	onListItemChecked(getListView(), v, pos, id);
-            }
-        });
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) {
-                onListItemChecked(getListView(), v, pos, id);
-                return true;
-            }
-        });
-
-
-        updateFilterBar();
     }
 
     private void updateFilterBar() {
@@ -238,7 +240,7 @@ public class Simpletask extends ListActivity {
         final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
         final TextView filterText = (TextView) findViewById(R.id.filter_text);
         if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
-                || !m_search.equals("")) {
+                || m_search != null) {
             String filterTitle = getString(R.string.title_filter_applied);
             if (m_prios.size() > 0) {
                 filterTitle += " " + getString(R.string.priority_prompt);
@@ -251,7 +253,7 @@ public class Simpletask extends ListActivity {
             if (m_contexts.size() > 0) {
                 filterTitle += " " + getString(R.string.context_prompt);
             }
-            if (!m_search.equals("")) {
+            if (m_search != null) {
                 filterTitle += " " + getString(R.string.search);
             }
 
@@ -265,13 +267,6 @@ public class Simpletask extends ListActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume: " + getIntent().getExtras());
-        m_adapter.setFilteredTasks();
-    }
-    
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(m_broadcastReceiver);
@@ -283,28 +278,36 @@ public class Simpletask extends ListActivity {
         outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
         outState.putStringArrayList("m_contexts", m_contexts);
         outState.putStringArrayList("m_projects", m_projects);
+        outState.putBoolean("m_contextsNot", m_contextsNot);
+        outState.putStringArrayList("m_sorts", m_sorts);
+        outState.putBoolean("m_priosNot", m_priosNot);
+        outState.putBoolean("m_projectsNot", m_projectsNot);
         outState.putString("m_search", m_search);
-        outState.putInt("m_sort", m_sort);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onRestart() {
+        super.onRestart();
+        Log.v(TAG, "onRestart: " + getIntent().getExtras());
+        handleIntent(null);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (actionMode != null) {
+            actionMode.finish();
+        }
         SharedPreferences.Editor editor = m_app.m_prefs.edit();
-        editor.putInt("m_sort", m_sort);
+        Log.v(TAG, "Storing sort in prefs: " + m_sorts);
+        editor.putString("m_sorts", Util.join(m_sorts, "\n"));
+        editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
+        editor.putStringSet("m_prios", new HashSet<String>(Priority.inCode(m_prios)));
+        editor.putStringSet("m_projects", new HashSet<String>(m_projects));
+        editor.putBoolean("m_contextsNot", m_contextsNot);
+        editor.putBoolean("m_priosNot", m_priosNot);
+        editor.putBoolean("m_projectsNot", m_projectsNot);
         editor.commit();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
-        Log.v(TAG, "Called restore instance state");
-        // m_prios = Priority.toPriority(state.getStringArrayList("m_prios"));
-        // m_contexts = state.getStringArrayList("m_contexts");
-        // m_projects = state.getStringArrayList("m_projects");
-        // m_search = state.getString("m_search");
-        //
-        // m_sort = state.getInt("m_sort", Constants.SORT_UNSORTED);
     }
 
     @Override
@@ -320,26 +323,19 @@ public class Simpletask extends ListActivity {
         searchView.setIconifiedByDefault(false); // Do not iconify the widget;
         // expand it by default
 
+
         this.options_menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // start the action bar instead
-
-        startAddTaskActivity(getTaskAt(position));
-    }
-
-
-    protected void onListItemChecked(ListView l, View v, int position, long id) {
-        // start the action bar instead
+        // toggle selected state
         l.setItemChecked(position, !l.isItemChecked(position));
     }
 
     private Task getTaskAt(final int pos) {
-        Task task = m_adapter.getItem(pos);
-        return task;
+        return m_adapter.getItem(pos);
     }
 
     private void shareTodoList() {
@@ -361,8 +357,9 @@ public class Simpletask extends ListActivity {
     }
 
     private void prioritizeTasks(final List<Task> tasks) {
-        final String[] prioArr = Priority
-                .rangeInCode(Priority.NONE, Priority.Z).toArray(new String[0]);
+        List<String> strings = Priority
+                .rangeInCode(Priority.NONE, Priority.Z);
+        final String[] prioArr = strings.toArray(new String[strings.size()]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select priority");
@@ -379,7 +376,8 @@ public class Simpletask extends ListActivity {
                 taskBag.store();
                 m_app.updateWidgets();
                 // We have change the data, views should refresh
-                m_adapter.setFilteredTasks();
+                m_adapter.setFilteredTasks(false);
+                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
             }
         });
         builder.show();
@@ -398,7 +396,8 @@ public class Simpletask extends ListActivity {
         taskBag.store();
         m_app.updateWidgets();
         // We have change the data, views should refresh
-        m_adapter.setFilteredTasks();
+        m_adapter.setFilteredTasks(true);
+        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -410,7 +409,8 @@ public class Simpletask extends ListActivity {
         taskBag.store();
         m_app.updateWidgets();
         // We have change the data, views should refresh
-        m_adapter.setFilteredTasks();
+        m_adapter.setFilteredTasks(true);
+        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
     private void deleteTasks(List<Task> tasks) {
@@ -419,16 +419,12 @@ public class Simpletask extends ListActivity {
                 taskBag.delete(t);
             }
         }
+        m_adapter.setFilteredTasks(false);
         taskBag.store();
-        m_adapter.setFilteredTasks();
         m_app.updateWidgets();
+        // We have change the data, views should refresh
+        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
-    
-	private void editTask(Task task) {
-		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_TASK, task);
-		startActivity(intent);
-	}
 
     private void archiveTasks() {
         new AsyncTask<Void, Void, Boolean>() {
@@ -450,7 +446,7 @@ public class Simpletask extends ListActivity {
                     Util.showToastLong(Simpletask.this,
                             "Archived completed tasks");
                     sendBroadcast(new Intent(
-                            Constants.INTENT_UPDATE_UI));
+                            Constants.INTENT_START_SYNC_TO_REMOTE));
                 } else {
                     Util.showToastLong(Simpletask.this,
                             "Could not archive tasks");
@@ -478,7 +474,7 @@ public class Simpletask extends ListActivity {
                 shareTodoList();
                 break;
             case R.id.quickfilter:
-                quickFilter();
+                changeList();
                 break;
             default:
                 return super.onMenuItemSelected(featureId, item);
@@ -486,34 +482,23 @@ public class Simpletask extends ListActivity {
         return true;
     }
 
-    private void quickFilter() {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), findViewById(R.id.quickfilter));
-        Menu menu = popupMenu.getMenu();
-        for (String ctx : taskBag.getContexts(false)) {
-            menu.add("@" + ctx);
-        }
-        
-        for (String tag : taskBag.getProjects(false)) {
-            menu.add("+" + tag);
-        }
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-				String itemTitle = item.getTitle().toString();
-				if (itemTitle.substring(0, 1).equals("@")) {
-					m_contexts = new ArrayList<String>();
-					m_contexts.add(itemTitle.substring(1));
-				} else {
-					m_projects = new ArrayList<String>();
-					m_projects.add(itemTitle.substring(1));
-				}
-				m_app.updateUI();
-				return true;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        }
+    private void changeList() {
+        final ArrayList<String> contexts = taskBag.getContexts(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(contexts.toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int which) {
+                        clearFilter();
+                        m_contexts.add(contexts.get(which));
+                        m_adapter.setFilteredTasks(false);
+                    }
+                });
 
-        );
-        popupMenu.show();
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.context_prompt);
+        dialog.show();
     }
 
     private void startAddTaskActivity(Task task) {
@@ -542,59 +527,32 @@ public class Simpletask extends ListActivity {
             finish();
         } else { // otherwise just clear the filter in the current activity
             clearFilter();
+            m_adapter.setFilteredTasks(false);
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        setIntent(intent);
+        if (intent.getExtras() != null) {
+            // Only change intent if it actually contains a filter
+            setIntent(intent);
+        }
         Log.v(TAG, "onNewIntent: " + intent);
         handleIntent(null);
     }
 
     void clearFilter() {
-    	m_contexts = new ArrayList<String>();
-    	m_projects = new ArrayList<String>();
-    	m_prios = new ArrayList<Priority>();
-    	m_contextsNot = false;
-    	m_projectsNot = false;
-    	m_priosNot = false;
-		m_search = "";
-    	m_adapter.setFilteredTasks();
-    	updateFilterBar();
+        m_prios = new ArrayList<Priority>();
+        m_contexts = new ArrayList<String>();
+        m_projects = new ArrayList<String>();
+        m_projectsNot = false;
+        m_search = null;
+        m_priosNot = false;
+        m_contextsNot = false;
     }
 
-    private MultiComparator<Task> getActiveSort() {
-        List<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
-        if (m_app.completedLast()) {
-            comparators.add(new CompletedComparator());
-        }
-        switch (m_sort) {
-            case Constants.SORT_UNSORTED:
-                break;
-            case Constants.SORT_REVERSE:
-            	Comparator<Task> comp = Collections.reverseOrder();
-                comparators.add(comp);
-                break;
-            case Constants.SORT_ALPHABETICAL:
-                comparators.add(new AlphabeticalComparator());
-                break;
-            case Constants.SORT_CONTEXT:
-                comparators.add(new ContextComparator());
-                comparators.add(new AlphabeticalComparator());
-                break;
-            case Constants.SORT_PRIORITY:
-                comparators.add(new PriorityComparator());
-                comparators.add(new AlphabeticalComparator());
-                break;
-            case Constants.SORT_PROJECT:
-                comparators.add(new ProjectComparator());
-                comparators.add(new AlphabeticalComparator());
-                break;
-        }
-        return (new MultiComparator<Task>(comparators));
-    }
+
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter, Filterable {
 
@@ -612,8 +570,11 @@ public class Simpletask extends ListActivity {
             this.vt = textViewResourceId;
         }
 
-        void setFilteredTasks() {
-            Log.v(TAG, "setFilteredTasks called");
+        void setFilteredTasks(boolean reload) {
+            Log.v(TAG, "setFilteredTasks called, reload: " + reload);
+            if (reload) {
+                taskBag.reload();
+            }
 
             AndFilter filter = new AndFilter();
             visibleTasks.clear();
@@ -622,51 +583,34 @@ public class Simpletask extends ListActivity {
                     visibleTasks.add(t);
                 }
             }
-            Collections.sort(visibleTasks, getActiveSort());
+            Collections.sort(visibleTasks, MultiComparator.create(m_sorts));
             headerAtPostion.clear();
             String header = "";
             int position = 0;
-            switch (m_sort) {
-                case Constants.SORT_PRIORITY:
-                    for (Task t : visibleTasks) {
-                        Priority prio = t.getPriority();
-                        String newHeader;
-                        if (prio == null) {
-                            newHeader = getString(R.string.no_prio);
-                        } else {
-                            newHeader = prio.getCode();
-                        }
-                        if (!header.equals(newHeader)) {
-                            header = newHeader;
-                            // Log.v(TAG, "Start of header: " + header +
-                            // " at position: " + position);
-                            headerAtPostion.put(position, header);
-                            position++;
-                        }
-                        position++;
-                    }
-                    break;
-                case Constants.SORT_CONTEXT:
-                    for (Task t : visibleTasks) {
-                        List<String> taskItems = t.getContexts();
-                        String newHeader;
-                        if (taskItems == null || taskItems.size() == 0) {
-                            newHeader = getString(R.string.no_context);
-                        } else {
-                            newHeader = taskItems.get(0);
-                        }
-                        if (!header.equals(newHeader)) {
-                            header = newHeader;
-                            // Log.v(TAG, "Start of header: " + header +
-                            // " at position: " + position);
-                            headerAtPostion.put(position, header);
-                            position++;
-                        }
-                        position++;
-                    }
-                    break;
-                case Constants.SORT_PROJECT:
-                    for (Task t : visibleTasks) {
+            String firstSort = m_sorts.get(0);
+            if (m_sorts.get(0).contains("completed") && m_sorts.size()>1) {
+               firstSort = m_sorts.get(1);
+            }
+                      if (firstSort.contains("by_context") ) {
+                                for (Task t : visibleTasks) {
+                                        List<String> taskItems = t.getContexts();
+                                      String newHeader;
+                                     if (taskItems == null || taskItems.size() == 0) {
+                                               newHeader = getString(R.string.no_context);
+                                            } else {
+                                              newHeader = taskItems.get(0);
+                                            }
+                                        if (!header.equals(newHeader)) {
+                                                header = newHeader;
+                                               // Log.v(TAG, "Start of header: " + header +
+                                                        // " at position: " + position);
+                                                      headerAtPostion.put(position, header);
+                                              position++;
+                                           }
+                                        position++;
+                                   }
+                          } else if (firstSort.contains("by_project") ) {
+                          for (Task t : visibleTasks) {
                         List<String> taskItems = t.getProjects();
                         String newHeader;
                         if (taskItems == null || taskItems.size() == 0) {
@@ -683,14 +627,14 @@ public class Simpletask extends ListActivity {
                         }
                         position++;
                     }
-                    break;
-
             }
             for (DataSetObserver ob : obs) {
                 ob.onChanged();
             }
+            updateFilterBar();
 
         }
+
 
         @Override
         public void registerDataSetObserver(DataSetObserver observer) {
@@ -757,8 +701,6 @@ public class Simpletask extends ListActivity {
                             .findViewById(R.id.tasktext);
                     holder.taskage = (TextView) convertView
                             .findViewById(R.id.taskage);
-    				holder.taskprio = (TextView) convertView
-    						.findViewById(R.id.taskprio);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -769,23 +711,23 @@ public class Simpletask extends ListActivity {
                 if (task != null) {
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat());
-                    
+
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getContexts()) {
-                        colorizeStrings.add("@"+context);
+                        colorizeStrings.add("@" + context);
                     }
                     Util.setColor(ss, Color.GRAY, colorizeStrings);
                     colorizeStrings.clear();
                     for (String project : task.getProjects()) {
-                        colorizeStrings.add("+"+project);
+                        colorizeStrings.add("+" + project);
                     }
                     Util.setColor(ss, Color.GRAY, colorizeStrings);
 
                     Resources res = getResources();
-                    int prioColor ;
+                    int prioColor;
                     switch (task.getPriority()) {
                         case A:
-                           prioColor = res.getColor(R.color.green);
+                            prioColor = res.getColor(R.color.green);
                             break;
                         case B:
                             prioColor = res.getColor(R.color.blue);
@@ -797,10 +739,9 @@ public class Simpletask extends ListActivity {
                             prioColor = res.getColor(R.color.gold);
                             break;
                         default:
-                           prioColor = res.getColor(R.color.black);
+                            prioColor = res.getColor(R.color.black);
                     }
-                    holder.taskprio.setText(task.getPriority().inListFormat());
-                    holder.taskprio.setTextColor(prioColor);
+                    Util.setColor(ss, prioColor, task.getPriority().inFileFormat());
                     holder.tasktext.setText(ss);
                     holder.tasktext.setTextColor(res.getColor(R.color.black));
 
@@ -833,7 +774,6 @@ public class Simpletask extends ListActivity {
                 }
                 holder.tasktext.setTextSize(m_app.taskTextFontSize());
                 holder.taskage.setTextSize(m_app.taskAgeFontSize());
-                holder.taskprio.setTextSize(m_app.taskTextFontSize());
             }
             return convertView;
         }
@@ -878,24 +818,33 @@ public class Simpletask extends ListActivity {
             return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence charSequence) {
-					m_search = charSequence.toString();
+                    m_search = charSequence.toString();
                     Log.v(TAG, "performFiltering: " + charSequence.toString());
                     return null;
                 }
 
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                    setFilteredTasks();
-					updateFilterBar();
+                    setFilteredTasks(false);
                 }
             };
         }
     }
 
     private static class ViewHolder {
-    	private TextView taskprio;
         private TextView tasktext;
         private TextView taskage;
+    }
+
+    public void storeKeys(String accessTokenKey, String accessTokenSecret) {
+        Editor editor = m_app.m_prefs.edit();
+        editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
+        editor.putString(Constants.PREF_ACCESSTOKEN_SECRET, accessTokenSecret);
+        editor.commit();
+    }
+
+    public void showToast(String string) {
+        Util.showToastLong(this, string);
     }
 
     public void startFilterActivity() {
@@ -912,12 +861,12 @@ public class Simpletask extends ListActivity {
                 Priority.inCode(m_prios));
         i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
         i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-        i.putExtra(Constants.ACTIVE_SORT, m_sort);
+        i.putStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED, m_sorts);
         i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
         i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
         i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(i);
+        startActivityForResult(i, REQUEST_FILTER);
     }
 
     class ActionBarListener implements AbsListView.MultiChoiceModeListener {
@@ -934,12 +883,14 @@ public class Simpletask extends ListActivity {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.task_context, menu);
             rebuildMenuWithSelection(mode, menu);
+            actionMode = mode;
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
+            return false; // To change body of implemented methods use File |
+            // Settings | File Templates.
         }
 
         private void rebuildMenuWithSelection(ActionMode mode, Menu menu) {
@@ -949,39 +900,37 @@ public class Simpletask extends ListActivity {
             title = title + numSelected;
             title = title + " " + getString(R.string.selected);
             mode.setTitle(title);
-    		MenuItem updateAction = menu.findItem(R.id.update);
-    		MenuItem completeAction = menu.findItem(R.id.done);
-    		MenuItem uncompleteAction = menu.findItem(R.id.uncomplete);
+            if (numSelected == 1) {
+                // show the edit menu item and hide the appropriate complete/uncomplete item
+                menu.findItem(R.id.update).setVisible(true);
+                if (checkedTasks.get(0).isCompleted()) {
+                    menu.findItem(R.id.done).setVisible(false);
+                } else {
+                    menu.findItem(R.id.uncomplete).setVisible(false);
+                }
+            } else {
+                menu.findItem(R.id.update).setVisible(false);
+                menu.findItem(R.id.done).setVisible(true);
+                menu.findItem(R.id.uncomplete).setVisible(true);
+            }
+            menu.removeGroup(Menu.CATEGORY_SECONDARY);
+            for (Task t : getCheckedTasks()) {
+                for (String s : t.getPhoneNumbers()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number, Menu.NONE,
+                            s);
+                }
+                for (String s : t.getMailAddresses()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE,
+                            s);
+                }
+                for (URL u : t.getLinks()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
+                            u.toString());
+                }
+            }
 
-    		// Only show update action with a single task selected
-    		if (numSelected == 1) {
-    			updateAction.setVisible(true);
-    			Task task = checkedTasks.get(0);
-    			if (task.isCompleted()) {
-    				completeAction.setVisible(false);
-    			} else {
-    				uncompleteAction.setVisible(false);
-    			}
-
-    			for (URL url : task.getLinks()) {
-    				menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
-    						url.toString());
-    			}
-    			for (String s1 : task.getMailAddresses()) {
-    				menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s1);
-    			}
-    			for (String s : task.getPhoneNumbers()) {
-    				menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number, Menu.NONE,
-    						s);
-    			}
-    		} else {
-    			updateAction.setVisible(false);
-    			completeAction.setVisible(true);
-    			uncompleteAction.setVisible(true);
-    			menu.removeGroup(Menu.CATEGORY_SECONDARY);
-    		}
-    		
         }
+
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
@@ -989,14 +938,9 @@ public class Simpletask extends ListActivity {
             int menuid = item.getItemId();
             Intent intent;
             switch (menuid) {
-				case R.id.update:
-				if (checkedTasks.size() == 1) {
-					editTask(checkedTasks.get(0));
-				} else {
-					Log.w(TAG,
-							"More than one task was selected while handling update menu");
-				}
-				break;
+                case R.id.update:
+                    startAddTaskActivity(checkedTasks.get(0));
+                    break;
                 case R.id.done:
                     completeTasks(checkedTasks);
                     break;
@@ -1030,37 +974,37 @@ public class Simpletask extends ListActivity {
                         calendarDescription = selectedTasksAsString();
 
                     }
-                    intent = new Intent(android.content.Intent.ACTION_INSERT)
-                            .setData(Events.CONTENT_URI)
+                    intent = new Intent(android.content.Intent.ACTION_EDIT)
+                            .setType(Constants.ANDROID_EVENT)
                             .putExtra(Events.TITLE, calendarTitle)
                             .putExtra(Events.DESCRIPTION, calendarDescription);
                     startActivity(intent);
                     break;
-				case R.id.url:
-					Log.v(TAG, "url: " + item.getTitle().toString());
-					intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
-							.getTitle().toString()));
-					startActivity(intent);
-					break;
-				case R.id.mail:
-					Log.v(TAG, "mail: " + item.getTitle().toString());
-					intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
-							.getTitle().toString()));
-					intent.putExtra(android.content.Intent.EXTRA_EMAIL,
-							new String[] { item.getTitle().toString() });
-					intent.setType("text/plain");
-					startActivity(intent);
-					break;
-				case R.id.phone_number:
-					Log.v(TAG, "phone_number");
-					intent = new Intent(Intent.ACTION_DIAL,
-							Uri.parse("tel:" + item.getTitle().toString()));
-					startActivity(intent);
-					break;
+                case R.id.url:
+                    Log.v(TAG, "url: " + item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
+                            .getTitle().toString()));
+                    startActivity(intent);
+                    break;
+                case R.id.mail:
+                    Log.v(TAG, "mail: " + item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
+                            .getTitle().toString()));
+                    intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                            new String[]{item.getTitle().toString()});
+                    intent.setType("text/plain");
+                    startActivity(intent);
+                    break;
+                case R.id.phone_number:
+                    Log.v(TAG, "phone_number");
+                    String encodedNumber = Uri.encode(item.getTitle().toString());
+                    intent = new Intent(Intent.ACTION_DIAL,
+                            Uri.parse("tel:" + encodedNumber));
+                    startActivity(intent);
+                    break;
             }
-            // Not sure why this is explicitly needed
             mode.finish();
-            m_adapter.setFilteredTasks();
+            m_adapter.setFilteredTasks(false);
             return true;
         }
 
@@ -1086,7 +1030,8 @@ public class Simpletask extends ListActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            m_adapter.setFilteredTasks();
+            actionMode = null;
+            m_adapter.setFilteredTasks(false);
             return;
         }
     }
@@ -1105,7 +1050,6 @@ public class Simpletask extends ListActivity {
             if (m_prios.size() > 0) {
                 addFilter(new ByPriorityFilter(m_prios, m_priosNot));
             }
-
             if (m_contexts.size() > 0) {
                 addFilter(new ByContextFilter(m_contexts, m_contextsNot));
             }

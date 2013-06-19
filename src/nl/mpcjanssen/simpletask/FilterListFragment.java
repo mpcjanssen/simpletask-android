@@ -11,8 +11,6 @@ import android.widget.*;
 
 import java.util.ArrayList;
 
-import nl.mpcjanssen.simpletask.R;
-
 public class FilterListFragment extends Fragment {
 
     final static String TAG = FilterListFragment.class.getSimpleName();
@@ -25,12 +23,14 @@ public class FilterListFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
+        // TODO Auto-generated method stub
         super.onDestroy();
         Log.v(TAG, "onDestroy() this:" + this);
     }
@@ -91,7 +91,6 @@ public class FilterListFragment extends Fragment {
                     MotionEvent cancelEvent = MotionEvent.obtain(event);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
                     v.onTouchEvent(cancelEvent);
-                    cancelEvent.recycle();
                     return true;
                 }
                 return false;
