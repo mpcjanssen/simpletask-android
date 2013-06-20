@@ -413,15 +413,31 @@ public class Simpletask extends ListActivity  {
     }
 
     private void deleteTasks(List<Task> tasks) {
-        for (Task t : tasks) {
-            if (t != null) {
-                taskBag.delete(t);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.delete_task_title);
+        builder.setMessage(R.string.delete_task_message);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        final List<Task> tasksToDelete = tasks;
+        builder.setPositiveButton(R.string.ok, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (Task t : tasksToDelete) {
+                    if (t != null) {
+                        taskBag.delete(t);
+                    }
+                }
+                m_adapter.setFilteredTasks(false);
+                taskBag.store();
+                m_app.updateWidgets();
             }
-        }
-        m_adapter.setFilteredTasks(false);
-        taskBag.store();
-        m_app.updateWidgets();
-        // We have change the data, views should refresh
+        });
+        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               // Do nothing
+            }
+        });
+        builder.show();
     }
 
 
