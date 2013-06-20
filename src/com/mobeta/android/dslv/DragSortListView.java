@@ -731,7 +731,7 @@ public class DragSortListView extends ListView {
                     v = new DragSortItemView(getContext());
                 }
                 v.setLayoutParams(new AbsListView.LayoutParams(
-                        ViewGroup.LayoutParams.FILL_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 v.addView(child);
             }
@@ -2093,7 +2093,7 @@ public class DragSortListView extends ListView {
     private void measureItem(View item) {
         ViewGroup.LayoutParams lp = item.getLayoutParams();
         if (lp == null) {
-            lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             item.setLayoutParams(lp);
         }
         int wspec = ViewGroup.getChildMeasureSpec(mWidthMeasureSpec, getListPaddingLeft()
