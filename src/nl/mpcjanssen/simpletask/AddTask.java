@@ -42,8 +42,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class AddTask extends Activity {
@@ -201,13 +200,23 @@ public class AddTask extends Activity {
     }
 
     private void showTagMenu(View v) {
-        final ArrayList<String> projects = taskBag.getProjects(false);
+        // Get projects in taskbag and in task to be added.
+        Set<String> allProjects = new HashSet<String>();
+        allProjects.addAll(taskBag.getProjects(false));
+
+        // Create single task from all lines to extract projects
+        Task t = new Task(1,textInputField.getText().toString().replaceAll("\\n", " "));
+        allProjects.addAll(t.getProjects());
+        ArrayList<String> projects = new ArrayList<String>(allProjects);
+        Collections.sort(projects);
+
+        final ArrayList<String> sortedProjects = projects;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(projects.toArray(new String[0]),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("+" + projects.get(which) + " ");
+                        replaceTextAtSelection("+" + sortedProjects.get(which) + " ");
                     }
                 });
 
@@ -242,13 +251,23 @@ public class AddTask extends Activity {
 
 
     private void showContextMenu(View v) {
-        final ArrayList<String> contexts = taskBag.getContexts(false);
+        // Get contexts in taskbag and in task to be added.
+        Set<String> allContexts = new HashSet<String>();
+        allContexts.addAll(taskBag.getContexts(false));
+
+        // Create single task from all lines to extract contexts
+        Task t = new Task(1,textInputField.getText().toString().replaceAll("\\n", " "));
+        allContexts.addAll(t.getContexts());
+        ArrayList<String> contexts = new ArrayList<String>(allContexts);
+        Collections.sort(contexts);
+
+        final ArrayList<String> sortedContexts = contexts;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(contexts.toArray(new String[0]),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("@" + contexts.get(which) + " ");
+                        replaceTextAtSelection("@" + sortedContexts.get(which) + " ");
                     }
                 });
 
