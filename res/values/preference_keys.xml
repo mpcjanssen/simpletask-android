@@ -2,8 +2,6 @@
 
 <!--suppress ALL -->
 <resources>
-    <string name="sort_complete_last_pref_key">todotxtsortcompletelast</string>
-    <string name="auto_archive_pref_key">todotxtautoarchive</string>
     <string name="prepend_date_pref_key">todotxtprependdate</string>
     <string name="line_breaks_pref_key">linebreakspref</string>
     <string name="font_size_delta_pref_key">fontsizedelta</string>

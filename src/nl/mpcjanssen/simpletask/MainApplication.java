@@ -24,14 +24,16 @@ package nl.mpcjanssen.simpletask;
 
 import android.app.Application;
 import android.appwidget.AppWidgetManager;
-import android.content.*;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.R;
 
 
 public class MainApplication extends Application {
@@ -78,10 +80,6 @@ public class MainApplication extends Application {
 
     public TaskBag getTaskBag() {
         return taskBag;
-    }
-
-    public boolean isAutoArchive() {
-        return m_prefs.getBoolean(getString(R.string.auto_archive_pref_key), false);
     }
 
     public int fontSizeDelta() {
@@ -147,9 +145,5 @@ public class MainApplication extends Application {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
             Log.v(TAG, "Updating widget: " + appWidgetId);
         }
-    }
-
-    public boolean completedLast() {
-        return m_prefs.getBoolean(getString(R.string.sort_complete_last_pref_key), true);
     }
 }

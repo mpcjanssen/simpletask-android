@@ -33,8 +33,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
-import android.util.Log;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.util.List;
@@ -73,26 +71,6 @@ public class Preferences extends PreferenceActivity {
 			addPreferencesFromResource(R.xml.todotxt_preferences);
 		}
 	}	
-	public static class ArchivePrefFragment extends PreferenceFragment
-	{
-		@Override
-		public void onCreate(final Bundle savedInstanceState)
-		{
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.archive_preferences);
-		}
-		
-		@Override
-		public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
-			if(preference.getKey().equals("archive_now")) {
-				Log.v("PREFERENCES", "Archiving completed items from preferences");
-				((Preferences)this.getActivity()).broadcastIntentAndClose(
-						Constants.INTENT_ACTION_ARCHIVE,
-						Preferences.RESULT_ARCHIVE);			
-			}
-			return true;
-		}
-	}
 
 	public static class AboutPrefFragment extends PreferenceFragment
 	{

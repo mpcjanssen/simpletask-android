@@ -33,7 +33,6 @@ import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.text.SpannableString;
@@ -102,7 +101,6 @@ public class Simpletask extends ListActivity  {
         m_app = (MainApplication) getApplication();
 
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.INTENT_ACTION_ARCHIVE);
         intentFilter.addAction(Constants.INTENT_UPDATE_UI);
 
 
@@ -110,12 +108,6 @@ public class Simpletask extends ListActivity  {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equalsIgnoreCase(
-                        Constants.INTENT_ACTION_ARCHIVE)) {
-                    // archive
-                    // refresh screen to remove completed tasks
-                    // push to remote
-                    archiveTasks();
-                } else if (intent.getAction().equalsIgnoreCase(
                         Constants.INTENT_UPDATE_UI)) {
                     m_adapter.setFilteredTasks(true);
                 }
@@ -390,7 +382,6 @@ public class Simpletask extends ListActivity  {
                 m_app.updateWidgets();
                 // We have change the data, views should refresh
                 m_adapter.setFilteredTasks(false);
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
             }
         });
         builder.show();
@@ -403,14 +394,10 @@ public class Simpletask extends ListActivity  {
                 t.markComplete(new Date());
             }
         }
-        if (m_app.isAutoArchive()) {
-            taskBag.archive();
-        }
         taskBag.store();
         m_app.updateWidgets();
         // We have change the data, views should refresh
         m_adapter.setFilteredTasks(true);
-        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -423,7 +410,6 @@ public class Simpletask extends ListActivity  {
         m_app.updateWidgets();
         // We have change the data, views should refresh
         m_adapter.setFilteredTasks(true);
-        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
     private void deleteTasks(List<Task> tasks) {
@@ -436,37 +422,8 @@ public class Simpletask extends ListActivity  {
         taskBag.store();
         m_app.updateWidgets();
         // We have change the data, views should refresh
-        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
-    private void archiveTasks() {
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    taskBag.archive();
-                    return true;
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    return false;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    Util.showToastLong(Simpletask.this,
-                            "Archived completed tasks");
-                    sendBroadcast(new Intent(
-                            Constants.INTENT_START_SYNC_TO_REMOTE));
-                } else {
-                    Util.showToastLong(Simpletask.this,
-                            "Could not archive tasks");
-                }
-            }
-        }.execute();
-    }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -488,6 +445,10 @@ public class Simpletask extends ListActivity  {
                 break;
             case R.id.quickfilter:
                 changeList();
+                break;
+            case R.id.archive:
+                taskBag.archive();
+                m_adapter.setFilteredTasks(true);
                 break;
             default:
                 return super.onMenuItemSelected(featureId, item);

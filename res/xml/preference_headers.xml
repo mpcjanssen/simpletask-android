@@ -7,10 +7,6 @@
             android:title="@string/todotxt_settings_header"
             android:summary="@string/todotxt_settings_summary"/>
     <header
-            android:fragment="nl.mpcjanssen.simpletask.Preferences$ArchivePrefFragment"
-            android:title="@string/ARCHIVE_settings_header"
-            android:summary="@string/ARCHIVE_settings_summary"/>
-    <header
             android:fragment="nl.mpcjanssen.simpletask.Preferences$AboutPrefFragment"
             android:title="@string/about_settings_header"
             android:summary="@string/about_settings_summary"/>

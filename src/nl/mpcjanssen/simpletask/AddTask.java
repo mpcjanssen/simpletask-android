@@ -99,9 +99,6 @@ public class AddTask extends Activity {
                 }
                 MainApplication m_app = (MainApplication) getApplication();
                 m_app.updateWidgets();
-                if (m_app.isAutoArchive()) {
-                    taskBag.archive();
-                }
                 taskBag.store();
                 finish();
                 break;
