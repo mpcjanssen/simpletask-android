@@ -413,12 +413,8 @@ public class Simpletask extends ListActivity  {
     }
 
     private void deleteTasks(List<Task> tasks) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.delete_task_title);
-        builder.setMessage(R.string.delete_task_message);
-        builder.setIcon(android.R.drawable.ic_dialog_alert);
         final List<Task> tasksToDelete = tasks;
-        builder.setPositiveButton(R.string.ok, new OnClickListener() {
+        Util.showDeleteConfirmationDialog( this, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for (Task t : tasksToDelete) {
@@ -431,13 +427,6 @@ public class Simpletask extends ListActivity  {
                 m_app.updateWidgets();
             }
         });
-        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-               // Do nothing
-            }
-        });
-        builder.show();
     }
 
 
