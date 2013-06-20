@@ -1257,13 +1257,7 @@ public class TodoTxtTouch extends ListActivity implements
     private class AndFilter {
         private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
 
-        public void addFilter(TaskFilter filter) {
-            if (filter != null) {
-                filters.add(filter);
-            }
-        }
-
-        private boolean apply(Task input) {
+        private AndFilter() {
             filters.clear();
             if (m_prios.size() > 0) {
                 addFilter(new ByPriorityFilter(m_prios, m_priosNot));
@@ -1278,6 +1272,15 @@ public class TodoTxtTouch extends ListActivity implements
             if (!Strings.isEmptyOrNull(m_search)) {
                 addFilter(new ByTextFilter(m_search, false));
             }
+        }
+
+        public void addFilter(TaskFilter filter) {
+            if (filter != null) {
+                filters.add(filter);
+            }
+        }
+
+        public boolean apply(Task input) {
             for (TaskFilter f : filters) {
                 if (!f.apply(input)) {
                     return false;
