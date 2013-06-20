@@ -7,11 +7,14 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import nl.mpcjanssen.simpletask.sort.*;
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class AppWidgetService extends RemoteViewsService {
 
@@ -69,7 +72,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	}
 	
     private Intent createFilterIntent() {
-    	Intent target = new Intent();
+    	Intent target = new Intent(mContext,Simpletask.class);
         target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
         target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
         target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
@@ -120,11 +123,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         final int itemId = R.layout.widget_list_item;
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
         rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
-        // Set the click intent so that we can handle it
+
+        // Start app with clicked task selected
         Intent fillInIntent = createFilterIntent();
         fillInIntent.putExtra(Constants.INTENT_SELECTED_TASK_ID, visibleTasks.get(position).getId());
         fillInIntent.putExtra(Constants.INTENT_SELECTED_TASK_TEXT, visibleTasks.get(position).inFileFormat());
         rv.setOnClickFillInIntent(R.id.widget_item_text, fillInIntent);
+
         return rv;
 	}
 
