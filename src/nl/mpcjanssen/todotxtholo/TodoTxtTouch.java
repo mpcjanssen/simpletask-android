@@ -50,6 +50,7 @@ import nl.mpcjanssen.todotxtholo.util.Util;
 import nl.mpcjanssen.todotxtholo.util.Util.OnMultiChoiceDialogListener;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TodoTxtTouch extends ListActivity implements
@@ -483,6 +484,38 @@ public class TodoTxtTouch extends ListActivity implements
         sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
+    private void deferTasks(List<Task> tasks) {
+        String[] keys = getResources().getStringArray(R.array.deferOptions);
+        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT,Locale.US);
+        Date now = new Date();
+        final List<Task> tasksToDefer = tasks;
+        String today = formatter.format(now);
+        String oneWeek = formatter.format(Util.addWeeksToDate(now, 7));
+        String twoWeeks = formatter.format(Util.addWeeksToDate(now, 14));
+        String oneMonth = formatter.format(Util.addMonthsToDate(now, 1));
+        String[] values = {today, oneWeek,twoWeeks,oneMonth};
+
+        Dialog d = Util.createSingleChoiceDialog(this,keys,values, 1, R.string.defer, null,
+                new Util.OnSingleChoiceDialogListener() {
+                    @Override
+                    public void onClick(String selected) {
+                        for (Task t : tasksToDefer) {
+                            if (t != null) {
+                                t.setPrependedDate(selected);
+                            }
+                        }
+                        m_adapter.setFilteredTasks(false);
+                        taskBag.store();
+                        m_app.updateWidgets();
+                        m_app.setNeedToPush(true);
+                        // We have change the data, views should refresh
+                        sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                    }
+                }
+        );
+        d.show();
+    }
+
     private void deleteTasks(List<Task> tasks) {
         for (Task t : tasks) {
             if (t != null) {
@@ -805,46 +838,52 @@ public class TodoTxtTouch extends ListActivity implements
             headerAtPostion.clear();
             String header = "";
             int position = 0;
-            String firstSort = m_sorts.get(0);
-            if (m_sorts.get(0).contains("completed") && m_sorts.size()>1) {
-               firstSort = m_sorts.get(1);
+            int firstGroupSortIndex = 0;
+
+            if (m_sorts.size() > 1 && m_sorts.get(0).contains("completed") || m_sorts.get(0).contains("future")) {
+                firstGroupSortIndex++;
+                if (m_sorts.size() > 2 && m_sorts.get(1).contains("completed") || m_sorts.get(1).contains("future")) {
+                    firstGroupSortIndex++;
+                }
             }
-                      if (firstSort.contains("by_context") ) {
-                                for (Task t : visibleTasks) {
-                                        List<String> taskItems = t.getContexts();
-                                      String newHeader;
-                                     if (taskItems == null || taskItems.size() == 0) {
-                                               newHeader = getString(R.string.no_context);
-                                            } else {
-                                              newHeader = taskItems.get(0);
-                                            }
-                                        if (!header.equals(newHeader)) {
-                                                header = newHeader;
-                                               // Log.v(TAG, "Start of header: " + header +
-                                                        // " at position: " + position);
-                                                      headerAtPostion.put(position, header);
-                                              position++;
-                                           }
-                                        position++;
-                                   }
-                          } else if (firstSort.contains("by_project") ) {
-                          for (Task t : visibleTasks) {
-                        List<String> taskItems = t.getProjects();
-                        String newHeader;
-                        if (taskItems == null || taskItems.size() == 0) {
-                            newHeader = getString(R.string.no_project);
-                        } else {
-                            newHeader = taskItems.get(0);
-                        }
-                        if (!header.equals(newHeader)) {
-                            header = newHeader;
-                            Log.v(TAG, "Start of header: " + header
-                                    + " at position: " + position);
-                            headerAtPostion.put(position, header);
-                            position++;
-                        }
+            String firstSort = m_sorts.get(firstGroupSortIndex);
+
+            if (firstSort.contains("by_context")) {
+                for (Task t : visibleTasks) {
+                    List<String> taskItems = t.getContexts();
+                    String newHeader;
+                    if (taskItems == null || taskItems.size() == 0) {
+                        newHeader = getString(R.string.no_context);
+                    } else {
+                        newHeader = taskItems.get(0);
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+                        // Log.v(TAG, "Start of header: " + header +
+                        // " at position: " + position);
+                        headerAtPostion.put(position, header);
                         position++;
                     }
+                    position++;
+                }
+            } else if (firstSort.contains("by_project")) {
+                for (Task t : visibleTasks) {
+                    List<String> taskItems = t.getProjects();
+                    String newHeader;
+                    if (taskItems == null || taskItems.size() == 0) {
+                        newHeader = getString(R.string.no_project);
+                    } else {
+                        newHeader = taskItems.get(0);
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+                        Log.v(TAG, "Start of header: " + header
+                                + " at position: " + position);
+                        headerAtPostion.put(position, header);
+                        position++;
+                    }
+                    position++;
+                }
             }
             for (DataSetObserver ob : obs) {
                 ob.onChanged();
@@ -1164,6 +1203,9 @@ public class TodoTxtTouch extends ListActivity implements
                     break;
                 case R.id.delete:
                     deleteTasks(checkedTasks);
+                    break;
+                case R.id.defer:
+                    deferTasks(checkedTasks);
                     break;
                 case R.id.uncomplete:
                     undoCompleteTasks(checkedTasks);

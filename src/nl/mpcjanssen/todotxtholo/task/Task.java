@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
@@ -140,6 +138,10 @@ public class Task implements Serializable, Comparable<Task> {
         return projects;
     }
 
+    public void setPrependedDate(String date) {
+        this.prependedDate = date;
+    }
+
     public String getPrependedDate() {
         return prependedDate;
     }
@@ -203,6 +205,22 @@ public class Task implements Serializable, Comparable<Task> {
         }
         sb.append(this.text);
         return sb.toString();
+    }
+
+    public boolean inFuture() {
+        if (Strings.isEmptyOrNull(this.getPrependedDate())) {
+            return false;
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
+            try {
+                Date createDate = sdf.parse(this.prependedDate);
+                Date now = new Date();
+                return createDate.after(now);
+            } catch (ParseException e) {
+                // e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     public String inFileFormat() {
