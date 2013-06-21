@@ -41,6 +41,7 @@ import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletaskdonate.R;
 
 import java.util.*;
 

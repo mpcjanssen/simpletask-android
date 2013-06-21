@@ -34,6 +34,7 @@ import android.util.Log;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletaskdonate.R;
 
 
 public class MainApplication extends Application {

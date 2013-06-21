@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletaskdonate.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +20,8 @@ import java.util.HashSet;
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
 	final static String TAG = MyAppWidgetProvider.class.getSimpleName();
-	
-	public static RemoteViews updateView(int widgetId, Context context) {
+
+    public static RemoteViews updateView(int widgetId, Context context) {
 
 		RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
 		// Set up the intent that starts the StackViewService, which will

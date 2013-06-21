@@ -39,7 +39,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletaskdonate.R;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -34,6 +34,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletaskdonate.R;
 
 import java.util.List;
 

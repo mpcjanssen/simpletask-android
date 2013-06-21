@@ -8,6 +8,7 @@ import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
 import android.widget.*;
+import nl.mpcjanssen.simpletaskdonate.R;
 
 import java.util.ArrayList;
 

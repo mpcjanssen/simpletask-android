@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import nl.mpcjanssen.simpletask.MainApplication;
-import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletaskdonate.R;
 import android.content.Context;
 
 

@@ -32,7 +32,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletaskdonate.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
