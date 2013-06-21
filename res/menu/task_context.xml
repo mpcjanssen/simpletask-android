@@ -49,6 +49,9 @@ You should have received a copy of the GNU General Public License along with Tod
         android:id="@+id/calendar"
         android:showAsAction="never"
         android:title="@string/add_to_calendar"/>
+    <item android:title="@string/defertask"
+        android:id="@+id/defer"
+        android:showAsAction="never"/>
     <item
         android:id="@+id/delete"
         android:icon="@drawable/delete"

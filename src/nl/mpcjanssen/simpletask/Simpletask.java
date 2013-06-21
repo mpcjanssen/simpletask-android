@@ -22,10 +22,7 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
+import android.app.*;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
@@ -47,6 +44,7 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Simpletask extends ListActivity  {
@@ -412,6 +410,34 @@ public class Simpletask extends ListActivity  {
         m_adapter.setFilteredTasks(true);
     }
 
+    private void deferTasks(List<Task> tasks) {
+        String[] keys = getResources().getStringArray(R.array.deferOptions);
+        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT,Locale.US);
+        Date now = new Date();
+        final List<Task> tasksToDefer = tasks;
+        String today = formatter.format(now);
+        String oneWeek = formatter.format(Util.addWeeksToDate(now, 7));
+        String twoWeeks = formatter.format(Util.addWeeksToDate(now, 14));
+        String oneMonth = formatter.format(Util.addMonthsToDate(now, 1));
+        String[] values = {today, oneWeek,twoWeeks,oneMonth};
+
+        Dialog d = Util.createSingleChoiceDialog(this,keys,values, 1, R.string.defertask, null,
+                new Util.OnSingleChoiceDialogListener() {
+                    @Override
+                    public void onClick(String selected) {
+                        for (Task t : tasksToDefer) {
+                            if (t != null) {
+                                t.setPrependedDate(selected);
+                            }
+                        }
+                        m_adapter.setFilteredTasks(false);
+                        taskBag.store();
+                        m_app.updateWidgets();
+                    }
+                }
+        );
+        d.show();
+    }
     private void deleteTasks(List<Task> tasks) {
         final List<Task> tasksToDelete = tasks;
         Util.showDeleteConfirmationDialog( this, new OnClickListener() {
@@ -571,10 +597,16 @@ public class Simpletask extends ListActivity  {
             String header = "";
             int index = 0;
             int position = 0;
-            String firstSort = m_sorts.get(0);
-            if (m_sorts.get(0).contains("completed") && m_sorts.size() > 1) {
-                firstSort = m_sorts.get(1);
+            int firstGroupSortIndex = 0;
+
+            if (m_sorts.size() > 1 && m_sorts.get(0).contains("completed") || m_sorts.get(0).contains("future")) {
+                firstGroupSortIndex++;
+                if (m_sorts.size() > 2 && m_sorts.get(1).contains("completed") || m_sorts.get(1).contains("future")) {
+                    firstGroupSortIndex++;
+                }
             }
+
+            String firstSort = m_sorts.get(firstGroupSortIndex);
             for (Task t : visibleTasks) {
                 if (firstSort.contains("by_context")) {
                     List<String> taskItems = t.getContexts();
@@ -924,6 +956,9 @@ public class Simpletask extends ListActivity  {
                     break;
                 case R.id.delete:
                     deleteTasks(checkedTasks);
+                    break;
+                case R.id.defer:
+                    deferTasks(checkedTasks);
                     break;
                 case R.id.uncomplete:
                     undoCompleteTasks(checkedTasks);
