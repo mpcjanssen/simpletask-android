@@ -142,6 +142,10 @@ public class Task implements Serializable, Comparable<Task> {
         return prependedDate;
     }
 
+    public void setPrependedDate(String date) {
+        this.prependedDate = date;
+    }
+
     public String getRelativeAge() {
         return relativeAge;
     }
@@ -164,6 +168,22 @@ public class Task implements Serializable, Comparable<Task> {
 
     public List<URL> getLinks() {
         return links;
+    }
+
+    public boolean inFuture() {
+        if (Strings.isEmptyOrNull(this.getPrependedDate())) {
+            return false;
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
+            try {
+                Date createDate = sdf.parse(this.prependedDate);
+                Date now = new Date();
+                return createDate.after(now);
+            } catch (ParseException e) {
+                // e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     public String getCompletionDate() {

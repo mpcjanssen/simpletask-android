@@ -36,6 +36,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="search">Search</string>
     <string name="addtask">Add Task(s)</string>
     <string name="updatetask">Update Task</string>
+    <string name="defertask">Defer Task</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
     <string name="update">Update</string>
@@ -94,7 +95,8 @@ You should have received a copy of the GNU General Public License along with Tod
   <string name="by_project">By Tag</string> 
   <string name="by_context">By List</string>
   <string name="completed">Completed</string> 
-  <string name="by_creation_date">By Creation Date</string> 
+  <string name="by_creation_date">By Creation Date</string>
+  <string name="in_future">Creation date in future</string>
 
     <!-- filter tabs -->
     <string name="filter_select_all">Select all</string>
@@ -121,6 +123,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_today">today</string>
     <string name="dates_months_ago">%d months ago</string>
     <string name="dates_one_month_ago">1 month ago</string>
+    <string name="dates_one_week">1 week</string>
+    <string name="dates_two_weeks">2 weeks</string>
+    <string name="dates_one_month">1 month</string>
+
     <string name="title_activity_filter">Filter</string>
     <string name="selected">selected</string>
     <string name="no_context">Inbox</string>

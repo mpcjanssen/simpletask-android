@@ -43,10 +43,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class Util {
@@ -157,7 +154,39 @@ public class Util {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public interface OnSingleChoiceDialogListener {
+        void onClick(String selected);
+    }
 
+    public static Dialog createSingleChoiceDialog(Context cxt,
+                                                  CharSequence[] keys, String[] values, int selected, Integer titleId,
+                                                  Integer iconId, final OnSingleChoiceDialogListener listener) {
+
+        assert(values.length == keys.length);
+        AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
+        if (iconId != null) {
+            builder.setIcon(iconId);
+        }
+        if (titleId != null) {
+            builder.setTitle(titleId);
+        }
+
+        final String[] res = values;
+        final int checkedItem = selected;
+
+        builder.setSingleChoiceItems(keys, checkedItem, null);
+
+        builder.setPositiveButton(R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        int index = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        listener.onClick(res[index]);
+                    }
+                });
+        builder.setNegativeButton(R.string.cancel, null);
+        return builder.create();
+    }
 
     public interface OnMultiChoiceDialogListener {
         void onClick(boolean[] selected);
@@ -338,5 +367,25 @@ public class Util {
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
+    }
+
+    public static Date addWeeksToDate(Date date, int weeks) {
+        Date newDate = new Date(date.getTime());
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(newDate);
+        calendar.add(Calendar.DATE, weeks);
+        newDate.setTime(calendar.getTime().getTime());
+        return newDate;
+    }
+
+    public static Date addMonthsToDate(Date date, int months) {
+        Date newDate = new Date(date.getTime());
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(newDate);
+        calendar.add(Calendar.MONTH, months);
+        newDate.setTime(calendar.getTime().getTime());
+        return newDate;
     }
 }

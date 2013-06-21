@@ -33,6 +33,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>@string/file_order</item>
         <item>@string/by_project</item>
         <item>@string/by_creation_date</item>
+        <item>@string/in_future</item>
     </string-array>
     <!-- will be prepended with "+!" or "-!" depending on direction -->
     <string-array name="sortKeys">
@@ -43,5 +44,14 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>file_order</item>
         <item>by_project</item>
         <item>by_creation_date</item>
+        <item>in_future</item>
+    </string-array>
+
+    <!-- available options for deferring -->
+    <string-array name="deferOptions">
+        <item>@string/dates_today</item>
+        <item>@string/dates_one_week</item>
+        <item>@string/dates_two_weeks</item>
+        <item>@string/dates_one_month</item>
     </string-array>
 </resources>
