@@ -5,14 +5,14 @@
  */
 package nl.mpcjanssen.todotxtholo.util;
 
+import android.content.Context;
+import nl.mpcjanssen.todotxtholo.R;
+import nl.mpcjanssen.todotxtholo.TodoApplication;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import nl.mpcjanssen.todotxtholo.R;
-import nl.mpcjanssen.todotxtholo.TodoApplication;
-import android.content.Context;
 
 
 public class RelativeDate {
@@ -106,12 +106,15 @@ public class RelativeDate {
 	/**
 	 * This method returns a String representing the relative date by comparing
 	 * the Date being passed in to the date / time that it is right now.
-	 * 
+	 * Future dates will be returned as is.
 	 * @param date
 	 * @return String representing the relative date
 	 */
 
 	public static String getRelativeDate(Date date) {
+        if (date.after(new Date())) {
+           return sdf.format(date);
+        }
 		Calendar converted = Calendar.getInstance();
 		converted.setTime(date);
 		return getRelativeDate(converted);
