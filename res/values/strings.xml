@@ -170,7 +170,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Add Task</string>
     <!-- share -->
-    <string name="share_addtask_name">Add to Todo.txt</string>
+    <string name="share_addtask_name">Add to Simpletask</string>
 
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d days ago</string>
