@@ -32,7 +32,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="main_no_items">No tasks to display.</string>
     <string name="set_preferences">Settings</string>
     <string name="preferences">Settings</string>
-    <string name="quickfilter">Filter on context or tag</string>
+    <string name="quickfilter">Filter on list or tag</string>
     <string name="search">Search</string>
     <string name="addtask">Add Task(s)</string>
     <string name="updatetask">Update Task</string>
@@ -45,7 +45,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear_filter">Clear filter</string>
-    <string name="tasktexthint">Create a task with @contexts or +tags\nCreate a new project or tag with @.. or +..\nAdd another task for every line</string>
+    <string name="tasktexthint">Create a task with @lists or +tags\nCreate a new project or tag with @.. or +..\nAdd another task for every line</string>
     <string name="shortcut_name_empty">No name specified, not creating shortcut</string>
     <string name="add_task_help">Add or update a task or tasks.
 		Each line creates a separate task for quick adding.\n
@@ -53,9 +53,9 @@ You should have received a copy of the GNU General Public License along with Tod
         start the line with (.), like (A)\n
         <b>Tags</b>
         start with a + sign, like +Kitchen\n
-        <b>Contexts</b>
+        <b>Lists</b>
         start with an @ sign, like @home\n
-        A task can include any number of tags or contexts.
+        A task can include any number of tags or lists.
     </string>
 
     <!-- preferences -->
@@ -85,14 +85,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
     <string name="delete_task_confirm">Delete</string>
     <!-- search -->
-    <string name="search_hint">Search todo.txt</string>
+    <string name="search_hint">Search Simpletask</string>
     <!-- sort -->
   <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction. \n\nItems are grouped \'By List\' or \'By Tag\' if they are the first sort or the second after \'Completed\'</string> 
   <string name="file_order">File Order (unsorted)</string> 
   <string name="alphabetical">Alphabetical</string> 
   <string name="by_prio">By Priority</string> 
   <string name="by_project">By Tag</string> 
-  <string name="by_context">By List</string> 
+  <string name="by_context">By List</string>
   <string name="completed">Completed</string> 
   <string name="by_creation_date">By Creation Date</string> 
 
@@ -108,12 +108,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="priority_prompt">Priority</string>
     <string name="priority_short_prompt">Prio</string>
     <string name="project_prompt">Tag</string>
-    <string name="context_prompt">Context</string>
+    <string name="context_prompt">List</string>
 
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Add Task</string>
     <!-- share -->
-    <string name="share_addtask_name">Add to Todo.txt</string>
+    <string name="share_addtask_name">Add to Simpletask</string>
 
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d days ago</string>

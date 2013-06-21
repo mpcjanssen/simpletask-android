@@ -26,6 +26,11 @@ You should have received a copy of the GNU General Public License along with Tod
 <!--suppress ALL -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+            android:title="@string/quickfilter"
+            android:id="@+id/quickfilter"
+            android:icon="@drawable/list"
+            android:showAsAction="always"/>
+    <item
             android:title="@string/share"
             android:showAsAction="ifRoom"
             android:icon="@drawable/share"
@@ -39,13 +44,9 @@ You should have received a copy of the GNU General Public License along with Tod
    <item
             android:title="@string/filter"
             android:id="@+id/filter"
-            android:showAsAction="never"
-            />
-   <item
-            android:title="@string/quickfilter"
-            android:id="@+id/quickfilter"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/labels"
-            android:showAsAction="always"/>
+            />
     <item
             android:title="@string/addtask"
             android:id="@+id/add_new"
