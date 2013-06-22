@@ -144,6 +144,13 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void setPrependedDate(String date) {
         this.prependedDate = date;
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
+        try {
+            Date d = sdf.parse(this.prependedDate);
+            this.relativeAge = RelativeDate.getRelativeDate(d);
+         } catch (ParseException e) {
+         // e.printStackTrace();
+         }
     }
 
     public String getRelativeAge() {
