@@ -850,6 +850,12 @@ public class Simpletask extends ListActivity  {
         public void select(Task selectedTask) {
             int index = visibleTasks.indexOf(selectedTask);
             Log.v(TAG, "Selected task found at: " + index);
+            if (index == -1) {
+                Log.w(TAG, "Selected task not found");
+                return;
+            } else {
+                Log.v(TAG, "Selected task found at: " + index);
+            }
             int position = indexToPosition.get(index).intValue();
             ListView lv = getListView();
             lv.setItemChecked(position,true);
