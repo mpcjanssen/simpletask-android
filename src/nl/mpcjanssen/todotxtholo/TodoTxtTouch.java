@@ -181,10 +181,18 @@ public class TodoTxtTouch extends ListActivity implements
 
         taskBag = m_app.getTaskBag();
 
+        m_prios = new ArrayList<Priority>();
+        m_contexts = new ArrayList<String>();
+        m_projects = new ArrayList<String>();
+        m_projectsNot = false;
+        m_priosNot = false;
+        m_contextsNot = false;
+        m_search = null;
+
         // Show search or filter results
-        clearFilter();
         Intent intent = getIntent();
         if (savedInstanceState != null) {
+            Log.v(TAG, "handleIntent: savedInstance state");
             m_prios = Priority.toPriority(savedInstanceState
                     .getStringArrayList("m_prios"));
             m_contexts = savedInstanceState.getStringArrayList("m_contexts");
@@ -198,7 +206,7 @@ public class TodoTxtTouch extends ListActivity implements
             m_search = intent.getStringExtra(SearchManager.QUERY);
             Log.v(TAG, "Searched for " + m_search);
         } else if (intent.getExtras() != null) {
-            Log.v(TAG, "Launched with filter:");
+            Log.v(TAG, "handleIntent launched with filter:");
 
             // handle different versions of shortcuts
             String prios;
@@ -239,6 +247,7 @@ public class TodoTxtTouch extends ListActivity implements
             }
         } else {
             // Set previous filters and sort
+            Log.v(TAG, "handleIntent: from m_prefs state");
             m_sorts = new ArrayList<String>();
             m_sorts.addAll(Arrays.asList(m_app.m_prefs.getString("m_sorts", "").split("\n")));
 
@@ -290,7 +299,7 @@ public class TodoTxtTouch extends ListActivity implements
         final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
         final TextView filterText = (TextView) findViewById(R.id.filter_text);
         if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
-                || m_search != null) {
+                || !Strings.isEmptyOrNull(m_search)) {
             String filterTitle = getString(R.string.title_filter_applied);
             if (m_prios.size() > 0) {
                 filterTitle += " " + getString(R.string.priority_prompt);
@@ -370,6 +379,7 @@ public class TodoTxtTouch extends ListActivity implements
         editor.putString("m_sorts", Util.join(m_sorts, "\n"));
         editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
         editor.putStringSet("m_prios", new HashSet<String>(Priority.inCode(m_prios)));
+        Log.v(TAG,"prio saved" + new HashSet<String>(Priority.inCode(m_prios)));
         editor.putStringSet("m_projects", new HashSet<String>(m_projects));
         editor.putBoolean("m_contextsNot", m_contextsNot);
         editor.putBoolean("m_priosNot", m_priosNot);
@@ -794,6 +804,11 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     void clearFilter() {
+        // Also clear the intent so we wont get the old filter after
+        // switching back to app later fixes [1c5271ee2e]
+        Intent intent = new Intent();
+        intent.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
+        setIntent(intent);
         m_prios = new ArrayList<Priority>();
         m_contexts = new ArrayList<String>();
         m_projects = new ArrayList<String>();
