@@ -117,7 +117,7 @@ public class Task implements Serializable, Comparable<Task> {
         Matcher matcher = matchPattern.matcher(this.text);
         if (matcher.find()) {
             try {
-                this.dueDate = sdf.parse(this.prependedDate);
+                this.dueDate = sdf.parse(matcher.group(1));
             } catch (ParseException e) {
                 this.dueDate = null;
             }
