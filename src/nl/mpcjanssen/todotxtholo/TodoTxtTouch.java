@@ -28,6 +28,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -36,6 +37,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseArray;
@@ -90,6 +93,44 @@ public class TodoTxtTouch extends ListActivity implements
 
     private ActionMode actionMode;
 
+    // Drawer vars
+    private ArrayList<String> m_lists;
+    private ListView m_drawerList;
+    private DrawerLayout m_drawerLayout;
+    private ActionBarDrawerToggle m_drawerToggle;
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = m_drawerLayout.isDrawerOpen(m_drawerList);
+        menu.findItem(R.id.filter).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        m_drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        m_drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (m_drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
@@ -188,6 +229,39 @@ public class TodoTxtTouch extends ListActivity implements
         m_priosNot = false;
         m_contextsNot = false;
         m_search = null;
+
+        m_drawerList = (ListView) findViewById(R.id.left_drawer);
+        m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // Set the adapter for the list view
+        updateDrawerList();
+
+        // Set the list's click listener
+        m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        m_drawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                m_drawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                R.string.changelist,  /* "open drawer" description */
+                R.string.app_label  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        m_drawerLayout.setDrawerListener(m_drawerToggle);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 
         // Show search or filter results
         Intent intent = getIntent();
@@ -591,32 +665,17 @@ public class TodoTxtTouch extends ListActivity implements
             case R.id.share:
                 shareTodoList();
                 break;
-            case R.id.changelist:
-                changeList();
-                break;
             default:
                 return super.onMenuItemSelected(featureId, item);
         }
         return true;
     }
 
-    private void changeList() {
-        final ArrayList<String> contexts = taskBag.getContexts(false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(contexts.toArray(new String[0]),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int which) {
-                        clearFilter();
-                        m_contexts.add(contexts.get(which));
-                        m_adapter.setFilteredTasks(false);
-                    }
-                });
+    private void changeList(String listName) {
+        clearFilter();
+        m_contexts.add(listName);
+        m_adapter.setFilteredTasks(false);
 
-        // Create the AlertDialog
-        AlertDialog dialog = builder.create();
-        dialog.setTitle(R.string.context_prompt);
-        dialog.show();
     }
 
     private void startAddTaskActivity(Task task) {
@@ -840,6 +899,10 @@ public class TodoTxtTouch extends ListActivity implements
             Log.v(TAG, "setFilteredTasks called, reload: " + reload);
             if (reload) {
                 taskBag.reload();
+                // Update lists in side drawer
+                // Set the adapter for the list view
+                updateDrawerList();
+
             }
 
             AndFilter filter = new AndFilter();
@@ -1103,6 +1166,12 @@ public class TodoTxtTouch extends ListActivity implements
         }
     }
 
+    private void updateDrawerList() {
+        m_lists = taskBag.getContexts(true);
+        m_drawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, m_lists));
+    }
+
     private static class ViewHolder {
         private TextView tasktext;
         private TextView taskage;
@@ -1344,6 +1413,18 @@ public class TodoTxtTouch extends ListActivity implements
                 }
             }
             return true;
+        }
+    }
+
+    private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            TextView tv = (TextView)view;
+            String listName = tv.getText().toString();
+            Log.v(TAG, "Clicked on drawer " + listName);
+            m_drawerList.setItemChecked(position, true);
+            changeList(listName);
+            m_drawerLayout.closeDrawer(m_drawerList);
         }
     }
 }
