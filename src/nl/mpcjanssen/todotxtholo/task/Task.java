@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
@@ -55,6 +57,10 @@ public class Task implements Serializable, Comparable<Task> {
     private List<String> phoneNumbers;
     private List<String> mailAddresses;
     private List<URL> links;
+    private Date dueDate;
+    private SimpleDateFormat sdf;
+
+
 
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
@@ -91,12 +97,12 @@ public class Task implements Serializable, Comparable<Task> {
 
         if (defaultPrependedDate != null
                 && Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT,Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             this.prependedDate = formatter.format(defaultPrependedDate);
         }
 
         if (!Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
+            this.sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             try {
                 Date d = sdf.parse(this.prependedDate);
                 this.relativeAge = RelativeDate.getRelativeDate(d);
@@ -104,10 +110,26 @@ public class Task implements Serializable, Comparable<Task> {
                 // e.printStackTrace();
             }
         }
+
+
+        Pattern matchPattern = Pattern
+                .compile("\\sdue:(\\d{4}-\\d{2}-\\d{2})");
+        Matcher matcher = matchPattern.matcher(this.text);
+        if (matcher.find()) {
+            try {
+                this.dueDate = sdf.parse(this.prependedDate);
+            } catch (ParseException e) {
+                this.dueDate = null;
+            }
+        }
     }
 
     public Priority getOriginalPriority() {
         return originalPriority;
+    }
+
+    public Date getDueDate() {
+        return this.dueDate;
     }
 
     public String getOriginalText() {

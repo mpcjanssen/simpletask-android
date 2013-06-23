@@ -44,7 +44,9 @@ public class MultiComparator<Task> implements Comparator<Task> {
                 comparators.add(new CreationDateComparator(reverse));
             } else if (sortType.equals("in_future")){
                 comparators.add(new FutureComparator(reverse));
-            } else {
+            } else if (sortType.equals("by_due_date")){
+                comparators.add(new DueDateComparator(reverse));
+            }else {
                 Log.w("Simpletask", "Unknown sort: " + sort);
             }
         }

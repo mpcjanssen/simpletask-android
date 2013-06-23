@@ -142,9 +142,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- search -->
     <string name="search_hint">Search todo.txt</string>
     <!-- sort -->
-    <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.
-        \n\nItems are grouped \'By List\' or \'By Tag\' if they are the first sort or the second after \'Completed\'
-    </string>
+    <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.</string>
     <string name="file_order">File Order (unsorted)</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="by_prio">By Priority</string>
@@ -153,6 +151,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="completed">Completed</string>
     <string name="by_creation_date">By Creation Date</string>
     <string name="in_future">Creation date in future</string>
+    <string name="by_due_date">By Due Date</string>
 
     <!-- filter tabs -->
     <string name="filter_select_all">Select all</string>
