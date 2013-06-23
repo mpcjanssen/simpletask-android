@@ -236,7 +236,7 @@ public class AddTask extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("+" + priorities[which].getCode());
+                        replacePriority(priorities[which].getCode());
                     }
                 });
 
