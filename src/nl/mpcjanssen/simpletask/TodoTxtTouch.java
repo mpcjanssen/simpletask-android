@@ -99,14 +99,6 @@ public class TodoTxtTouch extends ListActivity implements
 	private DrawerLayout m_drawerLayout;
 	private ActionBarDrawerToggle m_drawerToggle;
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
-		boolean drawerOpen = m_drawerLayout.isDrawerOpen(m_drawerList);
-		menu.findItem(R.id.filter).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -248,14 +240,12 @@ public class TodoTxtTouch extends ListActivity implements
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
-				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				setTitle(R.string.app_label);
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
-				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				setTitle(R.string.changelist);
 			}
 		};
 
