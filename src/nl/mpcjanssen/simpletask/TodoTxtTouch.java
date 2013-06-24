@@ -906,7 +906,6 @@ public class TodoTxtTouch extends ListActivity implements
 			Filterable {
 
 		private LayoutInflater m_inflater;
-		int vt;
 		ArrayList<Task> visibleTasks = new ArrayList<Task>();
 		Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
 		SparseArray<String> headerTitles = new SparseArray<String>();
@@ -917,7 +916,6 @@ public class TodoTxtTouch extends ListActivity implements
 		public TaskAdapter(Context context, int textViewResourceId,
 				LayoutInflater inflater, ListView view) {
 			this.m_inflater = inflater;
-			this.vt = textViewResourceId;
 		}
 
 		void setFilteredTasks(boolean reload) {
