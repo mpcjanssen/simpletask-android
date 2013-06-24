@@ -672,8 +672,13 @@ public class TodoTxtTouch extends ListActivity implements
     }
 
     private void changeList(String listName) {
-        clearFilter();
+        m_contexts.clear();
+        m_contextsNot=false;
+        Intent intent = getIntent();
         m_contexts.add(listName);
+        intent.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts,"\n"));
+        intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+        setIntent(intent);
         m_adapter.setFilteredTasks(false);
 
     }
