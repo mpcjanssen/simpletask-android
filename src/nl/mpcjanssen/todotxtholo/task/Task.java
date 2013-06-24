@@ -58,7 +58,7 @@ public class Task implements Serializable, Comparable<Task> {
     private List<String> mailAddresses;
     private List<URL> links;
     private Date dueDate;
-    private SimpleDateFormat sdf;
+    private SimpleDateFormat formatter;
 
 
 
@@ -94,17 +94,15 @@ public class Task implements Serializable, Comparable<Task> {
         this.contexts = ContextParser.getInstance().parse(text);
         this.projects = ProjectParser.getInstance().parse(text);
         this.deleted = Strings.isEmptyOrNull(text);
-
+        this.formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
         if (defaultPrependedDate != null
                 && Strings.isEmptyOrNull(this.prependedDate)) {
-            SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             this.prependedDate = formatter.format(defaultPrependedDate);
         }
 
         if (!Strings.isEmptyOrNull(this.prependedDate)) {
-            this.sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             try {
-                Date d = sdf.parse(this.prependedDate);
+                Date d = formatter.parse(this.prependedDate);
                 this.relativeAge = RelativeDate.getRelativeDate(d);
             } catch (ParseException e) {
                 // e.printStackTrace();
@@ -117,7 +115,7 @@ public class Task implements Serializable, Comparable<Task> {
         Matcher matcher = matchPattern.matcher(this.text);
         if (matcher.find()) {
             try {
-                this.dueDate = sdf.parse(matcher.group(1));
+                this.dueDate = formatter.parse(matcher.group(1));
             } catch (ParseException e) {
                 this.dueDate = null;
             }
@@ -162,9 +160,8 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void setPrependedDate(String date) {
         this.prependedDate = date;
-        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
         try {
-            Date d = sdf.parse(this.prependedDate);
+            Date d = formatter.parse(this.prependedDate);
             this.relativeAge = RelativeDate.getRelativeDate(d);
         } catch (ParseException e) {
             // e.printStackTrace();
@@ -205,8 +202,7 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void markComplete(Date date) {
         if (!this.completed) {
-            this.completionDate = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US)
-                    .format(date);
+            this.completionDate = formatter.format(date);
             this.deleted = false;
             this.completed = true;
         }
@@ -240,9 +236,8 @@ public class Task implements Serializable, Comparable<Task> {
         if (Strings.isEmptyOrNull(this.getPrependedDate())) {
             return false;
         } else {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
             try {
-                Date createDate = sdf.parse(this.prependedDate);
+                Date createDate = formatter.parse(this.prependedDate);
                 Date now = new Date();
                 return createDate.after(now);
             } catch (ParseException e) {
