@@ -40,7 +40,7 @@ You should have received a copy of the GNU General Public License along with Sim
             android:xlargeScreens="true"/>
 
     <application
-            android:name="nl.mpcjanssen.todotxtholo.TodoApplication"
+            android:name="nl.mpcjanssen.simpletask.TodoApplication"
             android:allowBackup="false"
             android:icon="@drawable/icon"
             android:label="@string/app_label"
@@ -60,14 +60,14 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity>
 
         <activity
-                android:name="nl.mpcjanssen.todotxtholo.LoginScreen"
+                android:name="nl.mpcjanssen.simpletask.LoginScreen"
                 android:label="@string/app_label">
         </activity>
         <activity
-                android:name="nl.mpcjanssen.todotxtholo.Preferences"
+                android:name="nl.mpcjanssen.simpletask.Preferences"
                 android:label="@string/set_preferences"/>
         <activity
-                android:name="nl.mpcjanssen.todotxtholo.AddTask"
+                android:name="nl.mpcjanssen.simpletask.AddTask"
                 android:exported="true"
                 android:label="@string/addtask"
                 android:windowSoftInputMode="adjustResize">
@@ -79,7 +79,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity-alias
                 android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
                 android:label="@string/shortcut_addtask_name"
-                android:targetActivity=".AddTask">
+                android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -89,7 +89,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity-alias
                 android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
                 android:label="@string/share_addtask_name"
-                android:targetActivity=".AddTask">
+                android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <action android:name="com.google.android.gm.action.AUTO_SEND" />
@@ -99,7 +99,7 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity-alias>
 
         <activity
-                android:name="nl.mpcjanssen.todotxtholo.TodoTxtTouch"
+                android:name="nl.mpcjanssen.simpletask.TodoTxtTouch"
                 android:exported="true"
                 android:launchMode="singleTask">
             <intent-filter>
@@ -120,7 +120,7 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity>
 
         <activity
-                android:name="nl.mpcjanssen.todotxtholo.FilterActivity"
+                android:name="nl.mpcjanssen.simpletask.FilterActivity"
                 android:label="@string/title_activity_filter"
                 android:exported="true">
             <intent-filter>
@@ -128,7 +128,7 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-        <receiver android:name="nl.mpcjanssen.todotxtholo.MyAppWidgetProvider">
+        <receiver android:name="nl.mpcjanssen.simpletask.MyAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
