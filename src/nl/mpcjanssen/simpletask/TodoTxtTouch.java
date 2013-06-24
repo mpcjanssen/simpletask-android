@@ -263,7 +263,8 @@ public class TodoTxtTouch extends ListActivity implements
 		m_drawerLayout.setDrawerListener(m_drawerToggle);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-
+		m_drawerToggle.syncState();
+		
 		// Show search or filter results
 		Intent intent = getIntent();
 		if (savedInstanceState != null) {
@@ -435,7 +436,7 @@ public class TodoTxtTouch extends ListActivity implements
 	protected void onRestart() {
 		super.onRestart();
 		Log.v(TAG, "onRestart: " + getIntent().getExtras());
-		handleIntent(null);
+		handleIntent(null);		
 	}
 
 	@Override
