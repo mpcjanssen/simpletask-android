@@ -23,7 +23,7 @@
             dslv:drag_start_mode="onMove"
             dslv:drag_handle_id="@id/drag_handle"
             dslv:remove_enabled="false"/>
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView 
               android:padding="10sp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
