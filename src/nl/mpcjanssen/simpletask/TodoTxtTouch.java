@@ -1438,7 +1438,6 @@ public class TodoTxtTouch extends ListActivity implements
 			TextView tv = (TextView) view;
 			String listName = tv.getText().toString();
 			Log.v(TAG, "Clicked on drawer " + listName);
-			m_drawerList.setItemChecked(position, true);
 			changeList(listName);
 			m_drawerLayout.closeDrawer(m_drawerList);
 		}
