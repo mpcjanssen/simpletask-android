@@ -240,12 +240,12 @@ public class TodoTxtTouch extends ListActivity implements
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
-				setTitle(R.string.app_label);
+				//setTitle(R.string.app_label);
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
-				setTitle(R.string.changelist);
+				//setTitle(R.string.changelist);
 			}
 		};
 
