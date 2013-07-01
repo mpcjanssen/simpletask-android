@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 
-import nl.mpcjanssen.simpletask.TodoTxtTouch;
+import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.util.Util;
 import android.util.Log;
 
@@ -39,7 +39,7 @@ import com.dropbox.client2.exception.DropboxUnlinkedException;
 
 public class DropboxFileUploader {
 
-	final static String TAG = TodoTxtTouch.class.getSimpleName();
+	final static String TAG = Simpletask.class.getSimpleName();
 	
 	private DropboxAPI<?> dropboxApi;
 	private DropboxFileStatus status;

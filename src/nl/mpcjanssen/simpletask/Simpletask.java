@@ -57,10 +57,10 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class TodoTxtTouch extends ListActivity implements
+public class Simpletask extends ListActivity implements
 		OnSharedPreferenceChangeListener {
 
-	final static String TAG = TodoTxtTouch.class.getSimpleName();
+	final static String TAG = Simpletask.class.getSimpleName();
 	private final static int REQUEST_FILTER = 1;
 	private final static int REQUEST_PREFERENCES = 2;
 
@@ -629,12 +629,12 @@ public class TodoTxtTouch extends ListActivity implements
 			@Override
 			protected void onPostExecute(Boolean result) {
 				if (result) {
-					Util.showToastLong(TodoTxtTouch.this,
+					Util.showToastLong(Simpletask.this,
 							"Archived completed tasks");
 					sendBroadcast(new Intent(
 							Constants.INTENT_START_SYNC_TO_REMOTE));
 				} else {
-					Util.showToastLong(TodoTxtTouch.this,
+					Util.showToastLong(Simpletask.this,
 							"Could not archive tasks");
 				}
 			}

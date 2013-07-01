@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.TodoApplication;
-import nl.mpcjanssen.simpletask.TodoTxtTouch;
+import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.todotxtholo.R;
 import android.content.Intent;
@@ -42,7 +42,7 @@ import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 
 class DropboxRemoteClient implements RemoteClient {
-	final static String TAG = TodoTxtTouch.class.getSimpleName();
+	final static String TAG = Simpletask.class.getSimpleName();
 	
 	private static final String TODO_TXT_REMOTE_FILE_NAME = "todo.txt";
 	private static final String DONE_TXT_REMOTE_FILE_NAME = "done.txt";
