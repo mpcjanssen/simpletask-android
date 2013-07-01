@@ -148,7 +148,7 @@ public class FilterSortFragment extends Fragment {
             for (int i = 0 ; i< adapter.getCount() ; i++) {
                multiSort.add(directions.get(i) + Constants.SORT_SEPARATOR + adapter.getSortType(i));
             }
-        } else {
+        } else if (originalItems !=null ) {
             multiSort.addAll(originalItems);
         }
         return multiSort;
