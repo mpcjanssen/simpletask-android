@@ -23,7 +23,7 @@
 package nl.mpcjanssen.simpletask.task;
 
 import android.content.SharedPreferences;
-import nl.mpcjanssen.simpletask.TodoTxtTouch;
+import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.remote.PullTodoResult;
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.util.TaskIo;
@@ -43,7 +43,7 @@ import java.util.*;
  *         it is global to the application so all activities operate on the same copy
  */
 public class TaskBag {
-    final static String TAG = TodoTxtTouch.class.getSimpleName();
+    final static String TAG = Simpletask.class.getSimpleName();
     private Preferences preferences;
     private final LocalFileTaskRepository localRepository;
     private final RemoteClientManager remoteClientManager;

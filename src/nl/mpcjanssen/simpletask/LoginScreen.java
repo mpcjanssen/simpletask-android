@@ -56,7 +56,7 @@ public class LoginScreen extends Activity {
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Intent i = new Intent(context, TodoTxtTouch.class);
+                Intent i = new Intent(context, Simpletask.class);
                 startActivity(i);
                 finish();
             }
@@ -88,7 +88,7 @@ public class LoginScreen extends Activity {
     }
 
     private void switchToTodolist() {
-        Intent intent = new Intent(this, TodoTxtTouch.class);
+        Intent intent = new Intent(this, Simpletask.class);
         startActivity(intent);
         finish();
     }

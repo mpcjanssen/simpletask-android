@@ -27,7 +27,7 @@ import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.exception.DropboxServerException;
 
-import nl.mpcjanssen.simpletask.TodoTxtTouch;
+import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.File;
@@ -38,7 +38,7 @@ import java.util.Collection;
 
 public class DropboxFileDownloader {
 
-    final static String TAG = TodoTxtTouch.class.getSimpleName();
+    final static String TAG = Simpletask.class.getSimpleName();
 
     private DropboxAPI<?> dropboxApi;
     private DropboxFileStatus status;

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterSortFragment extends Fragment {
-    private final static String TAG = TodoTxtTouch.class.getSimpleName();
+    private final static String TAG = Simpletask.class.getSimpleName();
     private final static String STATE_ITEMS = "items";
     private final static String STATE_SELECTED = "selectedItem";
 
