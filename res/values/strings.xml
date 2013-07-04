@@ -152,12 +152,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_creation_date">By Creation Date</string>
     <string name="in_future">Creation date in future</string>
     <string name="by_due_date">By Due Date</string>
-
-    <!-- filter tabs -->
+	
+    <!-- filter -->
     <string name="filter_select_all">Select all</string>
     <string name="filter_clear_all">Clear filter</string>
     <string name="filter_invert">Invert filter</string>
     <string name="add_filter_shortcut">Add shortcut</string>
+    <string name="create_widget">Create widget</string>
+	
 
     <!-- title bar changes -->
     <string name="title_filter_applied">Filtered by:</string>
@@ -195,5 +197,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="version_copied">Version info copied to clipboard</string>
 
     <string name="task_added">Task added</string>
+    <string name="default_sort">Default sort</string>
+    <string name="pull_to_refresh_refreshing_label">Syncing with dropbox…</string>
+
 
 </resources>

@@ -6,9 +6,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import com.mobeta.android.dslv.DragSortListView;
 
 import nl.mpcjanssen.simpletask.util.Strings;
@@ -19,14 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterSortFragment extends Fragment {
-    private final static String TAG = Simpletask.class.getSimpleName();
-    private final static String STATE_ITEMS = "items";
+    
     private final static String STATE_SELECTED = "selectedItem";
 
     private ArrayList<String> originalItems;
     private DragSortListView lv;
-    private GestureDetector gestureDetector;
-    private ActionBar actionbar;
     SortItemAdapter adapter;
     ArrayList<String> directions = new ArrayList<String>();
     ArrayList<String> adapterList = new ArrayList<String>();
@@ -71,7 +72,6 @@ public class FilterSortFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
-        actionbar = getActivity().getActionBar();
         if (savedInstanceState != null) {
             originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED);
         } else {
@@ -181,4 +181,15 @@ public class FilterSortFragment extends Fragment {
             return keys[index];
         }
     }
+
+	public void defaultSort() {
+		adapterList.clear();
+		directions.clear();
+		for (String value : getResources().getStringArray(R.array.sort)) {
+			adapterList.add(value);
+			directions.add(Constants.NORMAL_SORT);
+		}
+		adapter.notifyDataSetChanged();
+		
+	}
 }
