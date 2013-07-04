@@ -1,0 +1,5 @@
+@echo off
+REM Build script for windows
+set JAVA_HOME=C:\Progra~1\Java\jdk....
+set PATH=%PATH%;C:\android\sdk\platform-tools
+c:\path\to\apache-ant-1.9.1\bin\ant %1 %2 %3 %4 %5 %
