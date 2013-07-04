@@ -111,7 +111,8 @@ public class FilterActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.filter, menu);
         if (asWidgetConfigure) {
-        	menu.findItem(R.id.menu_add_filter_shortcut).setVisible(false);
+        	menu.findItem(R.id.menu_add_filter_shortcut).setVisible(false);		
+        	menu.findItem(R.id.menu_filter_action).setTitle(R.string.create_widget);
         }
         this.menu = menu;
         return true;
@@ -120,43 +121,31 @@ public class FilterActivity extends Activity {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_apply_filter:
+            case R.id.menu_filter_action:
             	if (asWidgetConfigure) {
             		askWidgetName();
             	} else {
             		applyFilter();
             	}
                 break;
-            case R.id.menu_select_all:
-                selectAll();
-                break;
-            case R.id.menu_clear_all:
-                clearAll();
-                break;
             case R.id.menu_add_filter_shortcut:
                 createFilterShortcut();
                 break;
+            case R.id.menu_default_sort:
+            	defaultSort();
+            	break;
         }
         return true;
     }
 
-    private void selectAll() {
-        String tag = (String) actionbar.getSelectedTab().getTag();
-        if (!tag.equals(getString(R.string.sort))) {
-            FilterListFragment fr = (FilterListFragment) getFragmentManager().findFragmentByTag(tag);
-            fr.selectAll();
-        }
-    }
+    private void defaultSort() {
+		// Find the fragment
+    	FilterSortFragment fr = (FilterSortFragment)this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
+		fr.defaultSort();
+	}
+    
 
-    private void clearAll() {
-        String tag = (String) actionbar.getSelectedTab().getTag();
-        if (!tag.equals(getString(R.string.sort))) {
-            FilterListFragment fr = (FilterListFragment) getFragmentManager().findFragmentByTag(tag);
-            fr.clearAll();
-        }
-    }
-
-    // Safe the active tab on configuration changes
+	// Safe the active tab on configuration changes
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -404,6 +393,15 @@ public class FilterActivity extends Activity {
             } else {
                 // If it exists, simply attach it in order to show it
                 ft.attach(mFragment);
+            }
+            if (menu==null) {
+            	return;            		
+            }
+            MenuItem mnuDefaultSort = menu.findItem(R.id.menu_default_sort);
+            if (tab.getTag().equals(getString(R.string.sort))) {
+            	mnuDefaultSort.setVisible(true);
+            } else {
+            	mnuDefaultSort.setVisible(false);
             }
         }
 

@@ -57,8 +57,11 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
 public class Simpletask extends ListActivity implements
-		OnSharedPreferenceChangeListener {
+		OnSharedPreferenceChangeListener, OnRefreshListener {
 
 	final static String TAG = Simpletask.class.getSimpleName();
 	private final static int REQUEST_FILTER = 1;
@@ -88,9 +91,6 @@ public class Simpletask extends ListActivity implements
 	private static final int SYNC_CHOICE_DIALOG = 100;
 	private static final int SYNC_CONFLICT_DIALOG = 101;
 
-	private View mRefreshIndeterminateProgressView;
-	private MenuItem refreshItem;
-
 	private ActionMode actionMode;
 
 	// Drawer vars
@@ -98,6 +98,9 @@ public class Simpletask extends ListActivity implements
 	private ListView m_drawerList;
 	private DrawerLayout m_drawerLayout;
 	private ActionBarDrawerToggle m_drawerToggle;
+
+	// PullToRefresh
+	private PullToRefreshAttacher mPullToRefreshHelper;
 
 
 	@Override
@@ -174,21 +177,10 @@ public class Simpletask extends ListActivity implements
 					handleSyncConflict();
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_START)) {
-					Log.v(TAG, "Start sync");
-					if (mRefreshIndeterminateProgressView == null) {
-						mRefreshIndeterminateProgressView = getLayoutInflater()
-								.inflate(R.layout.main_progress, null);
-					}
-					if (refreshItem != null) {
-						refreshItem
-								.setActionView(mRefreshIndeterminateProgressView);
-					}
+					mPullToRefreshHelper.setRefreshing(true);					
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_DONE)) {
-					Log.v(TAG, "Sync done");
-					if (refreshItem != null) {
-						refreshItem.setActionView(null);
-					}
+					mPullToRefreshHelper.setRefreshComplete();
 					m_adapter.setFilteredTasks(true);
 					Intent i = new Intent();
 					i.setAction(Constants.INTENT_UPDATE_UI);
@@ -197,9 +189,12 @@ public class Simpletask extends ListActivity implements
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
-
+		
 		handleIntent(savedInstanceState);
-
+		
+		// Create a PullToRefreshAttacher instance
+	    mPullToRefreshHelper = new PullToRefreshAttacher(this);
+	    mPullToRefreshHelper.setRefreshableView(getListView(), this);
 	}
 
 	private void handleIntent(Bundle savedInstanceState) {
@@ -472,8 +467,6 @@ public class Simpletask extends ListActivity implements
 		searchView.setIconifiedByDefault(false); // Do not iconify the widget;
 		// expand it by default
 
-		refreshItem = menu.findItem(R.id.sync);
-
 		this.options_menu = menu;
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -647,10 +640,6 @@ public class Simpletask extends ListActivity implements
 		switch (item.getItemId()) {
 		case R.id.add_new:
 			startAddTaskActivity(null);
-			break;
-		case R.id.sync:
-			Log.v(TAG, "onMenuItemSelected: sync");
-			syncClient(false);
 			break;
 		case R.id.search:
 			break;
@@ -1441,5 +1430,11 @@ public class Simpletask extends ListActivity implements
 			changeList(listName);
 			m_drawerLayout.closeDrawer(m_drawerList);
 		}
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		syncClient(false);
+		
 	}
 }

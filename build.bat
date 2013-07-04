@@ -1,5 +1,5 @@
 @echo off
 REM Build script for windows
-set JAVA_HOME=C:\Progra~1\Java\jdk1.7.0_01
-set PATH=%PATH%;C:\Users\A156712\Documents\Android\adt-bundle\sdk\platform-tools
-..\adt-bundle\apache-ant-1.9.1\bin\ant %1 %2 %3 %4 %5 %6
+set JAVA_HOME=C:\Docs\Dropbox\PortableApps\PortableApps\jdk
+set PATH=%PATH%;C:\Docs\android-sdk\platform-tools
+C:\Docs\Dropbox\PortableApps\PortableApps\ant\bin\ant %1 %2 %3 %4 %5 %6
