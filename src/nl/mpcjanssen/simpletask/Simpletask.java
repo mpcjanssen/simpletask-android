@@ -652,6 +652,9 @@ public class Simpletask extends ListActivity implements
 		case R.id.share:
 			shareTodoList();
 			break;
+		case R.id.sync:
+			syncClient(false);
+			break;
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
