@@ -191,10 +191,10 @@ public class Simpletask extends ListActivity implements
 		registerReceiver(m_broadcastReceiver, intentFilter);
 		
 		handleIntent(savedInstanceState);
-		
 		// Create a PullToRefreshAttacher instance
 	    mPullToRefreshHelper = new PullToRefreshAttacher(this);
 	    mPullToRefreshHelper.setRefreshableView(getListView(), this);
+
 	}
 
 	private void handleIntent(Bundle savedInstanceState) {
@@ -353,6 +353,8 @@ public class Simpletask extends ListActivity implements
 		lv.setTextFilterEnabled(true);
 		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lv.setMultiChoiceModeListener(new ActionBarListener());
+		
+
 	}
 
 	private void updateFilterBar() {
@@ -421,7 +423,12 @@ public class Simpletask extends ListActivity implements
 	protected void onRestart() {
 		super.onRestart();
 		Log.v(TAG, "onRestart: " + getIntent().getExtras());
-		handleIntent(null);		
+		handleIntent(null);
+		// Create a PullToRefreshAttacher instance
+	    if (mPullToRefreshHelper == null) {
+	    	mPullToRefreshHelper = new PullToRefreshAttacher(this);
+	    }
+	    mPullToRefreshHelper.setRefreshableView(getListView(), this);
 	}
 
 	@Override
