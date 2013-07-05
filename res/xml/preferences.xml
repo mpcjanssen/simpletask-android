@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	This file is part of Todo.txt Touch, an Android app for managing your todo.txt 
+	file (http://todotxt.com).
+
+	Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+
+	LICENSE:
+
+	Todo.txt Touch is free software: you can redistribute it and/or modify it 
+	under the terms of the GNU General Public
+	License as published by the Free Software Foundation, either version 2 of 
+	the License, or (at your option) any
+	later version.
+
+	Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT 
+	ANY WARRANTY; without even the implied
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU General Public License for more
+	details.
+
+	You should have received a copy of the GNU General Public License along with 
+	Todo.txt Touch. If not, see
+	<http://www.gnu.org/licenses/>.
+
+	@author Todo.txt contributors <todotxt@yahoogroups.com>
+	@license http://www.gnu.org/licenses/gpl.html
+	@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+-->
+<!-- suppress ALL -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/todotxt_settings_header" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/prepend_date_pref_key"
+            android:summary="@string/prepend_date_pref_summary"
+            android:title="@string/prepend_date_pref_title" />
+        <CheckBoxPreference
+            android:key="@string/line_breaks_pref_key"
+            android:summary="@string/line_breaks_pref_summary"
+            android:title="@string/line_breaks_pref_title" />
+
+        <EditTextPreference
+            android:key="@string/font_size_delta_pref_key"
+            android:numeric="signed"
+            android:summary="@string/font_size_delta_pref_summary"
+            android:title="@string/font_size_delta_pref_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/DROPBOX_settings_header" >
+        <EditTextPreference
+            android:defaultValue="@string/TODOTXTPATH_defaultPath"
+            android:key="@string/TODOTXTPATH_key"
+            android:summary="@string/TODOTXTPATH_summary"
+            android:title="@string/TODOTXTPATH_title" />
+
+        <CheckBoxPreference
+            android:key="@string/manual_sync_pref_key"
+            android:summary="@string/manual_sync_pref_summary"
+            android:title="@string/manual_sync_pref_title" />
+
+        <Preference
+            android:key="logout_dropbox"
+            android:summary="@string/dropbox_logout_pref_summary"
+            android:title="@string/dropbox_logout_pref_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/archive_now_pref_title" >
+        <CheckBoxPreference
+            android:key="@string/auto_archive_pref_key"
+            android:summary="@string/auto_archive_pref_summary"
+            android:title="@string/auto_archive_pref_title" />
+
+        <Preference
+            android:key="archive_now"
+            android:summary="@string/archive_now_pref_summary"
+            android:title="@string/archive_now_pref_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about_settings_header" >
+        <Preference
+            android:key="app_version"
+            android:title="@string/app_label" />
+
+        <PreferenceScreen
+            android:summary="@string/visit_website_summary"
+            android:title="@string/visit_website_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/visit_website_data" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="@string/visit_tracker_summary"
+            android:title="@string/visit_tracker_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/visit_tracker_data" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="@string/donate_summary"
+            android:title="@string/donate_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/visit_donate_data" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+</PreferenceScreen>
