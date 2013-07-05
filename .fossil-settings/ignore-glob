@@ -1,8 +1,8 @@
 */dropbox.xml
-*bin/
-bin/
-*gen/
-gen/
+*/bin/*
+bin/*
+*/gen/*
+gen/*
 out/*
 tests/gen/*
 *.apk
