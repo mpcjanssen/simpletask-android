@@ -107,20 +107,24 @@ public class Simpletask extends ListActivity implements
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
-		m_drawerToggle.syncState();
+		if (m_drawerToggle!=null) {
+			m_drawerToggle.syncState();
+		}
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		m_drawerToggle.onConfigurationChanged(newConfig);
+		if (m_drawerToggle != null) {
+			m_drawerToggle.onConfigurationChanged(newConfig);
+		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
-		if (m_drawerToggle.onOptionsItemSelected(item)) {
+		if (m_drawerToggle!=null && m_drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 		// Handle your other action bar items...
@@ -218,7 +222,6 @@ public class Simpletask extends ListActivity implements
 		m_search = null;
 
 		m_drawerList = (ListView) findViewById(R.id.left_drawer);
-		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 		// Set the adapter for the list view
 		updateDrawerList();
@@ -226,30 +229,38 @@ public class Simpletask extends ListActivity implements
 		// Set the list's click listener
 		m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-		m_drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-		m_drawerLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
-		R.string.changelist, /* "open drawer" description */
-		R.string.app_label /* "close drawer" description */
-		) {
+		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if (m_drawerLayout != null) {
+			// Not in tablet landscape mode
+			
+			m_drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+			m_drawerLayout, /* DrawerLayout object */
+			R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+			R.string.changelist, /* "open drawer" description */
+			R.string.app_label /* "close drawer" description */
+			) {
 
-			/** Called when a drawer has settled in a completely closed state. */
-			public void onDrawerClosed(View view) {
-				//setTitle(R.string.app_label);
-			}
+				/**
+				 * Called when a drawer has settled in a completely closed
+				 * state.
+				 */
+				public void onDrawerClosed(View view) {
+					// setTitle(R.string.app_label);
+				}
 
-			/** Called when a drawer has settled in a completely open state. */
-			public void onDrawerOpened(View drawerView) {
-				//setTitle(R.string.changelist);
-			}
-		};
+				/** Called when a drawer has settled in a completely open state. */
+				public void onDrawerOpened(View drawerView) {
+					// setTitle(R.string.changelist);
+				}
+			};
 
-		// Set the drawer toggle as the DrawerListener
-		m_drawerLayout.setDrawerListener(m_drawerToggle);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		m_drawerToggle.syncState();
-		
+			// Set the drawer toggle as the DrawerListener
+			m_drawerLayout.setDrawerListener(m_drawerToggle);
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getActionBar().setHomeButtonEnabled(true);
+			m_drawerToggle.syncState();
+		}
+
 		// Show search or filter results
 		Intent intent = getIntent();
 		if (savedInstanceState != null) {
@@ -1438,7 +1449,9 @@ public class Simpletask extends ListActivity implements
 			String listName = tv.getText().toString();
 			Log.v(TAG, "Clicked on drawer " + listName);
 			changeList(listName);
-			m_drawerLayout.closeDrawer(m_drawerList);
+			if (m_drawerLayout!=null) {
+				m_drawerLayout.closeDrawer(m_drawerList);
+			}
 		}
 	}
 
