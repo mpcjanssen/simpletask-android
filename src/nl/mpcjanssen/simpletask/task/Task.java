@@ -329,4 +329,8 @@ public class Task implements Serializable, Comparable<Task> {
     public int compareTo(Task another) {
         return ((Long) this.getId()).compareTo(another.getId());
     }
+
+	public void append(String string) {
+		this.init(originalText + " " + string , null);		
+	}
 }
