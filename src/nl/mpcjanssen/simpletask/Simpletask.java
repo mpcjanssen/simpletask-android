@@ -22,10 +22,37 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.*;
-import android.content.*;
+import nl.mpcjanssen.simpletask.remote.RemoteClient;
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
+import nl.mpcjanssen.simpletask.task.ByContextFilter;
+import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
+import nl.mpcjanssen.simpletask.task.ByProjectFilter;
+import nl.mpcjanssen.simpletask.task.ByTextFilter;
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskFilter;
+import nl.mpcjanssen.simpletask.util.Strings;
+import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
+import nl.mpcjanssen.todotxtholo.R;
+
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
@@ -43,22 +70,29 @@ import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
-import android.view.*;
-import android.widget.*;
-import nl.mpcjanssen.simpletask.remote.RemoteClient;
-import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.task.*;
-import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
-import nl.mpcjanssen.todotxtholo.R;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
 public class Simpletask extends ListActivity implements
 		OnSharedPreferenceChangeListener, OnRefreshListener {
@@ -526,7 +560,7 @@ public class Simpletask extends ListActivity implements
 			strings.add("+"+s);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		final String[] items = strings.toArray(new String[0]);
+		final String[] items = strings.toArray(new String[strings.size()]);
 		builder.setTitle(R.string.add_list_or_tag);
 		builder.setSingleChoiceItems(items, 0, new OnClickListener() {
 			@Override
