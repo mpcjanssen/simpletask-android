@@ -1059,8 +1059,8 @@ public class Simpletask extends ListActivity implements
 						position++;
 					}
 				}
-				positionToIndex.put(position, new Long(index));
-				indexToPosition.put(index, new Long(position));
+				positionToIndex.put(position, Long.valueOf(index));
+				indexToPosition.put(index, Long.valueOf(position));
 				index++;
 				position++;
 			}

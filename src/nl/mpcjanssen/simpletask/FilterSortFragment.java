@@ -93,7 +93,7 @@ public class FilterSortFragment extends Fragment {
                 sortDirection = parts[0];
                 sortType = parts[1];
                 if (Strings.isEmptyOrNull(sortDirection) || !sortDirection.equals(Constants.REVERSED_SORT)) {
-                    sortDirection = Constants.NORMAL_SORT;;
+                    sortDirection = Constants.NORMAL_SORT;
                 }
             }
 
@@ -121,7 +121,6 @@ public class FilterSortFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageButton btn = (ImageButton)view.findViewById(R.id.reverse_button);
                 String direction = directions.get(position);
                 if (direction.equals(Constants.REVERSED_SORT)) {
                     direction = Constants.NORMAL_SORT;

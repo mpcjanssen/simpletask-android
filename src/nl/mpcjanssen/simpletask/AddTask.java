@@ -44,6 +44,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.todotxtholo.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -210,7 +211,7 @@ public class AddTask extends Activity {
     private void showTagMenu(View v) {
         final ArrayList<String> projects = taskBag.getProjects(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(projects.toArray(new String[0]),
+        builder.setItems(projects.toArray(new String[projects.size()]),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
@@ -233,7 +234,7 @@ public class AddTask extends Activity {
             priorityCodes.add(prio.getCode());
         }
 
-        builder.setItems(priorityCodes.toArray(new String[0]),
+        builder.setItems(priorityCodes.toArray(new String[priorityCodes.size()]),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
@@ -251,7 +252,7 @@ public class AddTask extends Activity {
     private void showContextMenu(View v) {
         final ArrayList<String> contexts = taskBag.getContexts(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(contexts.toArray(new String[0]),
+        builder.setItems(contexts.toArray(new String[contexts.size()]),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
@@ -283,9 +284,8 @@ public class AddTask extends Activity {
         int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<String>();
-        for (String line : textInputField.getText().toString().split("\\n", -1)) {
-            lines.add(line);
-        }
+        Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
+
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
         int currentLine = getCurrentCursorLine(textInputField);
