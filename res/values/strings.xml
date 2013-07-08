@@ -46,6 +46,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="cleartask">Clear Task</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
+    <string name="add_list_or_tag">Add list or tag</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="defer">Defer task</string>
@@ -179,6 +180,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_days_ago">%d days ago</string>
     <string name="dates_one_day_ago">1 day ago</string>
     <string name="dates_today">today</string>
+    <string name="dates_tomorrow">tomorrow</string>
     <string name="dates_months_ago">%d months ago</string>
     <string name="dates_one_month_ago">1 month ago</string>
     <string name="dates_one_week">1 week</string>

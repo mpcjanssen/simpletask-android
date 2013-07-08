@@ -517,6 +517,39 @@ public class Simpletask extends ListActivity implements
 		startActivity(Intent.createChooser(shareIntent, "Share"));
 	}
 
+	private void tagTasks(final List<Task> tasks) {
+		List<String> strings = new ArrayList<String>();
+		for (String s: taskBag.getContexts(false)) {
+			strings.add("@"+s);
+		}
+		for (String s: taskBag.getProjects(false)) {
+			strings.add("+"+s);
+		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final String[] items = strings.toArray(new String[0]);
+		builder.setTitle("Add list or tag");
+		builder.setSingleChoiceItems(items, 0, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, final int which) {
+
+				dialog.dismiss();
+				for (Task task : tasks) {
+					if (task != null) {
+						task.append(items[which]);
+					}
+				}
+				taskBag.store();
+				m_app.updateWidgets();
+				m_app.setNeedToPush(true);
+				// We have change the data, views should refresh
+				m_adapter.setFilteredTasks(false);
+				sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+			}
+		});
+		builder.show();
+
+	}
+	
 	private void prioritizeTasks(final List<Task> tasks) {
 		List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
 		final String[] prioArr = strings.toArray(new String[strings.size()]);
@@ -583,12 +616,13 @@ public class Simpletask extends ListActivity implements
 		Date now = new Date();
 		final List<Task> tasksToDefer = tasks;
 		String today = formatter.format(now);
+		String tomorrow = formatter.format(Util.addWeeksToDate(now, 1));
 		String oneWeek = formatter.format(Util.addWeeksToDate(now, 7));
 		String twoWeeks = formatter.format(Util.addWeeksToDate(now, 14));
 		String oneMonth = formatter.format(Util.addMonthsToDate(now, 1));
-		String[] values = { today, oneWeek, twoWeeks, oneMonth };
+		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth };
 
-		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 1,
+		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
 				R.string.defer, null, new Util.OnSingleChoiceDialogListener() {
 					@Override
 					public void onClick(String selected) {
@@ -1317,6 +1351,9 @@ public class Simpletask extends ListActivity implements
 				break;
 			case R.id.uncomplete:
 				undoCompleteTasks(checkedTasks);
+				break;
+			case R.id.add_list_or_tag:
+				tagTasks(checkedTasks);
 				break;
 			case R.id.priority:
 				prioritizeTasks(checkedTasks);
