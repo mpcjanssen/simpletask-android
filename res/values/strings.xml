@@ -46,6 +46,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="cleartask">Clear Task</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
+    <string name="select_priority">Select priority</string>
     <string name="add_list_or_tag">Add list or tag</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>

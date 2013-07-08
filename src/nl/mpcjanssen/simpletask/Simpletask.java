@@ -527,7 +527,7 @@ public class Simpletask extends ListActivity implements
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		final String[] items = strings.toArray(new String[0]);
-		builder.setTitle("Add list or tag");
+		builder.setTitle(R.string.add_list_or_tag);
 		builder.setSingleChoiceItems(items, 0, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, final int which) {
@@ -555,7 +555,7 @@ public class Simpletask extends ListActivity implements
 		final String[] prioArr = strings.toArray(new String[strings.size()]);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Select priority");
+		builder.setTitle(R.string.select_priority);
 		builder.setSingleChoiceItems(prioArr, 0, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, final int which) {
