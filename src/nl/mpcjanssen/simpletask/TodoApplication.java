@@ -54,7 +54,6 @@ public class TodoApplication extends Application {
     private TaskBag taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private Handler handler = new Handler();
-    private Runnable runnable;
 
     public static Context getAppContext() {
         return appContext;
@@ -85,7 +84,7 @@ public class TodoApplication extends Application {
 
         taskBag.reload();
         // Pull from dropbox every 5 minutes
-        runnable = new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
       /* do what you need to do */

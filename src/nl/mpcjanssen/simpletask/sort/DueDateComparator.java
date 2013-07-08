@@ -10,7 +10,7 @@ public class DueDateComparator extends ReversableComparator {
 
     @Override
     public int unreversedCompare(Task a, Task b) {
-        int result = 0;
+        int result;
         if (a.getDueDate() == null && b.getDueDate() == null) {
             result = 0;
         } else if (a.getDueDate() == null) {
