@@ -559,29 +559,29 @@ public class Simpletask extends ListActivity implements
 		for (String s: taskBag.getProjects(false)) {
 			strings.add("+"+s);
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		final String[] items = strings.toArray(new String[strings.size()]);
-		builder.setTitle(R.string.add_list_or_tag);
-		builder.setSingleChoiceItems(items, 0, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, final int which) {
+        final String[] items = strings.toArray(new String[strings.size()]);
+        Dialog tagChooser = Util.createMultiChoiceDialog(this,items,null, R.string.add_list_or_tag,
+                null, new OnMultiChoiceDialogListener() {
+            @Override
+            public void onClick(boolean[] selected) {
 
-				dialog.dismiss();
-				for (Task task : tasks) {
-					if (task != null) {
-						task.append(items[which]);
-					}
-				}
-				taskBag.store();
-				m_app.updateWidgets();
-				m_app.setNeedToPush(true);
-				// We have change the data, views should refresh
-				m_adapter.setFilteredTasks(false);
-				sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
-			}
-		});
-		builder.show();
+                for (int i = 0 ; i < selected.length ; i++) {
+                    if (selected[i]) {
+                        for (Task t : tasks) {
+                            t.append(items[i]);
+                        }
+                    }
+                }
+                taskBag.store();
+                m_app.updateWidgets();
+                m_app.setNeedToPush(true);
+                // We have change the data, views should refresh
+                m_adapter.setFilteredTasks(false);
+                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
 
+            }
+        });
+        tagChooser.show();
 	}
 	
 	private void prioritizeTasks(final List<Task> tasks) {
