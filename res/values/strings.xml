@@ -203,6 +203,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_added">Task added</string>
     <string name="default_sort">Default sort</string>
     <string name="pull_to_refresh_refreshing_label">Syncing with dropbox…</string>
+    <string name="not_tagged">Tasks not on list or tagged</string>
 
 
 </resources>
