@@ -124,6 +124,9 @@ public class AddTask extends Activity {
 
     private void noteToSelf (Intent intent) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+            // This was a voice note
+        }
         taskBag.addAsTask(task);
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
