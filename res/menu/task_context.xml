@@ -46,6 +46,10 @@ You should have received a copy of the GNU General Public License along with Tod
             android:id="@+id/add_list_or_tag"
             android:icon="@drawable/labels"/>
     <item
+            android:title="@string/remove_list_or_tag"
+            android:id="@+id/remove_list_or_tag"
+            android:showAsAction="never"/>
+    <item
             android:title="@string/share"
             android:id="@+id/share"
             android:icon="@drawable/share"/>

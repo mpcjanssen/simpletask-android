@@ -333,4 +333,10 @@ public class Task implements Serializable, Comparable<Task> {
 	public void append(String string) {
 		this.init(originalText + " " + string , null);		
 	}
+
+    public void removeTag(String tag) {
+        String newText = originalText.replaceAll(tag, " ");
+        newText = newText.trim();
+        this.init(newText , null);
+    }
 }
