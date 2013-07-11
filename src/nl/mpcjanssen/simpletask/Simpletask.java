@@ -551,6 +551,45 @@ public class Simpletask extends ListActivity implements
 		startActivity(Intent.createChooser(shareIntent, "Share"));
 	}
 
+    private void removeTaskTags(final List<Task> tasks) {
+        LinkedHashSet<String> contexts = new LinkedHashSet<String>();
+        LinkedHashSet<String> projects = new LinkedHashSet<String>();
+        for (Task task : tasks) {
+            for (String s : task.getContexts()) {
+                contexts.add("@" + s);
+            }
+            for (String s : task.getProjects()) {
+                projects.add("+"+s);
+            }
+        }
+        final ArrayList<String> items = new ArrayList<String>();
+        items.addAll(contexts);
+        items.addAll(projects);
+        String[] values = items.toArray(new String[items.size()]);
+        Dialog tagChooser = Util.createMultiChoiceDialog(this,values,null, R.string.add_list_or_tag,
+                null, new OnMultiChoiceDialogListener() {
+            @Override
+            public void onClick(boolean[] selected) {
+
+                for (int i = 0 ; i < selected.length ; i++) {
+                    if (selected[i]) {
+                        for (Task t : tasks) {
+                            t.removeTag(items.get(i));
+                        }
+                    }
+                }
+                taskBag.store();
+                m_app.updateWidgets();
+                m_app.setNeedToPush(true);
+                // We have change the data, views should refresh
+                m_adapter.setFilteredTasks(false);
+                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+
+            }
+        });
+        tagChooser.show();
+    }
+
 	private void tagTasks(final List<Task> tasks) {
 		List<String> strings = new ArrayList<String>();
 		for (String s: taskBag.getContexts(false)) {
@@ -1389,6 +1428,9 @@ public class Simpletask extends ListActivity implements
 			case R.id.add_list_or_tag:
 				tagTasks(checkedTasks);
 				break;
+            case R.id.remove_list_or_tag:
+                removeTaskTags(checkedTasks);
+                break;
 			case R.id.priority:
 				prioritizeTasks(checkedTasks);
 				break;
