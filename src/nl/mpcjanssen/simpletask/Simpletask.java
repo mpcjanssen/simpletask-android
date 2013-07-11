@@ -565,8 +565,12 @@ public class Simpletask extends ListActivity implements
         final ArrayList<String> items = new ArrayList<String>();
         items.addAll(contexts);
         items.addAll(projects);
+        if (items.size()==0) {
+            showToast(R.string.not_tagged);
+            return;
+        }
         String[] values = items.toArray(new String[items.size()]);
-        Dialog tagChooser = Util.createMultiChoiceDialog(this,values,null, R.string.add_list_or_tag,
+        Dialog tagChooser = Util.createMultiChoiceDialog(this,values,null, R.string.remove_list_or_tag,
                 null, new OnMultiChoiceDialogListener() {
             @Override
             public void onClick(boolean[] selected) {
@@ -1320,7 +1324,12 @@ public class Simpletask extends ListActivity implements
 		Util.showToastLong(this, string);
 	}
 
-	public void startFilterActivity() {
+    public void showToast(int id) {
+        Util.showToastLong(this, getString(id));
+    }
+
+
+    public void startFilterActivity() {
 		Intent i = new Intent(this, FilterActivity.class);
 
 		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
@@ -1348,25 +1357,19 @@ public class Simpletask extends ListActivity implements
 		public void onItemCheckedStateChanged(ActionMode mode, int position,
 				long id, boolean checked) {
 			getListView().invalidateViews();
-			rebuildMenuWithSelection(mode, mode.getMenu());
+            mode.invalidate();
 		}
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.task_context, menu);
-			rebuildMenuWithSelection(mode, menu);
 			actionMode = mode;
 			return true;
 		}
 
 		@Override
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			return false; // To change body of implemented methods use File |
-			// Settings | File Templates.
-		}
-
-		private void rebuildMenuWithSelection(ActionMode mode, Menu menu) {
 			List<Task> checkedTasks = getCheckedTasks();
 			int numSelected = checkedTasks.size();
 			String title = "";
@@ -1401,7 +1404,7 @@ public class Simpletask extends ListActivity implements
 							u.toString());
 				}
 			}
-
+            return true;
 		}
 
 		@Override
