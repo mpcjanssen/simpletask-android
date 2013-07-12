@@ -96,9 +96,7 @@ public class TodoApplication extends Application {
                 Log.v(TAG, "Pulling from remote");
             }
         };
-
-        handler.postDelayed(runnable, 100);
-
+        handler.postDelayed(runnable, 5 * 60 * 1000);
     }
 
     @Override
