@@ -335,7 +335,7 @@ public class Task implements Serializable, Comparable<Task> {
 	}
 
     public void removeTag(String tag) {
-        String newText = inFileFormat().replaceAll(tag, " ");
+        String newText = inFileFormat().replaceAll(Pattern.quote(tag), " ");
         newText = newText.trim();
         this.init(newText , null);
     }
@@ -346,6 +346,15 @@ public class Task implements Serializable, Comparable<Task> {
     public void addList(String listName) {
         if (!getContexts().contains(listName)) {
             append ("@" + listName);
+        }
+    }
+
+    /* Tags the task with tag
+    ** If the task already has te tag, it does nothing
+    */
+    public void addTag(String tag) {
+        if (!getProjects().contains(tag)) {
+            append ("+" + tag);
         }
     }
 }

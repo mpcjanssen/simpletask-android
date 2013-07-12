@@ -44,8 +44,7 @@ You should have received a copy of the GNU General Public License along with Sim
             android:allowBackup="false"
             android:icon="@drawable/icon"
             android:label="@string/app_label"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
-            android:uiOptions="splitActionBarWhenNarrow">
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
 
         <activity
                 android:name="com.dropbox.client2.android.AuthActivity"
@@ -101,6 +100,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
                 android:name="nl.mpcjanssen.simpletask.Simpletask"
                 android:exported="true"
+                android:windowSoftInputMode="stateHidden"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

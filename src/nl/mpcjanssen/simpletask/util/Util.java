@@ -31,9 +31,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import nl.mpcjanssen.simpletask.TodoException;
+import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.todotxtholo.R;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -390,4 +393,25 @@ public class Util {
         return newDate;
     }
 
+    public static ArrayList<String> prefixItems(String prefix, ArrayList<String> items) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String item : items) {
+            result.add(prefix + item);
+        }
+        return result;
+    }
+
+    public static ArrayList<String> getCheckedItems(ListView listView , boolean checked) {
+        SparseBooleanArray checks = listView.getCheckedItemPositions();
+        ArrayList<String> items = new ArrayList<String>();
+        for (int i = 0 ; i < checks.size() ; i++) {
+            String item = (String)listView.getAdapter().getItem(checks.keyAt(i));
+            if (checks.valueAt(i) && checked) {
+                items.add(item);
+            } else if (!checks.valueAt(i) && !checked) {
+                items.add(item);
+            }
+        }
+        return items;
+    }
 }
