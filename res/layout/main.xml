@@ -102,24 +102,31 @@ You should have received a copy of the GNU General Public License along with Tod
             android:orientation="vertical"
             android:background="#111"
             android:layout_width="240dp">
-
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_drawer_title"
+                android:text="@string/context_prompt"
+                android:background="@android:color/holo_blue_dark"
+                android:textColor="@android:color/white"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:gravity="center_horizontal"
+                />
+        <ListView
+                android:id="@+id/left_tags_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:choiceMode="multipleChoice"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:background="#111"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/left_drawer_header"
                 android:visibility="gone">
-
-            <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@android:color/holo_blue_dark"
-                    android:visibility="gone"
-                    android:id="@+id/left_apply_button"
-                    android:text="@string/updatetask"
-                    android:textColor="@android:color/white"/>
-
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,16 +134,18 @@ You should have received a copy of the GNU General Public License along with Tod
                     android:textColor="@android:color/white"
                     android:hint="@string/new_list_name"
                     android:id="@+id/new_list_name"/>
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:id="@+id/left_apply_button"
+                    android:text="@string/updatetask"
+                    style="@android:style/Widget.Holo.Button.Borderless.Small"/>
+
         </LinearLayout>
 
-        <ListView
-                android:id="@+id/left_tags_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:choiceMode="multipleChoice"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="0dp"
-                android:background="#111"/>
+
     </LinearLayout>
     <LinearLayout
             android:id="@+id/right_drawer"
@@ -145,6 +154,26 @@ You should have received a copy of the GNU General Public License along with Tod
             android:orientation="vertical"
             android:background="#111"
             android:layout_width="240dp">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_drawer_title"
+                android:text="@string/project_prompt"
+                android:background="@android:color/holo_blue_dark"
+                android:textColor="@android:color/white"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:gravity="center_horizontal"
+                />
+
+        <ListView
+                android:id="@+id/right_tags_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:choiceMode="multipleChoice"
+                android:background="#111"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -153,15 +182,6 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:id="@+id/right_drawer_header"
                 android:visibility="gone">
 
-            <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@android:color/holo_blue_dark"
-                    android:visibility="gone"
-                    android:id="@+id/right_apply_button"
-                    android:text="@string/updatetask"
-                    android:textColor="@android:color/white"/>
 
             <EditText
                     android:layout_width="match_parent"
@@ -170,16 +190,17 @@ You should have received a copy of the GNU General Public License along with Tod
                     android:textColor="@android:color/white"
                     android:hint="@string/new_tag_name"
                     android:id="@+id/new_tag_name"/>
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:id="@+id/right_apply_button"
+                    android:text="@string/updatetask"
+                    style="@android:style/Widget.Holo.Button.Borderless.Small"
+                    />
         </LinearLayout>
 
-        <ListView
-                android:id="@+id/right_tags_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="0dp"
-                android:choiceMode="multipleChoice"
-                android:background="#111"/>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
 
