@@ -34,7 +34,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:title="@string/filter"
             android:id="@+id/filter"
             android:icon="@drawable/labels"
-            android:showAsAction="always"
+            android:showAsAction="never"
             />
     <item
             android:title="@string/addtask"

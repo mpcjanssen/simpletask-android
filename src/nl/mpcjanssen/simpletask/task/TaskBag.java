@@ -27,6 +27,7 @@ import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.remote.PullTodoResult;
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.util.TaskIo;
+import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -233,6 +234,14 @@ public class TaskBag {
             }
         }
         return null;
+    }
+
+    public ArrayList<String> getDecoratedContexts(boolean includeNone) {
+        return Util.prefixItems("@", getContexts(includeNone));
+    }
+
+    public ArrayList<String> getDecoratedProjects(boolean includeNone) {
+        return Util.prefixItems("+", getProjects(includeNone));
     }
 
     public static class Preferences {

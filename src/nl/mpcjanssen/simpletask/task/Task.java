@@ -331,12 +331,30 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
 	public void append(String string) {
-		this.init(originalText + " " + string , null);		
+		this.init(inFileFormat() + " " + string , null);
 	}
 
     public void removeTag(String tag) {
-        String newText = originalText.replaceAll(tag, " ");
+        String newText = inFileFormat().replaceAll(Pattern.quote(tag), " ");
         newText = newText.trim();
         this.init(newText , null);
+    }
+
+    /* Adds the task to list Listname
+    ** If the task is already on that list, it does nothing
+     */
+    public void addList(String listName) {
+        if (!getContexts().contains(listName)) {
+            append ("@" + listName);
+        }
+    }
+
+    /* Tags the task with tag
+    ** If the task already has te tag, it does nothing
+    */
+    public void addTag(String tag) {
+        if (!getProjects().contains(tag)) {
+            append ("+" + tag);
+        }
     }
 }
