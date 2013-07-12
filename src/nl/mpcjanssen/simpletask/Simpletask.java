@@ -1010,6 +1010,7 @@ public class Simpletask extends ListActivity implements
 		if (actionMode!=null) {
 			actionMode.finish();
 		}
+        updateDrawerList();
 	}
 
 	public class TaskAdapter extends BaseAdapter implements ListAdapter,
