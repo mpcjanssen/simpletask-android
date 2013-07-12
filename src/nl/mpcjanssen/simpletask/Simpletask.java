@@ -66,6 +66,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Layout;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseArray;
@@ -88,6 +89,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -138,6 +140,7 @@ public class Simpletask extends ListActivity implements
 	private ListView m_contextDrawerList;
     private ListView m_projectDrawerList;
 	private DrawerLayout m_drawerLayout;
+    private ViewGroup m_container;
 	private ActionBarDrawerToggle m_drawerToggle;
 
 	// PullToRefresh
@@ -275,8 +278,12 @@ public class Simpletask extends ListActivity implements
         m_projectDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_PROJECT));
 
 		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		if (m_drawerLayout != null) {
+		if (m_drawerLayout == null) {
+            // In tablet landscape mode
+            m_container = (ViewGroup) findViewById(R.id.tablet_drawer_layout);
 			// Not in tablet landscape mode
+        } else {
+            m_container = m_drawerLayout;
 			
 			m_drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 			m_drawerLayout, /* DrawerLayout object */
@@ -1027,10 +1034,8 @@ public class Simpletask extends ListActivity implements
 				taskBag.reload();
 				// Update lists in side drawer
 				// Set the adapter for the list view
-
+                updateDrawerList();
 			}
-            updateDrawerList();
-
 			AndFilter filter = new AndFilter();
 			visibleTasks.clear();
 			for (Task t : taskBag.getTasks()) {
@@ -1310,7 +1315,7 @@ public class Simpletask extends ListActivity implements
             }
         }
         for (String project : m_projects) {
-            int position = m_contextsList.indexOf(project);
+            int position = m_projectsList.indexOf(project);
             if (position!=-1) {
                 m_projectDrawerList.setItemChecked(position,true);
             }
@@ -1351,12 +1356,12 @@ public class Simpletask extends ListActivity implements
             }
         }
         showDrawerHeaders(true);
-        Button applyButton = (Button)m_drawerLayout.findViewById(R.id.left_apply_button);
+        Button applyButton = (Button)m_container.findViewById(R.id.left_apply_button);
         applyButton.setVisibility(View.VISIBLE);
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ListView lv = (ListView) m_drawerLayout.findViewById(R.id.left_tags_list);
+                ListView lv = (ListView) m_container.findViewById(R.id.left_tags_list);
                 SparseBooleanArray checks = lv.getCheckedItemPositions();
                 for (int i = 0 ; i < checks.size() ; i++) {
                     String listName = (String)lv.getAdapter().getItem(checks.keyAt(i));
@@ -1370,27 +1375,30 @@ public class Simpletask extends ListActivity implements
                         }
                     }
                 }
-                EditText ed = (EditText) m_drawerLayout.findViewById(R.id.new_list_name);
+                EditText ed = (EditText) m_container.findViewById(R.id.new_list_name);
                 if (!Strings.isEmptyOrNull(ed.getText().toString())) {
                     for (Task t: checkedTasks) {
                         t.addList(ed.getText().toString());
                     }
                 }
                 ed.clearFocus();
+                ed.setText("");
                 taskBag.store();
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
                 sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
                 actionMode.finish();
-                m_drawerLayout.closeDrawers();
+                if (m_drawerLayout!=null) {
+                    m_drawerLayout.closeDrawers();
+                }
             }
         });
-        Button rightApplyButton = (Button)m_drawerLayout.findViewById(R.id.right_apply_button);
+        Button rightApplyButton = (Button)m_container.findViewById(R.id.right_apply_button);
         rightApplyButton.setVisibility(View.VISIBLE);
         rightApplyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ListView lv = (ListView) m_drawerLayout.findViewById(R.id.right_tags_list);
+                ListView lv = (ListView) m_container.findViewById(R.id.right_tags_list);
                 SparseBooleanArray checks = lv.getCheckedItemPositions();
                 for (int i = 0 ; i < checks.size() ; i++) {
                     String listName = (String)lv.getAdapter().getItem(checks.keyAt(i));
@@ -1404,7 +1412,7 @@ public class Simpletask extends ListActivity implements
                         }
                     }
                 }
-                EditText ed = (EditText) m_drawerLayout.findViewById(R.id.new_tag_name);
+                EditText ed = (EditText) m_container.findViewById(R.id.new_tag_name);
                 if (!Strings.isEmptyOrNull(ed.getText().toString())) {
                     for (Task t: checkedTasks) {
                         t.addTag(ed.getText().toString());
@@ -1415,7 +1423,9 @@ public class Simpletask extends ListActivity implements
                 m_app.setNeedToPush(true);
                 sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
                 actionMode.finish();
-                m_drawerLayout.closeDrawers();
+                if (m_drawerLayout!=null) {
+                    m_drawerLayout.closeDrawers();
+                }
                 ed.setText("");
                 ed.clearFocus();
             }
@@ -1423,15 +1433,15 @@ public class Simpletask extends ListActivity implements
     }
 
     private void showDrawerHeaders(boolean show) {
-        if (m_drawerLayout==null) {
+        if (m_container==null) {
             return;
         }
         if (show) {
-            m_drawerLayout.findViewById(R.id.left_drawer_header).setVisibility(View.VISIBLE);
-            m_drawerLayout.findViewById(R.id.right_drawer_header).setVisibility(View.VISIBLE);
+            m_container.findViewById(R.id.left_drawer_header).setVisibility(View.VISIBLE);
+            m_container.findViewById(R.id.right_drawer_header).setVisibility(View.VISIBLE);
         } else {
-            m_drawerLayout.findViewById(R.id.left_drawer_header).setVisibility(View.GONE);
-            m_drawerLayout.findViewById(R.id.right_drawer_header).setVisibility(View.GONE);
+            m_container.findViewById(R.id.left_drawer_header).setVisibility(View.GONE);
+            m_container.findViewById(R.id.right_drawer_header).setVisibility(View.GONE);
         }
     }
 
@@ -1637,7 +1647,9 @@ public class Simpletask extends ListActivity implements
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			actionMode = null;
-            m_drawerLayout.closeDrawer(Gravity.LEFT);
+            if (m_drawerLayout!=null) {
+                m_drawerLayout.closeDrawers();
+            }
             updateDrawerList();
 			m_adapter.setFilteredTasks(false);
 			return;
