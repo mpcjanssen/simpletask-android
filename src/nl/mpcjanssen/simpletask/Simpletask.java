@@ -270,6 +270,16 @@ public class Simpletask extends ListActivity implements
 		m_contextDrawerList = (ListView) findViewById(R.id.left_tags_list);
         m_projectDrawerList = (ListView) findViewById(R.id.right_tags_list);
 
+        m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if (m_drawerLayout == null) {
+            // In tablet landscape mode
+            m_container = (ViewGroup) findViewById(R.id.tablet_drawer_layout);
+        } else {
+            // Not in tablet landscape mode
+            m_container = m_drawerLayout;
+        }
+
 		// Set the adapter for the list view
 		updateDrawerList();
 
@@ -277,14 +287,7 @@ public class Simpletask extends ListActivity implements
 		m_contextDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_CONTEXT));
         m_projectDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_PROJECT));
 
-		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		if (m_drawerLayout == null) {
-            // In tablet landscape mode
-            m_container = (ViewGroup) findViewById(R.id.tablet_drawer_layout);
-			// Not in tablet landscape mode
-        } else {
-            m_container = m_drawerLayout;
-			
+		if (m_drawerLayout != null) {
 			m_drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 			m_drawerLayout, /* DrawerLayout object */
 			R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
@@ -1315,12 +1318,42 @@ public class Simpletask extends ListActivity implements
                 m_contextDrawerList.setItemChecked(position,true);
             }
         }
+
+        CheckedTextView not = (CheckedTextView)m_container.findViewById(R.id.left_drawer_not);
+        not.setChecked(m_contextsNot);
+        not.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CheckedTextView cb = (CheckedTextView) view;
+                cb.setChecked(!cb.isChecked());
+                m_contextsNot = cb.isChecked();
+                Intent intent = getIntent();
+                intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+                setIntent(intent);
+                m_adapter.setFilteredTasks(false);
+            }
+        });
+
         for (String project : m_projects) {
             int position = m_projectsList.indexOf(project);
             if (position!=-1) {
                 m_projectDrawerList.setItemChecked(position,true);
             }
         }
+        not = (CheckedTextView)m_container.findViewById(R.id.right_drawer_not);
+        not.setChecked(m_projectsNot);
+        not.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CheckedTextView cb = (CheckedTextView) view;
+                cb.setChecked(!cb.isChecked());
+                m_projectsNot = cb.isChecked();
+                Intent intent = getIntent();
+                intent.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+                setIntent(intent);
+                m_adapter.setFilteredTasks(false);
+            }
+        });
     }
 
     private void updateDrawerListForSelection(final List<Task> checkedTasks) {
@@ -1440,9 +1473,13 @@ public class Simpletask extends ListActivity implements
         if (show) {
             m_container.findViewById(R.id.left_drawer_header).setVisibility(View.VISIBLE);
             m_container.findViewById(R.id.right_drawer_header).setVisibility(View.VISIBLE);
+            m_container.findViewById(R.id.right_drawer_inverted).setVisibility(View.GONE);
+            m_container.findViewById(R.id.left_drawer_inverted).setVisibility(View.GONE);
         } else {
             m_container.findViewById(R.id.left_drawer_header).setVisibility(View.GONE);
             m_container.findViewById(R.id.right_drawer_header).setVisibility(View.GONE);
+            m_container.findViewById(R.id.right_drawer_inverted).setVisibility(View.VISIBLE);
+            m_container.findViewById(R.id.left_drawer_inverted).setVisibility(View.VISIBLE);
         }
     }
 
@@ -1711,7 +1748,6 @@ public class Simpletask extends ListActivity implements
             tags = Util.getCheckedItems(lv,true);
             switch(type) {
                 case DRAWER_CONTEXT:
-                    m_contextsNot = false;
                     m_contexts.clear();
                     m_contexts.addAll(tags);
                     intent.putExtra(Constants.INTENT_CONTEXTS_FILTER,
@@ -1720,12 +1756,10 @@ public class Simpletask extends ListActivity implements
                     setIntent(intent);
                     break;
                 case DRAWER_PROJECT:
-                    m_projectsNot = false;
                     m_projects.clear();
                     m_projects.addAll(tags);
                     intent.putExtra(Constants.INTENT_PROJECTS_FILTER,
                             Util.join(m_projects, "\n"));
-                    intent.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
                     setIntent(intent);
                     break;
             }
