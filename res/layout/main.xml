@@ -134,7 +134,7 @@ You should have received a copy of the GNU General Public License along with Tod
                     />
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@android:color/holo_blue_dark"
                     />
 
@@ -214,7 +214,7 @@ You should have received a copy of the GNU General Public License along with Tod
                     />
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@android:color/holo_blue_dark"
                     />
 
