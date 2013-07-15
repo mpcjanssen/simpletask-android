@@ -169,7 +169,7 @@ You should have received a copy of the GNU General Public License along with Tod
                     android:visibility="gone"
                     android:id="@+id/left_apply_button"
                     android:text="@string/updatetask"
-                    style="@android:style/Widget.Holo.Button.Borderless.Small"/>
+                    style="@android:style/Widget.Holo.Button"/>
 
         </LinearLayout>
 
@@ -257,7 +257,7 @@ You should have received a copy of the GNU General Public License along with Tod
                     android:visibility="gone"
                     android:id="@+id/right_apply_button"
                     android:text="@string/updatetask"
-                    style="@android:style/Widget.Holo.Button.Borderless.Small"
+                    style="@android:style/Widget.Holo.Button"
                     />
         </LinearLayout>
 
