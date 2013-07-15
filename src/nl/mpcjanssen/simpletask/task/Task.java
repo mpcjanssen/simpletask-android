@@ -31,6 +31,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -172,6 +173,12 @@ public class Task implements Serializable, Comparable<Task> {
         } catch (ParseException e) {
             // e.printStackTrace();
         }
+    }
+
+    public void setPrependedDate(Date dt) {
+        this.prependedDate = formatter.format(dt);
+        this.relativeAge = RelativeDate.getRelativeDate(dt);
+
     }
 
     public String getPrependedDate() {
