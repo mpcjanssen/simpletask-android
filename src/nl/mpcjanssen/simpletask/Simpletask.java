@@ -41,6 +41,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -85,6 +86,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -718,30 +720,67 @@ public class Simpletask extends ListActivity implements
 		String oneWeek = formatter.format(Util.addWeeksToDate(now, 7));
 		String twoWeeks = formatter.format(Util.addWeeksToDate(now, 14));
 		String oneMonth = formatter.format(Util.addMonthsToDate(now, 1));
-		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth };
+		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth, "" };
 
 		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
 				R.string.defer, null, new Util.OnSingleChoiceDialogListener() {
 					@Override
 					public void onClick(String selected) {
-						for (Task t : tasksToDefer) {
-							if (t != null) {
-								t.setPrependedDate(selected);
-							}
-						}
-						m_adapter.setFilteredTasks(false);
-						taskBag.store();
-						m_app.updateWidgets();
-						m_app.setNeedToPush(true);
-						// We have change the data, views should refresh
-						sendBroadcast(new Intent(
-								Constants.INTENT_START_SYNC_TO_REMOTE));
+                        if (selected.equals("")) {
+                            DatePickerDialog dialog = new DatePickerDialog(Simpletask.this, new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.set(year, month, day);
+                                    deferTasks(cal.getTime(), tasksToDefer);
+
+                                }
+                            },
+                                    Calendar.getInstance().get(Calendar.YEAR),
+                                    Calendar.getInstance().get(Calendar.MONTH),
+                                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+                            dialog.show();
+                        } else {
+                            deferTasks(selected, tasksToDefer);
+                        }
 					}
 				});
 		d.show();
 	}
 
-	private void deleteTasks(List<Task> tasks) {
+    private void deferTasks(Date selected, List<Task> tasksToDefer) {
+        for (Task t : tasksToDefer) {
+            if (t != null) {
+                t.setPrependedDate(selected);
+            }
+        }
+        m_adapter.setFilteredTasks(false);
+        taskBag.store();
+        m_app.updateWidgets();
+        m_app.setNeedToPush(true);
+        // We have change the data, views should refresh
+        sendBroadcast(new Intent(
+                Constants.INTENT_START_SYNC_TO_REMOTE));
+    }
+
+
+    private void deferTasks(String selected, List<Task> tasksToDefer) {
+        for (Task t : tasksToDefer) {
+            if (t != null) {
+                t.setPrependedDate(selected);
+            }
+        }
+        m_adapter.setFilteredTasks(false);
+        taskBag.store();
+        m_app.updateWidgets();
+        m_app.setNeedToPush(true);
+        // We have change the data, views should refresh
+        sendBroadcast(new Intent(
+                Constants.INTENT_START_SYNC_TO_REMOTE));
+    }
+
+    private void deleteTasks(List<Task> tasks) {
 		for (Task t : tasks) {
 			if (t != null) {
 				taskBag.delete(t);

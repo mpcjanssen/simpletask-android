@@ -188,6 +188,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_one_week">1 week</string>
     <string name="dates_two_weeks">2 weeks</string>
     <string name="dates_one_month">1 month</string>
+    <string name="date_pick">pick date</string>
 
 
     <string name="title_activity_filter">Filter</string>
