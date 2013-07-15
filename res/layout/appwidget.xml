@@ -45,6 +45,8 @@
         android:layout_height="0dip"
         android:layout_weight="1"
         android:background="#FFFFFF"
+        android:divider="@android:drawable/divider_horizontal_bright"
+        android:dividerHeight="1dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
         android:textColor="#000000" />
