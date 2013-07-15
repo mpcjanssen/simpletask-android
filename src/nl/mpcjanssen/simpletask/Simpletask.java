@@ -1395,6 +1395,17 @@ public class Simpletask extends ListActivity implements
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                EditText ed = (EditText) m_container.findViewById(R.id.new_tag_name);
+                if (!Strings.isEmptyOrNull(ed.getText().toString())) {
+                    String newTag = ed.getText().toString();
+                    if (!Task.validTag(newTag)) {
+                        Util.showToastShort(view.getContext(),getString(R.id.invalid_context) + ": " + newTag );
+                        return;
+                    }
+                    for (Task t: checkedTasks) {
+                        t.addList(ed.getText().toString());
+                    }
+                }
                 ListView lv = (ListView) m_container.findViewById(R.id.left_tags_list);
                 SparseBooleanArray checks = lv.getCheckedItemPositions();
                 for (int i = 0 ; i < checks.size() ; i++) {
@@ -1407,12 +1418,6 @@ public class Simpletask extends ListActivity implements
                         for (Task t: checkedTasks) {
                             t.removeTag("@" + listName);
                         }
-                    }
-                }
-                EditText ed = (EditText) m_container.findViewById(R.id.new_list_name);
-                if (!Strings.isEmptyOrNull(ed.getText().toString())) {
-                    for (Task t: checkedTasks) {
-                        t.addList(ed.getText().toString());
                     }
                 }
                 ed.clearFocus();
@@ -1432,6 +1437,17 @@ public class Simpletask extends ListActivity implements
         rightApplyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                EditText ed = (EditText) m_container.findViewById(R.id.new_tag_name);
+                if (!Strings.isEmptyOrNull(ed.getText().toString())) {
+                    String newTag = ed.getText().toString();
+                    if (!Task.validTag(newTag)) {
+                        Util.showToastShort(view.getContext(),getString(R.id.invalid_project) + ": " + newTag );
+                        return;
+                    }
+                    for (Task t: checkedTasks) {
+                        t.addTag(ed.getText().toString());
+                    }
+                }
                 ListView lv = (ListView) m_container.findViewById(R.id.right_tags_list);
                 SparseBooleanArray checks = lv.getCheckedItemPositions();
                 for (int i = 0 ; i < checks.size() ; i++) {
@@ -1444,12 +1460,6 @@ public class Simpletask extends ListActivity implements
                         for (Task t: checkedTasks) {
                             t.removeTag("+" + listName);
                         }
-                    }
-                }
-                EditText ed = (EditText) m_container.findViewById(R.id.new_tag_name);
-                if (!Strings.isEmptyOrNull(ed.getText().toString())) {
-                    for (Task t: checkedTasks) {
-                        t.addTag(ed.getText().toString());
                     }
                 }
                 taskBag.store();

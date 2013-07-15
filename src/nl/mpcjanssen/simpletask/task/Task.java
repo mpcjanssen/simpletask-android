@@ -40,6 +40,10 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
+
+    private static final Pattern TAG_PATTERN = Pattern
+            .compile("^\\S*[\\p{javaLetterOrDigit}_]$");
+
     private static final String COMPLETED = "x ";
     private String originalText;
     private final Priority originalPriority;
@@ -61,7 +65,9 @@ public class Task implements Serializable, Comparable<Task> {
     private SimpleDateFormat formatter;
 
 
-
+    public static boolean validTag(String tag) {
+        return TAG_PATTERN.matcher(tag).find();
+    }
 
     public Task(long id, String rawText, Date defaultPrependedDate) {
         this.id = id;
