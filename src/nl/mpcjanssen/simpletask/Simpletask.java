@@ -1015,14 +1015,13 @@ public class Simpletask extends ListActivity implements
 	 * Handle clear filter click *
 	 */
 	public void onClearClick(View v) {
-		// End current activity if it's search results
+		// Collapse the actionview if we are searching
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			finish();
-		} else { // otherwise just clear the filter in the current activity
-			clearFilter();
-			m_adapter.setFilteredTasks(false);
+			options_menu.findItem(R.id.search).collapseActionView();
 		}
+		clearFilter();
+		m_adapter.setFilteredTasks(false);
 	}
 
 	@Override
@@ -1434,7 +1433,7 @@ public class Simpletask extends ListActivity implements
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText ed = (EditText) m_container.findViewById(R.id.new_tag_name);
+                EditText ed = (EditText) m_container.findViewById(R.id.new_list_name);
                 if (!Strings.isEmptyOrNull(ed.getText().toString())) {
                     String newTag = ed.getText().toString();
                     if (!Task.validTag(newTag)) {
