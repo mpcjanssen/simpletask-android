@@ -55,6 +55,7 @@ public class Constants {
     public final static String INTENT_PROJECTS_FILTER_NOT = "PROJECTSnot";
     public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
     public final static String INTENT_TITLE = "TITLE";
+    public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
 
     public final static String ACTIVE_SORTS = "SORTS";

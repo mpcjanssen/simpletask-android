@@ -421,11 +421,32 @@ public class Simpletask extends ListActivity implements
 		lv.setTextFilterEnabled(true);
 		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lv.setMultiChoiceModeListener(new ActionBarListener());
-		
+
+        // If we were started with a selected task,
+        // select it now and clear it from the intent
+        String selectedTask = intent.getStringExtra(Constants.INTENT_SELECTED_TASK);
+        if(selectedTask!=null) {
+            String[] parts = selectedTask.split(":", 2);
+            setSelectedTask(Integer.valueOf(parts[0]), parts[1]);
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK);
+            setIntent(intent);
+        }
 
 	}
 
-	private void updateFilterBar() {
+    private void setSelectedTask(int index,String selectedTask) {
+        Log.v(TAG, "Selected task: " + selectedTask );
+        Task task = new Task(index,selectedTask);
+        int position = m_adapter.getPosition(task);
+        if (position!=-1) {
+            ListView lv = getListView();
+            lv.setItemChecked(position,true);
+            lv.setSelection(position);
+        }
+
+    }
+
+    private void updateFilterBar() {
 		ListView lv = getListView();
 		int index = lv.getFirstVisiblePosition();
 		View v = lv.getChildAt(0);
@@ -1032,7 +1053,7 @@ public class Simpletask extends ListActivity implements
 			setIntent(intent);
 		}
 		Log.v(TAG, "onNewIntent: " + intent);
-		handleIntent(null);
+		//handleIntent(null);
 	}
 
 	void clearFilter() {
@@ -1061,8 +1082,8 @@ public class Simpletask extends ListActivity implements
 		ArrayList<Task> visibleTasks = new ArrayList<Task>();
 		Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
 		SparseArray<String> headerTitles = new SparseArray<String>();
-		SparseArray<Long> positionToIndex = new SparseArray<Long>();
-		SparseArray<Long> indexToPosition = new SparseArray<Long>();
+		SparseArray<Integer> positionToIndex = new SparseArray<Integer>();
+		SparseArray<Integer> indexToPosition = new SparseArray<Integer>();
 		int size = 0;
 
 		public TaskAdapter(Context context, int textViewResourceId,
@@ -1140,8 +1161,8 @@ public class Simpletask extends ListActivity implements
 						position++;
 					}
 				}
-				positionToIndex.put(position, Long.valueOf(index));
-				indexToPosition.put(index, Long.valueOf(position));
+				positionToIndex.put(position, index);
+				indexToPosition.put(index, position);
 				index++;
 				position++;
 			}
@@ -1158,6 +1179,17 @@ public class Simpletask extends ListActivity implements
 			obs.add(observer);
 			return;
 		}
+
+        /*
+        ** Get the adapter position for task
+         */
+        public int getPosition (Task task) {
+            int index = visibleTasks.indexOf(task);
+            if  (index==-1 || indexToPosition.indexOfKey(index)==-1) {
+                return index;
+            }
+            return indexToPosition.valueAt(indexToPosition.indexOfKey(index));
+        }
 
 		@Override
 		public void unregisterDataSetObserver(DataSetObserver observer) {
