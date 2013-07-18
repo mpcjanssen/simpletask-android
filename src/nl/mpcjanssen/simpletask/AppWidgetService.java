@@ -69,7 +69,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		
 	}
 	
-    private Intent createFilterIntent() {
+    private Intent createFilterIntent(Task selectedTask) {
     	Intent target = new Intent();
         target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
         target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
@@ -78,6 +78,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
         target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
         target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
+        target.putExtra(Constants.INTENT_SELECTED_TASK, selectedTask.getId() + ":" + selectedTask.inFileFormat());
         return target;
     }
 
@@ -121,7 +122,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         final int itemId = R.layout.widget_list_item;
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
         rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
-        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent());
+        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(visibleTasks.get(position)));
         return rv;
 	}
 

@@ -293,7 +293,6 @@ public class Task implements Serializable, Comparable<Task> {
         if (getClass() != obj.getClass())
             return false;
         Task other = (Task) obj;
-
         if (id != other.id)
             return false;
         return (this.inFileFormat().equals(other.inFileFormat()));
