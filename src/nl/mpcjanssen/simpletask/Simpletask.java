@@ -876,8 +876,8 @@ public class Simpletask extends ListActivity implements
 		Log.v(TAG, "Starting addTask activity");
 		Intent intent = new Intent(this, AddTask.class);
 		intent.putExtra(Constants.EXTRA_TASK, task);
-		intent.putExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-		intent.putExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
+		intent.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts,"\n"));
+		intent.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects,"\n"));
 		startActivity(intent);
 	}
 
