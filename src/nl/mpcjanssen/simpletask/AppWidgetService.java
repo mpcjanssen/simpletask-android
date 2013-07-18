@@ -43,7 +43,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
 	public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
-		// TODO Auto-generated constructor stub
 		widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
 		Log.v(TAG, "Creating view for widget: " + widgetId);
 		mContext = TodoApplication.getAppContext();
@@ -66,7 +65,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
 		setFilteredTasks(true);
-		
 	}
 	
     private Intent createFilterIntent(Task selectedTask) {

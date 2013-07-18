@@ -21,43 +21,50 @@ import android.widget.RemoteViews;
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
 	final static String TAG = MyAppWidgetProvider.class.getSimpleName();
+    final static int FROM_TITLE = 0;
+    final static int FROM_LISTVIEW = 1;
 	
 	public static RemoteViews updateView(int widgetId, Context context) {
 
 		RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
-		// Set up the intent that starts the StackViewService, which will
-        // provide the views for this collection.
+
         Intent intent = new Intent(context, AppWidgetService.class);
         // Add the app widget ID to the intent extras.
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        //intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
         view.setTextViewText(R.id.title,preferences.getString(Constants.INTENT_TITLE, "Simpletask"));
-		// Create an Intent to launch ExampleActivity
-        intent = new Intent(context, Simpletask.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+        // Make sure we use different intents for the different pendingIntents or
+        // they will replace each other
+
+        intent = new Intent(Constants.INTENT_START_FILTER);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, intent, 0);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
+
+        intent = new Intent(Constants.INTENT_START_FILTER);
+        pendingIntent = PendingIntent.getActivity(context, FROM_TITLE, intent, 0);
+        view.setOnClickPendingIntent(R.id.title,pendingIntent);
+
         intent = new Intent(context, AddTask.class);
-        PendingIntent pi = PendingIntent.getActivity(
-                context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        view.setOnClickPendingIntent(R.id.widgetadd,pi);
+        pendingIntent = PendingIntent.getActivity(
+                context, 0, intent, 0);
+        view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
         return view;
 	}
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
         for (int i = 0; i < appWidgetIds.length; i++) {
             int widgetId = appWidgetIds[i];
 			Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
-
 		}
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 
 
