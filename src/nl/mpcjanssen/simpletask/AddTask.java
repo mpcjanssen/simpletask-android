@@ -40,10 +40,12 @@ import android.widget.EditText;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.todotxtholo.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -183,8 +185,16 @@ public class AddTask extends Activity {
             textInputField.setSelection(task.inFileFormat().length());
         } else {
             if (textInputField.getText().length() == 0) {
-                ArrayList<String> projects = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_PROJECTS_SELECTED);
-                ArrayList<String> contexts = (ArrayList<String>) intent.getSerializableExtra(Constants.EXTRA_CONTEXTS_SELECTED);
+                ArrayList<String> projects = new ArrayList<String>();
+                String value = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER);
+                if (!Strings.isEmptyOrNull(value)) {
+                    projects.addAll(Arrays.asList(value.split("\n")));
+                }
+                ArrayList<String> contexts = new ArrayList<String>();
+                value = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
+                if (!Strings.isEmptyOrNull(value)) {
+                    contexts.addAll(Arrays.asList(value.split("\n")));
+                }
                 iniTask = new Task(1, "");
                 iniTask.initWithFilters(contexts, projects);
             }

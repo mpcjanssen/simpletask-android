@@ -1,10 +1,14 @@
 package nl.mpcjanssen.simpletask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import android.content.ComponentName;
+
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.todotxtholo.R;
 
@@ -21,9 +25,33 @@ import android.widget.RemoteViews;
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
 	final static String TAG = MyAppWidgetProvider.class.getSimpleName();
-    final static int FROM_TITLE = 0;
-    final static int FROM_LISTVIEW = 1;
-	
+    final static int FROM_LISTVIEW = 0;
+    // Create unique numbers for every widget pendingintent
+    // Otherwise the will overwrite eachother
+    final static int FROM_WIDGETS_START = 1;
+
+    public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
+        ArrayList<String> m_contexts = new ArrayList<String>();
+        m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>()));
+        ArrayList<String> prio_strings = new ArrayList<String>();
+        prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>()));
+        ArrayList<Priority> m_prios = Priority.toPriority(prio_strings);
+        ArrayList<String> m_projects = new ArrayList<String>();
+        m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>()));
+        boolean m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT, false);
+        boolean m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT, false);
+        boolean m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT, false);
+        ArrayList<String> m_sorts = new ArrayList<String>();
+        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
+        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
+        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
+        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
+    }
+
 	public static RemoteViews updateView(int widgetId, Context context) {
 
 		RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
@@ -31,7 +59,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, AppWidgetService.class);
         // Add the app widget ID to the intent extras.
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-        //intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
@@ -45,12 +73,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
         intent = new Intent(Constants.INTENT_START_FILTER);
-        pendingIntent = PendingIntent.getActivity(context, FROM_TITLE, intent, 0);
+        putFilterExtras(intent, preferences, widgetId);
+        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, intent, 0);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
         intent = new Intent(context, AddTask.class);
+        putFilterExtras(intent, preferences, widgetId);
         pendingIntent = PendingIntent.getActivity(
-                context, 0, intent, 0);
+                context, FROM_WIDGETS_START+widgetId, intent, 0);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
         return view;
 	}
