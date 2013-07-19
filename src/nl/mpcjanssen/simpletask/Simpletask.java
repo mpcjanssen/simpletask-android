@@ -799,18 +799,23 @@ public class Simpletask extends ListActivity implements
                 Constants.INTENT_START_SYNC_TO_REMOTE));
     }
 
-    private void deleteTasks(List<Task> tasks) {
-		for (Task t : tasks) {
-			if (t != null) {
-				taskBag.delete(t);
-			}
-		}
-		m_adapter.setFilteredTasks(false);
-		taskBag.store();
-		m_app.updateWidgets();
-		m_app.setNeedToPush(true);
-		// We have change the data, views should refresh
-		sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+    private void deleteTasks(final List<Task> tasks) {
+        Util.showDeleteConfirmationDialog(this, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                for (Task t : tasks) {
+                    if (t != null) {
+                        taskBag.delete(t);
+                    }
+                }
+                m_adapter.setFilteredTasks(false);
+                taskBag.store();
+                m_app.updateWidgets();
+                m_app.setNeedToPush(true);
+                // We have change the data, views should refresh
+                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+            }
+        });
 	}
 
 	private void archiveTasks() {
