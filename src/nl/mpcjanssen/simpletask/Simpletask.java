@@ -1053,7 +1053,9 @@ public class Simpletask extends ListActivity implements
 			setIntent(intent);
 		}
 		Log.v(TAG, "onNewIntent: " + intent);
-		//handleIntent(null);
+        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+		    handleIntent(null);
+        }
 	}
 
 	void clearFilter() {
