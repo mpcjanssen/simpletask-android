@@ -198,27 +198,27 @@ public class AddTask extends Activity {
                 iniTask = new Task(1, "");
                 iniTask.initWithFilters(contexts, projects);
             }
-        }
 
-        if (iniTask != null && iniTask.getProjects().size() == 1) {
-            List<String> ps = iniTask.getProjects();
-            String project = ps.get(0);
-            if (!project.equals("-")) {
-                textInputField.append(" +" + project);
+            if (iniTask != null && iniTask.getProjects().size() == 1) {
+                List<String> ps = iniTask.getProjects();
+                String project = ps.get(0);
+                if (!project.equals("-")) {
+                    textInputField.append(" +" + project);
+                }
             }
-        }
 
 
-        if (iniTask != null && iniTask.getContexts().size() == 1) {
-            List<String> cs = iniTask.getContexts();
-            String context = cs.get(0);
-            if (!context.equals("-")) {
-                textInputField.append(" @" + context);
+            if (iniTask != null && iniTask.getContexts().size() == 1) {
+                List<String> cs = iniTask.getContexts();
+                String context = cs.get(0);
+                if (!context.equals("-")) {
+                    textInputField.append(" @" + context);
+                }
             }
-        }
 
-        int textIndex = 0;
-        textInputField.setSelection(textIndex);
+            int textIndex = 0;
+            textInputField.setSelection(textIndex);
+        }
     }
 
     private void showTagMenu(View v) {
