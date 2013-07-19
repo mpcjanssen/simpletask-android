@@ -149,6 +149,7 @@ public class Simpletask extends ListActivity implements
 	private PullToRefreshAttacher mPullToRefreshHelper;
     private ArrayList<String> m_contextsList;
     private ArrayList<String> m_projectsList;
+    private SearchManager searchManager;
 
 
     @Override
@@ -247,6 +248,7 @@ public class Simpletask extends ListActivity implements
 	    mPullToRefreshHelper = new PullToRefreshAttacher(this);
 	    mPullToRefreshHelper.setRefreshableView(getListView(), this);
 
+
 	}
 
 	private void handleIntent(Bundle savedInstanceState) {
@@ -331,9 +333,6 @@ public class Simpletask extends ListActivity implements
 			m_priosNot = savedInstanceState.getBoolean("m_priosNot");
 			m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
 			m_sorts = savedInstanceState.getStringArrayList("m_sorts");
-		} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			m_search = intent.getStringExtra(SearchManager.QUERY);
-			Log.v(TAG, "Searched for " + m_search);
 		} else if (intent.getExtras() != null) {
 			Log.v(TAG, "handleIntent launched with filter:");
 
@@ -353,7 +352,7 @@ public class Simpletask extends ListActivity implements
 					Constants.INTENT_PROJECTS_FILTER_NOT, false);
 			m_contextsNot = intent.getBooleanExtra(
 					Constants.INTENT_CONTEXTS_FILTER_NOT, false);
-
+            m_search = intent.getStringExtra(SearchManager.QUERY);
 			Log.v(TAG, "\t sort:" + sorts);
 			if (sorts != null && !sorts.equals("")) {
 				m_sorts = new ArrayList<String>(
@@ -554,9 +553,8 @@ public class Simpletask extends ListActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.search)
+        searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
@@ -1048,14 +1046,18 @@ public class Simpletask extends ListActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		if (intent.getExtras() != null) {
+        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+            Intent currentIntent = getIntent();
+            currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY));
+            setIntent(currentIntent);
+            handleIntent(null);
+            options_menu.findItem(R.id.search).collapseActionView();
+        } else if (intent.getExtras() != null) {
 			// Only change intent if it actually contains a filter
 			setIntent(intent);
 		}
 		Log.v(TAG, "onNewIntent: " + intent);
-        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
-		    handleIntent(null);
-        }
+
 	}
 
 	void clearFilter() {
