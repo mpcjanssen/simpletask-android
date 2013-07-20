@@ -7,6 +7,15 @@ import android.test.AndroidTestCase;
  */
 public class TaskTest extends AndroidTestCase {
     public void testValidTag() throws Exception {
-        assertEquals(true, false);
+        assertEquals(false, Task.validTag(" "));
+        assertEquals(true, Task.validTag("Abc"));
+
+    }
+
+    public void testIdentity() throws Exception {
+        Task a = new Task(1,"Test");
+        Task b = new Task(1,"Test");
+        assertNotSame(a,b);
+        assertEquals(a,b);
     }
 }
