@@ -8,3 +8,4 @@
     android:configure="nl.mpcjanssen.simpletask.FilterActivity" 
     android:resizeMode="horizontal|vertical"
     android:previewImage="@drawable/appwidget_preview"/>
+<!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\xml\appwidget_info.xml -->

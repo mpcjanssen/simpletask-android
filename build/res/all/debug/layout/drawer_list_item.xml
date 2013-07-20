@@ -23,4 +23,4 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:textColor="#fff"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"/><!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\layout\drawer_list_item.xml -->

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\arrays.xml -->
     <string-array name="deferOptions">
         <item>@string/dates_today</item>
         <item>@string/dates_tomorrow</item>
@@ -31,7 +32,7 @@
         <item>in_future</item>
         <item>by_due_date</item>
     </string-array>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\colors.xml -->
     <color name="black">#000000</color>
     <color name="black_trans">#bb000000</color>
     <color name="blue">#587498</color>
@@ -40,7 +41,7 @@
     <color name="grey">#888888</color>
     <color name="orange">#E86850</color>
     <color name="white">#FFFFFF</color>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\dslv_attrs.xml -->
     <declare-styleable name="DragSortListView">
         <attr name="collapsed_height" format="dimension" />
         <attr name="drag_scroll_start" format="float" />
@@ -68,23 +69,30 @@
         <attr name="click_remove_id" format="integer" />
         <attr name="use_default_controller" format="boolean" />
     </declare-styleable>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\dimens.xml -->
     <dimen name="app_defaultsize_h">598.0dip</dimen>
     <dimen name="app_defaultsize_w">632.0dip</dimen>
     <dimen name="app_minimumsize_h">10.0dip</dimen>
     <dimen name="app_minimumsize_w">10.0dip</dimen>
     <dimen name="item_height">40dip</dimen>
     <dimen name="section_div_height">20dip</dimen>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\ids.xml -->
     <item name="invalid_context" type="id">Invalid list</item>
     <item name="invalid_project" type="id">Invalid tag</item>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\values\values.xml -->
+    <item name="ptr_content" type="id"/>
+    <item name="ptr_progress" type="id"/>
+    <item name="ptr_text" type="id"/>
+    <item name="ptr_text_opaque_bg" type="id"/>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="ARCHIVE_settings_header">Archive</string>
     <string name="ARCHIVE_settings_summary">Settings for archiving completed tasks in done.txt</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="TODOTXTPATH_key">todotxtpath</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="TODOTXTPATH_summary">The Dropbox folder where todo.txt is stored.</string>
     <string name="TODOTXTPATH_title">File location</string>
     <string name="about_settings_header">About</string>
@@ -106,7 +114,9 @@
     <string name="app_label">Simpletask</string>
     <string name="archive_now_pref_summary">Move completed tasks from todo.txt to done.txt.</string>
     <string name="archive_now_pref_title">Archive now</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="auto_archive_pref_key">todotxtautoarchive</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="auto_archive_pref_summary">Automatically archive tasks to done.txt on completion.</string>
     <string name="auto_archive_pref_title">Auto archive</string>
     <string name="by_context">By List</string>
@@ -133,7 +143,9 @@
     <string name="dates_tomorrow">tomorrow</string>
     <string name="dates_two_weeks">2 weeks</string>
     <string name="default_sort">Default sort</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="default_sort_pref_key">default_sort</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="defer">Defer task</string>
     <string name="delete">Delete</string>
     <string name="delete_task_confirm">Delete</string>
@@ -143,32 +155,42 @@
         free.</string>
     <string name="donate_title">Donate</string>
     <string name="done">Complete</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\dropbox.xml -->
     <string name="dropbox_consumer_key">69scx05jv6a2h7v</string>
     <string name="dropbox_consumer_secret">mrk04s9rb7txwsb</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>
     <string name="dropbox_logout_pref_title">Log out</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\dropbox.xml -->
     <string name="dropbox_manifest_key">db-69scx05jv6a2h7v</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="file_order">File Order (unsorted)</string>
     <string name="filter">Filter</string>
     <string name="filter_clear_all">Clear filter</string>
     <string name="filter_invert">Invert filter</string>
     <string name="filter_select_all">Select all</string>
     <string name="first_title_word">Simpletask</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="font_size_delta_pref_key">fontsizedelta</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="font_size_delta_pref_summary">Change the font size in units of sp.
         Use negative values to decrease the font size</string>
     <string name="font_size_delta_pref_title">Change font size</string>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\fontsizes.xml -->
     <item name="headerTextSize" format="float" type="string">16.0</item>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="in_future">Creation date in future</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="line_breaks_pref_key">linebreakspref</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
     <string name="login_screen_button">Log in to Dropbox</string>
     <string name="login_screen_offline_button">Work offline</string>
     <string name="main_no_items">No tasks to display.</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="manual_sync_pref_key">workofflinepref</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="manual_sync_pref_summary">Don\'t automatically upload every change to Dropbox.</string>
     <string name="manual_sync_pref_title">Manual sync</string>
     <string name="new_list_name">Input new list</string>
@@ -180,13 +202,18 @@
     <string name="not_tagged">Tasks not on list or tagged</string>
     <string name="ok">OK</string>
     <string name="preferences">Settings</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="prepend_date_pref_key">todotxtprependdate</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="priority">Prioritize</string>
     <string name="priority_prompt">Priority</string>
     <string name="priority_short_prompt">Prio</string>
     <string name="project_prompt">Tag</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\values\values.xml -->
+    <string name="pull_to_refresh_pull_label">Pull to refresh…</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="pull_to_refresh_refreshing_label">Syncing with dropbox…</string>
     <string name="remove_list_or_tag">Remove lists and tags</string>
     <string name="save_task">Save task</string>
@@ -201,7 +228,9 @@
     <string name="shortcut_addtask_name">Add Task</string>
     <string name="shortcut_name_empty">No name specified, not creating shortcut</string>
     <string name="sort">Sort</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\preference_keys.xml -->
     <string name="sort_complete_last_pref_key">todotxtsortcompletelast</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list</string>
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.</string>
@@ -218,11 +247,11 @@
     <string name="sync_download_message">Downloading todo.txt…</string>
     <string name="sync_upload_message">Uploading todo.txt…</string>
     <string name="task">Task</string>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\fontsizes.xml -->
     <item name="taskAgeTextSize" format="float" type="string">11.0</item>
     <item name="taskPrioTextSize" format="float" type="string">16.0</item>
     <item name="taskTextSize" format="float" type="string">16.0</item>
-
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\strings.xml -->
     <string name="task_added">Task added</string>
     <string name="tasktexthint">Call Mom @phone +Birthday\nBuy gift @errands +Birthday</string>
     <string name="title_activity_filter">Filter</string>
@@ -244,5 +273,9 @@
     <string name="visit_website_data">http://mpcjanssen.nl/cgi-bin/simpletask</string>
     <string name="visit_website_summary">Visit the Simpletask website</string>
     <string name="visit_website_title">Go to the website</string>
+    <!-- From: C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\values\values.xml -->
+    <style name="Widget.Holo.ProgressBar.Horizontal.Center" parent="android:Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_holo_center</item>
+    </style>
 
 </resources>

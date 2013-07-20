@@ -1,1 +1,1 @@
-include ':simpletask', ':libraries:PullToRefresh'
+include ':libraries:PullToRefresh'

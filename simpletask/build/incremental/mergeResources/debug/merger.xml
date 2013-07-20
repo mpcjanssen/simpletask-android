@@ -2,44 +2,44 @@
 <merger>
 
     <dataSet config="SimpletaskLibrariesPullToRefreshUnspecified.aar" >
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res" >
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res" >
             <file
                 name="fade_in"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\anim\fade_in.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\anim\fade_in.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="fade_out"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\anim\fade_out.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\anim\fade_out.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="progress_horizontal_holo_center"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable\progress_horizontal_holo_center.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable\progress_horizontal_holo_center.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="progress_primary_holo_dark"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-hdpi\progress_primary_holo_dark.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-hdpi\progress_primary_holo_dark.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="progress_primary_holo_dark"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-mdpi\progress_primary_holo_dark.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-mdpi\progress_primary_holo_dark.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="progress_primary_holo_dark"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-xhdpi\progress_primary_holo_dark.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-xhdpi\progress_primary_holo_dark.9.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="default_header"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\layout\default_header.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\layout\default_header.xml"
                 qualifiers=""
                 type="layout" />
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\values\values.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\values\values.xml"
                 qualifiers="" >
                 <item
                     name="ptr_text"
@@ -74,839 +74,839 @@
         </source>
     </dataSet>
     <dataSet config="main" >
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res" >
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res" >
             <file
                 name="appwidget_bg_clickable"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable\appwidget_bg_clickable.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable\appwidget_bg_clickable.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="appwidget_button_center"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable\appwidget_button_center.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable\appwidget_button_center.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="appwidget_button_left"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable\appwidget_button_left.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable\appwidget_button_left.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="appwidget_button_right"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable\appwidget_button_right.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable\appwidget_button_right.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_clickable"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable\appwidget_dark_bg_clickable.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable\appwidget_dark_bg_clickable.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="drag"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable\drag.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable\drag.9.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="action_search"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\action_search.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\action_search.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_bg.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_bg_focused.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_bg_pressed.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_dark_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_dark_bg.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_dark_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_dark_bg_focused.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_dark_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_dark_bg_pressed.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_inner_focused_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_inner_focused_c.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_inner_focused_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_inner_focused_l.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_inner_focused_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_inner_focused_r.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_inner_pressed_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_inner_pressed_c.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_inner_pressed_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_inner_pressed_l.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\appwidget_inner_pressed_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\appwidget_inner_pressed_r.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="cancel_light"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\cancel_light.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\cancel_light.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="complete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\complete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\complete.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="content_new"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\content_new.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\content_new.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="content_new_light"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\content_new_light.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\content_new_light.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="content_paste"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\content_paste.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\content_paste.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="content_save"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\content_save.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\content_save.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="delete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\delete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\delete.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="done"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\done.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\done.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="drawer_shadow"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\drawer_shadow.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\drawer_shadow.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="edit"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\edit.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\edit.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="help"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\help.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\help.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\icon.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\icon.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_action_list"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_action_list.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_action_list.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_action_prio"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_action_prio.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_action_prio.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_action_sort_down"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_action_sort_down.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_action_sort_down.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_action_sort_up"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_action_sort_up.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_action_sort_up.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_action_tag"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_action_tag.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_action_tag.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_action_uncomplete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_action_uncomplete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_action_uncomplete.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_drawer"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\ic_drawer.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\ic_drawer.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="labels"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\labels.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\labels.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="labels_light"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\labels_light.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\labels_light.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="list"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\list.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\list.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="navigation_refresh"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\navigation_refresh.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\navigation_refresh.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="prio"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\prio.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\prio.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="select_all"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\select_all.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\select_all.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="share"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\share.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\share.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sort"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi\sort.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi\sort.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_bg.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_bg_focused.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_bg_pressed.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_dark_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_dark_bg.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_dark_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_dark_bg_focused.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_inner_focused_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_inner_focused_c.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_inner_focused_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_inner_focused_l.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_inner_focused_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_inner_focused_r.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_inner_pressed_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_inner_pressed_c.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_inner_pressed_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_inner_pressed_l.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-hdpi-v14\appwidget_inner_pressed_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-hdpi-v14\appwidget_inner_pressed_r.9.png"
                 qualifiers="hdpi-v14"
                 type="drawable" />
             <file
                 name="action_search"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\action_search.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\action_search.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_bg.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_bg_focused.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_bg_pressed.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_dark_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_dark_bg.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_dark_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_dark_bg_focused.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_dark_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_dark_bg_pressed.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_inner_focused_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_inner_focused_c.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_inner_focused_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_inner_focused_l.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_inner_focused_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_inner_focused_r.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_inner_pressed_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_inner_pressed_c.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_inner_pressed_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_inner_pressed_l.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\appwidget_inner_pressed_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\appwidget_inner_pressed_r.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="cancel_light"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\cancel_light.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\cancel_light.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="complete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\complete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\complete.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="content_new"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\content_new.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\content_new.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="content_paste"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\content_paste.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\content_paste.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="content_save"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\content_save.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\content_save.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="delete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\delete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\delete.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="done"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\done.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\done.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="drawer_shadow"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\drawer_shadow.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\drawer_shadow.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="edit"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\edit.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\edit.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="help"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\help.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\help.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\icon.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\icon.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_action_list"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_action_list.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_action_list.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_action_prio"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_action_prio.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_action_prio.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_action_sort_down"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_action_sort_down.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_action_sort_down.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_action_sort_up"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_action_sort_up.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_action_sort_up.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_action_tag"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_action_tag.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_action_tag.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_action_uncomplete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_action_uncomplete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_action_uncomplete.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_drawer"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\ic_drawer.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\ic_drawer.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="labels"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\labels.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\labels.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="labels_light"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\labels_light.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\labels_light.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="list"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\list.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\list.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="navigation_refresh"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\navigation_refresh.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\navigation_refresh.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="prio"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\prio.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\prio.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="select_all"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\select_all.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\select_all.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="share"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\share.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\share.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="sort"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi\sort.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi\sort.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_bg.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_bg_focused.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_bg_pressed.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_dark_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_dark_bg.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_dark_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_dark_bg_focused.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_inner_focused_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_inner_focused_c.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_inner_focused_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_inner_focused_l.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_inner_focused_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_inner_focused_r.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_inner_pressed_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_inner_pressed_c.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_inner_pressed_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_inner_pressed_l.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-mdpi-v14\appwidget_inner_pressed_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-mdpi-v14\appwidget_inner_pressed_r.9.png"
                 qualifiers="mdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_preview"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-nodpi\appwidget_preview.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-nodpi\appwidget_preview.png"
                 qualifiers="nodpi"
                 type="drawable" />
             <file
                 name="action_search"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\action_search.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\action_search.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="cancel_light"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\cancel_light.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\cancel_light.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="complete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\complete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\complete.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="content_new"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\content_new.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\content_new.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="content_paste"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\content_paste.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\content_paste.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="content_save"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\content_save.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\content_save.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="delete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\delete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\delete.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="drawer_shadow"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\drawer_shadow.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\drawer_shadow.9.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="edit"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\edit.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\edit.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="help"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\help.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\help.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\icon.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\icon.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_action_list"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_action_list.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_action_list.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_action_prio"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_action_prio.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_action_prio.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_action_sort_down"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_action_sort_down.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_action_sort_down.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_action_sort_up"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_action_sort_up.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_action_sort_up.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_action_tag"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_action_tag.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_action_tag.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_action_uncomplete"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_action_uncomplete.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_action_uncomplete.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_drawer"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\ic_drawer.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\ic_drawer.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="labels"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\labels.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\labels.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="labels_lights"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\labels_lights.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\labels_lights.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="list"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\list.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\list.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="navigation_refresh"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\navigation_refresh.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\navigation_refresh.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="prio"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\prio.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\prio.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="select_all"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\select_all.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\select_all.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="share"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\share.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\share.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="sort"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi\sort.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi\sort.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="appwidget_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_bg.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_bg_focused.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_bg_pressed"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_bg_pressed.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_bg_pressed.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_dark_bg.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_dark_bg.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_dark_bg_focused"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_dark_bg_focused.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_dark_bg_focused.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_inner_focused_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_inner_focused_c.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_inner_focused_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_inner_focused_l.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_focused_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_inner_focused_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_inner_focused_r.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_c"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_inner_pressed_c.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_inner_pressed_c.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_l"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_inner_pressed_l.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_inner_pressed_l.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="appwidget_inner_pressed_r"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\drawable-xhdpi-v14\appwidget_inner_pressed_r.9.png"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\drawable-xhdpi-v14\appwidget_inner_pressed_r.9.png"
                 qualifiers="xhdpi-v14"
                 type="drawable" />
             <file
                 name="add_task"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\add_task.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\add_task.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="appwidget"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\appwidget.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\appwidget.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="drawer_list_item"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\drawer_list_item.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\drawer_list_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="filter"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\filter.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\filter.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="help"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\help.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\help.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="list_header"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\list_header.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\list_header.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="list_item"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\list_item.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\list_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="list_item_handle_right"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\list_item_handle_right.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\list_item_handle_right.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="login"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\login.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\login.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="main"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\main.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\main.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="multi_filter"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\multi_filter.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\multi_filter.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="selection_drawer_list_item"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\selection_drawer_list_item.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\selection_drawer_list_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="simple_list_item_multiple_choice"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\simple_list_item_multiple_choice.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\simple_list_item_multiple_choice.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="simple_list_item_single_choice"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\simple_list_item_single_choice.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\simple_list_item_single_choice.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="single_filter"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\single_filter.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\single_filter.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="widget_list_item"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout\widget_list_item.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout\widget_list_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="main"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\layout-large-land\main.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\layout-large-land\main.xml"
                 qualifiers="large-land"
                 type="layout" />
             <file
                 name="add_task"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\menu\add_task.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\menu\add_task.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="filter"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\menu\filter.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\menu\filter.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="main"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\menu\main.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\menu\main.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="task_context"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\menu\task_context.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\menu\task_context.xml"
                 qualifiers=""
                 type="menu" />
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\arrays.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\arrays.xml"
                 qualifiers="" >
                 <string-array name="deferOptions" >
                     <item>
@@ -988,7 +988,7 @@ by_due_date
                 </string-array>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\colors.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\colors.xml"
                 qualifiers="" >
                 <color name="grey" >#888888
                 </color>
@@ -1008,7 +1008,7 @@ by_due_date
                 </color>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\dimens.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\dimens.xml"
                 qualifiers="" >
                 <dimen name="section_div_height" >20dip
                 </dimen>
@@ -1024,7 +1024,7 @@ by_due_date
                 </dimen>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\dropbox.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\dropbox.xml"
                 qualifiers="" >
                 <string name="dropbox_consumer_secret" >mrk04s9rb7txwsb
                 </string>
@@ -1034,7 +1034,7 @@ by_due_date
                 </string>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\dslv_attrs.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\dslv_attrs.xml"
                 qualifiers="" >
                 <attr
                     name="click_remove_id"
@@ -1109,7 +1109,7 @@ by_due_date
                     format="boolean" />
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\fontsizes.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\fontsizes.xml"
                 qualifiers="" >
                 <item
                     name="taskAgeTextSize"
@@ -1137,7 +1137,7 @@ by_due_date
                 </item>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\ids.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\ids.xml"
                 qualifiers="" >
                 <item
                     name="invalid_project"
@@ -1151,7 +1151,7 @@ Invalid list
                 </item>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\preference_keys.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\preference_keys.xml"
                 qualifiers="" >
                 <string name="manual_sync_pref_key" >workofflinepref
                 </string>
@@ -1171,10 +1171,10 @@ Invalid list
                 </string>
             </file>
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\sample-dropbox.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\sample-dropbox.xml"
                 qualifiers="" />
             <file
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\values\strings.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\values\strings.xml"
                 qualifiers="" >
                 <string name="auto_archive_pref_title" >Auto archive
                 </string>
@@ -1473,24 +1473,24 @@ Lists
             </file>
             <file
                 name="appwidget_info"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\xml\appwidget_info.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\xml\appwidget_info.xml"
                 qualifiers=""
                 type="xml" />
             <file
                 name="preferences"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\xml\preferences.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\xml\preferences.xml"
                 qualifiers=""
                 type="xml" />
             <file
                 name="searchable"
-                path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\res\xml\searchable.xml"
+                path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\res\xml\searchable.xml"
                 qualifiers=""
                 type="xml" />
         </source>
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\build\res\rs\debug" />
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\res\rs\debug" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\src\debug\res" />
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\debug\res" />
     </dataSet>
 
 </merger>

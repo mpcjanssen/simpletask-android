@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
 LICENSE:
 
@@ -19,38 +18,18 @@ You should have received a copy of the GNU General Public License along with Sim
 @copyright 2012-2013  Mark Janssen
 -->
 <!-- suppress ALL -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="nl.mpcjanssen.todotxtholo"
-          android:versionCode="1008"
-          android:versionName="2.6.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1008" android:versionName="2.6.1" package="nl.mpcjanssen.todotxtholo">
 
-    <uses-sdk
-            android:minSdkVersion="15"
-            android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="17"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
 
-    <supports-screens
-            android:anyDensity="true"
-            android:largeScreens="true"
-            android:normalScreens="true"
-            android:resizeable="true"
-            android:smallScreens="true"
-            android:xlargeScreens="true"/>
+    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true"/>
 
-    <application
-            android:name="nl.mpcjanssen.simpletask.TodoApplication"
-            android:allowBackup="false"
-            android:icon="@drawable/icon"
-            android:label="@string/app_label"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
+    <application android:allowBackup="false" android:icon="@drawable/icon" android:label="@string/app_label" android:name="nl.mpcjanssen.simpletask.TodoApplication" android:theme="@android:style/Theme.Holo.Light.DarkActionBar" android:uiOptions="splitActionBarWhenNarrow">
 
-        <activity
-                android:name="com.dropbox.client2.android.AuthActivity"
-                android:exported="true"
-                android:launchMode="singleTask">
+        <activity android:exported="true" android:launchMode="singleTask" android:name="com.dropbox.client2.android.AuthActivity">
             <intent-filter>
                 <data android:scheme="@string/dropbox_manifest_key"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -59,49 +38,32 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-        <activity
-                android:name="nl.mpcjanssen.simpletask.LoginScreen"
-                android:label="@string/app_label">
+        <activity android:label="@string/app_label" android:name="nl.mpcjanssen.simpletask.LoginScreen">
         </activity>
-        <activity
-                android:name="nl.mpcjanssen.simpletask.Preferences"
-                android:label="@string/set_preferences"/>
-        <activity
-                android:name="nl.mpcjanssen.simpletask.AddTask"
-                android:exported="true"
-                android:label="@string/addtask"
-                android:windowSoftInputMode="adjustResize">
+        <activity android:label="@string/set_preferences" android:name="nl.mpcjanssen.simpletask.Preferences"/>
+        <activity android:exported="true" android:label="@string/addtask" android:name="nl.mpcjanssen.simpletask.AddTask" android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
-        <activity-alias
-                android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
-                android:label="@string/shortcut_addtask_name"
-                android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
+        <activity-alias android:label="@string/shortcut_addtask_name" android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut" android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity-alias>
 
-        <activity-alias
-                android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
-                android:label="@string/share_addtask_name"
-                android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
+        <activity-alias android:label="@string/share_addtask_name" android:name="nl.mpcjanssen.todotxtholo.AddTaskShare" android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
-                <action android:name="com.google.android.gm.action.AUTO_SEND" />
+                <action android:name="com.google.android.gm.action.AUTO_SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="text/*"/>
             </intent-filter>
         </activity-alias>
 
-        <activity
-                android:name="nl.mpcjanssen.simpletask.Simpletask"
-                android:exported="true"
-                android:launchMode="singleTask">
+        <activity android:exported="true" android:launchMode="singleTask" android:name="nl.mpcjanssen.simpletask.Simpletask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -114,15 +76,10 @@ You should have received a copy of the GNU General Public License along with Sim
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data
-                    android:name="android.app.searchable"
-                    android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
 
-        <activity
-                android:name="nl.mpcjanssen.simpletask.FilterActivity"
-                android:label="@string/title_activity_filter"
-                android:exported="true">
+        <activity android:exported="true" android:label="@string/title_activity_filter" android:name="nl.mpcjanssen.simpletask.FilterActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -132,34 +89,17 @@ You should have received a copy of the GNU General Public License along with Sim
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
-            <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/appwidget_info"/>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info"/>
         </receiver>
 
-        <service
-                android:name="nl.mpcjanssen.simpletask.AppWidgetService"
-                android:permission="android.permission.BIND_REMOTEVIEWS"
-                android:exported="false"/>
+        <service android:exported="false" android:name="nl.mpcjanssen.simpletask.AppWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <uses-library
-                android:required="false"
-                android:name="com.sec.android.app.multiwindow"/>
-        <meta-data
-                android:name="com.sec.android.support.multiwindow"
-                android:value="true"/>
-        <meta-data
-                android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
-                android:resource="@dimen/app_defaultsize_w"/>
-        <meta-data
-                android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
-                android:resource="@dimen/app_defaultsize_h"/>
-        <meta-data
-                android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
-                android:resource="@dimen/app_minimumsize_w"/>
-        <meta-data
-                android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
-                android:resource="@dimen/app_minimumsize_h"/>
+        <uses-library android:name="com.sec.android.app.multiwindow" android:required="false"/>
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_defaultsize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_defaultsize_h"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_minimumsize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_minimumsize_h"/>
     </application>
 
 </manifest>
