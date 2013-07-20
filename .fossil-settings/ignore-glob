@@ -14,3 +14,4 @@ build.bat
 local.properties
 *.bat
 build/*
+*/build/*
