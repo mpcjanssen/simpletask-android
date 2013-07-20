@@ -1,0 +1,105 @@
+<!--
+LICENSE:
+
+Simpletask is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+later version.
+
+Simpletask is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with Simpletask.  If not, see
+<http://www.gnu.org/licenses/>.
+
+@author Mark Janssen <mpc.janssen@gmail.com>
+@license http://www.gnu.org/licenses/gpl.html
+@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+@copyright 2012-2013  Mark Janssen
+-->
+<!-- suppress ALL -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1008" android:versionName="2.6.1" package="nl.mpcjanssen.todotxtholo">
+
+    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="17"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+
+    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true"/>
+
+    <application android:allowBackup="false" android:icon="@drawable/icon" android:label="@string/app_label" android:name="nl.mpcjanssen.simpletask.TodoApplication" android:theme="@android:style/Theme.Holo.Light.DarkActionBar" android:uiOptions="splitActionBarWhenNarrow">
+
+        <activity android:exported="true" android:launchMode="singleTask" android:name="com.dropbox.client2.android.AuthActivity">
+            <intent-filter>
+                <data android:scheme="@string/dropbox_manifest_key"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:label="@string/app_label" android:name="nl.mpcjanssen.simpletask.LoginScreen">
+        </activity>
+        <activity android:label="@string/set_preferences" android:name="nl.mpcjanssen.simpletask.Preferences"/>
+        <activity android:exported="true" android:label="@string/addtask" android:name="nl.mpcjanssen.simpletask.AddTask" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity-alias android:label="@string/shortcut_addtask_name" android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut" android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias android:label="@string/share_addtask_name" android:name="nl.mpcjanssen.todotxtholo.AddTaskShare" android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <action android:name="com.google.android.gm.action.AUTO_SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/*"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity android:exported="true" android:launchMode="singleTask" android:name="nl.mpcjanssen.simpletask.Simpletask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+
+        <activity android:exported="true" android:label="@string/title_activity_filter" android:name="nl.mpcjanssen.simpletask.FilterActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name="nl.mpcjanssen.simpletask.MyAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info"/>
+        </receiver>
+
+        <service android:exported="false" android:name="nl.mpcjanssen.simpletask.AppWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <uses-library android:name="com.sec.android.app.multiwindow" android:required="false"/>
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_defaultsize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_defaultsize_h"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_minimumsize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_minimumsize_h"/>
+    </application>
+
+</manifest>

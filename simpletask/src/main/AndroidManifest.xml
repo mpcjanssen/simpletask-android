@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+LICENSE:
+
+Simpletask is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+later version.
+
+Simpletask is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with Simpletask.  If not, see
+<http://www.gnu.org/licenses/>.
+
+@author Mark Janssen <mpc.janssen@gmail.com>
+@license http://www.gnu.org/licenses/gpl.html
+@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+@copyright 2012-2013  Mark Janssen
+-->
+<!-- suppress ALL -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="nl.mpcjanssen.todotxtholo"
+          android:versionCode="1008"
+          android:versionName="2.6.1">
+
+    <uses-sdk
+            android:minSdkVersion="15"
+            android:targetSdkVersion="17"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+
+    <supports-screens
+            android:anyDensity="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:resizeable="true"
+            android:smallScreens="true"
+            android:xlargeScreens="true"/>
+
+    <application
+            android:name="nl.mpcjanssen.simpletask.TodoApplication"
+            android:allowBackup="false"
+            android:icon="@drawable/icon"
+            android:label="@string/app_label"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
+
+        <activity
+                android:name="com.dropbox.client2.android.AuthActivity"
+                android:exported="true"
+                android:launchMode="singleTask">
+            <intent-filter>
+                <data android:scheme="@string/dropbox_manifest_key"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name="nl.mpcjanssen.simpletask.LoginScreen"
+                android:label="@string/app_label">
+        </activity>
+        <activity
+                android:name="nl.mpcjanssen.simpletask.Preferences"
+                android:label="@string/set_preferences"/>
+        <activity
+                android:name="nl.mpcjanssen.simpletask.AddTask"
+                android:exported="true"
+                android:label="@string/addtask"
+                android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
+                android:label="@string/shortcut_addtask_name"
+                android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+                android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
+                android:label="@string/share_addtask_name"
+                android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <action android:name="com.google.android.gm.action.AUTO_SEND" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/*"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+                android:name="nl.mpcjanssen.simpletask.Simpletask"
+                android:exported="true"
+                android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="nl.mpcjanssen.todotxtholo.START_WITH_FILTER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.app.searchable"
+                    android:resource="@xml/searchable"/>
+        </activity>
+
+        <activity
+                android:name="nl.mpcjanssen.simpletask.FilterActivity"
+                android:label="@string/title_activity_filter"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name="nl.mpcjanssen.simpletask.MyAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/appwidget_info"/>
+        </receiver>
+
+        <service
+                android:name="nl.mpcjanssen.simpletask.AppWidgetService"
+                android:permission="android.permission.BIND_REMOTEVIEWS"
+                android:exported="false"/>
+
+        <uses-library
+                android:required="false"
+                android:name="com.sec.android.app.multiwindow"/>
+        <meta-data
+                android:name="com.sec.android.support.multiwindow"
+                android:value="true"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
+                android:resource="@dimen/app_defaultsize_w"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
+                android:resource="@dimen/app_defaultsize_h"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
+                android:resource="@dimen/app_minimumsize_w"/>
+        <meta-data
+                android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
+                android:resource="@dimen/app_minimumsize_h"/>
+    </application>
+
+</manifest>
