@@ -6,10 +6,8 @@ gen/*
 out/*
 tests/gen/*
 *.apk
-build.bat
 *~
 .idea/workspace.xml
 .idea/tasks.xml
 */local.properties
 local.properties
-*.bat
