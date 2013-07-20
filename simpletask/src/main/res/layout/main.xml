@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
+
+Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+
+LICENSE:
+
+Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+later version.
+
+Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
+<http://www.gnu.org/licenses/>.
+
+@author Todo.txt contributors <todotxt@yahoogroups.com>
+@license http://www.gnu.org/licenses/gpl.html
+@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+-->
+
+<android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <!-- The main content view -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/home_root"
+                  android:orientation="vertical"
+                  android:divider="?android:attr/dividerVertical"
+                  android:showDividers="middle"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent">
+
+        <LinearLayout
+                android:id="@+id/actionbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+            <ImageView
+                    android:id="@+id/actionbar_icon"
+                    android:contentDescription="@string/app_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
+                    android:src="@drawable/labels_light"/>
+
+            <TextView
+                    android:id="@+id/filter_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+
+            <View
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"/>
+
+            <ImageButton
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/cancel_light"
+                    android:contentDescription="@string/clear_filter"
+                    android:onClick="onClearClick"
+                    android:id="@+id/actionbar_clear"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1">
+
+            <ListView
+                    android:id="@id/android:list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:fastScrollEnabled="true"/>
+
+            <TextView
+                    android:id="@id/android:empty"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/main_no_items"
+                    android:gravity="center_vertical|center_horizontal"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- The navigation drawer -->
+    <LinearLayout
+            android:id="@+id/left_drawer"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:orientation="vertical"
+            android:background="#111"
+            android:layout_width="240dp">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_drawer_title"
+                android:text="@string/context_prompt"
+                android:background="@android:color/holo_blue_dark"
+                android:textColor="@android:color/white"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:gravity="center_horizontal"
+                />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/left_drawer_inverted"
+                android:visibility="gone">
+            <CheckedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/left_drawer_not"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="#fff"
+                    android:text="@string/filter_invert"
+                    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    />
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/holo_blue_dark"
+                    />
+
+
+        </LinearLayout>
+        <ListView
+                android:id="@+id/left_tags_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:choiceMode="multipleChoice"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:background="#111"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/left_drawer_header"
+                android:visibility="gone">
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
+                    android:hint="@string/new_list_name"
+                    android:id="@+id/new_list_name"/>
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:id="@+id/left_apply_button"
+                    android:text="@string/updatetask"
+                    style="@android:style/Widget.Holo.Button"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/right_drawer"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:orientation="vertical"
+            android:background="#111"
+            android:layout_width="240dp">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_drawer_title"
+                android:text="@string/project_prompt"
+                android:background="@android:color/holo_blue_dark"
+                android:textColor="@android:color/white"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:gravity="center_horizontal"
+                />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/right_drawer_inverted"
+                android:visibility="gone">
+            <CheckedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/right_drawer_not"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="#fff"
+                    android:text="@string/filter_invert"
+                    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    />
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/holo_blue_dark"
+                    />
+
+
+        </LinearLayout>
+
+        <ListView
+                android:id="@+id/right_tags_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:choiceMode="multipleChoice"
+                android:background="#111"/>
+
+
+
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/right_drawer_header"
+                android:visibility="gone">
+
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
+                    android:hint="@string/new_tag_name"
+                    android:id="@+id/new_tag_name"/>
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:id="@+id/right_apply_button"
+                    android:text="@string/updatetask"
+                    style="@android:style/Widget.Holo.Button"
+                    />
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>
+

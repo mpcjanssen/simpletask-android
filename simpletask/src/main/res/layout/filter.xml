@@ -1,0 +1,11 @@
+<!--suppress ALL -->
+
+
+<LinearLayout
+        android:layout_gravity="center"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+</LinearLayout>

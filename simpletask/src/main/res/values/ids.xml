@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="invalid_project" type="id">Invalid tag</item>
+    <item name="invalid_context" type="id">Invalid list</item>
+</resources>
