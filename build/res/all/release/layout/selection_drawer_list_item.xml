@@ -24,4 +24,4 @@
     android:paddingRight="16dp"
     android:textColor="#fff"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    android:checkMark="?android:attr/listChoiceIndicatorMultiple"/>
+    android:checkMark="?android:attr/listChoiceIndicatorMultiple"/><!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\layout\selection_drawer_list_item.xml -->

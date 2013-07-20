@@ -30,4 +30,4 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/item_height"
             android:layout_weight="0"/>
-</LinearLayout>
+</LinearLayout><!-- From: C:\Users\A156712\Documents\Android\Simpletask\src\main\res\layout\list_item_handle_right.xml -->

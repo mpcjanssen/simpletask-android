@@ -1,6 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merger>
 
+    <dataSet config="SimpletaskLibrariesPullToRefreshUnspecified.aar" >
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res" >
+            <file
+                name="fade_in"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\anim\fade_in.xml"
+                qualifiers=""
+                type="anim" />
+            <file
+                name="fade_out"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\anim\fade_out.xml"
+                qualifiers=""
+                type="anim" />
+            <file
+                name="progress_horizontal_holo_center"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable\progress_horizontal_holo_center.xml"
+                qualifiers=""
+                type="drawable" />
+            <file
+                name="progress_primary_holo_dark"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-hdpi\progress_primary_holo_dark.9.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="progress_primary_holo_dark"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-mdpi\progress_primary_holo_dark.9.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="progress_primary_holo_dark"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\drawable-xhdpi\progress_primary_holo_dark.9.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="default_header"
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\layout\default_header.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                path="C:\Users\A156712\Documents\Android\Simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\res\values\values.xml"
+                qualifiers="" >
+                <item
+                    name="ptr_text"
+                    type="id"/>
+
+                <string name="pull_to_refresh_pull_label" >Pull to refresh…
+                </string>
+
+                <item
+                    name="ptr_progress"
+                    type="id"/>
+
+                <string name="pull_to_refresh_refreshing_label" >Loading…
+                </string>
+
+                <item
+                    name="ptr_text_opaque_bg"
+                    type="id"/>
+
+                <style
+                    name="Widget.Holo.ProgressBar.Horizontal.Center"
+                    parent="android:Widget.Holo.ProgressBar.Horizontal" >
+                    <item name="android:progressDrawable">
+@drawable/progress_horizontal_holo_center
+                    </item>
+                </style>
+
+                <item
+                    name="ptr_content"
+                    type="id"/>
+            </file>
+        </source>
+    </dataSet>
     <dataSet config="main" >
         <source path="C:\Users\A156712\Documents\Android\Simpletask\src\main\res" >
             <file
@@ -964,19 +1036,47 @@ by_due_date
             <file
                 path="C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\dslv_attrs.xml"
                 qualifiers="" >
+                <attr
+                    name="click_remove_id"
+                    format="integer" />
+                <attr
+                    name="drag_scroll_start"
+                    format="float" />
+                <attr
+                    name="track_drag_sort"
+                    format="boolean" />
+                <attr
+                    name="drop_animation_duration"
+                    format="integer" />
+                <attr
+                    name="float_alpha"
+                    format="float" />
+                <attr
+                    name="sort_enabled"
+                    format="boolean" />
+                <attr
+                    name="remove_animation_duration"
+                    format="integer" />
+                <attr
+                    name="collapsed_height"
+                    format="dimension" />
+                <attr
+                    name="float_background_color"
+                    format="color" />
+                <attr
+                    name="drag_handle_id"
+                    format="integer" />
+                <attr
+                    name="slide_shuffle_speed"
+                    format="float" />
+                <attr
+                    name="fling_handle_id"
+                    format="integer" />
+                <attr
+                    name="remove_enabled"
+                    format="boolean" />
+
                 <declare-styleable name="DragSortListView" >
-                    <attr
-                        name="collapsed_height"
-                        format="dimension" />
-                    <attr
-                        name="drag_scroll_start"
-                        format="float" />
-                    <attr
-                        name="max_drag_scroll_speed"
-                        format="float" />
-                    <attr
-                        name="float_background_color"
-                        format="color" />
                     <attr name="remove_mode" >
                         <enum
                             name="clickRemove"
@@ -985,30 +1085,6 @@ by_due_date
                             name="flingRemove"
                             value="1" />
                     </attr>
-                    <attr
-                        name="track_drag_sort"
-                        format="boolean" />
-                    <attr
-                        name="float_alpha"
-                        format="float" />
-                    <attr
-                        name="slide_shuffle_speed"
-                        format="float" />
-                    <attr
-                        name="remove_animation_duration"
-                        format="integer" />
-                    <attr
-                        name="drop_animation_duration"
-                        format="integer" />
-                    <attr
-                        name="drag_enabled"
-                        format="boolean" />
-                    <attr
-                        name="sort_enabled"
-                        format="boolean" />
-                    <attr
-                        name="remove_enabled"
-                        format="boolean" />
                     <attr name="drag_start_mode" >
                         <enum
                             name="onDown"
@@ -1020,19 +1096,17 @@ by_due_date
                             name="onLongPress"
                             value="2" />
                     </attr>
-                    <attr
-                        name="drag_handle_id"
-                        format="integer" />
-                    <attr
-                        name="fling_handle_id"
-                        format="integer" />
-                    <attr
-                        name="click_remove_id"
-                        format="integer" />
-                    <attr
-                        name="use_default_controller"
-                        format="boolean" />
                 </declare-styleable>
+
+                <attr
+                    name="drag_enabled"
+                    format="boolean" />
+                <attr
+                    name="max_drag_scroll_speed"
+                    format="float" />
+                <attr
+                    name="use_default_controller"
+                    format="boolean" />
             </file>
             <file
                 path="C:\Users\A156712\Documents\Android\Simpletask\src\main\res\values\fontsizes.xml"

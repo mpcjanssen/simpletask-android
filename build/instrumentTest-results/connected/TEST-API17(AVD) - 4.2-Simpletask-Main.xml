@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="nl.mpcjanssen.simpletask.task.TaskTest" tests="2" failures="1" errors="0" time="0.011" timestamp="2013-07-20T14:58:49" hostname="localhost">
+  <properties device="API17(AVD) - 4.2" flavor="Main" project="Simpletask" />
+  <testcase name="testAndroidTestCaseSetupProperly" classname="nl.mpcjanssen.simpletask.task.TaskTest" time="0.0" />
+  <testcase name="testValidTag" classname="nl.mpcjanssen.simpletask.task.TaskTest" time="0.019">
+    <failure>junit.framework.AssertionFailedError: expected:&lt;true&gt; but was:&lt;false&gt;
+at nl.mpcjanssen.simpletask.task.TaskTest.testValidTag(TaskTest.java:10)
+at java.lang.reflect.Method.invokeNative(Native Method)
+at android.test.AndroidTestRunner.runTest(AndroidTestRunner.java:190)
+at android.test.AndroidTestRunner.runTest(AndroidTestRunner.java:175)
+at android.test.InstrumentationTestRunner.onStart(InstrumentationTestRunner.java:555)
+at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:1661)
+</failure>
+  </testcase>
+</testsuite>

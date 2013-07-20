@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\src\instrumentTest\res" />
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\build\res\rs\test" />
+    </dataSet>
+
+</merger>

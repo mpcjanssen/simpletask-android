@@ -2,13 +2,13 @@
 <merger>
 
     <dataSet config="SimpletaskLibrariesPullToRefreshUnspecified.aar" >
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\assets" />
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\build\exploded-bundles\SimpletaskLibrariesPullToRefreshUnspecified.aar\assets" />
     </dataSet>
     <dataSet config="main" >
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\src\main\assets" />
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\main\assets" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="C:\Users\A156712\Documents\Android\Simpletask\app\src\debug\assets" />
+        <source path="C:\Users\A156712\Documents\Android\Simpletask\simpletask\src\debug\assets" />
     </dataSet>
 
 </merger>
