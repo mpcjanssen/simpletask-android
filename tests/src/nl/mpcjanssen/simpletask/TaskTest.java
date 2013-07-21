@@ -18,7 +18,11 @@ public class TaskTest extends TestCase {
     public void testEquals() throws Exception {
         Task a = new Task(1, "Test");
         Task b = new Task(1, "Test");
+        Task c = new Task(1, "Test ");
+        Task d = new Task(2, "Test");
         assertNotSame(a,b);
         assertEquals(a,b);
+        assertFalse(b.equals(c));
+        assertFalse(b.equals(d));
     }
 }
