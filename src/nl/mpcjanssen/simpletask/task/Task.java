@@ -263,7 +263,10 @@ public class Task implements Serializable, Comparable<Task> {
     public String inFileFormat() {
         StringBuilder sb = new StringBuilder();
         if (this.completed) {
-            sb.append(COMPLETED).append(this.completionDate).append(" ");
+            sb.append(COMPLETED);
+            if(!Strings.isEmptyOrNull(this.completionDate)){
+                sb.append(this.completionDate).append(" ");
+            }
             if (!Strings.isEmptyOrNull(this.prependedDate)) {
                 sb.append(this.prependedDate).append(" ");
             }
