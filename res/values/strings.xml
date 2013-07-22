@@ -155,8 +155,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_context">By List</string>
     <string name="completed">Completed</string>
     <string name="by_creation_date">By Creation Date</string>
-    <string name="in_future">Creation date in future</string>
+    <string name="in_future">Threshold date in future</string>
     <string name="by_due_date">By Due Date</string>
+    <string name="by_threshold_date">By Threshold Date</string>
 	
     <!-- filter -->
     <string name="filter_select_all">Select all</string>

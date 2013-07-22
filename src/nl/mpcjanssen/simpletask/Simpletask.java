@@ -771,7 +771,7 @@ public class Simpletask extends ListActivity implements
     private void deferTasks(Date selected, List<Task> tasksToDefer) {
         for (Task t : tasksToDefer) {
             if (t != null) {
-                t.setPrependedDate(selected);
+                t.deferToDate(selected);
             }
         }
         m_adapter.setFilteredTasks(false);
@@ -787,7 +787,7 @@ public class Simpletask extends ListActivity implements
     private void deferTasks(String selected, List<Task> tasksToDefer) {
         for (Task t : tasksToDefer) {
             if (t != null) {
-                t.setPrependedDate(selected);
+                t.deferToDate(selected);
             }
         }
         m_adapter.setFilteredTasks(false);
