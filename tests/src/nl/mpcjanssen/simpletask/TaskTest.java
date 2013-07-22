@@ -5,11 +5,11 @@ import nl.mpcjanssen.simpletask.task.Task;
 
 /**
  * Created with IntelliJ IDEA.
- * User: A156712
+ * User: Mark Janssen
  * Date: 21-7-13
  * Time: 12:28
- * To change this template use File | Settings | File Templates.
  */
+
 public class TaskTest extends TestCase {
     public void testValidTag() throws Exception {
        assertEquals(false, Task.validTag(" "));
