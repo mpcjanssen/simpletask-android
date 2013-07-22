@@ -31,7 +31,6 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -64,6 +63,7 @@ public class Task implements Serializable, Comparable<Task> {
     private List<URL> links;
     private Date dueDate;
     private SimpleDateFormat formatter;
+    private Date thresholdDate;
 
 
     public static boolean validTag(String tag) {
@@ -127,6 +127,17 @@ public class Task implements Serializable, Comparable<Task> {
                 this.dueDate = null;
             }
         }
+
+        matchPattern = Pattern
+                .compile("\\st:(\\d{4}-\\d{2}-\\d{2})");
+        matcher = matchPattern.matcher(this.text);
+        if (matcher.find()) {
+            try {
+                this.thresholdDate = formatter.parse(matcher.group(1));
+            } catch (ParseException e) {
+                this.thresholdDate = null;
+            }
+        }
     }
 
     public Priority getOriginalPriority() {
@@ -135,6 +146,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public Date getDueDate() {
         return this.dueDate;
+    }
+
+    public Date getThresholdDate() {
+        return this.thresholdDate;
     }
 
     public String getOriginalText() {
@@ -246,17 +261,12 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public boolean inFuture() {
-        if (Strings.isEmptyOrNull(this.getPrependedDate())) {
+        if (this.getThresholdDate()==null) {
             return false;
         } else {
-            try {
-                Date createDate = formatter.parse(this.prependedDate);
-                Date now = new Date();
-                return createDate.after(now);
-            } catch (ParseException e) {
-                // e.printStackTrace();
-                return false;
-            }
+            Date thresholdDate = this.getThresholdDate();
+            Date now = new Date();
+            return thresholdDate.after(now);
         }
     }
 
@@ -371,5 +381,21 @@ public class Task implements Serializable, Comparable<Task> {
         if (!getProjects().contains(tag)) {
             append ("+" + tag);
         }
+    }
+
+    public void deferToDate(String deferString) {
+        String taskContents = inFileFormat();
+        if (thresholdDate!=null) {
+            taskContents = taskContents.replaceFirst("\\st:(\\d{4}-\\d{2}-\\d{2})", " t:" + deferString);
+
+        } else {
+            taskContents = taskContents + " t:" + deferString;
+        }
+        init(taskContents,null);
+    }
+
+    public void deferToDate(Date deferDate) {
+        String deferString = formatter.format(deferDate);
+        deferToDate(deferString);
     }
 }
