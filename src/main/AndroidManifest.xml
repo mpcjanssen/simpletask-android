@@ -21,8 +21,8 @@ You should have received a copy of the GNU General Public License along with Sim
 <!-- suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="nl.mpcjanssen.todotxtholo"
-          android:versionCode="1008"
-          android:versionName="2.6.1">
+          android:versionCode="1010"
+          android:versionName="2.6.3">
 
     <uses-sdk
             android:minSdkVersion="15"
@@ -77,7 +77,7 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity>
 
         <activity-alias
-                android:name="nl.mpcjanssen.todotxtholo.AddTaskShortcut"
+                android:name="nl.mpcjanssen.simpletask.AddTaskShortcut"
                 android:label="@string/shortcut_addtask_name"
                 android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
             <intent-filter>
@@ -87,7 +87,7 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity-alias>
 
         <activity-alias
-                android:name="nl.mpcjanssen.todotxtholo.AddTaskShare"
+                android:name="nl.mpcjanssen.simpletask.AddTaskShare"
                 android:label="@string/share_addtask_name"
                 android:targetActivity="nl.mpcjanssen.simpletask.AddTask">
             <intent-filter>

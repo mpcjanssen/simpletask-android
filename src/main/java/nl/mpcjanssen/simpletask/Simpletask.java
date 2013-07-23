@@ -771,7 +771,7 @@ public class Simpletask extends ListActivity implements
     private void deferTasks(Date selected, List<Task> tasksToDefer) {
         for (Task t : tasksToDefer) {
             if (t != null) {
-                t.setPrependedDate(selected);
+                t.deferToDate(m_app.isDeferThreshold(), selected);
             }
         }
         m_adapter.setFilteredTasks(false);
@@ -787,7 +787,7 @@ public class Simpletask extends ListActivity implements
     private void deferTasks(String selected, List<Task> tasksToDefer) {
         for (Task t : tasksToDefer) {
             if (t != null) {
-                t.setPrependedDate(selected);
+                t.deferToDate(m_app.isDeferThreshold(), selected);
             }
         }
         m_adapter.setFilteredTasks(false);
@@ -1478,7 +1478,7 @@ public class Simpletask extends ListActivity implements
                 if (!Strings.isEmptyOrNull(ed.getText().toString())) {
                     String newTag = ed.getText().toString();
                     if (!Task.validTag(newTag)) {
-                        Util.showToastShort(view.getContext(),getString(R.id.invalid_context) + ": " + newTag );
+                        Util.showToastShort(view.getContext(),getString(R.string.invalid_context) + ": " + newTag );
                         return;
                     }
                     for (Task t: checkedTasks) {
@@ -1520,7 +1520,7 @@ public class Simpletask extends ListActivity implements
                 if (!Strings.isEmptyOrNull(ed.getText().toString())) {
                     String newTag = ed.getText().toString();
                     if (!Task.validTag(newTag)) {
-                        Util.showToastShort(view.getContext(),getString(R.id.invalid_project) + ": " + newTag );
+                        Util.showToastShort(view.getContext(),getString(R.string.invalid_project) + ": " + newTag );
                         return;
                     }
                     for (Task t: checkedTasks) {

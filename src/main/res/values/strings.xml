@@ -24,7 +24,8 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 <!--suppress ALL -->
 <resources>
-
+    <string name="invalid_context">Invalid list name</string>
+    <string name="invalid_project">Invalid tag name</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">Added task</string>
     <string name="add_task_failed">Could not add task</string>
@@ -96,6 +97,9 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
+    <string name="defer_threshold_date_pref_title">Defer by threshold date</string>
+    <string name="defer_threshold_date_pref_summary">Defer tasks using the threshold date (t:yyy-mm-dd).
+        If unchecked defer by due date (due:yyyy-mm-dd) instead.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
     <string name="swipe_complete_pref_title">Swipe to complete</string>
@@ -153,8 +157,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_context">By List</string>
     <string name="completed">Completed</string>
     <string name="by_creation_date">By Creation Date</string>
-    <string name="in_future">Creation date in future</string>
+    <string name="in_future">Threshold date in future</string>
     <string name="by_due_date">By Due Date</string>
+    <string name="by_threshold_date">By Threshold Date</string>
 	
     <!-- filter -->
     <string name="filter_select_all">Select all</string>
