@@ -35,6 +35,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>@string/by_creation_date</item>
         <item>@string/in_future</item>
         <item>@string/by_due_date</item>
+        <item>@string/by_threshold_date</item>
     </string-array>
     <!-- will be prepended with "+!" or "-!" depending on direction -->
     <string-array name="sortKeys">
@@ -47,6 +48,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>by_creation_date</item>
         <item>in_future</item>
         <item>by_due_date</item>
+        <item>by_threshold_date</item>
     </string-array>
 
     <!-- available options for deferring -->

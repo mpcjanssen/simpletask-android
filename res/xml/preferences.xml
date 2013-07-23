@@ -38,6 +38,11 @@
             android:summary="@string/prepend_date_pref_summary"
             android:title="@string/prepend_date_pref_title" />
         <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/defer_threshold_date_key"
+                android:summary="@string/defer_threshold_date_pref_summary"
+                android:title="@string/defer_threshold_date_pref_title" />
+        <CheckBoxPreference
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
