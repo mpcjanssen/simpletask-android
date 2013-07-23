@@ -76,20 +76,20 @@ public class Constants {
     public final static String EXTRA_FORCE_SYNC = "FORCE_SYNC";
     public final static String EXTRA_OVERWRITE = "OVERWRITE";
 
-    public final static String INTENT_ACTION_ARCHIVE = "nl.mpcjanssen.todotxtholo.ACTION_ARCHIVE";
-    public final static String INTENT_ACTION_LOGOUT = "nl.mpcjanssen.todotxtholo.ACTION_LOGOUT";
-    public final static String INTENT_ASYNC_SUCCESS = "nl.mpcjanssen.todotxtholo.ASYNC_SUCCESS";
-    public final static String INTENT_ASYNC_FAILED = "nl.mpcjanssen.todotxtholo.ASYNC_FAILED";
-    public final static String INTENT_SYNC_CONFLICT = "nl.mpcjanssen.todotxtholo.SYNC_CONFLICT";
-    public final static String INTENT_START_SYNC_WITH_REMOTE = "nl.mpcjanssen.todotxtholo.START_SYNC";
-    public final static String INTENT_START_SYNC_TO_REMOTE = "nl.mpcjanssen.todotxtholo.START_SYNC_TO";
-    public final static String INTENT_START_SYNC_FROM_REMOTE = "nl.mpcjanssen.todotxtholo.START_SYNC_FROM";
-    public final static String INTENT_SET_MANUAL = "nl.mpcjanssen.todotxtholo.GO_OFFLINE";
-    public final static String INTENT_UPDATE_UI = "nl.mpcjanssen.todotxtholo.UPDATE_UI";
-    public final static String INTENT_SYNC_START = "nl.mpcjanssen.todotxtholo.SYNC_START";
-    public final static String INTENT_SYNC_DONE = "nl.mpcjanssen.todotxtholo.SYNC_DONE";
-    public final static String INTENT_START_FILTER = "nl.mpcjanssen.todotxtholo.START_WITH_FILTER";
-    public final static String INTENT_START_SELECTION = "nl.mpcjanssen.todotxtholo.START_WITH_SELECTION";
+    public final static String INTENT_ACTION_ARCHIVE = "nl.mpcjanssen.simpletask.ACTION_ARCHIVE";
+    public final static String INTENT_ACTION_LOGOUT = "nl.mpcjanssen.simpletask.ACTION_LOGOUT";
+    public final static String INTENT_ASYNC_SUCCESS = "nl.mpcjanssen.simpletask.ASYNC_SUCCESS";
+    public final static String INTENT_ASYNC_FAILED = "nl.mpcjanssen.simpletask.ASYNC_FAILED";
+    public final static String INTENT_SYNC_CONFLICT = "nl.mpcjanssen.simpletask.SYNC_CONFLICT";
+    public final static String INTENT_START_SYNC_WITH_REMOTE = "nl.mpcjanssen.simpletask.START_SYNC";
+    public final static String INTENT_START_SYNC_TO_REMOTE = "nl.mpcjanssen.simpletask.START_SYNC_TO";
+    public final static String INTENT_START_SYNC_FROM_REMOTE = "nl.mpcjanssen.simpletask.START_SYNC_FROM";
+    public final static String INTENT_SET_MANUAL = "nl.mpcjanssen.simpletask.GO_OFFLINE";
+    public final static String INTENT_UPDATE_UI = "nl.mpcjanssen.simpletask.UPDATE_UI";
+    public final static String INTENT_SYNC_START = "nl.mpcjanssen.simpletask.SYNC_START";
+    public final static String INTENT_SYNC_DONE = "nl.mpcjanssen.simpletask.SYNC_DONE";
+    public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
+    public final static String INTENT_START_SELECTION = "nl.mpcjanssen.simpletask.START_WITH_SELECTION";
 
     // Constants for saving state
     public static final String LAYOUT_ID = "layoutId";
