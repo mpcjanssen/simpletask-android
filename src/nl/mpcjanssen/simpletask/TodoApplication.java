@@ -32,16 +32,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
-import nl.mpcjanssen.simpletask.sort.*;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.todotxtholo.R;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 
 public class TodoApplication extends Application {
@@ -174,6 +168,10 @@ public class TodoApplication extends Application {
 
     public boolean isAutoArchive() {
         return m_prefs.getBoolean(getString(R.string.auto_archive_pref_key), false);
+    }
+
+    public boolean isDeferThreshold() {
+        return m_prefs.getBoolean(getString(R.string.defer_threshold_date_key), true);
     }
 
     public int fontSizeDelta() {
