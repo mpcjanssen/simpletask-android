@@ -47,7 +47,10 @@ android {
         }
     }
 
+    check.dependsOn 'connectedInstrumentTestUnitDebug'
 }
+
+// Only sign if we have keystore properties in the gradle.properties
 if (project.hasProperty('storeFile') &&
         project.hasProperty('storePassword') &&
         project.hasProperty('keyPassword')) {
