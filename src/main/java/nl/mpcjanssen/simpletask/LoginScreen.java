@@ -52,7 +52,7 @@ public class LoginScreen extends Activity {
         m_app = (TodoApplication) getApplication();
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("nl.mpcjanssen.todotxtholo.ACTION_LOGIN");
+        intentFilter.addAction("nl.mpcjanssen.simpletask.ATION_LOGIN");
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
