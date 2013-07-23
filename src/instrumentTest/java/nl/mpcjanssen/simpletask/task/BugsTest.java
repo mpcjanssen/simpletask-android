@@ -1,4 +1,4 @@
-package nl.mpcjanssen.simpletask;
+package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 
