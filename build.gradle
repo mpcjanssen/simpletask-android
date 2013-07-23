@@ -1,21 +1,35 @@
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+	repositories {
+		mavenCentral()
+	}
 
-    dependencies {
-       	classpath 'com.android.tools.build:gradle:0.5.2'
-    }
+	dependencies {
+		classpath 'com.android.tools.build:gradle:0.5.2'
+	}
 }
 
 apply plugin: 'android'
 
 android {
-    buildToolsVersion "17.0"
-    compileSdkVersion 17
+	buildToolsVersion "17.0"
+		compileSdkVersion 17
+
+		dependencies {
+			compile fileTree(dir: 'libs', include: '*.jar')
+			compile project(':libraries:PullToRefresh')
+			compile 'com.android.support:support-v4:13.0.0'
+		}
+
+	productFlavors {
+		free {
+			packageName 'nl.mpcjanssen.todotxtholo'
+		}
+		trunk {
+			packageName 'nl.mpcjanssen.simpletask.trunk'
+		}
+		donate {
+			packageName 'nl.mpcjanssen.simpletask.donate'
+		}
+	}
 }
 
-dependencies {
-        compile fileTree(dir: 'libs', include: '*.jar')
-        compile project(':libraries:PullToRefresh')
-}

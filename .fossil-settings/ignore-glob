@@ -12,6 +12,5 @@ build.bat
 .idea/tasks.xml
 */local.properties
 local.properties
-*.bat
 build/*
 */build/*

@@ -1,21 +1,28 @@
-package nl.mpcjanssen.simpletask.task;
+package nl.mpcjanssen.simpletask;
 
-import android.test.AndroidTestCase;
+import junit.framework.TestCase;
+import nl.mpcjanssen.simpletask.task.Task;
 
 /**
- * Created by A156712 on 20-7-13.
+ * Created with IntelliJ IDEA.
+ * User: Mark Janssen
+ * Date: 21-7-13
+ * Time: 12:28
  */
-public class TaskTest extends AndroidTestCase {
-    public void testValidTag() throws Exception {
-        assertEquals(false, Task.validTag(" "));
-        assertEquals(true, Task.validTag("Abc"));
 
+public class TaskTest extends TestCase {
+    public void testValidTag() throws Exception {
+       assertEquals(false, Task.validTag(" "));
     }
 
-    public void testIdentity() throws Exception {
-        Task a = new Task(1,"Test");
-        Task b = new Task(1,"Test");
+    public void testEquals() throws Exception {
+        Task a = new Task(1, "Test");
+        Task b = new Task(1, "Test");
+        Task c = new Task(1, "Test ");
+        Task d = new Task(2, "Test");
         assertNotSame(a,b);
         assertEquals(a,b);
+        assertFalse(b.equals(c));
+        assertFalse(b.equals(d));
     }
 }
