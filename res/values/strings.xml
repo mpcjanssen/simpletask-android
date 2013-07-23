@@ -98,6 +98,9 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
+    <string name="defer_threshold_date_pref_title">Defer by threshold date</string>
+    <string name="defer_threshold_date_pref_summary">Defer tasks using the threshold date (t:yyy-mm-dd).
+        If unchecked defer by due date (due:yyyy-mm-dd) instead.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
     <string name="swipe_complete_pref_title">Swipe to complete</string>

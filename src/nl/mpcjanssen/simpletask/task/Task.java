@@ -43,6 +43,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     private static final Pattern TAG_PATTERN = Pattern
             .compile("^\\S*[\\p{javaLetterOrDigit}_]$");
+    private static final Pattern DUE_PATTERN =  Pattern
+            .compile("\\sdue:(\\d{4}-\\d{2}-\\d{2})");
+    private static final Pattern THRESHOLD_PATTERN =  Pattern
+            .compile("\\st:(\\d{4}-\\d{2}-\\d{2})");
 
     private static final String COMPLETED = "x ";
     private String originalText;
@@ -116,10 +120,7 @@ public class Task implements Serializable, Comparable<Task> {
             }
         }
 
-
-        Pattern matchPattern = Pattern
-                .compile("\\sdue:(\\d{4}-\\d{2}-\\d{2})");
-        Matcher matcher = matchPattern.matcher(this.text);
+        Matcher matcher = DUE_PATTERN.matcher(this.text);
         if (matcher.find()) {
             try {
                 this.dueDate = formatter.parse(matcher.group(1));
@@ -128,9 +129,7 @@ public class Task implements Serializable, Comparable<Task> {
             }
         }
 
-        matchPattern = Pattern
-                .compile("\\st:(\\d{4}-\\d{2}-\\d{2})");
-        matcher = matchPattern.matcher(this.text);
+        matcher = THRESHOLD_PATTERN.matcher(this.text);
         if (matcher.find()) {
             try {
                 this.thresholdDate = formatter.parse(matcher.group(1));
@@ -383,19 +382,36 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferToDate(String deferString) {
+    public void deferDueDate(String deferString) {
+        String taskContents = inFileFormat();
+        if (dueDate!=null) {
+            taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + deferString);
+        } else {
+            taskContents = taskContents + " due:" + deferString;
+        }
+        init(taskContents,null);
+    }
+
+    public void deferThresholdDate(String deferString) {
         String taskContents = inFileFormat();
         if (thresholdDate!=null) {
-            taskContents = taskContents.replaceFirst("\\st:(\\d{4}-\\d{2}-\\d{2})", " t:" + deferString);
-
+            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + deferString);
         } else {
             taskContents = taskContents + " t:" + deferString;
         }
         init(taskContents,null);
     }
 
-    public void deferToDate(Date deferDate) {
+    public void deferToDate(boolean isThresholdDate, String deferString) {
+        if (isThresholdDate) {
+            deferThresholdDate(deferString);
+        } else {
+            deferDueDate(deferString);
+        }
+    }
+
+    public void deferToDate(boolean isThresholdDate, Date deferDate) {
         String deferString = formatter.format(deferDate);
-        deferToDate(deferString);
+        deferToDate(isThresholdDate, deferString);
     }
 }
