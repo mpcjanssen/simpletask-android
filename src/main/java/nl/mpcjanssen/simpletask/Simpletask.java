@@ -37,9 +37,6 @@ import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
 import nl.mpcjanssen.todotxtholo.R;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -80,6 +77,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -103,7 +101,7 @@ import java.util.*;
 
 
 public class Simpletask extends ListActivity implements
-		OnSharedPreferenceChangeListener, OnRefreshListener {
+		OnSharedPreferenceChangeListener {
 
 	final static String TAG = Simpletask.class.getSimpleName();
 	private final static int REQUEST_FILTER = 1;
@@ -113,9 +111,7 @@ public class Simpletask extends ListActivity implements
     private final static int DRAWER_PROJECT = 2;
 
 	private TaskBag taskBag;
-	ProgressDialog m_ProgressDialog = null;
-	String m_DialogText = "";
-	Boolean m_DialogActive = false;
+
 	Menu options_menu;
 	TodoApplication m_app;
 
@@ -145,8 +141,6 @@ public class Simpletask extends ListActivity implements
     private ViewGroup m_container;
 	private ActionBarDrawerToggle m_drawerToggle;
 
-	// PullToRefresh
-	private PullToRefreshAttacher mPullToRefreshHelper;
     private ArrayList<String> m_contextsList;
     private ArrayList<String> m_projectsList;
     private SearchManager searchManager;
@@ -230,11 +224,11 @@ public class Simpletask extends ListActivity implements
 					handleSyncConflict();
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_START)) {
-					mPullToRefreshHelper.setRefreshing(true);					
+                    setProgressBarIndeterminateVisibility(true);
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_DONE)) {
-					mPullToRefreshHelper.setRefreshComplete();
 					m_adapter.setFilteredTasks(true);
+                    setProgressBarIndeterminateVisibility(false);
 					Intent i = new Intent();
 					i.setAction(Constants.INTENT_UPDATE_UI);
 					sendBroadcast(i);
@@ -242,13 +236,10 @@ public class Simpletask extends ListActivity implements
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
-		
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.main);
+        setProgressBarIndeterminateVisibility(false);
 		handleIntent(savedInstanceState);
-		// Create a PullToRefreshAttacher instance
-	    mPullToRefreshHelper = new PullToRefreshAttacher(this);
-	    mPullToRefreshHelper.setRefreshableView(getListView(), this);
-
-
 	}
 
 	private void handleIntent(Bundle savedInstanceState) {
@@ -258,8 +249,7 @@ public class Simpletask extends ListActivity implements
 			startLogin();
 			return;
 		}
-		setContentView(R.layout.main);
-		m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
+        m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
 
 		taskBag = m_app.getTaskBag();
 
@@ -411,9 +401,6 @@ public class Simpletask extends ListActivity implements
 		}
 		m_adapter.setFilteredTasks(true);
 
-		// listen to the ACTION_LOGOUT intent, if heard display LoginScreen
-		// and finish() current activity
-
 		setListAdapter(this.m_adapter);
 
 		ListView lv = getListView();
@@ -512,11 +499,7 @@ public class Simpletask extends ListActivity implements
 		super.onRestart();
 		Log.v(TAG, "onRestart: " + getIntent().getExtras());
 		handleIntent(null);
-		// Create a PullToRefreshAttacher instance
-	    if (mPullToRefreshHelper == null) {
-	    	mPullToRefreshHelper = new PullToRefreshAttacher(this);
-	    }
-	    mPullToRefreshHelper.setRefreshableView(getListView(), this);
+
 	}
 
 	@Override
@@ -1854,11 +1837,5 @@ public class Simpletask extends ListActivity implements
             }
             m_adapter.setFilteredTasks(false);
 		}
-	}
-
-	@Override
-	public void onRefreshStarted(View view) {
-		syncClient(false);
-		
 	}
 }
