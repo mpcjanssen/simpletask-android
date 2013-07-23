@@ -23,11 +23,16 @@ android {
         free {
             packageName 'nl.mpcjanssen.todotxtholo'
         }
-        trunk {
-            packageName 'nl.mpcjanssen.simpletask.trunk'
-        }
         donate {
             packageName 'nl.mpcjanssen.simpletask.donate'
+        }
+        dev {
+            packageName 'nl.mpcjanssen.simpletask.dev'
+        }
+        // Special flavor for testing as this is uninstalled after
+        // completion of the test run
+        unit {
+            packageName 'nl.mpcjanssen.simpletask.test'
         }
     }
     signingConfigs {
