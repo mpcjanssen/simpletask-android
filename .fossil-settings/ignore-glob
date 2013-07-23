@@ -14,3 +14,5 @@ build.bat
 local.properties
 build/*
 */build/*
+gradle.properties
+.gradle/*
