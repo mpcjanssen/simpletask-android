@@ -77,7 +77,7 @@ public class LocalFileTaskRepository {
 					+ " does not exist!");
 		} else {
 			try {
-				return TaskIo.loadTasksFromFile(TODO_TXT_FILE);
+				return TaskIo.loadTasksFromFile(TODO_TXT_FILE, preferences);
 			} catch (IOException e) {
 				throw new TodoException("Error loading from local file", e);
 			}

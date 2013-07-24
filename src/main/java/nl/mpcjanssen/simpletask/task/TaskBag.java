@@ -60,9 +60,6 @@ public class TaskBag {
         this.remoteClientManager = remoteClientManager;
     }
 
-    public void updatePreferences(Preferences preferences) {
-        this.preferences = preferences;
-    }
 
     private void store(ArrayList<Task> tasks) {
         localRepository.store(tasks);
@@ -91,6 +88,7 @@ public class TaskBag {
             localRepository.init();
             this.tasks = localRepository.load();
             lastReload = new Date();
+
         }
     }
 
@@ -157,7 +155,7 @@ public class TaskBag {
                 File todoFile = result.getTodoFile();
                 if (todoFile != null && todoFile.exists()) {
                     ArrayList<Task> remoteTasks = TaskIo
-                            .loadTasksFromFile(todoFile);
+                            .loadTasksFromFile(todoFile, preferences);
                     store(remoteTasks);
                     reload();
                 }
@@ -228,6 +226,12 @@ public class TaskBag {
             this.sharedPreferences = sharedPreferences;
         }
 
+        public void setUseWindowsLineBreaksEnabled(boolean enabled) {
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putBoolean("linebreakspref", enabled);
+            edit.commit();
+
+        }
         public boolean isUseWindowsLineBreaksEnabled() {
             return sharedPreferences.getBoolean("linebreakspref", false);
         }
