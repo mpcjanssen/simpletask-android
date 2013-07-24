@@ -24,6 +24,7 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.util.Log;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskBag;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import java.util.List;
  */
 public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
+    private static boolean sWindowsLineBreaks;
 
     public static ArrayList<Task> loadTasksFromStream(InputStream is)
             throws IOException {
@@ -60,7 +62,30 @@ public class TaskIo {
         return items;
     }
 
-    public static ArrayList<Task> loadTasksFromFile(File file)
+    private static String readLine(BufferedReader r) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        boolean eol = false;
+        int c;
+        while(!eol && (c = r.read()) >= 0) {
+            sb.append((char)c);
+            eol = (c == '\r' || c == '\n');
+
+            // check for \r\n
+            if (c == '\r') {
+                r.mark(1);
+                c = r.read();
+                if (c != '\n') {
+                    r.reset();
+                } else {
+                    sWindowsLineBreaks = true;
+                    sb.append((char)c);
+                }
+            }
+        }
+        return sb.length() == 0 ? null : sb.toString();
+    }
+
+    public static ArrayList<Task> loadTasksFromFile(File file, TaskBag.Preferences preferences)
             throws IOException {
         ArrayList<Task> items = new ArrayList<Task>();
         BufferedReader in = null;
@@ -72,7 +97,8 @@ public class TaskIo {
                 in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String line;
                 long counter = 0L;
-                while ((line = in.readLine()) != null) {
+                sWindowsLineBreaks = false;
+                while ((line = readLine(in)) != null) {
                     line = line.trim();
                     if (line.length() > 0) {
                         items.add(new Task(counter, line));
@@ -84,8 +110,10 @@ public class TaskIo {
                 Util.closeStream(is);
             }
         }
+        preferences.setUseWindowsLineBreaksEnabled(sWindowsLineBreaks);
         return items;
     }
+
 
     public static void writeToFile(List<Task> tasks, File file,
                                    boolean useWindowsBreaks) {

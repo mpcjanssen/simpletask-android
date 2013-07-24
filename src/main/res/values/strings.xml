@@ -101,7 +101,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="defer_threshold_date_pref_summary">Defer tasks using the threshold date (t:yyy-mm-dd).
         If unchecked defer by due date (due:yyyy-mm-dd) instead.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
-    <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
+    <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.
+    By default the type of line breaks used in the loaded todo file will be kept.</string>
     <string name="swipe_complete_pref_title">Swipe to complete</string>
     <string name="swipe_complete_pref_summary">Swipe over a task to complete it.</string>
     <string name="manual_sync_pref_title">Manual sync</string>
