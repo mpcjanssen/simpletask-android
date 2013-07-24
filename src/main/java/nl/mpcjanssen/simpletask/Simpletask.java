@@ -1275,7 +1275,6 @@ public class Simpletask extends ListActivity implements
 					Util.setColor(ss, prioColor, task.getPriority()
 							.inFileFormat());
 					holder.tasktext.setText(ss);
-					holder.tasktext.setTextColor(res.getColor(R.color.black));
 
 					if (task.isCompleted()) {
 						// Log.v(TAG, "Striking through " + task.getText());
@@ -1486,6 +1485,7 @@ public class Simpletask extends ListActivity implements
                 ed.clearFocus();
                 ed.setText("");
                 taskBag.store();
+                m_adapter.setFilteredTasks(false);
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
                 sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
@@ -1526,6 +1526,7 @@ public class Simpletask extends ListActivity implements
                     }
                 }
                 taskBag.store();
+                m_adapter.setFilteredTasks(false);
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
                 sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
