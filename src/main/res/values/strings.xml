@@ -121,11 +121,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_tracker_summary">Request a new feature or enhancement or report a problem.</string>
     <string name="visit_tracker_data">http://mpcjanssen.nl/cgi-bin/simpletask/tktnew</string>
 
-    <string name="donate_title">Donate</string>
-    <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be
-        free.
-    </string>
-    <string name="visit_donate_data">http://bit.ly/VYR7Fq</string>
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manual Sync</string>
     <string name="sync_dialog_msg">Do you want to upload or download your todo.txt file?</string>
