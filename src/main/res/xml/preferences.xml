@@ -46,7 +46,6 @@
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
-
         <EditTextPreference
             android:key="@string/font_size_delta_pref_key"
             android:numeric="signed"
@@ -100,13 +99,5 @@
                 android:action="android.intent.action.VIEW"
                 android:data="@string/visit_tracker_data" />
         </PreferenceScreen>
-        <PreferenceScreen
-            android:summary="@string/donate_summary"
-            android:title="@string/donate_title" >
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/visit_donate_data" />
-        </PreferenceScreen>
     </PreferenceCategory>
-
 </PreferenceScreen>
