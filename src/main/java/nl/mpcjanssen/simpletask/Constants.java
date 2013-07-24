@@ -22,6 +22,8 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.content.Intent;
+
 public class Constants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -102,4 +104,9 @@ public class Constants {
 
     // Android OS specific constants
     public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
+
+    // Constants for syncdirection
+    public static final String INTENT_SYNC_DIRECTION = "SYNC_DIRECTION";
+    public static final int PUSH = 0;
+    public static final int PULL = 1;
 }

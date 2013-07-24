@@ -227,7 +227,13 @@ public class Simpletask extends ListActivity implements
                     setProgressBarIndeterminateVisibility(true);
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_DONE)) {
-					m_adapter.setFilteredTasks(true);
+                    int direction = intent.getIntExtra(Constants.INTENT_SYNC_DIRECTION, -1);
+                    if (direction == Constants.PULL) {
+                        //Need to reload after pull
+                        m_adapter.setFilteredTasks(true);
+                    } else {
+                        m_adapter.setFilteredTasks(false);
+                    }
                     setProgressBarIndeterminateVisibility(false);
 					Intent i = new Intent();
 					i.setAction(Constants.INTENT_UPDATE_UI);
