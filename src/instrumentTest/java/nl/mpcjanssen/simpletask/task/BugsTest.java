@@ -16,5 +16,4 @@ public class BugsTest extends TestCase {
         Task t = new Task(0, taskContents);
         assertEquals(taskContents, t.inFileFormat());
     }
-
 }

@@ -190,6 +190,9 @@ public class Simpletask extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		Log.v(TAG, "onCreate");
 		m_app = (TodoApplication) getApplication();
+        m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
+
+        taskBag = m_app.getTaskBag();
 
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(Constants.INTENT_ACTION_ARCHIVE);
@@ -227,17 +230,7 @@ public class Simpletask extends ListActivity implements
                     setProgressBarIndeterminateVisibility(true);
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_DONE)) {
-                    int direction = intent.getIntExtra(Constants.INTENT_SYNC_DIRECTION, -1);
-                    if (direction == Constants.PULL) {
-                        //Need to reload after pull
-                        m_adapter.setFilteredTasks(true);
-                    } else {
-                        m_adapter.setFilteredTasks(false);
-                    }
                     setProgressBarIndeterminateVisibility(false);
-					Intent i = new Intent();
-					i.setAction(Constants.INTENT_UPDATE_UI);
-					sendBroadcast(i);
 				}
 			}
 		};
@@ -245,6 +238,7 @@ public class Simpletask extends ListActivity implements
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
         setProgressBarIndeterminateVisibility(false);
+        taskBag.reload();
 		handleIntent(savedInstanceState);
 	}
 
@@ -255,9 +249,10 @@ public class Simpletask extends ListActivity implements
 			startLogin();
 			return;
 		}
-        m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
+        if (taskBag==null) {
+            taskBag = m_app.getTaskBag();
+        }
 
-		taskBag = m_app.getTaskBag();
 
 		m_prios = new ArrayList<Priority>();
 		m_contexts = new ArrayList<String>();
@@ -405,7 +400,7 @@ public class Simpletask extends ListActivity implements
 			m_adapter = new TaskAdapter(this, R.layout.list_item,
 					getLayoutInflater(), getListView());
 		}
-		m_adapter.setFilteredTasks(true);
+		m_adapter.setFilteredTasks(false);
 
 		setListAdapter(this.m_adapter);
 
@@ -1767,7 +1762,6 @@ public class Simpletask extends ListActivity implements
                 m_drawerLayout.closeDrawers();
             }
             updateDrawerList();
-			m_adapter.setFilteredTasks(false);
 			return;
 		}
 	}

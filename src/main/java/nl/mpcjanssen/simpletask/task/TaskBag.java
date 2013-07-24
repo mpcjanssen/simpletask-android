@@ -108,7 +108,6 @@ public class TaskBag {
 
     public void addAsTask(String input) {
         try {
-            reload();
             Task task = new Task(tasks.size(), input,
                     (preferences.isPrependDateEnabled() ? new Date() : null));
             tasks.add(task);
@@ -120,27 +119,15 @@ public class TaskBag {
     }
 
     public void updateTask(Task task, String input) {
-        task.init(input, null);
-        store();
-    }
-
-    public Task find(Task task) {
-        Task found = TaskBag.find(tasks, task);
-        return found;
+        int index = tasks.indexOf(task);
+        if (index!=-1) {
+            tasks.get(index).init(input, null);
+            store();
+        }
     }
 
     public void delete(Task task) {
-        try {
-            Task found = TaskBag.find(tasks, task);
-            if (found != null) {
-                tasks.remove(found);
-            } else {
-                throw new TaskPersistException("Task not found, not deleted");
-            }
-        } catch (Exception e) {
-            throw new TaskPersistException(
-                    "An error occurred while deleting Task {" + task + "}", e);
-        }
+        tasks.remove(task);
     }
 
     /* REMOTE APIS */
@@ -224,16 +211,6 @@ public class TaskBag {
             ret.add(0, "-");
         }
         return ret;
-    }
-
-    private static Task find(List<Task> tasks, Task task) {
-        for (Task task2 : tasks) {
-            if (task2 == task || (task2.getText().equals(task.getOriginalText())
-                    && task2.getPriority() == task.getOriginalPriority())) {
-                return task2;
-            }
-        }
-        return null;
     }
 
     public ArrayList<String> getDecoratedContexts(boolean includeNone) {

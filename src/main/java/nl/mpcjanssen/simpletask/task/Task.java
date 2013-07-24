@@ -41,6 +41,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
 
+    private static final long serialVersionUID = 0L;
+
     private static final Pattern TAG_PATTERN = Pattern
             .compile("^\\S*[\\p{javaLetterOrDigit}_]$");
     private static final Pattern DUE_PATTERN =  Pattern

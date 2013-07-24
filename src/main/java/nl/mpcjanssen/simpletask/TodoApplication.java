@@ -244,7 +244,6 @@ public class TodoApplication extends Application {
             i.setAction(Constants.INTENT_SYNC_START);
             sendBroadcast(i);
             m_pushing = true;
-            updateUI();
 
             new AsyncTask<Void, Void, Integer>() {
                 static final int SUCCESS = 0;
@@ -271,13 +270,11 @@ public class TodoApplication extends Application {
                     Log.d(TAG, "post taskBag.pushToremote");
                     Intent i = new Intent();
                     i.setAction(Constants.INTENT_SYNC_DONE);
-                    i.putExtra(Constants.INTENT_SYNC_DIRECTION,Constants.PUSH);
                     sendBroadcast(i);
                     if (result == SUCCESS) {
                         Log.d(TAG, "taskBag.pushToRemote done");
                         m_pushing = false;
                         setNeedToPush(false);
-                        updateUI();
                     } else if (result == CONFLICT) {
                         // FIXME: need to know which file had conflict
                         sendBroadcast(new Intent(Constants.INTENT_SYNC_CONFLICT));
@@ -331,6 +328,7 @@ public class TodoApplication extends Application {
                     if (result) {
                         Log.d(TAG, "taskBag.pullFromRemote done");
                         m_pulling = false;
+                        taskBag.reload();
                         updateUI();
                     } else {
                         sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));

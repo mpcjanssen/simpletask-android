@@ -176,13 +176,12 @@ public class AddTask extends Activity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        Task task = (Task) intent.getSerializableExtra(
+        m_backup = (Task) intent.getSerializableExtra(
                 Constants.EXTRA_TASK);
-        if (task != null) {
-            m_backup = taskBag.find(task);
-            textInputField.setText(task.inFileFormat());
+        if (m_backup != null) {
+            textInputField.setText(m_backup.inFileFormat());
             setTitle(R.string.updatetask);
-            textInputField.setSelection(task.inFileFormat().length());
+            textInputField.setSelection(m_backup.inFileFormat().length());
         } else {
             if (textInputField.getText().length() == 0) {
                 ArrayList<String> projects = new ArrayList<String>();
