@@ -271,15 +271,13 @@ public class TodoApplication extends Application {
                     Log.d(TAG, "post taskBag.pushToremote");
                     Intent i = new Intent();
                     i.setAction(Constants.INTENT_SYNC_DONE);
+                    i.putExtra(Constants.INTENT_SYNC_DIRECTION,Constants.PUSH);
                     sendBroadcast(i);
                     if (result == SUCCESS) {
                         Log.d(TAG, "taskBag.pushToRemote done");
                         m_pushing = false;
                         setNeedToPush(false);
                         updateUI();
-                        // Push is complete. Now do a pull in case the remote
-                        // done.txt has changed.
-                        pullFromRemote(true);
                     } else if (result == CONFLICT) {
                         // FIXME: need to know which file had conflict
                         sendBroadcast(new Intent(Constants.INTENT_SYNC_CONFLICT));
@@ -340,6 +338,7 @@ public class TodoApplication extends Application {
                     super.onPostExecute(result);
                     Intent i = new Intent();
                     i.setAction(Constants.INTENT_SYNC_DONE);
+                    i.putExtra(Constants.INTENT_SYNC_DIRECTION,Constants.PULL);
                     sendBroadcast(i);
                 }
 
