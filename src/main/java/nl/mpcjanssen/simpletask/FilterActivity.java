@@ -43,6 +43,7 @@ public class FilterActivity extends Activity {
         // Set the proper theme
         setTheme(m_app.getActiveTheme());
         setContentView(R.layout.filter);
+
         Bundle arguments;
         actionbar = getActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
