@@ -275,9 +275,6 @@ public class Simpletask extends ListActivity implements
             m_container = m_drawerLayout;
         }
 
-		// Set the adapter for the list view
-		updateDrawerList();
-
 		// Set the list's click listener
 		m_contextDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_CONTEXT));
         m_projectDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_PROJECT));
@@ -417,8 +414,10 @@ public class Simpletask extends ListActivity implements
             setSelectedTask(Integer.valueOf(parts[0]), parts[1]);
             intent.removeExtra(Constants.INTENT_SELECTED_TASK);
             setIntent(intent);
+        } else {
+            // Set the adapter for the list view
+            updateDrawerList();
         }
-
 	}
 
     private void setSelectedTask(int index,String selectedTask) {
