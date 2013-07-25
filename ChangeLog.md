@@ -13,3 +13,6 @@
 
 * [Bugfix] Fixed a bug which could lead to duplication of tasks when editing them from Simpletask.
 
+### 2.6.5
+
+* [Feature] Removed the donate button from the free version and created a separate paid version. This also makes Simpletask suitable for [Google Play for Education](http://developer.android.com/distribute/googleplay/edu/index.html).
