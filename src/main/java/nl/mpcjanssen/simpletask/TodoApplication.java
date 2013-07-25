@@ -57,7 +57,7 @@ public class TodoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TodoApplication.appContext = getApplicationContext();
-        m_prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        m_prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         remoteClientManager = new RemoteClientManager(this, m_prefs);
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
