@@ -47,9 +47,9 @@ public class LoginScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.login);
-
         m_app = (TodoApplication) getApplication();
+        setTheme(m_app.getActiveTheme());
+        setContentView(R.layout.login);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("nl.mpcjanssen.simpletask.ATION_LOGIN");

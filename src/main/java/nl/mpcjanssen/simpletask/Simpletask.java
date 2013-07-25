@@ -89,6 +89,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -235,14 +236,30 @@ public class Simpletask extends ListActivity implements
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
+
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        // Set the proper theme
+        setTheme(m_app.getActiveTheme());
+
         setContentView(R.layout.main);
+
+        // Replace drawables if the theme is dark
+        if (m_app.isDarkTheme()) {
+            ImageView actionBarIcon = (ImageView) findViewById(R.id.actionbar_icon);
+            if (actionBarIcon!=null) {
+                actionBarIcon.setImageResource(R.drawable.labels);
+            }
+            ImageView actionBarClear = (ImageView) findViewById(R.id.actionbar_clear);
+            if (actionBarClear!=null) {
+                actionBarClear.setImageResource(R.drawable.cancel);
+            }
+        }
         setProgressBarIndeterminateVisibility(false);
         taskBag.reload();
 		handleIntent(savedInstanceState);
 	}
 
-	private void handleIntent(Bundle savedInstanceState) {
+    private void handleIntent(Bundle savedInstanceState) {
 		RemoteClient remoteClient = m_app.getRemoteClientManager()
 				.getRemoteClient();
 		if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {

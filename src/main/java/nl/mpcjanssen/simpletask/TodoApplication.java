@@ -366,6 +366,28 @@ public class TodoApplication extends Application {
         }
     }
 
+    public int getActiveTheme() {
+        String theme =  m_prefs.getString(getString(R.string.theme_pref_key), "");
+        if (theme.equals("android.R.style.Theme_Holo")) {
+            return android.R.style.Theme_Holo;
+        } else if (theme.equals("android.R.style.Theme_Holo_Light_DarkActionBar")) {
+            return android.R.style.Theme_Holo_Light_DarkActionBar;
+        } else  {
+            return android.R.style.Theme_Holo_Light_DarkActionBar;
+        }
+    }
+
+    public boolean isDarkTheme() {
+        switch (getActiveTheme()) {
+            case android.R.style.Theme_Holo:
+                return true;
+            case android.R.style.Theme_Holo_Light_DarkActionBar:
+                return false;
+            default:
+                return false;
+        }
+    }
+
     private final class BroadcastReceiverExtension extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
