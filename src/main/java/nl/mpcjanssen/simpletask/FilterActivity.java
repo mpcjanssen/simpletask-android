@@ -236,6 +236,7 @@ public class FilterActivity extends Activity {
     				AppWidgetManager.EXTRA_APPWIDGET_ID, 
     				AppWidgetManager.INVALID_APPWIDGET_ID);
 
+            Log.v(TAG, "Storing preferences for AppWidget " + mAppWidgetId);
     		// Store widget filter
     		SharedPreferences preferences = getApplicationContext().getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
     		Editor editor = preferences.edit();
@@ -250,7 +251,7 @@ public class FilterActivity extends Activity {
     		editor.commit();
 
             // onUpdate is not called on adding, launch it manually
-            Context context = FilterActivity.this;
+            Context context = getApplicationContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
                     mAppWidgetId, name);

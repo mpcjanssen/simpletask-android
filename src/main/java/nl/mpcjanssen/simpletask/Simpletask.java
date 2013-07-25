@@ -498,7 +498,8 @@ public class Simpletask extends ListActivity implements
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Log.v(TAG, "onRestart: " + getIntent().getExtras());
+		Log.v(TAG, "onRestart: " + getIntent().getExtras().keySet());
+        Log.d(TAG, "Contexts are now " + getIntent().getStringExtra(Constants.INTENT_CONTEXTS_FILTER));
 		handleIntent(null);
 
 	}
