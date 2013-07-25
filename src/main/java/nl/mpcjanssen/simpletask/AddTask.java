@@ -163,7 +163,8 @@ public class AddTask extends Activity {
             return;
         }
 
-
+        // Set the proper theme
+        setTheme(m_app.getActiveTheme());
         setContentView(R.layout.add_task);
 
         // text
