@@ -71,18 +71,18 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         // they will replace each other
 
         intent = new Intent(Constants.INTENT_START_FILTER);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
         intent = new Intent(Constants.INTENT_START_FILTER);
         putFilterExtras(intent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, intent, 0);
+        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
         intent = new Intent(context, AddTask.class);
         putFilterExtras(intent, preferences, widgetId);
         pendingIntent = PendingIntent.getActivity(
-                context, FROM_WIDGETS_START+widgetId, intent, 0);
+                context, FROM_WIDGETS_START+widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
         return view;
 	}
