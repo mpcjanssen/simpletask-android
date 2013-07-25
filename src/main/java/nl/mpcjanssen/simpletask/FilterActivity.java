@@ -255,7 +255,7 @@ public class FilterActivity extends Activity {
     		editor.commit();
 
             // onUpdate is not called on adding, launch it manually
-            Context context = FilterActivity.this;
+            Context context = getApplictionContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
                     mAppWidgetId, name);
