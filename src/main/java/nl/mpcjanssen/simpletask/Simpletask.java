@@ -1170,7 +1170,23 @@ public class Simpletask extends ListActivity implements
 						positionToIndex.put(position, null);
 						position++;
 					}
-				}
+				} else if (firstSort.contains("by_threshold_date")) {
+                    String taskItem = t.getThresholdDateString();
+                    String newHeader;
+                    if (Strings.isEmptyOrNull(taskItem)) {
+                        newHeader = getString(R.string.no_threshold_date);
+                    } else {
+                        newHeader = taskItem;
+                    }
+                    if (!header.equals(newHeader)) {
+                        header = newHeader;
+                        Log.v(TAG, "Start of header: " + header
+                                + " at position: " + position);
+                        headerTitles.put(position, header);
+                        positionToIndex.put(position, null);
+                        position++;
+                    }
+                }
 				positionToIndex.put(position, index);
 				indexToPosition.put(index, position);
 				index++;

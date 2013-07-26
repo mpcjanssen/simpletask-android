@@ -21,8 +21,8 @@ You should have received a copy of the GNU General Public License along with Sim
 <!-- suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="nl.mpcjanssen.todotxtholo"
-          android:versionCode="1018"
-          android:versionName="2.6.10">
+          android:versionCode="1019"
+          android:versionName="2.7.0 RC1">
 
     <uses-sdk
             android:minSdkVersion="15"
