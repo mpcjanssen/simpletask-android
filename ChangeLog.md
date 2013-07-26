@@ -6,7 +6,6 @@
 * [Feature] Support for a Holo Dark theme. Can be configured from the Preferences.
 * [Feature] Added grouping by threshold date and priority.
 * [Feature] Demonstrate Navigation drawers on first run.
-
 * [Bugfix] Properly initialize side drawes after first sync with Dropbox.
 * [Bugfix] Do not reset preferences to default after loggin out of Dropbox and logging in again.
 * [Bugfix] Fixed some sorting issues caused by bug in Alphabetical sort.
