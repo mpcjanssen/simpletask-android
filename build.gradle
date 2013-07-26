@@ -14,6 +14,11 @@ android {
     buildToolsVersion "17.0"
     compileSdkVersion 17
 
+    defaultConfig {
+        versionName '2.7.0'
+        versionCode 1019
+    }
+
     dependencies {
         compile fileTree(dir: 'libs', include: '*.jar')
         compile 'com.android.support:support-v4:13.0.0'
@@ -22,12 +27,15 @@ android {
     productFlavors {
         free {
             packageName 'nl.mpcjanssen.todotxtholo'
+            versionName android.defaultConfig.versionName + ' (' + getFossilUUID() +')'
         }
         donate {
             packageName 'nl.mpcjanssen.simpletask.donate'
+            versionName defaultConfig.versionName + '-donate (' + getFossilUUID() +')'
         }
         dev {
             packageName 'nl.mpcjanssen.simpletask.dev'
+            versionName defaultConfig.versionName + '-dev (' + getFossilUUID() +')'
         }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
@@ -59,6 +67,11 @@ if (project.hasProperty('storeFile') &&
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
     android.buildTypes.release.signingConfig = null
+}
+
+def getFossilUUID() {
+    String contents = new File( 'manifest.uuid' ).getText( 'UTF-8' )
+    return contents.substring(0,8);
 }
 
 
