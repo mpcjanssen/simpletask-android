@@ -232,6 +232,7 @@ public class Task implements Serializable, Comparable<Task> {
     public void markComplete(Date date) {
         if (!this.completed) {
             this.completionDate = formatter.format(date);
+            this.setPriority(Priority.NONE);
             this.deleted = false;
             this.completed = true;
         }
@@ -361,7 +362,9 @@ public class Task implements Serializable, Comparable<Task> {
 	}
 
     public void removeTag(String tag) {
-        String newText = inFileFormat().replaceAll(Pattern.quote(tag), " ");
+        String escapedTag = Pattern.quote(tag);
+        String regexp = "\\s" + escapedTag +"(?:\\s|$)";
+        String newText = inFileFormat().replaceAll(regexp, " ");
         newText = newText.trim();
         this.init(newText , null);
     }
@@ -391,7 +394,7 @@ public class Task implements Serializable, Comparable<Task> {
         } else {
             taskContents = taskContents + " due:" + deferString;
         }
-        init(taskContents,null);
+        init(taskContents, null);
     }
 
     public void deferThresholdDate(String deferString) {
@@ -401,7 +404,7 @@ public class Task implements Serializable, Comparable<Task> {
         } else {
             taskContents = taskContents + " t:" + deferString;
         }
-        init(taskContents,null);
+        init(taskContents, null);
     }
 
     public void deferToDate(boolean isThresholdDate, String deferString) {
@@ -415,5 +418,34 @@ public class Task implements Serializable, Comparable<Task> {
     public void deferToDate(boolean isThresholdDate, Date deferDate) {
         String deferString = formatter.format(deferDate);
         deferToDate(isThresholdDate, deferString);
+    }
+
+    public String getThresholdDateString(String empty) {
+        if (this.thresholdDate==null) {
+            return empty;
+        } else {
+            return formatter.format(thresholdDate);
+        }
+    }
+
+    public String getHeader(String sort, String empty) {
+        if (sort.contains("by_context")) {
+            if (getContexts().size()>0) {
+                return getContexts().get(0);
+            } else {
+                return empty;
+            }
+        } else if (sort.contains("by_project")) {
+            if (getProjects().size()>0) {
+                return getProjects().get(0);
+            } else {
+                return empty;
+            }
+        } else if (sort.contains("by_threshold_date")) {
+            return getThresholdDateString(empty);
+        } else if (sort.contains("by_prio")) {
+            return getPriority().getCode();
+        }
+        return "";
     }
 }

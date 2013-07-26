@@ -65,6 +65,9 @@ public class Preferences extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+        TodoApplication m_app = (TodoApplication) getApplication();
+        // Set the proper theme
+        setTheme(m_app.getActiveTheme());
 		super.onCreate(savedInstanceState);
 		// Display the fragment as the main content.
 		getFragmentManager().beginTransaction()
