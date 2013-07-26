@@ -7,7 +7,7 @@
 * [Feature] Added grouping by threshold date and priority.
 * [Feature] Demonstrate Navigation drawers on first run.
 * [Bugfix] Properly initialize side drawes after first sync with Dropbox.
-* [Bugfix] Do not reset preferences to default after loggin out of Dropbox and logging in again.
+* [Bugfix] Do not reset preferences to default after logging out of Dropbox and logging in again.
 * [Bugfix] Fixed some sorting issues caused by bug in Alphabetical sort.
 * [Code] Refactored header functionality so it will be easier to add new groupings.
 
