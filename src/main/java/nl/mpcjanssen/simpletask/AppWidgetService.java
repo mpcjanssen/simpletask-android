@@ -64,7 +64,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
         m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
 		taskBag = application.getTaskBag();
-		setFilteredTasks(true);
+		setFilteredTasks();
 	}
 	
     private Intent createFilterIntent(Task selectedTask) {
@@ -80,11 +80,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return target;
     }
 
-	void setFilteredTasks(boolean reload) {
-		Log.v(TAG, "setFilteredTasks called, reload: " + reload);
-		if (reload) {
-			taskBag.reload();
-		}
+	void setFilteredTasks() {
 		Log.v(TAG, "setFilteredTasks called");
 		AndFilter filter = new AndFilter();
 		visibleTasks.clear();
@@ -145,7 +141,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	public void onDataSetChanged() {
 		// TODO Auto-generated method stub
 		Log.v(TAG, "Data set changed, refresh");
-		setFilteredTasks(false);
+		setFilteredTasks();
 
 	}
 

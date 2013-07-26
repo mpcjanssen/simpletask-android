@@ -99,8 +99,7 @@ import java.util.*;
 import static java.lang.Thread.sleep;
 
 
-public class Simpletask extends ListActivity implements
-		OnSharedPreferenceChangeListener {
+public class Simpletask extends ListActivity  {
 
 	final static String TAG = Simpletask.class.getSimpleName();
 	private final static int REQUEST_FILTER = 1;
@@ -189,8 +188,6 @@ public class Simpletask extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		Log.v(TAG, "onCreate");
 		m_app = (TodoApplication) getApplication();
-        m_app.m_prefs.registerOnSharedPreferenceChangeListener(this);
-
         taskBag = m_app.getTaskBag();
 
 		final IntentFilter intentFilter = new IntentFilter();
@@ -380,20 +377,20 @@ public class Simpletask extends ListActivity implements
 			// Set previous filters and sort
 			Log.v(TAG, "handleIntent: from m_prefs state");
 			m_sorts = new ArrayList<String>();
-			m_sorts.addAll(Arrays.asList(m_app.m_prefs.getString("m_sorts", "")
+			m_sorts.addAll(Arrays.asList(TodoApplication.getPrefs().getString("m_sorts", "")
 					.split("\n")));
 
 			Log.v(TAG, "Got sort from app prefs: " + m_sorts);
 
-			m_contexts = new ArrayList<String>(m_app.m_prefs.getStringSet(
+			m_contexts = new ArrayList<String>(TodoApplication.getPrefs().getStringSet(
 					"m_contexts", Collections.<String> emptySet()));
-			m_prios = Priority.toPriority(new ArrayList<String>(m_app.m_prefs
+			m_prios = Priority.toPriority(new ArrayList<String>(TodoApplication.getPrefs()
 					.getStringSet("m_prios", Collections.<String> emptySet())));
-			m_projects = new ArrayList<String>(m_app.m_prefs.getStringSet(
+			m_projects = new ArrayList<String>(TodoApplication.getPrefs().getStringSet(
 					"m_projects", Collections.<String> emptySet()));
-			m_contextsNot = m_app.m_prefs.getBoolean("m_contextsNot", false);
-			m_priosNot = m_app.m_prefs.getBoolean("m_priosNot", false);
-			m_projectsNot = m_app.m_prefs.getBoolean("m_projectsNot", false);
+			m_contextsNot = TodoApplication.getPrefs().getBoolean("m_contextsNot", false);
+			m_priosNot = TodoApplication.getPrefs().getBoolean("m_priosNot", false);
+			m_projectsNot = TodoApplication.getPrefs().getBoolean("m_projectsNot", false);
 
 		}
 
@@ -493,7 +490,6 @@ public class Simpletask extends ListActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		m_app.m_prefs.unregisterOnSharedPreferenceChangeListener(this);
 		unregisterReceiver(m_broadcastReceiver);
 	}
 
@@ -519,18 +515,12 @@ public class Simpletask extends ListActivity implements
 	}
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		Log.v(TAG, "onSharedPreferenceChanged key=" + key);
-	}
-
-	@Override
 	protected void onStop() {
 		super.onStop();
 		if (actionMode != null) {
 			actionMode.finish();
 		}
-		SharedPreferences.Editor editor = m_app.m_prefs.edit();
+		SharedPreferences.Editor editor = TodoApplication.getPrefs().edit();
 		Log.v(TAG, "Storing sort in prefs: " + m_sorts);
 		editor.putString("m_sorts", Util.join(m_sorts, "\n"));
 		editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
@@ -1588,7 +1578,7 @@ public class Simpletask extends ListActivity implements
 	}
 
 	public void storeKeys(String accessTokenKey, String accessTokenSecret) {
-		Editor editor = m_app.m_prefs.edit();
+		Editor editor = m_app.getPrefs().edit();
 		editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
 		editor.putString(Constants.PREF_ACCESSTOKEN_SECRET, accessTokenSecret);
 		editor.commit();
