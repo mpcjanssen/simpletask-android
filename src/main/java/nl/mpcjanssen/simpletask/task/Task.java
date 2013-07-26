@@ -420,11 +420,32 @@ public class Task implements Serializable, Comparable<Task> {
         deferToDate(isThresholdDate, deferString);
     }
 
-    public String getThresholdDateString() {
+    public String getThresholdDateString(String empty) {
         if (this.thresholdDate==null) {
-            return "";
+            return empty;
         } else {
             return formatter.format(thresholdDate);
         }
+    }
+
+    public String getHeader(String sort, String empty) {
+        if (sort.contains("by_context")) {
+            if (getContexts().size()>0) {
+                return getContexts().get(0);
+            } else {
+                return empty;
+            }
+        } else if (sort.contains("by_project")) {
+            if (getProjects().size()>0) {
+                return getProjects().get(0);
+            } else {
+                return empty;
+            }
+        } else if (sort.contains("by_threshold_date")) {
+            return getThresholdDateString(empty);
+        } else if (sort.contains("by_prio")) {
+            return getPriority().getCode();
+        }
+        return "";
     }
 }

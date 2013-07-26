@@ -199,6 +199,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="no_project">No tag</string>
     <string name="no_creation_date">No creation date</string>
     <string name="no_threshold_date">No threshold date</string>
+    <string name="no_header">None</string>
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Add reminder</string>
     <string name="calendar_title">Simpletask reminder</string>

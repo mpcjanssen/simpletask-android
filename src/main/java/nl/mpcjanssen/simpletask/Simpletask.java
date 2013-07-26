@@ -1121,6 +1121,7 @@ public class Simpletask extends ListActivity implements
 			indexToPosition.clear();
 			headerTitles.clear();
 			String header = "";
+            String newHeader = "";
 			int index = 0;
 			int position = 0;
 			int firstGroupSortIndex = 0;
@@ -1135,16 +1136,7 @@ public class Simpletask extends ListActivity implements
 			}
 			String firstSort = m_sorts.get(firstGroupSortIndex);
 			for (Task t : visibleTasks) {
-
-				if (firstSort.contains("by_context")) {
-
-					List<String> taskItems = t.getContexts();
-					String newHeader;
-					if (taskItems == null || taskItems.size() == 0) {
-						newHeader = getString(R.string.no_context);
-					} else {
-						newHeader = taskItems.get(0);
-					}
+                    newHeader = t.getHeader(firstSort, getString(R.string.no_header));
 					if (!header.equals(newHeader)) {
 						header = newHeader;
 						// Log.v(TAG, "Start of header: " + header +
@@ -1153,40 +1145,7 @@ public class Simpletask extends ListActivity implements
 						positionToIndex.put(position, null);
 						position++;
 					}
-				} else if (firstSort.contains("by_project")) {
 
-					List<String> taskItems = t.getProjects();
-					String newHeader;
-					if (taskItems == null || taskItems.size() == 0) {
-						newHeader = getString(R.string.no_project);
-					} else {
-						newHeader = taskItems.get(0);
-					}
-					if (!header.equals(newHeader)) {
-						header = newHeader;
-						Log.v(TAG, "Start of header: " + header
-								+ " at position: " + position);
-						headerTitles.put(position, header);
-						positionToIndex.put(position, null);
-						position++;
-					}
-				} else if (firstSort.contains("by_threshold_date")) {
-                    String taskItem = t.getThresholdDateString();
-                    String newHeader;
-                    if (Strings.isEmptyOrNull(taskItem)) {
-                        newHeader = getString(R.string.no_threshold_date);
-                    } else {
-                        newHeader = taskItem;
-                    }
-                    if (!header.equals(newHeader)) {
-                        header = newHeader;
-                        Log.v(TAG, "Start of header: " + header
-                                + " at position: " + position);
-                        headerTitles.put(position, header);
-                        positionToIndex.put(position, null);
-                        position++;
-                    }
-                }
 				positionToIndex.put(position, index);
 				indexToPosition.put(index, position);
 				index++;
