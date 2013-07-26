@@ -106,7 +106,8 @@ class DropboxRemoteClient implements RemoteClient {
 	 */
 	private void clearAuthToken() {
 		Editor editor = sharedPreferences.edit();
-		editor.clear();
+		editor.remove(Constants.PREF_ACCESSTOKEN_KEY);
+        editor.remove(Constants.PREF_ACCESSTOKEN_SECRET);
 		editor.commit();
 	}
 
