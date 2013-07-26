@@ -526,10 +526,6 @@ public class Simpletask extends ListActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		Log.v(TAG, "onSharedPreferenceChanged key=" + key);
-		if (Constants.PREF_ACCESSTOKEN_SECRET.equals(key)) {
-			Log.i(TAG, "New access token secret. Syncing!");
-			syncClient(false);
-		}
 	}
 
 	@Override
@@ -544,7 +540,6 @@ public class Simpletask extends ListActivity implements
 		editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
 		editor.putStringSet("m_prios",
 				new HashSet<String>(Priority.inCode(m_prios)));
-		Log.v(TAG, "prio saved" + new HashSet<String>(Priority.inCode(m_prios)));
 		editor.putStringSet("m_projects", new HashSet<String>(m_projects));
 		editor.putBoolean("m_contextsNot", m_contextsNot);
 		editor.putBoolean("m_priosNot", m_priosNot);
