@@ -38,7 +38,12 @@ public class FilterActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {    	
     	Log.v(TAG, "Called with intent: " + getIntent().toString());
         super.onCreate(savedInstanceState);
+
+        TodoApplication m_app = (TodoApplication) getApplication();
+        // Set the proper theme
+        setTheme(m_app.getActiveTheme());
         setContentView(R.layout.filter);
+
         Bundle arguments;
         actionbar = getActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -236,7 +241,6 @@ public class FilterActivity extends Activity {
     				AppWidgetManager.EXTRA_APPWIDGET_ID, 
     				AppWidgetManager.INVALID_APPWIDGET_ID);
 
-            Log.v(TAG, "Storing preferences for AppWidget " + mAppWidgetId);
     		// Store widget filter
     		SharedPreferences preferences = getApplicationContext().getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
     		Editor editor = preferences.edit();
@@ -250,7 +254,6 @@ public class FilterActivity extends Activity {
             editor.putString(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
-            // onUpdate is not called on adding, launch it manually
             Context context = getApplicationContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,

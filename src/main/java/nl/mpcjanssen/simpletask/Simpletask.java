@@ -89,6 +89,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -98,6 +99,8 @@ import android.widget.TextView;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static java.lang.Thread.sleep;
 
 
 public class Simpletask extends ListActivity implements
@@ -221,7 +224,7 @@ public class Simpletask extends ListActivity implements
 					finish();
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_UPDATE_UI)) {
-					m_adapter.setFilteredTasks(false);
+					handleIntent(null);
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_CONFLICT)) {
 					handleSyncConflict();
@@ -235,14 +238,30 @@ public class Simpletask extends ListActivity implements
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
+
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        // Set the proper theme
+        setTheme(m_app.getActiveTheme());
+
         setContentView(R.layout.main);
+
+        // Replace drawables if the theme is dark
+        if (m_app.isDarkTheme()) {
+            ImageView actionBarIcon = (ImageView) findViewById(R.id.actionbar_icon);
+            if (actionBarIcon!=null) {
+                actionBarIcon.setImageResource(R.drawable.labels);
+            }
+            ImageView actionBarClear = (ImageView) findViewById(R.id.actionbar_clear);
+            if (actionBarClear!=null) {
+                actionBarClear.setImageResource(R.drawable.cancel);
+            }
+        }
         setProgressBarIndeterminateVisibility(false);
         taskBag.reload();
 		handleIntent(savedInstanceState);
 	}
 
-	private void handleIntent(Bundle savedInstanceState) {
+    private void handleIntent(Bundle savedInstanceState) {
 		RemoteClient remoteClient = m_app.getRemoteClientManager()
 				.getRemoteClient();
 		if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
@@ -418,6 +437,7 @@ public class Simpletask extends ListActivity implements
             // Set the adapter for the list view
             updateDrawerList();
         }
+
 	}
 
     private void setSelectedTask(int index,String selectedTask) {
@@ -497,7 +517,7 @@ public class Simpletask extends ListActivity implements
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-        Log.d(TAG, "Contexts are now " + getIntent().getStringExtra(Constants.INTENT_CONTEXTS_FILTER));
+		Log.v(TAG, "onRestart: " + getIntent().getExtras());
 		handleIntent(null);
 
 	}
@@ -506,10 +526,6 @@ public class Simpletask extends ListActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		Log.v(TAG, "onSharedPreferenceChanged key=" + key);
-		if (Constants.PREF_ACCESSTOKEN_SECRET.equals(key)) {
-			Log.i(TAG, "New access token secret. Syncing!");
-			syncClient(false);
-		}
 	}
 
 	@Override
@@ -524,7 +540,6 @@ public class Simpletask extends ListActivity implements
 		editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
 		editor.putStringSet("m_prios",
 				new HashSet<String>(Priority.inCode(m_prios)));
-		Log.v(TAG, "prio saved" + new HashSet<String>(Priority.inCode(m_prios)));
 		editor.putStringSet("m_projects", new HashSet<String>(m_projects));
 		editor.putBoolean("m_contextsNot", m_contextsNot);
 		editor.putBoolean("m_priosNot", m_priosNot);
@@ -1103,6 +1118,7 @@ public class Simpletask extends ListActivity implements
 			indexToPosition.clear();
 			headerTitles.clear();
 			String header = "";
+            String newHeader = "";
 			int index = 0;
 			int position = 0;
 			int firstGroupSortIndex = 0;
@@ -1117,16 +1133,7 @@ public class Simpletask extends ListActivity implements
 			}
 			String firstSort = m_sorts.get(firstGroupSortIndex);
 			for (Task t : visibleTasks) {
-
-				if (firstSort.contains("by_context")) {
-
-					List<String> taskItems = t.getContexts();
-					String newHeader;
-					if (taskItems == null || taskItems.size() == 0) {
-						newHeader = getString(R.string.no_context);
-					} else {
-						newHeader = taskItems.get(0);
-					}
+                    newHeader = t.getHeader(firstSort, getString(R.string.no_header));
 					if (!header.equals(newHeader)) {
 						header = newHeader;
 						// Log.v(TAG, "Start of header: " + header +
@@ -1135,24 +1142,7 @@ public class Simpletask extends ListActivity implements
 						positionToIndex.put(position, null);
 						position++;
 					}
-				} else if (firstSort.contains("by_project")) {
 
-					List<String> taskItems = t.getProjects();
-					String newHeader;
-					if (taskItems == null || taskItems.size() == 0) {
-						newHeader = getString(R.string.no_project);
-					} else {
-						newHeader = taskItems.get(0);
-					}
-					if (!header.equals(newHeader)) {
-						header = newHeader;
-						Log.v(TAG, "Start of header: " + header
-								+ " at position: " + position);
-						headerTitles.put(position, header);
-						positionToIndex.put(position, null);
-						position++;
-					}
-				}
 				positionToIndex.put(position, index);
 				indexToPosition.put(index, position);
 				index++;
@@ -1269,7 +1259,7 @@ public class Simpletask extends ListActivity implements
 						prioColor = res.getColor(R.color.gold);
 						break;
 					default:
-						prioColor = res.getColor(R.color.black);
+						prioColor = holder.tasktext.getCurrentTextColor();
 					}
 					Util.setColor(ss, prioColor, task.getPriority()
 							.inFileFormat());
@@ -1415,6 +1405,46 @@ public class Simpletask extends ListActivity implements
                 m_adapter.setFilteredTasks(false);
             }
         });
+        if (!m_app.drawersExplained() && m_contextsList.size() > 1 ) {
+            m_app.setDrawersExplained();
+            AsyncTask<Void,Integer,Void> drawerDemo = new AsyncTask<Void,Integer,Void>() {
+
+                @Override
+                protected Void doInBackground(Void... objects) {
+                    try {
+                        publishProgress(0);
+                        sleep(1500);
+                        publishProgress(1);
+                        sleep(500);
+                        publishProgress(2);
+                        sleep(1500);
+                        publishProgress(3);
+                    } catch (Exception e) {
+                        Log.e(TAG,""+e);
+                    }
+                    return null;
+                }
+
+                 protected void onProgressUpdate(Integer... progressArray) {
+                       int progress = progressArray[0];
+                       switch (progress) {
+                           case 0:
+                               m_drawerLayout.openDrawer(Gravity.LEFT);
+                               break;
+                           case 1:
+                               m_drawerLayout.closeDrawer(Gravity.LEFT);
+                               break;
+                           case 2:
+                               m_drawerLayout.openDrawer(Gravity.RIGHT);
+                               break;
+                           case 3:
+                               m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                               break;
+                       }
+                }
+            };
+            drawerDemo.execute(null,null,null);
+        }
     }
 
     private void updateDrawerListForSelection(final List<Task> checkedTasks) {

@@ -31,6 +31,9 @@ public class FilterSortFragment extends Fragment {
     SortItemAdapter adapter;
     ArrayList<String> directions = new ArrayList<String>();
     ArrayList<String> adapterList = new ArrayList<String>();
+    int sortUpId;
+    int sortDownId;
+    int dragHandleId;
 
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {
@@ -77,6 +80,18 @@ public class FilterSortFragment extends Fragment {
         } else {
             originalItems = arguments.getStringArrayList(Constants.ACTIVE_SORTS);
         }
+        TodoApplication m_app = (TodoApplication) getActivity().getApplication();
+        // Set the proper theme
+        if (m_app.isDarkTheme()) {
+            sortDownId = R.drawable.ic_action_sort_down_dark;
+            sortUpId = R.drawable.ic_action_sort_up_dark;
+            dragHandleId = R.drawable.ic_action_content_import_export;
+        } else {
+            sortDownId = R.drawable.ic_action_sort_down;
+            sortUpId = R.drawable.ic_action_sort_up;
+            dragHandleId = R.drawable.ic_action_content_import_export_light;
+        }
+
         adapterList.clear();
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
                 container, false);
@@ -163,10 +178,12 @@ public class FilterSortFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = super.getView(position, convertView, parent);
             ImageButton reverseButton = (ImageButton)row.findViewById(R.id.reverse_button);
+            ImageView dragHandle = (ImageView)row.findViewById(R.id.drag_handle);
+            dragHandle.setBackgroundResource(dragHandleId);
             if (directions.get(position).equals(Constants.REVERSED_SORT)) {
-                reverseButton.setBackgroundResource(R.drawable.ic_action_sort_up);
+                reverseButton.setBackgroundResource(sortUpId);
             } else {
-                reverseButton.setBackgroundResource(R.drawable.ic_action_sort_down);
+                reverseButton.setBackgroundResource(sortDownId);
             }
             return row;
         }

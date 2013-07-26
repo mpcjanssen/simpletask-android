@@ -221,6 +221,10 @@ public class TodoApplication extends Application {
         return m_prefs.getBoolean(Constants.PREF_NEED_TO_PUSH, false);
     }
 
+    public boolean drawersExplained() {
+        return m_prefs.getBoolean(getString(R.string.drawers_explained_pref_key), false);
+    }
+
     public void setNeedToPush(boolean needToPush) {
         Editor editor = m_prefs.edit();
         editor.putBoolean(Constants.PREF_NEED_TO_PUSH, needToPush);
@@ -364,6 +368,34 @@ public class TodoApplication extends Application {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
             Log.v(TAG, "Updating widget: " + appWidgetId);
         }
+    }
+
+    public int getActiveTheme() {
+        String theme =  m_prefs.getString(getString(R.string.theme_pref_key), "");
+        if (theme.equals("android.R.style.Theme_Holo")) {
+            return android.R.style.Theme_Holo;
+        } else if (theme.equals("android.R.style.Theme_Holo_Light_DarkActionBar")) {
+            return android.R.style.Theme_Holo_Light_DarkActionBar;
+        } else  {
+            return android.R.style.Theme_Holo_Light_DarkActionBar;
+        }
+    }
+
+    public boolean isDarkTheme() {
+        switch (getActiveTheme()) {
+            case android.R.style.Theme_Holo:
+                return true;
+            case android.R.style.Theme_Holo_Light_DarkActionBar:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    public void setDrawersExplained() {
+        Editor ed = m_prefs.edit();
+        ed.putBoolean(getString(R.string.drawers_explained_pref_key),true);
+        ed.commit();
     }
 
     private final class BroadcastReceiverExtension extends BroadcastReceiver {
