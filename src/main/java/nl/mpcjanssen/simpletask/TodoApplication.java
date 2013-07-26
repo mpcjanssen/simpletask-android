@@ -35,7 +35,6 @@ import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.todotxtholo.R;
 
 
 public class TodoApplication extends Application {

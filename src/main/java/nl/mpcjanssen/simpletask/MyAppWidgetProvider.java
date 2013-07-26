@@ -3,14 +3,9 @@ package nl.mpcjanssen.simpletask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
-
-import android.content.ComponentName;
 
 import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.todotxtholo.R;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

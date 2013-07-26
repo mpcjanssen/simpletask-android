@@ -16,7 +16,6 @@ import android.widget.EditText;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.todotxtholo.R;
 
 import java.util.ArrayList;
 import java.util.HashSet;

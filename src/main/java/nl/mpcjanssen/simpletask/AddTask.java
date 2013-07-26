@@ -42,7 +42,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.todotxtholo.R;
+import nl.mpcjanssen.simpletask.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;

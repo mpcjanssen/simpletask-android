@@ -10,7 +10,7 @@ import android.widget.RemoteViewsService;
 import nl.mpcjanssen.simpletask.sort.*;
 import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.todotxtholo.R;
+import nl.mpcjanssen.simpletask.R;
 
 import java.util.*;
 
