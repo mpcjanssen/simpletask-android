@@ -1262,7 +1262,7 @@ public class Simpletask extends ListActivity implements
 						prioColor = res.getColor(R.color.gold);
 						break;
 					default:
-						prioColor = res.getColor(R.color.black);
+						prioColor = holder.tasktext.getCurrentTextColor();
 					}
 					Util.setColor(ss, prioColor, task.getPriority()
 							.inFileFormat());
