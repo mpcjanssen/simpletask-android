@@ -1,14 +1,9 @@
 package nl.mpcjanssen.simpletask;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -16,7 +11,6 @@ import android.widget.*;
 import com.mobeta.android.dslv.DragSortListView;
 
 import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.todotxtholo.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;

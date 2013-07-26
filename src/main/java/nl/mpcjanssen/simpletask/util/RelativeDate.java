@@ -7,7 +7,7 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.content.Context;
 import nl.mpcjanssen.simpletask.TodoApplication;
-import nl.mpcjanssen.todotxtholo.R;
+import nl.mpcjanssen.simpletask.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

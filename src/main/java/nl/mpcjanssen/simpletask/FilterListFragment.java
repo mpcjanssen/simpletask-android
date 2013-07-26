@@ -11,8 +11,6 @@ import android.widget.*;
 
 import java.util.ArrayList;
 
-import nl.mpcjanssen.todotxtholo.R;
-
 public class FilterListFragment extends Fragment {
 
     final static String TAG = FilterListFragment.class.getSimpleName();

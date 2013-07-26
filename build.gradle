@@ -26,7 +26,7 @@ android {
 
     productFlavors {
         free {
-            packageName 'nl.mpcjanssen.todotxtholo'
+            packageName 'nl.mpcjanssen.simpletask'
             versionName android.defaultConfig.versionName + ' (' + getFossilUUID() +')'
         }
         donate {
