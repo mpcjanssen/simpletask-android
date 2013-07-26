@@ -240,8 +240,10 @@ public class FilterActivity extends Activity {
     				AppWidgetManager.EXTRA_APPWIDGET_ID, 
     				AppWidgetManager.INVALID_APPWIDGET_ID);
 
+            Context context = TodoApplication.getAppContext();
+
     		// Store widget filter
-    		SharedPreferences preferences = getApplicationContext().getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
+    		SharedPreferences preferences = context.getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
     		Editor editor = preferences.edit();
             editor.putString(Constants.INTENT_TITLE, name);
     		editor.putStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_CONTEXTS)));
@@ -253,7 +255,6 @@ public class FilterActivity extends Activity {
             editor.putString(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
-            Context context = getApplicationContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
                     mAppWidgetId, name);

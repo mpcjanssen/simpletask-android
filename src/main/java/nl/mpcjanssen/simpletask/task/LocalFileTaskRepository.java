@@ -43,10 +43,10 @@ public class LocalFileTaskRepository {
 	private static final String TAG = LocalFileTaskRepository.class
 			.getSimpleName();
 	final static File TODO_TXT_FILE = new File(
-			TodoApplication.appContext.getFilesDir(),
+			TodoApplication.getAppContext().getFilesDir(),
 			"todo.txt");
 	final static File DONE_TXT_FILE = new File(
-			TodoApplication.appContext.getFilesDir(),
+			TodoApplication.getAppContext().getFilesDir(),
 			"done.txt");
 	private final TaskBag.Preferences preferences;
 
