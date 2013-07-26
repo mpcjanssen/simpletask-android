@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+This is are dummy dropbox keys needed to make the unit tests compile
+-->
+<!--suppress ALL -->
+<resources>
+	<string name="dropbox_consumer_key">db-aaaaaaaaaa</string>
+	<string name="dropbox_consumer_secret">aaaaaaaaaaaa</string>
+</resources>
