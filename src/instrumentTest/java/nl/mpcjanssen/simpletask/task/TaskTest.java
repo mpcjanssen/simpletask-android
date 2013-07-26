@@ -86,7 +86,10 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, "Milk @@errands");
         t.removeTag("@errands");
         assertEquals("Milk @@errands", t.inFileFormat());
-        t = new Task(0, "Milk @@errands +supermarkt");
+        t.removeTag("@@errands");
+        assertEquals("Milk", t.inFileFormat());
+        assertEquals("Milk", t.inScreenFormat());
+        t = new Task(0, "Milk @@errands +supermarket");
         t.removeTag("@@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());
     }
