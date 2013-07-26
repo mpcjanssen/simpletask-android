@@ -1,5 +1,22 @@
 # ChangeLog
 
+
+### 2.7.0
+
+* [Feature] Support for a Holo Dark theme. Can be configured from the Preferences.
+* [Feature] Added grouping by threshold date and priority.
+* [Feature] Demonstrate Navigation drawers on first run.
+
+* [Bugfix] Properly initialize side drawes after first sync with Dropbox.
+* [Bugfix] Do not reset preferences to default after loggin out of Dropbox and logging in again.
+* [Bugfix] Fixed some sorting issues caused by bug in Alphabetical sort.
+* [Code] Refactored header functionality so it will be easier to add new groupings.
+
+
+### 2.6.10
+
+* [Bugfix] Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.
+
 ### 2.6.8
 
 * [Bugfix] Refresh the task view when updating task(s) through the drawer.
