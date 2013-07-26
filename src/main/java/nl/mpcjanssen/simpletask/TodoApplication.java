@@ -39,7 +39,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 public class TodoApplication extends Application {
     private final static String TAG = TodoApplication.class.getSimpleName();
-    public static Context appContext;
+    private static Context appContext;
     public SharedPreferences m_prefs;
     public boolean m_pulling = false;
     public boolean m_pushing = false;
@@ -56,7 +56,7 @@ public class TodoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TodoApplication.appContext = getApplicationContext();
-        m_prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         remoteClientManager = new RemoteClientManager(this, m_prefs);
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);

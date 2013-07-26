@@ -48,10 +48,10 @@ class DropboxRemoteClient implements RemoteClient {
 	private static final String DONE_TXT_REMOTE_FILE_NAME = "done.txt";
 	private static final AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	private static final File TODO_TXT_TMP_FILE = new File(
-			TodoApplication.appContext.getFilesDir(),
+			TodoApplication.getAppContext().getFilesDir(),
 			"tmp/todo.txt");
 	private static final File DONE_TXT_TMP_FILE = new File(
-			TodoApplication.appContext.getFilesDir(),
+			TodoApplication.getAppContext().getFilesDir(),
 			"tmp/done.txt");
 
 	private DropboxAPI<AndroidAuthSession> dropboxApi;
