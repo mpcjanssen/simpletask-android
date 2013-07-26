@@ -254,8 +254,7 @@ public class FilterActivity extends Activity {
             editor.putString(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(),"\n"));
     		editor.commit();
 
-            // onUpdate is not called on adding, launch it manually
-            Context context = getApplictionContext();
+            Context context = getApplicationContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
                     mAppWidgetId, name);
