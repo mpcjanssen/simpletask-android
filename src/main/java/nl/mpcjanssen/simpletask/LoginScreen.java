@@ -52,7 +52,7 @@ public class LoginScreen extends Activity {
         setContentView(R.layout.login);
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("nl.mpcjanssen.simpletask.ATION_LOGIN");
+        intentFilter.addAction("nl.mpcjanssen.simpletask.ACTION_LOGIN");
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
