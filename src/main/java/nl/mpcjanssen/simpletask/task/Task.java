@@ -232,6 +232,7 @@ public class Task implements Serializable, Comparable<Task> {
     public void markComplete(Date date) {
         if (!this.completed) {
             this.completionDate = formatter.format(date);
+            this.setPriority(Priority.NONE);
             this.deleted = false;
             this.completed = true;
         }
@@ -361,7 +362,9 @@ public class Task implements Serializable, Comparable<Task> {
 	}
 
     public void removeTag(String tag) {
-        String newText = inFileFormat().replaceAll(Pattern.quote(tag), " ");
+        String escapedTag = Pattern.quote(tag);
+        String regexp = "\\s" + escapedTag +"(?:\\s|$)";
+        String newText = inFileFormat().replaceAll(regexp, " ");
         newText = newText.trim();
         this.init(newText , null);
     }
