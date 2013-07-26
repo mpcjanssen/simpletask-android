@@ -39,8 +39,8 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 public class TodoApplication extends Application {
     private final static String TAG = TodoApplication.class.getSimpleName();
-    private static Context appContext;
-    public SharedPreferences m_prefs;
+    private static Context m_appContext;
+    private static SharedPreferences m_prefs;
     public boolean m_pulling = false;
     public boolean m_pushing = false;
     private RemoteClientManager remoteClientManager;
@@ -49,15 +49,19 @@ public class TodoApplication extends Application {
     private Handler handler = new Handler();
 
     public static Context getAppContext() {
-        return appContext;
+        return m_appContext;
+    }
+
+    public static SharedPreferences getPrefs() {
+        return m_prefs;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        TodoApplication.appContext = getApplicationContext();
-        m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
-        remoteClientManager = new RemoteClientManager(this, m_prefs);
+        TodoApplication.m_appContext = getApplicationContext();
+        TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+        remoteClientManager = new RemoteClientManager(this, getPrefs());
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(taskBagPreferences);
@@ -370,7 +374,7 @@ public class TodoApplication extends Application {
     }
 
     public int getActiveTheme() {
-        String theme =  m_prefs.getString(getString(R.string.theme_pref_key), "");
+        String theme =  getPrefs().getString(getString(R.string.theme_pref_key), "");
         if (theme.equals("android.R.style.Theme_Holo")) {
             return android.R.style.Theme_Holo;
         } else if (theme.equals("android.R.style.Theme_Holo_Light_DarkActionBar")) {
@@ -392,7 +396,7 @@ public class TodoApplication extends Application {
     }
 
     public void setDrawersExplained() {
-        Editor ed = m_prefs.edit();
+        Editor ed = getPrefs().edit();
         ed.putBoolean(getString(R.string.drawers_explained_pref_key),true);
         ed.commit();
     }
