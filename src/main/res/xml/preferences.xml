@@ -53,11 +53,7 @@
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
-        <EditTextPreference
-            android:key="@string/font_size_delta_pref_key"
-            android:numeric="signed"
-            android:summary="@string/font_size_delta_pref_summary"
-            android:title="@string/font_size_delta_pref_title" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/DROPBOX_settings_header" >
         <EditTextPreference
