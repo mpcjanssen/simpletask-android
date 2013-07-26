@@ -1196,7 +1196,6 @@ public class Simpletask extends ListActivity  {
 				TextView t = (TextView) convertView
 						.findViewById(R.id.list_header_title);
 				t.setText(headerTitles.get(position));
-				t.setTextSize(m_app.headerFontSize());
 
 			} else {
 				final ViewHolder holder;
@@ -1278,8 +1277,6 @@ public class Simpletask extends ListActivity  {
 						holder.taskage.setVisibility(View.GONE);
 					}
 				}
-				holder.tasktext.setTextSize(m_app.taskTextFontSize());
-				holder.taskage.setTextSize(m_app.taskAgeFontSize());
 			}
 			return convertView;
 		}
