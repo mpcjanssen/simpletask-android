@@ -100,6 +100,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.lang.Thread.sleep;
+
 
 public class Simpletask extends ListActivity implements
 		OnSharedPreferenceChangeListener {
@@ -222,7 +224,7 @@ public class Simpletask extends ListActivity implements
 					finish();
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_UPDATE_UI)) {
-					m_adapter.setFilteredTasks(false);
+					handleIntent(null);
 				} else if (intent.getAction().equalsIgnoreCase(
 						Constants.INTENT_SYNC_CONFLICT)) {
 					handleSyncConflict();
@@ -1408,6 +1410,46 @@ public class Simpletask extends ListActivity implements
                 m_adapter.setFilteredTasks(false);
             }
         });
+        if (!m_app.drawersExplained() && m_contextsList.size() > 1 ) {
+            m_app.setDrawersExplained();
+            AsyncTask<Void,Integer,Void> drawerDemo = new AsyncTask<Void,Integer,Void>() {
+
+                @Override
+                protected Void doInBackground(Void... objects) {
+                    try {
+                        publishProgress(0);
+                        sleep(1500);
+                        publishProgress(1);
+                        sleep(500);
+                        publishProgress(2);
+                        sleep(1500);
+                        publishProgress(3);
+                    } catch (Exception e) {
+                        Log.e(TAG,""+e);
+                    }
+                    return null;
+                }
+
+                 protected void onProgressUpdate(Integer... progressArray) {
+                       int progress = progressArray[0];
+                       switch (progress) {
+                           case 0:
+                               m_drawerLayout.openDrawer(Gravity.LEFT);
+                               break;
+                           case 1:
+                               m_drawerLayout.closeDrawer(Gravity.LEFT);
+                               break;
+                           case 2:
+                               m_drawerLayout.openDrawer(Gravity.RIGHT);
+                               break;
+                           case 3:
+                               m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                               break;
+                       }
+                }
+            };
+            drawerDemo.execute(null,null,null);
+        }
     }
 
     private void updateDrawerListForSelection(final List<Task> checkedTasks) {
