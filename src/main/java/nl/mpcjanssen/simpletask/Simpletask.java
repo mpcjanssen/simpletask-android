@@ -1286,9 +1286,7 @@ public class Simpletask extends ListActivity  {
 			if (headerTitles.get(position,null) != null) {
 				return 0;
 			} else {
-				return 1; // To change body of implemented methods use File |
-				// Settings | File Templates.
-
+				return 1; 
 			}
 		}
 
