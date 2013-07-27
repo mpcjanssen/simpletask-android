@@ -80,6 +80,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return target;
     }
 
+
+
 	void setFilteredTasks() {
 		Log.v(TAG, "setFilteredTasks called");
 		AndFilter filter = new AndFilter();
@@ -112,8 +114,12 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 	@Override
 	public RemoteViews getViewAt(int position) {
-
-        final int itemId = R.layout.widget_list_item;
+        int itemId;
+        if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
+            itemId = R.layout.widget_list_item_dark;
+        } else {
+            itemId = R.layout.widget_list_item;
+        }
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
         rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
         rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(visibleTasks.get(position)));
