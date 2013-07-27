@@ -37,7 +37,7 @@ import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
-public class TodoApplication extends Application {
+public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
@@ -73,6 +73,8 @@ public class TodoApplication extends Application {
         intentFilter.addAction(Constants.INTENT_START_SYNC_TO_REMOTE);
         intentFilter.addAction(Constants.INTENT_START_SYNC_FROM_REMOTE);
         intentFilter.addAction(Constants.INTENT_ASYNC_FAILED);
+        m_prefs.registerOnSharedPreferenceChangeListener(this);
+
 
         if (null == m_broadcastReceiver) {
             m_broadcastReceiver = new BroadcastReceiverExtension();
@@ -99,6 +101,7 @@ public class TodoApplication extends Application {
     @Override
     public void onTerminate() {
         unregisterReceiver(m_broadcastReceiver);
+        m_prefs.unregisterOnSharedPreferenceChangeListener(this);
         super.onTerminate();
     }
 
@@ -336,6 +339,14 @@ public class TodoApplication extends Application {
         }
     }
 
+    private void redrawWidgets(){
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, MyAppWidgetProvider.class));
+        if (appWidgetIds.length > 0) {
+            new MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
+        }
+    }
+
     public int getActiveTheme() {
         String theme =  getPrefs().getString(getString(R.string.theme_pref_key), "");
         if (theme.equals("android.R.style.Theme_Holo")) {
@@ -362,6 +373,13 @@ public class TodoApplication extends Application {
         Editor ed = getPrefs().edit();
         ed.putBoolean(getString(R.string.drawers_explained_pref_key),true);
         ed.commit();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(getString(R.string.widget_theme_pref_key))) {
+            redrawWidgets();
+        }
     }
 
     private final class BroadcastReceiverExtension extends BroadcastReceiver {
