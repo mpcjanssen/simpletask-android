@@ -50,16 +50,22 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     }
 
 	public static RemoteViews updateView(int widgetId, Context context) {
-
-		RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
-
+        SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
+        RemoteViews view ;
+        SharedPreferences appPreferences = TodoApplication.getPrefs();
+        String theme = appPreferences.getString("widget_theme", "");
+        if (theme.equals("android.R.style.Theme_Holo")) {
+            view = new RemoteViews(context.getPackageName(), R.layout.appwidget_dark);
+        } else {
+		    view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
+        }
         Intent intent = new Intent(context, AppWidgetService.class);
         // Add the app widget ID to the intent extras.
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
-        SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
+
         view.setTextViewText(R.id.title,preferences.getString(Constants.INTENT_TITLE, "Simpletask"));
 
         // Make sure we use different intents for the different pendingIntents or

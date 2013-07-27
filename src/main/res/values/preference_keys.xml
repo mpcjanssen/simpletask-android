@@ -12,5 +12,6 @@
     <string name="font_size_delta_pref_key">fontsizedelta</string>
     <string name="defer_threshold_date_key">deferthresholdate</string>
     <string name="theme_pref_key">theme</string>
+    <string name="widget_theme_pref_key">widget_theme</string>
     <string name="drawers_explained_pref_key">drawers_explained</string>
 </resources>
