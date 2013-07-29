@@ -121,6 +121,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     }
 
+
     /**
      * Check network status, then push.
      */
@@ -168,6 +169,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return remoteClientManager;
     }
     
+    public boolean isCloudLess() {
+        return BuildConfig.CLOUDLESS;
+    }
+
     public boolean isManualMode() {
         return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
     }

@@ -27,20 +27,29 @@ android {
     productFlavors {
         free {
             packageName 'nl.mpcjanssen.todotxtholo'
+            buildConfig "public final static boolean CLOUDLESS = false;"
             versionName android.defaultConfig.versionName + ' (' + getFossilUUID() +')'
         }
         donate {
             packageName 'nl.mpcjanssen.simpletask.donate'
+            buildConfig "public final static boolean CLOUDLESS = false;"
             versionName defaultConfig.versionName + '-donate (' + getFossilUUID() +')'
         }
         dev {
             packageName 'nl.mpcjanssen.simpletask.dev'
+            buildConfig "public final static boolean CLOUDLESS = false;"
             versionName defaultConfig.versionName + '-dev (' + getFossilUUID() +')'
         }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
         unit {
             packageName 'nl.mpcjanssen.simpletask.test'
+            buildConfig "public final static boolean CLOUDLESS = true;"
+        }
+        cloudless {
+            packageName 'nl.mpcjanssen.simpletask'
+            buildConfig "public final static boolean CLOUDLESS = true;"
+            versionName defaultConfig.versionName + '-cloudless (' + getFossilUUID() +')'
         }
     }
     signingConfigs {
