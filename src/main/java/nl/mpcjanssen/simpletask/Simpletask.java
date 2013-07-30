@@ -1406,22 +1406,25 @@ public class Simpletask extends ListActivity  {
                     return null;
                 }
 
-                 protected void onProgressUpdate(Integer... progressArray) {
-                       int progress = progressArray[0];
-                       switch (progress) {
-                           case 0:
-                               m_drawerLayout.openDrawer(Gravity.LEFT);
-                               break;
-                           case 1:
-                               m_drawerLayout.closeDrawer(Gravity.LEFT);
-                               break;
-                           case 2:
-                               m_drawerLayout.openDrawer(Gravity.RIGHT);
-                               break;
-                           case 3:
-                               m_drawerLayout.closeDrawer(Gravity.RIGHT);
-                               break;
-                       }
+                protected void onProgressUpdate(Integer... progressArray) {
+                    int progress = progressArray[0];
+                    if (m_drawerLayout == null) {
+                        return;
+                    }
+                    switch (progress) {
+                        case 0:
+                            m_drawerLayout.openDrawer(Gravity.LEFT);
+                            break;
+                        case 1:
+                            m_drawerLayout.closeDrawer(Gravity.LEFT);
+                            break;
+                        case 2:
+                            m_drawerLayout.openDrawer(Gravity.RIGHT);
+                            break;
+                        case 3:
+                            m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                            break;
+                    }
                 }
             };
             drawerDemo.execute(null,null,null);
