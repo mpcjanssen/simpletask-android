@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 2.7.2
+
+* [Bugfix] Don't crash while demo-ing navigation drawers.
+
 ### 2.7.1
 
 * [Feature] Added black theme for widgets. Widget and app theme can be configured seperately/
