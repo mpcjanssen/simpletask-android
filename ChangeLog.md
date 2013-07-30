@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 2.7.1
+
+* [Feature] Added black theme for widgets. Widget and app theme can be configured seperately/
+* [Code] Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.
 
 ### 2.7.0
 
