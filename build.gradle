@@ -15,8 +15,8 @@ android {
     compileSdkVersion 17
 
     defaultConfig {
-        versionName '2.7.1'
-        versionCode 1020
+        versionName '2.7.2'
+        versionCode 1021
     }
 
     dependencies {
