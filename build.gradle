@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.2'
+        classpath 'com.android.tools.build:gradle:0.5.4'
     }
 }
 
@@ -15,8 +15,8 @@ android {
     compileSdkVersion 17
 
     defaultConfig {
-        versionName '2.7.0'
-        versionCode 1019
+        versionName '2.7.1'
+        versionCode 1020
     }
 
     dependencies {
