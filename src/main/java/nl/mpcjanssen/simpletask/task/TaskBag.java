@@ -137,10 +137,10 @@ public class TaskBag {
         if (this.preferences.isOnline() || overridePreference) {
             File doneFile = null;
             if (localRepository.doneFileModifiedSince(lastSync)) {
-                doneFile = LocalFileTaskRepository.DONE_TXT_FILE;
+                doneFile = localRepository.DONE_TXT_FILE;
             }
             remoteClientManager.getRemoteClient().pushTodo(
-                    LocalFileTaskRepository.TODO_TXT_FILE,
+                    localRepository.TODO_TXT_FILE,
                     doneFile,
                     overwrite);
             lastSync = new Date();

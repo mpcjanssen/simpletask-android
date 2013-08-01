@@ -62,7 +62,8 @@
             android:title="@string/line_breaks_pref_title" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/DROPBOX_settings_header" >
+    <PreferenceCategory android:title="@string/DROPBOX_settings_header"
+                        android:key="@string/dropbox_cat_key">
         <EditTextPreference
             android:defaultValue="@string/TODOTXTPATH_defaultPath"
             android:key="@string/TODOTXTPATH_key"
