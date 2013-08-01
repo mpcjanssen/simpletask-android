@@ -106,7 +106,7 @@ public class LoginScreen extends Activity {
         remoteClient.finishLogin();
         if (remoteClient.isAuthenticated()) {
             switchToTodolist();
-            sendBroadcast(new Intent(Constants.INTENT_START_SYNC_FROM_REMOTE));
+            sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE));
         }
         m_loginStarted = false;
     }

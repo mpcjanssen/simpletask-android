@@ -78,20 +78,18 @@ public class Constants {
     public final static String EXTRA_FORCE_SYNC = "FORCE_SYNC";
     public final static String EXTRA_OVERWRITE = "OVERWRITE";
 
-    public final static String INTENT_ACTION_ARCHIVE = "nl.mpcjanssen.simpletask.ACTION_ARCHIVE";
-    public final static String INTENT_ACTION_LOGOUT = "nl.mpcjanssen.simpletask.ACTION_LOGOUT";
-    public final static String INTENT_ASYNC_SUCCESS = "nl.mpcjanssen.simpletask.ASYNC_SUCCESS";
-    public final static String INTENT_ASYNC_FAILED = "nl.mpcjanssen.simpletask.ASYNC_FAILED";
-    public final static String INTENT_SYNC_CONFLICT = "nl.mpcjanssen.simpletask.SYNC_CONFLICT";
-    public final static String INTENT_START_SYNC_WITH_REMOTE = "nl.mpcjanssen.simpletask.START_SYNC";
-    public final static String INTENT_START_SYNC_TO_REMOTE = "nl.mpcjanssen.simpletask.START_SYNC_TO";
-    public final static String INTENT_START_SYNC_FROM_REMOTE = "nl.mpcjanssen.simpletask.START_SYNC_FROM";
-    public final static String INTENT_SET_MANUAL = "nl.mpcjanssen.simpletask.GO_OFFLINE";
-    public final static String INTENT_UPDATE_UI = "nl.mpcjanssen.simpletask.UPDATE_UI";
-    public final static String INTENT_SYNC_START = "nl.mpcjanssen.simpletask.SYNC_START";
-    public final static String INTENT_SYNC_DONE = "nl.mpcjanssen.simpletask.SYNC_DONE";
+    public final static String BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE";
+    public final static String BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT";
+    public final static String BROADCAST_ASYNC_FAILED = "ASYNC_FAILED";
+    public final static String BROADCAST_SYNC_CONFLICT = "SYNC_CONFLICT";
+    public final static String BROADCAST_START_SYNC_WITH_REMOTE = "START_SYNC";
+    public final static String BROADCAST_START_SYNC_TO_REMOTE = "START_SYNC_TO";
+    public final static String BROADCAST_START_SYNC_FROM_REMOTE = "START_SYNC_FROM";
+    public final static String BROADCAST_SET_MANUAL = "GO_OFFLINE";
+    public final static String BROADCAST_UPDATE_UI = "UPDATE_UI";
+    public final static String BROADCAST_SYNC_START = "SYNC_START";
+    public final static String BROADCAST_SYNC_DONE = "SYNC_DONE";
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
-    public final static String INTENT_START_SELECTION = "nl.mpcjanssen.simpletask.START_WITH_SELECTION";
 
     // Constants for saving state
     public static final String LAYOUT_ID = "layoutId";

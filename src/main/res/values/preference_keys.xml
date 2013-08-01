@@ -14,4 +14,6 @@
     <string name="theme_pref_key">theme</string>
     <string name="widget_theme_pref_key">widget_theme</string>
     <string name="drawers_explained_pref_key">drawers_explained</string>
+    <string name="dropbox_cat_key">dropbox_category</string>
+
 </resources>
