@@ -101,7 +101,7 @@ public class AddTask extends Activity {
                     taskBag.archive();
                 }
                 sendBroadcast(new Intent(
-                        Constants.INTENT_START_SYNC_TO_REMOTE));
+                        getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE));
                 finish();
                 break;
             case R.id.menu_add_task_help:
@@ -133,7 +133,7 @@ public class AddTask extends Activity {
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         sendBroadcast(new Intent(
-                Constants.INTENT_START_SYNC_TO_REMOTE));
+                getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE));
         m_app.showToast(R.string.task_added);
     }
 

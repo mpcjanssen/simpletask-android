@@ -28,6 +28,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
@@ -74,6 +75,11 @@ public class Preferences extends Activity {
 			} catch (NameNotFoundException e) {
 				e.printStackTrace();
 			}
+            TodoApplication app = (TodoApplication)getActivity().getApplication();
+            if (app.isCloudLess()) {
+                PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
+                getPreferenceScreen().removePreference(dropboxCategory);
+            }
 		}
 
 		@Override
@@ -86,12 +92,12 @@ public class Preferences extends Activity {
 				Log.v("PREFERENCES",
 						"Archiving completed items from preferences");
 				((Preferences) this.getActivity()).broadcastIntentAndClose(
-						Constants.INTENT_ACTION_ARCHIVE,
+						getActivity().getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE,
 						Preferences.RESULT_ARCHIVE);
 			} else if (preference.getKey().equals("logout_dropbox")) {
 				Log.v("PREFERENCES", "Logging out from Dropbox");
 				((Preferences) this.getActivity()).broadcastIntentAndClose(
-						Constants.INTENT_ACTION_LOGOUT,
+                        getActivity().getPackageName()+Constants.BROADCAST_ACTION_LOGOUT,
 						Preferences.RESULT_LOGOUT);
 			}
 			return true;

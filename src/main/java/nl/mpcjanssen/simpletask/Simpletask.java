@@ -191,41 +191,41 @@ public class Simpletask extends ListActivity  {
         taskBag = m_app.getTaskBag();
 
 		final IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(Constants.INTENT_ACTION_ARCHIVE);
-		intentFilter.addAction(Constants.INTENT_SYNC_CONFLICT);
-		intentFilter.addAction(Constants.INTENT_ACTION_LOGOUT);
-		intentFilter.addAction(Constants.INTENT_UPDATE_UI);
-		intentFilter.addAction(Constants.INTENT_SYNC_START);
-		intentFilter.addAction(Constants.INTENT_SYNC_DONE);
+		intentFilter.addAction(getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE);
+		intentFilter.addAction(getPackageName()+Constants.BROADCAST_SYNC_CONFLICT);
+		intentFilter.addAction(getPackageName()+Constants.BROADCAST_ACTION_LOGOUT);
+		intentFilter.addAction(getPackageName()+Constants.BROADCAST_UPDATE_UI);
+		intentFilter.addAction(getPackageName()+Constants.BROADCAST_SYNC_START);
+		intentFilter.addAction(getPackageName()+Constants.BROADCAST_SYNC_DONE);
 
 		m_broadcastReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_ACTION_ARCHIVE)) {
+				if (intent.getAction().endsWith(
+						Constants.BROADCAST_ACTION_ARCHIVE)) {
 					// archive
 					// refresh screen to remove completed tasks
 					// push to remote
 					archiveTasks();
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_ACTION_LOGOUT)) {
+				} else if (intent.getAction().endsWith(
+						Constants.BROADCAST_ACTION_LOGOUT)) {
 					Log.v(TAG, "Logging out from Dropbox");
 					m_app.getRemoteClientManager().getRemoteClient()
 							.deauthenticate();
 					Intent i = new Intent(context, LoginScreen.class);
 					startActivity(i);
 					finish();
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_UPDATE_UI)) {
+				} else if (intent.getAction().endsWith(
+						Constants.BROADCAST_UPDATE_UI)) {
 					handleIntent(null);
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_SYNC_CONFLICT)) {
+				} else if (intent.getAction().endsWith(
+						Constants.BROADCAST_SYNC_CONFLICT)) {
 					handleSyncConflict();
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_SYNC_START)) {
+				} else if (intent.getAction().endsWith(
+						Constants.BROADCAST_SYNC_START) && !m_app.isCloudLess()) {
                     setProgressBarIndeterminateVisibility(true);
-				} else if (intent.getAction().equalsIgnoreCase(
-						Constants.INTENT_SYNC_DONE)) {
+				} else if (intent.getAction().endsWith(
+						Constants.BROADCAST_SYNC_DONE) && !m_app.isCloudLess()) {
                     setProgressBarIndeterminateVisibility(false);
 				}
 			}
@@ -255,12 +255,16 @@ public class Simpletask extends ListActivity  {
 	}
 
     private void handleIntent(Bundle savedInstanceState) {
-		RemoteClient remoteClient = m_app.getRemoteClientManager()
-				.getRemoteClient();
-		if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
-			startLogin();
-			return;
-		}
+        if (m_app.isCloudLess()) {
+            m_app.startWatching();
+        } else {
+            RemoteClient remoteClient = m_app.getRemoteClientManager()
+                    .getRemoteClient();
+            if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
+                startLogin();
+                return;
+            }
+        }
         if (taskBag==null) {
             taskBag = m_app.getTaskBag();
         }
@@ -520,6 +524,7 @@ public class Simpletask extends ListActivity  {
 		if (actionMode != null) {
 			actionMode.finish();
 		}
+        m_app.stopWatching();
 		SharedPreferences.Editor editor = TodoApplication.getPrefs().edit();
 		Log.v(TAG, "Storing sort in prefs: " + m_sorts);
 		editor.putString("m_sorts", Util.join(m_sorts, "\n"));
@@ -546,6 +551,9 @@ public class Simpletask extends ListActivity  {
 		// expand it by default
 
 		this.options_menu = menu;
+        if (m_app.isCloudLess()) {
+            menu.findItem(R.id.sync).setVisible(false);
+        }
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -613,7 +621,7 @@ public class Simpletask extends ListActivity  {
                 m_app.setNeedToPush(true);
                 // We have change the data, views should refresh
                 m_adapter.setFilteredTasks(false);
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 
             }
         });
@@ -646,7 +654,7 @@ public class Simpletask extends ListActivity  {
                 m_app.setNeedToPush(true);
                 // We have change the data, views should refresh
                 m_adapter.setFilteredTasks(false);
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 
             }
         });
@@ -674,7 +682,7 @@ public class Simpletask extends ListActivity  {
 				m_app.setNeedToPush(true);
 				// We have change the data, views should refresh
 				m_adapter.setFilteredTasks(false);
-				sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 			}
 		});
 		builder.show();
@@ -695,7 +703,7 @@ public class Simpletask extends ListActivity  {
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
 		m_adapter.setFilteredTasks(true);
-		sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 	}
 
 	private void undoCompleteTasks(List<Task> tasks) {
@@ -709,7 +717,7 @@ public class Simpletask extends ListActivity  {
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
 		m_adapter.setFilteredTasks(true);
-		sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 	}
 
 	private void deferTasks(List<Task> tasks) {
@@ -763,8 +771,7 @@ public class Simpletask extends ListActivity  {
         m_app.updateWidgets();
         m_app.setNeedToPush(true);
         // We have change the data, views should refresh
-        sendBroadcast(new Intent(
-                Constants.INTENT_START_SYNC_TO_REMOTE));
+        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
 
@@ -779,8 +786,7 @@ public class Simpletask extends ListActivity  {
         m_app.updateWidgets();
         m_app.setNeedToPush(true);
         // We have change the data, views should refresh
-        sendBroadcast(new Intent(
-                Constants.INTENT_START_SYNC_TO_REMOTE));
+        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deleteTasks(final List<Task> tasks) {
@@ -797,7 +803,7 @@ public class Simpletask extends ListActivity  {
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
                 // We have change the data, views should refresh
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         });
 	}
@@ -821,8 +827,7 @@ public class Simpletask extends ListActivity  {
 				if (result) {
 					Util.showToastLong(Simpletask.this,
 							"Archived completed tasks");
-					sendBroadcast(new Intent(
-							Constants.INTENT_START_SYNC_TO_REMOTE));
+                    sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 				} else {
 					Util.showToastLong(Simpletask.this,
 							"Could not archive tasks");
@@ -903,7 +908,7 @@ public class Simpletask extends ListActivity  {
 		} else {
 			Log.i(TAG, "auto sync mode; should automatically sync; force = "
 					+ force);
-			Intent i = new Intent(Constants.INTENT_START_SYNC_WITH_REMOTE);
+			Intent i = new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE);
 			if (force) {
 				i.putExtra(Constants.EXTRA_FORCE_SYNC, true);
 			}
@@ -961,7 +966,7 @@ public class Simpletask extends ListActivity  {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							sendBroadcast(new Intent(
-									Constants.INTENT_START_SYNC_TO_REMOTE)
+									getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE)
 									.putExtra(Constants.EXTRA_FORCE_SYNC, true));
 							// backgroundPushToRemote();
 							showToast(getString(R.string.sync_upload_message));
@@ -973,7 +978,7 @@ public class Simpletask extends ListActivity  {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							sendBroadcast(new Intent(
-									Constants.INTENT_START_SYNC_FROM_REMOTE)
+									getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE)
 									.putExtra(Constants.EXTRA_FORCE_SYNC, true));
 							// backgroundPullFromRemote();
 							showToast(getString(R.string.sync_download_message));
@@ -992,7 +997,7 @@ public class Simpletask extends ListActivity  {
 						public void onClick(DialogInterface arg0, int arg1) {
 							Log.v(TAG, "User selected PUSH");
 							sendBroadcast(new Intent(
-									Constants.INTENT_START_SYNC_TO_REMOTE)
+									getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE)
 									.putExtra(Constants.EXTRA_OVERWRITE, true)
 									.putExtra(Constants.EXTRA_FORCE_SYNC, true));
 							// backgroundPushToRemote();
@@ -1006,7 +1011,7 @@ public class Simpletask extends ListActivity  {
 						public void onClick(DialogInterface arg0, int arg1) {
 							Log.v(TAG, "User selected PULL");
 							sendBroadcast(new Intent(
-									Constants.INTENT_START_SYNC_FROM_REMOTE)
+									getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE)
 									.putExtra(Constants.EXTRA_FORCE_SYNC, true));
 							// backgroundPullFromRemote();
 							showToast(getString(R.string.sync_download_message));
@@ -1501,7 +1506,7 @@ public class Simpletask extends ListActivity  {
                 m_adapter.setFilteredTasks(false);
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
                 actionMode.finish();
                 if (m_drawerLayout!=null) {
                     m_drawerLayout.closeDrawers();
@@ -1542,7 +1547,7 @@ public class Simpletask extends ListActivity  {
                 m_adapter.setFilteredTasks(false);
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
-                sendBroadcast(new Intent(Constants.INTENT_START_SYNC_TO_REMOTE));
+                sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
                 actionMode.finish();
                 if (m_drawerLayout!=null) {
                     m_drawerLayout.closeDrawers();

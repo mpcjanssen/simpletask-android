@@ -67,7 +67,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
-
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
         File root;
@@ -76,7 +75,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         } else {
             root = TodoApplication.getAppContext().getFilesDir();
         }
-        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(root, taskBagPreferences);
+        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, root, taskBagPreferences);
         if (isCloudLess()) {
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, null);
             m_observer = new FileObserver(localTaskRepository.getTodoTxtFile().getPath(),
@@ -100,11 +99,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
         this.startWatching();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.INTENT_SET_MANUAL);
-        intentFilter.addAction(Constants.INTENT_START_SYNC_WITH_REMOTE);
-        intentFilter.addAction(Constants.INTENT_START_SYNC_TO_REMOTE);
-        intentFilter.addAction(Constants.INTENT_START_SYNC_FROM_REMOTE);
-        intentFilter.addAction(Constants.INTENT_ASYNC_FAILED);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_SET_MANUAL);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_ASYNC_FAILED);
         m_prefs.registerOnSharedPreferenceChangeListener(this);
 
 
@@ -115,28 +114,30 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
         taskBag.reload();
         // Pull from dropbox every 5 minutes
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+        if (!isCloudLess()) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
       /* do what you need to do */
-                if (!isManualMode()) {
-                    backgroundPullFromRemote();
-                }
+                    if (!isManualMode()) {
+                        backgroundPullFromRemote();
+                    }
       /* reschedule next */
-                handler.postDelayed(this, 5 * 60 * 1000);
-                Log.v(TAG, "Pulling from remote");
-            }
-        };
-        handler.postDelayed(runnable, 5 * 60 * 1000);
+                    handler.postDelayed(this, 5 * 60 * 1000);
+                    Log.v(TAG, "Pulling from remote");
+                }
+            };
+            handler.postDelayed(runnable, 5 * 60 * 1000);
+        }
     }
 
-    private void startWatching() {
+    public void startWatching() {
         if (m_observer!=null) {
             m_observer.startWatching();
         }
     }
 
-    private void stopWatching() {
+    public void stopWatching() {
         if (m_observer!=null) {
             m_observer.stopWatching();
         }
@@ -154,7 +155,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * now. Otherwise, pull.
      */
     private void syncWithRemote(boolean force) {
-        taskBag.store();
+        if (isCloudLess()) {
+            return;
+        }
         if (needToPush()) {
             Log.d(TAG, "needToPush = true; pushing.");
             pushToRemote(force, false);
@@ -170,6 +173,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * Check network status, then push.
      */
     private void pushToRemote(boolean force, boolean overwrite) {
+        if (isCloudLess()) {
+            return;
+        }
         setNeedToPush(true);
         if (!force && isManualMode()) {
             Log.i(TAG, "Working offline, don't push now");
@@ -185,6 +191,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * Check network status, then pull.
      */
     private void pullFromRemote(boolean force) {
+        if (isCloudLess()) {
+            return;
+        }
         if (!force && isManualMode()) {
             Log.i(TAG, "Working offline, don't pull now");
             return;
@@ -263,7 +272,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     void backgroundPushToRemote(final boolean overwrite) {
         if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
             Intent i = new Intent();
-            i.setAction(Constants.INTENT_SYNC_START);
+            i.setAction(getPackageName()+Constants.BROADCAST_SYNC_START);
             sendBroadcast(i);
             m_pushing = true;
 
@@ -291,7 +300,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 protected void onPostExecute(Integer result) {
                     Log.d(TAG, "post taskBag.pushToremote");
                     Intent i = new Intent();
-                    i.setAction(Constants.INTENT_SYNC_DONE);
+                    i.setAction(getPackageName()+Constants.BROADCAST_SYNC_DONE);
                     sendBroadcast(i);
                     if (result == SUCCESS) {
                         Log.d(TAG, "taskBag.pushToRemote done");
@@ -299,9 +308,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
                         setNeedToPush(false);
                     } else if (result == CONFLICT) {
                         // FIXME: need to know which file had conflict
-                        sendBroadcast(new Intent(Constants.INTENT_SYNC_CONFLICT));
+                        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_SYNC_CONFLICT));
                     } else {
-                        sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
+                        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_ASYNC_FAILED));
                     }
                     super.onPostExecute(result);
                 }
@@ -322,7 +331,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private void backgroundPullFromRemote() {
         if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
             Intent i = new Intent();
-            i.setAction(Constants.INTENT_SYNC_START);
+            i.setAction(getPackageName()+Constants.BROADCAST_SYNC_START);
             sendBroadcast(i);
             m_pulling = true;
             // Comment out next line to avoid resetting list position at top;
@@ -353,11 +362,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
                         taskBag.reload();
                         updateUI();
                     } else {
-                        sendBroadcast(new Intent(Constants.INTENT_ASYNC_FAILED));
+                        sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_ASYNC_FAILED));
                     }
                     super.onPostExecute(result);
                     Intent i = new Intent();
-                    i.setAction(Constants.INTENT_SYNC_DONE);
+                    i.setAction(getPackageName()+Constants.BROADCAST_SYNC_DONE);
                     i.putExtra(Constants.INTENT_SYNC_DIRECTION,Constants.PULL);
                     sendBroadcast(i);
                 }
@@ -376,7 +385,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * This method should be called whenever the TaskBag changes.
      */
     private void updateUI() {
-        sendBroadcast(new Intent(Constants.INTENT_UPDATE_UI));
+        sendBroadcast(new Intent(getPackageName()+ Constants.BROADCAST_UPDATE_UI));
         updateWidgets();
     }
 
@@ -438,17 +447,17 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     Constants.EXTRA_FORCE_SYNC, false);
             boolean overwrite = intent.getBooleanExtra(
                     Constants.EXTRA_OVERWRITE, false);
-            if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_START_SYNC_WITH_REMOTE)) {
+            if (intent.getAction().endsWith(
+                    Constants.BROADCAST_START_SYNC_WITH_REMOTE)) {
                 syncWithRemote(force_sync);
-            } else if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_START_SYNC_TO_REMOTE)) {
+            } else if (intent.getAction().endsWith(
+                    Constants.BROADCAST_START_SYNC_TO_REMOTE)) {
                 pushToRemote(force_sync, overwrite);
-            } else if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_START_SYNC_FROM_REMOTE)) {
+            } else if (intent.getAction().endsWith(
+                    Constants.BROADCAST_START_SYNC_FROM_REMOTE)) {
                 pullFromRemote(force_sync);
-            } else if (intent.getAction().equalsIgnoreCase(
-                    Constants.INTENT_ASYNC_FAILED)) {
+            } else if (intent.getAction().endsWith(
+                    Constants.BROADCAST_ASYNC_FAILED)) {
                 showToast("Synchronizing Failed");
                 m_pulling = false;
                 m_pushing = false;
@@ -456,5 +465,4 @@ public class TodoApplication extends Application implements SharedPreferences.On
             }
         }
     }
-
 }

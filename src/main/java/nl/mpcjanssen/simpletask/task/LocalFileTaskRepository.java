@@ -45,9 +45,11 @@ public class LocalFileTaskRepository {
 	final File TODO_TXT_FILE;
 	final File DONE_TXT_FILE;
 	private final TaskBag.Preferences preferences;
+    private final TodoApplication m_app;
 
-	public LocalFileTaskRepository(File root, TaskBag.Preferences m_prefs) {
-		this.preferences = m_prefs;
+    public LocalFileTaskRepository(TodoApplication app, File root,  TaskBag.Preferences preferences) {
+        this.m_app = app;
+		this.preferences = preferences;
         this.TODO_TXT_FILE = new File(root, "todo.txt");
         this.DONE_TXT_FILE = new File(root, "done.txt");
 	}
@@ -87,11 +89,14 @@ public class LocalFileTaskRepository {
 	}
 
 	public void store(ArrayList<Task> tasks) {
+        m_app.stopWatching();
 		TaskIo.writeToFile(tasks, TODO_TXT_FILE,
 				preferences.isUseWindowsLineBreaksEnabled());
+        m_app.startWatching();
 	}
 
 	public void archive(ArrayList<Task> tasks) {
+        m_app.stopWatching();
 		boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
 		ArrayList<Task> completedTasks = new ArrayList<Task>(tasks.size());
@@ -114,6 +119,7 @@ public class LocalFileTaskRepository {
 		// PRESERVE_BLANK_LINES)
 		TaskIo.writeToFile(incompleteTasks, TODO_TXT_FILE, false,
 				windowsLineBreaks);
+        m_app.startWatching();
 	}
 
 	public void loadDoneTasks(File file) {
