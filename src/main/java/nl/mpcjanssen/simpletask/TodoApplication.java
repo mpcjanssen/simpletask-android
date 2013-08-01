@@ -78,10 +78,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, root, taskBagPreferences);
         if (isCloudLess()) {
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, null);
-            m_observer = new FileObserver(localTaskRepository.getTodoTxtFile().getPath(),
+            Log.v(TAG, "Obs: " + localTaskRepository.getTodoTxtFile().getPath());
+            m_observer = new FileObserver(localTaskRepository.getTodoTxtFile().getParent(),
                     FileObserver.ALL_EVENTS) {
                 @Override
                 public void onEvent(int event, String path) {
+                    Log.v(TAG, "Obs path is: " + path);
                     if (path!=null && path.equals("todo.txt") ) {
                         Log.v(TAG, path + " event: " + event);
                         if( event == FileObserver.CLOSE_WRITE ||
