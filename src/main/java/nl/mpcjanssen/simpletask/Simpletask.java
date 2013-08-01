@@ -255,9 +255,7 @@ public class Simpletask extends ListActivity  {
 	}
 
     private void handleIntent(Bundle savedInstanceState) {
-        if (m_app.isCloudLess()) {
-            m_app.startWatching();
-        } else {
+        if (!m_app.isCloudLess()) {
             RemoteClient remoteClient = m_app.getRemoteClientManager()
                     .getRemoteClient();
             if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
@@ -268,7 +266,6 @@ public class Simpletask extends ListActivity  {
         if (taskBag==null) {
             taskBag = m_app.getTaskBag();
         }
-
 
 		m_prios = new ArrayList<Priority>();
 		m_contexts = new ArrayList<String>();
@@ -524,7 +521,6 @@ public class Simpletask extends ListActivity  {
 		if (actionMode != null) {
 			actionMode.finish();
 		}
-        m_app.stopWatching();
 		SharedPreferences.Editor editor = TodoApplication.getPrefs().edit();
 		Log.v(TAG, "Storing sort in prefs: " + m_sorts);
 		editor.putString("m_sorts", Util.join(m_sorts, "\n"));
