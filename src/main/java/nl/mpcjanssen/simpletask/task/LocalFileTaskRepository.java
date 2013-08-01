@@ -40,19 +40,21 @@ import android.util.Log;
  * @author Tim Barlotta
  */
 public class LocalFileTaskRepository {
-	private static final String TAG = LocalFileTaskRepository.class
+	private  final String TAG = LocalFileTaskRepository.class
 			.getSimpleName();
-	final static File TODO_TXT_FILE = new File(
-			TodoApplication.getAppContext().getFilesDir(),
-			"todo.txt");
-	final static File DONE_TXT_FILE = new File(
-			TodoApplication.getAppContext().getFilesDir(),
-			"done.txt");
+	final File TODO_TXT_FILE;
+	final File DONE_TXT_FILE;
 	private final TaskBag.Preferences preferences;
 
-	public LocalFileTaskRepository(TaskBag.Preferences m_prefs) {
+	public LocalFileTaskRepository(File root, TaskBag.Preferences m_prefs) {
 		this.preferences = m_prefs;
+        this.TODO_TXT_FILE = new File(root, "todo.txt");
+        this.DONE_TXT_FILE = new File(root, "done.txt");
 	}
+
+    public File getTodoTxtFile() {
+        return TODO_TXT_FILE;
+    }
 
 	public void init() {
 		try {

@@ -27,9 +27,14 @@ import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import java.io.File;
+
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
@@ -47,6 +52,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private TaskBag taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private Handler handler = new Handler();
+    private FileObserver m_observer;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -61,12 +67,38 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
-        remoteClientManager = new RemoteClientManager(this, getPrefs());
+
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
-        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(taskBagPreferences);
-        this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, remoteClientManager);
-
+        File root;
+        if (isCloudLess()) {
+            root = new File(Environment.getExternalStorageDirectory(),"data/nl.mpcjanssen.simpletask");
+        } else {
+            root = TodoApplication.getAppContext().getFilesDir();
+        }
+        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(root, taskBagPreferences);
+        if (isCloudLess()) {
+            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, null);
+            m_observer = new FileObserver(localTaskRepository.getTodoTxtFile().getPath(),
+                    FileObserver.ALL_EVENTS) {
+                @Override
+                public void onEvent(int event, String path) {
+                    if (path!=null && path.equals("todo.txt") ) {
+                        Log.v(TAG, path + " event: " + event);
+                        if( event == FileObserver.CLOSE_WRITE ||
+                                event == FileObserver.MOVED_TO) {
+                            Log.v(TAG, path + " modified reloading taskbag");
+                            taskBag.reload();
+                            updateUI();
+                        }
+                    }
+                }
+            };
+        } else {
+            remoteClientManager = new RemoteClientManager(this, getPrefs());
+            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, remoteClientManager);
+        }
+        this.startWatching();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_SET_MANUAL);
         intentFilter.addAction(Constants.INTENT_START_SYNC_WITH_REMOTE);
@@ -96,6 +128,18 @@ public class TodoApplication extends Application implements SharedPreferences.On
             }
         };
         handler.postDelayed(runnable, 5 * 60 * 1000);
+    }
+
+    private void startWatching() {
+        if (m_observer!=null) {
+            m_observer.startWatching();
+        }
+    }
+
+    private void stopWatching() {
+        if (m_observer!=null) {
+            m_observer.stopWatching();
+        }
     }
 
     @Override
