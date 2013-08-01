@@ -28,14 +28,6 @@ public class Constants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    public static final int SORT_UNSORTED = 0;
-    public static final int SORT_REVERSE = 1;
-    public static final int SORT_ALPHABETICAL = 2;
-    public static final int SORT_PRIORITY = 3;
-    public static final int SORT_PROJECT = 4;
-    public static final int SORT_CONTEXT = 5;
-    public static final int SORT_CREATION_DATE = 6;
-
     public static final String PREF_FIRSTRUN = "firstrun";
     public static final String PREF_ACCESSTOKEN_KEY = "accesstokenkey";
     public static final String PREF_ACCESSTOKEN_SECRET = "accesstokensecret";
@@ -43,10 +35,6 @@ public class Constants {
     public static final String PREF_DONE_REV = "done_rev";
     public static final String PREF_NEED_TO_PUSH = "need_to_push";
     public static final String DROPBOX_MODUS = "dropbox";
-
-    public final static long INVALID_ID = -1;
-    public final static int INVALID_POSITION = -1;
-
 
     // Constants for creating shortcuts
     public final static String INTENT_SORT_ORDER = "SORTS";
@@ -92,13 +80,9 @@ public class Constants {
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
 
     // Constants for saving state
-    public static final String LAYOUT_ID = "layoutId";
-    public static final String LISTVIEW_ID = "lvId";
-    public static final String CHECKBOX_ID = "cbId";
     public static final String FILTER_ITEMS = "items";
     public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
     public static final String INITIAL_NOT = "initialNot";
-    public static final String SELECTION_MODE = "selection_mode";
 
     // Android OS specific constants
     public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
