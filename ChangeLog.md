@@ -6,6 +6,7 @@
 * [Bugfix] Make application intents package specific so you can install different simpletask versions at the same time.
 * [Build] Integrate cloudless build so all versions are based on same source code
 * [Feature] Add Archive to context menu so you don't have to go to preferences to archive your tasks
+* [UI] Changed complete icons to avoid confusion with CAB dismiss
 
 ### 2.7.2
 
