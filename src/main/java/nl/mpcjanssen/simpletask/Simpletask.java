@@ -824,6 +824,7 @@ public class Simpletask extends ListActivity  {
 					Util.showToastLong(Simpletask.this,
 							"Archived completed tasks");
                     sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+                    sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_UPDATE_UI));
 				} else {
 					Util.showToastLong(Simpletask.this,
 							"Could not archive tasks");
@@ -853,6 +854,13 @@ public class Simpletask extends ListActivity  {
 		case R.id.sync:
 			syncClient(false);
 			break;
+            case R.id.archive:
+                Util.showConfirmationDialog(this, R.string.delete_task_message, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        archiveTasks();
+                    }
+                }, R.string.archive_task_title);
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
