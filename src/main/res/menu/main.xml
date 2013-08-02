@@ -50,6 +50,10 @@ You should have received a copy of the GNU General Public License along with Tod
             android:showAsAction="never"
             android:id="@+id/preferences"/>
     <item
+            android:title="@string/archive"
+            android:showAsAction="never"
+            android:id="@+id/archive"/>
+    <item
             android:title="@string/sync"
             android:showAsAction="never"
             android:id="@+id/sync"/>

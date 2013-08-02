@@ -36,6 +36,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="main_no_items">No tasks to display.</string>
     <string name="set_preferences">Settings</string>
     <string name="preferences">Settings</string>
+    <string name="archive">Archive</string>
     <string name="sync">Refresh</string>
     <string name="changelist">Select list</string>
     <string name="search">Search</string>
@@ -144,7 +145,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="login_screen_button">Log in to Dropbox</string>
     <string name="login_screen_offline_button">Work offline</string>
     <!-- delete -->
-    <string name="delete_task_title">Delete Task</string>
+    <string name="delete_task_title">Delete Task(s)</string>
+    <string name="archive_task_title">Archive Task(s)</string>
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
     <string name="delete_task_confirm">Delete</string>
     <!-- search -->
