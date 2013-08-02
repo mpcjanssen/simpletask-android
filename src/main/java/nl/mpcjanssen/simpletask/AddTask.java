@@ -129,11 +129,15 @@ public class AddTask extends Activity {
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             // This was a voice note
         }
-        taskBag.addAsTask(task);
+        addBackgroundTask(task);
+    }
+
+    private void addBackgroundTask(String taskText) {
+        taskBag.addAsTask(taskText);
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         sendBroadcast(new Intent(
-                getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+                getPackageName()+ Constants.BROADCAST_START_SYNC_WITH_REMOTE));
         m_app.showToast(R.string.task_added);
     }
 
@@ -159,6 +163,12 @@ public class AddTask extends Activity {
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now
             noteToSelf(intent);
+            finish();
+            return;
+        } else if (Constants.INTENT_BACKGROUND_TASK.equals(action)) {
+            if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
+                addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK));
+            }
             finish();
             return;
         }

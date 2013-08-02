@@ -77,7 +77,12 @@ public class Constants {
     public final static String BROADCAST_UPDATE_UI = "UPDATE_UI";
     public final static String BROADCAST_SYNC_START = "SYNC_START";
     public final static String BROADCAST_SYNC_DONE = "SYNC_DONE";
+
+
+    // Public intents
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
+    public final static String INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK";
+    public final static String EXTRA_BACKGROUND_TASK = "task";
 
     // Constants for saving state
     public static final String FILTER_ITEMS = "items";
