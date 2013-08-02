@@ -1,5 +1,12 @@
 # ChangeLog
 
+### 2.7.3
+
+* [Feature] Add Intent to create task for automation tools such as tasker see http://goo.gl/v3tr2D
+* [Bugfix] Make application intents package specific so you can install different simpletask versions at the same time.
+* [Build] Integrate cloudless build so all versions are based on same source code
+* [Feature] Add Archive to context menu so you don't have to go to preferences to archive your tasks
+
 ### 2.7.2
 
 * [Bugfix] Don't crash while demo-ing navigation drawers.
