@@ -166,8 +166,11 @@ public class AddTask extends Activity {
             finish();
             return;
         } else if (Constants.INTENT_BACKGROUND_TASK.equals(action)) {
+            Log.v(TAG, "Adding background task");
             if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
                 addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK));
+            } else {
+                Log.w(TAG, "Task was not in extras");
             }
             finish();
             return;
