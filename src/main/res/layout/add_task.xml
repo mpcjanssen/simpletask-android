@@ -31,7 +31,22 @@ You should have received a copy of the GNU General Public License along with Tod
                                  android:showDividers="middle"
                                  android:orientation="vertical">
 
-
+    <LinearLayout
+        android:padding="3sp"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/cb_clone"/>
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/clone_tags"/>
+    </LinearLayout>
     <EditText
             android:id="@+id/taskText"
             android:layout_width="fill_parent"
