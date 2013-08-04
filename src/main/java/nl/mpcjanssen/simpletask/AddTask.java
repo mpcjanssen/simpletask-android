@@ -242,26 +242,40 @@ public class AddTask extends Activity {
             textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    if (hasCloneTags() && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        // Move cursor to end of line
                         int position = textInputField.getSelectionStart();
-                        String precedingText = textInputField.getText().toString().substring(0,position);
-                        int lineStart = precedingText.lastIndexOf('\n');
-                        String line = "";
-                        if (lineStart!=-1) {
-                            line = precedingText.substring(lineStart,position);
+                        String remainingText = textInputField.getText().toString().substring(position);
+                        int endOfLineDistance = remainingText.indexOf('\n');
+                        int endOfLine;
+                        if (endOfLineDistance == -1) {
+                            endOfLine = textInputField.length();
                         } else {
-                            line = precedingText;
+                            endOfLine = position + endOfLineDistance;
                         }
-                        Task t = new Task(0,line);
-                        LinkedHashSet<String> tags = new LinkedHashSet<String>();
-                        for (String ctx : t.getContexts()) {
-                            tags.add("@" + ctx);
+                        textInputField.setSelection(endOfLine);
+
+                        if (hasCloneTags()) {
+                            String precedingText = textInputField.getText().toString().substring(0, endOfLine);
+                            int lineStart = precedingText.lastIndexOf('\n');
+                            String line = "";
+                            if (lineStart != -1) {
+                                line = precedingText.substring(lineStart, endOfLine);
+                            } else {
+                                line = precedingText;
+                            }
+                            Task t = new Task(0, line);
+                            LinkedHashSet<String> tags = new LinkedHashSet<String>();
+                            for (String ctx : t.getContexts()) {
+                                tags.add("@" + ctx);
+                            }
+                            for (String prj : t.getProjects()) {
+                                tags.add("+" + prj);
+                            }
+                            replaceTextAtSelection(Util.join(tags, " "));
+                            textInputField.setSelection(endOfLine);
                         }
-                        for (String prj : t.getProjects()) {
-                            tags.add("+" + prj);
-                        }
-                        replaceTextAtSelection(Util.join(tags, " "));
-                        textInputField.setSelection(position);
+
                     }
                     return false;
                 }
