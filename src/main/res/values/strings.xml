@@ -151,7 +151,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_confirm">Delete</string>
     <!-- search -->
 
-    <string name="clone_tags">Clone lists and tags of previous task</string>
+    <string name="clone_tags">New line copies lists and tags of previous line</string>
     <string name="search_hint">Search todo.txt</string>
     <!-- sort -->
     <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.</string>

@@ -75,6 +75,10 @@ public class AddTask extends Activity {
         return ((CheckBox)findViewById(R.id.cb_clone)).isChecked();
     }
 
+    public void setCloneTags(boolean bool) {
+        ((CheckBox)findViewById(R.id.cb_clone)).setChecked(bool);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -92,6 +96,8 @@ public class AddTask extends Activity {
                 startActivity(intent);
                 // And save current task
             case R.id.menu_save_task:
+                // save clone checkbox state
+                m_app.setAddTagsCloneTags(hasCloneTags());
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
                 String input = textInputField.getText().toString();
@@ -280,6 +286,7 @@ public class AddTask extends Activity {
                     return false;
                 }
             });
+            setCloneTags(m_app.isAddTagsCloneTags());
             int textIndex = 0;
             textInputField.setSelection(textIndex);
         }
