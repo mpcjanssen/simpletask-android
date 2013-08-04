@@ -238,6 +238,16 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.defer_threshold_date_key), true);
     }
 
+    public boolean isAddTagsCloneTags() {
+        return m_prefs.getBoolean(getString(R.string.clone_tags_key),false);
+    }
+
+    public void setAddTagsCloneTags(boolean bool) {
+        m_prefs.edit()
+                .putBoolean(getString(R.string.clone_tags_key),bool)
+                .commit();
+    }
+
     public void setManualMode(boolean manual) {
     	Editor edit = m_prefs.edit();
         edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);
