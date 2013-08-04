@@ -32,11 +32,16 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Layout;
 import android.text.Selection;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
@@ -47,6 +52,7 @@ import nl.mpcjanssen.simpletask.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 
@@ -65,6 +71,14 @@ public class AddTask extends Activity {
 
     private EditText textInputField;
 
+    public boolean hasCloneTags() {
+        return ((CheckBox)findViewById(R.id.cb_clone)).isChecked();
+    }
+
+    public void setCloneTags(boolean bool) {
+        ((CheckBox)findViewById(R.id.cb_clone)).setChecked(bool);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -82,6 +96,8 @@ public class AddTask extends Activity {
                 startActivity(intent);
                 // And save current task
             case R.id.menu_save_task:
+                // save clone checkbox state
+                m_app.setAddTagsCloneTags(hasCloneTags());
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
                 String input = textInputField.getText().toString();
@@ -228,7 +244,49 @@ public class AddTask extends Activity {
                     textInputField.append(" @" + context);
                 }
             }
+            // Listen to enter
+            textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        // Move cursor to end of line
+                        int position = textInputField.getSelectionStart();
+                        String remainingText = textInputField.getText().toString().substring(position);
+                        int endOfLineDistance = remainingText.indexOf('\n');
+                        int endOfLine;
+                        if (endOfLineDistance == -1) {
+                            endOfLine = textInputField.length();
+                        } else {
+                            endOfLine = position + endOfLineDistance;
+                        }
+                        textInputField.setSelection(endOfLine);
 
+                        if (hasCloneTags()) {
+                            String precedingText = textInputField.getText().toString().substring(0, endOfLine);
+                            int lineStart = precedingText.lastIndexOf('\n');
+                            String line = "";
+                            if (lineStart != -1) {
+                                line = precedingText.substring(lineStart, endOfLine);
+                            } else {
+                                line = precedingText;
+                            }
+                            Task t = new Task(0, line);
+                            LinkedHashSet<String> tags = new LinkedHashSet<String>();
+                            for (String ctx : t.getContexts()) {
+                                tags.add("@" + ctx);
+                            }
+                            for (String prj : t.getProjects()) {
+                                tags.add("+" + prj);
+                            }
+                            replaceTextAtSelection(Util.join(tags, " "));
+                            textInputField.setSelection(endOfLine);
+                        }
+
+                    }
+                    return false;
+                }
+            });
+            setCloneTags(m_app.isAddTagsCloneTags());
             int textIndex = 0;
             textInputField.setSelection(textIndex);
         }
