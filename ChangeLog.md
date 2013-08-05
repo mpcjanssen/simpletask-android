@@ -2,6 +2,8 @@
 
 ### 2.7.3
 
+* [Feature] Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
+* [Feature] Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
 * [Feature] Add Intent to create task for automation tools such as tasker see http://goo.gl/v3tr2D
 * [Bugfix] Make application intents package specific so you can install different simpletask versions at the same time.
 * [Build] Integrate cloudless build so all versions are based on same source code
