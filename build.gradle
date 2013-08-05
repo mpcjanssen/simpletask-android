@@ -63,7 +63,6 @@ android {
             signingConfig signingConfigs.release
         }
     }
-
     check.dependsOn 'connectedInstrumentTestUnitDebug'
 }
 

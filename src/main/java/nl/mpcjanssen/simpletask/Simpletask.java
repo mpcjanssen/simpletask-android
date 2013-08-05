@@ -59,6 +59,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -1728,6 +1729,13 @@ public class Simpletask extends ListActivity  {
 						.setType(Constants.ANDROID_EVENT)
 						.putExtra(Events.TITLE, calendarTitle)
 						.putExtra(Events.DESCRIPTION, calendarDescription);
+                // Set all day event today for calendars which need a date or
+                // otherwise put it in 1969 (at least HTC does this)
+                GregorianCalendar calDate = new GregorianCalendar();
+                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                        calDate.getTimeInMillis());
+                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                        calDate.getTimeInMillis()+60*60*1000);
 				startActivity(intent);
 				break;
 			case R.id.url:
