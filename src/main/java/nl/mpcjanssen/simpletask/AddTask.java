@@ -60,8 +60,6 @@ public class AddTask extends Activity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private ProgressDialog m_ProgressDialog = null;
-
     private Task m_backup;
     private TodoApplication m_app;
     private TaskBag taskBag;
@@ -403,14 +401,6 @@ public class AddTask extends Activity {
         }
         textInputField.getText().replace(Math.min(start, end), Math.max(start, end),
                 title, 0, title.length());
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (m_ProgressDialog != null) {
-            m_ProgressDialog.dismiss();
-        }
     }
 
     private void setupShortcut() {
