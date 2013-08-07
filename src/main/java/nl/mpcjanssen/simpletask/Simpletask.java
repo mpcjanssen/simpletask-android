@@ -1729,8 +1729,8 @@ public class Simpletask extends ListActivity  {
 						.setType(Constants.ANDROID_EVENT)
 						.putExtra(Events.TITLE, calendarTitle)
 						.putExtra(Events.DESCRIPTION, calendarDescription);
-                // Set all day event today for calendars which need a date or
-                // otherwise put it in 1969 (at least HTC does this)
+                // Explicitly set start and end date/time.
+                // Some calendar providers need this.
                 GregorianCalendar calDate = new GregorianCalendar();
                 intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
                         calDate.getTimeInMillis());

@@ -121,7 +121,7 @@ public class Task implements Serializable, Comparable<Task> {
                 // e.printStackTrace();
             }
         }
-
+        this.dueDate = null;
         Matcher matcher = DUE_PATTERN.matcher(this.text);
         if (matcher.find()) {
             try {
@@ -130,7 +130,7 @@ public class Task implements Serializable, Comparable<Task> {
                 this.dueDate = null;
             }
         }
-
+        this.thresholdDate = null;
         matcher = THRESHOLD_PATTERN.matcher(this.text);
         if (matcher.find()) {
             try {
