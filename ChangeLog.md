@@ -3,7 +3,8 @@
 ### 2.7.4
 
 * [Bugfix] Explicitly set task reminder start date to prevent 1970 tasks.
-* [Bugfix] Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues. 
+* [Bugfix] Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.
+* [Bugfix] Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.
 
 
 ### 2.7.3
