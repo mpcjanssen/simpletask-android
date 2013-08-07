@@ -70,11 +70,11 @@ public class AddTask extends Activity {
     private EditText textInputField;
 
     public boolean hasCloneTags() {
-        return ((CheckBox)findViewById(R.id.cb_clone)).isChecked();
+        return ((CheckBox) findViewById(R.id.cb_clone)).isChecked();
     }
 
     public void setCloneTags(boolean bool) {
-        ((CheckBox)findViewById(R.id.cb_clone)).setChecked(bool);
+        ((CheckBox) findViewById(R.id.cb_clone)).setChecked(bool);
     }
 
     @Override
@@ -99,14 +99,16 @@ public class AddTask extends Activity {
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
                 String input = textInputField.getText().toString();
-                if (m_backup != null) {
-                    // When updating we can only have one line
-                    input = input.replaceAll("\\r\\n|\\r|\\n", " ");
-                    taskBag.updateTask(m_backup, input);
-                } else {
-                    for (String taskText : input.split("\\r\\n|\\r|\\n")) {
-                        taskBag.addAsTask(taskText);
-                    }
+                ArrayList<String> tasks = new ArrayList<String>();
+                tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
+                if (m_backup != null && tasks.size()>0) {
+                    // When updating take the first line as the updated tasks
+                    taskBag.updateTask(m_backup, tasks.get(0));
+                    tasks.remove(0);
+                }
+                // Add any other tasks
+                for (String taskText : tasks) {
+                    taskBag.addAsTask(taskText);
                 }
 
                 m_app.setNeedToPush(true);
@@ -115,7 +117,7 @@ public class AddTask extends Activity {
                     taskBag.archive();
                 }
                 sendBroadcast(new Intent(
-                        getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+                        getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
                 finish();
                 break;
             case R.id.menu_add_task_help:
@@ -138,7 +140,7 @@ public class AddTask extends Activity {
         return true;
     }
 
-    private void noteToSelf (Intent intent) {
+    private void noteToSelf(Intent intent) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             // This was a voice note
@@ -151,7 +153,7 @@ public class AddTask extends Activity {
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         sendBroadcast(new Intent(
-                getPackageName()+ Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+                getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
         m_app.showToast(R.string.task_added);
     }
 
@@ -242,53 +244,54 @@ public class AddTask extends Activity {
                     textInputField.append(" @" + context);
                 }
             }
-            // Listen to enter
-            textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                        // Move cursor to end of line
-                        int position = textInputField.getSelectionStart();
-                        String remainingText = textInputField.getText().toString().substring(position);
-                        int endOfLineDistance = remainingText.indexOf('\n');
-                        int endOfLine;
-                        if (endOfLineDistance == -1) {
-                            endOfLine = textInputField.length();
-                        } else {
-                            endOfLine = position + endOfLineDistance;
-                        }
-                        textInputField.setSelection(endOfLine);
-
-                        if (hasCloneTags()) {
-                            String precedingText = textInputField.getText().toString().substring(0, endOfLine);
-                            int lineStart = precedingText.lastIndexOf('\n');
-                            String line = "";
-                            if (lineStart != -1) {
-                                line = precedingText.substring(lineStart, endOfLine);
-                            } else {
-                                line = precedingText;
-                            }
-                            Task t = new Task(0, line);
-                            LinkedHashSet<String> tags = new LinkedHashSet<String>();
-                            for (String ctx : t.getContexts()) {
-                                tags.add("@" + ctx);
-                            }
-                            for (String prj : t.getProjects()) {
-                                tags.add("+" + prj);
-                            }
-                            replaceTextAtSelection(Util.join(tags, " "));
-                            textInputField.setSelection(endOfLine);
-                        }
-
-                    }
-                    return false;
-                }
-            });
-            setCloneTags(m_app.isAddTagsCloneTags());
-            int textIndex = 0;
-            textInputField.setSelection(textIndex);
         }
+        // Listen to enter
+        textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    // Move cursor to end of line
+                    int position = textInputField.getSelectionStart();
+                    String remainingText = textInputField.getText().toString().substring(position);
+                    int endOfLineDistance = remainingText.indexOf('\n');
+                    int endOfLine;
+                    if (endOfLineDistance == -1) {
+                        endOfLine = textInputField.length();
+                    } else {
+                        endOfLine = position + endOfLineDistance;
+                    }
+                    textInputField.setSelection(endOfLine);
+
+                    if (hasCloneTags()) {
+                        String precedingText = textInputField.getText().toString().substring(0, endOfLine);
+                        int lineStart = precedingText.lastIndexOf('\n');
+                        String line = "";
+                        if (lineStart != -1) {
+                            line = precedingText.substring(lineStart, endOfLine);
+                        } else {
+                            line = precedingText;
+                        }
+                        Task t = new Task(0, line);
+                        LinkedHashSet<String> tags = new LinkedHashSet<String>();
+                        for (String ctx : t.getContexts()) {
+                            tags.add("@" + ctx);
+                        }
+                        for (String prj : t.getProjects()) {
+                            tags.add("+" + prj);
+                        }
+                        replaceTextAtSelection(Util.join(tags, " "));
+                        textInputField.setSelection(endOfLine);
+                    }
+
+                }
+                return false;
+            }
+        });
+        setCloneTags(m_app.isAddTagsCloneTags());
+        int textIndex = 0;
+        textInputField.setSelection(textIndex);
     }
+
 
     private void showTagMenu(View v) {
         final ArrayList<String> projects = taskBag.getProjects(false);
