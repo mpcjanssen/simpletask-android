@@ -1457,7 +1457,7 @@ public class Simpletask extends ListActivity  {
 
     public void startFilterActivity() {
 		Intent i = new Intent(this, FilterActivity.class);
-
+        mFilter.saveInIntent(i);
 
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivityForResult(i, REQUEST_FILTER);

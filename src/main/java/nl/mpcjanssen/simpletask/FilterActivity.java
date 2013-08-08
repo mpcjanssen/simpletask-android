@@ -198,7 +198,7 @@ public class FilterActivity extends Activity {
 
     private ArrayList<String> getSelectedSort() {
         FilterSortFragment fr;
-        fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
+        fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(SORT_TAB);
         if (fr == null) {
             // fragment was never intialized
             return null;
