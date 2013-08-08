@@ -37,27 +37,15 @@ public class Constants {
     public static final String DROPBOX_MODUS = "dropbox";
 
     // Constants for creating shortcuts
-    public final static String INTENT_SORT_ORDER = "SORTS";
-    public final static String INTENT_CONTEXTS_FILTER = "CONTEXTS";
-    public final static String INTENT_PROJECTS_FILTER = "PROJECTS";
-    public final static String INTENT_PRIORITIES_FILTER = "PRIORITIES";
-    public final static String INTENT_CONTEXTS_FILTER_NOT = "CONTEXTSnot";
-    public final static String INTENT_PROJECTS_FILTER_NOT = "PROJECTSnot";
-    public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
+
     public final static String INTENT_TITLE = "TITLE";
     public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
 
     public final static String ACTIVE_SORTS = "SORTS";
-    public static final String NORMAL_SORT = "+";
-    public static final String REVERSED_SORT = "-";
-    public static final String SORT_SEPARATOR = "!";
 
-    public final static String EXTRA_PRIORITIES = "PRIORITIES";
     public final static String EXTRA_PRIORITIES_SELECTED = "PRIORITIES_SELECTED";
-    public final static String EXTRA_PROJECTS = "PROJECTS";
     public final static String EXTRA_PROJECTS_SELECTED = "PROJECTS_SELECTED";
-    public final static String EXTRA_CONTEXTS = "CONTEXTS";
     public final static String EXTRA_CONTEXTS_SELECTED = "CONTEXTS_SELECTED";
     public final static String EXTRA_SORTS_SELECTED = "SORTS_SELECTED";
     public final static String EXTRA_SEARCH = "SEARCH";
