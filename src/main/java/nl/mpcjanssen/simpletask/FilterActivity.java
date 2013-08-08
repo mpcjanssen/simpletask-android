@@ -137,7 +137,7 @@ public class FilterActivity extends Activity {
 
     private void defaultSort() {
 		// Find the fragment
-    	FilterSortFragment fr = (FilterSortFragment)this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
+    	FilterSortFragment fr = (FilterSortFragment)this.getFragmentManager().findFragmentByTag(SORT_TAB);
 		fr.defaultSort();
 	}
     
@@ -379,7 +379,7 @@ public class FilterActivity extends Activity {
             	return;            		
             }
             MenuItem mnuDefaultSort = menu.findItem(R.id.menu_default_sort);
-            if (tab.getTag().equals(getString(R.string.sort))) {
+            if (tab.getTag().equals(SORT_TAB)) {
             	mnuDefaultSort.setVisible(true);
             } else {
             	mnuDefaultSort.setVisible(false);

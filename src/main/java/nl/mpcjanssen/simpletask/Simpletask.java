@@ -325,10 +325,9 @@ public class Simpletask extends ListActivity  {
             mFilter.initFromBundle(savedInstanceState);
 
 		} else if (intent.getExtras() != null) {
-			Log.v(TAG, "handleIntent launched with filter:");
+			Log.v(TAG, "handleIntent launched with filter:" + intent.getExtras().keySet());
             mFilter.initFromIntent(intent);
-
-		} else {
+        } else {
 			// Set previous filters and sort
 			Log.v(TAG, "handleIntent: from m_prefs state");
             mFilter.initFromPrefs(TodoApplication.getPrefs());
