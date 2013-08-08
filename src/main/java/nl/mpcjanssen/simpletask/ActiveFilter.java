@@ -22,13 +22,17 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 /**
- * Active filter, has methods for serialisation in several formats
+ * Active filter, has methods for serialization in several formats
  */
 public class ActiveFilter {
     static public final String NORMAL_SORT = "+";
     static public final String REVERSED_SORT = "-";
     static public final String SORT_SEPARATOR = "!";
 
+    /* Strings used in intent extras and preferences
+     * Do NOT modify this without good reason.
+     * Changing this will break existing shortcuts and widgets
+     */
     public final static String INTENT_TITLE = "TITLE";
     public final static String INTENT_SORT_ORDER = "SORTS";
     public final static String INTENT_CONTEXTS_FILTER = "CONTEXTS";
