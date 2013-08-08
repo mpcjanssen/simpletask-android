@@ -27,6 +27,12 @@ public class FilterActivity extends Activity {
     final static String PROJECT_TAB = "project";
     final static String PRIO_TAB = "prio";
     final static String SORT_TAB = "sort";
+
+    // Constants for saving state
+    public static final String FILTER_ITEMS = "items";
+    public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
+    public static final String INITIAL_NOT = "initialNot";
+
     boolean asWidgetConfigure = false;
     ActiveFilter mFilter;
 
@@ -60,9 +66,9 @@ public class FilterActivity extends Activity {
         }
         // Fill arguments for fragment
         arguments = new Bundle();        
-        arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getContexts(true));
-        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, mFilter.getContexts());
-        arguments.putBoolean(Constants.INITIAL_NOT, mFilter.getContextsNot());
+        arguments.putStringArrayList(FILTER_ITEMS, taskBag.getContexts(true));
+        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
+        arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.context_prompt))
                 .setTabListener(new MyTabsListener(this, CONTEXT_TAB, FilterListFragment.class, arguments))
@@ -70,9 +76,9 @@ public class FilterActivity extends Activity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getProjects(true));
-        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, mFilter.getProjects());
-        arguments.putBoolean(Constants.INITIAL_NOT, mFilter.getProjectsNot());
+        arguments.putStringArrayList(FILTER_ITEMS, taskBag.getProjects(true));
+        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
+        arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.project_prompt))
                 .setTabListener(new MyTabsListener(this, PROJECT_TAB, FilterListFragment.class, arguments))
@@ -80,9 +86,9 @@ public class FilterActivity extends Activity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(Constants.FILTER_ITEMS, Priority.inCode(taskBag.getPriorities()));
-        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
-        arguments.putBoolean(Constants.INITIAL_NOT, mFilter.getPrioritiesNot());
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(taskBag.getPriorities()));
+        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
+        arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.priority_short_prompt))
                 .setTabListener(new MyTabsListener(this, PRIO_TAB, FilterListFragment.class, arguments))
@@ -90,7 +96,7 @@ public class FilterActivity extends Activity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(Constants.ACTIVE_SORTS,mFilter.getSort());
+        arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.sort))
                 .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class, arguments))

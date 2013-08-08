@@ -41,16 +41,7 @@ public class Constants {
 
     public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
-
-    public final static String ACTIVE_SORTS = "SORTS";
-
-    public final static String EXTRA_PRIORITIES_SELECTED = "PRIORITIES_SELECTED";
-    public final static String EXTRA_PROJECTS_SELECTED = "PROJECTS_SELECTED";
-    public final static String EXTRA_CONTEXTS_SELECTED = "CONTEXTS_SELECTED";
-    public final static String EXTRA_SORTS_SELECTED = "SORTS_SELECTED";
-    public final static String EXTRA_SEARCH = "SEARCH";
     public final static String EXTRA_TASK = "TASK";
-    public final static String EXTRA_APPLIED_FILTERS = "APPLIED_FITERS";
     public final static String EXTRA_FORCE_SYNC = "FORCE_SYNC";
     public final static String EXTRA_OVERWRITE = "OVERWRITE";
 
@@ -71,11 +62,6 @@ public class Constants {
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
     public final static String INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK";
     public final static String EXTRA_BACKGROUND_TASK = "task";
-
-    // Constants for saving state
-    public static final String FILTER_ITEMS = "items";
-    public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
-    public static final String INITIAL_NOT = "initialNot";
 
     // Android OS specific constants
     public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
