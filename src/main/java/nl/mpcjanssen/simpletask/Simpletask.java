@@ -427,7 +427,6 @@ public class Simpletask extends ListActivity  {
 			actionMode.finish();
 		}
         mFilter.saveInPrefs(TodoApplication.getPrefs());
-
 	}
 
 	@Override
