@@ -99,10 +99,7 @@ public class TaskIo {
                 long counter = 0L;
                 sWindowsLineBreaks = false;
                 while ((line = readLine(in)) != null) {
-                    line = line.trim();
-                    if (line.length() > 0) {
-                        items.add(new Task(counter, line));
-                    }
+                    items.add(new Task(counter, line));
                     counter++;
                 }
             } finally {
