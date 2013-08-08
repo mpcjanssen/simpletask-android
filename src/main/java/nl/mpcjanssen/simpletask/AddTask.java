@@ -165,6 +165,7 @@ public class AddTask extends Activity {
         m_app = (TodoApplication) getApplication();
         taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
+        mFilter = new ActiveFilter(getResources());
         mFilter.initFromIntent(intent);
         final String action = intent.getAction();
         // create shortcut and exit
