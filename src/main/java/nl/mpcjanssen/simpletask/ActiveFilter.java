@@ -139,7 +139,7 @@ public class ActiveFilter {
                 filterTitle += " " + mResources.getString(R.string.search);
             }
         } else {
-                filterTitle = "No filter";
+                filterTitle = mResources.getString(R.string.no_filter);
         }
         return filterTitle;
     }
