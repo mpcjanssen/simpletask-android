@@ -27,5 +27,4 @@ You should have received a copy of the GNU General Public License along with Tod
                  android:id="@+id/widget_item_text"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
-                 android:gravity="center_vertical"
-                 android:textColor="#000000"/>
+                 android:gravity="center_vertical"/>

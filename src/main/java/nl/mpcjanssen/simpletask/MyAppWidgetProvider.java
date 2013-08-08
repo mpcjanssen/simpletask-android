@@ -48,6 +48,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
+
         ActiveFilter filter = new ActiveFilter(null);
         filter.initFromPrefs(preferences);
         view.setTextViewText(R.id.title,filter.getName());
@@ -80,8 +81,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 			Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widgetlv);
 		}
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        //super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 
 
