@@ -959,7 +959,7 @@ public class Simpletask extends ListActivity  {
 			}
 
 			visibleTasks.clear();
-            visibleTasks.addAll(mFilter.apply(taskBag.getTasks()));
+            visibleTasks.addAll(mFilter.apply(taskBag.getTasks(), true));
             ArrayList<String> sorts = mFilter.getSort();
 			Collections.sort(visibleTasks, MultiComparator.create(sorts));
 			positionToIndex.clear();

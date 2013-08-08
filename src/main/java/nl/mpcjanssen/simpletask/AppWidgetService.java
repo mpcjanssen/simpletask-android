@@ -59,7 +59,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	void setFilteredTasks() {
 		Log.v(TAG, "setFilteredTasks called");
 		visibleTasks.clear();
-        visibleTasks.addAll(mFilter.apply(taskBag.getTasks()));
+        visibleTasks.addAll(mFilter.apply(taskBag.getTasks(), false));
 		Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort()));
 	}
 
