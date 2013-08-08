@@ -97,12 +97,12 @@ public class FilterSortFragment extends Fragment {
             String sortDirection;
             if (parts.length==1) {
                sortType = parts[0];
-               sortDirection = Constants.NORMAL_SORT;
+               sortDirection = ActiveFilter.NORMAL_SORT;
             } else {
                 sortDirection = parts[0];
                 sortType = parts[1];
-                if (Strings.isEmptyOrNull(sortDirection) || !sortDirection.equals(Constants.REVERSED_SORT)) {
-                    sortDirection = Constants.NORMAL_SORT;
+                if (Strings.isEmptyOrNull(sortDirection) || !sortDirection.equals(ActiveFilter.REVERSED_SORT)) {
+                    sortDirection = ActiveFilter.NORMAL_SORT;
                 }
             }
 
@@ -118,7 +118,7 @@ public class FilterSortFragment extends Fragment {
         for (String item : values) {
             if (item!=null) {
                 adapterList.add(item);
-                directions.add(Constants.NORMAL_SORT);
+                directions.add(ActiveFilter.NORMAL_SORT);
             }
         }
 
@@ -131,10 +131,10 @@ public class FilterSortFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String direction = directions.get(position);
-                if (direction.equals(Constants.REVERSED_SORT)) {
-                    direction = Constants.NORMAL_SORT;
+                if (direction.equals(ActiveFilter.REVERSED_SORT)) {
+                    direction = ActiveFilter.NORMAL_SORT;
                 } else {
-                    direction = Constants.REVERSED_SORT;
+                    direction = ActiveFilter.REVERSED_SORT;
                 }
                 directions.remove(position);
                 directions.add(position,direction);
@@ -154,7 +154,7 @@ public class FilterSortFragment extends Fragment {
         ArrayList<String> multiSort = new ArrayList<String>();
         if (lv != null) {
             for (int i = 0 ; i< adapter.getCount() ; i++) {
-               multiSort.add(directions.get(i) + Constants.SORT_SEPARATOR + adapter.getSortType(i));
+               multiSort.add(directions.get(i) + ActiveFilter.SORT_SEPARATOR + adapter.getSortType(i));
             }
         } else if (originalItems !=null ) {
             multiSort.addAll(originalItems);
@@ -174,7 +174,7 @@ public class FilterSortFragment extends Fragment {
             ImageButton reverseButton = (ImageButton)row.findViewById(R.id.reverse_button);
             ImageView dragHandle = (ImageView)row.findViewById(R.id.drag_handle);
             dragHandle.setBackgroundResource(dragHandleId);
-            if (directions.get(position).equals(Constants.REVERSED_SORT)) {
+            if (directions.get(position).equals(ActiveFilter.REVERSED_SORT)) {
                 reverseButton.setBackgroundResource(sortUpId);
             } else {
                 reverseButton.setBackgroundResource(sortDownId);
@@ -197,7 +197,7 @@ public class FilterSortFragment extends Fragment {
 		directions.clear();
 		for (String value : getResources().getStringArray(R.array.sort)) {
 			adapterList.add(value);
-			directions.add(Constants.NORMAL_SORT);
+			directions.add(ActiveFilter.NORMAL_SORT);
 		}
 		adapter.notifyDataSetChanged();
 		
