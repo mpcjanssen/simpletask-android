@@ -4,6 +4,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.text.SpannableString;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -90,8 +92,21 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             itemId = R.layout.widget_list_item;
         }
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
-        rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
-        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(visibleTasks.get(position)));
+        Task temp = visibleTasks.get(position);
+        SpannableString ss = new SpannableString(temp.inScreenFormat());
+
+        ArrayList<String> colorizeStrings = new ArrayList<String>();
+        for (String context : temp.getContexts()) {
+            colorizeStrings.add("@" + context);
+        }
+        Util.setColor(ss, Color.GRAY, colorizeStrings);
+        colorizeStrings.clear();
+        for (String project : temp.getProjects()) {
+            colorizeStrings.add("+" + project);
+        }
+        Util.setColor(ss, Color.GRAY, colorizeStrings);
+        rv.setTextViewText(R.id.widget_item_text, ss );
+        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(temp));
         return rv;
 	}
 
