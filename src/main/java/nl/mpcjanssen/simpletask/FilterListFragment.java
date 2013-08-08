@@ -50,15 +50,15 @@ public class FilterListFragment extends Fragment {
         Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
-        ArrayList<String> items = arguments.getStringArrayList(Constants.FILTER_ITEMS);
+        ArrayList<String> items = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS);
         actionbar = getActivity().getActionBar();
 
         if (savedInstanceState != null) {
             selectedItems = savedInstanceState.getStringArrayList("selectedItems");
             not = savedInstanceState.getBoolean("not");
         } else {
-            selectedItems = arguments.getStringArrayList(Constants.INITIAL_SELECTED_ITEMS);
-            not = arguments.getBoolean(Constants.INITIAL_NOT);
+            selectedItems = arguments.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS);
+            not = arguments.getBoolean(FilterActivity.INITIAL_NOT);
         }
 
 

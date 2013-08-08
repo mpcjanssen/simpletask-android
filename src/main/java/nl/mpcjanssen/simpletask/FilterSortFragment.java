@@ -72,7 +72,7 @@ public class FilterSortFragment extends Fragment {
         if (savedInstanceState != null) {
             originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED);
         } else {
-            originalItems = arguments.getStringArrayList(Constants.ACTIVE_SORTS);
+            originalItems = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS);
         }
         TodoApplication m_app = (TodoApplication) getActivity().getApplication();
         // Set the proper theme
