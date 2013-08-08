@@ -267,7 +267,7 @@ public class FilterActivity extends Activity {
 
         alert.setTitle("Create widget");
         alert.setMessage("Widget title");
-
+        updateFilterFromFragments();
         name = mFilter.getProposedName();
 
 // Set an EditText view to get user input
