@@ -4,8 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.text.SpannableString;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -46,6 +44,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         mFilter = new ActiveFilter(mContext.getResources());
         mFilter.initFromPrefs(preferences);
 		taskBag = application.getTaskBag();
+        this.application = application;
 		setFilteredTasks();
 	}
 	
@@ -85,28 +84,16 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 	@Override
 	public RemoteViews getViewAt(int position) {
-        int itemId;
-        if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
-            itemId = R.layout.widget_list_item_dark;
-        } else {
-            itemId = R.layout.widget_list_item;
-        }
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
-        Task temp = visibleTasks.get(position);
-        SpannableString ss = new SpannableString(temp.inScreenFormat());
 
-        ArrayList<String> colorizeStrings = new ArrayList<String>();
-        for (String context : temp.getContexts()) {
-            colorizeStrings.add("@" + context);
+        Log.v(TAG,"GetViewAt:" + position);
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+        rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
+        if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
+            rv.setTextColor( R.id.widget_item_text, application.getResources().getColor(android.R.color.white));
+        } else {
+            rv.setTextColor(R.id.widget_item_text, application.getResources().getColor(android.R.color.black));
         }
-        Util.setColor(ss, Color.GRAY, colorizeStrings);
-        colorizeStrings.clear();
-        for (String project : temp.getProjects()) {
-            colorizeStrings.add("+" + project);
-        }
-        Util.setColor(ss, Color.GRAY, colorizeStrings);
-        rv.setTextViewText(R.id.widget_item_text, ss );
-        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(temp));
+        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(visibleTasks.get(position)));
         return rv;
 	}
 
