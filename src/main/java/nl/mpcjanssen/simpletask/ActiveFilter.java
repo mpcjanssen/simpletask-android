@@ -60,14 +60,14 @@ public class ActiveFilter {
 
 
     public void initFromBundle(Bundle bundle) {
-        m_prios = Priority.toPriority(bundle.getStringArrayList("m_prios"));
-        m_contexts = bundle.getStringArrayList("m_contexts");
-        m_projects = bundle.getStringArrayList("m_projects");
-        m_search = bundle.getString("m_search");
-        m_contextsNot = bundle.getBoolean("m_contextsNot");
-        m_priosNot = bundle.getBoolean("m_priosNot");
-        m_projectsNot = bundle.getBoolean("m_projectsNot");
-        m_sorts = bundle.getStringArrayList("m_sorts");
+        m_prios = Priority.toPriority(bundle.getStringArrayList(INTENT_PRIORITIES_FILTER));
+        m_contexts = bundle.getStringArrayList(INTENT_CONTEXTS_FILTER);
+        m_projects = bundle.getStringArrayList(INTENT_PROJECTS_FILTER);
+        m_search = bundle.getString(SearchManager.QUERY);
+        m_contextsNot = bundle.getBoolean(INTENT_CONTEXTS_FILTER_NOT);
+        m_priosNot = bundle.getBoolean(INTENT_PRIORITIES_FILTER_NOT);
+        m_projectsNot = bundle.getBoolean(INTENT_PROJECTS_FILTER_NOT);
+        m_sorts = bundle.getStringArrayList(INTENT_SORT_ORDER);
     }
 
     public void initFromIntent(Intent intent) {
@@ -106,17 +106,17 @@ public class ActiveFilter {
 
     public void initFromPrefs(SharedPreferences prefs) {
         m_sorts = new ArrayList<String>();
-        m_sorts.addAll(Arrays.asList(prefs.getString("m_sorts", "")
+        m_sorts.addAll(Arrays.asList(prefs.getString(INTENT_SORT_ORDER, "")
                 .split("\n")));
         m_contexts = new ArrayList<String>(prefs.getStringSet(
-                "m_contexts", Collections.<String>emptySet()));
+                INTENT_CONTEXTS_FILTER, Collections.<String>emptySet()));
         m_prios = Priority.toPriority(new ArrayList<String>(prefs
-                .getStringSet("m_prios", Collections.<String>emptySet())));
+                .getStringSet(INTENT_PRIORITIES_FILTER, Collections.<String>emptySet())));
         m_projects = new ArrayList<String>(prefs.getStringSet(
-                "m_projects", Collections.<String>emptySet()));
-        m_contextsNot = prefs.getBoolean("m_contextsNot", false);
-        m_priosNot = prefs.getBoolean("m_priosNot", false);
-        m_projectsNot = prefs.getBoolean("m_projectsNot", false);
+                INTENT_PROJECTS_FILTER, Collections.<String>emptySet()));
+        m_contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false);
+        m_priosNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false);
+        m_projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
     }
 
@@ -175,27 +175,27 @@ public class ActiveFilter {
     }
 
     public void saveInBundle(Bundle bundle) {
-        bundle.putStringArrayList("m_prios", Priority.inCode(m_prios));
-        bundle.putStringArrayList("m_contexts", m_contexts);
-        bundle.putStringArrayList("m_projects", m_projects);
-        bundle.putBoolean("m_contextsNot", m_contextsNot);
-        bundle.putStringArrayList("m_sorts", m_sorts);
-        bundle.putBoolean("m_priosNot", m_priosNot);
-        bundle.putBoolean("m_projectsNot", m_projectsNot);
-        bundle.putString("m_search", m_search);
+        bundle.putStringArrayList(INTENT_PRIORITIES_FILTER, Priority.inCode(m_prios));
+        bundle.putStringArrayList(INTENT_CONTEXTS_FILTER, m_contexts);
+        bundle.putStringArrayList(INTENT_PROJECTS_FILTER, m_projects);
+        bundle.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+        bundle.putStringArrayList(INTENT_SORT_ORDER, m_sorts);
+        bundle.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+        bundle.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        bundle.putString(SearchManager.QUERY, m_search);
     }
 
     public void saveInPrefs(SharedPreferences prefs) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(INTENT_TITLE, mName);
-        editor.putString("m_sorts", Util.join(m_sorts, "\n"));
-        editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
-        editor.putStringSet("m_prios",
+        editor.putString(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
+        editor.putStringSet(INTENT_CONTEXTS_FILTER, new HashSet<String>(m_contexts));
+        editor.putStringSet(INTENT_PRIORITIES_FILTER,
                 new HashSet<String>(Priority.inCode(m_prios)));
-        editor.putStringSet("m_projects", new HashSet<String>(m_projects));
-        editor.putBoolean("m_contextsNot", m_contextsNot);
-        editor.putBoolean("m_priosNot", m_priosNot);
-        editor.putBoolean("m_projectsNot", m_projectsNot);
+        editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<String>(m_projects));
+        editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_contextsNot);
+        editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+        editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
         editor.commit();
     }
 
