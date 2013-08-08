@@ -23,7 +23,12 @@ import java.util.HashSet;
 public class FilterActivity extends Activity {
 
     final static String TAG = FilterActivity.class.getSimpleName();
+    final static String CONTEXT_TAB = "context";
+    final static String PROJECT_TAB = "project";
+    final static String PRIO_TAB = "prio";
+    final static String SORT_TAB = "sort";
     boolean asWidgetConfigure = false;
+    ActiveFilter mFilter;
 
     Menu menu;
     private ActionBar actionbar;
@@ -46,68 +51,50 @@ public class FilterActivity extends Activity {
         Bundle arguments;
         actionbar = getActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        Intent intent = getIntent();
+        mFilter = new ActiveFilter(getResources());
+        mFilter.initFromIntent(intent);
         TaskBag taskBag = ((TodoApplication)getApplication()).getTaskBag();
-        if (getIntent().getAction()!=null) {
+        if (intent.getAction()!=null) {
         	asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         }
         // Fill arguments for fragment
         arguments = new Bundle();        
-        if(asWidgetConfigure) { 
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getContexts(true));
-        } else {
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_CONTEXTS));
-        }
-        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED));
-        arguments.putBoolean(Constants.INITIAL_NOT, getIntent().getBooleanExtra(Constants.EXTRA_CONTEXTS + "not", false));
+        arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getContexts(true));
+        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, mFilter.getContexts());
+        arguments.putBoolean(Constants.INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.context_prompt))
-                .setTabListener(new MyTabsListener(this, Constants.EXTRA_CONTEXTS, FilterListFragment.class, arguments))
-                .setTag(Constants.EXTRA_CONTEXTS));
+                .setTabListener(new MyTabsListener(this, CONTEXT_TAB, FilterListFragment.class, arguments))
+                .setTag(CONTEXT_TAB));
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        if(asWidgetConfigure) { 
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getProjects(true));
-        } else {
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_PROJECTS));
-        }
-        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED));
-        arguments.putBoolean(Constants.INITIAL_NOT, getIntent().getBooleanExtra(Constants.EXTRA_PROJECTS + "not", false));
+        arguments.putStringArrayList(Constants.FILTER_ITEMS, taskBag.getProjects(true));
+        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, mFilter.getProjects());
+        arguments.putBoolean(Constants.INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.project_prompt))
-                .setTabListener(new MyTabsListener(this, Constants.EXTRA_PROJECTS, FilterListFragment.class, arguments))
-                .setTag(Constants.EXTRA_PROJECTS));
+                .setTabListener(new MyTabsListener(this, PROJECT_TAB, FilterListFragment.class, arguments))
+                .setTag(PROJECT_TAB));
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        if(asWidgetConfigure) { 
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, Priority.inCode(taskBag.getPriorities()));        	
-        } else {
-        	arguments.putStringArrayList(Constants.FILTER_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_PRIORITIES));
-        }
-        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, getIntent().getStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED));
-        arguments.putBoolean(Constants.INITIAL_NOT, getIntent().getBooleanExtra(Constants.EXTRA_PRIORITIES + "not", false));
+        arguments.putStringArrayList(Constants.FILTER_ITEMS, Priority.inCode(taskBag.getPriorities()));
+        arguments.putStringArrayList(Constants.INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
+        arguments.putBoolean(Constants.INITIAL_NOT, mFilter.getPrioritiesNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.priority_short_prompt))
-                .setTabListener(new MyTabsListener(this, Constants.EXTRA_PRIORITIES, FilterListFragment.class, arguments))
-                .setTag(Constants.EXTRA_PRIORITIES));
+                .setTabListener(new MyTabsListener(this, PRIO_TAB, FilterListFragment.class, arguments))
+                .setTag(PRIO_TAB));
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        if(asWidgetConfigure) {
-            ArrayList<String> defaultSorts = new ArrayList<String>();
-            for (String type : getResources().getStringArray(R.array.sortKeys)) {
-                defaultSorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR +  type);
-            }
-            arguments.putStringArrayList(Constants.ACTIVE_SORTS, defaultSorts);
-        } else {
-            arguments.putStringArrayList(Constants.ACTIVE_SORTS, getIntent().getStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED));
-        }
+        arguments.putStringArrayList(Constants.ACTIVE_SORTS,mFilter.getSort());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.sort))
-                .setTabListener(new MyTabsListener(this, getString(R.string.sort), FilterSortFragment.class, arguments))
-                .setTag(getString(R.string.sort)));
+                .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class, arguments))
+                .setTag(SORT_TAB));
     }
 
     @Override
@@ -164,45 +151,49 @@ public class FilterActivity extends Activity {
 
     private Intent createFilterIntent() {
         Intent target = new Intent(Constants.INTENT_START_FILTER);
-        String name = "";
-        ArrayList<String> appliedFilters = new ArrayList<String>();
-        ArrayList<String> contextFilter = getFilter(Constants.EXTRA_CONTEXTS);
-        ArrayList<String> projectsFilter = getFilter(Constants.EXTRA_PROJECTS);
-        ArrayList<String> prioritiesFilter = getFilter(Constants.EXTRA_PRIORITIES);
-        appliedFilters.addAll(contextFilter);
-        appliedFilters.addAll(prioritiesFilter);
-        appliedFilters.addAll(projectsFilter);
+        updateFilterFromFragments();
+        mFilter.setName(mFilter.getProposedName());
+        mFilter.saveInIntent(target);
 
-
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(contextFilter, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, getNot(Constants.EXTRA_CONTEXTS));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(projectsFilter, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, getNot(Constants.EXTRA_PROJECTS));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(prioritiesFilter, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, getNot(Constants.EXTRA_PRIORITIES));
-        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(), "\n"));
-
-        if (appliedFilters.size() == 1) {
-            name = appliedFilters.get(0);
-        }
-        target.putExtra("name", name);
+        target.putExtra("name", mFilter.getProposedName());
         return target;
     }
 
-    private ArrayList<String> getFilter(String tag) {
+    private void updateFilterFromFragments () {
+        ArrayList<String> items;
+        items = getFragmentFilter(CONTEXT_TAB);
+        if (items!=null) {
+            mFilter.setContexts(items);
+        }
+        mFilter.setContextsNot(getNot(CONTEXT_TAB,mFilter.getContextsNot()));
+
+        items = getFragmentFilter(PROJECT_TAB);
+        if (items!=null) {
+            mFilter.setProjects(items);
+        }
+        mFilter.setProjectsNot(getNot(PROJECT_TAB,mFilter.getProjectsNot()));
+
+        items = getFragmentFilter(PRIO_TAB);
+        if (items!=null) {
+            mFilter.setPriorities(items);
+        }
+        mFilter.setPrioritiesNot(getNot(PRIO_TAB,mFilter.getPrioritiesNot()));
+
+        items = getSelectedSort();
+        if (items!=null) {
+            mFilter.setSort(items);
+        }
+    }
+
+    private ArrayList<String> getFragmentFilter(String tag) {
         FilterListFragment fr;
         fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);
-        ArrayList<String> filter;
         if (fr == null) {
-            // fragment was never intialized
-            filter = getIntent().getStringArrayListExtra(tag + "_SELECTED");
+            // fragment was not initialized so no update
+            return null;
         } else {
-            filter = fr.getSelectedItems();
+            return fr.getSelectedItems();
         }
-        if (filter == null) {
-        	filter = new ArrayList<String>();
-        }
-        return filter;
     }
 
     private ArrayList<String> getSelectedSort() {
@@ -210,23 +201,22 @@ public class FilterActivity extends Activity {
         fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(getString(R.string.sort));
         if (fr == null) {
             // fragment was never intialized
-            return getIntent().getStringArrayListExtra(Constants.ACTIVE_SORTS);
+            return null;
         } else {
             return fr.getSelectedItem();
         }
     }
 
-    private boolean getNot(String tag) {
+    private boolean getNot(String tag, boolean current) {
         FilterListFragment fr;
         fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);
         boolean not;
         if (fr == null) {
             // fragment was never intialized
-            not = getIntent().getBooleanExtra(tag + "not", false);
+            return current;
         } else {
-            not = fr.getNot();
+            return fr.getNot();
         }
-        return not;
     }
 
     
@@ -235,6 +225,7 @@ public class FilterActivity extends Activity {
 
     	Intent intent = getIntent();
     	Bundle extras = intent.getExtras();
+        updateFilterFromFragments();
     	if (extras != null) {
     		mAppWidgetId = extras.getInt(
     				AppWidgetManager.EXTRA_APPWIDGET_ID, 
@@ -244,16 +235,8 @@ public class FilterActivity extends Activity {
 
     		// Store widget filter
     		SharedPreferences preferences = context.getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
-    		Editor editor = preferences.edit();
-            editor.putString(Constants.INTENT_TITLE, name);
-    		editor.putStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_CONTEXTS)));
-    		editor.putBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT, getNot(Constants.EXTRA_CONTEXTS));
-    		editor.putStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_PROJECTS)));
-    		editor.putBoolean(Constants.INTENT_PROJECTS_FILTER_NOT, getNot(Constants.EXTRA_PROJECTS));
-    		editor.putStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>(getFilter(Constants.EXTRA_PRIORITIES)));
-    		editor.putBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT, getNot(Constants.EXTRA_PRIORITIES));
-            editor.putString(Constants.INTENT_SORT_ORDER, Util.join(getSelectedSort(),"\n"));
-    		editor.commit();
+            mFilter.setName(name);
+            mFilter.saveInPrefs(preferences);
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
@@ -261,7 +244,6 @@ public class FilterActivity extends Activity {
 
     		Intent resultValue = new Intent(getApplicationContext(), AppWidgetService.class);
     		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            resultValue.putExtra(Constants.INTENT_TITLE, name);
     		setResult(RESULT_OK, resultValue);
     		finish();
     	}
@@ -280,18 +262,7 @@ public class FilterActivity extends Activity {
         alert.setTitle("Create widget");
         alert.setMessage("Widget title");
 
-        ArrayList<String> appliedFilters = new ArrayList<String>();
-        ArrayList<String> contextFilter = getFilter(Constants.EXTRA_CONTEXTS);
-        ArrayList<String> projectsFilter = getFilter(Constants.EXTRA_PROJECTS);
-        ArrayList<String> prioritiesFilter = getFilter(Constants.EXTRA_PRIORITIES);
-        appliedFilters.addAll(contextFilter);
-        appliedFilters.addAll(prioritiesFilter);
-        appliedFilters.addAll(projectsFilter);
-        if (appliedFilters.size() == 1) {
-            name = appliedFilters.get(0);
-        } else {
-            name = "";
-        }
+        name = mFilter.getProposedName();
 
 // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -340,7 +311,7 @@ public class FilterActivity extends Activity {
 // Set an EditText view to get user input
         final EditText input = new EditText(this);
         alert.setView(input);
-        input.setText(target.getStringExtra("name"));
+        input.setText(mFilter.getProposedName());
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {

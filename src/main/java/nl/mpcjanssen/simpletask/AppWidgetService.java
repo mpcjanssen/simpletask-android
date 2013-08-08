@@ -26,15 +26,9 @@ public class AppWidgetService extends RemoteViewsService {
 
 class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	final static String TAG = AppWidgetRemoteViewsFactory.class.getSimpleName();
-	private ArrayList<String> m_contexts;
-	private ArrayList<String> m_projects;
-	private ArrayList<Priority> m_prios;
-    private ArrayList<String> m_sorts;
-	private boolean m_priosNot;
-	private boolean m_projectsNot;
-	private boolean m_contextsNot;
-    private String m_title;
-	
+
+    private ActiveFilter mFilter;
+
 	private Context mContext;
 	private int widgetId;
 	private SharedPreferences preferences;
@@ -47,35 +41,15 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		Log.v(TAG, "Creating view for widget: " + widgetId);
 		mContext = TodoApplication.getAppContext();
 		preferences = mContext.getSharedPreferences(""+widgetId, 0);
-		m_contexts = new ArrayList<String>();
-		m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>()));
-		Log.v(TAG, "contexts: " + m_contexts);
-		ArrayList<String> prio_strings = new ArrayList<String>();
-		prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>()));
-		m_prios = Priority.toPriority(prio_strings);		
-		Log.v(TAG, "prios: " + m_prios);
-		m_projects = new ArrayList<String>();
-		m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>()));
-		Log.v(TAG, "tags: " + m_projects);
-		m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT,false);
-		m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT,false);
-		m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT,false);
-		m_sorts = new ArrayList<String>();
-        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
-        m_title = preferences.getString(Constants.INTENT_TITLE,"Simpletask");
+        mFilter = new ActiveFilter(mContext.getResources());
+        mFilter.initFromPrefs(preferences);
 		taskBag = application.getTaskBag();
 		setFilteredTasks();
 	}
 	
     private Intent createFilterIntent(Task selectedTask) {
     	Intent target = new Intent();
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
-        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
+        mFilter.saveInIntent(target);
         target.putExtra(Constants.INTENT_SELECTED_TASK, selectedTask.getId() + ":" + selectedTask.inFileFormat());
         return target;
     }
@@ -84,15 +58,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 	void setFilteredTasks() {
 		Log.v(TAG, "setFilteredTasks called");
-		AndFilter filter = new AndFilter();
 		visibleTasks.clear();
-		for (Task t : taskBag.getTasks()) {
-			if (filter.apply(t) && !t.isCompleted()) {
-				visibleTasks.add(t);
-			}
-		}
-		Collections.sort(visibleTasks,MultiComparator.create(m_sorts));
-		}
+        visibleTasks.addAll(mFilter.apply(taskBag.getTasks()));
+		Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort()));
+	}
 
 	@Override
 	public int getCount() {
@@ -156,37 +125,5 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		// TODO Auto-generated method stub
 
 	}
-	
-	private class AndFilter {
-		private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
-
-		public void addFilter(TaskFilter filter) {
-			if (filter != null) {
-				filters.add(filter);
-			}
-		}
-
-		private boolean apply(Task input) {
-			filters.clear();
-			if (m_prios.size() > 0) {
-				addFilter(new ByPriorityFilter(m_prios, m_priosNot));
-			}
-
-			if (m_contexts.size() > 0) {
-				addFilter(new ByContextFilter(m_contexts, m_contextsNot));
-			}
-			if (m_projects.size() > 0) {
-				addFilter(new ByProjectFilter(m_projects, m_projectsNot));
-			}
-
-			for (TaskFilter f : filters) {
-				if (!f.apply(input)) {
-					return false;
-				}
-			}
-			return true;
-		}
-	}
-
 }
 

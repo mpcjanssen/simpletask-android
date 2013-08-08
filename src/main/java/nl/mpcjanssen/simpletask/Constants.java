@@ -38,7 +38,7 @@ public class Constants {
 
     // Constants for creating shortcuts
 
-    public final static String INTENT_TITLE = "TITLE";
+
     public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
 

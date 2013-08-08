@@ -27,26 +27,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
         Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
-        ArrayList<String> m_contexts = new ArrayList<String>();
-        m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>()));
-        ArrayList<String> prio_strings = new ArrayList<String>();
-        prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>()));
-        ArrayList<Priority> m_prios = Priority.toPriority(prio_strings);
-        ArrayList<String> m_projects = new ArrayList<String>();
-        m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>()));
-        Log.d(TAG, "putFilter contexts " + m_contexts + " for " + widgetId);
-        boolean m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT, false);
-        boolean m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT, false);
-        boolean m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT, false);
-        ArrayList<String> m_sorts = new ArrayList<String>();
-        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
-        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
+        ActiveFilter filter = new ActiveFilter(null);
+        filter.initFromPrefs(preferences);
+        filter.saveInIntent(target);
     }
 
 	public static RemoteViews updateView(int widgetId, Context context) {
@@ -65,8 +48,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
-
-        view.setTextViewText(R.id.title,preferences.getString(Constants.INTENT_TITLE, "Simpletask"));
+        ActiveFilter filter = new ActiveFilter(null);
+        filter.initFromPrefs(preferences);
+        view.setTextViewText(R.id.title,filter.getName());
 
         // Make sure we use different intents for the different pendingIntents or
         // they will replace each other
