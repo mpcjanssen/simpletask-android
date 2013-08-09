@@ -1,15 +1,14 @@
 # ChangeLog
 
-
 ### 2.7.6
 
-* Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
+* [Feature] Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
 
 ### 2.7.5
 * [Bugfix] Fix issue with changing widget theme show "Loading" or nothing at all after switching
 * [Code] Refactored Filter handling in a separate class
 * [Code] Change detection of newline in todo.txt
-* [Bugfix] Don't trim whitespace from tasks
+* [Bugfix] Do not trim whitespace from tasks
 
 ### 2.7.4
 
