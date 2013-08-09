@@ -340,7 +340,7 @@ public class Simpletask extends ListActivity  {
 			m_adapter = new TaskAdapter(this, R.layout.list_item,
 					getLayoutInflater(), getListView());
 		}
-		m_adapter.setFilteredTasks(false);
+		m_adapter.setFilteredTasks(true);
 
 		setListAdapter(this.m_adapter);
 
