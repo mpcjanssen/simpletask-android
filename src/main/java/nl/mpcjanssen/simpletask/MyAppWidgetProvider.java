@@ -95,11 +95,11 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             int widgetId = appWidgetIds[i];
             Log.v(TAG, "cleaning up widget configuration id:" + widgetId);
             // At least clear contents of the preferences file
-            // File will still be on filesystem though
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
             preferences.edit().clear().commit();
             File prefs_path = new File (context.getFilesDir(), "../shared_prefs");
             File prefs_xml = new File (prefs_path,  widgetId +".xml");
+            // Remove the XML file
             if(!prefs_xml.delete()) {
                 Log.w(TAG, "File not deleted: " + prefs_xml.toString());
             };
