@@ -38,7 +38,7 @@ To open Simpletask with a specific filter you can use the intent:
 
 ##### Sorts extra
 
-SORTS contains a comma or '\n' separated list of sort keys and their direction with a `!` in between.
+SORTS contains a comma or '\\n' separated list of sort keys and their direction with a `!` in between.
 
 ###### Direction
 
