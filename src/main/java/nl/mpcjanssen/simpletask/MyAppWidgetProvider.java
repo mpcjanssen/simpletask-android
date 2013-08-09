@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -87,6 +88,24 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widgetlv);
 		}
 	}
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        for (int i = 0; i < appWidgetIds.length; i++) {
+            int widgetId = appWidgetIds[i];
+            Log.v(TAG, "cleaning up widget configuration id:" + widgetId);
+            // At least clear contents of the preferences file
+            // File will still be on filesystem though
+            SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
+            preferences.edit().clear().commit();
+            File prefs_path = new File (context.getFilesDir(), "../shared_prefs");
+            File prefs_xml = new File (prefs_path,  widgetId +".xml");
+            if(!prefs_xml.delete()) {
+                Log.w(TAG, "File not deleted: " + prefs_xml.toString());
+            };
+
+        }
+    }
 
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String name) {
