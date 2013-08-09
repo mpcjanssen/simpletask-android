@@ -22,7 +22,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	final static String TAG = MyAppWidgetProvider.class.getSimpleName();
     final static int FROM_LISTVIEW = 0;
     // Create unique numbers for every widget pendingintent
-    // Otherwise the will overwrite eachother
+    // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
 
     public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
@@ -78,24 +78,24 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 			int[] appWidgetIds) {
         for (int i = 0; i < appWidgetIds.length; i++) {
             int widgetId = appWidgetIds[i];
-			Log.v(TAG, "Updating widget:" + widgetId);
+			//Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
+
+            // Need to update the listview to redraw the listitems when
+            // Changing the theme
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widgetlv);
 		}
-        //super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String name) {
-        Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+        //Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our
         // package, but it needs this because on the other side it's the widget host inflating
         // the layout from our package).
         RemoteViews views = updateView(appWidgetId,context);
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
-
     }
 }
