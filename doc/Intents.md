@@ -28,9 +28,9 @@ I like to add the +tasker tag to be able to quickly filter tasks that were creat
 To open Simpletask with a specific filter you can use the intent:
 
 * Intent action: `nl.mpcjanssen.simpletask.START_WITH_FILTER`
-* Intent string extra: `CONTEXTS` list of contexts in filter separated by '\n' or ','
-* Intent string extra: `PROJECTS` list of contexts in filter separated by '\n' or ','
-* Intent string extra: `PRIORITIES` list of contexts in filter separated by '\n' or ','
+* Intent string extra: `CONTEXTS` list of contexts in filter separated by '\\n' or ','
+* Intent string extra: `PROJECTS` list of contexts in filter separated by '\\n' or ','
+* Intent string extra: `PRIORITIES` list of contexts in filter separated by '\\n' or ','
 * Intent boolean extra: `CONTEXTSnot` true to invert the contexts filter.
 * Intent boolean extra: `PROJECTSnot` true to invert the projects filter.
 * Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.
