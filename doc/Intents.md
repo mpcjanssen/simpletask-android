@@ -34,7 +34,25 @@ To open Simpletask with a specific filter you can use the intent:
 * Intent boolean extra: `CONTEXTSnot` true to invert the contexts filter.
 * Intent boolean extra: `PROJECTSnot` true to invert the projects filter.
 * Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.
-* Intent string extra: `SORTS` active sort. To be documented.
+* Intent string extra: `SORTS` active sort.
+
+##### Sorts extra
+
+SORTS contains a comma or '\n' separated list of sort keys and their direction with a `!` in between.
+
+###### Direction
+
+* `+`: Ascending
+* `-`: Descending
+
+###### Sort keys
+
+See list in [source code](http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51)
+
+###### Example
+
+* The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.
+* The sort `+!completed,-!alphabetical` sorts completed tasks last and then sorts reversed alphabetical.
 
 Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:
 
