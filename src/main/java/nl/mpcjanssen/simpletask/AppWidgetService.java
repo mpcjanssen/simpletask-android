@@ -84,8 +84,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 	@Override
 	public RemoteViews getViewAt(int position) {
-
-        Log.v(TAG,"GetViewAt:" + position);
+        //Log.v(TAG,"GetViewAt:" + position);
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
         rv.setTextViewText(R.id.widget_item_text, visibleTasks.get(position).getText());
         if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
