@@ -38,6 +38,8 @@ To open Simpletask with a specific filter you can use the intent:
 
 Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:
 
-`am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e PROJECTS project1,project2 -e CONTEXTS @errands,@computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT`
+`am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e PROJECTS project1,project2 -e CONTEXTS @errands,@computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S`
+
+The `-S` at the end will ensure the app is properly restarted if it's already visible.
 
 
