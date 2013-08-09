@@ -49,6 +49,7 @@ public class TaskBag {
     private final LocalFileTaskRepository localRepository;
     private final RemoteClientManager remoteClientManager;
     private ArrayList<Task> tasks = new ArrayList<Task>();
+    private Date lastReload = null;
     private Date lastSync = null;
 
     public TaskBag(Preferences taskBagPreferences,
@@ -62,6 +63,8 @@ public class TaskBag {
 
     private void store(ArrayList<Task> tasks) {
         localRepository.store(tasks);
+
+        lastReload = null;
     }
 
     public void store() {
@@ -70,7 +73,9 @@ public class TaskBag {
 
     public void archive() {
         try {
+            reload();
             localRepository.archive(tasks);
+            lastReload = null;
             reload();
         } catch (Exception e) {
             throw new TaskPersistException(
@@ -79,8 +84,12 @@ public class TaskBag {
     }
 
     public void reload() {
-        localRepository.init();
-        this.tasks = localRepository.load();
+        if (lastReload == null || localRepository.todoFileModifiedSince(lastReload)) {
+            localRepository.init();
+            this.tasks = localRepository.load();
+            lastReload = new Date();
+
+        }
     }
 
     public int size() {
@@ -93,10 +102,6 @@ public class TaskBag {
 
     public Task getTaskAt(int position) {
         return tasks.get(position);
-    }
-
-    public void clear () {
-        tasks.clear();
     }
 
     public void addAsTask(String input) {
@@ -149,9 +154,9 @@ public class TaskBag {
                         .pullTodo();
                 File todoFile = result.getTodoFile();
                 if (todoFile != null && todoFile.exists()) {
-                    this.clear();
-                    TaskIo.loadTasksFromFile(todoFile, preferences);
-                    this.store();
+                    ArrayList<Task> remoteTasks = TaskIo
+                            .loadTasksFromFile(todoFile, preferences);
+                    store(remoteTasks);
                     reload();
                 }
 
@@ -212,10 +217,6 @@ public class TaskBag {
 
     public ArrayList<String> getDecoratedProjects(boolean includeNone) {
         return Util.prefixItems("+", getProjects(includeNone));
-    }
-
-    public Preferences getPreferences() {
-        return preferences;
     }
 
     public static class Preferences {
