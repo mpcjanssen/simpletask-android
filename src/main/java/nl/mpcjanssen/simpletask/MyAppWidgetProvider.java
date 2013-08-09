@@ -22,31 +22,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	final static String TAG = MyAppWidgetProvider.class.getSimpleName();
     final static int FROM_LISTVIEW = 0;
     // Create unique numbers for every widget pendingintent
-    // Otherwise the will overwrite eachother
+    // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
 
     public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
         Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
-        ArrayList<String> m_contexts = new ArrayList<String>();
-        m_contexts.addAll(preferences.getStringSet(Constants.INTENT_CONTEXTS_FILTER, new HashSet<String>()));
-        ArrayList<String> prio_strings = new ArrayList<String>();
-        prio_strings.addAll(preferences.getStringSet(Constants.INTENT_PRIORITIES_FILTER, new HashSet<String>()));
-        ArrayList<Priority> m_prios = Priority.toPriority(prio_strings);
-        ArrayList<String> m_projects = new ArrayList<String>();
-        m_projects.addAll(preferences.getStringSet(Constants.INTENT_PROJECTS_FILTER, new HashSet<String>()));
-        Log.d(TAG, "putFilter contexts " + m_contexts + " for " + widgetId);
-        boolean m_contextsNot = preferences.getBoolean(Constants.INTENT_CONTEXTS_FILTER_NOT, false);
-        boolean m_projectsNot = preferences.getBoolean(Constants.INTENT_PROJECTS_FILTER_NOT, false);
-        boolean m_priosNot = preferences.getBoolean(Constants.INTENT_PRIORITIES_FILTER_NOT, false);
-        ArrayList<String> m_sorts = new ArrayList<String>();
-        m_sorts.addAll(Arrays.asList(preferences.getString(Constants.INTENT_SORT_ORDER, "").split("\n")));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
-        target.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
-        target.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
-        target.putExtra(Constants.INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
-        target.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts,"\n"));
+        ActiveFilter filter = new ActiveFilter(null);
+        filter.initFromPrefs(preferences);
+        filter.saveInIntent(target);
     }
 
 	public static RemoteViews updateView(int widgetId, Context context) {
@@ -66,7 +49,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
 
-        view.setTextViewText(R.id.title,preferences.getString(Constants.INTENT_TITLE, "Simpletask"));
+        ActiveFilter filter = new ActiveFilter(null);
+        filter.initFromPrefs(preferences);
+        view.setTextViewText(R.id.title,filter.getName());
 
         // Make sure we use different intents for the different pendingIntents or
         // they will replace each other
@@ -93,23 +78,24 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 			int[] appWidgetIds) {
         for (int i = 0; i < appWidgetIds.length; i++) {
             int widgetId = appWidgetIds[i];
-			Log.v(TAG, "Updating widget:" + widgetId);
+			//Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
+
+            // Need to update the listview to redraw the listitems when
+            // Changing the theme
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widgetlv);
 		}
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String name) {
-        Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+        //Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our
         // package, but it needs this because on the other side it's the widget host inflating
         // the layout from our package).
         RemoteViews views = updateView(appWidgetId,context);
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
-
     }
 }

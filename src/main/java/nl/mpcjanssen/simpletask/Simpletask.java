@@ -115,14 +115,16 @@ public class Simpletask extends ListActivity  {
 	TodoApplication m_app;
 
 	// filter variables
-	private ArrayList<Priority> m_prios = new ArrayList<Priority>();
-	private ArrayList<String> m_contexts = new ArrayList<String>();
-	private ArrayList<String> m_projects = new ArrayList<String>();
-	private ArrayList<String> m_sorts = new ArrayList<String>();
-	private boolean m_projectsNot = false;
-	private String m_search;
-	private boolean m_priosNot;
-	private boolean m_contextsNot;
+//	private ArrayList<Priority> m_prios = new ArrayList<Priority>();
+//	private ArrayList<String> m_contexts = new ArrayList<String>();
+//	private ArrayList<String> m_projects = new ArrayList<String>();
+//	private ArrayList<String> m_sorts = new ArrayList<String>();
+//	private boolean m_projectsNot = false;
+//	private String m_search;
+//	private boolean m_priosNot;
+//	private boolean m_contextsNot;
+
+    ActiveFilter mFilter;
 
 	TaskAdapter m_adapter;
 
@@ -268,13 +270,7 @@ public class Simpletask extends ListActivity  {
             taskBag = m_app.getTaskBag();
         }
 
-		m_prios = new ArrayList<Priority>();
-		m_contexts = new ArrayList<String>();
-		m_projects = new ArrayList<String>();
-		m_projectsNot = false;
-		m_priosNot = false;
-		m_contextsNot = false;
-		m_search = null;
+		mFilter = new ActiveFilter(getResources());
 
 		m_contextDrawerList = (ListView) findViewById(R.id.left_tags_list);
         m_projectDrawerList = (ListView) findViewById(R.id.right_tags_list);
@@ -326,86 +322,19 @@ public class Simpletask extends ListActivity  {
 		Intent intent = getIntent();
 		if (savedInstanceState != null) {
 			Log.v(TAG, "handleIntent: savedInstance state");
-			m_prios = Priority.toPriority(savedInstanceState
-					.getStringArrayList("m_prios"));
-			m_contexts = savedInstanceState.getStringArrayList("m_contexts");
-			m_projects = savedInstanceState.getStringArrayList("m_projects");
-			m_search = savedInstanceState.getString("m_search");
-			m_contextsNot = savedInstanceState.getBoolean("m_contextsNot");
-			m_priosNot = savedInstanceState.getBoolean("m_priosNot");
-			m_projectsNot = savedInstanceState.getBoolean("m_projectsNot");
-			m_sorts = savedInstanceState.getStringArrayList("m_sorts");
+            mFilter.initFromBundle(savedInstanceState);
+
 		} else if (intent.getExtras() != null) {
-			Log.v(TAG, "handleIntent launched with filter:");
-
-			// handle different versions of shortcuts
-			String prios;
-			String projects;
-			String contexts;
-			String sorts;
-
-			prios = intent.getStringExtra(Constants.INTENT_PRIORITIES_FILTER);
-			projects = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER);
-			contexts = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
-			sorts = intent.getStringExtra(Constants.INTENT_SORT_ORDER);
-			m_priosNot = intent.getBooleanExtra(
-					Constants.INTENT_PRIORITIES_FILTER_NOT, false);
-			m_projectsNot = intent.getBooleanExtra(
-					Constants.INTENT_PROJECTS_FILTER_NOT, false);
-			m_contextsNot = intent.getBooleanExtra(
-					Constants.INTENT_CONTEXTS_FILTER_NOT, false);
-            m_search = intent.getStringExtra(SearchManager.QUERY);
-			Log.v(TAG, "\t sort:" + sorts);
-			if (sorts != null && !sorts.equals("")) {
-				m_sorts = new ArrayList<String>(
-						Arrays.asList(sorts.split("\n")));
-				Log.v(TAG, "\t sorts:" + m_sorts);
-			}
-			if (prios != null && !prios.equals("")) {
-				m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
-				Log.v(TAG, "\t prio:" + m_prios);
-			}
-			if (projects != null && !projects.equals("")) {
-				m_projects = new ArrayList<String>(Arrays.asList(projects
-						.split("\n")));
-				Log.v(TAG, "\t projects:" + m_projects);
-			}
-			if (contexts != null && !contexts.equals("")) {
-				m_contexts = new ArrayList<String>(Arrays.asList(contexts
-						.split("\n")));
-				Log.v(TAG, "\t contexts:" + m_contexts);
-			}
-		} else {
+			Log.v(TAG, "handleIntent launched with filter:" + intent.getExtras().keySet());
+            mFilter.initFromIntent(intent);
+        } else {
 			// Set previous filters and sort
 			Log.v(TAG, "handleIntent: from m_prefs state");
-			m_sorts = new ArrayList<String>();
-			m_sorts.addAll(Arrays.asList(TodoApplication.getPrefs().getString("m_sorts", "")
-					.split("\n")));
+            mFilter.initFromPrefs(TodoApplication.getPrefs());
 
-			Log.v(TAG, "Got sort from app prefs: " + m_sorts);
-
-			m_contexts = new ArrayList<String>(TodoApplication.getPrefs().getStringSet(
-					"m_contexts", Collections.<String> emptySet()));
-			m_prios = Priority.toPriority(new ArrayList<String>(TodoApplication.getPrefs()
-					.getStringSet("m_prios", Collections.<String> emptySet())));
-			m_projects = new ArrayList<String>(TodoApplication.getPrefs().getStringSet(
-					"m_projects", Collections.<String> emptySet()));
-			m_contextsNot = TodoApplication.getPrefs().getBoolean("m_contextsNot", false);
-			m_priosNot = TodoApplication.getPrefs().getBoolean("m_priosNot", false);
-			m_projectsNot = TodoApplication.getPrefs().getBoolean("m_projectsNot", false);
 
 		}
 
-		if (m_sorts == null || m_sorts.size() == 0
-				|| Strings.isEmptyOrNull(m_sorts.get(0))) {
-			// Set a default sort
-			m_sorts = new ArrayList<String>();
-			for (String type : getResources().getStringArray(R.array.sortKeys)) {
-				m_sorts.add(Constants.NORMAL_SORT + Constants.SORT_SEPARATOR
-						+ type);
-			}
-
-		}
 		// Initialize Adapter
 		if (m_adapter == null) {
 			m_adapter = new TaskAdapter(this, R.layout.list_item,
@@ -456,31 +385,12 @@ public class Simpletask extends ListActivity  {
 
 		final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
 		final TextView filterText = (TextView) findViewById(R.id.filter_text);
-		if (m_contexts.size() + m_projects.size() + m_prios.size() > 0
-				|| !Strings.isEmptyOrNull(m_search)) {
-			String filterTitle = getString(R.string.title_filter_applied);
-			if (m_prios.size() > 0) {
-				filterTitle += " " + getString(R.string.priority_prompt);
-			}
-
-			if (m_projects.size() > 0) {
-				filterTitle += " " + getString(R.string.project_prompt);
-			}
-
-			if (m_contexts.size() > 0) {
-				filterTitle += " " + getString(R.string.context_prompt);
-			}
-			if (m_search != null) {
-				filterTitle += " " + getString(R.string.search);
-			}
-
-			actionbar_clear.setVisibility(View.VISIBLE);
-			filterText.setText(filterTitle);
-
+        if (mFilter.hasFilter()) {
+            actionbar_clear.setVisibility(View.VISIBLE);
 		} else {
 			actionbar_clear.setVisibility(View.GONE);
-			filterText.setText("No filter");
 		}
+        filterText.setText(mFilter.getTitle());
 	}
 
 	private void startLogin() {
@@ -498,14 +408,7 @@ public class Simpletask extends ListActivity  {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putStringArrayList("m_prios", Priority.inCode(m_prios));
-		outState.putStringArrayList("m_contexts", m_contexts);
-		outState.putStringArrayList("m_projects", m_projects);
-		outState.putBoolean("m_contextsNot", m_contextsNot);
-		outState.putStringArrayList("m_sorts", m_sorts);
-		outState.putBoolean("m_priosNot", m_priosNot);
-		outState.putBoolean("m_projectsNot", m_projectsNot);
-		outState.putString("m_search", m_search);
+        mFilter.saveInBundle(outState);
 	}
 
 	@Override
@@ -522,17 +425,7 @@ public class Simpletask extends ListActivity  {
 		if (actionMode != null) {
 			actionMode.finish();
 		}
-		SharedPreferences.Editor editor = TodoApplication.getPrefs().edit();
-		Log.v(TAG, "Storing sort in prefs: " + m_sorts);
-		editor.putString("m_sorts", Util.join(m_sorts, "\n"));
-		editor.putStringSet("m_contexts", new HashSet<String>(m_contexts));
-		editor.putStringSet("m_prios",
-				new HashSet<String>(Priority.inCode(m_prios)));
-		editor.putStringSet("m_projects", new HashSet<String>(m_projects));
-		editor.putBoolean("m_contextsNot", m_contextsNot);
-		editor.putBoolean("m_priosNot", m_priosNot);
-		editor.putBoolean("m_projectsNot", m_projectsNot);
-		editor.commit();
+        mFilter.saveInPrefs(TodoApplication.getPrefs());
 	}
 
 	@Override
@@ -873,8 +766,7 @@ public class Simpletask extends ListActivity  {
 		Log.v(TAG, "Starting addTask activity");
 		Intent intent = new Intent(this, AddTask.class);
 		intent.putExtra(Constants.EXTRA_TASK, task);
-		intent.putExtra(Constants.INTENT_CONTEXTS_FILTER, Util.join(m_contexts,"\n"));
-		intent.putExtra(Constants.INTENT_PROJECTS_FILTER, Util.join(m_projects,"\n"));
+        mFilter.saveInIntent(intent);
 		startActivity(intent);
 	}
 
@@ -928,40 +820,7 @@ public class Simpletask extends ListActivity  {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		final Dialog d;
-
-		if (R.id.priority == id) {
-			final List<Priority> pStrs = taskBag.getPriorities();
-			int size = pStrs.size();
-			boolean[] values = new boolean[size];
-			for (Priority prio : m_prios) {
-				int index = pStrs.indexOf(prio);
-				if (index != -1) {
-					values[index] = true;
-				}
-			}
-			d = Util.createMultiChoiceDialog(this,
-					pStrs.toArray(new String[size]), values, null, null,
-					new OnMultiChoiceDialogListener() {
-
-						@Override
-						public void onClick(boolean[] selected) {
-							m_prios.clear();
-							for (int i = 0; i < selected.length; i++) {
-								if (selected[i]) {
-									m_prios.add(pStrs.get(i));
-								}
-							}
-							removeDialog(R.id.priority);
-						}
-					});
-			d.setOnCancelListener(new OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					removeDialog(R.id.priority);
-				}
-			});
-			return d;
-		} else if (id == SYNC_CHOICE_DIALOG) {
+        if (id == SYNC_CHOICE_DIALOG) {
 			Log.v(TAG, "Time to show the sync choice dialog");
 			AlertDialog.Builder upDownChoice = new AlertDialog.Builder(this);
 			upDownChoice.setTitle(R.string.sync_dialog_title);
@@ -1063,15 +922,9 @@ public class Simpletask extends ListActivity  {
 		// Also clear the intent so we wont get the old filter after
 		// switching back to app later fixes [1c5271ee2e]
 		Intent intent = new Intent();
-		intent.putExtra(Constants.INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
+        mFilter.clear();
+        mFilter.saveInIntent(intent);
 		setIntent(intent);
-		m_prios = new ArrayList<Priority>();
-		m_contexts = new ArrayList<String>();
-		m_projects = new ArrayList<String>();
-		m_projectsNot = false;
-		m_search = null;
-		m_priosNot = false;
-		m_contextsNot = false;
 		if (actionMode!=null) {
 			actionMode.finish();
 		}
@@ -1102,14 +955,11 @@ public class Simpletask extends ListActivity  {
 				// Set the adapter for the list view
                 updateDrawerList();
 			}
-			AndFilter filter = new AndFilter();
+
 			visibleTasks.clear();
-			for (Task t : taskBag.getTasks()) {
-				if (filter.apply(t)) {
-					visibleTasks.add(t);
-				}
-			}
-			Collections.sort(visibleTasks, MultiComparator.create(m_sorts));
+            visibleTasks.addAll(mFilter.apply(taskBag.getTasks(), true));
+            ArrayList<String> sorts = mFilter.getSort();
+			Collections.sort(visibleTasks, MultiComparator.create(sorts));
 			positionToIndex.clear();
 			indexToPosition.clear();
 			headerTitles.clear();
@@ -1119,15 +969,15 @@ public class Simpletask extends ListActivity  {
 			int position = 0;
 			int firstGroupSortIndex = 0;
 
-			if (m_sorts.size() > 1 && m_sorts.get(0).contains("completed")
-					|| m_sorts.get(0).contains("future")) {
+			if (sorts.size() > 1 && sorts.get(0).contains("completed")
+					|| sorts.get(0).contains("future")) {
 				firstGroupSortIndex++;
-				if (m_sorts.size() > 2 && m_sorts.get(1).contains("completed")
-						|| m_sorts.get(1).contains("future")) {
+				if (sorts.size() > 2 && sorts.get(1).contains("completed")
+						|| sorts.get(1).contains("future")) {
 					firstGroupSortIndex++;
 				}
 			}
-			String firstSort = m_sorts.get(firstGroupSortIndex);
+			String firstSort = sorts.get(firstGroupSortIndex);
 			for (Task t : visibleTasks) {
                     newHeader = t.getHeader(firstSort, getString(R.string.no_header));
 					if (!header.equals(newHeader)) {
@@ -1330,8 +1180,8 @@ public class Simpletask extends ListActivity  {
 				@Override
 				protected FilterResults performFiltering(
 						CharSequence charSequence) {
-					m_search = charSequence.toString();
-					Log.v(TAG, "performFiltering: " + charSequence.toString());
+					mFilter.setSearch(charSequence.toString());
+					//Log.v(TAG, "performFiltering: " + charSequence.toString());
 					return null;
 				}
 
@@ -1354,7 +1204,7 @@ public class Simpletask extends ListActivity  {
                 R.layout.selection_drawer_list_item, m_projectsList));
         m_projectDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_PROJECT));
         showDrawerHeaders(false);
-        for (String context : m_contexts) {
+        for (String context : mFilter.getContexts()) {
             int position = m_contextsList.indexOf(context);
             if (position!=-1) {
                 m_contextDrawerList.setItemChecked(position,true);
@@ -1362,36 +1212,38 @@ public class Simpletask extends ListActivity  {
         }
 
         CheckedTextView not = (CheckedTextView)m_container.findViewById(R.id.left_drawer_not);
-        not.setChecked(m_contextsNot);
+        not.setChecked(mFilter.getContextsNot());
         not.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CheckedTextView cb = (CheckedTextView) view;
                 cb.setChecked(!cb.isChecked());
-                m_contextsNot = cb.isChecked();
+                boolean state = cb.isChecked();
+                mFilter.setContextsNot(state);
                 Intent intent = getIntent();
-                intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+                mFilter.saveInIntent(intent);
                 setIntent(intent);
                 m_adapter.setFilteredTasks(false);
             }
         });
 
-        for (String project : m_projects) {
+        for (String project : mFilter.getProjects()) {
             int position = m_projectsList.indexOf(project);
             if (position!=-1) {
                 m_projectDrawerList.setItemChecked(position,true);
             }
         }
         not = (CheckedTextView)m_container.findViewById(R.id.right_drawer_not);
-        not.setChecked(m_projectsNot);
+        not.setChecked(mFilter.getProjectsNot());
         not.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CheckedTextView cb = (CheckedTextView) view;
                 cb.setChecked(!cb.isChecked());
-                m_projectsNot = cb.isChecked();
+                boolean state = cb.isChecked();
+                mFilter.setProjectsNot(state);
                 Intent intent = getIntent();
-                intent.putExtra(Constants.INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+                mFilter.saveInIntent(intent);
                 setIntent(intent);
                 m_adapter.setFilteredTasks(false);
             }
@@ -1603,22 +1455,8 @@ public class Simpletask extends ListActivity  {
 
     public void startFilterActivity() {
 		Intent i = new Intent(this, FilterActivity.class);
+        mFilter.saveInIntent(i);
 
-		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
-				Priority.inCode(taskBag.getPriorities()));
-		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
-				taskBag.getProjects(true));
-		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
-				taskBag.getContexts(true));
-
-		i.putStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED,
-				Priority.inCode(m_prios));
-		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
-		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
-		i.putStringArrayListExtra(Constants.EXTRA_SORTS_SELECTED, m_sorts);
-		i.putExtra(Constants.EXTRA_CONTEXTS + "not", m_contextsNot);
-		i.putExtra(Constants.EXTRA_PRIORITIES + "not", m_priosNot);
-		i.putExtra(Constants.EXTRA_PROJECTS + "not", m_projectsNot);
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivityForResult(i, REQUEST_FILTER);
 	}
@@ -1797,41 +1635,7 @@ public class Simpletask extends ListActivity  {
 		}
 	}
 
-	private class AndFilter {
-		private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
 
-		private AndFilter() {
-			filters.clear();
-			if (m_prios.size() > 0) {
-				addFilter(new ByPriorityFilter(m_prios, m_priosNot));
-			}
-			if (m_contexts.size() > 0) {
-				addFilter(new ByContextFilter(m_contexts, m_contextsNot));
-			}
-			if (m_projects.size() > 0) {
-				addFilter(new ByProjectFilter(m_projects, m_projectsNot));
-			}
-
-			if (!Strings.isEmptyOrNull(m_search)) {
-				addFilter(new ByTextFilter(m_search, false));
-			}
-		}
-
-		public void addFilter(TaskFilter filter) {
-			if (filter != null) {
-				filters.add(filter);
-			}
-		}
-
-		public boolean apply(Task input) {
-			for (TaskFilter f : filters) {
-				if (!f.apply(input)) {
-					return false;
-				}
-			}
-			return true;
-		}
-	}
 
 	private class DrawerItemClickListener implements
 			AdapterView.OnItemClickListener {
@@ -1851,21 +1655,14 @@ public class Simpletask extends ListActivity  {
             tags = Util.getCheckedItems(lv,true);
             switch(type) {
                 case DRAWER_CONTEXT:
-                    m_contexts.clear();
-                    m_contexts.addAll(tags);
-                    intent.putExtra(Constants.INTENT_CONTEXTS_FILTER,
-                            Util.join(m_contexts, "\n"));
-                    intent.putExtra(Constants.INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-                    setIntent(intent);
+                    mFilter.setContexts(tags);
                     break;
                 case DRAWER_PROJECT:
-                    m_projects.clear();
-                    m_projects.addAll(tags);
-                    intent.putExtra(Constants.INTENT_PROJECTS_FILTER,
-                            Util.join(m_projects, "\n"));
-                    setIntent(intent);
+                    mFilter.setProjects(tags);
                     break;
             }
+            mFilter.saveInIntent(intent);
+            setIntent(intent);
             m_adapter.setFilteredTasks(false);
 		}
 	}
