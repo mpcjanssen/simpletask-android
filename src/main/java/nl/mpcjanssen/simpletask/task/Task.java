@@ -259,7 +259,7 @@ public class Task implements Serializable, Comparable<Task> {
             sb.append(this.getPriority().inFileFormat()).append(" ");
         }
         sb.append(this.text);
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     public boolean inFuture() {

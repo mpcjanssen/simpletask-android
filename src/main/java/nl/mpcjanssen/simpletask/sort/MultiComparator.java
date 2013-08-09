@@ -1,6 +1,8 @@
 package nl.mpcjanssen.simpletask.sort;
 
 import android.util.Log;
+
+import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class MultiComparator<Task> implements Comparator<Task> {
 
 
         for (String sort : sorts) {
-            String parts[] = sort.split(Constants.SORT_SEPARATOR);
+            String parts[] = sort.split(ActiveFilter.SORT_SEPARATOR);
             boolean reverse = false;
             String sortType;
             if(parts.length==1) {
@@ -24,7 +26,7 @@ public class MultiComparator<Task> implements Comparator<Task> {
                 sortType = parts[0];
             } else {
                 sortType = parts[1];
-                if (parts[0].equals(Constants.REVERSED_SORT)) {
+                if (parts[0].equals(ActiveFilter.REVERSED_SORT)) {
                     reverse = true;
                 }
             }

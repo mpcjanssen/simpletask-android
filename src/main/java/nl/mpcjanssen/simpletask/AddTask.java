@@ -63,6 +63,7 @@ public class AddTask extends Activity {
     private Task m_backup;
     private TodoApplication m_app;
     private TaskBag taskBag;
+    private ActiveFilter mFilter;
 
     private String share_text;
 
@@ -164,6 +165,8 @@ public class AddTask extends Activity {
         m_app = (TodoApplication) getApplication();
         taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
+        mFilter = new ActiveFilter(getResources());
+        mFilter.initFromIntent(intent);
         final String action = intent.getAction();
         // create shortcut and exit
         if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
@@ -214,18 +217,8 @@ public class AddTask extends Activity {
             textInputField.setSelection(m_backup.inFileFormat().length());
         } else {
             if (textInputField.getText().length() == 0) {
-                ArrayList<String> projects = new ArrayList<String>();
-                String value = intent.getStringExtra(Constants.INTENT_PROJECTS_FILTER);
-                if (!Strings.isEmptyOrNull(value)) {
-                    projects.addAll(Arrays.asList(value.split("\n")));
-                }
-                ArrayList<String> contexts = new ArrayList<String>();
-                value = intent.getStringExtra(Constants.INTENT_CONTEXTS_FILTER);
-                if (!Strings.isEmptyOrNull(value)) {
-                    contexts.addAll(Arrays.asList(value.split("\n")));
-                }
                 iniTask = new Task(1, "");
-                iniTask.initWithFilters(contexts, projects);
+                iniTask.initWithFilters(mFilter.getContexts(), mFilter.getProjects());
             }
 
             if (iniTask != null && iniTask.getProjects().size() == 1) {
