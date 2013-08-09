@@ -42,6 +42,8 @@ public class ActiveFilter {
     public final static String INTENT_PROJECTS_FILTER_NOT = "PROJECTSnot";
     public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
 
+    public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
+
     private  Resources mResources;
 
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
@@ -89,25 +91,25 @@ public class ActiveFilter {
         m_search = intent.getStringExtra(SearchManager.QUERY);
         if (sorts != null && !sorts.equals("")) {
             m_sorts = new ArrayList<String>(
-                    Arrays.asList(sorts.split("\n")));
+                    Arrays.asList(sorts.split(INTENT_EXTRA_DELIMITERS)));
         }
         if (prios != null && !prios.equals("")) {
-            m_prios = Priority.toPriority(Arrays.asList(prios.split("\n")));
+            m_prios = Priority.toPriority(Arrays.asList(prios.split(INTENT_EXTRA_DELIMITERS)));
         }
         if (projects != null && !projects.equals("")) {
             m_projects = new ArrayList<String>(Arrays.asList(projects
-                    .split("\n")));
+                    .split(INTENT_EXTRA_DELIMITERS)));
         }
         if (contexts != null && !contexts.equals("")) {
             m_contexts = new ArrayList<String>(Arrays.asList(contexts
-                    .split("\n")));
+                    .split(INTENT_EXTRA_DELIMITERS)));
         }
     }
 
     public void initFromPrefs(SharedPreferences prefs) {
         m_sorts = new ArrayList<String>();
         m_sorts.addAll(Arrays.asList(prefs.getString(INTENT_SORT_ORDER, "")
-                .split("\n")));
+                .split(INTENT_EXTRA_DELIMITERS)));
         m_contexts = new ArrayList<String>(prefs.getStringSet(
                 INTENT_CONTEXTS_FILTER, Collections.<String>emptySet()));
         m_prios = Priority.toPriority(new ArrayList<String>(prefs
