@@ -40,6 +40,51 @@ public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
     private static boolean sWindowsLineBreaks;
 
+    public static ArrayList<Task> loadTasksFromStream(InputStream is)
+            throws IOException {
+        ArrayList<Task> items = new ArrayList<Task>();
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new InputStreamReader(is));
+            String line;
+            long counter = 0L;
+            while ((line = in.readLine()) != null) {
+                line = line.trim();
+                if (line.length() > 0) {
+                    items.add(new Task(counter, line));
+                }
+                counter++;
+            }
+        } finally {
+            Util.closeStream(in);
+            Util.closeStream(is);
+        }
+        return items;
+    }
+
+    private static String readLine(BufferedReader r) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        boolean eol = false;
+        int c;
+        while(!eol && (c = r.read()) >= 0) {
+            sb.append((char)c);
+            eol = (c == '\r' || c == '\n');
+
+            // check for \r\n
+            if (c == '\r') {
+                r.mark(1);
+                c = r.read();
+                if (c != '\n') {
+                    r.reset();
+                } else {
+                    sWindowsLineBreaks = true;
+                    sb.append((char)c);
+                }
+            }
+        }
+        return sb.length() == 0 ? null : sb.toString();
+    }
+
     public static ArrayList<Task> loadTasksFromFile(File file, TaskBag.Preferences preferences)
             throws IOException {
         ArrayList<Task> items = new ArrayList<Task>();
@@ -50,25 +95,12 @@ public class TaskIo {
             InputStream is = new FileInputStream(file);
             try {
                 in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                // Read the first line to determine line terminator
-                in.mark((int)file.length());
-                String firstLine = in.readLine();
-                in.reset();
-                in.skip(firstLine.length());
-                char c = (char)in.read();
-                if (c == '\r') {
-                    c = (char)in.read();
-                    if (c =='\n') {
-                        sWindowsLineBreaks = true;
-                    }
-                } else {
-                    sWindowsLineBreaks = false;
-                }
-                in.reset();
                 String line;
-                long counter = 1;
-                while ((line = in.readLine())!=null) {
-                    if (!line.trim().equals("")) {
+                long counter = 0L;
+                sWindowsLineBreaks = false;
+                while ((line = readLine(in)) != null) {
+                    line = line.trim();
+                    if (line.length() > 0) {
                         items.add(new Task(counter, line));
                     }
                     counter++;
