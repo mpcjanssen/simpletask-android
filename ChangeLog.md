@@ -1,8 +1,20 @@
 # ChangeLog
 
+### 2.7.8
+
+* [Feature] Display due and threshold dates below task. Due dates can be colored (setting).
+* [Bugfix] Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.
+* [Bugfix] Show warning when logging out of dropbox that unsaved changes will be lost.
+
+### 2.7.7
+
+* [Bugfix] Fixed crash when installing for the first time.
+
 ### 2.7.6
 
 * [Feature] Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
+* [Bugfix] Clean up widget configuration when removing a widget from the homescreen.
+
 
 ### 2.7.5
 * [Bugfix] Fix issue with changing widget theme show "Loading" or nothing at all after switching
