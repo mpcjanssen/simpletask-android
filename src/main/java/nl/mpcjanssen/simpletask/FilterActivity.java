@@ -117,6 +117,9 @@ public class FilterActivity extends Activity {
         	menu.findItem(R.id.menu_filter_action).setTitle(R.string.create_widget);
         }
         this.menu = menu;
+        if (actionbar.getSelectedNavigationIndex() == actionbar.getTabCount()-1) {
+            menu.findItem(R.id.menu_default_sort).setVisible(true);
+        }
         return true;
     }
 
