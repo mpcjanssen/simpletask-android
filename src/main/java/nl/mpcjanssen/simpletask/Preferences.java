@@ -23,6 +23,7 @@
 package nl.mpcjanssen.simpletask;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -32,6 +33,8 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+
+import nl.mpcjanssen.simpletask.util.Util;
 
 public class Preferences extends Activity {
 	final static String TAG = Preferences.class.getSimpleName();
@@ -91,14 +94,26 @@ public class Preferences extends Activity {
 			if (preference.getKey().equals("archive_now")) {
 				Log.v("PREFERENCES",
 						"Archiving completed items from preferences");
-				((Preferences) this.getActivity()).broadcastIntentAndClose(
-						getActivity().getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE,
-						Preferences.RESULT_ARCHIVE);
+                Util.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ((Preferences) getActivity()).broadcastIntentAndClose(
+                                getActivity().getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE,
+                                Preferences.RESULT_ARCHIVE);
+                    }
+                }, R.string.archive_task_title);
+
 			} else if (preference.getKey().equals("logout_dropbox")) {
 				Log.v("PREFERENCES", "Logging out from Dropbox");
-				((Preferences) this.getActivity()).broadcastIntentAndClose(
-                        getActivity().getPackageName()+Constants.BROADCAST_ACTION_LOGOUT,
-						Preferences.RESULT_LOGOUT);
+                Util.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ((Preferences) getActivity()).broadcastIntentAndClose(
+                                getActivity().getPackageName()+Constants.BROADCAST_ACTION_LOGOUT,
+                                Preferences.RESULT_LOGOUT);
+                    }
+                }, R.string.dropbox_logout_pref_title);
+
 			}
 			return true;
 		}

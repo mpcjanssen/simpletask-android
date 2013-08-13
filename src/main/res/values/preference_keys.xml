@@ -16,5 +16,6 @@
     <string name="drawers_explained_pref_key">drawers_explained</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="clone_tags_key">clone_tags</string>
+    <string name="color_due_date_key">color_due_date</string>
 
 </resources>
