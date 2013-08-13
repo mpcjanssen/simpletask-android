@@ -24,9 +24,10 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <!--suppress ALL -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:orientation="vertical"
                 android:background="?android:attr/activatedBackgroundIndicator"
         >
 
@@ -41,15 +42,38 @@ You should have received a copy of the GNU General Public License along with Tod
             android:textSize="16sp"
             />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/datebar" >
     <TextView
             android:id="@+id/taskage"
             android:focusable="false"
-            android:layout_width="wrap_content"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:paddingLeft="4dip"
             android:paddingBottom="4dip"
             android:textSize="11sp"
-            android:layout_below="@id/tasktext"
-            android:visibility="gone"/>
+            android:layout_weight="1"/>
+    <TextView
+            android:id="@+id/taskdue"
+            android:focusable="false"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dip"
+            android:paddingBottom="4dip"
+            android:textSize="11sp"
+            android:layout_weight="1"/>
+    <TextView
+            android:id="@+id/taskthreshold"
+            android:focusable="false"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dip"
+            android:paddingBottom="4dip"
+            android:textSize="11sp"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
