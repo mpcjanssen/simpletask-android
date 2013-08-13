@@ -69,10 +69,6 @@ public class LocalFileTaskRepository {
 		}
 	}
 
-	public void purge() {
-		TODO_TXT_FILE.delete();
-	}
-
 	public ArrayList<Task> load() {
 		init();
 		if (!TODO_TXT_FILE.exists()) {

@@ -88,6 +88,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -1065,7 +1066,11 @@ public class Simpletask extends ListActivity  {
 					holder.tasktext = (TextView) convertView
 							.findViewById(R.id.tasktext);
 					holder.taskage = (TextView) convertView
-							.findViewById(R.id.taskage);
+                            .findViewById(R.id.taskage);
+                    holder.taskdue = (TextView) convertView
+                            .findViewById(R.id.taskdue);
+                    holder.taskthreshold = (TextView) convertView
+                            .findViewById(R.id.taskthreshold);
 					convertView.setTag(holder);
 				} else {
 					holder = (ViewHolder) convertView.getTag();
@@ -1125,17 +1130,45 @@ public class Simpletask extends ListActivity  {
 										& ~Paint.STRIKE_THRU_TEXT_FLAG);
 					}
 
-					if (!Strings.isEmptyOrNull(task.getRelativeAge())) {
-						holder.taskage.setText(task.getRelativeAge());
-						holder.taskage.setVisibility(View.VISIBLE);
-					} else {
-						holder.tasktext.setPadding(
-								holder.tasktext.getPaddingLeft(),
-								holder.tasktext.getPaddingTop(),
-								holder.tasktext.getPaddingRight(), 4);
-						holder.taskage.setText("");
-						holder.taskage.setVisibility(View.GONE);
-					}
+
+                    String relAge = task.getRelativeAge();
+                    SpannableString relDue = task.getRelativeDueDate(getResources());
+                    String relThres = task.getRelativeThresholdDate();
+                    boolean anyDateShown = false;
+                    if (!Strings.isEmptyOrNull(relAge)) {
+                        holder.taskage.setText(relAge);
+                        anyDateShown = true;
+                    } else {
+                        holder.taskage.setText("");
+                    }
+                    if (relDue!=null) {
+                        anyDateShown = true;
+                        holder.taskdue.setText(relDue);
+                    } else {
+                        holder.taskdue.setText("");
+                    }
+                    if (!Strings.isEmptyOrNull(relThres)) {
+                        anyDateShown = true;
+                        holder.taskthreshold.setText(relThres);
+                    } else {
+                        holder.taskthreshold.setText("");
+                    }
+                    LinearLayout datesBar = (LinearLayout)convertView
+                            .findViewById(R.id.datebar);
+                    if (!anyDateShown || task.isCompleted()) {
+                        datesBar.setVisibility(View.GONE);
+                        holder.tasktext.setPadding(
+                                holder.tasktext.getPaddingLeft(),
+                                holder.tasktext.getPaddingTop(),
+                                holder.tasktext.getPaddingRight(), 4);
+                    } else {
+                        datesBar.setVisibility(View.VISIBLE);
+                        holder.tasktext.setPadding(
+                                holder.tasktext.getPaddingLeft(),
+                                holder.tasktext.getPaddingTop(),
+                                holder.tasktext.getPaddingRight(), 0);
+                        holder.tasktext.setText(task.dateLessScreenFormat());
+                    }
 				}
 			}
 			return convertView;
@@ -1435,6 +1468,8 @@ public class Simpletask extends ListActivity  {
     private static class ViewHolder {
 		private TextView tasktext;
 		private TextView taskage;
+        private TextView taskdue;
+        private TextView taskthreshold;
 	}
 
 	public void storeKeys(String accessTokenKey, String accessTokenSecret) {

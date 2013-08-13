@@ -22,10 +22,15 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import android.content.res.Resources;
+import android.text.SpannableString;
+
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Strings;
+import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -204,6 +209,29 @@ public class Task implements Serializable, Comparable<Task> {
 
     public String getRelativeAge() {
         return relativeAge;
+    }
+
+    public SpannableString getRelativeDueDate(Resources res) {
+
+        if (dueDate!=null) {
+            String relativeDate = RelativeDate.getRelativeDate(dueDate);
+            SpannableString ss = new SpannableString("Due: " +  relativeDate);
+            if (relativeDate.equals(res.getString(R.string.dates_today))) {
+                Util.setColor(ss,res.getColor(android.R.color.holo_green_light));
+            } else if (dueDate.before(new Date())) {
+                Util.setColor(ss,res.getColor(android.R.color.holo_red_light));
+            }
+            return ss;
+        } else {
+            return null;
+        }
+    }
+    public String getRelativeThresholdDate() {
+        if (thresholdDate!=null) {
+            return "T: " + RelativeDate.getRelativeDate(thresholdDate);
+        } else {
+            return null;
+        }
     }
 
     public boolean isDeleted() {
@@ -453,5 +481,14 @@ public class Task implements Serializable, Comparable<Task> {
             return getPriority().getCode();
         }
         return "";
+    }
+
+    public CharSequence dateLessScreenFormat() {
+        String text = inScreenFormat();
+        // remove due dates
+        text = text.replaceAll(DUE_PATTERN.pattern(),"");
+        // remove threshold dates
+        text = text.replaceAll(THRESHOLD_PATTERN.pattern(),"");
+        return text;
     }
 }

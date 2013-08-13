@@ -372,6 +372,13 @@ public class Util {
         }
     }
 
+    public static void setColor(SpannableString ss, int color) {
+
+        ss.setSpan(new ForegroundColorSpan(color), 0,
+                ss.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
     public static Date addWeeksToDate(Date date, int weeks) {
         Date newDate = new Date(date.getTime());
 
