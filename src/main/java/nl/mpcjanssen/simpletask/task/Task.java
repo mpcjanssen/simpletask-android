@@ -211,14 +211,14 @@ public class Task implements Serializable, Comparable<Task> {
         return relativeAge;
     }
 
-    public SpannableString getRelativeDueDate(Resources res) {
+    public SpannableString getRelativeDueDate(Resources res, boolean useColor) {
 
         if (dueDate!=null) {
             String relativeDate = RelativeDate.getRelativeDate(dueDate);
             SpannableString ss = new SpannableString("Due: " +  relativeDate);
-            if (relativeDate.equals(res.getString(R.string.dates_today))) {
+            if (relativeDate.equals(res.getString(R.string.dates_today)) && useColor) {
                 Util.setColor(ss,res.getColor(android.R.color.holo_green_light));
-            } else if (dueDate.before(new Date())) {
+            } else if (dueDate.before(new Date()) && useColor) {
                 Util.setColor(ss,res.getColor(android.R.color.holo_red_light));
             }
             return ss;

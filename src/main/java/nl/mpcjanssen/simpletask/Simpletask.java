@@ -216,6 +216,7 @@ public class Simpletask extends ListActivity  {
 					Log.v(TAG, "Logging out from Dropbox");
 					m_app.getRemoteClientManager().getRemoteClient()
 							.deauthenticate();
+                    m_app.setManualMode(false);
 					Intent i = new Intent(context, LoginScreen.class);
 					startActivity(i);
 					finish();
@@ -262,7 +263,9 @@ public class Simpletask extends ListActivity  {
         if (!m_app.isCloudLess()) {
             RemoteClient remoteClient = m_app.getRemoteClientManager()
                     .getRemoteClient();
-            if (!remoteClient.isAuthenticated()) {
+            // Keep allowing use of the app in manual unauthenticated mode
+            // This will probably be removed in the future.
+            if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
                 startLogin();
                 return;
             }
@@ -1132,7 +1135,7 @@ public class Simpletask extends ListActivity  {
 
 
                     String relAge = task.getRelativeAge();
-                    SpannableString relDue = task.getRelativeDueDate(getResources());
+                    SpannableString relDue = task.getRelativeDueDate(res, m_app.hasColorDueDates());
                     String relThres = task.getRelativeThresholdDate();
                     boolean anyDateShown = false;
                     if (!Strings.isEmptyOrNull(relAge)) {

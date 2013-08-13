@@ -117,6 +117,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_title">Widget theme</string>
     <string name="widget_theme_pref_summary">Change the theme used for the widgets</string>
 
+    <string name="color_due_pref_title">Color due dates</string>
+    <string name="color_due_pref_summary">Color due dates based on whether they are due today, due in the future or overdue.</string>
+
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -143,11 +146,17 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Log in to Dropbox</string>
-    <string name="login_screen_offline_button">Work offline</string>
+    <string name="login_cloudless">If you don\'t have a dropbox account or don\'t want to use it to store your todo list,
+        you can download Simpletask Cloudless from the Play Store.
+        \nhttp://goo.gl/X1C55P
+    </string>
     <!-- delete -->
     <string name="delete_task_title">Delete Task(s)</string>
     <string name="archive_task_title">Archive Task(s)</string>
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
+    <string name="logout_message">Please make sure you have synced all changes with dropbox or
+        shared your complete task list if not connected to dropbox.\n
+        Any changes that have not been saved will be lost after logging out.</string>
     <string name="delete_task_confirm">Delete</string>
     <!-- search -->
 
