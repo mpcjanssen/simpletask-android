@@ -69,14 +69,7 @@ public class LoginScreen extends Activity {
                 startLogin();
             }
         });
-        
-        Button m_offlineButton = (Button) findViewById(R.id.work_offline);
-        m_offlineButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                workOffline();
-            }
-        });
+
 
 
         RemoteClient remoteClient = m_app.getRemoteClientManager()
@@ -115,11 +108,6 @@ public class LoginScreen extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(m_broadcastReceiver);
-    }
-    
-    void workOffline() {
-        m_app.setManualMode(true);
-        switchToTodolist();
     }
 
     void startLogin() {

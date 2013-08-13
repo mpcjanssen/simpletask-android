@@ -262,7 +262,7 @@ public class Simpletask extends ListActivity  {
         if (!m_app.isCloudLess()) {
             RemoteClient remoteClient = m_app.getRemoteClientManager()
                     .getRemoteClient();
-            if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
+            if (!remoteClient.isAuthenticated()) {
                 startLogin();
                 return;
             }
