@@ -96,11 +96,16 @@ public class FilterActivity extends Activity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort());
-        actionbar.addTab(actionbar.newTab()
+        Tab sortTab = actionbar.newTab()
                 .setText(getString(R.string.sort))
                 .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class, arguments))
-                .setTag(SORT_TAB));
+                .setTag(SORT_TAB);
+        arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort());
+        actionbar.addTab(sortTab);
+        
+        if(intent.getBooleanExtra(Constants.INTENT_OPEN_SORT_TAB, false)) {
+            actionbar.selectTab(sortTab);
+        }
     }
 
     @Override
