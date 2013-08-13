@@ -6,7 +6,7 @@
 * [Bugfix] Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.
 * [Bugfix] Show warning when logging out of dropbox that unsaved changes will be lost.
 * [Bugfix] Don't prefill new task when filter is inverted.
-* Quick access to filter and sort from actionbar.
+* [Feature] Quick access to filter and sort from actionbar.
 
 ### 2.7.7
 
