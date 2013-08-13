@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Strings;
@@ -337,14 +338,19 @@ public class Task implements Serializable, Comparable<Task> {
         return result;
     }
 
-    public void initWithFilters(ArrayList<String> ctxts, ArrayList<String> pjs) {
-        if ((ctxts != null) && (ctxts.size() == 1)) {
+    public void initWithFilter(ActiveFilter mFilter) {
+        if ((mFilter.getContexts() != null)
+                && (mFilter.getContexts().size() == 1)
+                && (mFilter.getContextsNot()!=true)) {
             contexts.clear();
-            contexts.add(ctxts.get(0));
+            contexts.add(mFilter.getContexts().get(0));
         }
-        if ((pjs != null) && (pjs.size() == 1)) {
+
+        if ((mFilter.getProjects() != null)
+                && (mFilter.getProjects().size() == 1)
+                && (mFilter.getProjectsNot()!=true)) {
             projects.clear();
-            projects.add(pjs.get(0));
+            projects.add(mFilter.getProjects().get(0));
         }
     }
 
