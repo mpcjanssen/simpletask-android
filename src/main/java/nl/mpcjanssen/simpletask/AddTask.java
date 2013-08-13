@@ -218,7 +218,7 @@ public class AddTask extends Activity {
         } else {
             if (textInputField.getText().length() == 0) {
                 iniTask = new Task(1, "");
-                iniTask.initWithFilters(mFilter.getContexts(), mFilter.getProjects());
+                iniTask.initWithFilter(mFilter);
             }
 
             if (iniTask != null && iniTask.getProjects().size() == 1) {
