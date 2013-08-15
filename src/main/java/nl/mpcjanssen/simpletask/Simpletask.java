@@ -1086,7 +1086,7 @@ public class Simpletask extends ListActivity  {
 
 				if (task != null) {
 					SpannableString ss = new SpannableString(
-							task.inScreenFormat());
+							task.datelessScreenFormat());
 
 					ArrayList<String> colorizeStrings = new ArrayList<String>();
 					for (String context : task.getContexts()) {
@@ -1173,7 +1173,6 @@ public class Simpletask extends ListActivity  {
                                 holder.tasktext.getPaddingLeft(),
                                 holder.tasktext.getPaddingTop(),
                                 holder.tasktext.getPaddingRight(), 0);
-                        holder.tasktext.setText(task.dateLessScreenFormat());
                     }
 				}
 			}

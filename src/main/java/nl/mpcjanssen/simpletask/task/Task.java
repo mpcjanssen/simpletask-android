@@ -287,8 +287,8 @@ public class Task implements Serializable, Comparable<Task> {
         if (this.getPriority()!=Priority.NONE) {
             sb.append(this.getPriority().inFileFormat()).append(" ");
         }
-        sb.append(this.text);
-        return sb.toString().trim();
+        sb.append(this.text.trim());
+        return sb.toString();
     }
 
     public boolean inFuture() {
@@ -483,7 +483,7 @@ public class Task implements Serializable, Comparable<Task> {
         return "";
     }
 
-    public CharSequence dateLessScreenFormat() {
+    public CharSequence datelessScreenFormat() {
         String text = inScreenFormat();
         // remove due dates
         text = text.replaceAll(DUE_PATTERN.pattern(),"");
