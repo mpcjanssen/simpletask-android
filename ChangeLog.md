@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 2.7.9
+
+* [Bugfix] Fix coloring of tasks if it contains creation, due or threshold date.
+
 ### 2.7.8
 
 * [Feature] Display due and threshold dates below task. Due dates can be colored (setting).
