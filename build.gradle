@@ -51,6 +51,11 @@ android {
             buildConfig "public final static boolean CLOUDLESS = true;"
             versionName defaultConfig.versionName + '-cloudless (' + getFossilUUID() +')'
         }
+        cloudlessdonate {
+            packageName 'nl.mpcjanssen.simpletaskdonate'
+            buildConfig "public final static boolean CLOUDLESS = true;"
+            versionName defaultConfig.versionName + '-cloudless-donate (' + getFossilUUID() +')'
+        }
     }
     signingConfigs {
         release {
