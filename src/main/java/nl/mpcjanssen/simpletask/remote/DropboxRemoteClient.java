@@ -262,6 +262,8 @@ class DropboxRemoteClient implements RemoteClient {
 				return false;
 			}
 			return true;
+		} else {
+			Log.w("DbAuthLog", "Dropbox authentication failed");
 		}
 		return false;
 	}
