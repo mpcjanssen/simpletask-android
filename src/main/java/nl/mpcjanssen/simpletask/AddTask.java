@@ -242,7 +242,7 @@ public class AddTask extends Activity {
         textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     // Move cursor to end of line
                     int position = textInputField.getSelectionStart();
                     String remainingText = textInputField.getText().toString().substring(position);
