@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 2.7.10
+
+* [Bugfix] Fix FC in add task screen.
+* [UI] Split drawers on tablet landscape to better use space.
+
 ### 2.7.9
 
 * [Bugfix] Fix coloring of tasks if it contains creation, due or threshold date.
