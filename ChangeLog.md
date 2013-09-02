@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 2.7.11
+
+* [Bugfix] Fix FC in share task logging.
+
 ### 2.7.10
 
 * [Bugfix] Fix FC in add task screen.
