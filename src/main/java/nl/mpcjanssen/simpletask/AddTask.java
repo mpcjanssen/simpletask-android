@@ -178,7 +178,9 @@ public class AddTask extends Activity {
             Log.d(TAG, "Share");
             share_text = (String) intent
                     .getCharSequenceExtra(Intent.EXTRA_TEXT);
-            Log.d(TAG, share_text);
+            if (share_text == null) {
+                share_text = "";
+            }
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now
             noteToSelf(intent);
