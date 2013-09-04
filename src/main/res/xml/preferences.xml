@@ -62,6 +62,11 @@
                 android:summary="@string/defer_threshold_date_pref_summary"
                 android:title="@string/defer_threshold_date_pref_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/long_click_drag_drop_key"
+            android:summary="@string/long_press_drag_pref_summary"
+            android:title="@string/long_press_drag_pref_title" />
+        <CheckBoxPreference
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
