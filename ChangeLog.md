@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 2.8.0
+
+* [UI] Use long click to start drag and drop in sort screen. Old arrows can
+  still be enabled in settings.
+
 ### 2.7.11
 
 * [Bugfix] Fix FC in share task logging.
