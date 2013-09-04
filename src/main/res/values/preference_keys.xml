@@ -17,5 +17,6 @@
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="clone_tags_key">clone_tags</string>
     <string name="color_due_date_key">color_due_date</string>
+    <string name="long_click_drag_drop_key">long_click_drag_drop</string>
 
 </resources>
