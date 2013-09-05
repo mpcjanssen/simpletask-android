@@ -367,18 +367,19 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void initWithFilter(ActiveFilter mFilter) {
-        if ((mFilter.getContexts() != null)
-                && (mFilter.getContexts().size() == 1)
-                && (mFilter.getContextsNot()!=true)) {
-            contexts.clear();
-            contexts.add(mFilter.getContexts().get(0));
-        }
 
-        if ((mFilter.getProjects() != null)
-                && (mFilter.getProjects().size() == 1)
-                && (mFilter.getProjectsNot()!=true)) {
+        // Ignore empty contexts and projects for initializing the task
+        ArrayList<String> filterContexts = mFilter.getContexts();
+        filterContexts.remove("-");
+        if ((filterContexts.size() == 1) && (mFilter.getContextsNot()!=true)) {
+            contexts.clear();
+            contexts.add(filterContexts.get(0));
+        }
+        ArrayList<String> filterProjects = mFilter.getProjects();
+        filterProjects.remove("-");
+        if ((filterProjects.size() == 1) && (mFilter.getProjectsNot()!=true)) {
             projects.clear();
-            projects.add(mFilter.getProjects().get(0));
+            projects.add(filterProjects.get(0));
         }
     }
 
