@@ -40,7 +40,6 @@ public class LoginScreen extends Activity {
 
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
-    private boolean m_loginStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,20 +87,17 @@ public class LoginScreen extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (m_loginStarted) {
-            finishLogin();
-        }
+        finishLogin();
     }
 
     private void finishLogin() {
         RemoteClient remoteClient = m_app.getRemoteClientManager()
                 .getRemoteClient();
         remoteClient.finishLogin();
-        if (remoteClient.isAuthenticated()) {
+        if (remoteClient.finishLogin() && remoteClient.isAuthenticated()) {
             switchToTodolist();
             sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE));
         }
-        m_loginStarted = false;
     }
 
     @Override
@@ -114,7 +110,6 @@ public class LoginScreen extends Activity {
         final RemoteClient client = m_app.getRemoteClientManager()
                 .getRemoteClient();
         client.startLogin();
-        m_loginStarted = true;
     }
 
 }
