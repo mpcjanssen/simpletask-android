@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 2.8.1
+
+* [Bugfix] Solved issue which could lead to Dropbox login loops.
+
 ### 2.8.0
 
 * [UI] Use long click to start drag and drop in sort screen. Old arrows can
