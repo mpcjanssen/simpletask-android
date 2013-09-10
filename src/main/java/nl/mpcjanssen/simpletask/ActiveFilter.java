@@ -153,8 +153,10 @@ public class ActiveFilter {
     public String getProposedName() {
         ArrayList<String> appliedFilters = new ArrayList<String>();
         appliedFilters.addAll(m_contexts);
+        appliedFilters.remove("-");
         appliedFilters.addAll(Priority.inCode(m_prios));
         appliedFilters.addAll(m_projects);
+        appliedFilters.remove("-");
         if (appliedFilters.size() == 1) {
             return appliedFilters.get(0);
         } else {
