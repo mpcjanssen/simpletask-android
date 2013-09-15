@@ -1,3 +1,4 @@
 storeFile = file:/path_to_keystore
 storePassword = storepass
 keyPassword = keypass
+org.gradle.daemon=true
