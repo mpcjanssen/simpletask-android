@@ -1,5 +1,11 @@
 # ChangeLog
 
+### 2.8.2
+
+* [Feature] Allow 1x1 widget size.
+* [Feature] Filter completed tasks and tasks with threshold date in future.
+  1MTD/MYN is fully supported now.
+
 ### 2.8.1
 
 * [Bugfix] Solved issue which could lead to Dropbox login loops.
