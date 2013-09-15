@@ -34,6 +34,10 @@ To open Simpletask with a specific filter you can use the intent:
 * Intent boolean extra: `CONTEXTSnot` true to invert the contexts filter.
 * Intent boolean extra: `PROJECTSnot` true to invert the projects filter.
 * Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.
+* Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.
+* Intent boolean extra: `HIDECOMPLETED` true to hide completed tasks.
+* Intent boolean extra: `HIDEFUTURE` true to hide tasks with a threshold date
+  in the future.
 * Intent string extra: `SORTS` active sort.
 
 ##### Sorts extra
