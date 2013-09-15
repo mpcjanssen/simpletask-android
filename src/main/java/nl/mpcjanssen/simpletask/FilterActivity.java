@@ -26,6 +26,7 @@ public class FilterActivity extends Activity {
     final static String CONTEXT_TAB = "context";
     final static String PROJECT_TAB = "project";
     final static String PRIO_TAB = "prio";
+    final static String OTHER_TAB = "other";
     final static String SORT_TAB = "sort";
 
     // Constants for saving state
@@ -93,6 +94,15 @@ public class FilterActivity extends Activity {
                 .setText(getString(R.string.priority_short_prompt))
                 .setTabListener(new MyTabsListener(this, PRIO_TAB, FilterListFragment.class, arguments))
                 .setTag(PRIO_TAB));
+
+        // Fill arguments for fragment
+        arguments = new Bundle();
+        arguments.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, mFilter.getHideCompleted());
+        arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.getHideFuture());
+        actionbar.addTab(actionbar.newTab()
+                .setText(getString(R.string.other_prompt))
+                .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class, arguments))
+                .setTag(OTHER_TAB));
 
         // Fill arguments for fragment
         arguments = new Bundle();
@@ -193,6 +203,9 @@ public class FilterActivity extends Activity {
         }
         mFilter.setPrioritiesNot(getNot(PRIO_TAB,mFilter.getPrioritiesNot()));
 
+        mFilter.setHideCompleted(getHideCompleted());
+        mFilter.setHideFuture(getHideFuture());
+
         items = getSelectedSort();
         if (items!=null) {
             mFilter.setSort(items);
@@ -221,6 +234,27 @@ public class FilterActivity extends Activity {
         }
     }
 
+    private boolean getHideCompleted() {
+        FilterOtherFragment fr;
+        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            return mFilter.getHideCompleted();
+        } else {
+            return fr.getHideCompleted();
+        }
+    }
+
+    private boolean getHideFuture() {
+        FilterOtherFragment fr;
+        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            return mFilter.getHideFuture();
+        } else {
+            return fr.getHideFuture();
+        }
+    }
     private boolean getNot(String tag, boolean current) {
         FilterListFragment fr;
         fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);

@@ -42,6 +42,9 @@ public class ActiveFilter {
     public final static String INTENT_PROJECTS_FILTER_NOT = "PROJECTSnot";
     public final static String INTENT_PRIORITIES_FILTER_NOT = "PRIORITIESnot";
 
+    public final static String INTENT_HIDE_COMPLETED_FILTER = "HIDECOMPLETED";
+    public final static String INTENT_HIDE_FUTURE_FILTER = "HIDEFUTURE";
+
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
     private  Resources mResources;
@@ -54,6 +57,9 @@ public class ActiveFilter {
     private String m_search;
     private boolean m_priosNot;
     private boolean m_contextsNot;
+    private boolean m_hideCompleted;
+    private boolean m_hideFuture;
+
     private String mName;
 
     public ActiveFilter(Resources resources) {
@@ -70,6 +76,8 @@ public class ActiveFilter {
         m_priosNot = bundle.getBoolean(INTENT_PRIORITIES_FILTER_NOT);
         m_projectsNot = bundle.getBoolean(INTENT_PROJECTS_FILTER_NOT);
         m_sorts = bundle.getStringArrayList(INTENT_SORT_ORDER);
+        m_hideCompleted = bundle.getBoolean(INTENT_HIDE_COMPLETED_FILTER);
+        m_hideFuture = bundle.getBoolean(INTENT_HIDE_FUTURE_FILTER);
     }
 
     public void initFromIntent(Intent intent) {
@@ -88,6 +96,10 @@ public class ActiveFilter {
                 INTENT_PROJECTS_FILTER_NOT, false);
         m_contextsNot = intent.getBooleanExtra(
                 INTENT_CONTEXTS_FILTER_NOT, false);
+        m_hideCompleted = intent.getBooleanExtra(
+                INTENT_HIDE_COMPLETED_FILTER, false);
+        m_hideFuture = intent.getBooleanExtra(
+                INTENT_HIDE_FUTURE_FILTER, false);
         m_search = intent.getStringExtra(SearchManager.QUERY);
         if (sorts != null && !sorts.equals("")) {
             m_sorts = new ArrayList<String>(
@@ -119,6 +131,8 @@ public class ActiveFilter {
         m_contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false);
         m_priosNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false);
         m_projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false);
+        m_hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false);
+        m_hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
     }
 
@@ -186,6 +200,8 @@ public class ActiveFilter {
         bundle.putStringArrayList(INTENT_SORT_ORDER, m_sorts);
         bundle.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
         bundle.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        bundle.putBoolean(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
+        bundle.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
         bundle.putString(SearchManager.QUERY, m_search);
     }
 
@@ -200,6 +216,8 @@ public class ActiveFilter {
         editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_contextsNot);
         editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
         editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
+        editor.putBoolean(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
         editor.commit();
     }
 
@@ -211,6 +229,8 @@ public class ActiveFilter {
         target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
         target.putExtra(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
         target.putExtra(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
+        target.putExtra(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
+        target.putExtra(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
         target.putExtra(SearchManager.QUERY, m_search);
     }
 
@@ -220,6 +240,8 @@ public class ActiveFilter {
         m_contexts = new ArrayList<String>();
         m_projects = new ArrayList<String>();
         m_projectsNot = false;
+        m_hideFuture=false;
+        m_hideCompleted=false;
         m_search = null;
         m_priosNot = false;
         m_contextsNot = false;
@@ -265,11 +287,14 @@ public class ActiveFilter {
         this.m_projects = projects;
     }
 
-    public ArrayList<Task> apply(ArrayList<Task> tasks, boolean showCompleted) {
+    public ArrayList<Task> apply(ArrayList<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
         for (Task t : tasks) {
-            if (t.isCompleted() && !showCompleted) {
+            if (t.isCompleted() && this.getHideCompleted()) {
+                continue;
+            }
+            if (t.inFuture() && this.getHideFuture()) {
                 continue;
             }
             if (filter.apply(t)) {
@@ -303,6 +328,21 @@ public class ActiveFilter {
         return mName;
     }
 
+    public boolean getHideCompleted() {
+        return m_hideCompleted;
+    }
+
+    public boolean getHideFuture() {
+        return m_hideFuture;
+    }
+
+    public void setHideCompleted(boolean hide) {
+        this.m_hideCompleted = hide;
+    }
+
+    public void setHideFuture(boolean hide) {
+        this.m_hideFuture = hide;
+    }
 
     private class AndFilter {
         private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
