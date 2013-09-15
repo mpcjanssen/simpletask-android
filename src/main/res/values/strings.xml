@@ -185,13 +185,16 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_invert">Invert filter</string>
     <string name="add_filter_shortcut">Add shortcut</string>
     <string name="create_widget">Create widget</string>
-	
+    <string name="filter_hide_completed">Hide completed tasks</string>
+    <string name="filter_hide_future">Hide tasks with threshold date in future</string>
+
 
     <!-- title bar changes -->
     <string name="title_filter_applied">Filtered by:</string>
     <string name="add_task_help_btn">Help</string>
     <string name="priority_prompt">Priority</string>
     <string name="priority_short_prompt">Prio</string>
+    <string name="other_prompt">Other</string>
     <string name="project_prompt">Tag</string>
     <string name="context_prompt">List</string>
     <string name="separator">Separator</string>
