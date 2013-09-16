@@ -39,10 +39,11 @@
             android:icon="@drawable/help"
             />
     <item
-            android:id="@+id/menu_add_task"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/addtask"
-            android:icon="@drawable/content_new"
-            />
+        android:title="@string/insert_due"
+        android:id="@+id/insert_due"
+        android:showAsAction="never"/>
+    <item
+        android:title="@string/insert_threshold"
+        android:id="@+id/insert_threshold"
+        android:showAsAction="never"/>
 </menu>
