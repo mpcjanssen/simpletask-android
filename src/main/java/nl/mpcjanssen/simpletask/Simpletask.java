@@ -96,6 +96,9 @@ public class Simpletask extends ListActivity  {
 	private final static int DRAWER_CONTEXT = 1;
 	private final static int DRAWER_PROJECT = 2;
 
+
+
+
 	private TaskBag taskBag;
 
 	Menu options_menu;
@@ -566,7 +569,7 @@ public class Simpletask extends ListActivity  {
                 // Recurring task?
                 if (t.getRecurrencePattern()!=null) {
                     Task newTask = new Task(0,t.getOriginalText());
-                    newTask.deferToDate(false, t.getRecurrencePattern());
+                    newTask.deferDueDate(t.getRecurrencePattern());
                     taskBag.addAsTask(newTask.inFileFormat());
                 }
 			}
@@ -596,7 +599,7 @@ public class Simpletask extends ListActivity  {
 		sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 	}
 
-	private void deferTasks(List<Task> tasks) {
+	private void deferTasks(List<Task> tasks, final int dateType ) {
 		String[] keys = getResources().getStringArray(R.array.deferOptions);
 		final List<Task> tasksToDefer = tasks;
 		String today = "0d";
@@ -607,7 +610,7 @@ public class Simpletask extends ListActivity  {
 		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth, "" };
 
 		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
-				R.string.defer, null, new Util.OnSingleChoiceDialogListener() {
+				R.string.set_date, null, new Util.OnSingleChoiceDialogListener() {
 					@Override
 					public void onClick(String selected) {
 						if (selected.equals("")) {
@@ -616,7 +619,7 @@ public class Simpletask extends ListActivity  {
 								public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 									Calendar cal = Calendar.getInstance();
 									cal.set(year, month, day);
-									deferTasks(cal.getTime(), tasksToDefer);
+									deferTasks(cal.getTime(), tasksToDefer, dateType);
 
 								}
 							},
@@ -626,17 +629,21 @@ public class Simpletask extends ListActivity  {
 
 							dialog.show();
 						} else {
-							deferTasks(selected, tasksToDefer);
+							deferTasks(selected, tasksToDefer, dateType);
 						}
 					}
 				});
 		d.show();
 	}
 
-	private void deferTasks(Date selected, List<Task> tasksToDefer) {
+	private void deferTasks(Date selected, List<Task> tasksToDefer, int type) {
 		for (Task t : tasksToDefer) {
 			if (t != null) {
-				t.deferToDate(m_app.isDeferThreshold(), selected);
+                if (type==Task.DUE_DATE) {
+				    t.setDueDate(selected);
+                } else {
+                    t.setThresholdDate(selected);
+                }
 			}
 		}
 		m_adapter.setFilteredTasks(false);
@@ -648,10 +655,14 @@ public class Simpletask extends ListActivity  {
 	}
 
 
-	private void deferTasks(String selected, List<Task> tasksToDefer) {
+	private void deferTasks(String selected, List<Task> tasksToDefer, int type) {
 		for (Task t : tasksToDefer) {
 			if (t != null) {
-				t.deferToDate(m_app.isDeferThreshold(), selected);
+                if (type==Task.DUE_DATE) {
+				    t.deferDueDate(selected);
+                } else {
+                    t.deferThresholdDate(selected);
+                }
 			}
 		}
 		m_adapter.setFilteredTasks(false);
@@ -1552,9 +1563,12 @@ public class Simpletask extends ListActivity  {
 				case R.id.delete:
 					deleteTasks(checkedTasks);
 					break;
-				case R.id.defer:
-					deferTasks(checkedTasks);
-					break;
+				case R.id.defer_due:
+                    deferTasks(checkedTasks, Task.DUE_DATE);
+                    break;
+                case R.id.defer_threshold:
+                    deferTasks(checkedTasks, Task.THRESHOLD_DATE);
+                    break;
 				case R.id.uncomplete:
 					undoCompleteTasks(checkedTasks);
 					break;
