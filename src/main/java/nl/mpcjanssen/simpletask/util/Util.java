@@ -47,6 +47,8 @@ import org.apache.http.params.HttpParams;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
 
@@ -379,12 +381,12 @@ public class Util {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public static Date addWeeksToDate(Date date, int weeks) {
+    public static Date addDaysToDate(Date date, int days) {
         Date newDate = new Date(date.getTime());
 
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(newDate);
-        calendar.add(Calendar.DATE, weeks);
+        calendar.add(Calendar.DATE, days);
         newDate.setTime(calendar.getTime().getTime());
         return newDate;
     }
@@ -396,6 +398,41 @@ public class Util {
         calendar.setTime(newDate);
         calendar.add(Calendar.MONTH, months);
         newDate.setTime(calendar.getTime().getTime());
+        return newDate;
+    }
+
+    public static Date addYearsToDate(Date date, int years) {
+        Date newDate = new Date(date.getTime());
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(newDate);
+        calendar.add(Calendar.YEAR, years);
+        newDate.setTime(calendar.getTime().getTime());
+        return newDate;
+    }
+
+    public static Date addInterval(String interval) {
+        Pattern p = Pattern.compile("(\\d+)([dwmy])");
+        Matcher m = p.matcher(interval);
+        int amount;
+        String type;
+        Date newDate = new Date();
+        m.find();
+        if(m.groupCount()==2) {
+            amount = Integer.parseInt(m.group(1));
+            type = m.group(2);
+        } else {
+            return null;
+        }
+        if (type.equals("d")) {
+            newDate = Util.addDaysToDate(newDate, amount);
+        } else if (type.equals("w")) {
+            newDate = Util.addDaysToDate(newDate, amount*7);
+        } else if (type.equals("m")) {
+            newDate = Util.addMonthsToDate(newDate, amount);
+        } else if (type.equals("y")) {
+            newDate = Util.addYearsToDate(newDate, amount);
+        }
         return newDate;
     }
 
