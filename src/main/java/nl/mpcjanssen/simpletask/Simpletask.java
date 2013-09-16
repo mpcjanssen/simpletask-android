@@ -563,6 +563,12 @@ public class Simpletask extends ListActivity  {
 		for (Task t : tasks) {
 			if (t != null && !t.isCompleted()) {
 				t.markComplete(new Date());
+                // Recurring task?
+                if (t.getRecurrencePattern()!=null) {
+                    Task newTask = new Task(0,t.getOriginalText());
+                    newTask.deferToDate(false, t.getRecurrencePattern());
+                    taskBag.addAsTask(newTask.inFileFormat());
+                }
 			}
 		}
 		if (m_app.isAutoArchive()) {
@@ -592,15 +598,12 @@ public class Simpletask extends ListActivity  {
 
 	private void deferTasks(List<Task> tasks) {
 		String[] keys = getResources().getStringArray(R.array.deferOptions);
-		SimpleDateFormat formatter = new SimpleDateFormat(
-				Constants.DATE_FORMAT, Locale.US);
-		Date now = new Date();
 		final List<Task> tasksToDefer = tasks;
-		String today = formatter.format(now);
-		String tomorrow = formatter.format(Util.addWeeksToDate(now, 1));
-		String oneWeek = formatter.format(Util.addWeeksToDate(now, 7));
-		String twoWeeks = formatter.format(Util.addWeeksToDate(now, 14));
-		String oneMonth = formatter.format(Util.addMonthsToDate(now, 1));
+		String today = "0d";
+		String tomorrow = "1d";
+		String oneWeek = "1w";
+		String twoWeeks = "2w";
+		String oneMonth = "1m";
 		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth, "" };
 
 		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
