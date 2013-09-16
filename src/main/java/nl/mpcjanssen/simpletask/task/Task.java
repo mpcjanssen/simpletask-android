@@ -469,56 +469,17 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void deferThresholdDate(String deferString) {
-        Pattern p = Pattern.compile("(\\d+)([dwmy])");
-        Matcher m = p.matcher(deferString);
-        int amount;
-        String type;
-        Date newDate = new Date();
-        m.find();
-        if(m.groupCount()==2) {
-            amount = Integer.parseInt(m.group(1));
-            type = m.group(2);
-        } else {
-            return;
+        Date newDate = Util.addInterval(deferString);
+        if (newDate!=null) {
+            setThresholdDate(newDate);
         }
-        if (type.equals("d")) {
-            newDate = Util.addDaysToDate(newDate, amount);
-        } else if (type.equals("w")) {
-            newDate = Util.addDaysToDate(newDate, amount*7);
-        } else if (type.equals("m")) {
-            newDate = Util.addMonthsToDate(newDate, amount);
-        } else if (type.equals("y")) {
-            newDate = Util.addYearsToDate(newDate, amount);
-        }
-        String newDateString = formatter.format(newDate);
-        setThresholdDate(newDateString);
     }
 
     public void deferDueDate(String deferString) {
-        Pattern p = Pattern.compile("(\\d+)([dwmy])");
-        Matcher m = p.matcher(deferString);
-        int amount;
-        String type;
-        Date newDate = new Date();
-        m.find();
-        if(m.groupCount()==2) {
-            amount = Integer.parseInt(m.group(1));
-            type = m.group(2);
-        } else {
-            return;
+        Date newDate = Util.addInterval(deferString);
+        if (newDate!=null) {
+            setDueDate(newDate);
         }
-        if (type.equals("d")) {
-            newDate = Util.addDaysToDate(newDate, amount);
-        } else if (type.equals("w")) {
-            newDate = Util.addDaysToDate(newDate, amount*7);
-        } else if (type.equals("m")) {
-            newDate = Util.addMonthsToDate(newDate, amount);
-        } else if (type.equals("y")) {
-            newDate = Util.addYearsToDate(newDate, amount);
-        }
-
-        String newDateString = formatter.format(newDate);
-        setDueDate(newDateString);
     }
 
     public void deferThresholdDate(Date deferDate) {

@@ -55,6 +55,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete">Delete</string>
     <string name="defer_due">Set due date(s)</string>
     <string name="defer_threshold">Set threshold date(s)</string>
+    <string name="insert_due">Insert due date</string>
+    <string name="insert_threshold">Insert threshold date</string>
     <string name="share">Share</string>
     <string name="unComplete">Undo complete</string>
     <string name="ok">OK</string>
