@@ -47,6 +47,9 @@ import java.util.regex.Pattern;
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
 
+    public final static int DUE_DATE = 0;
+    public final static int THRESHOLD_DATE = 1;
+
     private static final long serialVersionUID = 0L;
 
     private static final Pattern TAG_PATTERN = Pattern
@@ -55,6 +58,8 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("\\sdue:(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern THRESHOLD_PATTERN =  Pattern
             .compile("\\st:(\\d{4}-\\d{2}-\\d{2})");
+    private static final Pattern RECURRENCE_PATTERN =  Pattern
+            .compile("\\srec:(\\d{1,}[dwmy])");
 
     private static final String COMPLETED = "x ";
     private String originalText;
@@ -76,6 +81,7 @@ public class Task implements Serializable, Comparable<Task> {
     private Date dueDate;
     private SimpleDateFormat formatter;
     private Date thresholdDate;
+    private String recurrencePattern;
 
 
     public static boolean validTag(String tag) {
@@ -136,6 +142,13 @@ public class Task implements Serializable, Comparable<Task> {
                 this.dueDate = null;
             }
         }
+
+        this.recurrencePattern = null;
+        matcher = RECURRENCE_PATTERN.matcher(this.text);
+        if (matcher.find()) {
+            this.recurrencePattern = matcher.group(1);
+        }
+
         this.thresholdDate = null;
         matcher = THRESHOLD_PATTERN.matcher(this.text);
         if (matcher.find()) {
@@ -248,6 +261,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public List<String> getMailAddresses() {
         return mailAddresses;
+    }
+
+    public String getRecurrencePattern() {
+        return recurrencePattern;
     }
 
     public List<URL> getLinks() {
@@ -422,37 +439,47 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferDueDate(String deferString) {
+
+    public void setDueDate(Date dueDate) {
+        setDueDate(formatter.format(dueDate));
+    }
+
+    public void setDueDate(String dueDateString) {
         String taskContents = inFileFormat();
         if (dueDate!=null) {
-            taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + deferString);
+            taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + dueDateString);
         } else {
-            taskContents = taskContents + " due:" + deferString;
+            taskContents = taskContents + " due:" + dueDateString;
+        }
+        init(taskContents, null);
+    }
+
+    public void setThresholdDate(Date thresholdDate) {
+        setThresholdDate(formatter.format(thresholdDate));
+    }
+
+    public void setThresholdDate(String thresholdDate) {
+        String taskContents = inFileFormat();
+        if (thresholdDate!=null) {
+            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDate);
+        } else {
+            taskContents = taskContents + " t:" + thresholdDate;
         }
         init(taskContents, null);
     }
 
     public void deferThresholdDate(String deferString) {
-        String taskContents = inFileFormat();
-        if (thresholdDate!=null) {
-            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + deferString);
-        } else {
-            taskContents = taskContents + " t:" + deferString;
-        }
-        init(taskContents, null);
-    }
-
-    public void deferToDate(boolean isThresholdDate, String deferString) {
-        if (isThresholdDate) {
-            deferThresholdDate(deferString);
-        } else {
-            deferDueDate(deferString);
+        Date newDate = Util.addInterval(deferString);
+        if (newDate!=null) {
+            setThresholdDate(newDate);
         }
     }
 
-    public void deferToDate(boolean isThresholdDate, Date deferDate) {
-        String deferString = formatter.format(deferDate);
-        deferToDate(isThresholdDate, deferString);
+    public void deferDueDate(String deferString) {
+        Date newDate = Util.addInterval(deferString);
+        if (newDate!=null) {
+            setDueDate(newDate);
+        }
     }
 
     public String getThresholdDateString(String empty) {

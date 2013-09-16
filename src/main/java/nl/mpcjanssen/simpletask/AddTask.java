@@ -24,6 +24,7 @@ package nl.mpcjanssen.simpletask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -39,6 +40,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -49,11 +51,15 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.simpletask.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 
 
 public class AddTask extends Activity {
@@ -88,12 +94,6 @@ public class AddTask extends Activity {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add_task:
-                // Open new tasks add activity
-                Intent intent = getIntent();
-                intent.removeExtra(Constants.EXTRA_TASK);
-                startActivity(intent);
-                // And save current task
             case R.id.menu_save_task:
                 // save clone checkbox state
                 m_app.setAddTagsCloneTags(hasCloneTags());
@@ -137,6 +137,13 @@ public class AddTask extends Activity {
             case R.id.menu_add_tag:
                 showTagMenu(findViewById(R.id.menu_add_tag));
                 break;
+            case R.id.insert_due:
+                insertDate(Task.DUE_DATE);
+                break;
+            case R.id.insert_threshold:
+                insertDate(Task.THRESHOLD_DATE);
+                break;
+
         }
         return true;
     }
@@ -287,6 +294,60 @@ public class AddTask extends Activity {
         textInputField.setSelection(textIndex);
     }
 
+
+    private void insertDate(final int dateType) {
+        String[] keys = getResources().getStringArray(R.array.deferOptions);
+        String today = "0d";
+        String tomorrow = "1d";
+        String oneWeek = "1w";
+        String twoWeeks = "2w";
+        String oneMonth = "1m";
+        String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth, "" };
+        int titleId;
+        if (dateType==Task.DUE_DATE) {
+            titleId = R.string.insert_due;
+        } else {
+            titleId = R.string.insert_threshold;
+        }
+        Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
+                titleId, null, new Util.OnSingleChoiceDialogListener() {
+            @Override
+            public void onClick(String selected) {
+                if (selected.equals("")) {
+                    DatePickerDialog dialog = new DatePickerDialog(AddTask.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            Calendar cal = Calendar.getInstance();
+                            cal.set(year, month, day);
+                            insertDateAtSelection(dateType, cal.getTime());
+
+                        }
+                    },
+                            Calendar.getInstance().get(Calendar.YEAR),
+                            Calendar.getInstance().get(Calendar.MONTH),
+                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+                    dialog.show();
+                } else {
+                    insertDateAtSelection(dateType, Util.addInterval(selected));
+                }
+            }
+        });
+        d.show();
+    }
+
+    private void insertDateAtSelection(int dateType, String date) {
+           if (dateType==Task.DUE_DATE) {
+               replaceTextAtSelection("due:" + date);
+           } else {
+               replaceTextAtSelection("t:" + date);
+           }
+    }
+
+    private void insertDateAtSelection(int dateType, Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
+        insertDateAtSelection(dateType, formatter.format(date));
+    }
 
     private void showTagMenu(View v) {
         final ArrayList<String> projects = taskBag.getProjects(false);

@@ -1,5 +1,15 @@
 # ChangeLog
 
+### 2.9.0
+
+* [Feature] Set due and threshold date for selected tasks from main screen.
+* [Feature] Insert due or threshold date from menu in Add Task screen.
+* [Feature] Create recurring tasks with the rec:[0-9]+[mwd] format
+  [http://github.com/bram85/todo.txt-tools/wiki/Recurrence](http://github.com/bram85/todo.txt-tools/wiki/Recurrence)
+* [Feature] Removed setting for deferable due date, both due date and threshold
+  date can be set and defered from the main menu now so this setting is not
+  needed anymore.
+
 ### 2.8.2
 
 * [Feature] Allow 1x1 widget size.
