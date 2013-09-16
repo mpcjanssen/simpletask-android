@@ -608,9 +608,14 @@ public class Simpletask extends ListActivity  {
 		String twoWeeks = "2w";
 		String oneMonth = "1m";
 		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth, "" };
-
+        int titleId;
+        if (dateType==Task.DUE_DATE) {
+            titleId = R.string.defer_due;
+        } else {
+            titleId = R.string.defer_threshold;
+        }
 		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
-				R.string.set_date, null, new Util.OnSingleChoiceDialogListener() {
+				titleId, null, new Util.OnSingleChoiceDialogListener() {
 					@Override
 					public void onClick(String selected) {
 						if (selected.equals("")) {
