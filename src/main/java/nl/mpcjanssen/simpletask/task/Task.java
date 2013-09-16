@@ -55,6 +55,8 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("\\sdue:(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern THRESHOLD_PATTERN =  Pattern
             .compile("\\st:(\\d{4}-\\d{2}-\\d{2})");
+    private static final Pattern RECURRENCE_PATTERN =  Pattern
+            .compile("\\srec:(\\d{1,}[dwmy])");
 
     private static final String COMPLETED = "x ";
     private String originalText;
@@ -76,6 +78,7 @@ public class Task implements Serializable, Comparable<Task> {
     private Date dueDate;
     private SimpleDateFormat formatter;
     private Date thresholdDate;
+    private String recurrencePattern;
 
 
     public static boolean validTag(String tag) {
@@ -136,6 +139,13 @@ public class Task implements Serializable, Comparable<Task> {
                 this.dueDate = null;
             }
         }
+
+        this.recurrencePattern = null;
+        matcher = RECURRENCE_PATTERN.matcher(this.text);
+        if (matcher.find()) {
+            this.recurrencePattern = matcher.group(1);
+        }
+
         this.thresholdDate = null;
         matcher = THRESHOLD_PATTERN.matcher(this.text);
         if (matcher.find()) {
@@ -248,6 +258,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     public List<String> getMailAddresses() {
         return mailAddresses;
+    }
+
+    public String getRecurrencePattern() {
+        return recurrencePattern;
     }
 
     public List<URL> getLinks() {
@@ -443,10 +457,33 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void deferToDate(boolean isThresholdDate, String deferString) {
-        if (isThresholdDate) {
-            deferThresholdDate(deferString);
+        Pattern p = Pattern.compile("(\\d+)([dwmy])");
+        Matcher m = p.matcher(deferString);
+        int amount;
+        String type;
+        Date newDate = new Date();
+        m.find();
+        if(m.groupCount()==2) {
+            amount = Integer.parseInt(m.group(1));
+            type = m.group(2);
         } else {
-            deferDueDate(deferString);
+            return;
+        }
+        if (type.equals("d")) {
+            newDate = Util.addDaysToDate(newDate, amount);
+        } else if (type.equals("w")) {
+            newDate = Util.addDaysToDate(newDate, amount*7);
+        } else if (type.equals("m")) {
+            newDate = Util.addMonthsToDate(newDate, amount);
+        } else if (type.equals("y")) {
+            newDate = Util.addYearsToDate(newDate, amount);
+        }
+
+        String newDateString = formatter.format(newDate);
+        if (isThresholdDate) {
+            deferThresholdDate(newDateString);
+        } else {
+            deferDueDate(newDateString);
         }
     }
 

@@ -379,12 +379,12 @@ public class Util {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public static Date addWeeksToDate(Date date, int weeks) {
+    public static Date addDaysToDate(Date date, int days) {
         Date newDate = new Date(date.getTime());
 
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(newDate);
-        calendar.add(Calendar.DATE, weeks);
+        calendar.add(Calendar.DATE, days);
         newDate.setTime(calendar.getTime().getTime());
         return newDate;
     }
@@ -395,6 +395,16 @@ public class Util {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(newDate);
         calendar.add(Calendar.MONTH, months);
+        newDate.setTime(calendar.getTime().getTime());
+        return newDate;
+    }
+
+    public static Date addYearsToDate(Date date, int years) {
+        Date newDate = new Date(date.getTime());
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(newDate);
+        calendar.add(Calendar.YEAR, years);
         newDate.setTime(calendar.getTime().getTime());
         return newDate;
     }
