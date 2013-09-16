@@ -53,7 +53,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="remove_list_or_tag">Remove lists and tags</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
-    <string name="defer">Defer task</string>
+    <string name="defer_due">Set due date(s)</string>
+    <string name="defer_threshold">Set threshold date(s)</string>
+    <string name="set_date">Set date</string>
     <string name="share">Share</string>
     <string name="unComplete">Undo complete</string>
     <string name="ok">OK</string>
@@ -98,9 +100,6 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
-    <string name="defer_threshold_date_pref_title">Defer by threshold date</string>
-    <string name="defer_threshold_date_pref_summary">Defer tasks using the threshold date (t:yyy-mm-dd).
-        If unchecked defer by due date (due:yyyy-mm-dd) instead.</string>
     <string name="long_press_drag_pref_title">Use long click for drag-drop</string>
     <string name="long_press_drag_pref_summary">Use a long press for dragging and dropping the sort items in the sorting filter tab.
         Uncheck this to use the arrows handle to drag and drop.

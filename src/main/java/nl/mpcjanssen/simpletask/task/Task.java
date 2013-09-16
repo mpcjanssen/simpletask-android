@@ -47,6 +47,9 @@ import java.util.regex.Pattern;
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
 
+    public final static int DUE_DATE = 0;
+    public final static int THRESHOLD_DATE = 1;
+
     private static final long serialVersionUID = 0L;
 
     private static final Pattern TAG_PATTERN = Pattern
@@ -436,27 +439,62 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferDueDate(String deferString) {
+
+    public void setDueDate(Date dueDate) {
+        setDueDate(formatter.format(dueDate));
+    }
+
+    public void setDueDate(String dueDateString) {
         String taskContents = inFileFormat();
         if (dueDate!=null) {
-            taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + deferString);
+            taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + dueDateString);
         } else {
-            taskContents = taskContents + " due:" + deferString;
+            taskContents = taskContents + " due:" + dueDateString;
+        }
+        init(taskContents, null);
+    }
+
+    public void setThresholdDate(Date thresholdDate) {
+        setThresholdDate(formatter.format(thresholdDate));
+    }
+
+    public void setThresholdDate(String thresholdDate) {
+        String taskContents = inFileFormat();
+        if (thresholdDate!=null) {
+            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDate);
+        } else {
+            taskContents = taskContents + " t:" + thresholdDate;
         }
         init(taskContents, null);
     }
 
     public void deferThresholdDate(String deferString) {
-        String taskContents = inFileFormat();
-        if (thresholdDate!=null) {
-            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + deferString);
+        Pattern p = Pattern.compile("(\\d+)([dwmy])");
+        Matcher m = p.matcher(deferString);
+        int amount;
+        String type;
+        Date newDate = new Date();
+        m.find();
+        if(m.groupCount()==2) {
+            amount = Integer.parseInt(m.group(1));
+            type = m.group(2);
         } else {
-            taskContents = taskContents + " t:" + deferString;
+            return;
         }
-        init(taskContents, null);
+        if (type.equals("d")) {
+            newDate = Util.addDaysToDate(newDate, amount);
+        } else if (type.equals("w")) {
+            newDate = Util.addDaysToDate(newDate, amount*7);
+        } else if (type.equals("m")) {
+            newDate = Util.addMonthsToDate(newDate, amount);
+        } else if (type.equals("y")) {
+            newDate = Util.addYearsToDate(newDate, amount);
+        }
+        String newDateString = formatter.format(newDate);
+        setThresholdDate(newDateString);
     }
 
-    public void deferToDate(boolean isThresholdDate, String deferString) {
+    public void deferDueDate(String deferString) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
         Matcher m = p.matcher(deferString);
         int amount;
@@ -480,16 +518,17 @@ public class Task implements Serializable, Comparable<Task> {
         }
 
         String newDateString = formatter.format(newDate);
-        if (isThresholdDate) {
-            deferThresholdDate(newDateString);
-        } else {
-            deferDueDate(newDateString);
-        }
+        setDueDate(newDateString);
     }
 
-    public void deferToDate(boolean isThresholdDate, Date deferDate) {
+    public void deferThresholdDate(Date deferDate) {
         String deferString = formatter.format(deferDate);
-        deferToDate(isThresholdDate, deferString);
+        setThresholdDate(deferString);
+    }
+
+    public void deferDueDate(boolean isThresholdDate, Date deferDate) {
+        String deferString = formatter.format(deferDate);
+        setDueDate(deferString);
     }
 
     public String getThresholdDateString(String empty) {
