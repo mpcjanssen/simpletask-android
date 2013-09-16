@@ -482,16 +482,6 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferThresholdDate(Date deferDate) {
-        String deferString = formatter.format(deferDate);
-        setThresholdDate(deferString);
-    }
-
-    public void deferDueDate(boolean isThresholdDate, Date deferDate) {
-        String deferString = formatter.format(deferDate);
-        setDueDate(deferString);
-    }
-
     public String getThresholdDateString(String empty) {
         if (this.thresholdDate==null) {
             return empty;
