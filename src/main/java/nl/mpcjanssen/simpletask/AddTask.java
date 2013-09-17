@@ -39,6 +39,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -128,22 +129,6 @@ public class AddTask extends Activity {
                 dialog.setTitle("Task format");
                 dialog.show();
                 break;
-            case R.id.menu_add_prio:
-                showPrioMenu(findViewById(R.id.menu_add_prio));
-                break;
-            case R.id.menu_add_list:
-                showContextMenu(findViewById(R.id.menu_add_list));
-                break;
-            case R.id.menu_add_tag:
-                showTagMenu(findViewById(R.id.menu_add_tag));
-                break;
-            case R.id.insert_due:
-                insertDate(Task.DUE_DATE);
-                break;
-            case R.id.insert_threshold:
-                insertDate(Task.THRESHOLD_DATE);
-                break;
-
         }
         return true;
     }
@@ -292,6 +277,39 @@ public class AddTask extends Activity {
         setCloneTags(m_app.isAddTagsCloneTags());
         int textIndex = 0;
         textInputField.setSelection(textIndex);
+
+        // Set button callbacks
+        findViewById(R.id.btnContext).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContextMenu();
+            }
+        });
+        findViewById(R.id.btnProject).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTagMenu();
+            }
+        });
+        findViewById(R.id.btnPrio).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPrioMenu();
+            }
+        });
+
+        findViewById(R.id.btnDue).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertDate(Task.DUE_DATE);
+            }
+        });
+        findViewById(R.id.btnThreshold).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertDate(Task.THRESHOLD_DATE);
+            }
+        });
     }
 
 
@@ -349,7 +367,7 @@ public class AddTask extends Activity {
         insertDateAtSelection(dateType, formatter.format(date));
     }
 
-    private void showTagMenu(View v) {
+    private void showTagMenu() {
         final ArrayList<String> projects = taskBag.getProjects(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(projects.toArray(new String[projects.size()]),
@@ -366,7 +384,7 @@ public class AddTask extends Activity {
         dialog.show();
     }
 
-    private void showPrioMenu(View v) {
+    private void showPrioMenu() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final Priority[] priorities = Priority.values();
         ArrayList<String> priorityCodes = new ArrayList<String>();
@@ -390,7 +408,7 @@ public class AddTask extends Activity {
     }
 
 
-    private void showContextMenu(View v) {
+    private void showContextMenu() {
         final ArrayList<String> contexts = taskBag.getContexts(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(contexts.toArray(new String[contexts.size()]),
