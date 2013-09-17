@@ -446,7 +446,7 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void setDueDate(String dueDateString) {
         String taskContents = inFileFormat();
-        if (dueDate!=null) {
+        if (this.dueDate!=null) {
             taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + dueDateString);
         } else {
             taskContents = taskContents + " due:" + dueDateString;
@@ -458,12 +458,12 @@ public class Task implements Serializable, Comparable<Task> {
         setThresholdDate(formatter.format(thresholdDate));
     }
 
-    public void setThresholdDate(String thresholdDate) {
+    public void setThresholdDate(String thresholdDateString) {
         String taskContents = inFileFormat();
-        if (thresholdDate!=null) {
-            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDate);
+        if (this.thresholdDate!=null) {
+            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDateString);
         } else {
-            taskContents = taskContents + " t:" + thresholdDate;
+            taskContents = taskContents + " t:" + thresholdDateString;
         }
         init(taskContents, null);
     }
