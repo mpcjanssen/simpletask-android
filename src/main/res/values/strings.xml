@@ -197,6 +197,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="other_prompt">Other</string>
     <string name="project_prompt">Tag</string>
     <string name="context_prompt">List</string>
+
+    <string name="priority_format">(prio)</string>
+    <string name="context_format">\@list</string>
+    <string name="project_format">+tag</string>
+
     <string name="separator">Separator</string>
 
     <!-- launcher shortcut -->
