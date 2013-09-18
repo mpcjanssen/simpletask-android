@@ -159,9 +159,10 @@ public class AddTask extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        m_app = (TodoApplication) getApplication();
+        m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
-        m_app = (TodoApplication) getApplication();
         taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
         mFilter = new ActiveFilter(getResources());

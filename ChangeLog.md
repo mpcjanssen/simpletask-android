@@ -4,7 +4,7 @@
 ### 2.9.1
 
 * [Bugfix] Make the todo.txt extensions case insensitive, e.g. Due: or due: or DUE: now all work
-* [UI] Move save button in Add Task screen back to bottom.
+* [UI] Make use of the Split Action Bar configurable to have either easily reachable buttons or more screen real estate.
 * [Bugfix] Don't add empty tasks from Add Task screen.
 
 ### 2.9.0
