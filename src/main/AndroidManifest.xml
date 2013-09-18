@@ -70,7 +70,6 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:name="nl.mpcjanssen.simpletask.AddTask"
                 android:exported="true"
                 android:label="@string/addtask"
-                android:uiOptions="none"
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
