@@ -1,5 +1,12 @@
 # ChangeLog
 
+
+### 2.9.1
+
+* [Bugfix] Make the todo.txt extensions case insensitive, e.g. Due: or due: or DUE: now all work
+* [UI] Move save button in Add Task screen back to bottom.
+* [Bugfix] Don't add empty tasks from Add Task screen.
+
 ### 2.9.0
 
 * [Feature] Set due and threshold date for selected tasks from main screen.
