@@ -101,6 +101,13 @@ public class AddTask extends Activity {
                 // strip line breaks
                 textInputField = (EditText) findViewById(R.id.taskText);
                 String input = textInputField.getText().toString();
+
+                // Don't add empty tasks
+                if (input.trim().equals("")) {
+                    finish();
+                    return true;
+                }
+
                 ArrayList<String> tasks = new ArrayList<String>();
                 tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
                 if (m_backup != null && tasks.size()>0) {
