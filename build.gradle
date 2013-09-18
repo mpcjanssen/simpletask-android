@@ -15,8 +15,8 @@ android {
     compileSdkVersion 18
 
     defaultConfig {
-        versionName '2.9.0'
-        versionCode 1035
+        versionName '2.9.1'
+        versionCode 1036
     }
 
     dependencies {
