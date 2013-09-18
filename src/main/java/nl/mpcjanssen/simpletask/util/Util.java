@@ -413,14 +413,14 @@ public class Util {
 
     public static Date addInterval(String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
-        Matcher m = p.matcher(interval);
+        Matcher m = p.matcher(interval.toLowerCase());
         int amount;
         String type;
         Date newDate = new Date();
         m.find();
         if(m.groupCount()==2) {
             amount = Integer.parseInt(m.group(1));
-            type = m.group(2);
+            type = m.group(2).toLowerCase();
         } else {
             return null;
         }
