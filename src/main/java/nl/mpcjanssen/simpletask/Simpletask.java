@@ -168,9 +168,10 @@ public class Simpletask extends ListActivity  {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		Log.v(TAG, "onCreate");
 		m_app = (TodoApplication) getApplication();
+        m_app.setActionBarStyle(getWindow());
+        super.onCreate(savedInstanceState);
 		taskBag = m_app.getTaskBag();
 
 		final IntentFilter intentFilter = new IntentFilter();

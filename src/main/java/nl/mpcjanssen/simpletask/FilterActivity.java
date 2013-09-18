@@ -48,9 +48,10 @@ public class FilterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {    	
     	Log.v(TAG, "Called with intent: " + getIntent().toString());
+        TodoApplication  m_app = (TodoApplication) getApplication();
+        m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
 
-        TodoApplication m_app = (TodoApplication) getApplication();
         // Set the proper theme
         setTheme(m_app.getActiveTheme());
         setContentView(R.layout.filter);

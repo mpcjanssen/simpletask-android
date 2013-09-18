@@ -17,5 +17,6 @@
     <string name="clone_tags_key">clone_tags</string>
     <string name="color_due_date_key">color_due_date</string>
     <string name="long_click_drag_drop_key">long_click_drag_drop</string>
+    <string name="split_actionbar_key">split_actionbar</string>
 
 </resources>

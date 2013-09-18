@@ -26,12 +26,14 @@ import android.app.Application;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Window;
 
 import java.io.File;
 
@@ -427,6 +429,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
             return android.R.style.Theme_Holo_Light_DarkActionBar;
         } else  {
             return android.R.style.Theme_Holo_Light_DarkActionBar;
+        }
+    }
+
+    public void setActionBarStyle(Window window) {
+        if (getPrefs().getBoolean(getString(R.string.split_actionbar_key), true)) {
+            window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
         }
     }
 

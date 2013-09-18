@@ -124,6 +124,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="color_due_pref_title">Color due dates</string>
     <string name="color_due_pref_summary">Color due dates based on whether they are due today, due in the future or overdue.</string>
 
+    <string name="split_actionbar_pref_title">Use split action bar</string>
+    <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
+        For more screen estate for the todo list turn this off. </string>
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
