@@ -1,5 +1,8 @@
 # ChangeLog
 
+### 3.0.0
+
+* [Feature] Enable switching of todo files (Menu->Open todo file).
 
 ### 2.9.1
 
