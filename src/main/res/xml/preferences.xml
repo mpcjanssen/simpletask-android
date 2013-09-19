@@ -27,35 +27,34 @@
 	@author Todo.txt contributors <todotxt@yahoogroups.com>
 	@license http://www.gnu.org/licenses/gpl.html
 	@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
--->
-<!-- suppress ALL -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+--><!-- suppress ALL -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/todotxt_settings_header" >
+    <PreferenceCategory android:title="@string/todotxt_settings_header">
         <ListPreference
-                android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
-                android:entries="@array/themes"
-                android:entryValues="@array/theme_values"
-                android:key="@string/theme_pref_key"
-                android:summary="@string/theme_pref_summary"
-                android:title="@string/theme_pref_title" />
+            android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
+            android:entries="@array/themes"
+            android:entryValues="@array/theme_values"
+            android:key="@string/theme_pref_key"
+            android:summary="@string/theme_pref_summary"
+            android:title="@string/theme_pref_title" />
         <ListPreference
-                android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
-                android:entries="@array/themes"
-                android:entryValues="@array/theme_values"
-                android:key="@string/widget_theme_pref_key"
-                android:summary="@string/widget_theme_pref_summary"
-                android:title="@string/widget_theme_pref_title" />
+            android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
+            android:entries="@array/themes"
+            android:entryValues="@array/theme_values"
+            android:key="@string/widget_theme_pref_key"
+            android:summary="@string/widget_theme_pref_summary"
+            android:title="@string/widget_theme_pref_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/split_actionbar_key"
             android:summary="@string/split_actionbar_pref_summary"
             android:title="@string/split_actionbar_pref_title" />
         <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="@string/color_due_date_key"
-                android:summary="@string/color_due_pref_summary"
-                android:title="@string/color_due_pref_title" />
+            android:defaultValue="true"
+            android:key="@string/color_due_date_key"
+            android:summary="@string/color_due_pref_summary"
+            android:title="@string/color_due_pref_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prepend_date_pref_key"
@@ -72,20 +71,28 @@
             android:title="@string/line_breaks_pref_title" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/DROPBOX_settings_header"
-                        android:key="@string/dropbox_cat_key">
+    <PreferenceCategory
+        android:title="@string/DROPBOX_settings_header"
+        android:key="@string/dropbox_cat_key">
 
         <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/manual_sync_pref_key"
             android:summary="@string/manual_sync_pref_summary"
             android:title="@string/manual_sync_pref_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/resume_sync_pref_key"
+            android:summary="@string/resume_sync_pref_summary"
+            android:title="@string/resume_sync_pref_title" />
 
         <Preference
             android:key="logout_dropbox"
             android:summary="@string/dropbox_logout_pref_summary"
             android:title="@string/dropbox_logout_pref_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/archive_now_pref_title" >
+    <PreferenceCategory android:title="@string/archive_now_pref_title">
         <CheckBoxPreference
             android:key="@string/auto_archive_pref_key"
             android:summary="@string/auto_archive_pref_summary"
@@ -96,21 +103,21 @@
             android:summary="@string/archive_now_pref_summary"
             android:title="@string/archive_now_pref_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/about_settings_header" >
+    <PreferenceCategory android:title="@string/about_settings_header">
         <Preference
             android:key="app_version"
             android:title="@string/app_label" />
 
         <PreferenceScreen
             android:summary="@string/visit_website_summary"
-            android:title="@string/visit_website_title" >
+            android:title="@string/visit_website_title">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/visit_website_data" />
         </PreferenceScreen>
         <PreferenceScreen
             android:summary="@string/visit_tracker_summary"
-            android:title="@string/visit_tracker_title" >
+            android:title="@string/visit_tracker_title">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/visit_tracker_data" />

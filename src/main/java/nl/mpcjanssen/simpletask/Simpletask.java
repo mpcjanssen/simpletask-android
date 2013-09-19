@@ -230,6 +230,9 @@ public class Simpletask extends ListActivity  {
 		}
 		setProgressBarIndeterminateVisibility(false);
 		getTaskBag().reload();
+        if(m_app.hasSyncOnResume()) {
+            syncClient(false);
+        }
 		handleIntent(savedInstanceState);
 	}
 
@@ -394,6 +397,9 @@ public class Simpletask extends ListActivity  {
 	protected void onRestart() {
 		super.onRestart();
 		Log.v(TAG, "onRestart: " + getIntent().getExtras());
+        if(m_app.hasSyncOnResume()) {
+            syncClient(false);
+        }
 		handleIntent(null);
 
 	}
