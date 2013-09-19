@@ -44,8 +44,10 @@ import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.util.DropboxFileDialog;
 import nl.mpcjanssen.simpletask.util.FileDialog;
 import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletask.remote.DropboxRemoteClient;
 
 
 public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -59,6 +61,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private BroadcastReceiver m_broadcastReceiver;
     private Handler handler = new Handler();
     private FileObserver m_observer;
+    private File local_todo;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -71,20 +74,20 @@ public class TodoApplication extends Application implements SharedPreferences.On
     @Override
     public void onCreate() {
         super.onCreate();
-        File todo;
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         if (isCloudLess()) {
             String todoName = getTodoFileName();
             if(todoName!=null) {
-                todo = new File(todoName);
+                local_todo = new File(todoName);
             } else {
-                todo = new File(Environment.getExternalStorageDirectory(),"data/nl.mpcjanssen.simpletask/todo.txt");
+                local_todo = new File(Environment.getExternalStorageDirectory(),"data/nl.mpcjanssen.simpletask/todo.txt");
             }
         } else {
-            todo = new File(TodoApplication.getAppContext().getFilesDir(),"todo.txt");
+            // Local storage for Dropbox is always the same
+            local_todo = new File(TodoApplication.getAppContext().getFilesDir(),"todo.txt");
         }
-        initStorage(todo);
+        initStorage(local_todo);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(getPackageName()+Constants.BROADCAST_SET_MANUAL);
@@ -118,11 +121,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    private void initStorage(File root) {
-        setTodoFile(root);
+    private void initStorage(File todoFile) {
+        if(isCloudLess()) {
+            local_todo = todoFile;
+        }
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
-        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, root, taskBagPreferences);
+        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, local_todo, taskBagPreferences);
         if (isCloudLess()) {
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, null);
             Log.v(TAG, "Obs: " + localTaskRepository.getTodoTxtFile().getPath());
@@ -155,11 +160,28 @@ public class TodoApplication extends Application implements SharedPreferences.On
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
             @Override
             public void fileSelected(File file) {
+                setTodoFile(file);
                 initStorage(file);
             }
         });
         fileDialog.createFileDialog();
     }
+
+    public void openDropboxFile(Activity act) {
+        DropboxRemoteClient client = (DropboxRemoteClient)remoteClientManager.getRemoteClient();
+        DropboxFileDialog fileDialog = new DropboxFileDialog(act,
+                client.getApi(), new File(getTodoFileName()).getParentFile());
+        fileDialog.addFileListener(new DropboxFileDialog.FileSelectedListener() {
+            @Override
+            public void fileSelected(File file) {
+                setTodoFile(file);
+                initStorage(file);
+                pullFromRemote(true);
+            }
+        });
+        fileDialog.createFileDialog();
+    }
+
     public void startWatching() {
         if (m_observer!=null) {
             m_observer.startWatching();

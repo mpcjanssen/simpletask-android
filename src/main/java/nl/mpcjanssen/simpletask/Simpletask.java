@@ -761,7 +761,8 @@ public class Simpletask extends ListActivity  {
                if (m_app.isCloudLess()) {
                    m_app.openCloudlessFile(this);
                } else {
-                   Util.showToastLong(this,"Not implemented");
+
+                   m_app.openDropboxFile(this);
                }
                 break;
             default:
