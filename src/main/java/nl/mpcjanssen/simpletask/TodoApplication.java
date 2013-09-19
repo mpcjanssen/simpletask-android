@@ -22,7 +22,9 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
@@ -36,11 +38,13 @@ import android.util.Log;
 import android.view.Window;
 
 import java.io.File;
+import java.io.IOException;
 
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
 import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.util.FileDialog;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -67,16 +71,57 @@ public class TodoApplication extends Application implements SharedPreferences.On
     @Override
     public void onCreate() {
         super.onCreate();
+        File todo;
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+        if (isCloudLess()) {
+            String todoName = getTodoFileName();
+            if(todoName!=null) {
+                todo = new File(todoName);
+            } else {
+                todo = new File(Environment.getExternalStorageDirectory(),"data/nl.mpcjanssen.simpletask/todo.txt");
+            }
+        } else {
+            todo = new File(TodoApplication.getAppContext().getFilesDir(),"todo.txt");
+        }
+        initStorage(todo);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_SET_MANUAL);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE);
+        intentFilter.addAction(getPackageName()+Constants.BROADCAST_ASYNC_FAILED);
+        m_prefs.registerOnSharedPreferenceChangeListener(this);
+
+
+        if (null == m_broadcastReceiver) {
+            m_broadcastReceiver = new BroadcastReceiverExtension();
+            registerReceiver(m_broadcastReceiver, intentFilter);
+        }
+
+        // Pull from dropbox every 5 minutes
+        if (!isCloudLess()) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+      /* do what you need to do */
+                    if (!isManualMode()) {
+                        backgroundPullFromRemote();
+                    }
+      /* reschedule next */
+                    handler.postDelayed(this, 5 * 60 * 1000);
+                    Log.v(TAG, "Pulling from remote");
+                }
+            };
+            handler.postDelayed(runnable, 5 * 60 * 1000);
+        }
+    }
+
+    private void initStorage(File root) {
+        setTodoFile(root);
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
-        File root;
-        if (isCloudLess()) {
-            root = new File(Environment.getExternalStorageDirectory(),"data/nl.mpcjanssen.simpletask");
-        } else {
-            root = TodoApplication.getAppContext().getFilesDir();
-        }
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, root, taskBagPreferences);
         if (isCloudLess()) {
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, null);
@@ -100,39 +145,21 @@ public class TodoApplication extends Application implements SharedPreferences.On
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, remoteClientManager);
         }
         this.startWatching();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getPackageName()+Constants.BROADCAST_SET_MANUAL);
-        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE);
-        intentFilter.addAction(getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE);
-        intentFilter.addAction(getPackageName()+Constants.BROADCAST_ASYNC_FAILED);
-        m_prefs.registerOnSharedPreferenceChangeListener(this);
-
-
-        if (null == m_broadcastReceiver) {
-            m_broadcastReceiver = new BroadcastReceiverExtension();
-            registerReceiver(m_broadcastReceiver, intentFilter);
-        }
-
         taskBag.reload();
-        // Pull from dropbox every 5 minutes
-        if (!isCloudLess()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-      /* do what you need to do */
-                    if (!isManualMode()) {
-                        backgroundPullFromRemote();
-                    }
-      /* reschedule next */
-                    handler.postDelayed(this, 5 * 60 * 1000);
-                    Log.v(TAG, "Pulling from remote");
-                }
-            };
-            handler.postDelayed(runnable, 5 * 60 * 1000);
-        }
+        updateUI();
     }
 
+    public void openCloudlessFile(Activity act) {
+        FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getParentFile());
+        fileDialog.setSelectDirectoryOption(false);
+        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+            @Override
+            public void fileSelected(File file) {
+                initStorage(file);
+            }
+        });
+        fileDialog.createFileDialog();
+    }
     public void startWatching() {
         if (m_observer!=null) {
             m_observer.startWatching();
@@ -230,6 +257,18 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public boolean isManualMode() {
         return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
+    }
+
+    public String getTodoFileName() {
+        return m_prefs.getString(getString(R.string.todo_file_key), null);
+    }
+
+    public void setTodoFile(File todo) {
+        try {
+            m_prefs.edit().putString(getString(R.string.todo_file_key), todo.getCanonicalPath()).commit();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     public boolean isAutoArchive() {
