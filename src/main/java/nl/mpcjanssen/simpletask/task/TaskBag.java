@@ -163,6 +163,9 @@ public class TaskBag {
                 File doneFile = result.getDoneFile();
                 if (doneFile != null && doneFile.exists()) {
                     localRepository.loadDoneTasks(doneFile);
+                } else if (doneFile == null) {
+                    // Dropbox has no done file so remove this one
+                    localRepository.removeDoneFile();
                 }
                 lastSync = new Date();
             }

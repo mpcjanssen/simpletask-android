@@ -122,6 +122,9 @@ public class LocalFileTaskRepository {
 		Util.renameFile(file, DONE_TXT_FILE, true);
 	}
 
+    public void removeDoneFile() {
+        DONE_TXT_FILE.delete();
+    }
 	public boolean todoFileModifiedSince(Date date) {
 		long date_ms = 0l;
 		if (date != null) {

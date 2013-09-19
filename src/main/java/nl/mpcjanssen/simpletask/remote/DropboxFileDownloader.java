@@ -81,6 +81,12 @@ public class DropboxFileDownloader {
         for (DropboxFile file : files) {
             if (file.getStatus() == DropboxFileStatus.FOUND) {
                 loadFile(file);
+            } else if (file.getStatus() == DropboxFileStatus.NOT_CHANGED) {
+                // Check if we still have a local copy. This could have been removed
+                // When switching todo files
+                if (!file.getLocalFile().exists()) {
+                    loadFile(file);
+                }
             }
         }
 
