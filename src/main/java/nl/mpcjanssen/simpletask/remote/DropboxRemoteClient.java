@@ -45,7 +45,7 @@ import com.dropbox.client2.session.Session.AccessType;
 public class DropboxRemoteClient implements RemoteClient {
 	final static String TAG = Simpletask.class.getSimpleName();
 	
-	private static final String DEFAULT_TODO_TXT_REMOTE_PATH = "/todo";
+	private static final String DEFAULT_TODO_TXT_REMOTE_PATH = "/todo/todo.txt";
 	private static final AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	private static final File TODO_TXT_TMP_FILE = new File(
 			TodoApplication.getAppContext().getFilesDir(),
@@ -281,7 +281,11 @@ public class DropboxRemoteClient implements RemoteClient {
 	}
 
 	String getTodoFile() {
-        String rawPath =  sharedPreferences.getString("todo_file", DEFAULT_TODO_TXT_REMOTE_PATH);
+        String rawPath =  sharedPreferences.getString("todo_file", null);
+        if (rawPath == null)  {
+            rawPath = DEFAULT_TODO_TXT_REMOTE_PATH;
+            sharedPreferences.edit().putString("todo_file", rawPath).commit();
+        }
         // Return a proper path name otherwise syncing with dropbox will not work
         // Fixes bug #2
         rawPath = rawPath.replaceAll("/$", "");
