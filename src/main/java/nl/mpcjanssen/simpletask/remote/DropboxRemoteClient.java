@@ -198,7 +198,10 @@ public class DropboxRemoteClient implements RemoteClient {
 		if (doneFile.getStatus() == DropboxFileStatus.SUCCESS) {
 			downloadedDoneFile = doneFile.getLocalFile();
 			storeRev(Constants.PREF_DONE_REV, doneFile.getLoadedMetadata().rev);
-		}
+		} else if (doneFile.getStatus() == DropboxFileStatus.NOT_FOUND) {
+            // Couldn't download done file from dropbox
+            downloadedDoneFile = null;
+        }
 
 		return new PullTodoResult(downloadedTodoFile, downloadedDoneFile);
 	}
