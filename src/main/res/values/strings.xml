@@ -164,7 +164,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
     <string name="logout_message">Please make sure you have synced all changes with dropbox or
         shared your complete task list if not connected to dropbox.\n
-        Any changes that have not been saved will be lost after logging out.</string>
+        Any changes that have not been synced will be lost after logging out.</string>
+     <string name="dropbox_open">Please make sure you have synced all changes with dropbox or
+        shared your complete task list if not connected to dropbox.\n
+        Any changes that have not been synced will be lost after opening a different file.</string>
     <string name="delete_task_confirm">Delete</string>
     <!-- search -->
 
