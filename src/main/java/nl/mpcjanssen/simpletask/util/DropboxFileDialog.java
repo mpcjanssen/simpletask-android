@@ -24,6 +24,7 @@ public class DropboxFileDialog {
     private String currentPathString;
     private String[] fileList;
     private AlertDialog dialogShown;
+    private final String TAG = getClass().getName();
 
     public interface FileSelectedListener {
         void fileSelected(File file);
@@ -76,6 +77,15 @@ public class DropboxFileDialog {
 
     public void loadMetadataDone(DropboxAPI.Entry pathEntry) {
         List<String> r = new ArrayList<String>();
+        if (pathEntry==null) {
+            Log.e(TAG, "Error downloading meta data" );
+            Util.showToastLong(this.activity, "Error downloading file list from Dropbox, are you connected?");
+            if (dialogShown!=null) {
+                dialogShown.cancel();
+                dialogShown.dismiss();
+            }
+            return;
+        }
         currentPathString = pathEntry.path;
         if (pathEntry.isDir) {
             if (!pathEntry.path.equals("/")) r.add(PARENT_DIR);

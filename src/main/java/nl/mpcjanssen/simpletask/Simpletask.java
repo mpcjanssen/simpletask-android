@@ -31,7 +31,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -538,7 +537,7 @@ public class Simpletask extends ListActivity  {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.select_priority);
-		builder.setSingleChoiceItems(prioArr, 0, new OnClickListener() {
+		builder.setSingleChoiceItems(prioArr, 0, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, final int which) {
 
@@ -678,7 +677,7 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void deleteTasks(final List<Task> tasks) {
-		Util.showDeleteConfirmationDialog(this, new OnClickListener() {
+		Util.showDeleteConfirmationDialog(this, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				for (Task t : tasks) {
@@ -750,7 +749,7 @@ public class Simpletask extends ListActivity  {
 				syncClient(false);
 				break;
 			case R.id.archive:
-				Util.showConfirmationDialog(this, R.string.delete_task_message, new OnClickListener() {
+				Util.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						archiveTasks();
@@ -761,8 +760,12 @@ public class Simpletask extends ListActivity  {
                if (m_app.isCloudLess()) {
                    m_app.openCloudlessFile(this);
                } else {
-
-                   m_app.openDropboxFile(this);
+                   Util.showConfirmationDialog(this, R.string.dropbox_open, new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           m_app.openDropboxFile(Simpletask.this);
+                       }
+                   });
                }
                 break;
             default:
