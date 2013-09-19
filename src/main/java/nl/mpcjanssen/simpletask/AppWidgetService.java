@@ -33,7 +33,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	private int widgetId;
 	private SharedPreferences preferences;
 	private TodoApplication application;
-	private TaskBag taskBag;
 	ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
 	public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
@@ -43,7 +42,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 		preferences = mContext.getSharedPreferences(""+widgetId, 0);
         mFilter = new ActiveFilter(mContext.getResources());
         mFilter.initFromPrefs(preferences);
-		taskBag = application.getTaskBag();
         this.application = application;
 		setFilteredTasks();
 	}
@@ -60,7 +58,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	void setFilteredTasks() {
 		Log.v(TAG, "setFilteredTasks called");
 		visibleTasks.clear();
-        visibleTasks.addAll(mFilter.apply(taskBag.getTasks()));
+        visibleTasks.addAll(mFilter.apply(application.getTaskBag().getTasks()));
 		Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort()));
 	}
 

@@ -97,10 +97,6 @@ public class Simpletask extends ListActivity  {
 	private final static int DRAWER_PROJECT = 2;
 
 
-
-
-	private TaskBag taskBag;
-
 	Menu options_menu;
 	TodoApplication m_app;
 
@@ -172,7 +168,6 @@ public class Simpletask extends ListActivity  {
 		m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
-		taskBag = m_app.getTaskBag();
 
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE);
@@ -235,11 +230,15 @@ public class Simpletask extends ListActivity  {
 			}
 		}
 		setProgressBarIndeterminateVisibility(false);
-		taskBag.reload();
+		getTaskBag().reload();
 		handleIntent(savedInstanceState);
 	}
 
-	private void handleIntent(Bundle savedInstanceState) {
+    private TaskBag getTaskBag() {
+        return m_app.getTaskBag();
+    }
+
+    private void handleIntent(Bundle savedInstanceState) {
 		if (!m_app.isCloudLess()) {
 			RemoteClient remoteClient = m_app.getRemoteClientManager()
 				.getRemoteClient();
@@ -249,9 +248,6 @@ public class Simpletask extends ListActivity  {
 				startLogin();
 				return;
 			}
-		}
-		if (taskBag==null) {
-			taskBag = m_app.getTaskBag();
 		}
 
 		mFilter = new ActiveFilter(getResources());
@@ -490,7 +486,7 @@ public class Simpletask extends ListActivity  {
 								}
 							}
 						}
-						taskBag.store();
+						getTaskBag().store();
 						m_app.updateWidgets();
 						m_app.setNeedToPush(true);
 						// We have change the data, views should refresh
@@ -503,6 +499,7 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void tagTasks(final List<Task> tasks) {
+        TaskBag taskBag = getTaskBag();
 		List<String> strings = new ArrayList<String>();
 		for (String s: taskBag.getContexts(false)) {
 			strings.add("@"+s);
@@ -523,7 +520,7 @@ public class Simpletask extends ListActivity  {
 								}
 							}
 						}
-						taskBag.store();
+						getTaskBag().store();
 						m_app.updateWidgets();
 						m_app.setNeedToPush(true);
 						// We have change the data, views should refresh
@@ -551,7 +548,7 @@ public class Simpletask extends ListActivity  {
 						task.setPriority(Priority.toPriority(prioArr[which]));
 					}
 				}
-				taskBag.store();
+				getTaskBag().store();
 				m_app.updateWidgets();
 				m_app.setNeedToPush(true);
 				// We have change the data, views should refresh
@@ -564,6 +561,7 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void completeTasks(List<Task> tasks) {
+        TaskBag taskBag = getTaskBag();
 		for (Task t : tasks) {
 			if (t != null && !t.isCompleted()) {
 				t.markComplete(new Date());
@@ -592,7 +590,7 @@ public class Simpletask extends ListActivity  {
 				t.markIncomplete();
 			}
 		}
-		taskBag.store();
+		getTaskBag().store();
 		m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
@@ -653,7 +651,7 @@ public class Simpletask extends ListActivity  {
 			}
 		}
 		m_adapter.setFilteredTasks(false);
-		taskBag.store();
+		getTaskBag().store();
 		m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
@@ -672,7 +670,7 @@ public class Simpletask extends ListActivity  {
 			}
 		}
 		m_adapter.setFilteredTasks(false);
-		taskBag.store();
+		getTaskBag().store();
 		m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
@@ -685,11 +683,11 @@ public class Simpletask extends ListActivity  {
 			public void onClick(DialogInterface dialogInterface, int i) {
 				for (Task t : tasks) {
 					if (t != null) {
-						taskBag.delete(t);
+						getTaskBag().delete(t);
 					}
 				}
 				m_adapter.setFilteredTasks(false);
-				taskBag.store();
+				getTaskBag().store();
 				m_app.updateWidgets();
 				m_app.setNeedToPush(true);
 				// We have change the data, views should refresh
@@ -704,7 +702,7 @@ public class Simpletask extends ListActivity  {
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				try {
-					taskBag.archive();
+					getTaskBag().archive();
 					return true;
 				} catch (Exception e) {
 					Log.e(TAG, e.getMessage(), e);
@@ -758,7 +756,15 @@ public class Simpletask extends ListActivity  {
 						archiveTasks();
 					}
 				}, R.string.archive_task_title);
-			default:
+                break;
+            case R.id.open_file:
+               if (m_app.isCloudLess()) {
+                   m_app.openCloudlessFile(this);
+               } else {
+                   Util.showToastLong(this,"Not implemented");
+               }
+                break;
+            default:
 				return super.onMenuItemSelected(featureId, item);
 		}
 		return true;
@@ -953,14 +959,14 @@ public class Simpletask extends ListActivity  {
 		       void setFilteredTasks(boolean reload) {
 			       Log.v(TAG, "setFilteredTasks called, reload: " + reload);
 			       if (reload) {
-				       taskBag.reload();
+				       getTaskBag().reload();
 				       // Update lists in side drawer
 				       // Set the adapter for the list view
 				       updateDrawerList();
 			       }
 
 			       visibleTasks.clear();
-			       visibleTasks.addAll(mFilter.apply(taskBag.getTasks()));
+			       visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
 			       ArrayList<String> sorts = mFilter.getSort();
 			       Collections.sort(visibleTasks, MultiComparator.create(sorts));
 			       positionToIndex.clear();
@@ -1229,6 +1235,7 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void updateDrawerList() {
+        TaskBag taskBag = getTaskBag();
 		m_contextsList = taskBag.getContexts(true);
 		m_contextDrawerList.setAdapter(new ArrayAdapter<String>(this,
 					R.layout.selection_drawer_list_item, m_contextsList));
@@ -1328,6 +1335,7 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void updateDrawerListForSelection(final List<Task> checkedTasks) {
+        TaskBag taskBag = getTaskBag();
 		LinkedHashSet<String> selectedContexts = new LinkedHashSet<String>();
 		LinkedHashSet<String> selectedProjects = new LinkedHashSet<String>();
 		for (Task t: checkedTasks) {
@@ -1393,7 +1401,7 @@ public class Simpletask extends ListActivity  {
 				}
 				ed.clearFocus();
 				ed.setText("");
-				taskBag.store();
+				getTaskBag().store();
 				m_adapter.setFilteredTasks(false);
 				m_app.updateWidgets();
 				m_app.setNeedToPush(true);
@@ -1434,7 +1442,7 @@ public class Simpletask extends ListActivity  {
 						}
 					}
 				}
-				taskBag.store();
+				getTaskBag().store();
 				m_adapter.setFilteredTasks(false);
 				m_app.updateWidgets();
 				m_app.setNeedToPush(true);

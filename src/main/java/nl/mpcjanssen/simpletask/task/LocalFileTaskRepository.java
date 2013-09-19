@@ -47,11 +47,11 @@ public class LocalFileTaskRepository {
 	private final TaskBag.Preferences preferences;
     private final TodoApplication m_app;
 
-    public LocalFileTaskRepository(TodoApplication app, File root,  TaskBag.Preferences preferences) {
+    public LocalFileTaskRepository(TodoApplication app, File todo,  TaskBag.Preferences preferences) {
         this.m_app = app;
 		this.preferences = preferences;
-        this.TODO_TXT_FILE = new File(root, "todo.txt");
-        this.DONE_TXT_FILE = new File(root, "done.txt");
+        this.TODO_TXT_FILE = todo;
+        this.DONE_TXT_FILE = new File(todo.getParentFile(), "done.txt");
 	}
 
     public File getTodoTxtFile() {
