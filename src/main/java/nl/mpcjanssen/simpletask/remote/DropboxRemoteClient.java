@@ -23,6 +23,7 @@
 package nl.mpcjanssen.simpletask.remote;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.Constants;
@@ -41,11 +42,10 @@ import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 
-class DropboxRemoteClient implements RemoteClient {
+public class DropboxRemoteClient implements RemoteClient {
 	final static String TAG = Simpletask.class.getSimpleName();
 	
-	private static final String TODO_TXT_REMOTE_FILE_NAME = "todo.txt";
-	private static final String DONE_TXT_REMOTE_FILE_NAME = "done.txt";
+	private static final String DEFAULT_TODO_TXT_REMOTE_PATH = "/todo";
 	private static final AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	private static final File TODO_TXT_TMP_FILE = new File(
 			TodoApplication.getAppContext().getFilesDir(),
@@ -176,10 +176,10 @@ class DropboxRemoteClient implements RemoteClient {
 	@Override
 	public PullTodoResult pullTodo() {
 		DropboxFile todoFile = new DropboxFile(
-				getTodoFileRemotePathAndFilename(), TODO_TXT_TMP_FILE,
+				getTodoFile(), TODO_TXT_TMP_FILE,
 				loadRev(Constants.PREF_TODO_REV));
 		DropboxFile doneFile = new DropboxFile(
-				getDoneFileRemotePathAndFilename(), DONE_TXT_TMP_FILE,
+				getDoneFile(), DONE_TXT_TMP_FILE,
 				loadRev(Constants.PREF_DONE_REV));
 		ArrayList<DropboxFile> dropboxFiles = new ArrayList<DropboxFile>(2);
 		dropboxFiles.add(todoFile);
@@ -208,13 +208,13 @@ class DropboxRemoteClient implements RemoteClient {
 		ArrayList<DropboxFile> dropboxFiles = new ArrayList<DropboxFile>(2);
 		if (todoFile != null) {
 			dropboxFiles.add(new DropboxFile(
-					getTodoFileRemotePathAndFilename(), todoFile,
+					getTodoFile(), todoFile,
 					loadRev(Constants.PREF_TODO_REV)));
 		}
 
 		if (doneFile != null) {
 			dropboxFiles.add(new DropboxFile(
-					getDoneFileRemotePathAndFilename(), doneFile,
+					getDoneFile(), doneFile,
 					loadRev(Constants.PREF_DONE_REV)));
 		}
 
@@ -280,21 +280,30 @@ class DropboxRemoteClient implements RemoteClient {
 		return dropboxApi;
 	}
 
-	String getRemotePath() {
-		String rawPath =  sharedPreferences.getString("todotxtpath", todoApplication
-				.getResources().getString(R.string.TODOTXTPATH_defaultPath));
+	String getTodoFile() {
+        String rawPath =  sharedPreferences.getString("todo_file", DEFAULT_TODO_TXT_REMOTE_PATH);
         // Return a proper path name otherwise syncing with dropbox will not work
         // Fixes bug #2
         rawPath = rawPath.replaceAll("/$", "");
         rawPath = rawPath.replaceAll("//", "/");
         return rawPath;
-	}
+    }
 
-	String getTodoFileRemotePathAndFilename() {
-		return getRemotePath() + "/" + TODO_TXT_REMOTE_FILE_NAME;
-	}
+    String getDoneFile() {
+        String todoPath = getTodoFile();
+        File donePath = new File(todoPath).getParentFile();
+        File doneFile = new File(donePath, "done.txt");
+        try {
+            return doneFile.getCanonicalPath();
+        } catch (IOException e) {
+            // Should never happen
+            Log.e("DROPBOX", e.getMessage());
+            return null;
+        }
+    }
 
-	String getDoneFileRemotePathAndFilename() {
-		return getRemotePath() + "/" + DONE_TXT_REMOTE_FILE_NAME;
-	}
+    public DropboxAPI getApi() {
+        return dropboxApi;
+    }
+
 }

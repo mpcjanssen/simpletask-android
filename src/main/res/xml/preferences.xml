@@ -74,11 +74,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/DROPBOX_settings_header"
                         android:key="@string/dropbox_cat_key">
-        <EditTextPreference
-            android:defaultValue="@string/TODOTXTPATH_defaultPath"
-            android:key="@string/TODOTXTPATH_key"
-            android:summary="@string/TODOTXTPATH_summary"
-            android:title="@string/TODOTXTPATH_title" />
 
         <CheckBoxPreference
             android:key="@string/manual_sync_pref_key"
