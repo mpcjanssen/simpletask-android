@@ -8,6 +8,7 @@
     <string name="prepend_date_pref_key">todotxtprependdate</string>
     <string name="line_breaks_pref_key">linebreakspref</string>
     <string name="manual_sync_pref_key">workofflinepref</string>
+    <string name="resume_sync_pref_key">resumesyncpref</string>
     <string name="font_size_delta_pref_key">fontsizedelta</string>
     <string name="theme_pref_key">theme</string>
     <string name="widget_theme_pref_key">widget_theme</string>

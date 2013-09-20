@@ -113,6 +113,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="swipe_complete_pref_summary">Swipe over a task to complete it.</string>
     <string name="manual_sync_pref_title">Manual sync</string>
     <string name="manual_sync_pref_summary">Don\'t automatically upload every change to Dropbox.</string>
+    <string name="resume_sync_pref_title">Resume sync</string>
+    <string name="resume_sync_pref_summary">Sync with dropbox when opening app.</string>
     <string name="font_size_delta_pref_title">Change font size</string>
     <string name="font_size_delta_pref_summary">Change the font size in units of sp.
         Use negative values to decrease the font size</string>
