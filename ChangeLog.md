@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 3.0.1
+
+* [Bugfix] Fix FCs when trying to open another todo file.
+* [Feature] [Dropbox] Add setting for automatic sync when opening app.
+
 ### 3.0.0
 
 * [Feature] Enable switching of todo files (Menu->Open todo file).
