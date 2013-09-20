@@ -155,7 +155,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public void openCloudlessFile(Activity act) {
-        FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getParentFile());
+
+        FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getAbsoluteFile().getParentFile());
         fileDialog.setSelectDirectoryOption(false);
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
             @Override
@@ -170,7 +171,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void openDropboxFile(Activity act) {
         DropboxRemoteClient client = (DropboxRemoteClient)remoteClientManager.getRemoteClient();
         DropboxFileDialog fileDialog = new DropboxFileDialog(act,
-                client.getApi(), new File(getTodoFileName()).getParentFile());
+                client.getApi(), new File(getTodoFileName()).getAbsoluteFile().getParentFile());
         fileDialog.addFileListener(new DropboxFileDialog.FileSelectedListener() {
             @Override
             public void fileSelected(File file) {
@@ -281,8 +282,16 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
     }
 
+    public boolean hasSyncOnResume() {
+        return m_prefs.getBoolean(getString(R.string.resume_sync_pref_key), false);
+    }
+
     public String getTodoFileName() {
-        return m_prefs.getString(getString(R.string.todo_file_key), null);
+        String default_path = "/todo.txt";
+        if (local_todo!=null) {
+            default_path = local_todo.getAbsolutePath();
+        }
+        return m_prefs.getString(getString(R.string.todo_file_key), default_path);
     }
 
     public void setTodoFile(File todo) {
