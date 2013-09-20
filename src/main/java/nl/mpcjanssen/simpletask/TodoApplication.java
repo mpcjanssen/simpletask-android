@@ -155,6 +155,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public void openCloudlessFile(Activity act) {
+
         FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getParentFile());
         fileDialog.setSelectDirectoryOption(false);
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
@@ -286,7 +287,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public String getTodoFileName() {
-        return m_prefs.getString(getString(R.string.todo_file_key), null);
+        String default_path = "/todo.txt";
+        if (local_todo!=null) {
+            default_path = local_todo.getAbsolutePath();
+        }
+        return m_prefs.getString(getString(R.string.todo_file_key), default_path);
     }
 
     public void setTodoFile(File todo) {
