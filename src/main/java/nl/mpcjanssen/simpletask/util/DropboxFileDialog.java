@@ -99,7 +99,7 @@ public class DropboxFileDialog {
         }
 
         Collections.sort(r);
-        fileList = (String[]) r.toArray(new String[]{});
+        fileList = r.toArray(new String[]{});
         if (dialogShown!=null) {
             dialogShown.cancel();
             dialogShown.dismiss();
