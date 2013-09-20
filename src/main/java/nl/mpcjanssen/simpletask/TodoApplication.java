@@ -77,12 +77,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         if (isCloudLess()) {
-            String todoName = getTodoFileName();
-            if(todoName!=null) {
-                local_todo = new File(todoName);
-            } else {
-                local_todo = new File(Environment.getExternalStorageDirectory(),"data/nl.mpcjanssen.simpletask/todo.txt");
-            }
+            local_todo = new File(getTodoFileName());
         } else {
             // Local storage for Dropbox is always the same
             local_todo = new File(TodoApplication.getAppContext().getFilesDir(),"todo.txt");
@@ -287,9 +282,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public String getTodoFileName() {
-        String default_path = "/todo.txt";
-        if (local_todo!=null) {
-            default_path = local_todo.getAbsolutePath();
+        String default_path;
+        if (isCloudLess()) {
+            default_path = Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
+        } else {
+            default_path="/todo/todo.txt";
         }
         return m_prefs.getString(getString(R.string.todo_file_key), default_path);
     }
