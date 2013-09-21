@@ -196,10 +196,10 @@ public class ActiveFilter {
         bundle.putStringArrayList(INTENT_PRIORITIES_FILTER, Priority.inCode(m_prios));
         bundle.putStringArrayList(INTENT_CONTEXTS_FILTER, m_contexts);
         bundle.putStringArrayList(INTENT_PROJECTS_FILTER, m_projects);
-        bundle.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
         bundle.putStringArrayList(INTENT_SORT_ORDER, m_sorts);
         bundle.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
         bundle.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+        bundle.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
         bundle.putBoolean(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
         bundle.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
         bundle.putString(SearchManager.QUERY, m_search);
@@ -213,7 +213,7 @@ public class ActiveFilter {
         editor.putStringSet(INTENT_PRIORITIES_FILTER,
                 new HashSet<String>(Priority.inCode(m_prios)));
         editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<String>(m_projects));
-        editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_contextsNot);
+        editor.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
         editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
         editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
         editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
