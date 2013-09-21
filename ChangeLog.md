@@ -1,5 +1,14 @@
 # ChangeLog
 
+### 3.0.3
+
+* [Bugfix] Fix widget filters using inverted List filters.
+* [Bugfix] Track file events on correct path after opening a different todo file.
+
+### 3.0.2
+
+* [Bugfix] Fix FC on start with cloudless version.
+
 ### 3.0.1
 
 * [Bugfix] Fix FCs when trying to open another todo file.
