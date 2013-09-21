@@ -130,7 +130,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     FileObserver.ALL_EVENTS) {
                 @Override
                 public void onEvent(int event, String path) {
-                    if (path!=null && path.equals("todo.txt") ) {
+                    String todoFileName = new File(TodoApplication.this.getTodoFileName()).getName();
+                    if (path!=null && path.equals(todoFileName) ) {
                         if( event == FileObserver.CLOSE_WRITE ||
                                 event == FileObserver.MOVED_TO) {
                             Log.v(TAG, path + " modified reloading taskbag");
