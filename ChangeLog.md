@@ -7,7 +7,7 @@
 
 ### 3.0.2
 
-* [Bugfix] Fix FC on start with cloudless version.
+* [Bugfix] [Cloudless] Fix FC on start.
 
 ### 3.0.1
 
