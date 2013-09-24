@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 3.0.4
+
+* [UI] Redid defer dialogs to require only one click.
+* [Feature] Setting to save todos when pressing back key from Add Task screen.
+
 ### 3.0.3
 
 * [Bugfix] Fix widget filters using inverted List filters.
