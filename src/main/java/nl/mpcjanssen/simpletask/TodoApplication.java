@@ -304,6 +304,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.auto_archive_pref_key), false);
     }
 
+    public boolean isBackSaving() {
+        return m_prefs.getBoolean(getString(R.string.back_key_saves_key), false);
+    }
+
     public boolean hasColorDueDates() {
         return m_prefs.getBoolean(getString(R.string.color_due_date_key), true);
     }
