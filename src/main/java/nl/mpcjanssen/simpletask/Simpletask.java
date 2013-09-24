@@ -604,25 +604,11 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void deferTasks(List<Task> tasks, final int dateType ) {
-		String[] keys = getResources().getStringArray(R.array.deferOptions);
-		final List<Task> tasksToDefer = tasks;
-		String today = "0d";
-		String tomorrow = "1d";
-		String oneWeek = "1w";
-		String twoWeeks = "2w";
-		String oneMonth = "1m";
-		String[] values = { today, tomorrow, oneWeek, twoWeeks, oneMonth, "" };
-        int titleId;
-        if (dateType==Task.DUE_DATE) {
-            titleId = R.string.defer_due;
-        } else {
-            titleId = R.string.defer_threshold;
-        }
-		Dialog d = Util.createSingleChoiceDialog(this, keys, values, 2,
-				titleId, null, new Util.OnSingleChoiceDialogListener() {
+        final List<Task> tasksToDefer = tasks;
+		Dialog d =  Util.createDeferDialog(this, dateType, true, new Util.InputDialogListener() {
 					@Override
 					public void onClick(String selected) {
-						if (selected.equals("")) {
+						if (selected!=null && selected.equals("pick")) {
 							DatePickerDialog dialog = new DatePickerDialog(Simpletask.this, new DatePickerDialog.OnDateSetListener() {
 								@Override
 								public void onDateSet(DatePicker datePicker, int year, int month, int day) {

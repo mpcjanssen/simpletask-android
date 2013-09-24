@@ -22,7 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,10 +35,13 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletask.task.Task;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -456,5 +461,40 @@ public class Util {
             }
         }
         return items;
+    }
+
+    public static AlertDialog createDeferDialog(final Activity act, int dateType, final boolean showNone,  final InputDialogListener listener) {
+        String[] keys = act.getResources().getStringArray(R.array.deferOptions);
+        String today = "0d";
+        String tomorrow = "1d";
+        String oneWeek = "1w";
+        String twoWeeks = "2w";
+        String oneMonth = "1m";
+        final String[] values  = { "", today, tomorrow, oneWeek, twoWeeks, oneMonth, "pick" };
+        if (!showNone) {
+            keys = Arrays.copyOfRange(keys, 1, keys.length);
+        }
+        int titleId;
+        if (dateType==Task.DUE_DATE) {
+            titleId = R.string.defer_due;
+        } else {
+            titleId = R.string.defer_threshold;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+        builder.setTitle(titleId);
+        builder.setItems(keys,  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (!showNone) {
+                    whichButton++;
+                }
+                String selected = values[whichButton];
+                listener.onClick(selected);
+            }
+        });
+        AlertDialog d = builder.create();
+        return d;
+
     }
 }
