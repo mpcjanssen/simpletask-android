@@ -53,6 +53,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <!-- available options for deferring -->
     <string-array name="deferOptions">
+        <item>@string/none</item>
         <item>@string/dates_today</item>
         <item>@string/dates_tomorrow</item>
         <item>@string/dates_one_week</item>

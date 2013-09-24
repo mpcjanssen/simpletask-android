@@ -218,6 +218,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- share -->
     <string name="share_addtask_name">Add to Simpletask</string>
 
+    <string name="none">none</string>
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d days ago</string>
     <string name="dates_one_day_ago">1 day ago</string>
