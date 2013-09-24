@@ -19,5 +19,6 @@
     <string name="long_click_drag_drop_key">long_click_drag_drop</string>
     <string name="split_actionbar_key">split_actionbar</string>
     <string name="todo_file_key">todo_file</string>
+    <string name="back_key_saves_key">back_saves</string>
 
 </resources>

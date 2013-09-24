@@ -92,7 +92,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
 
-    <string name="todotxt_settings_header">Main</string>
+    <string name="todotxt_ui_settings_header">User Interface</string>
+    <string name="todotxt_behavior_settings_header">Behavior</string>
     <string name="todotxt_settings_summary">Application wide settings</string>
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
@@ -120,6 +121,10 @@ You should have received a copy of the GNU General Public License along with Tod
         Use negative values to decrease the font size</string>
     <string name="theme_pref_title">Application theme</string>
     <string name="theme_pref_summary">Change the theme used for the application, restart the application after changing the setting</string>
+
+    <string name="back_saves_pref_title">Save todos when pressing back</string>
+    <string name="back_saves_summary">Save the entered todos when pressing back in the Add Task screen.</string>
+
 
     <string name="widget_theme_pref_title">Widget theme</string>
     <string name="widget_theme_pref_summary">Change the theme used for the widgets</string>

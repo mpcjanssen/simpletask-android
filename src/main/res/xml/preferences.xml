@@ -30,7 +30,7 @@
 --><!-- suppress ALL -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/todotxt_settings_header">
+    <PreferenceCategory android:title="@string/todotxt_ui_settings_header">
         <ListPreference
             android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
             android:entries="@array/themes"
@@ -55,6 +55,11 @@
             android:key="@string/color_due_date_key"
             android:summary="@string/color_due_pref_summary"
             android:title="@string/color_due_pref_title" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prepend_date_pref_key"
@@ -66,10 +71,14 @@
             android:summary="@string/long_press_drag_pref_summary"
             android:title="@string/long_press_drag_pref_title" />
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/back_key_saves_key"
+            android:summary="@string/back_saves_summary"
+            android:title="@string/back_saves_pref_title" />
+        <CheckBoxPreference
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
-
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/DROPBOX_settings_header"

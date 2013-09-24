@@ -96,38 +96,7 @@ public class AddTask extends Activity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_task:
-                // save clone checkbox state
-                m_app.setAddTagsCloneTags(hasCloneTags());
-                // strip line breaks
-                textInputField = (EditText) findViewById(R.id.taskText);
-                String input = textInputField.getText().toString();
-
-                // Don't add empty tasks
-                if (input.trim().equals("")) {
-                    finish();
-                    return true;
-                }
-
-                ArrayList<String> tasks = new ArrayList<String>();
-                tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
-                if (m_backup != null && tasks.size()>0) {
-                    // When updating take the first line as the updated tasks
-                    taskBag.updateTask(m_backup, tasks.get(0));
-                    tasks.remove(0);
-                }
-                // Add any other tasks
-                for (String taskText : tasks) {
-                    taskBag.addAsTask(taskText);
-                }
-
-                m_app.setNeedToPush(true);
-                m_app.updateWidgets();
-                if (m_app.isAutoArchive()) {
-                    taskBag.archive();
-                }
-                sendBroadcast(new Intent(
-                        getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
-                finish();
+                saveTasksAndClose();
                 break;
             case R.id.menu_add_task_help:
                 Dialog dialog = new Dialog(this);
@@ -136,8 +105,47 @@ public class AddTask extends Activity {
                 dialog.setTitle("Task format");
                 dialog.show();
                 break;
+            case R.id.menu_cancel_task:
+                finish();
+                break;
         }
         return true;
+    }
+
+    private void saveTasksAndClose() {
+        // save clone checkbox state
+        m_app.setAddTagsCloneTags(hasCloneTags());
+        // strip line breaks
+        textInputField = (EditText) findViewById(R.id.taskText);
+        String input = textInputField.getText().toString();
+
+        // Don't add empty tasks
+        if (input.trim().equals("")) {
+             finish();
+             return;
+        }
+
+        ArrayList<String> tasks = new ArrayList<String>();
+        tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
+        if (m_backup != null && tasks.size()>0) {
+            // When updating take the first line as the updated tasks
+            taskBag.updateTask(m_backup, tasks.get(0));
+            tasks.remove(0);
+        }
+        // Add any other tasks
+        for (String taskText : tasks) {
+            taskBag.addAsTask(taskText);
+        }
+
+        m_app.setNeedToPush(true);
+        m_app.updateWidgets();
+        if (m_app.isAutoArchive()) {
+            taskBag.archive();
+        }
+        sendBroadcast(new Intent(
+                getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+        finish();
+        return;
     }
 
     private void noteToSelf(Intent intent) {
@@ -146,6 +154,14 @@ public class AddTask extends Activity {
             // This was a voice note
         }
         addBackgroundTask(task);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (m_app.isBackSaving()) {
+            saveTasksAndClose();
+        }
+        super.onBackPressed();
     }
 
     private void addBackgroundTask(String taskText) {
