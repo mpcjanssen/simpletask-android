@@ -92,11 +92,21 @@ public class FilterOtherFragment extends Fragment {
     }
 
     public boolean getHideCompleted() {
-        return cbHideCompleted.isChecked();
+        Bundle arguments = getArguments();
+        if (cbHideCompleted == null) {
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false);
+        } else {
+            return cbHideCompleted.isChecked();
+        }
     }
 
     public boolean getHideFuture() {
-        return cbHideFuture.isChecked();
+        Bundle arguments = getArguments();
+        if (cbHideCompleted == null) {
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false);
+        } else {
+            return cbHideFuture.isChecked();
+        }
     }
 
     class FilterGestureDetector extends SimpleOnGestureListener {
