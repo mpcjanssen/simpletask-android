@@ -46,6 +46,15 @@ public class FilterActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+        TodoApplication app = (TodoApplication) getApplication();
+        if (app.isBackSaving()) {
+            applyFilter();
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {    	
     	Log.v(TAG, "Called with intent: " + getIntent().toString());
         TodoApplication  m_app = (TodoApplication) getApplication();

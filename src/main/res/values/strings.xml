@@ -122,8 +122,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="theme_pref_title">Application theme</string>
     <string name="theme_pref_summary">Change the theme used for the application, restart the application after changing the setting</string>
 
-    <string name="back_saves_pref_title">Save todos when pressing back</string>
-    <string name="back_saves_summary">Save the entered todos when pressing back in the Add Task screen.</string>
+    <string name="back_saves_pref_title">Save or apply when pressing back</string>
+    <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
 
 
     <string name="widget_theme_pref_title">Widget theme</string>
