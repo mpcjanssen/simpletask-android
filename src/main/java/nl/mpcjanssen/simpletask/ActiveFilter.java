@@ -55,10 +55,10 @@ public class ActiveFilter {
     private ArrayList<String> m_sorts = new ArrayList<String>();
     private boolean m_projectsNot = false;
     private String m_search;
-    private boolean m_priosNot;
-    private boolean m_contextsNot;
-    private boolean m_hideCompleted;
-    private boolean m_hideFuture;
+    private boolean m_priosNot = false;
+    private boolean m_contextsNot = false;
+    private boolean m_hideCompleted = false;
+    private boolean m_hideFuture = false;
 
     private String mName;
 
@@ -240,8 +240,6 @@ public class ActiveFilter {
         m_contexts = new ArrayList<String>();
         m_projects = new ArrayList<String>();
         m_projectsNot = false;
-        m_hideFuture=false;
-        m_hideCompleted=false;
         m_search = null;
         m_priosNot = false;
         m_contextsNot = false;
