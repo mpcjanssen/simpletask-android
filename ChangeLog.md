@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.6
+
+* [Feature] Replace existing due and threshold dates in Add Task screen, also prevents duplication caused by Android DatePicker bug http://code.google.com/p/android/issues/detail?id=34860.
+
 ### 3.0.5
 
 * [Feature] Back button configuration to apply filter.
