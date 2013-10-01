@@ -342,13 +342,17 @@ public class AddTask extends Activity {
             @Override
             public void onClick(String selected) {
                 if (selected.equals("pick")) {
+                    /* Note on some Android versions the OnDateSetListener can fire twice
+                     * https://code.google.com/p/android/issues/detail?id=34860
+                     * With the current implementation which replaces the dates this is not an
+                     * issue. The date is just replaced twice
+                     */
                     DatePickerDialog dialog = new DatePickerDialog(AddTask.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             Calendar cal = Calendar.getInstance();
                             cal.set(year, month, day);
                             insertDateAtSelection(dateType, cal.getTime());
-
                         }
                     },
                             Calendar.getInstance().get(Calendar.YEAR),
@@ -364,17 +368,17 @@ public class AddTask extends Activity {
         d.show();
     }
 
-    private void insertDateAtSelection(int dateType, String date) {
+    private void replaceDate(int dateType, String date) {
            if (dateType==Task.DUE_DATE) {
-               replaceTextAtSelection("due:" + date);
+               replaceDueDate(date);
            } else {
-               replaceTextAtSelection("t:" + date);
+               replaceThresholdDate(date);
            }
     }
 
     private void insertDateAtSelection(int dateType, Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
-        insertDateAtSelection(dateType, formatter.format(date));
+        replaceDate(dateType, formatter.format(date));
     }
 
     private void showTagMenu() {
@@ -446,7 +450,7 @@ public class AddTask extends Activity {
         return -1;
     }
 
-    private void replacePriority(CharSequence newPrio) {
+    private void replaceDueDate(CharSequence newDueDate) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
@@ -463,7 +467,7 @@ public class AddTask extends Activity {
         }
         if (currentLine != -1) {
             Task t = new Task(0, lines.get(currentLine));
-            t.setPriority(Priority.toPriority(newPrio.toString()));
+            t.setDueDate(newDueDate.toString());
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
@@ -474,6 +478,52 @@ public class AddTask extends Activity {
         int newEnd = Math.min(end + sizeDelta, newLength);
         newEnd = Math.max(newStart, newEnd);
         textInputField.setSelection(newStart, newEnd);
+    }
+
+    private void replaceThresholdDate(CharSequence newThresholdDate) {
+        // save current selection and length
+        int start = textInputField.getSelectionStart();
+        int end = textInputField.getSelectionEnd();
+        ArrayList<String> lines = new ArrayList<String>();
+        Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
+
+        // For some reason the currentLine can be larger than the amount of lines in the EditText
+        // Check for this case to prevent any array index out of bounds errors
+        int currentLine = getCurrentCursorLine(textInputField);
+        if (currentLine > lines.size() - 1) {
+            currentLine = lines.size() - 1;
+        }
+        if (currentLine != -1) {
+            Task t = new Task(0, lines.get(currentLine));
+            t.setThresholdDate(newThresholdDate.toString());
+            lines.set(currentLine, t.inFileFormat());
+            textInputField.setText(Util.join(lines, "\n"));
+        }
+        // restore selection
+        textInputField.setSelection(start, end);
+    }
+
+    private void replacePriority(CharSequence newPrio) {
+        // save current selection and length
+        int start = textInputField.getSelectionStart();
+        int end = textInputField.getSelectionEnd();
+        ArrayList<String> lines = new ArrayList<String>();
+        Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
+
+        // For some reason the currentLine can be larger than the amount of lines in the EditText
+        // Check for this case to prevent any array index out of bounds errors
+        int currentLine = getCurrentCursorLine(textInputField);
+        if (currentLine > lines.size() - 1) {
+            currentLine = lines.size() - 1;
+        }
+        if (currentLine != -1) {
+            Task t = new Task(0, lines.get(currentLine));
+            t.setPriority(Priority.toPriority(newPrio.toString()));
+            lines.set(currentLine, t.inFileFormat());
+            textInputField.setText(Util.join(lines, "\n"));
+        }
+        // restore selection
+        textInputField.setSelection(start, end);
 
     }
 
