@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 3.0.5
+
+* [Feature] Back button configuration to apply filter.
+* [Bugfix] Don't reset 'Other' filters when clearing filter.
+
 ### 3.0.4
 
 * [UI] Redid defer dialogs to require only one click.
