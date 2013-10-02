@@ -40,47 +40,27 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	public static String computeRelativeDate(Calendar now, Calendar calendar) {
-		
-		String date = sdf.format(now.getTime());
+    public static String computeRelativeDate(Calendar now, Calendar calendar) {
 
+        String date = sdf.format(now.getTime());
+
+        int days = now.compareTo(calendar);
         int years = calendar.get(Calendar.YEAR) - now.get(Calendar.YEAR);
         int months = calendar.get(Calendar.MONTH) - now.get(Calendar.MONTH);
-        int days = calendar.get(Calendar.DAY_OF_MONTH)
-                - now.get(Calendar.DAY_OF_MONTH);
-        int hours = calendar.get(Calendar.HOUR_OF_DAY)
-                - now.get(Calendar.HOUR_OF_DAY);
-        int minutes = calendar.get(Calendar.MINUTE) - now.get(Calendar.MINUTE);
-        int seconds = calendar.get(Calendar.SECOND) - now.get(Calendar.SECOND);
+        if (days > 0) {
+            return date;
+        }
+        if (days == 0) {
+            return context.getString(R.string.dates_one_day_ago);
+        } else if (days == -1) {
+            return context.getString(R.string.dates_one_day_ago);
+        } else if (days < -1 && days > -7) {
+            return context.getString(R.string.dates_days_ago, Math.abs(days));
+        }
+        return date;
+    }
 
-		if (years == 0 && months == 0) {
-			if (days < -1)
-				return context.getString(R.string.dates_days_ago, Math.abs(days));
-			else if (days == -1)
-				return context.getString(R.string.dates_one_day_ago);
-			else if (days == 0)
-				return context.getString(R.string.dates_today);		} else if (years == 0 || years == -1) {
-			if (years == -1) {
-				months = 11 - months
-						+ Calendar.getInstance().get(Calendar.MONTH);
-				if (months == 1)
-					return context.getString(R.string.dates_one_month_ago);
-				else
-					return context.getString(R.string.dates_months_ago, months);
-			} else {
-				if (months != -1)
-					return context.getString(R.string.dates_months_ago,Math.abs(months));
-				else
-					return context.getString(R.string.dates_one_month_ago);
-			}
-		} else {
-			return date;
-		}
-		return date;
-
-	}
-
-	/**
+    /**
 	 * This method returns a String representing the relative date by comparing
 	 * the Calendar being passed in to the date / time that it is right now.
 	 * 
