@@ -6,6 +6,16 @@
 package nl.mpcjanssen.simpletask.util;
 
 import android.content.Context;
+import android.util.Log;
+
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.Months;
+import org.joda.time.Weeks;
+import org.joda.time.Years;
+
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.R;
 
@@ -36,25 +46,47 @@ public class RelativeDate {
 	 * for hours, minutes, seconds.
 	 * 
 	 * @param now
-	 * @param calendar
+	 * @param when
 	 * @return String representing the relative date
 	 */
 
-    public static String computeRelativeDate(Calendar now, Calendar calendar) {
+    public static String computeRelativeDate(Calendar now, Calendar when) {
 
         String date = sdf.format(now.getTime());
 
-        int days = now.compareTo(calendar);
-        int years = calendar.get(Calendar.YEAR) - now.get(Calendar.YEAR);
-        int months = calendar.get(Calendar.MONTH) - now.get(Calendar.MONTH);
+        LocalDate start = LocalDate.fromCalendarFields(now);
+        LocalDate end = LocalDate.fromCalendarFields(when);
+
+        int days = Days.daysBetween(start, end).getDays();
+        int months = Months.monthsBetween(start, end).getMonths();
+        int weeks = Weeks.weeksBetween(start, end).getWeeks();
+        int years = Years.yearsBetween(start, end).getYears();
+
         if (days > 0) {
             return date;
         }
         if (days == 0) {
+            return context.getString(R.string.dates_today);
+        }
+
+        if (years == -1) {
+            return context.getString(R.string.dates_one_year_ago);
+        } else if (years < -1) {
+            return context.getString(R.string.dates_years_ago, Math.abs(years) );
+        }
+        if (months == -1) {
+            return context.getString(R.string.dates_one_month_ago);
+        } else if (months < -1) {
+            return context.getString(R.string.dates_months_ago, Math.abs(months) );
+        }
+        if (weeks == -1) {
+            return context.getString(R.string.dates_one_week_ago);
+        } else if (weeks < -1) {
+            return context.getString(R.string.dates_weeks_ago, Math.abs(weeks) );
+        }
+        if (days == -1) {
             return context.getString(R.string.dates_one_day_ago);
-        } else if (days == -1) {
-            return context.getString(R.string.dates_one_day_ago);
-        } else if (days < -1 && days > -7) {
+        } else if (days < -1) {
             return context.getString(R.string.dates_days_ago, Math.abs(days));
         }
         return date;
