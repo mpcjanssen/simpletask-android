@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.7
+
+* [UI] Improve relative date display around month boundaries. 30 sep - 1 oct is 1 day not 1 month.
+
 ### 3.0.6
 
 * [Feature] Replace existing due and threshold dates in Add Task screen, also prevents duplication caused by Android DatePicker bug http://code.google.com/p/android/issues/detail?id=34860.
