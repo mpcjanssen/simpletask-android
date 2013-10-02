@@ -35,20 +35,23 @@ public class RelativeDate {
 	 * months, and years, you can add the other cases in by copying the logic
 	 * for hours, minutes, seconds.
 	 * 
+	 * @param now
 	 * @param calendar
-	 * @param years
-	 * @param months
-	 * @param days
-	 * @param hours
-	 * @param minutes
-	 * @param seconds
 	 * @return String representing the relative date
 	 */
 
-	private static String computeRelativeDate(Calendar calendar, int years,
-			int months, int days, int hours, int minutes, int seconds) {
+	public static String computeRelativeDate(Calendar now, Calendar calendar) {
 		
-		String date = sdf.format(calendar.getTime());
+		String date = sdf.format(now.getTime());
+
+        int years = calendar.get(Calendar.YEAR) - now.get(Calendar.YEAR);
+        int months = calendar.get(Calendar.MONTH) - now.get(Calendar.MONTH);
+        int days = calendar.get(Calendar.DAY_OF_MONTH)
+                - now.get(Calendar.DAY_OF_MONTH);
+        int hours = calendar.get(Calendar.HOUR_OF_DAY)
+                - now.get(Calendar.HOUR_OF_DAY);
+        int minutes = calendar.get(Calendar.MINUTE) - now.get(Calendar.MINUTE);
+        int seconds = calendar.get(Calendar.SECOND) - now.get(Calendar.SECOND);
 
 		if (years == 0 && months == 0) {
 			if (days < -1)
@@ -88,18 +91,7 @@ public class RelativeDate {
 	public static String getRelativeDate(Calendar calendar) {
 
 		Calendar now = Calendar.getInstance();
-
-		int years = calendar.get(Calendar.YEAR) - now.get(Calendar.YEAR);
-		int months = calendar.get(Calendar.MONTH) - now.get(Calendar.MONTH);
-		int days = calendar.get(Calendar.DAY_OF_MONTH)
-				- now.get(Calendar.DAY_OF_MONTH);
-		int hours = calendar.get(Calendar.HOUR_OF_DAY)
-				- now.get(Calendar.HOUR_OF_DAY);
-		int minutes = calendar.get(Calendar.MINUTE) - now.get(Calendar.MINUTE);
-		int seconds = calendar.get(Calendar.SECOND) - now.get(Calendar.SECOND);
-
-		return computeRelativeDate(calendar, years, months, days, hours,
-				minutes, seconds);
+		return computeRelativeDate(now, calendar);
 
 	}
 
