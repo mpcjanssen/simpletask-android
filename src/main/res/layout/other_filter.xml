@@ -9,17 +9,17 @@
     android:orientation="vertical">
 
     <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/cb_hide_completed"
+        android:id="@+id/cb_show_completed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_hide_completed" />
+        android:text="@string/filter_show_completed" />
 
     <CheckBox
-        android:id="@+id/cb_hide_future"
+        android:id="@+id/cb_show_future"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_hide_future" />
+        android:text="@string/filter_show_future" />
 
 
 </LinearLayout>

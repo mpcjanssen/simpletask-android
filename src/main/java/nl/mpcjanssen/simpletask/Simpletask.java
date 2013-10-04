@@ -1264,6 +1264,38 @@ public class Simpletask extends ListActivity  {
 			}
 		});
 
+        CheckedTextView future = (CheckedTextView)m_container.findViewById(R.id.show_future);
+        future.setChecked(!mFilter.getHideFuture());
+        future.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CheckedTextView cb = (CheckedTextView) view;
+                cb.setChecked(!cb.isChecked());
+                boolean state = cb.isChecked();
+                mFilter.setHideFuture(!state);
+                Intent intent = getIntent();
+                mFilter.saveInIntent(intent);
+                setIntent(intent);
+                m_adapter.setFilteredTasks(false);
+            }
+        });
+
+        CheckedTextView completed = (CheckedTextView)m_container.findViewById(R.id.show_completed);
+        completed.setChecked(!mFilter.getHideCompleted());
+        completed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CheckedTextView cb = (CheckedTextView) view;
+                cb.setChecked(!cb.isChecked());
+                boolean state = cb.isChecked();
+                mFilter.setHideCompleted(!state);
+                Intent intent = getIntent();
+                mFilter.saveInIntent(intent);
+                setIntent(intent);
+                m_adapter.setFilteredTasks(false);
+            }
+        });
+
 		for (String project : mFilter.getProjects()) {
 			int position = m_projectsList.indexOf(project);
 			if (position!=-1) {
@@ -1461,11 +1493,13 @@ public class Simpletask extends ListActivity  {
 			m_container.findViewById(R.id.left_drawer_header).setVisibility(View.VISIBLE);
 			m_container.findViewById(R.id.right_drawer_header).setVisibility(View.VISIBLE);
 			m_container.findViewById(R.id.right_drawer_inverted).setVisibility(View.GONE);
+            m_container.findViewById(R.id.left_drawer_showing).setVisibility(View.GONE);
 			m_container.findViewById(R.id.left_drawer_inverted).setVisibility(View.GONE);
 		} else {
 			m_container.findViewById(R.id.left_drawer_header).setVisibility(View.GONE);
 			m_container.findViewById(R.id.right_drawer_header).setVisibility(View.GONE);
 			m_container.findViewById(R.id.right_drawer_inverted).setVisibility(View.VISIBLE);
+            m_container.findViewById(R.id.left_drawer_showing).setVisibility(View.VISIBLE);
 			m_container.findViewById(R.id.left_drawer_inverted).setVisibility(View.VISIBLE);
 		}
 	}
