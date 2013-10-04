@@ -61,15 +61,15 @@ public class FilterOtherFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
                 container, false);
 
-        cbHideCompleted = (CheckBox) layout.findViewById(R.id.cb_hide_completed);
-        cbHideFuture = (CheckBox) layout.findViewById(R.id.cb_hide_future);
+        cbHideCompleted = (CheckBox) layout.findViewById(R.id.cb_show_completed);
+        cbHideFuture = (CheckBox) layout.findViewById(R.id.cb_show_future);
 
         if (savedInstanceState != null) {
-            cbHideCompleted.setChecked(savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
-            cbHideFuture.setChecked(savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
+            cbHideCompleted.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
+            cbHideFuture.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
         } else {
-            cbHideCompleted.setChecked(arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
-            cbHideFuture.setChecked(arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
+            cbHideCompleted.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
+            cbHideFuture.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
         }
 
         gestureDetector = new GestureDetector(TodoApplication.getAppContext(),
@@ -94,18 +94,18 @@ public class FilterOtherFragment extends Fragment {
     public boolean getHideCompleted() {
         Bundle arguments = getArguments();
         if (cbHideCompleted == null) {
-            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false);
+            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false);
         } else {
-            return cbHideCompleted.isChecked();
+            return !cbHideCompleted.isChecked();
         }
     }
 
     public boolean getHideFuture() {
         Bundle arguments = getArguments();
         if (cbHideCompleted == null) {
-            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false);
+            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false);
         } else {
-            return cbHideFuture.isChecked();
+            return !cbHideFuture.isChecked();
         }
     }
 

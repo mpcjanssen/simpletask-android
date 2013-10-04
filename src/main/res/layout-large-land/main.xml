@@ -38,6 +38,51 @@ You should have received a copy of the GNU General Public License along with Tod
                     android:orientation="vertical"
                     android:background="#111"
                     android:layout_width="240dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/left_drawer_showing"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/left_drawer_title"
+                    android:text="@string/filter_show_prompt"
+                    android:background="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:gravity="center_horizontal"
+                    />
+                <CheckedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/show_completed"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="#fff"
+                    android:text="@string/filter_show_completed_short"
+                    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    />
+                <CheckedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/show_future"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="#fff"
+                    android:text="@string/filter_show_future_short"
+                    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    />
+
+
+            </LinearLayout>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
