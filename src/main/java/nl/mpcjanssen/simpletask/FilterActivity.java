@@ -110,7 +110,7 @@ public class FilterActivity extends Activity {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, mFilter.getHideCompleted());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.getHideFuture());
         actionbar.addTab(actionbar.newTab()
-                .setText(getString(R.string.other_prompt))
+                .setText(getString(R.string.filter_show_prompt))
                 .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class, arguments))
                 .setTag(OTHER_TAB));
 

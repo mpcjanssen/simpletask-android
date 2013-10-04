@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.8
+
+* [UI] Show/Hide completed and future tasks from left navigation drawer.
+
 ### 3.0.7
 
 * [UI] Improve relative date display around month boundaries. 30 sep - 1 oct is 1 day not 1 month.

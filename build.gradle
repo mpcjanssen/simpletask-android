@@ -15,8 +15,8 @@ android {
     compileSdkVersion 18
 
     defaultConfig {
-        versionName '3.0.7'
-        versionCode 1044
+        versionName '3.0.8'
+        versionCode 1045
     }
 
     dependencies {

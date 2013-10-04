@@ -160,7 +160,7 @@ public class ActiveFilter {
             }
         } else {
                 filterTitle = mResources.getString(R.string.no_filter);
-        } 
+        }
         return filterTitle;
     }
 
