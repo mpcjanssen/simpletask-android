@@ -55,6 +55,11 @@
             android:key="@string/color_due_date_key"
             android:summary="@string/color_due_pref_summary"
             android:title="@string/color_due_pref_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/ui_drawer_show_other_key"
+            android:summary="@string/drawer_show_other_summary"
+            android:title="@string/drawer_show_other_pref_title" />
 
 
     </PreferenceCategory>

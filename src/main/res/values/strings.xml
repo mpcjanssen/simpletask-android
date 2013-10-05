@@ -125,6 +125,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="back_saves_pref_title">Back button</string>
     <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
 
+    <string name="drawer_show_other_pref_title">Extended left drawer</string>
+    <string name="drawer_show_other_summary">Show the completed and future filters in the left drawer.</string>
+
 
     <string name="widget_theme_pref_title">Widget theme</string>
     <string name="widget_theme_pref_summary">Change the theme used for the widgets</string>
