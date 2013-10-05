@@ -266,7 +266,6 @@ public class Simpletask extends ListActivity  {
 			// Not in tablet landscape mode
 			m_container = m_drawerLayout;
 		}
-
 		// Set the list's click listener
 		m_contextDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_CONTEXT));
 		m_projectDrawerList.setOnItemClickListener(new DrawerItemClickListener(DRAWER_PROJECT));
@@ -292,8 +291,9 @@ public class Simpletask extends ListActivity  {
 					// setTitle(R.string.changelist);
 				}
 			};
+            showDrawerHeaders(false);
 
-			// Set the drawer toggle as the DrawerListener
+            // Set the drawer toggle as the DrawerListener
 			m_drawerLayout.setDrawerListener(m_drawerToggle);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 			getActionBar().setHomeButtonEnabled(true);
@@ -1499,7 +1499,11 @@ public class Simpletask extends ListActivity  {
 			m_container.findViewById(R.id.left_drawer_header).setVisibility(View.GONE);
 			m_container.findViewById(R.id.right_drawer_header).setVisibility(View.GONE);
 			m_container.findViewById(R.id.right_drawer_inverted).setVisibility(View.VISIBLE);
-            m_container.findViewById(R.id.left_drawer_showing).setVisibility(View.VISIBLE);
+            if (m_app.hasExtendedDrawer()) {
+                m_container.findViewById(R.id.left_drawer_showing).setVisibility(View.VISIBLE);
+            } else {
+                m_container.findViewById(R.id.left_drawer_showing).setVisibility(View.GONE);
+            }
 			m_container.findViewById(R.id.left_drawer_inverted).setVisibility(View.VISIBLE);
 		}
 	}

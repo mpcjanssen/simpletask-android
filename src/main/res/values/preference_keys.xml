@@ -20,5 +20,5 @@
     <string name="split_actionbar_key">split_actionbar</string>
     <string name="todo_file_key">todo_file</string>
     <string name="back_key_saves_key">back_saves</string>
-
+    <string name="ui_drawer_show_other_key">ui_drawer_show_other_key</string>
 </resources>
