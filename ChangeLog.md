@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.9
+
+* [UI] Make extended left drawer configurable.
+
 ### 3.0.8
 
 * [UI] Show/Hide completed and future tasks from left navigation drawer.
