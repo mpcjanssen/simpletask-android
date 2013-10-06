@@ -83,6 +83,10 @@ if (project.hasProperty('storeFile') &&
 }
 
 def getFossilUUID() {
-    String contents = file( 'manifest.uuid' ).getText( 'UTF-8' )
-    return contents.substring(0,8);
+    if (file( 'manifest.uuid').exists()) {
+        String contents = file( 'manifest.uuid' ).getText( 'UTF-8' )
+        return contents.substring(0,8);
+    } else {
+        return "unknown";
+    }
 }
