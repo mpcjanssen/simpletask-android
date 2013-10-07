@@ -5,7 +5,7 @@ An Android application based on the brilliant [todo.txt](http://todotxt.com) by
 
 The goal of the application is to provide a tool to do GTD without providing an overwhelming amount of
 options.
-You can download the latest versions from the Play Store. Simpletask comes in three version. You can check the differences between these versions [here](./wiki/Versions)
+You can download the latest versions from the Play Store. Simpletask comes in three version. You can check the differences between these versions [here](./doc/Versions.md)
 
 To follow code and ticket updates follow [the rss feed](./timeline.rss).
 
@@ -21,7 +21,7 @@ Simpletask supports the following todo.txt extensions:
 ChangeLog
 ---------------------
 
-See [ChangeLog](./doc/trunk/ChangeLog.md)
+See [ChangeLog](./ChangeLog.md)
 
 Design considerations
 ---------------------
@@ -46,8 +46,8 @@ See [MYN](./doc/MYN.md)
 
 #### Why shouldn't `Defer Tasks` use the due date.
 
-See [Defer Tasks](./doc/DeferTasks)
+See [Defer Tasks](./doc/DeferTasks.md)
 
 #### Why the switch to Gradle
 
-See [Gradle](./doc/Gradle)
+See [Gradle](./doc/Gradle.md)
