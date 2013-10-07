@@ -7,7 +7,7 @@ The goal of the application is to provide a tool to do GTD without providing an 
 options.
 You can download the latest versions from the Play Store. Simpletask comes in three version. You can check the differences between these versions [here](./doc/Versions.md)
 
-To follow code and ticket updates follow [the rss feed](/timeline.rss).
+To follow code and ticket updates follow [the rss feed](../../timeline.rss).
 
 Extensions
 ----------
