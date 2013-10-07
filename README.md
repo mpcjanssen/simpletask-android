@@ -37,17 +37,17 @@ FAQ
 
 #### Which intents can I use to automate simpletask?
 
-See [Intents](./doc/trunk/doc/Intents.md)
+See [Intents](./doc/Intents.md)
 
 
 #### How can I configure Simpletask for MYN?
 
-See [MYN](./doc/trunk/doc/MYN.md)
+See [MYN](./doc/MYN.md)
 
 #### Why shouldn't `Defer Tasks` use the due date.
 
-See [Defer Tasks](./wiki/DeferTasks)
+See [Defer Tasks](./doc/DeferTasks)
 
 #### Why the switch to Gradle
 
-See [Gradle](./wiki/Gradle)
+See [Gradle](./doc/Gradle)
