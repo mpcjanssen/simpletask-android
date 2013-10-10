@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.10
+
+* Remove spurious padding of widgets.
+
 ### 3.0.9
 
 * [UI] Make extended left drawer configurable.
