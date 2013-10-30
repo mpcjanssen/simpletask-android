@@ -4,6 +4,7 @@
 
 * [UI] Remove spurious padding of widgets.
 * [UI] Use more space for navigation drawers.
+* [BugFix] Keep priority on recurring tasks.
 
 ### 3.0.9
 
