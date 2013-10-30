@@ -2,7 +2,8 @@
 
 ### 3.0.10
 
-* Remove spurious padding of widgets.
+* [UI] Remove spurious padding of widgets.
+* [UI] Use more space for navigation drawers.
 
 ### 3.0.9
 
