@@ -101,7 +101,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_gravity="start"
             android:orientation="vertical"
             android:background="#111"
-            android:layout_width="240dp">
+            android:layout_width="fill_parent">
 
 
         <LinearLayout
@@ -233,7 +233,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_gravity="end"
             android:orientation="vertical"
             android:background="#111"
-            android:layout_width="240dp">
+            android:layout_width="fill_parent">
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
