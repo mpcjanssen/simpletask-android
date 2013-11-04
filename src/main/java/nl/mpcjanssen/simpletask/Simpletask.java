@@ -570,9 +570,8 @@ public class Simpletask extends ListActivity  {
 		for (Task t : tasks) {
 			if (t != null && !t.isCompleted()) {
                 if (t.getRecurrencePattern()!=null) {
-                    Task newTask = new Task(0,t.getOriginalText());
+                    Task newTask = taskBag.addAsTask(t.inFileFormat());
                     newTask.deferDueDate(t.getRecurrencePattern());
-                    taskBag.addAsTask(newTask.inFileFormat());
                 }
                 t.markComplete(new Date());
 			}
