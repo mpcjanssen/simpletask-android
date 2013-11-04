@@ -577,10 +577,10 @@ public class Simpletask extends ListActivity  {
                 t.markComplete(new Date());
 			}
 		}
+        taskBag.store();
 		if (m_app.isAutoArchive()) {
 			taskBag.archive();
 		}
-		taskBag.store();
 		m_app.updateWidgets();
 		m_app.setNeedToPush(true);
 		// We have change the data, views should refresh
