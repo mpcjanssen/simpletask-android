@@ -25,10 +25,6 @@ You should have received a copy of the GNU General Public License along with Sim
           android:versionCode="0"
           android:versionName="0.0.0">
 
-    <uses-sdk
-            android:minSdkVersion="15"
-            android:targetSdkVersion="17"/>
-
     <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>
