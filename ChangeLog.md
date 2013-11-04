@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.11
+
+* [Bugfix] Fixed issue with recurring tasks if auto archive is active.
+
 ### 3.0.10
 
 * [UI] Remove spurious padding of widgets.
