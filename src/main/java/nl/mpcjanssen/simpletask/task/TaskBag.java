@@ -104,12 +104,13 @@ public class TaskBag {
         return tasks.get(position);
     }
 
-    public void addAsTask(String input) {
+    public Task addAsTask(String input) {
         try {
             Task task = new Task(tasks.size(), input,
                     (preferences.isPrependDateEnabled() ? new Date() : null));
             tasks.add(task);
             store();
+            return task;
         } catch (Exception e) {
             throw new TaskPersistException("An error occurred while adding {"
                     + input + "}", e);
