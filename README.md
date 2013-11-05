@@ -47,10 +47,10 @@ See [Intents](./doc/Intents.md)
 
 See [MYN](./doc/MYN.md)
 
-#### Why shouldn't `Defer Tasks` use the due date.
+#### Why shouldn't `Defer Tasks` use the due date?
 
 See [Defer Tasks](./doc/DeferTasks.md)
 
-#### Why the switch to Gradle
+#### Why the switch to Gradle?
 
 See [Gradle](./doc/Gradle.md)
