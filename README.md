@@ -37,7 +37,7 @@ FAQ
 
 #### Why does Simpletask use lists and tags
 
-See [Lists and Tags](./doc/trunk/doc/ListsAndTags.md)
+See [Lists and Tags](./doc/ListsAndTags.md)
 
 #### Which intents can I use to automate simpletask?
 
