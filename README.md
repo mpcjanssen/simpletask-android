@@ -35,7 +35,7 @@ Design considerations
 FAQ
 ---------------------
 
-#### Why does Simpletask use lists and tags
+#### Why does Simpletask use lists and tags?
 
 See [Lists and Tags](./doc/ListsAndTags.md)
 
