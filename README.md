@@ -35,10 +35,13 @@ Design considerations
 FAQ
 ---------------------
 
+#### Why does Simpletask use lists and tags
+
+See [Lists and Tags](./doc/trunk/doc/ListsAndTags.md)
+
 #### Which intents can I use to automate simpletask?
 
 See [Intents](./doc/Intents.md)
-
 
 #### How can I configure Simpletask for MYN?
 
