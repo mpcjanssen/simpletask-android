@@ -571,7 +571,16 @@ public class Simpletask extends ListActivity  {
 			if (t != null && !t.isCompleted()) {
                 if (t.getRecurrencePattern()!=null) {
                     Task newTask = taskBag.addAsTask(t.inFileFormat());
-                    newTask.deferDueDate(t.getRecurrencePattern());
+                    if (newTask.getDueDate()==null && newTask.getThresholdDate()==null) {
+                        newTask.deferDueDate(t.getRecurrencePattern());
+                    } else {
+                        if (newTask.getDueDate()!=null) {
+                            newTask.deferDueDate(t.getRecurrencePattern());
+                        }
+                        if (newTask.getThresholdDate()!=null) {
+                            newTask.deferThresholdDate(t.getRecurrencePattern());
+                        }
+                    }
                 }
                 t.markComplete(new Date());
 			}
