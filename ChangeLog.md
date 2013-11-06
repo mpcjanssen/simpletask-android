@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.0.12
+
+* [Feature] Also change threshold date for the new task when completing a recurring task.
+
 ### 3.0.11
 
 * [Bugfix] Fixed issue with recurring tasks if auto archive is active.
