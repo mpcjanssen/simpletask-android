@@ -571,14 +571,15 @@ public class Simpletask extends ListActivity  {
 			if (t != null && !t.isCompleted()) {
                 if (t.getRecurrencePattern()!=null) {
                     Task newTask = taskBag.addAsTask(t.inFileFormat());
+                    boolean fromOriginalDate = m_app.hasRecurOriginalDates();
                     if (newTask.getDueDate()==null && newTask.getThresholdDate()==null) {
-                        newTask.deferDueDate(t.getRecurrencePattern());
+                        newTask.deferDueDate(t.getRecurrencePattern(),fromOriginalDate);
                     } else {
                         if (newTask.getDueDate()!=null) {
-                            newTask.deferDueDate(t.getRecurrencePattern());
+                            newTask.deferDueDate(t.getRecurrencePattern(),fromOriginalDate);
                         }
                         if (newTask.getThresholdDate()!=null) {
-                            newTask.deferThresholdDate(t.getRecurrencePattern());
+                            newTask.deferThresholdDate(t.getRecurrencePattern(),fromOriginalDate);
                         }
                     }
                 }
@@ -661,9 +662,9 @@ public class Simpletask extends ListActivity  {
 		for (Task t : tasksToDefer) {
 			if (t != null) {
                 if (type==Task.DUE_DATE) {
-				    t.deferDueDate(selected);
+				    t.deferDueDate(selected, false);
                 } else {
-                    t.deferThresholdDate(selected);
+                    t.deferThresholdDate(selected,false );
                 }
 			}
 		}

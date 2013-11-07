@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.1.0
+
+* [Feature] New setting for recurring to use the original due or threshold date instead of today. (Default is true)
+
 ### 3.0.12
 
 * [Feature] Also change threshold date for the new task when completing a recurring task.
