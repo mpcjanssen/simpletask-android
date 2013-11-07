@@ -312,6 +312,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.color_due_date_key), true);
     }
 
+    public boolean hasRecurOriginalDates() {
+        return m_prefs.getBoolean(getString(R.string.recur_from_original_date), true);
+    }
+
     public boolean hasExtendedDrawer() {
         return m_prefs.getBoolean(getString(R.string.ui_drawer_show_other_key), true);
     }

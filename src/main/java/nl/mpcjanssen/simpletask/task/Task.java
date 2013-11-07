@@ -474,23 +474,31 @@ public class Task implements Serializable, Comparable<Task> {
         init(taskContents, null);
     }
 
-    public void deferThresholdDate(String deferString) {
+    public void deferThresholdDate(String deferString, boolean original) {
         if (deferString.equals("")) {
             setThresholdDate("");
             return;
         }
-        Date newDate = Util.addInterval(deferString);
+        Date olddate = new Date();
+        if (original) {
+            olddate = getThresholdDate();
+        }
+        Date newDate = Util.addInterval(olddate,deferString);
         if (newDate!=null) {
             setThresholdDate(newDate);
         }
     }
 
-    public void deferDueDate(String deferString) {
+    public void deferDueDate(String deferString, boolean original) {
         if (deferString.equals("")) {
             setDueDate("");
             return;
         }
-        Date newDate = Util.addInterval(deferString);
+        Date olddate = new Date();
+        if (original) {
+            olddate = getDueDate();
+        }
+        Date newDate = Util.addInterval(olddate, deferString);
         if (newDate!=null) {
             setDueDate(newDate);
         }

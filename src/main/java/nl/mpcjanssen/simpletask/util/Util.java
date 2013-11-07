@@ -416,12 +416,11 @@ public class Util {
         return newDate;
     }
 
-    public static Date addInterval(String interval) {
+    public static Date addInterval(Date date, String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
         Matcher m = p.matcher(interval.toLowerCase());
         int amount;
         String type;
-        Date newDate = new Date();
         m.find();
         if(m.groupCount()==2) {
             amount = Integer.parseInt(m.group(1));
@@ -430,15 +429,15 @@ public class Util {
             return null;
         }
         if (type.equals("d")) {
-            newDate = Util.addDaysToDate(newDate, amount);
+            date = Util.addDaysToDate(date, amount);
         } else if (type.equals("w")) {
-            newDate = Util.addDaysToDate(newDate, amount*7);
+            date = Util.addDaysToDate(date, amount*7);
         } else if (type.equals("m")) {
-            newDate = Util.addMonthsToDate(newDate, amount);
+            date = Util.addMonthsToDate(date, amount);
         } else if (type.equals("y")) {
-            newDate = Util.addYearsToDate(newDate, amount);
+            date = Util.addYearsToDate(date, amount);
         }
-        return newDate;
+        return date;
     }
 
     public static ArrayList<String> prefixItems(String prefix, ArrayList<String> items) {

@@ -361,7 +361,7 @@ public class AddTask extends Activity {
 
                     dialog.show();
                 } else {
-                    insertDateAtSelection(dateType, Util.addInterval(selected));
+                    insertDateAtSelection(dateType, Util.addInterval(new Date(), selected));
                 }
             }
         });
