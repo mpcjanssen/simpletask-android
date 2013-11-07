@@ -421,6 +421,9 @@ public class Util {
         Matcher m = p.matcher(interval.toLowerCase());
         int amount;
         String type;
+        if (date == null) {
+            date = new Date();
+        }
         m.find();
         if(m.groupCount()==2) {
             amount = Integer.parseInt(m.group(1));
