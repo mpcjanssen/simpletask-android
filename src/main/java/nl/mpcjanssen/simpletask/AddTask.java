@@ -31,10 +31,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -257,10 +259,16 @@ public class AddTask extends Activity {
             }
         }
         // Listen to enter
+        // Use IME_ACTION_NEXT to also work with soft keyboards like Swype
+        textInputField.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        textInputField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
         textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                //Log.v (TAG, "editorAction: " + i);
+                if (i == EditorInfo.IME_ACTION_NEXT || 
+                    ( keyEvent!=null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER )) {
                     // Move cursor to end of line
                     int position = textInputField.getSelectionStart();
                     String remainingText = textInputField.getText().toString().substring(position);
@@ -272,6 +280,7 @@ public class AddTask extends Activity {
                         endOfLine = position + endOfLineDistance;
                     }
                     textInputField.setSelection(endOfLine);
+                    replaceTextAtSelection("\n", false);
 
                     if (hasCloneTags()) {
                         String precedingText = textInputField.getText().toString().substring(0, endOfLine);
@@ -290,12 +299,14 @@ public class AddTask extends Activity {
                         for (String prj : t.getProjects()) {
                             tags.add("+" + prj);
                         }
-                        replaceTextAtSelection(Util.join(tags, " "));
-                        textInputField.setSelection(endOfLine);
-                    }
-
+                        replaceTextAtSelection(Util.join(tags, " "), true);
+                    } 
+                    endOfLine++;
+                    textInputField.setSelection(endOfLine);
+                    return true;
+                } else {
+                    return false;
                 }
-                return false;
             }
         });
         setCloneTags(m_app.isAddTagsCloneTags());
@@ -388,7 +399,7 @@ public class AddTask extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("+" + projects.get(which) + " ");
+                        replaceTextAtSelection("+" + projects.get(which) + " ", true);
                     }
                 });
 
@@ -429,7 +440,7 @@ public class AddTask extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("@" + contexts.get(which) + " ");
+                        replaceTextAtSelection("@" + contexts.get(which) + " ", true);
                     }
                 });
 
@@ -527,10 +538,10 @@ public class AddTask extends Activity {
 
     }
 
-    private void replaceTextAtSelection(CharSequence title) {
+    private void replaceTextAtSelection(CharSequence title, boolean spaces) {
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
-        if (start == end && start != 0) {
+        if (start == end && start != 0 && spaces) {
             // no selection prefix with space if needed
             if (!(textInputField.getText().charAt(start - 1) == ' ')) {
                 title = " " + title;
