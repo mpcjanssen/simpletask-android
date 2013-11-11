@@ -537,7 +537,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(getString(R.string.widget_theme_pref_key))) {
+        if (s.equals(getString(R.string.widget_theme_pref_key)) ||
+                s.equals(getString(R.string.widget_extended_pref_key))) {
             redrawWidgets();
         }
     }

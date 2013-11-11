@@ -47,6 +47,11 @@
             android:title="@string/widget_theme_pref_title" />
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="@string/widget_extended_pref_key"
+            android:summary="@string/widget_extended_pref_summary"
+            android:title="@string/widget_extended_pref_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/split_actionbar_key"
             android:summary="@string/split_actionbar_pref_summary"
             android:title="@string/split_actionbar_pref_title" />

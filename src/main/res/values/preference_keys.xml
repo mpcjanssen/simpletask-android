@@ -12,6 +12,7 @@
     <string name="font_size_delta_pref_key">fontsizedelta</string>
     <string name="theme_pref_key">theme</string>
     <string name="widget_theme_pref_key">widget_theme</string>
+    <string name="widget_extended_pref_key">widget_extended</string>
     <string name="drawers_explained_pref_key">drawers_explained</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="clone_tags_key">clone_tags</string>
