@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.2.0
+
+* [UI] Show tasks in widget as they are displayed in the main screen. One line view is still available as setting.
+
 ### 3.1.0
 
 * [Feature] New setting for recurring to use the original due or threshold date instead of today. (Default is true)
