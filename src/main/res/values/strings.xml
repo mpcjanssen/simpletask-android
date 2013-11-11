@@ -135,6 +135,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_title">Widget theme</string>
     <string name="widget_theme_pref_summary">Change the theme used for the widgets</string>
 
+    <string name="widget_extended_pref_title">Extended widget</string>
+    <string name="widget_extended_pref_summary">Show tasks in widget with separate dates line.</string>
+
     <string name="color_due_pref_title">Color due dates</string>
     <string name="color_due_pref_summary">Color due dates based on whether they are due today, due in the future or overdue.</string>
 
