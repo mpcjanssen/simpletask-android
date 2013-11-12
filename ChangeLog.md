@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.2.1
+
+* [BugFix] Fix issues when adding tasks with some soft keyboards such as Swype.
+
 ### 3.2.0
 
 * [UI] Show tasks in widget as they are displayed in the main screen. One line view is still available as setting.
