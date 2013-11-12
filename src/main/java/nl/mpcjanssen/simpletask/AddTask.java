@@ -267,8 +267,14 @@ public class AddTask extends Activity {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 //Log.v (TAG, "editorAction: " + i);
-                if (i == EditorInfo.IME_ACTION_NEXT || 
-                    ( keyEvent!=null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER )) {
+                boolean hardwareEnterUp = keyEvent!=null &&
+                        keyEvent.getAction() == KeyEvent.ACTION_UP &&
+                        keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER;
+                boolean hardwareEnterDown = keyEvent!=null &&
+                        keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
+                        keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER;
+                boolean imeActionNext = (i == EditorInfo.IME_ACTION_NEXT);
+                if (i == EditorInfo.IME_ACTION_NEXT || hardwareEnterUp ) {
                     // Move cursor to end of line
                     int position = textInputField.getSelectionStart();
                     String remainingText = textInputField.getText().toString().substring(position);
@@ -303,6 +309,8 @@ public class AddTask extends Activity {
                     } 
                     endOfLine++;
                     textInputField.setSelection(endOfLine);
+                }
+                if (imeActionNext || hardwareEnterDown || hardwareEnterUp) {
                     return true;
                 } else {
                     return false;
