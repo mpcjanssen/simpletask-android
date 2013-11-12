@@ -258,23 +258,23 @@ public class AddTask extends Activity {
                 }
             }
         }
-        // Listen to enter
-        // Use IME_ACTION_NEXT to also work with soft keyboards like Swype
+        // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
+        // like Swype where not ENTER keyCode is generated.
         textInputField.setRawInputType(InputType.TYPE_CLASS_TEXT);
         textInputField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-
         textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                //Log.v (TAG, "editorAction: " + i);
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+
                 boolean hardwareEnterUp = keyEvent!=null &&
                         keyEvent.getAction() == KeyEvent.ACTION_UP &&
                         keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER;
                 boolean hardwareEnterDown = keyEvent!=null &&
                         keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
                         keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER;
-                boolean imeActionNext = (i == EditorInfo.IME_ACTION_NEXT);
-                if (i == EditorInfo.IME_ACTION_NEXT || hardwareEnterUp ) {
+                boolean imeActionNext = (actionId == EditorInfo.IME_ACTION_NEXT);
+
+                if (imeActionNext || hardwareEnterUp ) {
                     // Move cursor to end of line
                     int position = textInputField.getSelectionStart();
                     String remainingText = textInputField.getText().toString().substring(position);
