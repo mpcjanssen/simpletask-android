@@ -22,6 +22,7 @@
     <string name="todo_file_key">todo_file</string>
     <string name="back_key_saves_key">back_saves</string>
     <string name="ui_drawer_show_other_key">ui_drawer_show_other_key</string>
+    <string name="ui_drawer_fixed_landscape">ui_drawer_fixed_landscape</string>
     <string name="recur_from_original_date">recur_from_original_date</string>
 
 </resources>

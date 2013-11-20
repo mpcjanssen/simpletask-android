@@ -65,8 +65,11 @@
             android:key="@string/ui_drawer_show_other_key"
             android:summary="@string/drawer_show_other_summary"
             android:title="@string/drawer_show_other_pref_title" />
-
-
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/ui_drawer_fixed_landscape"
+            android:summary="@string/drawer_fixed_landscape_summary"
+            android:title="@string/drawer_fixed_landscape_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">
