@@ -206,7 +206,7 @@ public class Simpletask extends ListActivity  {
 				} else if (intent.getAction().endsWith(
 							Constants.BROADCAST_SYNC_DONE) && !m_app.isCloudLess()) {
 					setProgressBarIndeterminateVisibility(false);
-							}
+				}
 			}
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
@@ -214,8 +214,11 @@ public class Simpletask extends ListActivity  {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		// Set the proper theme
 		setTheme(m_app.getActiveTheme());
-
-		setContentView(R.layout.main);
+        if (m_app.hasLandscapeDrawers()) {
+		    setContentView(R.layout.main_landscape);
+        } else {
+            setContentView(R.layout.main);
+        }
 
 		// Replace drawables if the theme is dark
 		if (m_app.isDarkTheme()) {

@@ -320,6 +320,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.ui_drawer_show_other_key), true);
     }
 
+    public boolean hasLandscapeDrawers() {
+        return (m_prefs.getBoolean(getString(R.string.ui_drawer_fixed_landscape), false) &&
+                getResources().getBoolean(R.bool.is_landscape));
+    }
+
     public boolean hasLongClickDragDrop() {
         return m_prefs.getBoolean(getString(R.string.long_click_drag_drop_key), true);
     }
