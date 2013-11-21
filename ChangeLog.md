@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.2.2
+
+* [Feature] Make landscape mode configurable between fixed and sliding drawers.
+
 ### 3.2.1
 
 * [BugFix] Fix issues when adding tasks with some soft keyboards such as Swype.
