@@ -35,11 +35,6 @@ android {
             buildConfig "public final static boolean CLOUDLESS = false;"
             versionName defaultConfig.versionName + '-donate (' + getFossilUUID() +')'
         }
-        dev {
-            packageName 'nl.mpcjanssen.simpletask.dev'
-            buildConfig "public final static boolean CLOUDLESS = false;"
-            versionName defaultConfig.versionName + '-dev (' + getFossilUUID() +')'
-        }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
         unit {
