@@ -61,6 +61,15 @@ public class Task implements Serializable, Comparable<Task> {
     private static final Pattern RECURRENCE_PATTERN =  Pattern
             .compile("\\s[Rr][Ee][Cc]:(\\d{1,}[dDwWmMyY])");
 
+    private final static Pattern PRIORITY_PATTERN = Pattern
+            .compile("^\\(([A-Z])\\) (.*)");
+
+    private final static Pattern SINGLE_DATE_PATTERN = Pattern
+            .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
+
+    private final static Pattern COMPLETED_PATTERN = Pattern
+            .compile("^([X,x] )(.*)");
+
     private static SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
 
     private static final String COMPLETED = "x ";
@@ -94,21 +103,25 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public Date getDueDate() {
-        Date dueDate = null;
-        Matcher matcher = DUE_PATTERN.matcher(this.text);
+    private Date getDate (Pattern datePattern) {
+        Date date = null;
+        Matcher matcher = datePattern.matcher(this.text);
         if (matcher.find()) {
             try {
-                dueDate = formatter.parse(matcher.group(1));
+                date = formatter.parse(matcher.group(1));
             } catch (ParseException e) {
-                dueDate = null;
+                date = null;
             }
         }
-        return dueDate;
+        return date;
+    }
+
+    public Date getDueDate() {
+        return getDate(DUE_PATTERN);
     }
 
     public Date getThresholdDate() {
-        return this.thresholdDate;
+        return getDate(THRESHOLD_PATTERN);
     }
 
     public String getText() {
