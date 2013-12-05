@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 3.2.3
+
+* [Build] Simplified version numbering.
+
 ### 3.2.2
 
 * [Feature] Make landscape mode configurable between fixed and sliding drawers.
