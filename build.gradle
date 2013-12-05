@@ -15,8 +15,8 @@ android {
     compileSdkVersion 19
 
     defaultConfig {
-        versionName '3.2.2'
-        versionCode 1053
+        versionName '3.2.3'
+        versionCode 1054
     }
 
     dependencies {
@@ -28,12 +28,10 @@ android {
         free {
             packageName 'nl.mpcjanssen.todotxtholo'
             buildConfig "public final static boolean CLOUDLESS = false;"
-            versionName android.defaultConfig.versionName + ' (' + getFossilUUID() +')'
         }
         donate {
             packageName 'nl.mpcjanssen.simpletask.donate'
             buildConfig "public final static boolean CLOUDLESS = false;"
-            versionName defaultConfig.versionName + '-donate (' + getFossilUUID() +')'
         }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
@@ -44,12 +42,10 @@ android {
         cloudless {
             packageName 'nl.mpcjanssen.simpletask'
             buildConfig "public final static boolean CLOUDLESS = true;"
-            versionName defaultConfig.versionName + '-cloudless (' + getFossilUUID() +')'
         }
         cloudlessdonate {
             packageName 'nl.mpcjanssen.simpletaskdonate'
             buildConfig "public final static boolean CLOUDLESS = true;"
-            versionName defaultConfig.versionName + '-cloudless-donate (' + getFossilUUID() +')'
         }
     }
     signingConfigs {
@@ -75,13 +71,4 @@ if (project.hasProperty('storeFile') &&
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
     android.buildTypes.release.signingConfig = null
-}
-
-def getFossilUUID() {
-    if (file( 'manifest.uuid').exists()) {
-        String contents = file( 'manifest.uuid' ).getText( 'UTF-8' )
-        return contents.substring(0,8);
-    } else {
-        return "unknown";
-    }
 }
