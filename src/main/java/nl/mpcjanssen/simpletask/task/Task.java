@@ -177,23 +177,28 @@ public class Task implements Serializable, Comparable<Task> {
         return TagParser.getInstance().parse(text);
     }
 
-    public void setPrependedDate(String date) {
-        //TODO implement
-    }
-
     public String getPrependedDate() {
-        //TODO implement
-        return null;
-    }
-
-    public void setPrependedDate(Date dt) {
-        //TODO implement
-
+        String tail = getTextWithoutCompletionAndPriority();
+        Matcher matcher = SINGLE_DATE_PREFIX.matcher(tail);
+        if (matcher.matches()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
     }
 
     public String getRelativeAge() {
-        //TODO implement
-        return null;
+        Date dt;
+        String prependDate = getPrependedDate();
+        if (prependDate==null) {
+            return null;
+        }
+        try {
+            dt = formatter.parse(prependDate);
+        } catch (ParseException e) {
+            return null;
+        }
+        return RelativeDate.getRelativeDate(dt);
     }
 
     public SpannableString getRelativeDueDate(Resources res, boolean useColor) {
