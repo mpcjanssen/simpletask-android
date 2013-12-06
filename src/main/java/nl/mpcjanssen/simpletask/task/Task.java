@@ -135,7 +135,13 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setThresholdDate(String thresholdDateString) {
-        //TODO implement
+        if (thresholdDateString.equals("")) {
+            text = text.replaceAll(THRESHOLD_PATTERN.pattern(),"");
+        } else if (this.text!=null) {
+            text = text.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDateString);
+        } else {
+            text = text + " t:" + thresholdDateString;
+        }
     }
 
     public String getText() {
@@ -367,7 +373,7 @@ public class Task implements Serializable, Comparable<Task> {
             append("+" + tag);
         }
     }
-    
+
     public void deferThresholdDate(String deferString, boolean original) {
         if (deferString.equals("")) {
             setThresholdDate("");
