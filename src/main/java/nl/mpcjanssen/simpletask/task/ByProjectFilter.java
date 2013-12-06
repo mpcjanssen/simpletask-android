@@ -55,14 +55,14 @@ public class ByProjectFilter implements TaskFilter {
         if (projects.size() == 0) {
             return true;
         }
-        for (String p : input.getProjects()) {
+        for (String p : input.getTags()) {
             if (projects.contains(p)) {
                 return true;
             }
         }        /*
          * Match tasks without project if filter contains "-"
 		 */
-        return input.getProjects().size() == 0 && projects.contains("-");
+        return input.getTags().size() == 0 && projects.contains("-");
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */

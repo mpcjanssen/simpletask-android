@@ -26,7 +26,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,14 +33,12 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -50,9 +47,7 @@ import android.widget.TextView;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
-import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -241,8 +236,8 @@ public class AddTask extends Activity {
                 iniTask.initWithFilter(mFilter);
             }
 
-            if (iniTask != null && iniTask.getProjects().size() == 1) {
-                List<String> ps = iniTask.getProjects();
+            if (iniTask != null && iniTask.getTags().size() == 1) {
+                List<String> ps = iniTask.getTags();
                 String project = ps.get(0);
                 if (!project.equals("-")) {
                     textInputField.append(" +" + project);
@@ -250,8 +245,8 @@ public class AddTask extends Activity {
             }
 
 
-            if (iniTask != null && iniTask.getContexts().size() == 1) {
-                List<String> cs = iniTask.getContexts();
+            if (iniTask != null && iniTask.getLists().size() == 1) {
+                List<String> cs = iniTask.getLists();
                 String context = cs.get(0);
                 if (!context.equals("-")) {
                     textInputField.append(" @" + context);
@@ -299,10 +294,10 @@ public class AddTask extends Activity {
                         }
                         Task t = new Task(0, line);
                         LinkedHashSet<String> tags = new LinkedHashSet<String>();
-                        for (String ctx : t.getContexts()) {
+                        for (String ctx : t.getLists()) {
                             tags.add("@" + ctx);
                         }
-                        for (String prj : t.getProjects()) {
+                        for (String prj : t.getTags()) {
                             tags.add("+" + prj);
                         }
                         replaceTextAtSelection(Util.join(tags, " "), true);
