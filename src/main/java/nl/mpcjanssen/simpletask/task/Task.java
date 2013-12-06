@@ -27,21 +27,14 @@ import android.text.SpannableString;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.util.RelativeDate;
-import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.Serializable;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -140,8 +133,12 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public Priority getPriority() {
-        //TODO implement
-        return Priority.NONE;
+        Matcher m = PRIORITY_PATTERN.matcher(getTextWithoutCompletionInfo());
+        if (m.matches()) {
+            return Priority.toPriority(m.group(1));
+        } else {
+            return Priority.NONE;
+        }
     }
 
     public List<String> getContexts() {
@@ -182,8 +179,6 @@ public class Task implements Serializable, Comparable<Task> {
         return null;
     }
 
-
-
     public List<String> getPhoneNumbers() {
         //TODO implement
         return null;
@@ -204,6 +199,20 @@ public class Task implements Serializable, Comparable<Task> {
         return null;
     }
 
+    public String getTextWithoutCompletionInfo() {
+        Matcher xMatch = COMPLETED_PATTERN.matcher(text);
+        if (!xMatch.matches()) {
+            return text;
+        }
+        String restText = xMatch.group(2);
+        Matcher dateMatch = SINGLE_DATE_PATTERN.matcher(restText);
+        if (!dateMatch.matches()) {
+            return restText;
+        } else {
+            return dateMatch.group(2);
+        }
+
+    }
     public String getCompletionDate() {
         Matcher xMatch = COMPLETED_PATTERN.matcher(text);
         if (!xMatch.matches()) {
@@ -216,7 +225,6 @@ public class Task implements Serializable, Comparable<Task> {
         } else {
             return dateMatch.group(1);
         }
-
     }
 
     public boolean isCompleted() {
