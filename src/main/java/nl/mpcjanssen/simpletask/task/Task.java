@@ -117,7 +117,13 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setDueDate(String dueDateString) {
-        //TODO implement
+        if (dueDateString.equals("")) {
+            text = text.replaceAll(DUE_PATTERN.pattern(),"");
+        } else if (this.getDueDate()!=null) {
+            text = text.replaceFirst(DUE_PATTERN.pattern(), " due:" + dueDateString);
+        } else {
+            text = text + " due:" + dueDateString;
+        }
     }
 
     public Date getThresholdDate() {
@@ -361,13 +367,35 @@ public class Task implements Serializable, Comparable<Task> {
             append("+" + tag);
         }
     }
-
+    
     public void deferThresholdDate(String deferString, boolean original) {
-        //TODO implement
+        if (deferString.equals("")) {
+            setThresholdDate("");
+            return;
+        }
+        Date olddate = new Date();
+        if (original) {
+            olddate = getThresholdDate();
+        }
+        Date newDate = Util.addInterval(olddate,deferString);
+        if (newDate!=null) {
+            setThresholdDate(newDate);
+        }
     }
 
     public void deferDueDate(String deferString, boolean original) {
-        //TODO implement
+        if (deferString.equals("")) {
+            setDueDate("");
+            return;
+        }
+        Date olddate = new Date();
+        if (original) {
+            olddate = getDueDate();
+        }
+        Date newDate = Util.addInterval(olddate, deferString);
+        if (newDate!=null) {
+            setDueDate(newDate);
+        }
     }
 
 
