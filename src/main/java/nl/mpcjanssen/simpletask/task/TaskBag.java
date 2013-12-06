@@ -191,7 +191,7 @@ public class TaskBag {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
         for (Task item : tasks) {
-            res.addAll(item.getContexts());
+            res.addAll(item.getLists());
         }
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);
@@ -205,7 +205,7 @@ public class TaskBag {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
         for (Task item : tasks) {
-            res.addAll(item.getProjects());
+            res.addAll(item.getTags());
         }
         ArrayList<String> ret = new ArrayList<String>(res);
         Collections.sort(ret);

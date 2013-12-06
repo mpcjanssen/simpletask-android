@@ -28,15 +28,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class ContextParser {
+class ListParser {
 	private final static Pattern CONTEXT_PATTERN = Pattern
 			.compile("(?:^|\\s)@(\\S*\\w)");
-	private static final ContextParser INSTANCE = new ContextParser();
+	private static final ListParser INSTANCE = new ListParser();
 
-	private ContextParser() {
+	private ListParser() {
 	}
 
-	public static ContextParser getInstance() {
+	public static ListParser getInstance() {
 		return INSTANCE;
 	}
 
