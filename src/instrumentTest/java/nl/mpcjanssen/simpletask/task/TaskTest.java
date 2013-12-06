@@ -51,7 +51,22 @@ public class TaskTest extends TestCase {
         assertEquals(rawText, t.inFileFormat());
     }
 
-    public void testCompletionWithPriority() {
+    public void testCompletionWithPriority1() {
+        String rawText = "(A) Test";
+        Task t = new Task(0, rawText);
+        t.update(rawText);
+        assertEquals(t.getPriority(), Priority.A);
+        Date completionDate = new Date();
+        t.markComplete(completionDate);
+        assertTrue(t.isCompleted());
+        t.setPriority(Priority.B);
+        t.markIncomplete();
+        assertFalse(t.isCompleted());
+        assertEquals(Priority.B , t.getPriority());
+        assertEquals("(B) Test", t.inFileFormat());
+    }
+
+    public void testCompletionWithPriority2() {
         String rawText = "(A) Test";
         Task t = new Task(0, rawText);
         t.update(rawText);
@@ -61,10 +76,9 @@ public class TaskTest extends TestCase {
         assertTrue(t.isCompleted());
         t.markIncomplete();
         assertFalse(t.isCompleted());
-        assertEquals(Priority.NONE , t.getPriority());
-        assertEquals("Test", t.inFileFormat());
+        assertEquals(Priority.A , t.getPriority());
+        assertEquals("(A) Test", t.inFileFormat());
     }
-
     public void testPriority() {
         Task t = new Task(0, "(C) Test");
         assertEquals(t.getPriority(), Priority.C);

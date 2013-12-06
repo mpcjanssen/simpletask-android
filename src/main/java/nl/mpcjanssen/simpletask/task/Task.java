@@ -137,7 +137,7 @@ public class Task implements Serializable, Comparable<Task> {
     public void setThresholdDate(String thresholdDateString) {
         if (thresholdDateString.equals("")) {
             text = text.replaceAll(THRESHOLD_PATTERN.pattern(),"");
-        } else if (this.text!=null) {
+        } else if (this.getThresholdDate()!=null) {
             text = text.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDateString);
         } else {
             text = text + " t:" + thresholdDateString;
@@ -162,7 +162,11 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setPriority(Priority priority) {
-        //TODO implement
+        if (priority == Priority.NONE) {
+            text = getCompletionPrefix() + getTextWithoutCompletionAndPriority();
+        } else {
+            text = getCompletionPrefix() + priority.inFileFormat() + " " +getTextWithoutCompletionAndPriority();
+        }
     }
 
     public List<String> getLists() {
@@ -245,6 +249,33 @@ public class Task implements Serializable, Comparable<Task> {
             return restText;
         } else {
             return dateMatch.group(2);
+        }
+    }
+
+    public String getTextWithoutCompletionAndPriority() {
+        String rest = getTextWithoutCompletionInfo() ;
+        Matcher prioMatch = PRIORITY_PATTERN.matcher(rest);
+        if (!prioMatch.matches()) {
+            return rest;
+        } else {
+            return prioMatch.group(2);
+        }
+    }
+
+    public String getCompletionPrefix() {
+        Matcher xMatch = COMPLETED_PATTERN.matcher(text);
+        String result = "";
+        if (!xMatch.matches()) {
+            return result;
+        } else {
+            result = xMatch.group(1);
+        }
+        String restText = xMatch.group(2);
+        Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
+        if (!dateMatch.matches()) {
+            return result;
+        } else {
+            return result + dateMatch.group(1) + " ";
         }
 
     }
