@@ -6,23 +6,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.TextView;
 
 import nl.mpcjanssen.simpletask.sort.*;
 import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.R;
 
 import java.util.*;
 
@@ -107,12 +102,12 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                     rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.black));
                 }
                 ArrayList<String> colorizeStrings = new ArrayList<String>();
-                for (String context : task.getContexts()) {
+                for (String context : task.getLists()) {
                     colorizeStrings.add("@" + context);
                 }
                 Util.setColor(ss, Color.GRAY, colorizeStrings);
                 colorizeStrings.clear();
-                for (String project : task.getProjects()) {
+                for (String project : task.getTags()) {
                     colorizeStrings.add("+" + project);
                 }
                 Util.setColor(ss, Color.GRAY, colorizeStrings);

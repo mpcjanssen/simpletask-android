@@ -12,8 +12,8 @@ public class ProjectComparator extends ReversableComparator {
 
     @Override
     public int unreversedCompare(Task a, Task b) {
-        List<String> projectsA = a.getProjects();
-        List<String> projectsB = b.getProjects();
+        List<String> projectsA = a.getTags();
+        List<String> projectsB = b.getTags();
 
         if (projectsA.isEmpty() && projectsB.isEmpty()) {
             return 0;

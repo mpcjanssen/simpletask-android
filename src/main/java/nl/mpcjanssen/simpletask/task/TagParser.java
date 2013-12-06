@@ -22,42 +22,34 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PriorityTextSplitter {
-	private final static Pattern PRIORITY_PATTERN = Pattern
-			.compile("^\\(([A-Z])\\) (.*)");
+class TagParser {
+    private final static Pattern CONTEXT_PATTERN = Pattern
+            .compile("(?:^|\\s)\\+(\\S*\\w)");
+    private static final TagParser INSTANCE = new TagParser();
 
-	private final static PriorityTextSplitter INSTANCE = new PriorityTextSplitter();
+    private TagParser() {
+    }
 
-	private PriorityTextSplitter() {
-	}
+    public static TagParser getInstance() {
+        return INSTANCE;
+    }
 
-	public static PriorityTextSplitter getInstance() {
-		return INSTANCE;
-	}
-
-	public static class PrioritySplitResult {
-		public final Priority priority;
-		public final String text;
-
-		public PrioritySplitResult(Priority priority, String text) {
-			this.priority = priority;
-			this.text = text;
-		}
-	}
-
-	public PrioritySplitResult split(String text) {
-		if (text == null) {
-			return new PrioritySplitResult(Priority.NONE, "");
-		}
-		Priority priority = Priority.NONE;
-		Matcher priorityMatcher = PRIORITY_PATTERN.matcher(text);
-		if (priorityMatcher.find()) {
-			priority = Priority.toPriority(priorityMatcher.group(1));
-			text = priorityMatcher.group(2);
-		}
-		return new PrioritySplitResult(priority, text);
-	}
+    public List<String> parse(String inputText) {
+        if (inputText == null) {
+            return Collections.emptyList();
+        }
+        Matcher m = CONTEXT_PATTERN.matcher(inputText);
+        List<String> projects = new ArrayList<String>();
+        while (m.find()) {
+            String project = m.group(1).trim();
+            projects.add(project);
+        }
+        return projects;
+    }
 }

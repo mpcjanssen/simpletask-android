@@ -28,28 +28,29 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class ProjectParser {
-    private final static Pattern CONTEXT_PATTERN = Pattern
-            .compile("(?:^|\\s)\\+(\\S*\\w)");
-    private static final ProjectParser INSTANCE = new ProjectParser();
+class ListParser {
+	private final static Pattern CONTEXT_PATTERN = Pattern
+			.compile("(?:^|\\s)@(\\S*\\w)");
+	private static final ListParser INSTANCE = new ListParser();
 
-    private ProjectParser() {
-    }
+	private ListParser() {
+	}
 
-    public static ProjectParser getInstance() {
-        return INSTANCE;
-    }
+	public static ListParser getInstance() {
+		return INSTANCE;
+	}
 
-    public List<String> parse(String inputText) {
-        if (inputText == null) {
-            return Collections.emptyList();
-        }
-        Matcher m = CONTEXT_PATTERN.matcher(inputText);
-        List<String> projects = new ArrayList<String>();
-        while (m.find()) {
-            String project = m.group(1).trim();
-            projects.add(project);
-        }
-        return projects;
-    }
+	public List<String> parse(String inputText) {
+		if (inputText == null) {
+			return Collections.emptyList();
+		}
+
+		Matcher m = CONTEXT_PATTERN.matcher(inputText);
+		List<String> contexts = new ArrayList<String>();
+		while (m.find()) {
+			String context = m.group(1);
+			contexts.add(context);
+		}
+		return contexts;
+	}
 }
