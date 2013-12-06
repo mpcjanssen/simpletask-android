@@ -269,6 +269,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Add reminder</string>
     <string name="calendar_title">Simpletask reminder</string>
+    <string name="share_title">Simpletask task</string>
     <string name="version_copied">Version info copied to clipboard</string>
 
     <string name="task_added">Task added</string>
