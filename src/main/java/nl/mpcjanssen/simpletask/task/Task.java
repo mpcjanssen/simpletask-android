@@ -27,6 +27,9 @@ import android.text.SpannableString;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletask.util.RelativeDate;
+import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -56,6 +59,8 @@ public class Task implements Serializable, Comparable<Task> {
     private final static Pattern PRIORITY_PATTERN = Pattern
             .compile("^\\(([A-Z])\\) (.*)");
     private final static Pattern SINGLE_DATE_PATTERN = Pattern
+            .compile("(\\s|^)(\\d{4}-\\d{2}-\\d{2})");
+    private final static Pattern SINGLE_DATE_PREFIX = Pattern
             .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
@@ -176,13 +181,28 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public SpannableString getRelativeDueDate(Resources res, boolean useColor) {
-        //TODO implement
-        return null;
+        Date dueDate = getDueDate();
+        if (dueDate!=null) {
+            String relativeDate = RelativeDate.getRelativeDate(dueDate);
+            SpannableString ss = new SpannableString("Due: " +  relativeDate);
+            if (relativeDate.equals(res.getString(R.string.dates_today)) && useColor) {
+                Util.setColor(ss, res.getColor(android.R.color.holo_green_light));
+            } else if (dueDate.before(new Date()) && useColor) {
+                Util.setColor(ss,res.getColor(android.R.color.holo_red_light));
+            }
+            return ss;
+        } else {
+            return null;
+        }
     }
 
     public String getRelativeThresholdDate() {
-        //TODO implement
-        return null;
+        Date thresholdDate = getThresholdDate();
+        if (thresholdDate!=null) {
+            return "T: " + RelativeDate.getRelativeDate(thresholdDate);
+        } else {
+            return null;
+        }
     }
 
     public List<String> getPhoneNumbers() {
@@ -208,7 +228,7 @@ public class Task implements Serializable, Comparable<Task> {
             return text;
         }
         String restText = xMatch.group(2);
-        Matcher dateMatch = SINGLE_DATE_PATTERN.matcher(restText);
+        Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
         if (!dateMatch.matches()) {
             return restText;
         } else {
@@ -223,7 +243,7 @@ public class Task implements Serializable, Comparable<Task> {
             return null;
         }
         String restText = xMatch.group(2);
-        Matcher dateMatch = SINGLE_DATE_PATTERN.matcher(restText);
+        Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
         if (!dateMatch.matches()) {
             return "";
         } else {
@@ -350,8 +370,14 @@ public class Task implements Serializable, Comparable<Task> {
         //TODO implement
     }
 
+
     public String getThresholdDateString(String empty) {
-        return empty;
+        Matcher matcher = THRESHOLD_PATTERN.matcher(this.text);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return empty;
+        }
     }
 
     public String getHeader(String sort, String empty) {
@@ -377,10 +403,12 @@ public class Task implements Serializable, Comparable<Task> {
 
     public CharSequence datelessScreenFormat() {
         String text = inScreenFormat();
+        // remove completion and creation dates
+        text = text.replaceAll(SINGLE_DATE_PATTERN.pattern(),"");
         // remove due dates
         text = text.replaceAll(DUE_PATTERN.pattern(), "");
         // remove threshold dates
         text = text.replaceAll(THRESHOLD_PATTERN.pattern(), "");
-        return text;
+        return text.trim();
     }
 }
