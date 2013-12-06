@@ -1638,18 +1638,17 @@ public class Simpletask extends ListActivity  {
 					String shareText = selectedTasksAsString();
 					intent = new Intent(android.content.Intent.ACTION_SEND)
 						.setType("text/plain")
-						.putExtra(android.content.Intent.EXTRA_SUBJECT,
-								"Todo.txt task")
-						.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+                        .putExtra(android.content.Intent.EXTRA_SUBJECT,
+                                getString(R.string.share_title))
+                        .putExtra(android.content.Intent.EXTRA_TEXT, shareText);
 					startActivity(Intent.createChooser(intent, "Share"));
 					break;
 				case R.id.calendar:
-					List<Task> selectedTasks = getCheckedTasks();
 					String calendarTitle = getString(R.string.calendar_title);
 					String calendarDescription = "";
-					if (selectedTasks.size() == 1) {
+					if (checkedTasks.size() == 1) {
 						// Set the task as title
-						calendarTitle = selectedTasks.get(0).getText();
+						calendarTitle = checkedTasks.get(0).getText();
 					} else {
 						// Set the tasks as description
 						calendarDescription = selectedTasksAsString();
