@@ -13,8 +13,8 @@ public class ContextComparator extends ReversableComparator {
 
     @Override
     public int unreversedCompare(Task a, Task b) {
-        List<String> contextsA = a.getContexts();
-        List<String> contextsB = b.getContexts();
+        List<String> contextsA = a.getLists();
+        List<String> contextsB = b.getLists();
 
         if (contextsA.isEmpty() && contextsB.isEmpty()) {
             return 0;

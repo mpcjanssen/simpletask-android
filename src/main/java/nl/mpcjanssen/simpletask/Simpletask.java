@@ -10,14 +10,9 @@ package nl.mpcjanssen.simpletask;
 
 import nl.mpcjanssen.simpletask.remote.RemoteClient;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.task.ByContextFilter;
-import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
-import nl.mpcjanssen.simpletask.task.ByProjectFilter;
-import nl.mpcjanssen.simpletask.task.ByTextFilter;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
-import nl.mpcjanssen.simpletask.task.TaskFilter;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
@@ -30,12 +25,9 @@ import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
@@ -80,7 +72,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.Thread.sleep;
@@ -467,10 +458,10 @@ public class Simpletask extends ListActivity  {
 		LinkedHashSet<String> contexts = new LinkedHashSet<String>();
 		LinkedHashSet<String> projects = new LinkedHashSet<String>();
 		for (Task task : tasks) {
-			for (String s : task.getContexts()) {
+			for (String s : task.getLists()) {
 				contexts.add("@" + s);
 			}
-			for (String s : task.getProjects()) {
+			for (String s : task.getTags()) {
 				projects.add("+"+s);
 			}
 		}
@@ -1098,12 +1089,12 @@ public class Simpletask extends ListActivity  {
 							       task.datelessScreenFormat());
 
 					       ArrayList<String> colorizeStrings = new ArrayList<String>();
-					       for (String context : task.getContexts()) {
+					       for (String context : task.getLists()) {
 						       colorizeStrings.add("@" + context);
 					       }
 					       Util.setColor(ss, Color.GRAY, colorizeStrings);
 					       colorizeStrings.clear();
-					       for (String project : task.getProjects()) {
+					       for (String project : task.getTags()) {
 						       colorizeStrings.add("+" + project);
 					       }
 					       Util.setColor(ss, Color.GRAY, colorizeStrings);
@@ -1378,10 +1369,10 @@ public class Simpletask extends ListActivity  {
 		LinkedHashSet<String> selectedContexts = new LinkedHashSet<String>();
 		LinkedHashSet<String> selectedProjects = new LinkedHashSet<String>();
 		for (Task t: checkedTasks) {
-			selectedContexts.addAll(t.getContexts());
+			selectedContexts.addAll(t.getLists());
 		}
 		for (Task t: checkedTasks) {
-			selectedProjects.addAll(t.getProjects());
+			selectedProjects.addAll(t.getTags());
 		}
 		m_contextsList = taskBag.getContexts(false);
 		m_projectsList = taskBag.getProjects(false);
@@ -1639,7 +1630,7 @@ public class Simpletask extends ListActivity  {
 					intent = new Intent(android.content.Intent.ACTION_SEND)
 						.setType("text/plain")
 						.putExtra(android.content.Intent.EXTRA_SUBJECT,
-								"Todo.txt task")
+                                "Todo.txt task")
 						.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
 					startActivity(Intent.createChooser(intent, "Share"));
 					break;

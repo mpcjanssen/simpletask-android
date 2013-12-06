@@ -55,14 +55,14 @@ public class ByContextFilter implements TaskFilter {
             return true;
         }
 
-        for (String c : input.getContexts()) {
+        for (String c : input.getLists()) {
             if (contexts.contains(c)) {
                 return true;
             }
         }        /*
          * Match tasks without context if filter contains "-"
 		 */
-        return input.getContexts().size() == 0 && contexts.contains("-");
+        return input.getLists().size() == 0 && contexts.contains("-");
 
     }
 
