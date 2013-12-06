@@ -37,8 +37,11 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,7 +71,7 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
 
     private final static Pattern COMPLETED_PATTERN = Pattern
-            .compile("^([X,x] )(.*)");
+            .compile("^([Xx] )(.*)");
 
     private static SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
 
@@ -133,109 +136,102 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setPriority(Priority priority) {
-        this.priority = priority;
+        //TODO implement
     }
 
     public Priority getPriority() {
-        return priority;
+        //TODO implement
+        return Priority.NONE;
     }
 
     public List<String> getContexts() {
-        return contexts;
+        //TODO implement
+        return new ArrayList<String>();
     }
 
     public List<String> getProjects() {
-        return projects;
+        //TODO implement
+        return new ArrayList<String>();
     }
 
     public void setPrependedDate(String date) {
-        this.prependedDate = date;
-        try {
-            Date d = formatter.parse(this.prependedDate);
-            this.relativeAge = RelativeDate.getRelativeDate(d);
-        } catch (ParseException e) {
-            // e.printStackTrace();
-        }
+        //TODO implement
     }
 
     public void setPrependedDate(Date dt) {
-        this.prependedDate = formatter.format(dt);
-        this.relativeAge = RelativeDate.getRelativeDate(dt);
+        //TODO implement
 
     }
 
     public String getPrependedDate() {
-        return prependedDate;
+        //TODO implement
+        return null;
     }
 
     public String getRelativeAge() {
-        return relativeAge;
+        //TODO implement
+        return null;
     }
 
     public SpannableString getRelativeDueDate(Resources res, boolean useColor) {
-
-        if (dueDate!=null) {
-            String relativeDate = RelativeDate.getRelativeDate(dueDate);
-            SpannableString ss = new SpannableString("Due: " +  relativeDate);
-            if (relativeDate.equals(res.getString(R.string.dates_today)) && useColor) {
-                Util.setColor(ss,res.getColor(android.R.color.holo_green_light));
-            } else if (dueDate.before(new Date()) && useColor) {
-                Util.setColor(ss,res.getColor(android.R.color.holo_red_light));
-            }
-            return ss;
-        } else {
-            return null;
-        }
+        //TODO implement
+        return null;
     }
     public String getRelativeThresholdDate() {
-        if (thresholdDate!=null) {
-            return "T: " + RelativeDate.getRelativeDate(thresholdDate);
-        } else {
-            return null;
-        }
+        //TODO implement
+        return null;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
 
-    public boolean isCompleted() {
-        return completed;
-    }
 
     public List<String> getPhoneNumbers() {
-        return phoneNumbers;
+        //TODO implement
+        return null;
     }
 
     public List<String> getMailAddresses() {
-        return mailAddresses;
+        //TODO implement
+        return null;
     }
 
     public String getRecurrencePattern() {
-        return recurrencePattern;
+        //TODO implement
+        return null;
     }
 
     public List<URL> getLinks() {
-        return links;
+        //TODO implement
+        return null;
     }
 
     public String getCompletionDate() {
-        return completionDate;
+        Matcher xMatch = COMPLETED_PATTERN.matcher(text);
+        if (!xMatch.matches()) {
+            return null;
+        }
+        String restText = xMatch.group(2);
+        Matcher dateMatch = SINGLE_DATE_PATTERN.matcher(restText);
+        if (!dateMatch.matches()) {
+            return "";
+        } else {
+            return dateMatch.group(1);
+        }
+
+    }
+
+    public boolean isCompleted() {
+        return getCompletionDate()!=null;
     }
 
     public void markComplete(Date date) {
-        if (!this.completed) {
-            this.completionDate = formatter.format(date);
-            this.deleted = false;
-            this.completed = true;
+        if (!this.isCompleted()) {
+            String completionDate = formatter.format(date);
+            this.text = "x " + completionDate + " " + text;
         }
     }
 
     public void markIncomplete() {
-        if (this.completed) {
-            this.completionDate = "";
-            this.completed = false;
-        }
+        //TODO implement
     }
 
     public void delete() {
@@ -245,8 +241,8 @@ public class Task implements Serializable, Comparable<Task> {
     // TODO need a better solution (TaskFormatter?) here
     public String inScreenFormat() {
         StringBuilder sb = new StringBuilder();
-        if (this.completed) {
-            sb.append(COMPLETED).append(this.completionDate).append(" ");
+        if (this.isCompleted()) {
+            sb.append(COMPLETED).append(this.getCompletionDate()).append(" ");
         }
         if (this.getPriority()!=Priority.NONE) {
             sb.append(this.getPriority().inFileFormat()).append(" ");
@@ -266,24 +262,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String inFileFormat() {
-        StringBuilder sb = new StringBuilder();
-        if (this.completed) {
-            sb.append(COMPLETED);
-            if(!Strings.isEmptyOrNull(this.completionDate)){
-                sb.append(this.completionDate).append(" ");
-            }
-
-        }
-
-        if (priority != Priority.NONE) {
-            sb.append(priority.inFileFormat()).append(" ");
-        }
-        if (!Strings.isEmptyOrNull(this.prependedDate)) {
-            sb.append(this.prependedDate).append(" ");
-            }
-
-        sb.append(this.text);
-        return sb.toString();
+        return text;
     }
 
     public void copyInto(Task destination) {
@@ -318,18 +297,7 @@ public class Task implements Serializable, Comparable<Task> {
     public void initWithFilter(ActiveFilter mFilter) {
 
         // Ignore empty contexts and projects for initializing the task
-        ArrayList<String> filterContexts = mFilter.getContexts();
-        filterContexts.remove("-");
-        if ((filterContexts.size() == 1) && (mFilter.getContextsNot()!=true)) {
-            contexts.clear();
-            contexts.add(filterContexts.get(0));
-        }
-        ArrayList<String> filterProjects = mFilter.getProjects();
-        filterProjects.remove("-");
-        if ((filterProjects.size() == 1) && (mFilter.getProjectsNot()!=true)) {
-            projects.clear();
-            projects.add(filterProjects.get(0));
-        }
+        // TODO implement
     }
 
     /**
@@ -377,17 +345,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setDueDate(String dueDateString) {
-        String taskContents = inFileFormat();
-        if (dueDateString.equals("")) {
-            taskContents =
-
-                    taskContents.replaceAll(DUE_PATTERN.pattern(),"");
-        } else if (this.dueDate!=null) {
-            taskContents = taskContents.replaceFirst(DUE_PATTERN.pattern(), " due:" + dueDateString);
-        } else {
-            taskContents = taskContents + " due:" + dueDateString;
-        }
-        init(taskContents, null);
+        //TODO implement
     }
 
     public void setThresholdDate(Date thresholdDate) {
@@ -395,53 +353,19 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setThresholdDate(String thresholdDateString) {
-        String taskContents = inFileFormat();
-        if (thresholdDateString.equals("")) {
-            taskContents = taskContents.replaceAll(THRESHOLD_PATTERN.pattern(),"");
-        } else if (this.thresholdDate!=null) {
-            taskContents = taskContents.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDateString);
-        } else {
-            taskContents = taskContents + " t:" + thresholdDateString;
-        }
-        init(taskContents, null);
+        //TODO implement
     }
 
     public void deferThresholdDate(String deferString, boolean original) {
-        if (deferString.equals("")) {
-            setThresholdDate("");
-            return;
-        }
-        Date olddate = new Date();
-        if (original) {
-            olddate = getThresholdDate();
-        }
-        Date newDate = Util.addInterval(olddate,deferString);
-        if (newDate!=null) {
-            setThresholdDate(newDate);
-        }
+        //TODO implement
     }
 
     public void deferDueDate(String deferString, boolean original) {
-        if (deferString.equals("")) {
-            setDueDate("");
-            return;
-        }
-        Date olddate = new Date();
-        if (original) {
-            olddate = getDueDate();
-        }
-        Date newDate = Util.addInterval(olddate, deferString);
-        if (newDate!=null) {
-            setDueDate(newDate);
-        }
+        //TODO implement
     }
 
     public String getThresholdDateString(String empty) {
-        if (this.thresholdDate==null) {
             return empty;
-        } else {
-            return formatter.format(thresholdDate);
-        }
     }
 
     public String getHeader(String sort, String empty) {
