@@ -146,6 +146,7 @@ public class Simpletask extends ListActivity  {
 		Log.v(TAG, "onCreate");
 		m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
+
         super.onCreate(savedInstanceState);
 
 		final IntentFilter intentFilter = new IntentFilter();
@@ -192,6 +193,7 @@ public class Simpletask extends ListActivity  {
 		registerReceiver(m_broadcastReceiver, intentFilter);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		// Set the proper theme
 		setTheme(m_app.getActiveTheme());
         if (m_app.hasLandscapeDrawers()) {
@@ -1549,9 +1551,7 @@ public class Simpletask extends ListActivity  {
 			List<Task> checkedTasks = getCheckedTasks();
 			updateDrawerListForSelection(checkedTasks);
 			int numSelected = checkedTasks.size();
-			String title = "";
-			title = title + numSelected;
-			title = title + " " + getString(R.string.selected);
+			String title = "" + numSelected;
 			mode.setTitle(title);
 			if (numSelected == 1) {
 				// show the edit menu item and hide the appropriate
