@@ -101,10 +101,8 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
                 android:name="nl.mpcjanssen.simpletask.Simpletask"
                 android:exported="true"
-                android:label=""
                 android:launchMode="singleTask">
-            <intent-filter
-                android:label="@string/app_label">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
