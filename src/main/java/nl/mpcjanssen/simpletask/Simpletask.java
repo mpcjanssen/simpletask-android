@@ -147,6 +147,7 @@ public class Simpletask extends ListActivity  {
 		m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
 
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
 		final IntentFilter intentFilter = new IntentFilter();
@@ -192,7 +193,6 @@ public class Simpletask extends ListActivity  {
 		};
 		registerReceiver(m_broadcastReceiver, intentFilter);
 
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		// Set the proper theme
 		setTheme(m_app.getActiveTheme());
