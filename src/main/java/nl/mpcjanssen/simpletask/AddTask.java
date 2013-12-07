@@ -229,7 +229,6 @@ public class AddTask extends Activity {
         if (m_backup != null) {
             textInputField.setText(m_backup.inFileFormat());
             setTitle(R.string.updatetask);
-            textInputField.setSelection(m_backup.inFileFormat().length());
         } else {
             if (textInputField.getText().length() == 0) {
                 iniTask = new Task(1, "");
@@ -348,6 +347,10 @@ public class AddTask extends Activity {
                 insertDate(Task.THRESHOLD_DATE);
             }
         });
+
+        if (m_backup!=null) {
+            textInputField.setSelection(m_backup.inFileFormat().length());
+        }
     }
 
 
