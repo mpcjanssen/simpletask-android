@@ -1,5 +1,11 @@
 # ChangeLog
 
+### 3.2.4
+
+* [Feature] Keep priority when completing tasks.
+* [UI] Simplified activity titles.
+* 
+
 ### 3.2.3
 
 * [Build] Simplified version numbering.
