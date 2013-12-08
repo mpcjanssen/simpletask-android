@@ -95,13 +95,6 @@ public class AddTask extends Activity {
             case R.id.menu_save_task:
                 saveTasksAndClose();
                 break;
-            case R.id.menu_add_task_help:
-                Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.help);
-                dialog.setCancelable(true);
-                dialog.setTitle("Task format");
-                dialog.show();
-                break;
             case R.id.menu_cancel_task:
                 finish();
                 break;
