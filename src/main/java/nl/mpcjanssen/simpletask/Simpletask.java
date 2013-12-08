@@ -236,7 +236,12 @@ public class Simpletask extends ListActivity  {
 
 		mFilter = new ActiveFilter(getResources());
 
-		m_drawerList = (ListView) findViewById(R.id.left_drawer_list);
+		m_drawerList = (ListView) findViewById(R.id.left_drawer);
+        if (m_app.isDarkTheme()) {
+            m_drawerList.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
+        } else {
+            m_drawerList.setBackgroundColor(getResources().getColor(android.R.color.background_light));
+        }
 
 		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
