@@ -940,10 +940,9 @@ public class Simpletask extends ListActivity  {
                 m_drawerList.setItemChecked(position,true);
             }
         }
-        // We need to handle 'not' checked states from here
-        m_drawerList.setItemChecked(drawerAdapter.getContextNotPosition(),mFilter.getContextsNot());
-        m_drawerList.setItemChecked(drawerAdapter.getProjectsNotPosition(),mFilter.getProjectsNot());
-	}
+        m_drawerList.setItemChecked(drawerAdapter.getContextHeaderPosition(),mFilter.getContextsNot());
+        m_drawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(),mFilter.getProjectsNot());
+ 	}
 
 	private void showDrawerHeaders(boolean show) {
 		if (m_container==null) {
@@ -1454,26 +1453,35 @@ public class Simpletask extends ListActivity  {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-                view.setSelected(true);
+                //view.setSelected(true);
 				ArrayList<String> tags;
 				ListView lv = (ListView) parent;
-				Intent intent = getIntent();
-				tags = Util.getCheckedItems(lv,true);
-                ArrayList<String> filteredContexts = new ArrayList<String>();
-                ArrayList<String> filteredProjects = new ArrayList<String>();
-
-                for (String tag : tags) {
-                    if (tag.startsWith("+")) {
-                        filteredProjects.add(tag.substring(1));
-                    } else if (tag.startsWith("@")) {
-                        filteredContexts.add(tag.substring(1));
-                    }
+                DrawerAdapter adapter = (DrawerAdapter) lv.getAdapter();
+                if (adapter.getProjectsHeaderPosition()==position) {
+                    mFilter.setProjectsNot(!mFilter.getProjectsNot());
                 }
-                mFilter.setContexts(filteredContexts);
-                mFilter.setProjects(filteredProjects);
+                if (adapter.getContextHeaderPosition()==position) {
+                    mFilter.setContextsNot(!mFilter.getContextsNot());
+                } else {
+                    tags = Util.getCheckedItems(lv,true);
+                    ArrayList<String> filteredContexts = new ArrayList<String>();
+                    ArrayList<String> filteredProjects = new ArrayList<String>();
+
+                    for (String tag : tags) {
+                        if (tag.startsWith("+")) {
+                            filteredProjects.add(tag.substring(1));
+                        } else if (tag.startsWith("@")) {
+                            filteredContexts.add(tag.substring(1));
+                        }
+                    }
+                    mFilter.setContexts(filteredContexts);
+                    mFilter.setProjects(filteredProjects);
+                }
+				Intent intent = getIntent();
+
 				mFilter.saveInIntent(intent);
 				setIntent(intent);
-
+                adapter.notifyDataSetChanged();
                 finishActionmode();
                 m_adapter.setFilteredTasks(false);
                 //m_drawerLayout.closeDrawer(Gravity.LEFT);
