@@ -9,6 +9,11 @@ You can download the latest versions from the Play Store. Simpletask comes in th
 
 To follow code and ticket updates follow [the rss feed](../../timeline.rss).
 
+Getting started
+---------------
+
+* [Getting started with MYN and Simpletask](./doc/tutorial/MYN.md) 
+
 Extensions
 ----------
 
