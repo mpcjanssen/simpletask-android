@@ -329,6 +329,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.long_click_drag_drop_key), true);
     }
 
+    public boolean hasNewTaskExample() {
+        return m_prefs.getBoolean(getString(R.string.ui_show_new_task_hint), true);
+    }
+
     public boolean isAddTagsCloneTags() {
         return m_prefs.getBoolean(getString(R.string.clone_tags_key),false);
     }
