@@ -240,7 +240,7 @@ public class Simpletask extends ListActivity  {
         if (m_app.isDarkTheme()) {
             m_drawerList.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
         } else {
-            m_drawerList.setBackgroundColor(getResources().getColor(android.R.color.background_light));
+            m_drawerList.setBackgroundColor(0xfff3f3f3);
         }
 
 		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
