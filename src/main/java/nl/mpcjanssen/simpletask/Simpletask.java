@@ -8,6 +8,7 @@
 
 package nl.mpcjanssen.simpletask;
 
+import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.remote.RemoteClient;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -927,8 +928,7 @@ public class Simpletask extends ListActivity  {
         drawerItems.addAll(taskBag.getDecoratedContexts(true));
         drawerItems.addAll(taskBag.getDecoratedProjects(true));
 
-		m_drawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, drawerItems));
+		m_drawerList.setAdapter(new DrawerAdapter(getLayoutInflater(), drawerItems));
         m_drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -1476,6 +1476,7 @@ public class Simpletask extends ListActivity  {
 				mFilter.saveInIntent(intent);
 				setIntent(intent);
 				m_adapter.setFilteredTasks(false);
+                //m_drawerLayout.closeDrawer(Gravity.LEFT);
 			}
 		}
 }
