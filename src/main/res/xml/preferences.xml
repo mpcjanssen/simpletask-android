@@ -70,6 +70,11 @@
             android:key="@string/ui_drawer_fixed_landscape"
             android:summary="@string/drawer_fixed_landscape_summary"
             android:title="@string/drawer_fixed_landscape_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/ui_show_new_task_hint"
+            android:summary="@string/show_new_task_hint_summary"
+            android:title="@string/show_new_task_hint_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">

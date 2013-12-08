@@ -63,7 +63,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear_filter">Clear filter</string>
-    <string name="tasktexthint">Call Mom @phone +Birthday\nBuy gift @errands +Birthday</string>
+
+    <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
+
     <string name="shortcut_name_empty">No name specified, not creating shortcut</string>
     <string name="add_task_help">Add or update a task to the task list. When adding tasks,
         each line is a separate task for quick adding.\n
@@ -147,6 +149,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_title">Use split action bar</string>
     <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
         For more screen estate for the todo list turn this off. </string>
+
+    <string name="show_new_task_hint_title">Show new task example</string>
+    <string name="show_new_task_hint_summary">Show some example tasks when adding a new task.</string>
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>

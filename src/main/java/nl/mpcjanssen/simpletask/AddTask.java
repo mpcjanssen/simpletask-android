@@ -210,6 +210,10 @@ public class AddTask extends Activity {
         // text
         textInputField = (EditText) findViewById(R.id.taskText);
 
+        if (!m_app.hasNewTaskExample()) {
+            textInputField.setHint("");
+        }
+
         if (share_text != null) {
             textInputField.setText(share_text);
         }
