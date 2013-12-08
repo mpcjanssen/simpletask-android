@@ -55,3 +55,5 @@ See [Defer Tasks](./doc/DeferTasks.md)
 #### Why the switch to Gradle?
 
 See [Gradle](./doc/Gradle.md)
+
+*NB: [Here](http://mpcjanssen.nl/fossil/simpletask) is the main version of this file, use this in case of bad links.*
