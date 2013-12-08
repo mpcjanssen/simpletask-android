@@ -924,23 +924,22 @@ public class Simpletask extends ListActivity  {
 
 	private void updateDrawerList() {
         TaskBag taskBag = getTaskBag();
-        ArrayList drawerItems = new ArrayList();
-        drawerItems.addAll(taskBag.getDecoratedContexts(true));
-        drawerItems.addAll(taskBag.getDecoratedProjects(true));
+        DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
+                taskBag.getDecoratedContexts(true), taskBag.getDecoratedProjects(true));
 
-		m_drawerList.setAdapter(new DrawerAdapter(getLayoutInflater(), drawerItems));
+		m_drawerList.setAdapter(drawerAdapter);
         m_drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         for (String context : mFilter.getContexts()) {
-            int position = drawerItems.indexOf("@"+ context);
+            int position = drawerAdapter.getIndexOf("@"+ context);
             if (position!=-1) {
                 m_drawerList.setItemChecked(position,true);
             }
         }
 
-        for (String context : mFilter.getProjects()) {
-            int position = drawerItems.indexOf("+"+ context);
+        for (String project : mFilter.getProjects()) {
+            int position = drawerAdapter.getIndexOf("+"+ project);
             if (position!=-1) {
                 m_drawerList.setItemChecked(position,true);
             }
