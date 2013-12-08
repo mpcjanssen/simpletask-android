@@ -150,7 +150,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
-    <string name="visit_website_title">Go to the website</string>
+    <string name="visit_website_title">Help</string>
     <string name="visit_website_summary">Visit the Simpletask website</string>
     <string name="visit_website_data">http://mpcjanssen.nl/cgi-bin/simpletask</string>
 
