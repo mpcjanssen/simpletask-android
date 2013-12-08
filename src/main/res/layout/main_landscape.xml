@@ -32,23 +32,16 @@ You should have received a copy of the GNU General Public License along with Tod
 
         <!-- The navigation drawer -->
 
-        <LinearLayout
-                    android:id="@+id/left_drawer"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical"
-                    android:background="#111"
-                    android:layout_width="240dp">
-
             <ListView
-                    android:id="@+id/left_drawer_list"
+                    android:id="@+id/left_drawer"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:choiceMode="multipleChoice"
                     android:divider="@android:color/transparent"
                     android:dividerHeight="0dp"
                     android:background="#111"/>
-            </LinearLayout>
+
 
 
     <!-- The main content view -->
