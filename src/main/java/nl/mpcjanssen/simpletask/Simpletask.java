@@ -929,7 +929,7 @@ public class Simpletask extends ListActivity  {
 
 		m_drawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, drawerItems));
-        m_drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        m_drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         for (String context : mFilter.getContexts()) {
@@ -1456,6 +1456,7 @@ public class Simpletask extends ListActivity  {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
+                view.setSelected(true);
 				ArrayList<String> tags;
 				ListView lv = (ListView) parent;
 				Intent intent = getIntent();
