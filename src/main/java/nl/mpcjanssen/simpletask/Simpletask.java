@@ -387,10 +387,8 @@ public class Simpletask extends ListActivity  {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (actionMode != null) {
-			actionMode.finish();
-		}
-		mFilter.saveInPrefs(TodoApplication.getPrefs());
+        finishActionmode();
+        mFilter.saveInPrefs(TodoApplication.getPrefs());
 	}
 
 	@Override
@@ -916,10 +914,8 @@ public class Simpletask extends ListActivity  {
 		mFilter.clear();
 		mFilter.saveInIntent(intent);
 		setIntent(intent);
-		if (actionMode!=null) {
-			actionMode.finish();
-		}
-		updateDrawerList();
+        finishActionmode();
+        updateDrawerList();
 	}
 
 	private void updateDrawerList() {
@@ -944,6 +940,9 @@ public class Simpletask extends ListActivity  {
                 m_drawerList.setItemChecked(position,true);
             }
         }
+        // We need to handle 'not' checked states from here
+        m_drawerList.setItemChecked(drawerAdapter.getContextNotPosition(),mFilter.getContextsNot());
+        m_drawerList.setItemChecked(drawerAdapter.getProjectsNotPosition(),mFilter.getProjectsNot());
 	}
 
 	private void showDrawerHeaders(boolean show) {
@@ -1474,8 +1473,16 @@ public class Simpletask extends ListActivity  {
                 mFilter.setProjects(filteredProjects);
 				mFilter.saveInIntent(intent);
 				setIntent(intent);
-				m_adapter.setFilteredTasks(false);
+
+                finishActionmode();
+                m_adapter.setFilteredTasks(false);
                 //m_drawerLayout.closeDrawer(Gravity.LEFT);
 			}
 		}
+
+    private void finishActionmode() {
+        if (actionMode!=null) {
+            actionMode.finish();
+        }
+    }
 }
