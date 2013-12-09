@@ -39,9 +39,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -398,14 +401,32 @@ public class AddTask extends Activity {
     private void showTagMenu() {
         final ArrayList<String> projects = taskBag.getProjects(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(projects.toArray(new String[projects.size()]),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("+" + projects.get(which) + " ", true);
-                    }
-                });
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        builder.setView(view);
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        final EditText ed = (EditText) view.findViewById(R.id.editText);
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice, projects ));
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        ed.setHint(R.string.new_tag_name);
 
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> items = new ArrayList<String>();
+                items.addAll(Util.getCheckedItems(lv, true));
+                if (ed.getText()!=null) {
+                    items.add(ed.getText().toString());
+                }
+                for (String item : items) {
+                    replaceTextAtSelection("+" + item + " ", true);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.project_prompt);
@@ -439,14 +460,32 @@ public class AddTask extends Activity {
     private void showContextMenu() {
         final ArrayList<String> contexts = taskBag.getContexts(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(contexts.toArray(new String[contexts.size()]),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("@" + contexts.get(which) + " ", true);
-                    }
-                });
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        builder.setView(view);
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        final EditText ed = (EditText) view.findViewById(R.id.editText);
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice, contexts ));
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        ed.setHint(R.string.new_list_name);
 
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> items = new ArrayList<String>();
+                items.addAll(Util.getCheckedItems(lv, true));
+                if (ed.getText()!=null) {
+                    items.add(ed.getText().toString());
+                }
+                for (String item : items) {
+                    replaceTextAtSelection("@" + item + " ", true);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.context_prompt);
