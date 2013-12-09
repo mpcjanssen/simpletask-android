@@ -49,7 +49,7 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:focusable="false"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="4dip"
+                android:paddingLeft="0dip"
                 android:paddingRight="4dip"
                 android:paddingTop="4dip"
                 android:textSize="16sp"
@@ -65,7 +65,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:focusable="false"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dip"
+            android:paddingLeft="0dip"
             android:paddingBottom="4dip"
             android:textSize="11sp"
             android:layout_weight="1"/>
