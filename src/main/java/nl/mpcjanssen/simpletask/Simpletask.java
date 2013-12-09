@@ -1164,7 +1164,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					       Util.setColor(ss, prioColor, task.getPriority()
 							       .inFileFormat());
 					       holder.tasktext.setText(ss);
-
+                           final ArrayList<Task> tasks = new ArrayList<Task>();
+                           tasks.add(task);
 					       if (task.isCompleted()) {
 						       // Log.v(TAG, "Striking through " + task.getText());
 						       holder.tasktext.setPaintFlags(holder.tasktext
@@ -1172,6 +1173,12 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 						       holder.taskage.setPaintFlags(holder.taskage
 								       .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                                holder.cbCompleted.setChecked(true);
+                               holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       undoCompleteTasks(tasks);
+                                   }
+                               });
 					       } else {
 						       holder.tasktext
 							       .setPaintFlags(holder.tasktext.getPaintFlags()
@@ -1180,7 +1187,15 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 							       .setPaintFlags(holder.taskage.getPaintFlags()
                                            & ~Paint.STRIKE_THRU_TEXT_FLAG);
                                holder.cbCompleted.setChecked(false);
+                               holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       completeTasks(tasks);
+                                   }
+                               });
 					       }
+
+
 
 
 					       String relAge = task.getRelativeAge();
