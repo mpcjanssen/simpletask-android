@@ -59,6 +59,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -77,7 +78,7 @@ import java.util.*;
 import static java.lang.Thread.sleep;
 
 
-public class Simpletask extends ListActivity  {
+public class Simpletask extends ListActivity  implements AdapterView.OnItemLongClickListener {
 
 	final static String TAG = Simpletask.class.getSimpleName();
 	private final static int REQUEST_FILTER = 1;
@@ -409,11 +410,24 @@ public class Simpletask extends ListActivity  {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// toggle selected state
-		l.setItemChecked(position, !l.isItemChecked(position));
-	}
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Task clickedTask = m_adapter.getItem(position);
+        ArrayList<Task> taskList = new ArrayList<Task>();
+        taskList.add(clickedTask);
+        if (!clickedTask.isCompleted()) {
+            completeTasks(taskList);
+        } else {
+            undoCompleteTasks(taskList);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        ListView l = (ListView) parent;
+        l.setItemChecked(position, !l.isItemChecked(position));
+        return true;
+    }
 
 	private Task getTaskAt(final int pos) {
 		return m_adapter.getItem(pos);
@@ -927,7 +941,7 @@ public class Simpletask extends ListActivity  {
         for (String context : mFilter.getContexts()) {
             int position = drawerAdapter.getIndexOf("@"+ context);
             if (position!=-1) {
-                m_drawerList.setItemChecked(position,true);
+                m_drawerList.setItemChecked(position, true);
             }
         }
 
@@ -963,11 +977,12 @@ public class Simpletask extends ListActivity  {
 		startActivityForResult(i, REQUEST_FILTER);
 	}
 
-	private static class ViewHolder {
+    private static class ViewHolder {
 		private TextView tasktext;
 		private TextView taskage;
 		private TextView taskdue;
 		private TextView taskthreshold;
+        private CheckBox cbCompleted;
 	}
 
 	public class TaskAdapter extends BaseAdapter implements ListAdapter,
@@ -1109,6 +1124,8 @@ public class Simpletask extends ListActivity  {
 						       .findViewById(R.id.taskdue);
 					       holder.taskthreshold = (TextView) convertView
 						       .findViewById(R.id.taskthreshold);
+                           holder.cbCompleted = (CheckBox) convertView
+                               .findViewById(R.id.checkBox);
 					       convertView.setTag(holder);
 				       } else {
 					       holder = (ViewHolder) convertView.getTag();
@@ -1159,6 +1176,7 @@ public class Simpletask extends ListActivity  {
 								       .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 						       holder.taskage.setPaintFlags(holder.taskage
 								       .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                               holder.cbCompleted.setChecked(true);
 					       } else {
 						       holder.tasktext
 							       .setPaintFlags(holder.tasktext.getPaintFlags()
@@ -1166,6 +1184,7 @@ public class Simpletask extends ListActivity  {
 						       holder.taskage
 							       .setPaintFlags(holder.taskage.getPaintFlags()
                                            & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                               holder.cbCompleted.setChecked(false);
 					       }
 
 
@@ -1464,6 +1483,8 @@ public class Simpletask extends ListActivity  {
                 lv.setItemChecked(position, true);
             }
         }
+        lv.setLongClickable(true);
+        lv.setOnItemLongClickListener(this);
 
         final EditText ed = (EditText) view.findViewById(R.id.editText);
         m_app.setEditTextHint(ed,R.string.new_list_name);

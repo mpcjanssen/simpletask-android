@@ -88,7 +88,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	}
 
     private RemoteViews getExtendedView(int position) {
-            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.list_item);
+            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
             Task task;
             task = visibleTasks.get(position);
 
@@ -177,7 +177,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     private RemoteViews getSimpleView(int position) {
         RemoteViews rv;
-        rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+        rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
         Task task = visibleTasks.get(position);
         SpannableString ss = new SpannableString(
                 task.datelessScreenFormat());
