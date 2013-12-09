@@ -141,7 +141,7 @@ public class FileDialog {
             }
         }
         Collections.sort(r);
-        fileList = (String[]) r.toArray(new String[]{});
+        fileList = r.toArray(new String[]{});
     }
 
     private File getChosenFile(String fileChosen) {

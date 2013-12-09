@@ -327,10 +327,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 getResources().getBoolean(R.bool.is_landscape));
     }
 
-    public boolean hasLongClickDragDrop() {
-        return m_prefs.getBoolean(getString(R.string.long_click_drag_drop_key), true);
-    }
-
     public void setEditTextHint(EditText editText, int resid ) {
         if (m_prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
             editText.setHint(resid);
