@@ -539,6 +539,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 						task.setPriority(Priority.toPriority(prioArr[which]));
 					}
 				}
+                finishActionmode();
 				getTaskBag().store();
 				m_app.updateWidgets();
 				m_app.setNeedToPush(true);
@@ -1362,7 +1363,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                     break;
 				case R.id.priority:
 					prioritizeTasks(checkedTasks);
-					break;
+					return true;
 				case R.id.share:
 					String shareText = selectedTasksAsString();
 					intent = new Intent(android.content.Intent.ACTION_SEND)
