@@ -659,7 +659,7 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void deleteTasks(final List<Task> tasks) {
-		Util.showDeleteConfirmationDialog(this, new DialogInterface.OnClickListener() {
+		m_app.showConfirmationDialog(this,  R.string.delete_task_message, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				for (Task t : tasks) {
@@ -675,7 +675,7 @@ public class Simpletask extends ListActivity  {
 				// We have change the data, views should refresh
 				sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 			}
-		});
+		} , R.string.delete_task_title);
 	}
 
 	private void archiveTasks() {
@@ -732,7 +732,7 @@ public class Simpletask extends ListActivity  {
 				syncClient(false);
 				break;
 			case R.id.archive:
-				Util.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
+				m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						archiveTasks();
@@ -743,12 +743,12 @@ public class Simpletask extends ListActivity  {
                if (m_app.isCloudLess()) {
                    m_app.openCloudlessFile(this);
                } else {
-                   Util.showConfirmationDialog(this, R.string.dropbox_open, new DialogInterface.OnClickListener() {
+                   m_app.showConfirmationDialog(this, R.string.dropbox_open, new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialog, int which) {
                            m_app.openDropboxFile(Simpletask.this);
                        }
-                   });
+                   }, R.string.dropbox);
                }
                 break;
             default:

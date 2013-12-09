@@ -37,7 +37,8 @@ import android.util.Log;
 import nl.mpcjanssen.simpletask.util.Util;
 
 public class Preferences extends Activity {
-	final static String TAG = Preferences.class.getSimpleName();
+    static TodoApplication m_app ;
+    final static String TAG = Preferences.class.getSimpleName();
 	public static final int RESULT_LOGOUT = RESULT_FIRST_USER + 1;
 	public static final int RESULT_ARCHIVE = RESULT_FIRST_USER + 2;
 
@@ -53,7 +54,7 @@ public class Preferences extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-        TodoApplication m_app = (TodoApplication) getApplication();
+        m_app = (TodoApplication) getApplication();
         // Set the proper theme
         setTheme(m_app.getActiveTheme());
 		super.onCreate(savedInstanceState);
@@ -94,7 +95,7 @@ public class Preferences extends Activity {
 			if (preference.getKey().equals("archive_now")) {
 				Log.v("PREFERENCES",
 						"Archiving completed items from preferences");
-                Util.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
+                m_app.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ((Preferences) getActivity()).broadcastIntentAndClose(
@@ -105,7 +106,7 @@ public class Preferences extends Activity {
 
 			} else if (preference.getKey().equals("logout_dropbox")) {
 				Log.v("PREFERENCES", "Logging out from Dropbox");
-                Util.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
+                m_app.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ((Preferences) getActivity()).broadcastIntentAndClose(

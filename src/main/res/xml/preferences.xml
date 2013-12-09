@@ -75,6 +75,11 @@
             android:key="@string/ui_show_edittext_hints"
             android:summary="@string/show_edittext_hints_summary"
             android:title="@string/show_edittext_hints_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/ui_show_confirmation_dialogs"
+            android:summary="@string/show_confirmation_dialogs_summary"
+            android:title="@string/show_confirmation_dialogs_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">
