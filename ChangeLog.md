@@ -1,10 +1,16 @@
 # ChangeLog
 
-### 3.2.4
+### 4.0.0.
 
+Big update which should make starting with Simpletask more intuitive:
+
+* [UI] Merged tag and list navigation drawer. Right drawer will contain favourite filters in a future release.
+* [UI] Checkboxes in tasklist to quickly complete/uncomplete tasks.
+* [UI] Improved tag and list selection dialogs where you can also add new items.
+* [UI] Updated priority colors to reflect urgency better.
+* [Settings] Added 'expert' user settings "hide hints" and "hide confirmation dialogs"
 * [Feature] Keep priority when completing tasks.
-* [UI] Simplified activity titles.
-* 
+* [UI] Remember last used filter tab.
 
 ### 3.2.3
 
