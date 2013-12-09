@@ -671,6 +671,7 @@ public class Simpletask extends ListActivity  {
 				getTaskBag().store();
 				m_app.updateWidgets();
 				m_app.setNeedToPush(true);
+                updateDrawerList();
 				// We have change the data, views should refresh
 				sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 			}
