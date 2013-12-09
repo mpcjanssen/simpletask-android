@@ -116,19 +116,19 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 int prioColor;
                 switch (task.getPriority()) {
                     case A:
-                        prioColor = res.getColor(R.color.green);
+                        prioColor = res.getColor(android.R.color.holo_red_dark);
                         break;
                     case B:
-                        prioColor = res.getColor(R.color.blue);
+                        prioColor = res.getColor(android.R.color.holo_orange_dark);
                         break;
                     case C:
-                        prioColor = res.getColor(R.color.orange);
+                        prioColor = res.getColor(android.R.color.holo_green_dark);
                         break;
                     case D:
-                        prioColor = res.getColor(R.color.gold);
+                        prioColor = res.getColor(android.R.color.holo_blue_dark);
                         break;
                     default:
-                        prioColor = 0;
+                        prioColor = res.getColor(android.R.color.darker_gray);
                 }
                 if (prioColor!=0) {
                     Util.setColor(ss, prioColor, task.getPriority()

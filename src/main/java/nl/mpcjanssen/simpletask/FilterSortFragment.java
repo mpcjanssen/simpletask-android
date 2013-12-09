@@ -82,22 +82,17 @@ public class FilterSortFragment extends Fragment {
         if (m_app.isDarkTheme()) {
             sortDownId = R.drawable.ic_action_sort_down_dark;
             sortUpId = R.drawable.ic_action_sort_up_dark;
-            dragHandleId = R.drawable.ic_action_content_import_export;
         } else {
             sortDownId = R.drawable.ic_action_sort_down;
             sortUpId = R.drawable.ic_action_sort_up;
-            dragHandleId = R.drawable.ic_action_content_import_export_light;
         }
 
         adapterList.clear();
         LinearLayout layout;
-        if (m_app.hasLongClickDragDrop()) {
-            layout = (LinearLayout) inflater.inflate(R.layout.single_filter_no_handle,
-                    container, false);
-        } else {
+
             layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
-                container, false);
-        }
+                    container, false);
+
         String[] values = getResources().getStringArray(R.array.sort);
         String[] keys = getResources().getStringArray(R.array.sortKeys);
         for (String item : originalItems) {
@@ -135,7 +130,7 @@ public class FilterSortFragment extends Fragment {
         lv.setDropListener(onDrop);
         lv.setRemoveListener(onRemove);
 
-        adapter = new SortItemAdapter(getActivity(), R.layout.list_item_handle_right, R.id.text, adapterList);
+        adapter = new SortItemAdapter(getActivity(), R.layout.sort_list_item, R.id.text, adapterList);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -182,11 +177,7 @@ public class FilterSortFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = super.getView(position, convertView, parent);
             ImageButton reverseButton = (ImageButton)row.findViewById(R.id.reverse_button);
-            ImageView dragHandle = (ImageView)row.findViewById(R.id.drag_handle);
-            dragHandle.setBackgroundResource(dragHandleId);
-            if (m_app.hasLongClickDragDrop()) {
-                dragHandle.setVisibility(View.GONE);
-            }
+
             if (directions.get(position).equals(ActiveFilter.REVERSED_SORT)) {
                 reverseButton.setBackgroundResource(sortUpId);
             } else {
