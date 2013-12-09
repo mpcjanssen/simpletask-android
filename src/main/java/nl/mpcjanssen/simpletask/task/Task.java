@@ -91,7 +91,10 @@ public class Task implements Serializable, Comparable<Task> {
         this.text = rawText;
         if (defaultPrependedDate != null
                 && getPrependedDate() == null) {
+            Priority p = getPriority();
+            setPriority(Priority.NONE);
             this.text = formatter.format(defaultPrependedDate) + " " + text;
+            setPriority(p);
         }
     }
 
@@ -474,11 +477,22 @@ public class Task implements Serializable, Comparable<Task> {
     public CharSequence datelessScreenFormat() {
         String text = inScreenFormat();
         // remove completion and creation dates
-        text = text.replaceAll(SINGLE_DATE_PATTERN.pattern(),"");
+        text = getTextWithoutCompletionAndPriority();
+
+        // remove possible create date
+        Matcher m = SINGLE_DATE_PREFIX.matcher(text);
+        if (m.matches()) {
+            text = m.group(2);
+        }
         // remove due dates
         text = text.replaceAll(DUE_PATTERN.pattern(), "");
         // remove threshold dates
         text = text.replaceAll(THRESHOLD_PATTERN.pattern(), "");
-        return text.trim();
+
+        // Re add priority
+        if (getPriority()!=Priority.NONE) {
+            text = getPriority().inFileFormat() + " " + text.trim();
+        }
+        return text;
     }
 }
