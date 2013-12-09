@@ -143,16 +143,6 @@ public class FilterActivity extends Activity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.filter, menu);
-        if (asWidgetConfigure) {
-        	menu.findItem(R.id.menu_filter_action).setTitle(R.string.create_widget);
-        }
-        return true;
-    }
-
-    @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter_action:
