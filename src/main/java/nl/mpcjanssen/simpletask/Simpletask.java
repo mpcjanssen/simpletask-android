@@ -1177,6 +1177,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                                    @Override
                                    public void onClick(View v) {
                                        undoCompleteTasks(tasks);
+                                       finishActionmode();
                                    }
                                });
 					       } else {
@@ -1191,6 +1192,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                                    @Override
                                    public void onClick(View v) {
                                        completeTasks(tasks);
+                                       finishActionmode();
                                    }
                                });
 					       }
@@ -1320,15 +1322,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 				// show the edit menu item and hide the appropriate
 				// complete/uncomplete item
 				menu.findItem(R.id.update).setVisible(true);
-				if (checkedTasks.get(0).isCompleted()) {
-					menu.findItem(R.id.done).setVisible(false);
-				} else {
-					menu.findItem(R.id.uncomplete).setVisible(false);
-				}
 			} else {
 				menu.findItem(R.id.update).setVisible(false);
-				menu.findItem(R.id.done).setVisible(true);
-				menu.findItem(R.id.uncomplete).setVisible(true);
 			}
 			menu.removeGroup(Menu.CATEGORY_SECONDARY);
 			for (Task t : getCheckedTasks()) {
@@ -1356,9 +1351,6 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 				case R.id.update:
 					startAddTaskActivity(checkedTasks.get(0));
 					break;
-				case R.id.done:
-					completeTasks(checkedTasks);
-					break;
 				case R.id.delete:
 					deleteTasks(checkedTasks);
 					break;
@@ -1368,9 +1360,6 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                 case R.id.defer_threshold:
                     deferTasks(checkedTasks, Task.THRESHOLD_DATE);
                     break;
-				case R.id.uncomplete:
-					undoCompleteTasks(checkedTasks);
-					break;
 				case R.id.priority:
 					prioritizeTasks(checkedTasks);
 					break;
