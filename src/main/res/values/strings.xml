@@ -150,8 +150,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
         For more screen estate for the todo list turn this off. </string>
 
-    <string name="show_new_task_hint_title">Show new task example</string>
-    <string name="show_new_task_hint_summary">Show some example tasks when adding a new task.</string>
+    <string name="show_edittext_hints_title">Show hints</string>
+    <string name="show_edittext_hints_summary">Show editing hints in textboxes. If you find this distracting, disable this setting.</string>
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>

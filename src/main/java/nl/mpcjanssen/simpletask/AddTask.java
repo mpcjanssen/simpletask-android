@@ -224,10 +224,7 @@ public class AddTask extends Activity {
 
         // text
         textInputField = (EditText) findViewById(R.id.taskText);
-
-        if (!m_app.hasNewTaskExample()) {
-            textInputField.setHint("");
-        }
+        m_app.setEditTextHint(textInputField, R.string.tasktexthint);
 
         if (share_text != null) {
             textInputField.setText(share_text);
@@ -424,7 +421,7 @@ public class AddTask extends Activity {
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 projects.toArray(new String[projects.size()])));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        ed.setHint(R.string.new_tag_name);
+        m_app.setEditTextHint(ed,R.string.new_tag_name);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -490,7 +487,7 @@ public class AddTask extends Activity {
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()] )));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        ed.setHint(R.string.new_list_name);
+        m_app.setEditTextHint(ed,R.string.new_list_name);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
