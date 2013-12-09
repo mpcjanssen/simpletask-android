@@ -41,7 +41,6 @@ public class FilterActivity extends Activity {
     TodoApplication  m_app;
     SharedPreferences prefs;
 
-    Menu menu;
     private ActionBar actionbar;
 
     private int getLastActiveTab() {
@@ -148,12 +147,7 @@ public class FilterActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.filter, menu);
         if (asWidgetConfigure) {
-        	menu.findItem(R.id.menu_add_filter_shortcut).setVisible(false);		
         	menu.findItem(R.id.menu_filter_action).setTitle(R.string.create_widget);
-        }
-        this.menu = menu;
-        if (actionbar.getSelectedNavigationIndex() == actionbar.getTabCount()-1) {
-            menu.findItem(R.id.menu_default_sort).setVisible(true);
         }
         return true;
     }
@@ -168,12 +162,6 @@ public class FilterActivity extends Activity {
             		applyFilter();
             	}
                 break;
-            case R.id.menu_add_filter_shortcut:
-                createFilterShortcut();
-                break;
-            case R.id.menu_default_sort:
-            	defaultSort();
-            	break;
         }
         return true;
     }
@@ -427,15 +415,6 @@ public class FilterActivity extends Activity {
             } else {
                 // If it exists, simply attach it in order to show it
                 ft.attach(mFragment);
-            }
-            if (menu==null) {
-            	return;            		
-            }
-            MenuItem mnuDefaultSort = menu.findItem(R.id.menu_default_sort);
-            if (tab.getTag().equals(SORT_TAB)) {
-            	mnuDefaultSort.setVisible(true);
-            } else {
-            	mnuDefaultSort.setVisible(false);
             }
         }
 
