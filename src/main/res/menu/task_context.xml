@@ -54,6 +54,14 @@ You should have received a copy of the GNU General Public License along with Tod
             android:id="@+id/defer_due"
             android:showAsAction="never"/>
     <item
+        android:title="@string/update_lists"
+        android:showAsAction="never"
+        android:id="@+id/update_lists" />
+    <item
+        android:title="@string/update_tags"
+        android:showAsAction="never"
+        android:id="@+id/update_tags" />
+    <item
         android:title="@string/defer_threshold"
         android:id="@+id/defer_threshold"
         android:showAsAction="never"/>
