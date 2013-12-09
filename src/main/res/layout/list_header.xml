@@ -9,5 +9,5 @@
         android:paddingBottom="2dip"
         android:paddingLeft="5dip"
     style="?android:attr/listSeparatorTextViewStyle"
-    android:gravity="right"
+    android:gravity="left"
     android:paddingRight="20dip" />

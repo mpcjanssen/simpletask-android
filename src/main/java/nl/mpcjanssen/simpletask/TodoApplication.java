@@ -23,6 +23,7 @@
 package nl.mpcjanssen.simpletask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
@@ -36,6 +37,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
+import android.widget.EditText;
 
 import java.io.File;
 import java.io.IOException;
@@ -325,12 +327,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 getResources().getBoolean(R.bool.is_landscape));
     }
 
-    public boolean hasLongClickDragDrop() {
-        return m_prefs.getBoolean(getString(R.string.long_click_drag_drop_key), true);
-    }
-
-    public boolean hasNewTaskExample() {
-        return m_prefs.getBoolean(getString(R.string.ui_show_new_task_hint), true);
+    public void setEditTextHint(EditText editText, int resid ) {
+        if (m_prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
+            editText.setHint(resid);
+        }
     }
 
     public boolean isAddTagsCloneTags() {
@@ -575,6 +575,24 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 m_pushing = false;
                 updateUI();
             }
+        }
+    }
+
+    public void showConfirmationDialog(Context cxt, int msgid,
+                                              DialogInterface.OnClickListener oklistener, int titleid) {
+        boolean show = getPrefs().getBoolean(getString(R.string.ui_show_confirmation_dialogs), true);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
+        builder.setTitle(titleid);
+        builder.setMessage(msgid);
+        builder.setPositiveButton(android.R.string.ok, oklistener);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.setCancelable(true);
+        Dialog dialog = builder.create();
+        if (show) {
+           dialog.show();
+        } else {
+            oklistener.onClick(dialog , DialogInterface.BUTTON_POSITIVE);
         }
     }
 }

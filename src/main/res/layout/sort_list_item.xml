@@ -24,10 +24,4 @@
             android:gravity="center_vertical"
             android:paddingLeft="8dp"/>
 
-    <ImageView
-            android:id="@+id/drag_handle"
-            android:background="@drawable/ic_action_content_import_export_light"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/item_height"
-            android:layout_weight="0"/>
 </LinearLayout>

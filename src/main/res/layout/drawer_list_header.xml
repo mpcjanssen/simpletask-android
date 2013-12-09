@@ -1,5 +1,5 @@
 <!--
-  Copyright 2011 Google Inc.
+  Copyright 2013 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
   limitations under the License.
   -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/appwidget_inner_pressed_c"
-        android:state_pressed="true" />
-    <item android:drawable="@drawable/appwidget_inner_focused_c"
-        android:state_focused="true"
-        android:state_enabled="true"
-        android:state_window_focused="true" />
-    <item android:drawable="@android:color/transparent" />
-</selector>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:id="@+id/text1"
+android:text="@string/filter_show_prompt"
+android:background="@android:color/holo_blue_dark"
+android:textColor="@android:color/white"
+style="?android:attr/listSeparatorTextViewStyle"
+android:gravity="center_vertical|center_horizontal"
+    android:paddingTop="10dip"
+    android:paddingBottom="10dip" />

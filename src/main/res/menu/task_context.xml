@@ -26,49 +26,62 @@ You should have received a copy of the GNU General Public License along with Tod
 <!--suppress ALL -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:title="@string/done"
-            android:id="@+id/done"
-            android:icon="@drawable/complete"/>
+        android:title="@string/update"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        android:id="@+id/update"
+        android:icon="@drawable/edit" />
     <item
-            android:title="@string/unComplete"
-            android:id="@+id/uncomplete"
-            android:icon="@drawable/ic_action_uncomplete"/>
+        android:title="@string/update_lists"
+        android:showAsAction="always"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_action_collections_view_as_list"
+        android:id="@+id/update_lists" />
     <item
-            android:title="@string/update"
-            android:id="@+id/update"
-            android:icon="@drawable/edit"/>
+        android:title="@string/update_tags"
+        android:showAsAction="always"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_action_collections_new_label"
+        android:id="@+id/update_tags" />
     <item
-            android:title="@string/priority"
-            android:id="@+id/priority"
-            android:icon="@drawable/prio"/>
+        android:title="@string/priority"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:id="@+id/priority"
+        android:icon="@drawable/prio" />
     <item
-            android:title="@string/share"
-            android:id="@+id/share"
-            android:icon="@drawable/share"/>
+        android:title="@string/share"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:id="@+id/share"
+        android:icon="@drawable/share" />
     <item
-            android:title="@string/add_to_calendar"
-            android:showAsAction="never"
-            android:id="@+id/calendar"/>
+        android:title="@string/add_to_calendar"
+        android:showAsAction="never"
+        android:id="@+id/calendar" />
     <item
-            android:title="@string/defer_due"
-            android:id="@+id/defer_due"
-            android:showAsAction="never"/>
+        android:title="@string/defer_due"
+        android:id="@+id/defer_due"
+        android:showAsAction="never" />
     <item
         android:title="@string/defer_threshold"
         android:id="@+id/defer_threshold"
-        android:showAsAction="never"/>
+        android:showAsAction="never" />
     <item
-            android:title="@string/delete"
-            android:id="@+id/delete"
-            android:showAsAction="never"
-            android:icon="@drawable/delete"/>
+        android:title="@string/delete"
+        android:id="@+id/delete"
+        android:showAsAction="never"
+        android:icon="@drawable/delete" />
     <item
-            android:id="@+id/url"
-            android:visible="false"/>
+        android:id="@+id/url"
+        android:showAsAction="never"
+        android:visible="false" />
     <item
-            android:id="@+id/mail"
-            android:visible="false"/>
+        android:id="@+id/mail"
+        android:showAsAction="never"
+        android:visible="false" />
     <item
-            android:id="@+id/phone_number"
-            android:visible="false"/>
+        android:id="@+id/phone_number"
+        android:showAsAction="never"
+        android:visible="false" />
 </menu>

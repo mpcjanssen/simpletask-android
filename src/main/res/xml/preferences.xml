@@ -72,9 +72,14 @@
             android:title="@string/drawer_fixed_landscape_title" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="@string/ui_show_new_task_hint"
-            android:summary="@string/show_new_task_hint_summary"
-            android:title="@string/show_new_task_hint_title" />
+            android:key="@string/ui_show_edittext_hints"
+            android:summary="@string/show_edittext_hints_summary"
+            android:title="@string/show_edittext_hints_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/ui_show_confirmation_dialogs"
+            android:summary="@string/show_confirmation_dialogs_summary"
+            android:title="@string/show_confirmation_dialogs_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">
@@ -83,11 +88,6 @@
             android:key="@string/prepend_date_pref_key"
             android:summary="@string/prepend_date_pref_summary"
             android:title="@string/prepend_date_pref_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/long_click_drag_drop_key"
-            android:summary="@string/long_press_drag_pref_summary"
-            android:title="@string/long_press_drag_pref_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/back_key_saves_key"
