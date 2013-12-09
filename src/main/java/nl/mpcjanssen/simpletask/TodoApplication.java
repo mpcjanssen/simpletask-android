@@ -23,6 +23,7 @@
 package nl.mpcjanssen.simpletask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
@@ -578,6 +579,24 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 m_pushing = false;
                 updateUI();
             }
+        }
+    }
+
+    public void showConfirmationDialog(Context cxt, int msgid,
+                                              DialogInterface.OnClickListener oklistener, int titleid) {
+        boolean show = getPrefs().getBoolean(getString(R.string.ui_show_confirmation_dialogs), true);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
+        builder.setTitle(titleid);
+        builder.setMessage(msgid);
+        builder.setPositiveButton(android.R.string.ok, oklistener);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.setCancelable(true);
+        Dialog dialog = builder.create();
+        if (show) {
+           dialog.show();
+        } else {
+            oklistener.onClick(dialog , DialogInterface.BUTTON_POSITIVE);
         }
     }
 }

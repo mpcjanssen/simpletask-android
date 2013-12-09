@@ -255,39 +255,6 @@ public class Util {
         builder.show();
     }
 
-    public static void showConfirmationDialog(Context cxt, int msgid,
-                                              OnClickListener oklistener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
-        // builder.setTitle(cxt.getPackageName());
-        builder.setMessage(msgid);
-        builder.setPositiveButton(android.R.string.ok, oklistener);
-        builder.setNegativeButton(android.R.string.cancel, null);
-        builder.setCancelable(true);
-        builder.show();
-    }
-
-    public static void showConfirmationDialog(Context cxt, int msgid,
-                                              OnClickListener oklistener, int titleid) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
-        // builder.setTitle(cxt.getPackageName());
-        builder.setTitle(titleid);
-        builder.setMessage(msgid);
-        builder.setPositiveButton(android.R.string.ok, oklistener);
-        builder.setNegativeButton(android.R.string.cancel, null);
-        builder.setCancelable(true);
-        builder.show();
-    }
-
-    public static void showDeleteConfirmationDialog(Context cxt,
-                                                    OnClickListener oklistener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
-        builder.setTitle(R.string.delete_task_title);
-        builder.setMessage(R.string.delete_task_message);
-        builder.setPositiveButton(R.string.delete_task_confirm, oklistener);
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
-    }
-
     public interface InputDialogListener {
         void onClick(String input);
     }
