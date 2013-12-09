@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:focusable="false"
-        android:clickable="false"
+        android:clickable="true"
         android:id="@+id/checkBox" />
 
     <LinearLayout

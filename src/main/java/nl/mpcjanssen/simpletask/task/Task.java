@@ -369,9 +369,14 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void initWithFilter(ActiveFilter mFilter) {
+        if (!mFilter.getContextsNot() && mFilter.getContexts().size()==1) {
+            addList(mFilter.getContexts().get(0));
+        }
 
-        // Ignore empty contexts and projects for initializing the task
-        // TODO implement
+        if (!mFilter.getProjectsNot() && mFilter.getProjects().size()==1) {
+            addTag(mFilter.getProjects().get(0));
+        }
+
     }
 
     /**
