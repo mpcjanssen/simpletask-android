@@ -412,15 +412,10 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Task clickedTask = m_adapter.getItem(position);
-        ArrayList<Task> taskList = new ArrayList<Task>();
-        taskList.add(clickedTask);
-        if (!clickedTask.isCompleted()) {
-            completeTasks(taskList);
-        } else {
-            undoCompleteTasks(taskList);
-        }
+        onItemLongClick(l,v,position,id);
     }
+
+
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
