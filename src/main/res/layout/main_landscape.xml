@@ -23,92 +23,90 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 -->
 
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tablet_drawer_layout"
-        android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        android:layout_height="fill_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tablet_drawer_layout"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:layout_height="fill_parent">
 
-        <!-- The navigation drawer -->
+    <!-- The navigation drawer -->
 
-            <ListView
-                    android:id="@+id/left_drawer"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:choiceMode="multipleChoice"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp"
-                    android:background="#111"/>
-
-
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:choiceMode="multipleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#111" />
 
     <!-- The main content view -->
-    <LinearLayout android:id="@+id/home_root"
-                  android:orientation="vertical"
-                  android:divider="?android:attr/dividerVertical"
-                  android:showDividers="middle"
-                  android:layout_gravity="fill_horizontal"
-                  android:layout_width="0dp"
-                  android:layout_height="fill_parent"
-                  android:layout_weight="2"
-            >
+    <LinearLayout
+        android:id="@+id/home_root"
+        android:orientation="vertical"
+        android:divider="?android:attr/dividerVertical"
+        android:showDividers="middle"
+        android:layout_gravity="fill_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="3">
+
         <LinearLayout
-                android:id="@+id/actionbar"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
+            android:id="@+id/actionbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <ImageView
-                    android:id="@+id/actionbar_icon"
-                    android:contentDescription="@string/app_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginRight="5dip"
-                    android:src="@drawable/labels_light"/>
+                android:id="@+id/actionbar_icon"
+                android:contentDescription="@string/app_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:src="@drawable/labels_light" />
 
             <TextView
-                    android:id="@+id/filter_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"/>
+                android:id="@+id/filter_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
 
             <View
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"/>
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
 
             <ImageButton
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/cancel_light"
-                    android:contentDescription="@string/clear_filter"
-                    android:onClick="onClearClick"
-                    android:id="@+id/actionbar_clear"/>
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/cancel_light"
+                android:contentDescription="@string/clear_filter"
+                android:onClick="onClearClick"
+                android:id="@+id/actionbar_clear" />
         </LinearLayout>
 
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="0dip"
-                android:layout_weight="1">
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1">
 
             <ListView
-                    android:id="@id/android:list"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:fastScrollEnabled="true"/>
+                android:id="@id/android:list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fastScrollEnabled="true" />
 
             <TextView
-                    android:id="@id/android:empty"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="@string/main_no_items"
-                    android:gravity="center_vertical|center_horizontal"/>
+                android:id="@id/android:empty"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="@string/main_no_items"
+                android:gravity="center_vertical|center_horizontal" />
         </LinearLayout>
     </LinearLayout>
 

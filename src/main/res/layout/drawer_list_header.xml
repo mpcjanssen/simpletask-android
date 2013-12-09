@@ -22,5 +22,6 @@ android:text="@string/filter_show_prompt"
 android:background="@android:color/holo_blue_dark"
 android:textColor="@android:color/white"
 style="?android:attr/listSeparatorTextViewStyle"
-android:gravity="center_horizontal"
-/>
+android:gravity="center_vertical|center_horizontal"
+    android:paddingTop="10dip"
+    android:paddingBottom="10dip" />
