@@ -720,10 +720,7 @@ public class Simpletask extends ListActivity  {
 				startPreferencesActivity();
 				break;
 			case R.id.filter:
-				startFilterActivity(false);
-				break;
-			case R.id.sort:
-				startFilterActivity(true);
+				startFilterActivity();
 				break;
 			case R.id.share:
 				shareTodoList();
@@ -971,10 +968,9 @@ public class Simpletask extends ListActivity  {
 		Util.showToastLong(this, getString(id));
 	}
 
-	public void startFilterActivity(boolean openSortTab) {
+	public void startFilterActivity() {
 		Intent i = new Intent(this, FilterActivity.class);
 		mFilter.saveInIntent(i);
-		i.putExtra(Constants.INTENT_OPEN_SORT_TAB, openSortTab);
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivityForResult(i, REQUEST_FILTER);
 	}

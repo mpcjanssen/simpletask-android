@@ -39,8 +39,6 @@ public class Constants {
     // Constants for creating shortcuts
     public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
-    public final static String INTENT_OPEN_SORT_TAB = "OPEN_SORT_TAB";
-
     public final static String EXTRA_TASK = "TASK";
     public final static String EXTRA_FORCE_SYNC = "FORCE_SYNC";
     public final static String EXTRA_OVERWRITE = "OVERWRITE";
