@@ -180,7 +180,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
         Task task = visibleTasks.get(position);
         SpannableString ss = new SpannableString(
-                task.getText());
+                task.datelessScreenFormat());
         if (task.isCompleted()) {
             ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
