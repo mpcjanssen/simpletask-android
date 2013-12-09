@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,18 +38,31 @@ public class FilterActivity extends Activity {
     boolean asWidgetConfigure = false;
     ActiveFilter mFilter;
 
+    TodoApplication  m_app;
+    SharedPreferences prefs;
+
     Menu menu;
     private ActionBar actionbar;
 
+    private int getLastActiveTab() {
+        return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
+    }
+
+    private void saveActiveTab(int i) {
+        prefs.edit()
+                .putInt(getString(R.string.last_open_filter_tab), i)
+                .commit();
+    }
+
     @Override
     protected void onDestroy() {
+        saveActiveTab(actionbar.getSelectedNavigationIndex());
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
-        TodoApplication app = (TodoApplication) getApplication();
-        if (app.isBackSaving()) {
+        if (m_app.isBackSaving()) {
             applyFilter();
         }
         super.onBackPressed();
@@ -57,7 +71,8 @@ public class FilterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {    	
     	Log.v(TAG, "Called with intent: " + getIntent().toString());
-        TodoApplication  m_app = (TodoApplication) getApplication();
+        m_app = (TodoApplication) getApplication();
+        prefs = getPreferences(MODE_PRIVATE);
         m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
 
@@ -122,9 +137,9 @@ public class FilterActivity extends Activity {
                 .setTag(SORT_TAB);
         arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort());
         actionbar.addTab(sortTab);
-        
-        if(intent.getBooleanExtra(Constants.INTENT_OPEN_SORT_TAB, false)) {
-            actionbar.selectTab(sortTab);
+        int previousTab = getLastActiveTab();
+        if (previousTab < actionbar.getTabCount()) {
+            actionbar.setSelectedNavigationItem(previousTab);
         }
     }
 
@@ -168,20 +183,6 @@ public class FilterActivity extends Activity {
     	FilterSortFragment fr = (FilterSortFragment)this.getFragmentManager().findFragmentByTag(SORT_TAB);
 		fr.defaultSort();
 	}
-    
-
-	// Safe the active tab on configuration changes
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt("active_tab", actionbar.getSelectedNavigationIndex());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        actionbar.setSelectedNavigationItem(savedInstanceState.getInt("active_tab"));
-    }
 
     private Intent createFilterIntent() {
         Intent target = new Intent(Constants.INTENT_START_FILTER);
