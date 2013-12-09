@@ -237,11 +237,6 @@ public class Simpletask extends ListActivity  {
 		mFilter = new ActiveFilter(getResources());
 
 		m_drawerList = (ListView) findViewById(R.id.left_drawer);
-        if (m_app.isDarkTheme()) {
-            m_drawerList.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
-        } else {
-            m_drawerList.setBackgroundColor(0xfff3f3f3);
-        }
 
 		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -276,7 +271,6 @@ public class Simpletask extends ListActivity  {
 					// setTitle(R.string.changelist);
 				}
 			};
-            showDrawerHeaders(false);
 
             // Set the drawer toggle as the DrawerListener
 			m_drawerLayout.setDrawerListener(m_drawerToggle);
@@ -946,12 +940,6 @@ public class Simpletask extends ListActivity  {
         m_drawerList.setItemChecked(drawerAdapter.getContextHeaderPosition(),mFilter.getContextsNot());
         m_drawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(),mFilter.getProjectsNot());
  	}
-
-	private void showDrawerHeaders(boolean show) {
-		if (m_container==null) {
-			return;
-		}
-	}
 
 	public void storeKeys(String accessTokenKey, String accessTokenSecret) {
 		Editor editor = m_app.getPrefs().edit();
