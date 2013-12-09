@@ -51,6 +51,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="priority">Prioritize</string>
     <string name="select_priority">Select priority</string>
     <string name="add_list_or_tag">Add lists and tags</string>
+    <string name="update_lists">Update lists</string>
+    <string name="update_tags">Update tags</string>
     <string name="remove_list_or_tag">Remove lists and tags</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
@@ -105,10 +107,6 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
-    <string name="long_press_drag_pref_title">Use long click for drag-drop</string>
-    <string name="long_press_drag_pref_summary">Use a long press for dragging and dropping the sort items in the sorting filter tab.
-        Uncheck this to use the arrows handle to drag and drop.
-    </string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.
     By default the type of line breaks used in the loaded todo file will be kept.</string>
@@ -150,8 +148,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
         For more screen estate for the todo list turn this off. </string>
 
-    <string name="show_new_task_hint_title">Show new task example</string>
-    <string name="show_new_task_hint_summary">Show some example tasks when adding a new task.</string>
+    <string name="show_edittext_hints_title">Show hints</string>
+    <string name="show_edittext_hints_summary">Show editing hints in textboxes. If you find this distracting, disable this setting.</string>
+
+    <string name="show_confirmation_dialogs_title">Show confirmation dialogs</string>
+    <string name="show_confirmation_dialogs_summary">Show a confirmation dialog before executing undoable actions or actions that can lead to data loss.
+        Disable this setting if you find this annoying. You have been warned though.</string>
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -284,6 +286,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="new_list_name">Input new list</string>
     <string name="new_tag_name">Input new tag</string>
     <string name="no_filter">No filter</string>
+    <string name="dropbox">Dropbox</string>
 
 
 </resources>

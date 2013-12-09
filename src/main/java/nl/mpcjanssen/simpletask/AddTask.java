@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
@@ -39,9 +40,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -55,9 +59,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 
 public class AddTask extends Activity {
@@ -90,17 +96,24 @@ public class AddTask extends Activity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                finish();
+                startActivity(upIntent);
+                return true;
             case R.id.menu_save_task:
                 saveTasksAndClose();
-                break;
+                return true;
             case R.id.menu_cancel_task:
                 finish();
-                break;
+                return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
+
 
     private void saveTasksAndClose() {
         // save clone checkbox state
@@ -165,9 +178,11 @@ public class AddTask extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.v(TAG, "onCreate()");
         taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
@@ -209,10 +224,7 @@ public class AddTask extends Activity {
 
         // text
         textInputField = (EditText) findViewById(R.id.taskText);
-
-        if (!m_app.hasNewTaskExample()) {
-            textInputField.setHint("");
-        }
+        m_app.setEditTextHint(textInputField, R.string.tasktexthint);
 
         if (share_text != null) {
             textInputField.setText(share_text);
@@ -396,16 +408,40 @@ public class AddTask extends Activity {
     }
 
     private void showTagMenu() {
-        final ArrayList<String> projects = taskBag.getProjects(false);
+        final Set<String> projects = new HashSet<String>();
+        projects.addAll(taskBag.getProjects(false));
+        // Also display contexts in tasks being added
+        Task t = new Task(0,textInputField.getText().toString());
+        projects.addAll(t.getTags());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(projects.toArray(new String[projects.size()]),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("+" + projects.get(which) + " ", true);
-                    }
-                });
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        builder.setView(view);
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        final EditText ed = (EditText) view.findViewById(R.id.editText);
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                projects.toArray(new String[projects.size()])));
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        m_app.setEditTextHint(ed,R.string.new_tag_name);
 
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> items = new ArrayList<String>();
+                items.addAll(Util.getCheckedItems(lv, true));
+                String newText = ed.getText().toString();
+                if (!newText.equals("")) {
+                    items.add(ed.getText().toString());
+                }
+                for (String item : items) {
+                    replaceTextAtSelection("+" + item + " ", true);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.project_prompt);
@@ -437,16 +473,41 @@ public class AddTask extends Activity {
 
 
     private void showContextMenu() {
-        final ArrayList<String> contexts = taskBag.getContexts(false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(contexts.toArray(new String[contexts.size()]),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int which) {
-                        replaceTextAtSelection("@" + contexts.get(which) + " ", true);
-                    }
-                });
+        final Set<String> contexts = new HashSet<String>();
+        contexts.addAll(taskBag.getContexts(false));
+        // Also display contexts in tasks being added
+        Task t = new Task(0,textInputField.getText().toString());
+        contexts.addAll(t.getLists());
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        builder.setView(view);
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        final EditText ed = (EditText) view.findViewById(R.id.editText);
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                contexts.toArray(new String[contexts.size()] )));
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        m_app.setEditTextHint(ed,R.string.new_list_name);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> items = new ArrayList<String>();
+                items.addAll(Util.getCheckedItems(lv, true));
+                String newText = ed.getText().toString();
+                if (!newText.equals("")) {
+                    items.add(ed.getText().toString());
+                }
+                for (String item : items) {
+                    replaceTextAtSelection("@" + item + " ", true);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.context_prompt);

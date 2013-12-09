@@ -69,7 +69,12 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:name="nl.mpcjanssen.simpletask.AddTask"
                 android:exported="true"
                 android:label="@string/addtask"
-                android:windowSoftInputMode="adjustResize">
+                android:windowSoftInputMode="adjustResize"
+                android:parentActivityName="nl.mpcjanssen.simpletask.Simpletask" >
+                <!-- Parent activity meta-data to support 4.0 and lower -->
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="nl.mpcjanssen.simpletask.Simpletask" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -83,6 +88,7 @@ You should have received a copy of the GNU General Public License along with Sim
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
         </activity-alias>
 
         <activity-alias
