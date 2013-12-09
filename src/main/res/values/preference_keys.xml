@@ -13,14 +13,12 @@
     <string name="theme_pref_key">theme</string>
     <string name="widget_theme_pref_key">widget_theme</string>
     <string name="widget_extended_pref_key">widget_extended</string>
-    <string name="drawers_explained_pref_key">drawers_explained</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="clone_tags_key">clone_tags</string>
     <string name="color_due_date_key">color_due_date</string>
     <string name="split_actionbar_key">split_actionbar</string>
     <string name="todo_file_key">todo_file</string>
     <string name="back_key_saves_key">back_saves</string>
-    <string name="ui_drawer_show_other_key">ui_drawer_show_other_key</string>
     <string name="ui_drawer_fixed_landscape">ui_drawer_fixed_landscape</string>
     <string name="ui_show_edittext_hints">ui_show_edittext_hints</string>
     <string name="ui_show_confirmation_dialogs">ui_show_confirmation_dialogs</string>

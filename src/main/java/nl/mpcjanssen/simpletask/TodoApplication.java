@@ -318,10 +318,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.recur_from_original_date), true);
     }
 
-    public boolean hasExtendedDrawer() {
-        return m_prefs.getBoolean(getString(R.string.ui_drawer_show_other_key), true);
-    }
-
     public boolean hasLandscapeDrawers() {
         return (m_prefs.getBoolean(getString(R.string.ui_drawer_fixed_landscape), false) &&
                 getResources().getBoolean(R.bool.is_landscape));
@@ -351,10 +347,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public boolean needToPush() {
         return m_prefs.getBoolean(Constants.PREF_NEED_TO_PUSH, false);
-    }
-
-    public boolean drawersExplained() {
-        return m_prefs.getBoolean(getString(R.string.drawers_explained_pref_key), false);
     }
 
     public void setNeedToPush(boolean needToPush) {
@@ -536,12 +528,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
             default:
                 return false;
         }
-    }
-
-    public void setDrawersExplained() {
-        Editor ed = getPrefs().edit();
-        ed.putBoolean(getString(R.string.drawers_explained_pref_key),true);
-        ed.commit();
     }
 
     @Override
