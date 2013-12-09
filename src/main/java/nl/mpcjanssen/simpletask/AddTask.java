@@ -58,9 +58,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 
 public class AddTask extends Activity {
@@ -399,13 +401,18 @@ public class AddTask extends Activity {
     }
 
     private void showTagMenu() {
-        final ArrayList<String> projects = taskBag.getProjects(false);
+        final Set<String> projects = new HashSet<String>();
+        projects.addAll(taskBag.getProjects(false));
+        // Also display contexts in tasks being added
+        Task t = new Task(0,textInputField.getText().toString());
+        projects.addAll(t.getTags());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice, projects ));
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                projects.toArray(new String[projects.size()])));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         ed.setHint(R.string.new_tag_name);
 
@@ -414,7 +421,8 @@ public class AddTask extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
                 items.addAll(Util.getCheckedItems(lv, true));
-                if (ed.getText()!=null) {
+                String newText = ed.getText().toString();
+                if (!newText.equals("")) {
                     items.add(ed.getText().toString());
                 }
                 for (String item : items) {
@@ -458,13 +466,19 @@ public class AddTask extends Activity {
 
 
     private void showContextMenu() {
-        final ArrayList<String> contexts = taskBag.getContexts(false);
+        final Set<String> contexts = new HashSet<String>();
+        contexts.addAll(taskBag.getContexts(false));
+        // Also display contexts in tasks being added
+        Task t = new Task(0,textInputField.getText().toString());
+        contexts.addAll(t.getLists());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice, contexts ));
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                contexts.toArray(new String[contexts.size()] )));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         ed.setHint(R.string.new_list_name);
 
@@ -473,7 +487,8 @@ public class AddTask extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
                 items.addAll(Util.getCheckedItems(lv, true));
-                if (ed.getText()!=null) {
+                String newText = ed.getText().toString();
+                if (!newText.equals("")) {
                     items.add(ed.getText().toString());
                 }
                 for (String item : items) {
