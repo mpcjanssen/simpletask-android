@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
@@ -95,17 +96,24 @@ public class AddTask extends Activity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                finish();
+                startActivity(upIntent);
+                return true;
             case R.id.menu_save_task:
                 saveTasksAndClose();
-                break;
+                return true;
             case R.id.menu_cancel_task:
                 finish();
-                break;
+                return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
+
 
     private void saveTasksAndClose() {
         // save clone checkbox state
@@ -170,9 +178,11 @@ public class AddTask extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.v(TAG, "onCreate()");
         taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
