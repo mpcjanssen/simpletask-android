@@ -659,23 +659,23 @@ public class Simpletask extends ListActivity  {
 	}
 
 	private void deleteTasks(final List<Task> tasks) {
-		m_app.showConfirmationDialog(this,  R.string.delete_task_message, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				for (Task t : tasks) {
-					if (t != null) {
-						getTaskBag().delete(t);
-					}
-				}
-				m_adapter.setFilteredTasks(false);
-				getTaskBag().store();
-				m_app.updateWidgets();
-				m_app.setNeedToPush(true);
+		m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                for (Task t : tasks) {
+                    if (t != null) {
+                        getTaskBag().delete(t);
+                    }
+                }
+                m_adapter.setFilteredTasks(false);
+                getTaskBag().store();
+                m_app.updateWidgets();
+                m_app.setNeedToPush(true);
                 updateDrawerList();
-				// We have change the data, views should refresh
-				sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
-			}
-		} , R.string.delete_task_title);
+                // We have change the data, views should refresh
+                sendBroadcast(new Intent(getPackageName() + Constants.BROADCAST_START_SYNC_TO_REMOTE));
+            }
+        }, R.string.delete_task_title);
 	}
 
 	private void archiveTasks() {
@@ -1412,9 +1412,14 @@ public class Simpletask extends ListActivity  {
 								+ encodedNumber));
 					startActivity(intent);
 					break;
+                case R.id.update_lists:
+                    updateLists(checkedTasks);
+                    return true;
+                case R.id.update_tags:
+                    updateTags(checkedTasks);
+                    return true;
 			}
 			mode.finish();
-			m_adapter.setFilteredTasks(false);
 			return true;
 		}
 
@@ -1449,7 +1454,144 @@ public class Simpletask extends ListActivity  {
 		}
 	}
 
-	private class DrawerItemClickListener implements
+    private void updateLists(final List<Task> checkedTasks) {
+        final ArrayList<String> contexts = new ArrayList<String>();
+        Set<String> selectedContexts = new HashSet<String>();
+
+        TaskBag taskbag = getTaskBag();
+        contexts.addAll(taskbag.getContexts(false));
+        for (Task t: checkedTasks) {
+            selectedContexts.addAll(t.getLists());
+        }
+
+
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                contexts.toArray(new String[contexts.size()] )));
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        for (String context : selectedContexts) {
+            int position = contexts.indexOf(context);
+            if (position!=-1) {
+                lv.setItemChecked(position, true);
+            }
+        }
+
+        final EditText ed = (EditText) view.findViewById(R.id.editText);
+        m_app.setEditTextHint(ed,R.string.new_list_name);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> uncheckedItesm = new ArrayList<String>();
+                uncheckedItesm.addAll(Util.getCheckedItems(lv, false));
+                items.addAll(Util.getCheckedItems(lv, true));
+                String newText = ed.getText().toString();
+                if (!newText.equals("")) {
+                    items.add(ed.getText().toString());
+                }
+                for (String item : items) {
+                    for (Task t : checkedTasks) {
+                        t.addList(item);
+                    }
+                }
+                for (String item : uncheckedItesm) {
+                    for (Task t : checkedTasks) {
+                        t.removeTag("@" + item);
+                    }
+                }
+                finishActionmode();
+                m_adapter.setFilteredTasks(false);
+                getTaskBag().store();
+                m_app.updateWidgets();
+                m_app.setNeedToPush(true);
+                updateDrawerList();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.update_lists);
+        dialog.show();
+    }
+
+    private void updateTags(final List<Task> checkedTasks) {
+        final ArrayList<String> projects = new ArrayList<String>();
+        Set<String> selectedProjects= new HashSet<String>();
+
+        TaskBag taskbag = getTaskBag();
+        projects.addAll(taskbag.getProjects(false));
+        for (Task t: checkedTasks) {
+            selectedProjects.addAll(t.getTags());
+        }
+
+
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                projects.toArray(new String[projects.size()] )));
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        for (String context : selectedProjects) {
+            int position = projects.indexOf(context);
+            if (position!=-1) {
+                lv.setItemChecked(position, true);
+            }
+        }
+
+        final EditText ed = (EditText) view.findViewById(R.id.editText);
+        m_app.setEditTextHint(ed,R.string.new_list_name);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> uncheckedItesm = new ArrayList<String>();
+                uncheckedItesm.addAll(Util.getCheckedItems(lv, false));
+                items.addAll(Util.getCheckedItems(lv, true));
+                String newText = ed.getText().toString();
+                if (!newText.equals("")) {
+                    items.add(ed.getText().toString());
+                }
+                for (String item : items) {
+                    for (Task t : checkedTasks) {
+                        t.addTag(item);
+                    }
+                }
+                for (String item : uncheckedItesm) {
+                    for (Task t : checkedTasks) {
+                        t.removeTag("+"+item);
+                    }
+                }
+                finishActionmode();
+                m_adapter.setFilteredTasks(false);
+                getTaskBag().store();
+                m_app.updateWidgets();
+                m_app.setNeedToPush(true);
+                updateDrawerList();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(R.string.update_tags);
+        dialog.show();
+    }  
+    private class DrawerItemClickListener implements
 		AdapterView.OnItemClickListener {
 
 			@Override
