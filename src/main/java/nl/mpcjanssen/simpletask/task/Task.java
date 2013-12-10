@@ -25,6 +25,10 @@ package nl.mpcjanssen.simpletask.task;
 import android.content.res.Resources;
 import android.text.SpannableString;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
@@ -65,12 +69,12 @@ public class Task implements Serializable, Comparable<Task> {
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
     private static final String COMPLETED = "x ";
-    private static SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
+    private static DateTimeFormatter formatter = ISODateTimeFormat.date();
     private String text;
     private long id = 0;
 
 
-    public Task(long id, String rawText, Date defaultPrependedDate) {
+    public Task(long id, String rawText, DateTime defaultPrependedDate) {
         this.id = id;
         this.init(rawText, defaultPrependedDate);
     }
@@ -87,36 +91,33 @@ public class Task implements Serializable, Comparable<Task> {
         this.init(rawText, null);
     }
 
-    public void init(String rawText, Date defaultPrependedDate) {
+    public void init(String rawText, DateTime defaultPrependedDate) {
         this.text = rawText;
         if (defaultPrependedDate != null
                 && getPrependedDate() == null) {
             Priority p = getPriority();
             setPriority(Priority.NONE);
-            this.text = formatter.format(defaultPrependedDate) + " " + text;
+
+            this.text = formatter.print(defaultPrependedDate) + " " + text;
             setPriority(p);
         }
     }
 
-    private Date getDate(Pattern datePattern) {
-        Date date = null;
+    private DateTime getDate(Pattern datePattern) {
+        DateTime date = null;
         Matcher matcher = datePattern.matcher(this.text);
         if (matcher.find()) {
-            try {
-                date = formatter.parse(matcher.group(1));
-            } catch (ParseException e) {
-                date = null;
-            }
+           date = formatter.parseDateTime(matcher.group(1));
         }
         return date;
     }
 
-    public Date getDueDate() {
+    public DateTime getDueDate() {
         return getDate(DUE_PATTERN);
     }
 
-    public void setDueDate(Date dueDate) {
-        setDueDate(formatter.format(dueDate));
+    public void setDueDate(DateTime dueDate) {
+        setDueDate(formatter.print(dueDate));
     }
 
     public void setDueDate(String dueDateString) {
@@ -129,12 +130,12 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public Date getThresholdDate() {
+    public DateTime getThresholdDate() {
         return getDate(THRESHOLD_PATTERN);
     }
 
-    public void setThresholdDate(Date thresholdDate) {
-        setThresholdDate(formatter.format(thresholdDate));
+    public void setThresholdDate(DateTime thresholdDate) {
+        setThresholdDate(formatter.print(thresholdDate));
     }
 
     public void setThresholdDate(String thresholdDateString) {
@@ -191,27 +192,23 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getRelativeAge() {
-        Date dt;
+        DateTime dt;
         String prependDate = getPrependedDate();
         if (prependDate==null) {
             return null;
         }
-        try {
-            dt = formatter.parse(prependDate);
-        } catch (ParseException e) {
-            return null;
-        }
+        dt = formatter.parseDateTime(prependDate);
         return RelativeDate.getRelativeDate(dt);
     }
 
     public SpannableString getRelativeDueDate(Resources res, boolean useColor) {
-        Date dueDate = getDueDate();
+        DateTime dueDate = getDueDate();
         if (dueDate!=null) {
             String relativeDate = RelativeDate.getRelativeDate(dueDate);
             SpannableString ss = new SpannableString("Due: " +  relativeDate);
             if (relativeDate.equals(res.getString(R.string.dates_today)) && useColor) {
                 Util.setColor(ss, res.getColor(android.R.color.holo_green_light));
-            } else if (dueDate.before(new Date()) && useColor) {
+            } else if (dueDate.isBefore(new DateTime()) && useColor) {
                 Util.setColor(ss,res.getColor(android.R.color.holo_red_light));
             }
             return ss;
@@ -221,7 +218,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getRelativeThresholdDate() {
-        Date thresholdDate = getThresholdDate();
+        DateTime thresholdDate = getThresholdDate();
         if (thresholdDate!=null) {
             return "T: " + RelativeDate.getRelativeDate(thresholdDate);
         } else {
@@ -306,9 +303,9 @@ public class Task implements Serializable, Comparable<Task> {
         return getCompletionDate() != null;
     }
 
-    public void markComplete(Date date) {
+    public void markComplete(DateTime date) {
         if (!this.isCompleted()) {
-            String completionDate = formatter.format(date);
+            String completionDate = formatter.print(date);
             this.text = "x " + completionDate + " " + text;
         }
     }
@@ -329,9 +326,9 @@ public class Task implements Serializable, Comparable<Task> {
         if (this.getThresholdDate() == null) {
             return false;
         } else {
-            Date thresholdDate = this.getThresholdDate();
-            Date now = new Date();
-            return thresholdDate.after(now);
+            DateTime thresholdDate = this.getThresholdDate();
+            DateTime now = new DateTime();
+            return thresholdDate.isAfter(now);
         }
     }
 
@@ -423,11 +420,11 @@ public class Task implements Serializable, Comparable<Task> {
             setThresholdDate("");
             return;
         }
-        Date olddate = new Date();
+        DateTime olddate = new DateTime();
         if (original) {
             olddate = getThresholdDate();
         }
-        Date newDate = Util.addInterval(olddate,deferString);
+        DateTime newDate = Util.addInterval(olddate,deferString);
         if (newDate!=null) {
             setThresholdDate(newDate);
         }
@@ -438,11 +435,11 @@ public class Task implements Serializable, Comparable<Task> {
             setDueDate("");
             return;
         }
-        Date olddate = new Date();
+        DateTime olddate = new DateTime();
         if (original) {
             olddate = getDueDate();
         }
-        Date newDate = Util.addInterval(olddate, deferString);
+        DateTime newDate = Util.addInterval(olddate, deferString);
         if (newDate!=null) {
             setDueDate(newDate);
         }
