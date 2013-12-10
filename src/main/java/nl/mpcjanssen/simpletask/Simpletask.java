@@ -996,6 +996,11 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
     private void updateRightDrawer() {
         ArrayList<String> names = new ArrayList<String>();
         final ArrayList<ActiveFilter> filters = getSavedFilter();
+        Collections.sort(filters, new Comparator<ActiveFilter>(){
+            public int compare(ActiveFilter f1, ActiveFilter f2) {
+                return f1.getName().compareToIgnoreCase(f2.getName());
+            }
+        });
         for (ActiveFilter f : filters) {
             names.add(f.getName());
         }
