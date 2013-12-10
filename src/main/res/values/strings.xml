@@ -289,5 +289,5 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="save_filter">Save current filter</string>
-    <string name="save_filter_message">Give the name for the current filter in right drawer</string>
+    <string name="save_filter_message">Enter the name for the current filter to be displayed in the saved filters drawer</string>
 </resources>
