@@ -94,13 +94,25 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:gravity="center_vertical|center_horizontal"/>
         </LinearLayout>
     </LinearLayout>
-    <!-- The navigation drawer -->
+    <!-- The left navigation drawer -->
     <ListView
         android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:choiceMode="multipleChoice"
         android:layout_gravity="start"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#111"
+        />
+
+    <!-- The right navigation drawer -->
+    <ListView
+        android:id="@+id/right_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:choiceMode="multipleChoice"
+        android:layout_gravity="end"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:background="#111"
