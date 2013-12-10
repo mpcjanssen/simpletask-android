@@ -23,6 +23,9 @@
 package nl.mpcjanssen.simpletask.task;
 
 import android.content.SharedPreferences;
+
+import org.joda.time.DateTime;
+
 import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.remote.PullTodoResult;
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
@@ -107,7 +110,7 @@ public class TaskBag {
     public Task addAsTask(String input) {
         try {
             Task task = new Task(tasks.size(), input,
-                    (preferences.isPrependDateEnabled() ? new Date() : null));
+                    (preferences.isPrependDateEnabled() ? new DateTime() : null));
             tasks.add(task);
             store();
             return task;

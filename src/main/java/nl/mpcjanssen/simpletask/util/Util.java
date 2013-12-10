@@ -49,6 +49,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 
 import java.io.*;
 import java.util.*;
@@ -353,43 +355,13 @@ public class Util {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public static Date addDaysToDate(Date date, int days) {
-        Date newDate = new Date(date.getTime());
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(newDate);
-        calendar.add(Calendar.DATE, days);
-        newDate.setTime(calendar.getTime().getTime());
-        return newDate;
-    }
-
-    public static Date addMonthsToDate(Date date, int months) {
-        Date newDate = new Date(date.getTime());
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(newDate);
-        calendar.add(Calendar.MONTH, months);
-        newDate.setTime(calendar.getTime().getTime());
-        return newDate;
-    }
-
-    public static Date addYearsToDate(Date date, int years) {
-        Date newDate = new Date(date.getTime());
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(newDate);
-        calendar.add(Calendar.YEAR, years);
-        newDate.setTime(calendar.getTime().getTime());
-        return newDate;
-    }
-
-    public static Date addInterval(Date date, String interval) {
+    public static DateTime addInterval(DateTime date, String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
         Matcher m = p.matcher(interval.toLowerCase());
         int amount;
         String type;
         if (date == null) {
-            date = new Date();
+            date = new DateTime();
         }
         m.find();
         if(m.groupCount()==2) {
@@ -398,16 +370,17 @@ public class Util {
         } else {
             return null;
         }
+        Period period = new Period(0);
         if (type.equals("d")) {
-            date = Util.addDaysToDate(date, amount);
+            period = period.plusDays(amount);
         } else if (type.equals("w")) {
-            date = Util.addDaysToDate(date, amount*7);
+            period = period.plusWeeks(amount);
         } else if (type.equals("m")) {
-            date = Util.addMonthsToDate(date, amount);
+            period = period.plusMonths(amount);
         } else if (type.equals("y")) {
-            date = Util.addYearsToDate(date, amount);
+            period = period.plusYears(amount);
         }
-        return date;
+        return date.plus(period);
     }
 
     public static ArrayList<String> prefixItems(String prefix, ArrayList<String> items) {

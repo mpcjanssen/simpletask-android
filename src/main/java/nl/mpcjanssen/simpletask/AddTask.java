@@ -48,6 +48,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
@@ -369,21 +373,22 @@ public class AddTask extends Activity {
                      * With the current implementation which replaces the dates this is not an
                      * issue. The date is just replaced twice
                      */
+                    final DateTime today = new DateTime();
                     DatePickerDialog dialog = new DatePickerDialog(AddTask.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.set(year, month, day);
-                            insertDateAtSelection(dateType, cal.getTime());
+                            month++;
+                            DateTime date = ISODateTimeFormat.date().parseDateTime(year+"-"+month+"-"+day);
+                            insertDateAtSelection(dateType, date);
                         }
                     },
-                            Calendar.getInstance().get(Calendar.YEAR),
-                            Calendar.getInstance().get(Calendar.MONTH),
-                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                            today.getYear(),
+                            today.getMonthOfYear()-1,
+                            today.getDayOfMonth());
 
                     dialog.show();
                 } else {
-                    insertDateAtSelection(dateType, Util.addInterval(new Date(), selected));
+                    insertDateAtSelection(dateType, Util.addInterval(new DateTime(), selected));
                 }
             }
         });
@@ -398,9 +403,9 @@ public class AddTask extends Activity {
            }
     }
 
-    private void insertDateAtSelection(int dateType, Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);
-        replaceDate(dateType, formatter.format(date));
+    private void insertDateAtSelection(int dateType, DateTime date) {
+        DateTimeFormatter formatter = ISODateTimeFormat.date();
+        replaceDate(dateType, formatter.print(date));
     }
 
     private void showTagMenu() {

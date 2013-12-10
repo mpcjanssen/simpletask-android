@@ -74,6 +74,9 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -573,7 +576,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                         }
                     }
                 }
-                t.markComplete(new Date());
+                t.markComplete(new DateTime());
 			}
 		}
         taskBag.store();
@@ -607,18 +610,20 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					@Override
 					public void onClick(String selected) {
 						if (selected!=null && selected.equals("pick")) {
+                            final DateTime today = new DateTime();
 							DatePickerDialog dialog = new DatePickerDialog(Simpletask.this, new DatePickerDialog.OnDateSetListener() {
 								@Override
 								public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-									Calendar cal = Calendar.getInstance();
-									cal.set(year, month, day);
-									deferTasks(cal.getTime(), tasksToDefer, dateType);
+                                    month++;
+
+                                    DateTime date = ISODateTimeFormat.date().parseDateTime(year + "-" + month + "-" + day);
+									deferTasks(date, tasksToDefer, dateType);
 
 								}
 							},
-							Calendar.getInstance().get(Calendar.YEAR),
-							Calendar.getInstance().get(Calendar.MONTH),
-							Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                                    today.getYear(),
+                                    today.getMonthOfYear()-1,
+                                    today.getDayOfMonth());
 
 							dialog.show();
 						} else {
@@ -629,7 +634,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		d.show();
 	}
 
-	private void deferTasks(Date selected, List<Task> tasksToDefer, int type) {
+	private void deferTasks(DateTime selected, List<Task> tasksToDefer, int type) {
 		for (Task t : tasksToDefer) {
 			if (t != null) {
                 if (type==Task.DUE_DATE) {
