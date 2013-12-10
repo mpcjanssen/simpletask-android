@@ -1012,7 +1012,9 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFilter = filters.get(position);
                 m_adapter.setFilteredTasks(false);
-                m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                if (m_drawerLayout!=null) {
+                    m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                }
                 updateDrawers();
             }
         });
