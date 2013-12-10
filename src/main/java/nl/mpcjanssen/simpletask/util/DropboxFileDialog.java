@@ -99,7 +99,7 @@ public class DropboxFileDialog {
         }
 
         Collections.sort(r);
-        fileList = r.toArray(new String[]{});
+        fileList = r.toArray(new String[r.size()]);
         if (dialogShown!=null) {
             dialogShown.cancel();
             dialogShown.dismiss();
@@ -119,14 +119,13 @@ public class DropboxFileDialog {
 
 class DropboxMetadataLoader extends AsyncTask<Object, Integer, DropboxAPI.Entry> {
 
-    private DropboxAPI api;
     private DropboxFileDialog dialog;
     private final String TAG = getClass().getName();
 
     @Override
     protected DropboxAPI.Entry doInBackground(Object... params) {
         DropboxAPI.Entry pathEntry = null;
-        this.api = (DropboxAPI) params[0];
+        DropboxAPI api = (DropboxAPI) params[0];
         this.dialog = (DropboxFileDialog) params[1];
         String path = (String) params[2];
         try {

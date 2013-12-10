@@ -462,8 +462,6 @@ public class Util {
                 listener.onClick(selected);
             }
         });
-        AlertDialog d = builder.create();
-        return d;
-
+        return builder.create();
     }
 }

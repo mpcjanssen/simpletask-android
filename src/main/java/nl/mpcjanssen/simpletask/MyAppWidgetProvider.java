@@ -102,7 +102,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             // Remove the XML file
             if(!prefs_xml.delete()) {
                 Log.w(TAG, "File not deleted: " + prefs_xml.toString());
-            };
+            }
 
         }
     }
