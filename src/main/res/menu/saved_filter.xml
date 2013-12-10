@@ -1,0 +1,15 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/menu_saved_filter_delete"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/delete"/>
+    <item
+        android:id="@+id/menu_saved_filter_shortcut"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/add_filter_shortcut"/>
+</menu>
