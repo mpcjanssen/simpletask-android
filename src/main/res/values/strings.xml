@@ -68,7 +68,8 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
 
-    <string name="shortcut_name_empty">No name specified, not creating shortcut</string>
+    <string name="filter_name_empty">No name specified, not adding filter</string>
+    <string name="widget_name_empty">No widget specified, not widget filter</string>
     <string name="add_task_help">Add or update a task to the task list. When adding tasks,
         each line is a separate task for quick adding.\n
         <b>Priority</b>\n
@@ -213,7 +214,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_select_all">Select all</string>
     <string name="filter_clear_all">Clear filter</string>
     <string name="filter_invert">Invert filter</string>
-    <string name="add_filter_shortcut">Add shortcut</string>
+    <string name="add_filter_shortcut">Shortcut on homescreen</string>
     <string name="create_widget">Create widget</string>
     <string name="filter_show_completed">Show completed tasks</string>
     <string name="filter_show_future">Show tasks with threshold date in future</string>
@@ -287,4 +288,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dropbox">Dropbox</string>
 
 
+    <string name="save_filter">Save current filter</string>
+    <string name="save_filter_message">Give the name for the current filter in right drawer</string>
 </resources>

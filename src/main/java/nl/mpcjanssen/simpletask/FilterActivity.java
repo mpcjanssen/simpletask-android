@@ -317,7 +317,7 @@ public class FilterActivity extends Activity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 if (value.equals("")) {
-                    Util.showToastShort(getApplicationContext(), R.string.shortcut_name_empty);
+                    Util.showToastShort(getApplicationContext(), R.string.widget_name_empty);
                 } else {
                     createWidget(value);
                 }
@@ -335,50 +335,6 @@ public class FilterActivity extends Activity {
 
     }
 
-
-    private void createFilterShortcut() {
-        final Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        Intent target = createFilterIntent();
-
-        // Setup target intent for shortcut
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target);
-
-        // Set shortcut icon
-        Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.icon);
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes);
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle("Create shortcut");
-        alert.setMessage("Shortcut name");
-
-// Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
-        input.setText(mFilter.getProposedName());
-
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                if (value.equals("")) {
-                    Util.showToastShort(getApplicationContext(), R.string.shortcut_name_empty);
-                } else {
-                    shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, value);
-                    sendBroadcast(shortcut);
-                }
-            }
-        }
-        );
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
-
-    }
 
     private class MyTabsListener<T extends Fragment> implements ActionBar.TabListener {
 
