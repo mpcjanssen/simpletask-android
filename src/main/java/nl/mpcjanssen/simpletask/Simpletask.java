@@ -914,12 +914,16 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
      * Handle add filter click *
      */
     public void onAddFilterClick(View v) {
-        SharedPreferences saved_filters = getSharedPreferences("filters",MODE_PRIVATE);
-        Set<String> filters = new HashSet<String>();
-        filters.add("filter_1");
-        saved_filters.edit().putStringSet("ids", filters ).commit();
-        SharedPreferences test_filter_prefs = getSharedPreferences("filter_1",MODE_PRIVATE);
-        mFilter.setName("test");
+        SharedPreferences saved_filters = getSharedPreferences("filters", MODE_PRIVATE);
+        int newId  = saved_filters.getInt("max_id", 1)+1;
+        Set<String> filters = saved_filters.getStringSet("ids", new HashSet<String>());
+        filters.add("filter_" + newId);
+        saved_filters.edit()
+                .putStringSet("ids", filters )
+                .putInt("max_id", newId)
+                .commit();
+        SharedPreferences test_filter_prefs = getSharedPreferences("filter_" + newId,MODE_PRIVATE);
+        mFilter.setName("filter_" + newId);
         mFilter.saveInPrefs(test_filter_prefs);
         updateRightDrawer();
     }
