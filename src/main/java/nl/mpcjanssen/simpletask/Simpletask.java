@@ -1015,6 +1015,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                 if (m_drawerLayout!=null) {
                     m_drawerLayout.closeDrawer(Gravity.RIGHT);
                 }
+                finishActionmode();
                 updateDrawers();
             }
         });
