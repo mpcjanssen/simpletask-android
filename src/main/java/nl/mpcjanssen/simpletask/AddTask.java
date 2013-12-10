@@ -179,6 +179,10 @@ public class AddTask extends Activity {
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
+
+        // Set the proper theme
+        setTheme(m_app.getActiveTheme());
+
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.v(TAG, "onCreate()");
@@ -216,8 +220,6 @@ public class AddTask extends Activity {
             return;
         }
 
-        // Set the proper theme
-        setTheme(m_app.getActiveTheme());
         setContentView(R.layout.add_task);
 
         // text

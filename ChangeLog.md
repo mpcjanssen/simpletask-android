@@ -1,6 +1,10 @@
 # ChangeLog
 
-### 4.0.0.
+### 4.0.1
+
+* [Bugfix] Fix dark theme for AddTask.
+
+### 4.0.0
 
 Big update which should make starting with Simpletask more intuitive:
 
