@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -46,7 +47,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,7 +58,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -94,13 +93,14 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 	private BroadcastReceiver m_broadcastReceiver;
 	private ActionMode actionMode;
 	// Drawer vars
-	private ListView m_drawerList;
+	private ListView m_leftDrawerList;
+    private ListView m_rightDrawerList;
 	private DrawerLayout m_drawerLayout;
 	private ViewGroup m_container;
 	private ActionBarDrawerToggle m_drawerToggle;
 	private SearchManager searchManager;
 
-	@Override
+    @Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
@@ -237,7 +237,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		mFilter = new ActiveFilter(getResources());
 
-		m_drawerList = (ListView) findViewById(R.id.left_drawer);
+		m_leftDrawerList = (ListView) findViewById(R.id.left_drawer);
+        m_rightDrawerList = (ListView) findViewById(R.id.right_drawer_list);
 
 		m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -249,7 +250,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			m_container = m_drawerLayout;
 		}
 		// Set the list's click listener
-		m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
+		m_leftDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		if (m_drawerLayout != null) {
 			m_drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
@@ -321,7 +322,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			setIntent(intent);
 		} else {
 			// Set the adapter for the list view
-			updateDrawerList();
+			updateDrawers();
 		}
 
 	}
@@ -675,7 +676,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                 getTaskBag().store();
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
-                updateDrawerList();
+                updateDrawers();
                 // We have change the data, views should refresh
                 sendBroadcast(new Intent(getPackageName() + Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
@@ -897,6 +898,32 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		m_adapter.setFilteredTasks(false);
 	}
 
+    public ArrayList<ActiveFilter> getSavedFilter() {
+        ArrayList<ActiveFilter> saved_filters = new ArrayList<ActiveFilter>();
+        SharedPreferences saved_filter_ids = getSharedPreferences("filters",MODE_PRIVATE);
+        Set<String> filterIds = saved_filter_ids.getStringSet("ids", new HashSet<String>());
+        for (String id : filterIds ) {
+            SharedPreferences filter_pref = getSharedPreferences(id,MODE_PRIVATE);
+            ActiveFilter filter = new ActiveFilter(getResources());
+            filter.initFromPrefs(filter_pref);
+            saved_filters.add(filter);
+        }
+        return saved_filters;
+    }
+    /**
+     * Handle add filter click *
+     */
+    public void onAddFilterClick(View v) {
+        SharedPreferences saved_filters = getSharedPreferences("filters",MODE_PRIVATE);
+        Set<String> filters = new HashSet<String>();
+        filters.add("filter_1");
+        saved_filters.edit().putStringSet("ids", filters ).commit();
+        SharedPreferences test_filter_prefs = getSharedPreferences("filter_1",MODE_PRIVATE);
+        mFilter.setName("test");
+        mFilter.saveInPrefs(test_filter_prefs);
+        updateRightDrawer();
+    }
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -922,33 +949,64 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		mFilter.saveInIntent(intent);
 		setIntent(intent);
         finishActionmode();
-        updateDrawerList();
+        updateDrawers();
 	}
 
-	private void updateDrawerList() {
+    private void updateDrawers () {
+        updateLeftDrawer();
+        updateRightDrawer();
+    }
+
+    private void updateRightDrawer() {
+        ArrayList<String> names = new ArrayList<String>();
+        final ArrayList<ActiveFilter> filters = getSavedFilter();
+        for (ActiveFilter f : filters) {
+            names.add(f.getName());
+        }
+        m_rightDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, names));
+        m_rightDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+        m_leftDrawerList.setLongClickable(true);
+        m_rightDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mFilter = filters.get(position);
+                m_adapter.setFilteredTasks(false);
+                updateDrawers();
+            }
+        });
+        m_rightDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Util.showToastLong(Simpletask.this, "Popup");
+                return true;
+            }
+        });
+    }
+
+	private void updateLeftDrawer() {
         TaskBag taskBag = getTaskBag();
         DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
                 taskBag.getDecoratedContexts(true), taskBag.getDecoratedProjects(true));
 
-		m_drawerList.setAdapter(drawerAdapter);
-        m_drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-		m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
+		m_leftDrawerList.setAdapter(drawerAdapter);
+        m_leftDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+		m_leftDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         for (String context : mFilter.getContexts()) {
             int position = drawerAdapter.getIndexOf("@"+ context);
             if (position!=-1) {
-                m_drawerList.setItemChecked(position, true);
+                m_leftDrawerList.setItemChecked(position, true);
             }
         }
 
         for (String project : mFilter.getProjects()) {
             int position = drawerAdapter.getIndexOf("+"+ project);
             if (position!=-1) {
-                m_drawerList.setItemChecked(position,true);
+                m_leftDrawerList.setItemChecked(position, true);
             }
         }
-        m_drawerList.setItemChecked(drawerAdapter.getContextHeaderPosition(),mFilter.getContextsNot());
-        m_drawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(),mFilter.getProjectsNot());
+        m_leftDrawerList.setItemChecked(drawerAdapter.getContextHeaderPosition(), mFilter.getContextsNot());
+        m_leftDrawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(), mFilter.getProjectsNot());
  	}
 
 	public void storeKeys(String accessTokenKey, String accessTokenSecret) {
@@ -1003,7 +1061,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 				       getTaskBag().reload();
 				       // Update lists in side drawer
 				       // Set the adapter for the list view
-				       updateDrawerList();
+				       updateDrawers();
 			       }
 
 			       visibleTasks.clear();
@@ -1456,7 +1514,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			if (m_drawerLayout!=null) {
 				m_drawerLayout.closeDrawers();
 			}
-			updateDrawerList();
+			updateDrawers();
 			return;
 		}
 	}
@@ -1518,7 +1576,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                 getTaskBag().store();
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
-                updateDrawerList();
+                updateDrawers();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1587,7 +1645,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                 getTaskBag().store();
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
-                updateDrawerList();
+                updateDrawers();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
