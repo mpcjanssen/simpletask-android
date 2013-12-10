@@ -4,7 +4,10 @@
 
 Big update which should make starting with Simpletask more intuitive:
 
-* [UI] Merged tag and list navigation drawer. Right drawer will contain favourite filters in a future release.
+* [UI] Merged tag and list navigation drawer into the left drawer.
+* [UI] Click tag or list header to invert the filter.
+* [UI] Right drawer with favourite filters.
+* [UI] Long click saved filter to create homescreen shortcut.
 * [UI] Checkboxes in tasklist to quickly complete/uncomplete tasks.
 * [UI] Improved tag and list selection dialogs where you can also add new items.
 * [UI] Updated priority colors to reflect urgency better.
