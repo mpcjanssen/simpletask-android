@@ -46,6 +46,7 @@ import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -99,9 +100,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 	private ListView m_leftDrawerList;
     private ListView m_rightDrawerList;
 	private DrawerLayout m_drawerLayout;
-	private ViewGroup m_container;
-	private ActionBarDrawerToggle m_drawerToggle;
-	private SearchManager searchManager;
+    private ActionBarDrawerToggle m_drawerToggle;
 
     @Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -247,10 +246,10 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		if (m_drawerLayout == null) {
 			// In tablet landscape mode
-			m_container = (ViewGroup) findViewById(R.id.tablet_drawer_layout);
+            ViewGroup m_container = (ViewGroup) findViewById(R.id.tablet_drawer_layout);
 		} else {
 			// Not in tablet landscape mode
-			m_container = m_drawerLayout;
+            ViewGroup m_container = m_drawerLayout;
 		}
 		// Set the list's click listener
 		m_leftDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -399,7 +398,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 			.getActionView();
 		searchView.setSearchableInfo(searchManager
@@ -1143,8 +1142,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		       ArrayList<Task> visibleTasks = new ArrayList<Task>();
 		       Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
 		       SparseArray<String> headerTitles = new SparseArray<String>();
-		       SparseArray<Integer> positionToIndex = new SparseArray<Integer>();
-		       SparseArray<Integer> indexToPosition = new SparseArray<Integer>();
+		       SparseIntArray positionToIndex = new SparseIntArray();
+		       SparseIntArray indexToPosition = new SparseIntArray();
 		       int size = 0;
 		       private LayoutInflater m_inflater;
 
@@ -1191,7 +1190,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					       // Log.v(TAG, "Start of header: " + header +
 					       // " at position: " + position);
 					       headerTitles.put(position, header);
-					       positionToIndex.put(position, null);
+					       positionToIndex.put(position, -1);
 					       position++;
 				       }
 
@@ -1211,8 +1210,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		       @Override
 		       public void registerDataSetObserver(DataSetObserver observer) {
 			       obs.add(observer);
-			       return;
-		       }
+               }
 
 		       /*
 			** Get the adapter position for task
@@ -1228,8 +1226,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		       @Override
 		       public void unregisterDataSetObserver(DataSetObserver observer) {
 			       obs.remove(observer);
-			       return;
-		       }
+               }
 
 		       @Override
 		       public int getCount() {
@@ -1238,10 +1235,10 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public Task getItem(int position) {
-			       if (positionToIndex.get(position) == null) {
+			       if (positionToIndex.get(position,-1) == -1) {
 				       return null;
 			       }
-			       return visibleTasks.get(positionToIndex.get(position).intValue());
+			       return visibleTasks.get(positionToIndex.get(position));
 		       }
 
 		       @Override
@@ -1425,11 +1422,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public boolean isEnabled(int position) {
-			       if (headerTitles.get(position,null) != null) {
-				       return false;
-			       } else {
-				       return true;
-			       }
+                   return headerTitles.get(position, null) == null;
 		       }
 
 		       @Override
@@ -1613,8 +1606,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 				m_drawerLayout.closeDrawers();
 			}
 			updateDrawers();
-			return;
-		}
+        }
 	}
 
     private void updateLists(final List<Task> checkedTasks) {

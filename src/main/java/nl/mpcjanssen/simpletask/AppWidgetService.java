@@ -37,16 +37,14 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     private ActiveFilter mFilter;
 
 	private Context mContext;
-	private int widgetId;
-	private SharedPreferences preferences;
-	private TodoApplication application;
+    private TodoApplication application;
 	ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
 	public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
-		widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+        int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
 		Log.v(TAG, "Creating view for widget: " + widgetId);
 		mContext = TodoApplication.getAppContext();
-		preferences = mContext.getSharedPreferences(""+widgetId, 0);
+        SharedPreferences preferences = mContext.getSharedPreferences("" + widgetId, 0);
         mFilter = new ActiveFilter(mContext.getResources());
         mFilter.initFromPrefs(preferences);
         this.application = application;

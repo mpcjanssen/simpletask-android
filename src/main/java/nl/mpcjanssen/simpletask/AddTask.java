@@ -73,7 +73,6 @@ public class AddTask extends Activity {
     private Task m_backup;
     private TodoApplication m_app;
     private TaskBag taskBag;
-    private ActiveFilter mFilter;
 
     private String share_text;
 
@@ -148,7 +147,6 @@ public class AddTask extends Activity {
         sendBroadcast(new Intent(
                 getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
         finish();
-        return;
     }
 
     private void noteToSelf(Intent intent) {
@@ -186,7 +184,7 @@ public class AddTask extends Activity {
         Log.v(TAG, "onCreate()");
         taskBag = m_app.getTaskBag();
         final Intent intent = getIntent();
-        mFilter = new ActiveFilter(getResources());
+        ActiveFilter mFilter = new ActiveFilter(getResources());
         mFilter.initFromIntent(intent);
         final String action = intent.getAction();
         // create shortcut and exit
@@ -313,11 +311,7 @@ public class AddTask extends Activity {
                     endOfLine++;
                     textInputField.setSelection(endOfLine);
                 }
-                if (imeActionNext || hardwareEnterDown || hardwareEnterUp) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (imeActionNext || hardwareEnterDown || hardwareEnterUp);
             }
         });
         setCloneTags(m_app.isAddTagsCloneTags());
