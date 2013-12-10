@@ -60,6 +60,17 @@ public class ActiveFilter {
     private boolean m_hideCompleted = false;
     private boolean m_hideFuture = false;
 
+    public String getPrefName() {
+        return mPrefName;
+    }
+
+    public void setPrefName(String mPrefName) {
+        this.mPrefName = mPrefName;
+    }
+
+    // The name of the shared preference this filter came from
+    private String mPrefName;
+
     private String mName;
 
     public ActiveFilter(Resources resources) {

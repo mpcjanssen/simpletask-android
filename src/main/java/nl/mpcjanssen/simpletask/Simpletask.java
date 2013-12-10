@@ -47,6 +47,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,9 +69,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 
@@ -906,6 +909,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
             SharedPreferences filter_pref = getSharedPreferences(id,MODE_PRIVATE);
             ActiveFilter filter = new ActiveFilter(getResources());
             filter.initFromPrefs(filter_pref);
+            filter.setPrefName(id);
             saved_filters.add(filter);
         }
         return saved_filters;
@@ -914,18 +918,46 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
      * Handle add filter click *
      */
     public void onAddFilterClick(View v) {
-        SharedPreferences saved_filters = getSharedPreferences("filters", MODE_PRIVATE);
-        int newId  = saved_filters.getInt("max_id", 1)+1;
-        Set<String> filters = saved_filters.getStringSet("ids", new HashSet<String>());
-        filters.add("filter_" + newId);
-        saved_filters.edit()
-                .putStringSet("ids", filters )
-                .putInt("max_id", newId)
-                .commit();
-        SharedPreferences test_filter_prefs = getSharedPreferences("filter_" + newId,MODE_PRIVATE);
-        mFilter.setName("filter_" + newId);
-        mFilter.saveInPrefs(test_filter_prefs);
-        updateRightDrawer();
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle(R.string.save_filter);
+        alert.setMessage(R.string.save_filter_message);
+
+// Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        input.setText(mFilter.getProposedName());
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                if (value.equals("")) {
+                    Util.showToastShort(getApplicationContext(), R.string.filter_name_empty);
+                } else {
+                    SharedPreferences saved_filters = getSharedPreferences("filters", MODE_PRIVATE);
+                    int newId  = saved_filters.getInt("max_id", 1)+1;
+                    Set<String> filters = saved_filters.getStringSet("ids", new HashSet<String>());
+                    filters.add("filter_" + newId);
+                    saved_filters.edit()
+                            .putStringSet("ids", filters )
+                            .putInt("max_id", newId)
+                            .commit();
+                    SharedPreferences test_filter_prefs = getSharedPreferences("filter_" + newId,MODE_PRIVATE);
+                    mFilter.setName(value);
+                    mFilter.saveInPrefs(test_filter_prefs);
+                    updateRightDrawer();
+                }
+            }
+        }
+        );
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 
 	@Override
@@ -975,19 +1007,73 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFilter = filters.get(position);
                 m_adapter.setFilteredTasks(false);
+                m_drawerLayout.closeDrawer(Gravity.RIGHT);
                 updateDrawers();
             }
         });
         m_rightDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Util.showToastLong(Simpletask.this, "Popup");
+                final ActiveFilter filter = filters.get(position);
+                final String prefsName = filter.getPrefName();
+                PopupMenu popupMenu = new PopupMenu(Simpletask.this,view);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int menuid = item.getItemId();
+                        switch (menuid) {
+                            case R.id.menu_saved_filter_delete:
+                                deleteSavedFilter(prefsName);
+                                break;
+                            case R.id.menu_saved_filter_shortcut:
+                                createFilterShortcut(filter);
+                                break;
+                            default:
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.saved_filter, popupMenu.getMenu());
+                popupMenu.show();
                 return true;
             }
         });
     }
 
-	private void updateLeftDrawer() {
+    public void createFilterShortcut(ActiveFilter filter) {
+        final Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        Intent target = new Intent(Constants.INTENT_START_FILTER);
+        filter.saveInIntent(target);
+
+        target.putExtra("name", filter.getName());
+
+        // Setup target intent for shortcut
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target);
+
+        // Set shortcut icon
+        Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.icon);
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes);
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, filter.getName());
+        sendBroadcast(shortcut);
+    }
+
+    private void deleteSavedFilter(String prefsName) {
+        SharedPreferences saved_filters = getSharedPreferences("filters", MODE_PRIVATE);
+        HashSet<String> ids = new HashSet<String>();
+        ids.addAll(saved_filters.getStringSet("ids", new HashSet<String>()));
+        ids.remove(prefsName);
+        saved_filters.edit().putStringSet("ids", ids).commit();
+        SharedPreferences filter_prefs = getSharedPreferences(prefsName,MODE_PRIVATE);
+        filter_prefs.edit().clear().commit();
+        File prefs_path = new File (this.getFilesDir(), "../shared_prefs");
+        File prefs_xml = new File (prefs_path,  prefsName+".xml");
+        prefs_xml.delete();
+        updateRightDrawer();
+    }
+
+    private void updateLeftDrawer() {
         TaskBag taskBag = getTaskBag();
         DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
                 taskBag.getDecoratedContexts(true), taskBag.getDecoratedProjects(true));
