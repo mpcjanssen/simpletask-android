@@ -221,6 +221,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_show_completed_short">Completed</string>
     <string name="filter_show_future_short">Future</string>
     <string name="filter_show_prompt">Show</string>
+    <string name="filter_saved_prompt">Saved filters</string>
 
 
     <!-- title bar changes -->

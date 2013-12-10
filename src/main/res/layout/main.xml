@@ -23,8 +23,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 -->
 
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -51,18 +50,18 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dip"
                 android:layout_marginRight="5dip"
-                android:src="@drawable/labels_light"/>
+                android:src="@drawable/labels_light" />
 
             <TextView
                 android:id="@+id/filter_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <ImageButton
                 style="?android:attr/borderlessButtonStyle"
@@ -71,7 +70,7 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:src="@drawable/cancel_light"
                 android:contentDescription="@string/clear_filter"
                 android:onClick="onClearClick"
-                android:id="@+id/actionbar_clear"/>
+                android:id="@+id/actionbar_clear" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,14 +83,14 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:id="@id/android:list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:fastScrollEnabled="true"/>
+                android:fastScrollEnabled="true" />
 
             <TextView
                 android:id="@id/android:empty"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="@string/main_no_items"
-                android:gravity="center_vertical|center_horizontal"/>
+                android:gravity="center_vertical|center_horizontal" />
         </LinearLayout>
     </LinearLayout>
     <!-- The left navigation drawer -->
@@ -103,20 +102,47 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_gravity="start"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:background="#111"
-        />
+        android:background="#111" />
 
     <!-- The right navigation drawer -->
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/right_drawer"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:choiceMode="multipleChoice"
         android:layout_gravity="end"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#111"
-        />
+        android:background="#111">
 
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1"
+            android:text="@string/filter_saved_prompt"
+            android:background="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip" />
+
+        <ListView
+            android:id="@+id/right_drawer_list"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:choiceMode="multipleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:src="@drawable/content_new"
+            android:onClick="onAddFilterClick"
+            android:id="@+id/button" />
+
+
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
 
