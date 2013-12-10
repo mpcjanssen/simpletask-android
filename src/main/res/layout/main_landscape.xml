@@ -109,6 +109,47 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:gravity="center_vertical|center_horizontal" />
         </LinearLayout>
     </LinearLayout>
+    <!-- The right navigation drawer -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/right_drawer"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_gravity="end"
+        android:background="#111">
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1"
+            android:text="@string/filter_saved_prompt"
+            android:background="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip" />
+
+        <ListView
+            android:id="@+id/right_drawer_list"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:choiceMode="multipleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:src="@drawable/content_new"
+            android:onClick="onAddFilterClick"
+            android:id="@+id/button" />
+
+
+    </LinearLayout>
 
 </LinearLayout>
 
