@@ -217,7 +217,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="add_filter_shortcut">To homescreen</string>
     <string name="rename_filter">Rename</string>
     <string name="rename_filter_message">Enter new name of the saved filter:</string>
-    <string name="replace_filter">Replace</string>
+    <string name="update_filter">Update</string>
     <string name="create_widget">Create widget</string>
     <string name="filter_show_completed">Show completed tasks</string>
     <string name="filter_show_future">Show tasks with threshold date in future</string>

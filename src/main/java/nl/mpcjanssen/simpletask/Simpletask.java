@@ -1043,8 +1043,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                             case R.id.menu_saved_filter_rename:
                                 renameSavedFilter(prefsName);
                                 break;
-                            case R.id.menu_saved_filter_replace:
-                                replaceSavedFilter(prefsName);
+                            case R.id.menu_saved_filter_update:
+                                updateSavedFilter(prefsName);
                                 break;
                             default:
                                 break;
@@ -1091,7 +1091,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
         updateRightDrawer();
     }
 
-    private void replaceSavedFilter(String prefsName) {
+    private void updateSavedFilter(String prefsName) {
         SharedPreferences filter_pref = getSharedPreferences(prefsName,MODE_PRIVATE);
         ActiveFilter old_filter = new ActiveFilter(getResources());
         old_filter.initFromPrefs(filter_pref);
