@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.0.5
+
+* [Bugfix] Fix recurring tasks.
+
 ### 4.0.4
 
 * [Bugfix] Fix issue with unsorted or duplicate headers.
