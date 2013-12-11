@@ -240,8 +240,12 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getRecurrencePattern() {
-        //TODO implement
-        return null;
+        Matcher matcher = RECURRENCE_PATTERN.matcher(this.text);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
     }
 
     public List<URL> getLinks() {

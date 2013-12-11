@@ -110,8 +110,10 @@ public class TaskTest extends TestCase {
         assertEquals("Milk +supermarket", t.inFileFormat());
     }
 
-    public void testRecurrance() {
-        Task t = new Task(0, "Test rec:1d");
-        assertEquals("1d", t.getRecurrencePattern());
+    public void testRecurrence() {
+        Task t1 = new Task(0, "Test");
+        Task t2 = new Task(0, "Test rec:1d");
+        assertEquals(null, t1.getRecurrencePattern());
+        assertEquals("1d", t2.getRecurrencePattern());
     }
 }
