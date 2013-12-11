@@ -145,6 +145,7 @@ public class ActiveFilter {
         m_hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false);
         m_hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
+        m_search = prefs.getString(SearchManager.QUERY, null);
     }
 
     public boolean hasFilter() {
@@ -229,6 +230,7 @@ public class ActiveFilter {
         editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
         editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
         editor.putBoolean(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
+        editor.putString(SearchManager.QUERY,m_search);
         editor.commit();
     }
 
