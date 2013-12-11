@@ -39,6 +39,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -174,11 +175,15 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public List<String> getLists() {
-        return ListParser.getInstance().parse(text);
+        List<String> lists =  ListParser.getInstance().parse(text);
+        Collections.sort(lists);
+        return lists;
     }
 
     public List<String> getTags() {
-        return TagParser.getInstance().parse(text);
+        List<String> tags =  TagParser.getInstance().parse(text);
+        Collections.sort(tags);
+        return tags;
     }
 
     public String getPrependedDate() {
