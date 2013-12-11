@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.0.4
+
+* [Bugfix] Fix issue with unsorted or duplicate headers.
+
 ### 4.0.3
 
 * [Bugfix] Save text search in saved filter.
