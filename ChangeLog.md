@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.0.3
+
+* [Bugfix] Save text search in saved filter.
+
 ### 4.0.2
 
 * [UI] Revert left drawer to checked views.
