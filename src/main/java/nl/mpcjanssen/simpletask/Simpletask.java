@@ -1040,6 +1040,12 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
                             case R.id.menu_saved_filter_shortcut:
                                 createFilterShortcut(filter);
                                 break;
+                            case R.id.menu_saved_filter_rename:
+                                renameSavedFilter(prefsName);
+                                break;
+                            case R.id.menu_saved_filter_replace:
+                                replaceSavedFilter(prefsName);
+                                break;
                             default:
                                 break;
                         }
@@ -1084,6 +1090,56 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
         prefs_xml.delete();
         updateRightDrawer();
     }
+
+    private void replaceSavedFilter(String prefsName) {
+        SharedPreferences filter_pref = getSharedPreferences(prefsName,MODE_PRIVATE);
+        ActiveFilter old_filter = new ActiveFilter(getResources());
+        old_filter.initFromPrefs(filter_pref);
+        String filterName = old_filter.getName();
+        mFilter.setName(filterName);
+        mFilter.saveInPrefs(filter_pref);
+        updateRightDrawer();
+    }
+
+    private void renameSavedFilter(String prefsName) {
+        final SharedPreferences filter_pref = getSharedPreferences(prefsName,MODE_PRIVATE);
+        ActiveFilter old_filter = new ActiveFilter(getResources());
+        old_filter.initFromPrefs(filter_pref);
+        String filterName = old_filter.getName();
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle(R.string.rename_filter);
+        alert.setMessage(R.string.rename_filter_message);
+
+// Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        input.setText(filterName);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                if (value.equals("")) {
+                    Util.showToastShort(getApplicationContext(), R.string.filter_name_empty);
+                } else {
+                    mFilter.setName(value);
+                    mFilter.saveInPrefs(filter_pref);
+                    updateRightDrawer();
+                }
+            }
+        }
+        );
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+
 
     private void updateLeftDrawer() {
         TaskBag taskBag = getTaskBag();
