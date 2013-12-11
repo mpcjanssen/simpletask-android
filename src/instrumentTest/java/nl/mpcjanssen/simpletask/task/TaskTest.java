@@ -2,6 +2,8 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 
 import nl.mpcjanssen.simpletask.task.Task;
@@ -32,7 +34,7 @@ public class TaskTest extends TestCase {
     public void testCompletion() {
         String rawText = "Test";
         Task t = new Task(0, rawText);
-        Date completionDate = new Date();
+        DateTime completionDate = new DateTime();
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
@@ -41,9 +43,9 @@ public class TaskTest extends TestCase {
     }
     public void testCompletionWithPrependDate() {
         String rawText = "Test";
-        Task t = new Task(0, rawText, new Date());
+        Task t = new Task(0, rawText, new DateTime());
         rawText = t.inFileFormat();
-        Date completionDate = new Date();
+        DateTime completionDate = new DateTime();
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
@@ -56,7 +58,7 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, rawText);
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
-        Date completionDate = new Date();
+        DateTime completionDate = new DateTime();
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.setPriority(Priority.B);
@@ -71,7 +73,7 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, rawText);
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
-        Date completionDate = new Date();
+        DateTime completionDate = new DateTime();
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
