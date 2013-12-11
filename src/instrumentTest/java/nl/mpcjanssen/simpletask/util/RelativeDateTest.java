@@ -2,6 +2,10 @@ package nl.mpcjanssen.simpletask.util;
 
 import junit.framework.TestCase;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.util.Calendar;
 
 
@@ -15,10 +19,9 @@ import java.util.Calendar;
 public class RelativeDateTest extends TestCase {
     public void testMonthWrap()  {
         // Bug f35cd1b
-        Calendar now = Calendar.getInstance();
-        now.set(2013,Calendar.OCTOBER,1);
-        Calendar cal = Calendar.getInstance();
-        cal.set(2013,Calendar.SEPTEMBER,30);
-        assertEquals("1 day ago", RelativeDate.computeRelativeDate(now,cal));
+        DateTimeFormatter df = ISODateTimeFormat.date();
+        DateTime now = df.parseDateTime("2013-10-01");
+        DateTime when = df.parseDateTime("2013-09-30");
+        assertEquals("1 day ago", RelativeDate.computeRelativeDate(now,when));
     }
 }
