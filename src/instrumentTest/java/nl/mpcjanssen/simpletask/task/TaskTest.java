@@ -109,4 +109,9 @@ public class TaskTest extends TestCase {
         t.removeTag("@@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());
     }
+
+    public void testRecurrance() {
+        Task t = new Task(0, "Test rec:1d");
+        assertEquals("1d", t.getRecurrencePattern());
+    }
 }
