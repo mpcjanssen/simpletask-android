@@ -79,7 +79,7 @@ public class DrawerAdapter extends BaseAdapter implements ListAdapter {
 
         } else {
             if (convertView == null) {
-                convertView = m_inflater.inflate(R.layout.drawer_list_item, null);
+                convertView = m_inflater.inflate(R.layout.drawer_list_item_checked, null);
             }
             tv = (TextView) convertView;
             tv.setText(items.get(position).substring(1));
