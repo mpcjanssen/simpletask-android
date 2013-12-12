@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.0.6
+
+* [Bugfix] Fix rare crash when starting app.
+
 ### 4.0.5
 
 * [Bugfix] Fix recurring tasks.
