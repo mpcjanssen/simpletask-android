@@ -967,7 +967,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+		if (intent.getAction()  !=null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
 			Intent currentIntent = getIntent();
 			currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY));
 			setIntent(currentIntent);
