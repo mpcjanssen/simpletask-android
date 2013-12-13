@@ -8,6 +8,7 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
+            android:id="@+id/header"
             android:background="#0099cc"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">

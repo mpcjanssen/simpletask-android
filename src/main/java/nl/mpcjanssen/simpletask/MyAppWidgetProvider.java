@@ -14,8 +14,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 
 public class MyAppWidgetProvider extends AppWidgetProvider {
@@ -37,12 +40,26 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
         RemoteViews view ;
         SharedPreferences appPreferences = TodoApplication.getPrefs();
+        ColorDrawable listColor;
+        ColorDrawable headerColor;
         String theme = appPreferences.getString("widget_theme", "");
         if (theme.equals("android.R.style.Theme_Holo")) {
             view = new RemoteViews(context.getPackageName(), R.layout.appwidget_dark);
+            listColor = new ColorDrawable(0xFFFFFF);
+            headerColor = new ColorDrawable(0x0099CC);
+
         } else {
 		    view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
+            listColor = new ColorDrawable(0x000000);
+            headerColor = new ColorDrawable(0x000000);
         }
+
+        listColor.setAlpha(30);
+        headerColor.setAlpha(10);
+
+        view.setInt(R.id.widgetlv,"setBackgroundColor",listColor.getColor());
+        view.setInt(R.id.header,"setBackgroundColor",headerColor.getColor());
+
         Intent intent = new Intent(context, AppWidgetService.class);
         // Add the app widget ID to the intent extras.
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
