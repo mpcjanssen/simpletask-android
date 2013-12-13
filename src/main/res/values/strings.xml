@@ -69,7 +69,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
 
     <string name="filter_name_empty">No name specified, not adding filter</string>
-    <string name="widget_name_empty">No widget specified, not widget filter</string>
+    <string name="widget_name_empty">No widget name specified, not adding widget</string>
     <string name="add_task_help">Add or update a task to the task list. When adding tasks,
         each line is a separate task for quick adding.\n
         <b>Priority</b>\n
