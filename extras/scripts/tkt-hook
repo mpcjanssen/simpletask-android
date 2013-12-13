@@ -1,0 +1,22 @@
+#!/usr/bin/env tclsh
+package require ncgi
+package require http
+::ncgi::parse
+::ncgi::header
+puts "<html>"
+catch {
+set uuid [::ncgi::value uuid ""]
+
+if {$uuid eq ""} {
+	exit 0
+}
+
+set mail_cmd [open "|mailx -r ticket@domain -s \"Updated ticket\" ticket@domain" w]
+
+set body "http://domain/fossil/simpletask/tktview/$uuid"
+puts $mail_cmd $body
+close $mail_cmd
+} error
+
+puts $error
+puts "</html>"
