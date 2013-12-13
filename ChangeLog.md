@@ -135,8 +135,8 @@ Big update which should make starting with Simpletask more intuitive:
 * Updated Add Task screen.
 * Create recurring tasks with the rec:[0-9]+[mwd] format
   [http://github.com/bram85/todo.txt-tools/wiki/Recurrence](http://github.com/bram85/todo.txt-tools/wiki/Recurrence)
-* Removed setting for deferable due date, both due date and threshold
-  date can be set and defered from the main menu now so this setting is not
+* Removed setting for deferrable due date, both due date and threshold
+  date can be set and deferred from the main menu now so this setting is not
   needed anymore.
 
 ### 2.8.2
