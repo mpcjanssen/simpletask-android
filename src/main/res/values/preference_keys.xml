@@ -22,6 +22,8 @@
     <string name="ui_drawer_fixed_landscape">ui_drawer_fixed_landscape</string>
     <string name="ui_show_edittext_hints">ui_show_edittext_hints</string>
     <string name="ui_show_confirmation_dialogs">ui_show_confirmation_dialogs</string>
+    <string name="widget_header_transparency">widget_header_transparency</string>
+    <string name="widget_background_transparency">widget_background_transparency</string>
     <string name="recur_from_original_date">recur_from_original_date</string>
     <string name="last_open_filter_tab">last_open_filter_tab</string>
 

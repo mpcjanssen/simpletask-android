@@ -43,19 +43,24 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         ColorDrawable listColor;
         ColorDrawable headerColor;
         String theme = appPreferences.getString("widget_theme", "");
+
         if (theme.equals("android.R.style.Theme_Holo")) {
             view = new RemoteViews(context.getPackageName(), R.layout.appwidget_dark);
-            listColor = new ColorDrawable(0xFFFFFF);
-            headerColor = new ColorDrawable(0x0099CC);
-
+            listColor = new ColorDrawable(0xFF000000);
+            headerColor = new ColorDrawable(0xFF000000);
         } else {
 		    view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
-            listColor = new ColorDrawable(0x000000);
-            headerColor = new ColorDrawable(0x000000);
+            listColor = new ColorDrawable(0xFFFFFFFF);
+            headerColor = new ColorDrawable(0xFF0099CC);
         }
 
-        listColor.setAlpha(30);
-        headerColor.setAlpha(10);
+        int header_transparency = appPreferences.getInt("widget_header_transparency", 0);
+        int background_transparency = appPreferences.getInt("widget_background_transparency", 0);
+
+        int header_alpha = ((100-header_transparency)*255)/100;
+        int background_alpha = ((100-background_transparency)*255)/100;
+        headerColor.setAlpha(header_alpha);
+        listColor.setAlpha(background_alpha);
 
         view.setInt(R.id.widgetlv,"setBackgroundColor",listColor.getColor());
         view.setInt(R.id.header,"setBackgroundColor",headerColor.getColor());
