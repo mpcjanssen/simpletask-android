@@ -115,6 +115,11 @@
             android:key="@string/recur_from_original_date"
             android:summary="@string/recur_from_original_date_pref_summary"
             android:title="@string/recur_from_original_date_pref_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/share_task_show_edit"
+            android:summary="@string/share_task_show_edit_summary"
+            android:title="@string/share_task_show_edit_pref_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/DROPBOX_settings_header"

@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 4.0.8
+
+* When using "Share" with simpletask, just add the task. You can restore the old behavior of showing
+  the edit activity in the settings.
+
 ### 4.0.7
 
 * Configure widget transparency.
