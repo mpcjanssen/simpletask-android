@@ -11,11 +11,16 @@ if {$uuid eq ""} {
 	exit 0
 }
 
-set mail_cmd [open "|mailx -r \"Simpletask ticket <ticket@mpcjanssen.nl>\" -s \"Updated ticket [string range $uuid 0 7]\" mpc.janssen@gmail.com" w]
+if {$env(REMOTE_ADDR) eq "127.0.0.1"} {
+   set mail_cmd [open "|mailx -r \"Simpletask ticket <ticket@mpcjanssen.nl>\" -s \"Updated ticket [string range $uuid 0 7]\" mpc.janssen@gmail.com" w]
 
-set body "http://mpcjanssen.nl/fossil/simpletask/tktview/$uuid"
-puts $mail_cmd $body
-close $mail_cmd
+   set body "http://mpcjanssen.nl/fossil/simpletask/tktview/$uuid"
+   puts $mail_cmd $body
+   close $mail_cmd
+} else {
+   puts $env(REMOTE_ADDR)
+   puts [ncgi::nvlist]
+}
 } error
 
 puts $error
