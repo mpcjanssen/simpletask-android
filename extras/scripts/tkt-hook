@@ -11,9 +11,9 @@ if {$uuid eq ""} {
 	exit 0
 }
 
-set mail_cmd [open "|mailx -r ticket@domain -s \"Updated ticket\" ticket@domain" w]
+set mail_cmd [open "|mailx -r \"Simpletask ticket <ticket@mpcjanssen.nl>\" -s \"Updated ticket [string range $uuid 0 7]\" mpc.janssen@gmail.com" w]
 
-set body "http://domain/fossil/simpletask/tktview/$uuid"
+set body "http://mpcjanssen.nl/fossil/simpletask/tktview/$uuid"
 puts $mail_cmd $body
 close $mail_cmd
 } error
