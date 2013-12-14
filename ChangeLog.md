@@ -2,7 +2,7 @@
 
 ### 4.0.7
 
-* Configure widget transparency
+* Configure widget transparency.
 
 ### 4.0.6
 
