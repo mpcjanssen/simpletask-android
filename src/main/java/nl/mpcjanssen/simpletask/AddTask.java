@@ -170,7 +170,9 @@ public class AddTask extends Activity {
     }
 
     private void addBackgroundTask(String taskText) {
-        taskBag.addAsTask(taskText);
+        for (String task : taskText.split("\r\n|\r|\n")) {
+            taskBag.addAsTask(task);
+        }
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         sendBroadcast(new Intent(
@@ -207,6 +209,13 @@ public class AddTask extends Activity {
                     .getCharSequenceExtra(Intent.EXTRA_TEXT);
             if (share_text == null) {
                 share_text = "";
+            }
+            if (!m_app.hasShareTaskShowsEdit()) {
+                if (!share_text.equals("")) {
+                    addBackgroundTask(share_text);
+                }
+                finish();
+                return;
             }
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now

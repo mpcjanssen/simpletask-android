@@ -126,6 +126,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="theme_pref_title">Application theme</string>
     <string name="theme_pref_summary">Change the theme used for the application, restart the application after changing the setting</string>
 
+    <string name="share_task_show_edit_pref_title">Edit shared task</string>
+    <string name="share_task_show_edit_summary">Allow editing of a shared task before saving it.
+        Disable this to have the shared task stored without intervention.</string>
+
     <string name="back_saves_pref_title">Back button</string>
     <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
 
@@ -284,7 +288,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_title">Simpletask task</string>
     <string name="version_copied">Version info copied to clipboard</string>
 
-    <string name="task_added">Task added</string>
+    <string name="task_added">Task added to Simpletask</string>
     <string name="default_sort">Default sort</string>
     <string name="pull_to_refresh_refreshing_label">Syncing with dropbox…</string>
     <string name="not_tagged">Tasks not on list or tagged</string>
