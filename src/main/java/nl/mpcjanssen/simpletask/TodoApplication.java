@@ -314,6 +314,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.share_task_show_edit), false);
     }
 
+    public boolean hasCapitalizeTasks() {
+        return m_prefs.getBoolean(getString(R.string.capitalize_tasks), false);
+    }
+
     public boolean hasColorDueDates() {
         return m_prefs.getBoolean(getString(R.string.color_due_date_key), true);
     }
