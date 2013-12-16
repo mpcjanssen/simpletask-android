@@ -64,6 +64,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -424,11 +425,13 @@ public class AddTask extends Activity {
     }
 
     private void showTagMenu() {
-        final Set<String> projects = new HashSet<String>();
+        final Set<String> projects = new TreeSet<String>();
         projects.addAll(taskBag.getProjects(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         projects.addAll(t.getTags());
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
         builder.setView(view);
