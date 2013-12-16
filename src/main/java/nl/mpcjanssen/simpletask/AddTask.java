@@ -492,7 +492,7 @@ public class AddTask extends Activity {
 
 
     private void showContextMenu() {
-        final Set<String> contexts = new HashSet<String>();
+        final Set<String> contexts = new TreeSet<String>();
         contexts.addAll(taskBag.getContexts(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
