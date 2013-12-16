@@ -275,8 +275,14 @@ public class AddTask extends Activity {
             }
         }
         // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
-        // like Swype where not ENTER keyCode is generated.
-        textInputField.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        // like Swype where ENTER keyCode is not generated.
+
+        int inputFlags = InputType.TYPE_CLASS_TEXT;
+
+        if (m_app.hasCapitalizeTasks()) {
+            inputFlags |= InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
+        }
+        textInputField.setRawInputType(inputFlags);
         textInputField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
