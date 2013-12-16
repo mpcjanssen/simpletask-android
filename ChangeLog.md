@@ -2,7 +2,8 @@
 
 ### 4.0.9
 
-* Add setting to capitalize tasks
+* Add setting to capitalize tasks.
+* Sort list and tag popups in AddTask screen.
 
 ### 4.0.8
 
