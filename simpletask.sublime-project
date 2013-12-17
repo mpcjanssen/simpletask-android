@@ -1,0 +1,19 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"build_systems":
+	[
+        { "name": "Check",
+          "cmd": "gradlew.bat check",
+          "working_dir": "${project_path:${folder}}"
+        },
+
+        { "name": "installFreeRelease",
+          "cmd": "gradlew.bat installFreeRelease"
+        }
+    ]
+}

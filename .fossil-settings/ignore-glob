@@ -19,3 +19,4 @@ gradle.properties
 *.iml
 *.un~
 tags
+*.sublime-workspace
