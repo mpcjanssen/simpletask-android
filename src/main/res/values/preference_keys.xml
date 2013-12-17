@@ -15,6 +15,7 @@
     <string name="widget_extended_pref_key">widget_extended</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="clone_tags_key">clone_tags</string>
+    <string name="word_wrap_key">word_wrap</string>
     <string name="color_due_date_key">color_due_date</string>
     <string name="split_actionbar_key">split_actionbar</string>
     <string name="todo_file_key">todo_file</string>
