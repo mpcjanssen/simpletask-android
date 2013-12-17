@@ -1,27 +1,34 @@
 {
-	"folders":
-	[
-  {
-   "path": "."
- }
- ],
- "build_systems":
- [
- { 
-  "name": "Simpletask",
-  "working_dir": "${project_path:${folder}}",
-  "cmd": "gradlew --gui",  
-  "shell":true,
-  "variants":
-  [
-  {
-    "name": "Check",
-    "cmd": "gradlew check"            
-    },
-
-    { "name": "installFreeRelease",
-    "cmd": "gradlew installFreeRelease"
-    }]
-  }
+  "build_systems": [
+    {
+      "cmd": "gradlew --gui",
+      "name": "Simpletask",
+      "file_regex": "(C:.*?):([0-9]+):",
+      "shell": true,
+      "variants": [
+        {
+          "cmd": "gradlew check",
+          "env": {
+            "term": "dumb"
+          },
+          "name": "Check"
+        },
+        {
+          "cmd": "gradlew installFreeRelease",
+          "env": {
+            "term": "dumb"
+          },
+          "name": "installFreeRelease"
+        }
+      ],
+      "working_dir": "${project_path:${folder}}"
+    }
+  ],
+  "folders": [
+    {
+      "path": ".",
+      "folder_exclude_patterns": ["build"],
+      "file_exclude_patterns": ["R.java"]
+    }
   ]
 }
