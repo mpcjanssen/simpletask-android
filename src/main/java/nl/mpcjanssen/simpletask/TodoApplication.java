@@ -347,6 +347,16 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 .commit();
     }
 
+    public boolean isWordWrap() {
+        return m_prefs.getBoolean(getString(R.string.word_wrap_key),false);
+    }
+
+    public void setWordWrap(boolean bool) {
+        m_prefs.edit()
+                .putBoolean(getString(R.string.word_wrap_key),bool)
+                .commit();
+    }
+
     public void setManualMode(boolean manual) {
     	Editor edit = m_prefs.edit();
         edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);

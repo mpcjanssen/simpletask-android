@@ -84,6 +84,17 @@ public class AddTask extends Activity {
 
     private EditText textInputField;
 
+    public boolean hasWordWrap() {
+        return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
+    }
+
+    public void setWordWrap(boolean bool) {
+        ((CheckBox) findViewById(R.id.cb_wrap)).setChecked(bool);
+        if (textInputField!=null) {
+            textInputField.setHorizontallyScrolling(!bool);
+        }
+    }
+
     public boolean hasCloneTags() {
         return ((CheckBox) findViewById(R.id.cb_clone)).isChecked();
     }
@@ -120,8 +131,10 @@ public class AddTask extends Activity {
 
 
     private void saveTasksAndClose() {
-        // save clone checkbox state
+        // save clone CheckBox state
         m_app.setAddTagsCloneTags(hasCloneTags());
+        m_app.setWordWrap(hasWordWrap());
+        
         // strip line breaks
         textInputField = (EditText) findViewById(R.id.taskText);
         String input = textInputField.getText().toString();
@@ -336,7 +349,17 @@ public class AddTask extends Activity {
                 return (imeActionNext || hardwareEnterDown || hardwareEnterUp);
             }
         });
+
         setCloneTags(m_app.isAddTagsCloneTags());
+        setWordWrap(m_app.isWordWrap());
+        
+        ((CheckBox) findViewById(R.id.cb_wrap)).setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setWordWrap(hasWordWrap());
+            }
+        });
+
         int textIndex = 0;
         textInputField.setSelection(textIndex);
 
