@@ -1,7 +1,7 @@
 {
   "build_systems": [
     {
-      "cmd": "gradlew --gui",
+      "cmd": "gradlew build",
       "name": "Simpletask",
       "file_regex": "(C:.*?):([0-9]+):",
       "shell": true,
@@ -28,7 +28,7 @@
     {
       "path": ".",
       "folder_exclude_patterns": ["build"],
-      "file_exclude_patterns": ["R.java"]
+      "file_exclude_patterns": ["R.java","simpletask.sublime-workspace"]
     }
   ]
 }
