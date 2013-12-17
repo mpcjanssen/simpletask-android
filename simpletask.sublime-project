@@ -1,19 +1,27 @@
 {
 	"folders":
 	[
-		{
-			"path": "."
-		}
-	],
-	"build_systems":
-	[
-        { "name": "Check",
-          "cmd": "gradlew.bat check",
-          "working_dir": "${project_path:${folder}}"
-        },
+  {
+   "path": "."
+ }
+ ],
+ "build_systems":
+ [
+ { 
+  "name": "Simpletask",
+  "working_dir": "${project_path:${folder}}",
+  "cmd": "gradlew --gui",  
+  "shell":true,
+  "variants":
+  [
+  {
+    "name": "Check",
+    "cmd": "gradlew check"            
+    },
 
-        { "name": "installFreeRelease",
-          "cmd": "gradlew.bat installFreeRelease"
-        }
-    ]
+    { "name": "installFreeRelease",
+    "cmd": "gradlew installFreeRelease"
+    }]
+  }
+  ]
 }
