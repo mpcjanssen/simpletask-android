@@ -4,6 +4,7 @@
 
 * Add setting to capitalize tasks.
 * Sort list and tag popups in AddTask screen.
+* Toggle wordwrap when adding tasks.
 
 ### 4.0.8
 
