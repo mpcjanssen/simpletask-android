@@ -7,6 +7,13 @@ let g:ctrlp_custom_ignore = {
 
 nnoremap <leader>f :call FuzzyFindFromHere()<CR>
 
-function FuzzyFindFromHere()
+function! FuzzyFindFromHere()
     execute "CtrlP ".s:script_path
 endfunction
+
+function! RunGradleTask(task)
+     execute ":cd ".s:script_path
+     execute ":!start cmd /c gradlew ".a:task
+endfunction
+
+command! InstallFreeRelease :call RunGradleTask("installFreeRelease")
