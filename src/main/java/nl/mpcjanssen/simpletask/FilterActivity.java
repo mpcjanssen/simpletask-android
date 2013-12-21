@@ -123,6 +123,8 @@ public class FilterActivity extends Activity {
         arguments = new Bundle();
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, mFilter.getHideCompleted());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.getHideFuture());
+        arguments.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, mFilter.getHideLists());
+        arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.getHideTags());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.filter_show_prompt))
                 .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class, arguments))
@@ -201,6 +203,8 @@ public class FilterActivity extends Activity {
 
         mFilter.setHideCompleted(getHideCompleted());
         mFilter.setHideFuture(getHideFuture());
+        mFilter.setHideLists(getHideLists());
+        mFilter.setHideTags(getHideTags());
 
         items = getSelectedSort();
         if (items!=null) {
@@ -251,6 +255,29 @@ public class FilterActivity extends Activity {
             return fr.getHideFuture();
         }
     }
+
+    private boolean getHideLists() {
+        FilterOtherFragment fr;
+        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            return mFilter.getHideLists();
+        } else {
+            return fr.getHideLists();
+        }
+    }
+
+    private boolean getHideTags() {
+        FilterOtherFragment fr;
+        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            return mFilter.getHideTags();
+        } else {
+            return fr.getHideTags();
+        }
+    }
+
     private boolean getNot(String tag, boolean current) {
         FilterListFragment fr;
         fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);

@@ -25,6 +25,8 @@ public class FilterOtherFragment extends Fragment {
     final static String TAG = FilterOtherFragment.class.getSimpleName();
     private CheckBox cbHideCompleted;
     private CheckBox cbHideFuture;
+    private CheckBox cbHideLists;
+    private CheckBox cbHideTags;
     private GestureDetector gestureDetector;
     ActionBar actionbar;
 
@@ -48,6 +50,8 @@ public class FilterOtherFragment extends Fragment {
         Log.v(TAG, "onSaveInstanceState() this:" + this);
         outState.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, getHideCompleted());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, getHideFuture());
+        outState.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, getHideLists());
+        outState.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, getHideTags());
     }
 
     @Override
@@ -63,13 +67,19 @@ public class FilterOtherFragment extends Fragment {
 
         cbHideCompleted = (CheckBox) layout.findViewById(R.id.cb_show_completed);
         cbHideFuture = (CheckBox) layout.findViewById(R.id.cb_show_future);
+        cbHideLists = (CheckBox) layout.findViewById(R.id.cb_show_lists);
+        cbHideTags = (CheckBox) layout.findViewById(R.id.cb_show_tags);
 
         if (savedInstanceState != null) {
             cbHideCompleted.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
+            cbHideLists.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false));
+            cbHideTags.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
         } else {
             cbHideCompleted.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
+            cbHideLists.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false));
+            cbHideTags.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
         }
 
         gestureDetector = new GestureDetector(TodoApplication.getAppContext(),
@@ -109,6 +119,23 @@ public class FilterOtherFragment extends Fragment {
         }
     }
 
+    public boolean getHideLists() {
+        Bundle arguments = getArguments();
+        if (cbHideCompleted == null) {
+            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false);
+        } else {
+            return !cbHideLists.isChecked();
+        }
+    }
+    public boolean getHideTags() {
+        Bundle arguments = getArguments();
+        if (cbHideCompleted == null) {
+            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false);
+        } else {
+            return !cbHideTags.isChecked();
+        }
+    }
+
     class FilterGestureDetector extends SimpleOnGestureListener {
         private static final int SWIPE_MIN_DISTANCE = 120;
         private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -141,15 +168,5 @@ public class FilterOtherFragment extends Fragment {
             }
             return false;
         }
-    }
-
-    public void selectAll() {
-        cbHideCompleted.setChecked(true);
-        cbHideFuture.setChecked(true);
-    }
-
-    public void clearAll() {
-        cbHideCompleted.setChecked(false);
-        cbHideFuture.setChecked(false);
     }
 }

@@ -1345,7 +1345,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 				       if (task != null) {
 					       SpannableString ss = new SpannableString(
-							       task.datelessScreenFormat());
+							       task.inScreenFormat(mFilter));
 
 					       ArrayList<String> colorizeStrings = new ArrayList<String>();
 					       for (String context : task.getLists()) {
