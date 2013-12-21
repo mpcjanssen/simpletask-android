@@ -44,6 +44,8 @@ public class ActiveFilter {
 
     public final static String INTENT_HIDE_COMPLETED_FILTER = "HIDECOMPLETED";
     public final static String INTENT_HIDE_FUTURE_FILTER = "HIDEFUTURE";
+    public final static String INTENT_HIDE_LISTS_FILTER = "HIDELISTS";
+    public final static String INTENT_HIDE_TAGS_FILTER =  "HIDETAGS";
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
@@ -59,6 +61,8 @@ public class ActiveFilter {
     private boolean m_contextsNot = false;
     private boolean m_hideCompleted = false;
     private boolean m_hideFuture = false;
+    private boolean m_hideLists = false;
+    private boolean m_hideTags = false;
 
     public String getPrefName() {
         return mPrefName;
@@ -89,6 +93,8 @@ public class ActiveFilter {
         m_sorts = bundle.getStringArrayList(INTENT_SORT_ORDER);
         m_hideCompleted = bundle.getBoolean(INTENT_HIDE_COMPLETED_FILTER);
         m_hideFuture = bundle.getBoolean(INTENT_HIDE_FUTURE_FILTER);
+        m_hideLists = bundle.getBoolean(INTENT_HIDE_LISTS_FILTER);
+        m_hideTags = bundle.getBoolean(INTENT_HIDE_TAGS_FILTER);
     }
 
     public void initFromIntent(Intent intent) {
@@ -111,6 +117,10 @@ public class ActiveFilter {
                 INTENT_HIDE_COMPLETED_FILTER, false);
         m_hideFuture = intent.getBooleanExtra(
                 INTENT_HIDE_FUTURE_FILTER, false);
+        m_hideLists = intent.getBooleanExtra(
+                INTENT_HIDE_LISTS_FILTER, false);
+        m_hideTags = intent.getBooleanExtra(
+                INTENT_HIDE_TAGS_FILTER, false);
         m_search = intent.getStringExtra(SearchManager.QUERY);
         if (sorts != null && !sorts.equals("")) {
             m_sorts = new ArrayList<String>(
@@ -144,6 +154,8 @@ public class ActiveFilter {
         m_projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false);
         m_hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false);
         m_hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false);
+        m_hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false);
+        m_hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
         m_search = prefs.getString(SearchManager.QUERY, null);
     }
@@ -214,6 +226,8 @@ public class ActiveFilter {
         bundle.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
         bundle.putBoolean(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
         bundle.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
+        bundle.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
+        bundle.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
         bundle.putString(SearchManager.QUERY, m_search);
     }
 
@@ -230,6 +244,8 @@ public class ActiveFilter {
         editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
         editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
         editor.putBoolean(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
+        editor.putBoolean(INTENT_HIDE_LISTS_FILTER,m_hideLists);
+        editor.putBoolean(INTENT_HIDE_TAGS_FILTER,m_hideTags);
         editor.putString(SearchManager.QUERY,m_search);
         editor.commit();
     }
@@ -244,6 +260,8 @@ public class ActiveFilter {
         target.putExtra(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
         target.putExtra(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
         target.putExtra(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
+        target.putExtra(INTENT_HIDE_LISTS_FILTER,m_hideLists);
+        target.putExtra(INTENT_HIDE_TAGS_FILTER,m_hideTags);
         target.putExtra(SearchManager.QUERY, m_search);
     }
 
@@ -347,12 +365,27 @@ public class ActiveFilter {
         return m_hideFuture;
     }
 
+    public boolean getHideLists() {
+        return m_hideLists;
+    }
+
+    public boolean getHideTags() {
+        return m_hideTags;
+    }
     public void setHideCompleted(boolean hide) {
         this.m_hideCompleted = hide;
     }
 
     public void setHideFuture(boolean hide) {
         this.m_hideFuture = hide;
+    }
+
+    public void setHideLists(boolean hide) {
+        this.m_hideLists = hide;
+    }
+
+    public void setHideTags(boolean hide) {
+        this.m_hideTags = hide;
     }
 
     private class AndFilter {

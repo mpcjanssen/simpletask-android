@@ -315,7 +315,7 @@ public class Task implements Serializable, Comparable<Task> {
     public void markComplete(DateTime date) {
         if (!this.isCompleted()) {
             String completionDate = formatter.print(date);
-            this.text = "x " + completionDate + " " + text;
+            this.text = "x " + completionDate + " " + inFileFormat();
         }
     }
 
@@ -327,8 +327,25 @@ public class Task implements Serializable, Comparable<Task> {
         this.update("");
     }
 
-    public String inScreenFormat() {
-        return text;
+    public String inScreenFormat(ActiveFilter filter) {
+        String screenText = datelessScreenFormat();
+        if (filter==null) {
+            return screenText;
+        }
+        if (filter.getHideLists()) {
+            for (String list : getLists()) {
+                screenText = screenText.replaceAll("@" + list,"");
+            }
+            screenText = screenText.replaceAll("[ ]+", " ");
+        }
+
+        if (filter.getHideTags()) {
+            for (String tag : getTags()) {
+                screenText = screenText.replaceAll("+" + tag,"");
+            }
+            screenText = screenText.replaceAll("[ ]+", " ");
+        }
+        return screenText;
     }
 
     public boolean inFuture() {
@@ -485,25 +502,24 @@ public class Task implements Serializable, Comparable<Task> {
         return "";
     }
 
-    public CharSequence datelessScreenFormat() {
-        String text = inScreenFormat();
+    public String datelessScreenFormat() {
         // remove completion and creation dates
-        text = getTextWithoutCompletionAndPriority();
+        String stext = getTextWithoutCompletionAndPriority();
 
         // remove possible create date
-        Matcher m = SINGLE_DATE_PREFIX.matcher(text);
+        Matcher m = SINGLE_DATE_PREFIX.matcher(stext);
         if (m.matches()) {
-            text = m.group(2);
+            stext = m.group(2);
         }
         // remove due dates
-        text = text.replaceAll(DUE_PATTERN.pattern(), "");
+        stext = stext.replaceAll(DUE_PATTERN.pattern(), "");
         // remove threshold dates
-        text = text.replaceAll(THRESHOLD_PATTERN.pattern(), "");
+        stext = stext.replaceAll(THRESHOLD_PATTERN.pattern(), "");
 
         // Re add priority
         if (getPriority()!=Priority.NONE) {
-            text = getPriority().inFileFormat() + " " + text.trim();
+            stext = getPriority().inFileFormat() + " " + stext.trim();
         }
-        return text;
+        return stext;
     }
 }

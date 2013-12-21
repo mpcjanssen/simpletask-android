@@ -92,7 +92,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
             if (task != null) {
                 SpannableString ss = new SpannableString(
-                        task.datelessScreenFormat());
+                        task.inScreenFormat(mFilter));
 
                 if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
                     rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.white));
@@ -178,7 +178,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
         Task task = visibleTasks.get(position);
         SpannableString ss = new SpannableString(
-                task.datelessScreenFormat());
+                task.inScreenFormat(mFilter));
         if (task.isCompleted()) {
             ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
