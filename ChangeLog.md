@@ -5,6 +5,7 @@
 * Add setting to capitalize tasks.
 * Sort list and tag popups in AddTask screen.
 * Add option to toggle wordwrap when adding tasks.
+* Add filter option to hide tags and lists on task display.
 
 ### 4.0.8
 
