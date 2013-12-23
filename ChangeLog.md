@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.0.10
+
+* Don't crash on tha '++tag' when show tags is unchecked. Fixes [9c5902].
+
 ### 4.0.9
 
 * Add setting to capitalize tasks.

@@ -334,14 +334,14 @@ public class Task implements Serializable, Comparable<Task> {
         }
         if (filter.getHideLists()) {
             for (String list : getLists()) {
-                screenText = screenText.replaceAll("@" + list,"");
+                screenText = screenText.replace("@" + list,"");
             }
             screenText = screenText.replaceAll("[ ]+", " ");
         }
 
         if (filter.getHideTags()) {
             for (String tag : getTags()) {
-                screenText = screenText.replaceAll("+" + tag,"");
+                screenText = screenText.replace("+" + tag,"");
             }
             screenText = screenText.replaceAll("[ ]+", " ");
         }
