@@ -2,7 +2,7 @@
 
 ### 4.0.10
 
-* Don't crash on tha '++tag' when show tags is unchecked. Fixes [9c5902].
+* Don't crash on a '++tag' when show tags is unchecked. Fixes [9c5902].
 
 ### 4.0.9
 
