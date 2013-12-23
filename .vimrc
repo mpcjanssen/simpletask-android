@@ -29,9 +29,9 @@ function! AndroidMonitor()
     let l:filename = s:script_path."local.properties"
     execute "vimgrep /\\v^sdk\\.dir=(.*)\s*$/j ".l:filename
     for i in getqflist()
-        echo "found ". i.text
+        echom "found ". i.text
         let l:cmd = split(i.text,"=")[1]
-        execute ":!start cmd /c " . l:cmd . "\\tools\\monitor.bat"
+        execute ":AsyncCommand " . l:cmd . "\\tools\\monitor.bat"
         break
     endfor
 endfunction
