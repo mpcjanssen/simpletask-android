@@ -1244,6 +1244,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 						       }
 					       }
 			       String firstSort = sorts.get(firstGroupSortIndex);
+                   ArrayList<Task> visibleWithoutEnduring = new ArrayList<Task>();
 			       for (Task t : visibleTasks) {
 				       newHeader = t.getHeader(firstSort, getString(R.string.no_header));
 				       if (!header.equals(newHeader)) {
@@ -1254,13 +1255,19 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					       positionToIndex.put(position, -1);
 					       position++;
 				       }
-
-				       positionToIndex.put(position, index);
-				       indexToPosition.put(index, position);
-				       index++;
-				       position++;
+                       
+                       if (!t.isHidden() || m_app.showHidden()) {
+                           // enduring tasks should not be displayed
+                           visibleWithoutEnduring.add(t);
+                           positionToIndex.put(position, index);
+                           indexToPosition.put(index, position);
+                           index++;
+                           position++;
+                       }
 			       }
 			       size = position;
+                   visibleTasks.clear();
+                   visibleTasks.addAll(visibleWithoutEnduring);
 			       for (DataSetObserver ob : obs) {
 				       ob.onChanged();
 			       }
