@@ -2,17 +2,19 @@
 " loaded by https://github.com/MarcWeber/vim-addon-local-vimrc
 
 set tags=tags;/
+
 set makeprg=gradlew\ --no-color
 
 let s:script_path = expand('<sfile>:p:h') . "/" 
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\vbuild$',
-  \ }
+
+let g:fuf_dir_exclude='\v(^|[/\\])(\.hg|\.git|\.bzr|build)($|[/\\])'
+let g:fuf_file_exclude='\v(^|[/\\])(\.hg|\.git|\.bzr|build)($|[/\\])'
 
 nnoremap <leader>f :call FuzzyFindFromProjectRoot()<CR>
+nnoremap <C-p> :call FuzzyFindFromProjectRoot()<CR>
 
 function! FuzzyFindFromProjectRoot()
-    execute "CtrlP ".s:script_path
+    execute "FufFile ".s:script_path."**\\"
 endfunction
 
 function! ExecuteInProjectRoot(cmdline)
