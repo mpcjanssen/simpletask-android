@@ -33,12 +33,9 @@ public class TaskTest extends TestCase {
     
 
     public void testHidden() {
-        String rawText1 = "Test h:1";
-        String rawText2 = "Test";
-        Task t1 = new Task(0, rawText1);
-        Task t2 = new Task(0, rawText2);
-        assertTrue(t1.isHidden());
-        assertFalse(t2.isHidden());
+        assertTrue(new Task(0,"Test h:1").isHidden());
+        assertFalse(new Task(0,"Test").isHidden());
+        assertTrue(new Task(0,"h:1").isHidden());
     }
 
     public void testCompletion() {

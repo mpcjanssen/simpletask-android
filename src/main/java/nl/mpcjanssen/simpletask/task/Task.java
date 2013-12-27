@@ -54,7 +54,7 @@ public class Task implements Serializable, Comparable<Task> {
     public final static int THRESHOLD_DATE = 1;
     private static final long serialVersionUID = 0L;
     private static final Pattern HIDDEN_PATTERN = Pattern
-            .compile("\\s[Hh]:1");
+            .compile("(^|\\s)[Hh]:1");
     private static final Pattern TAG_PATTERN = Pattern
             .compile("^\\S*[\\p{javaLetterOrDigit}_]$");
     private static final Pattern DUE_PATTERN = Pattern
