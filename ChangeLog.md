@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.1.0
+
+* Support hidden tasks with (h:1). This allows persistent list/tags. Tasks can be unhidden from the settings.
+
 ### 4.0.10
 
 * Don't crash on a '++tag' when show tags is unchecked. Fixes [9c5902].
