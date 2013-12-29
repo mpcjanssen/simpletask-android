@@ -123,4 +123,9 @@ public class TaskTest extends TestCase {
         assertEquals(null, t1.getRecurrencePattern());
         assertEquals("1d", t2.getRecurrencePattern());
     }
+
+    public void testInvalidThresholdDate() {
+        Task t1 = new Task(0, "Test t:2013-11-31");
+        assertFalse(t1.inFuture());
+    }
 }
