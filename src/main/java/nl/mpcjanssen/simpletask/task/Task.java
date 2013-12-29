@@ -210,7 +210,11 @@ public class Task implements Serializable, Comparable<Task> {
         if (prependDate==null) {
             return null;
         }
-        dt = formatter.parseDateTime(prependDate);
+        try {
+            dt = formatter.parseDateTime(prependDate);
+        } catch (IllegalFieldValueException e) {
+            return prependDate;
+        }
         return RelativeDate.getRelativeDate(dt);
     }
 

@@ -133,4 +133,14 @@ public class TaskTest extends TestCase {
         Task t1 = new Task(0, "Test due:2013-11-31");
         assertEquals(null,t1.getDueDate());
     }
+
+    public void testInvalidCreateDate() {
+        Task t1 = new Task(0, "2013-11-31 Test");
+        assertEquals("2013-11-31",t1.getRelativeAge());
+    }
+
+    public void testInvalidCompleteDate() {
+        Task t1 = new Task(0, "x 2013-11-31 Test");
+        assertEquals("2013-11-31",t1.getCompletionDate());
+    }
 }
