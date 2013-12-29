@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.1.1
+
+* Fix crashes with invalid dates such as 2013-11-31.
+
 ### 4.1.0
 
 * Support hidden tasks (with h:1). This allows persistent list/tags. Tasks can be unhidden from the settings.
