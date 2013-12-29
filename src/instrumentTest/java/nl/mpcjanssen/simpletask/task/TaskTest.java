@@ -128,4 +128,9 @@ public class TaskTest extends TestCase {
         Task t1 = new Task(0, "Test t:2013-11-31");
         assertFalse(t1.inFuture());
     }
+
+    public void testInvalidDueDate() {
+        Task t1 = new Task(0, "Test due:2013-11-31");
+        assertEquals(null,t1.getDueDate());
+    }
 }

@@ -26,8 +26,10 @@ import android.content.res.Resources;
 import android.text.SpannableString;
 
 import org.joda.time.DateTime;
+import org.joda.time.IllegalFieldValueException;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
@@ -109,8 +111,12 @@ public class Task implements Serializable, Comparable<Task> {
     private DateTime getDate(Pattern datePattern) {
         DateTime date = null;
         Matcher matcher = datePattern.matcher(this.text);
-        if (matcher.find()) {
-           date = formatter.parseDateTime(matcher.group(1));
+        try {
+            if (matcher.find()) {
+                date = formatter.parseDateTime(matcher.group(1));
+            }
+        } catch (IllegalFieldValueException e) {
+            return null;
         }
         return date;
     }
