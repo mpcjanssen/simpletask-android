@@ -121,6 +121,11 @@
             android:summary="@string/show_hidden_summary"
             android:title="@string/show_hidden_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/show_empty_lists"
+            android:summary="@string/show_empty_lists_summary"
+            android:title="@string/show_empty_lists_title" />
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/share_task_show_edit"
             android:summary="@string/share_task_show_edit_summary"
