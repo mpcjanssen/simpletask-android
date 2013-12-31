@@ -1199,21 +1199,60 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 	public class TaskAdapter extends BaseAdapter implements ListAdapter,
 	       Filterable {
+               public class VisibleLine {
+                   private Task task = null;
+                   private String title = null;
+                   private boolean header = false;
 
-		       ArrayList<Task> visibleTasks = new ArrayList<Task>();
-		       Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
-		       SparseArray<String> headerTitles = new SparseArray<String>();
-		       SparseIntArray positionToIndex = new SparseIntArray();
-		       SparseIntArray indexToPosition = new SparseIntArray();
-		       int size = 0;
-		       private LayoutInflater m_inflater;
+                   public VisibleLine(String title) {
+                       this.title = title;
+                       this.header = true;
+                   }
 
-		       public TaskAdapter(Context context, int textViewResourceId,
+                   public VisibleLine(Task task) {
+                       this.task = task;
+                       this.header = false;
+                   }
+
+                   @Override
+                   public boolean equals(Object obj) {
+                       if (this == obj)
+                           return true;
+                       if (obj == null)
+                           return false;
+                       if (getClass() != obj.getClass())
+                           return false;
+
+                       VisibleLine other = (VisibleLine) obj;
+                       if (other.header != this.header)
+                           return false;
+                       if (other.header) {
+                           return title.equals(other.title);
+                       } else {
+                           return this.task.equals(other.task);
+                       }
+                   }
+
+                   @Override
+                   public int hashCode() {
+                       final int prime = 31;
+                       int result = 1;
+                       result = prime * result + ((title == null) ? 0 : title.hashCode());
+                       result = prime * result + ((task == null) ? 0 : task.hashCode());
+                       return result;
+                   }
+               }
+               ArrayList<VisibleLine> visibleLines = new ArrayList<VisibleLine>();
+               Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
+               private LayoutInflater m_inflater;
+
+               public TaskAdapter(Context context, int textViewResourceId,
 				       LayoutInflater inflater, ListView view) {
 			       this.m_inflater = inflater;
 		       }
 
 		       void setFilteredTasks(boolean reload) {
+                   ArrayList<Task> visibleTasks = new ArrayList<Task>();
 			       Log.v(TAG, "setFilteredTasks called, reload: " + reload);
 			       if (reload) {
 				       getTaskBag().reload();
@@ -1223,12 +1262,10 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			       }
 
 			       visibleTasks.clear();
+                   visibleLines.clear();
 			       visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
 			       ArrayList<String> sorts = mFilter.getSort();
 			       Collections.sort(visibleTasks, MultiComparator.create(sorts));
-			       positionToIndex.clear();
-			       indexToPosition.clear();
-			       headerTitles.clear();
 			       String header = "";
 			       String newHeader = "";
 			       int index = 0;
@@ -1244,30 +1281,25 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 						       }
 					       }
 			       String firstSort = sorts.get(firstGroupSortIndex);
-                   ArrayList<Task> visibleWithoutEnduring = new ArrayList<Task>();
 			       for (Task t : visibleTasks) {
 				       newHeader = t.getHeader(firstSort, getString(R.string.no_header));
 				       if (!header.equals(newHeader)) {
-					       header = newHeader;
-					       // Log.v(TAG, "Start of header: " + header +
-					       // " at position: " + position);
-					       headerTitles.put(position, header);
-					       positionToIndex.put(position, -1);
-					       position++;
+					       VisibleLine headerLine = new VisibleLine(newHeader);
+                           int last = visibleLines.size()-1;
+                           if (last!=-1 && visibleLines.get(last).header && !m_app.showEmptyLists()) {
+                               visibleLines.set(last, headerLine);
+                           } else {
+                               visibleLines.add(headerLine);
+                           }
+                           header = newHeader;
 				       }
                        
                        if (!t.isHidden() || m_app.showHidden()) {
                            // enduring tasks should not be displayed
-                           visibleWithoutEnduring.add(t);
-                           positionToIndex.put(position, index);
-                           indexToPosition.put(index, position);
-                           index++;
-                           position++;
+                           VisibleLine taskLine = new VisibleLine(t);
+                           visibleLines.add(taskLine);
                        }
 			       }
-			       size = position;
-                   visibleTasks.clear();
-                   visibleTasks.addAll(visibleWithoutEnduring);
 			       for (DataSetObserver ob : obs) {
 				       ob.onChanged();
 			       }
@@ -1284,11 +1316,9 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			** Get the adapter position for task
 			*/
 		       public int getPosition (Task task) {
-			       int index = visibleTasks.indexOf(task);
-			       if  (index==-1 || indexToPosition.indexOfKey(index)==-1) {
-				       return index;
-			       }
-			       return indexToPosition.valueAt(indexToPosition.indexOfKey(index));
+                   VisibleLine line = new VisibleLine(task);
+			       int index = visibleLines.indexOf(line);
+				   return index;
 		       }
 
 		       @Override
@@ -1298,15 +1328,16 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public int getCount() {
-			       return size;
+			       return visibleLines.size();
 		       }
 
 		       @Override
 		       public Task getItem(int position) {
-			       if (positionToIndex.get(position,-1) == -1) {
+                   VisibleLine line = visibleLines.get(position);
+			       if (line.header) {
 				       return null;
 			       }
-			       return visibleTasks.get(positionToIndex.get(position));
+			       return line.task;
 		       }
 
 		       @Override
@@ -1322,11 +1353,12 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public View getView(int position, View convertView, ViewGroup parent) {
-			       if (headerTitles.get(position,null) != null) {
+                   VisibleLine line = visibleLines.get(position);
+			       if (line.header) {
 				       convertView = m_inflater.inflate(R.layout.list_header, null);
 				       TextView t = (TextView) convertView
 					       .findViewById(R.id.list_header_title);
-				       t.setText(headerTitles.get(position));
+				       t.setText(line.title);
 
 			       } else {
 				       final ViewHolder holder;
@@ -1348,7 +1380,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					       holder = (ViewHolder) convertView.getTag();
 				       }
 				       Task task;
-				       task = getItem(position);
+				       task = line.task;
 
 				       if (task != null) {
 					       SpannableString ss = new SpannableString(
@@ -1466,11 +1498,12 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public int getItemViewType(int position) {
-			       if (headerTitles.get(position,null) != null) {
-				       return 0;
-			       } else {
-				       return 1;
-			       }
+                   VisibleLine line = visibleLines.get(position);
+                   if (line.header) {
+                       return 0;
+                   } else {
+                       return 1;
+                   }
 		       }
 
 		       @Override
@@ -1480,7 +1513,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public boolean isEmpty() {
-			       return visibleTasks.size() == 0;
+			       return visibleLines.size() == 0;
 		       }
 
 		       @Override
@@ -1490,7 +1523,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
 		       @Override
 		       public boolean isEnabled(int position) {
-                   return headerTitles.get(position, null) == null;
+                   VisibleLine line = visibleLines.get(position);
+                   return !line.header;
 		       }
 
 		       @Override
