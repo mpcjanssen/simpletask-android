@@ -11,6 +11,11 @@ buildscript {
 apply plugin: 'android'
 
 android {
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
     buildToolsVersion "19.0.0"
     compileSdkVersion 19
 
@@ -27,25 +32,25 @@ android {
     productFlavors {
         free {
             packageName 'nl.mpcjanssen.todotxtholo'
-            buildConfig "public final static boolean CLOUDLESS = false;"
+            buildConfigField "boolean", "CLOUDLESS", "false"
         }
         donate {
             packageName 'nl.mpcjanssen.simpletask.donate'
-            buildConfig "public final static boolean CLOUDLESS = false;"
+            buildConfigField "boolean", "CLOUDLESS", "false"
         }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
         unit {
             packageName 'nl.mpcjanssen.simpletask.test'
-            buildConfig "public final static boolean CLOUDLESS = true;"
+            buildConfigField "boolean", "CLOUDLESS", "true"
         }
         cloudless {
             packageName 'nl.mpcjanssen.simpletask'
-            buildConfig "public final static boolean CLOUDLESS = true;"
+            buildConfigField "boolean", "CLOUDLESS", "true"
         }
         cloudlessdonate {
             packageName 'nl.mpcjanssen.simpletaskdonate'
-            buildConfig "public final static boolean CLOUDLESS = true;"
+            buildConfigField "boolean", "CLOUDLESS", "true"
         }
     }
     signingConfigs {
