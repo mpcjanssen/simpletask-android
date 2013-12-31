@@ -3,6 +3,8 @@
 ### 4.1.1
 
 * Fix crashes with invalid dates such as 2013-11-31.
+* Refactored header handling.
+* Setting to hide headers with only hidden tasks.
 
 ### 4.1.0
 
