@@ -30,5 +30,6 @@
     <string name="last_open_filter_tab">last_open_filter_tab</string>
     <string name="capitalize_tasks">capitalize_tasks</string>
     <string name="show_hidden">show_hidden</string>
+    <string name="show_empty_lists">show_empty_lists</string>
 
 </resources>
