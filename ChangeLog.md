@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.1.2
+
+* Archive selected tasks only.
+
 ### 4.1.1
 
 * Fix crashes with invalid dates such as 2013-11-31.
