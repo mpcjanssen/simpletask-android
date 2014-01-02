@@ -74,10 +74,10 @@ public class TaskBag {
         store(this.tasks);
     }
 
-    public void archive() {
+    public void archive(List<Task> tasksToArchive) {
         try {
             reload();
-            localRepository.archive(tasks);
+            localRepository.archive(tasks, tasksToArchive);
             lastReload = null;
             reload();
         } catch (Exception e) {

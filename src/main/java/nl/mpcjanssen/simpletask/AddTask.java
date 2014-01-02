@@ -160,7 +160,7 @@ public class AddTask extends Activity {
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         if (m_app.isAutoArchive()) {
-            taskBag.archive();
+            taskBag.archive(null);
         }
         sendBroadcast(new Intent(
                 getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));

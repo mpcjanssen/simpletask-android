@@ -68,6 +68,11 @@ You should have received a copy of the GNU General Public License along with Tod
         android:showAsAction="never"
         android:icon="@drawable/delete" />
     <item
+        android:title="@string/archive"
+        android:id="@+id/archive"
+        android:showAsAction="never"
+        />
+    <item
         android:id="@+id/url"
         android:showAsAction="never"
         android:visible="false" />
