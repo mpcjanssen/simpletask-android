@@ -169,7 +169,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					// archive
 					// refresh screen to remove completed tasks
 					// push to remote
-					archiveTasks();
+					archiveTasks(null);
 				} else if (intent.getAction().endsWith(
 							Constants.BROADCAST_ACTION_LOGOUT)) {
 					Log.v(TAG, "Logging out from Dropbox");
@@ -581,7 +581,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		}
         taskBag.store();
 		if (m_app.isAutoArchive()) {
-			taskBag.archive();
+			taskBag.archive(null);
 		}
 		m_app.updateWidgets();
 		m_app.setNeedToPush(true);
@@ -690,13 +690,13 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
         }, R.string.delete_task_title);
 	}
 
-	private void archiveTasks() {
+	private void archiveTasks( final List<Task> tasksToArchive) {
 		new AsyncTask<Void, Void, Boolean>() {
 
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				try {
-					getTaskBag().archive();
+					getTaskBag().archive(tasksToArchive);
 					return true;
 				} catch (Exception e) {
 					Log.e(TAG, e.getMessage(), e);
@@ -708,7 +708,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			protected void onPostExecute(Boolean result) {
 				if (result) {
 					Util.showToastLong(Simpletask.this,
-							"Archived completed tasks");
+							"Archived tasks");
 					sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
 					sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_UPDATE_UI));
 				} else {
@@ -744,7 +744,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 				m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
-						archiveTasks();
+						archiveTasks(null);
 					}
 				}, R.string.archive_task_title);
                 break;
@@ -1605,6 +1605,9 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 					break;
 				case R.id.delete:
 					deleteTasks(checkedTasks);
+					break;
+				case R.id.archive:
+					archiveTasks(checkedTasks);
 					break;
 				case R.id.defer_due:
                     deferTasks(checkedTasks, Task.DUE_DATE);

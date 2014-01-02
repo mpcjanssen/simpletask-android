@@ -25,6 +25,7 @@ package nl.mpcjanssen.simpletask.task;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 
 import nl.mpcjanssen.simpletask.TodoApplication;
@@ -91,29 +92,39 @@ public class LocalFileTaskRepository {
         m_app.startWatching();
 	}
 
-	public void archive(ArrayList<Task> tasks) {
+	public void archive(ArrayList<Task> tasks,  List<Task> tasksToArchive) {
         m_app.stopWatching();
 		boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
-		ArrayList<Task> completedTasks = new ArrayList<Task>(tasks.size());
-		ArrayList<Task> incompleteTasks = new ArrayList<Task>(tasks.size());
+		ArrayList<Task> archivedTasks = new ArrayList<Task>(tasks.size());
+		ArrayList<Task> remainingTasks = new ArrayList<Task>(tasks.size());
 
-		for (Task task : tasks) {
-			if (task.isCompleted()) {
-				completedTasks.add(task);
-			} else {
-				incompleteTasks.add(task);
-			}
-		}
+        for (Task task : tasks) {
+            if (tasksToArchive!=null) {
+                // Archive selected tasks
+                if (tasksToArchive.indexOf(task)!=-1) {
+                    archivedTasks.add(task);
+                } else {
+                    remainingTasks.add(task);
+                }
+            } else {
+                // Archive completed tasks
+                if (task.isCompleted()) {
+                    archivedTasks.add(task);
+                } else {
+                    remainingTasks.add(task);
+                }
+            }
+        }
 
 		// append completed tasks to done.txt
-		TaskIo.writeToFile(completedTasks, DONE_TXT_FILE, true,
+		TaskIo.writeToFile(archivedTasks, DONE_TXT_FILE, true,
 				windowsLineBreaks);
 
 		// write incomplete tasks back to todo.txt
 		// TODO: remove blank lines (if we ever add support for
 		// PRESERVE_BLANK_LINES)
-		TaskIo.writeToFile(incompleteTasks, TODO_TXT_FILE, false,
+		TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
 				windowsLineBreaks);
         m_app.startWatching();
 	}
