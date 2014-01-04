@@ -3,6 +3,8 @@
 ### 4.1.2
 
 * Archive selected tasks only.
+* Edit multiple tasks at once.
+* Re-added donation link for f-droid users.
 
 ### 4.1.1
 
