@@ -75,7 +75,7 @@ public class AddTask extends Activity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private Task m_backup;
+    private ArrayList<Task> m_backup = new ArrayList<Task>();
     private TodoApplication m_app;
     private TaskBag taskBag;
 
@@ -149,8 +149,11 @@ public class AddTask extends Activity {
         tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
         if (m_backup != null && tasks.size()>0) {
             // When updating take the first line as the updated tasks
-            taskBag.updateTask(m_backup, tasks.get(0));
-            tasks.remove(0);
+
+            for (int i = 0 ; i < tasks.size() && i < m_backup.size() ; i++) {
+                 taskBag.updateTask(m_backup.get(i), tasks.get(i));
+                 tasks.remove(i);
+            }
         }
         // Add any other tasks
         for (String taskText : tasks) {
@@ -260,10 +263,16 @@ public class AddTask extends Activity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        m_backup = (Task) intent.getSerializableExtra(
+
+
+        String sTasks = intent.getStringExtra(
                 Constants.EXTRA_TASK);
-        if (m_backup != null) {
-            textInputField.setText(m_backup.inFileFormat());
+        if (sTasks != null && !sTasks.equals("")) {
+            for (String txt : sTasks.split("\n",-1)) {
+                String[] parts = txt.split(":",2);
+                m_backup.add(new Task(Integer.valueOf(parts[0]),parts[1]));
+            }
+            textInputField.setText(sTasks);
             setTitle(R.string.updatetask);
         } else {
             if (textInputField.getText().length() == 0) {
@@ -397,7 +406,7 @@ public class AddTask extends Activity {
         });
 
         if (m_backup!=null) {
-            textInputField.setSelection(m_backup.inFileFormat().length());
+            textInputField.setSelection(sTasks.length());
         }
     }
 
