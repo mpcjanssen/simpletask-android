@@ -1,5 +1,5 @@
 " vimrc in project root
-" loaded by https://github.com/MarcWeber/vim-addon-local-vimrc
+" loaded by https://github.com/embear/vim-localvimrc
 
 set tags=tags;/
 
@@ -22,6 +22,11 @@ function! ExecuteInProjectRoot(cmdline)
      execute ":AsyncShell ".a:cmdline
 endfunction
 
+function! AckFromProjectSrcRoot()
+     execute ":cd ".s:script_path."/src"
+     execute ":Ack " . expand("<cword>")
+endfunction
+
 function! MakeInProjectRoot(cmdline)
      execute ":cd ".s:script_path
      execute ":AsyncMake ".a:cmdline
@@ -39,6 +44,9 @@ function! AndroidMonitor()
 endfunction
 
 command! -nargs=1 ExecuteInProjectRoot :call ExecuteInProjectRoot(<f-args>)
+command! AckInSrc :call AckFromProjectSrcRoot()
 command! InstallFreeRelease :call MakeInProjectRoot("installFreeRelease")
 command! UpdateCTags :call ExecuteInProjectRoot("ctags")
 command! AndroidMonitor :call AndroidMonitor()
+
+nnoremap <leader>a :AckInSrc<CR>
