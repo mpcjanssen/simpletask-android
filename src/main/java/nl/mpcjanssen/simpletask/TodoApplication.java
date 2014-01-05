@@ -356,7 +356,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public boolean isWordWrap() {
-        return m_prefs.getBoolean(getString(R.string.word_wrap_key),false);
+        return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
     public void setWordWrap(boolean bool) {
