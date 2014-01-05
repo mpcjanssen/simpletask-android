@@ -5,6 +5,7 @@
 * Archive selected tasks only.
 * Edit multiple tasks at once.
 * Re-added donation link for f-droid users.
+* Changed default wordwrapping in AddTask to on.
 
 ### 4.1.1
 
