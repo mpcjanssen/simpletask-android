@@ -1,11 +1,15 @@
 " vimrc in project root
 " loaded by https://github.com/embear/vim-localvimrc
 
+if exists ("s:loaded")
+    finish
+endif
+
+let s:loaded=1
+
 set tags=tags;/
 
 set makeprg=gradlew\ --no-color
-
-let s:script_path = expand('<sfile>:p:h') . "/" 
 
 
 let g:ctrlp_custom_ignore = {
@@ -18,22 +22,22 @@ let g:fuf_file_exclude='\v(^|[/\\])(\.hg|\.git|\.bzr|build)($|[/\\])'
 nnoremap <leader>f :CtrlP<CR>
 
 function! ExecuteInProjectRoot(cmdline)
-     execute ":cd ".s:script_path
+     execute ":cd ".g:project_root
      execute ":AsyncShell ".a:cmdline
 endfunction
 
 function! AckFromProjectSrcRoot()
-     execute ":cd ".s:script_path."/src"
+     execute ":cd ".g:project_root."/src"
      execute ":Ack " . expand("<cword>")
 endfunction
 
 function! MakeInProjectRoot(cmdline)
-     execute ":cd ".s:script_path
+     execute ":cd ".g:project_root
      execute ":AsyncMake ".a:cmdline
 endfunction
 
 function! AndroidMonitor()
-    let l:filename = s:script_path."local.properties"
+    let l:filename = g:project_root."local.properties"
     execute "vimgrep /\\v^sdk\\.dir=(.*)\s*$/j ".l:filename
     for i in getqflist()
         echom "found ". i.text
