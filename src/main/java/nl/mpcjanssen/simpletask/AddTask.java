@@ -148,11 +148,13 @@ public class AddTask extends Activity {
         ArrayList<String> tasks = new ArrayList<String>();
         tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
         if (m_backup != null && tasks.size()>0) {
-            // When updating take the first line as the updated tasks
-
-            for (int i = 0 ; i < tasks.size() && i < m_backup.size() ; i++) {
-                 taskBag.updateTask(m_backup.get(i), tasks.get(i));
-                 tasks.remove(i);
+            int numTasks = tasks.size();
+            int numBackup = m_backup.size();
+            Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
+            for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
+                 taskBag.updateTask(m_backup.get(0), tasks.get(0));
+                 tasks.remove(0);
+                 m_backup.remove(0);
             }
         }
         // Add any other tasks
@@ -270,7 +272,9 @@ public class AddTask extends Activity {
             ArrayList<String> prefill = new ArrayList<String>();
             for (String txt : sTasks.split("\n",-1)) {
                 String[] parts = txt.split(":",2);
-                m_backup.add(new Task(Integer.valueOf(parts[0]),parts[1]));
+                Task t = new Task(Integer.valueOf(parts[0]),"");
+                t.init(parts[1],null);
+                m_backup.add(t);
                 prefill.add(parts[1]);
             }
             String sPrefill = Util.join(prefill,"\n");
