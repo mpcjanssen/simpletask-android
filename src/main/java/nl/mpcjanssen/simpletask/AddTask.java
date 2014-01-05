@@ -264,15 +264,17 @@ public class AddTask extends Activity {
         setTitle(R.string.addtask);
 
 
-
         String sTasks = intent.getStringExtra(
                 Constants.EXTRA_TASK);
         if (sTasks != null && !sTasks.equals("")) {
+            ArrayList<String> prefill = new ArrayList<String>();
             for (String txt : sTasks.split("\n",-1)) {
                 String[] parts = txt.split(":",2);
                 m_backup.add(new Task(Integer.valueOf(parts[0]),parts[1]));
+                prefill.add(parts[1]);
             }
-            textInputField.setText(sTasks);
+            String sPrefill = Util.join(prefill,"\n");
+            textInputField.setText(sPrefill);
             setTitle(R.string.updatetask);
         } else {
             if (textInputField.getText().length() == 0) {
@@ -406,7 +408,7 @@ public class AddTask extends Activity {
         });
 
         if (m_backup!=null) {
-            textInputField.setSelection(sTasks.length());
+            textInputField.setSelection(textInputField.getText().length());
         }
     }
 
