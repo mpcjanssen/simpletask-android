@@ -314,4 +314,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="donate_title">Donate</string>
     <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be free.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">Reverse sort</string>
 </resources>

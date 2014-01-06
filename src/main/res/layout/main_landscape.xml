@@ -27,7 +27,8 @@ You should have received a copy of the GNU General Public License along with Tod
     android:id="@+id/tablet_drawer_layout"
     android:layout_width="fill_parent"
     android:orientation="horizontal"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:baselineAligned="false">
 
     <!-- The navigation drawer -->
 
@@ -146,6 +147,7 @@ You should have received a copy of the GNU General Public License along with Tod
             style="?android:attr/borderlessButtonStyle"
             android:src="@drawable/content_new"
             android:onClick="onAddFilterClick"
+            android:contentDescription="@string/add_filter_shortcut"
             android:id="@+id/button" />
 
 

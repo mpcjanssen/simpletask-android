@@ -13,6 +13,7 @@
             android:layout_height="@dimen/item_height"
             android:focusable="false"
             android:clickable="false"
+            android:contentDescription="@string/sort_reverse"
             android:layout_weight="0"/>
 
     <TextView
