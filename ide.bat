@@ -1,1 +1,1 @@
-gvim -S .lvimrc
+gvim -S lvimrc.vim
