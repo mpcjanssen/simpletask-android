@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.1.3
+
+* Removed Dropbox dependency of cloudless version. Only released through FDroid.
+
 ### 4.1.2
 
 * Archive selected tasks only.
