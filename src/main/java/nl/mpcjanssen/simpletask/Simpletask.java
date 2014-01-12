@@ -43,6 +43,7 @@ import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -77,6 +78,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 
+
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -104,6 +106,13 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
     private ListView m_rightDrawerList;
 	private DrawerLayout m_drawerLayout;
     private ActionBarDrawerToggle m_drawerToggle;
+    
+    private void showHelp() {
+        Intent i = new Intent(this, HelpScreen.class);
+        startActivity(i);
+        finish();
+    }
+
 
     @Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -739,6 +748,9 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 				break;
 			case R.id.sync:
 				syncClient(false);
+				break;
+			case R.id.help:
+				showHelp();
 				break;
 			case R.id.archive:
 				m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {

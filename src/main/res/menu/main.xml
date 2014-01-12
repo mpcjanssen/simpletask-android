@@ -67,4 +67,9 @@ You should have received a copy of the GNU General Public License along with Tod
         android:orderInCategory="1"
         android:icon="@drawable/navigation_refresh"
         android:id="@+id/sync" />
+    <item
+        android:title="@string/help"
+        android:showAsAction="never"
+        android:orderInCategory="1"
+        android:id="@+id/help" />
 </menu>
