@@ -437,4 +437,20 @@ public class Util {
         });
         return builder.create();
     }
+
+    private static byte[] readFully(InputStream inputStream)
+        throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = inputStream.read(buffer)) != -1) {
+            baos.write(buffer, 0, length);
+        }
+        return baos.toByteArray();
+    }
+
+    public static String readFully(InputStream inputStream, String encoding)
+        throws IOException {
+        return new String(readFully(inputStream), encoding);
+    }
 }

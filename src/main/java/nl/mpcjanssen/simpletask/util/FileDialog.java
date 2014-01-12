@@ -37,7 +37,7 @@ public class FileDialog {
      */
     public FileDialog(Activity activity, File path, boolean txtOnly) {
         this.activity = activity;
-	this.txtOnly=txtOnly;
+        this.txtOnly=txtOnly;
         if (!path.exists() || !path.isDirectory()) path = Environment.getExternalStorageDirectory();
         loadFileList(path);
     }

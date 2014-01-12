@@ -50,6 +50,12 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:name="nl.mpcjanssen.simpletask.LoginScreen"
                 android:label="@string/app_label">
         </activity>
+
+        <activity
+                android:name="nl.mpcjanssen.simpletask.HelpScreen"
+                android:label="@string/help">
+        </activity>
+        
         <activity
                 android:name="nl.mpcjanssen.simpletask.Preferences"
                 android:label="@string/set_preferences"/>
