@@ -766,10 +766,16 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		return true;
 	}
 
-	private void startAddTaskActivity(Task task) {
+	private void startAddTaskActivity(List<Task> tasks) {
 		Log.v(TAG, "Starting addTask activity");
+        ArrayList<String> payload = new ArrayList<String>();
+        if (tasks!=null) {
+            for (Task t : tasks) {
+                payload.add("" + t.getId() + ":" + t.inFileFormat()); 
+            }
+        }
 		Intent intent = new Intent(this, AddTask.class);
-		intent.putExtra(Constants.EXTRA_TASK, task);
+		intent.putExtra(Constants.EXTRA_TASK, Util.join(payload, "\n"));
 		mFilter.saveInIntent(intent);
 		startActivity(intent);
 	}
@@ -1570,13 +1576,6 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			int numSelected = checkedTasks.size();
 			String title = "" + numSelected;
 			mode.setTitle(title);
-			if (numSelected == 1) {
-				// show the edit menu item and hide the appropriate
-				// complete/uncomplete item
-				menu.findItem(R.id.update).setVisible(true);
-			} else {
-				menu.findItem(R.id.update).setVisible(false);
-			}
 			menu.removeGroup(Menu.CATEGORY_SECONDARY);
 			for (Task t : getCheckedTasks()) {
 				for (String s : t.getPhoneNumbers()) {
@@ -1601,7 +1600,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 			Intent intent;
 			switch (menuid) {
 				case R.id.update:
-					startAddTaskActivity(checkedTasks.get(0));
+					startAddTaskActivity(checkedTasks);
 					break;
 				case R.id.delete:
 					deleteTasks(checkedTasks);
