@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 4.1.4
+
+* Added setting to only display `.txt` files in todo file browser.
+* Added tutorial and help screens to application. Courtesy Tushar.
+
 ### 4.1.3
 
 * Removed Dropbox dependency of cloudless version. Only released through FDroid.
