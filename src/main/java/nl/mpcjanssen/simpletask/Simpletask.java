@@ -43,7 +43,6 @@ import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;

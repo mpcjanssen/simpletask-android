@@ -9,7 +9,7 @@ public class DropboxFileDialog {
     public interface FileSelectedListener {
         void fileSelected(File file);
     }
-    public DropboxFileDialog(Object activity, Object api, Object path) {
+    public DropboxFileDialog(Object activity, Object api, Object path, boolean txtOnly) {
     }
 
     public void createFileDialog() {
