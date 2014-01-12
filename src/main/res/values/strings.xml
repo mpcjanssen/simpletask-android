@@ -134,6 +134,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="back_saves_pref_title">Back button</string>
     <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
 
+    <string name="show_txt_only_pref_title">Show txt files only</string>
+    <string name="show_txt_only_summary">Only show .txt files in the file selection dialog.</string>
+
     <string name="drawer_fixed_landscape_title">Open landscape drawers</string>
     <string name="drawer_fixed_landscape_summary">Always open the drawers in landscape mode.</string>
 

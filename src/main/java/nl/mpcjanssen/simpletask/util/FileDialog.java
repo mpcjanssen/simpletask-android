@@ -28,14 +28,16 @@ public class FileDialog {
     private ListenerList<DirectorySelectedListener> dirListenerList = new ListenerList<FileDialog.DirectorySelectedListener>();
     private final Activity activity;
     private boolean selectDirectoryOption;
+    private boolean txtOnly;
     private String fileEndsWith;
 
     /**
      * @param activity
      * @param path
      */
-    public FileDialog(Activity activity, File path) {
+    public FileDialog(Activity activity, File path, boolean txtOnly) {
         this.activity = activity;
+	this.txtOnly=txtOnly;
         if (!path.exists() || !path.isDirectory()) path = Environment.getExternalStorageDirectory();
         loadFileList(path);
     }
@@ -130,8 +132,8 @@ public class FileDialog {
                     if (!sel.canRead()) return false;
                     if (selectDirectoryOption) return sel.isDirectory();
                     else {
-                        boolean endsWith = fileEndsWith == null || filename.toLowerCase().endsWith(fileEndsWith);
-                        return endsWith || sel.isDirectory();
+                        boolean txtFile = filename.toLowerCase().endsWith(".txt");
+                        return !txtOnly ||  sel.isDirectory() || txtFile;
                     }
                 }
             };
