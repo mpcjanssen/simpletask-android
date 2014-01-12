@@ -154,7 +154,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public void openCloudlessFile(Activity act) {
 
-        FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getAbsoluteFile().getParentFile());
+        FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getAbsoluteFile().getParentFile(),showTxtOnly());
         fileDialog.setSelectDirectoryOption(false);
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
             @Override
@@ -169,7 +169,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void openDropboxFile(Activity act) {
         DropboxRemoteClient client = (DropboxRemoteClient)remoteClientManager.getRemoteClient();
         DropboxFileDialog fileDialog = new DropboxFileDialog(act,
-                client.getApi(), new File(getTodoFileName()).getAbsoluteFile().getParentFile());
+							     client.getApi(), 
+							     new File(getTodoFileName()).getAbsoluteFile().getParentFile(), 
+							     showTxtOnly());
         fileDialog.addFileListener(new DropboxFileDialog.FileSelectedListener() {
             @Override
             public void fileSelected(File file) {
@@ -282,6 +284,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public boolean hasSyncOnResume() {
         return m_prefs.getBoolean(getString(R.string.resume_sync_pref_key), false);
+    }
+
+    public boolean showTxtOnly() {
+        return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
     }
 
     public boolean showHidden() {

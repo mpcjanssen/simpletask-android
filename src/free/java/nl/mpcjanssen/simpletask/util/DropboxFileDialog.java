@@ -21,6 +21,7 @@ import nl.mpcjanssen.simpletask.remote.DropboxFile;
 public class DropboxFileDialog {
     private static final String PARENT_DIR = "..";
     private final DropboxAPI api;
+    private boolean txtOnly = false;
     private String currentPathString;
     private String[] fileList;
     private AlertDialog dialogShown;
@@ -38,10 +39,11 @@ public class DropboxFileDialog {
      * @param activity
      * @param path
      */
-    public DropboxFileDialog(Activity activity, DropboxAPI api, File path) {
+    public DropboxFileDialog(Activity activity, DropboxAPI api, File path, boolean txtOnly) {
         this.activity = activity;
         this.api = api;
         this.currentPathString = path.getAbsolutePath();
+        this.txtOnly = txtOnly;
     }
 
     /**
@@ -91,7 +93,14 @@ public class DropboxFileDialog {
             if (!pathEntry.path.equals("/")) r.add(PARENT_DIR);
             for (DropboxAPI.Entry child : pathEntry.contents) {
                 if (child.isDeleted) continue;
-                r.add(child.fileName());
+		String filename = child.fileName();
+		String extension = "";
+		if (filename.length()>3) {
+		    extension = filename.substring(filename.length()-4);
+		}
+		if (!txtOnly || child.isDir || ".txt".equals(extension)) {
+		    r.add(child.fileName());
+		}
             }
         } else {
             fireFileSelectedEvent(new File(pathEntry.path));

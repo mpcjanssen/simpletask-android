@@ -133,7 +133,13 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/capitalize_tasks"
-            android:title="@string/capitalize_tasks_pref_title" />
+            android:title="@string/capitalize_tasks_pref_title"
+	 />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/show_txt_only"
+	    android:summary="@string/show_txt_only_summary"
+            android:title="@string/show_txt_only_pref_title" /> 
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/DROPBOX_settings_header"
