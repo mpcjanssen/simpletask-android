@@ -1,8 +1,15 @@
 # ChangeLog
 
+### 4.1.3
+
+* Removed Dropbox dependency of cloudless version. Only released through FDroid.
+
 ### 4.1.2
 
 * Archive selected tasks only.
+* Edit multiple tasks at once.
+* Re-added donation link for f-droid users.
+* Changed default wordwrapping in AddTask to on.
 
 ### 4.1.1
 

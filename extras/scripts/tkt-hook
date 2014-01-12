@@ -1,6 +1,7 @@
 #!/usr/bin/env tclsh
 package require ncgi
 package require http
+package require sqlite3
 ::ncgi::parse
 ::ncgi::header
 puts "<html>"
@@ -11,8 +12,15 @@ if {$uuid eq ""} {
 	exit 0
 }
 
+
+sqlite3 db /var/repos/simpletask.fossil -readonly 1
+
+set result [db eval {SELECT title from ticket where tkt_uuid=$uuid}]
+set title [lindex $result 0]
+db close
+
 if {$env(REMOTE_ADDR) eq "127.0.0.1"} {
-   set mail_cmd [open "|mailx -r \"Simpletask ticket <ticket@mpcjanssen.nl>\" -s \"Updated ticket [string range $uuid 0 7]\" mpc.janssen@gmail.com" w]
+   set mail_cmd [open "|mailx -r \"Simpletask ticket <ticket@mpcjanssen.nl>\" -s \"Updated ticket [string range $uuid 0 7]: $title\" mpc.janssen@gmail.com" w]
 
    set body "http://mpcjanssen.nl/fossil/simpletask/tktview/$uuid"
    puts $mail_cmd $body
@@ -20,6 +28,7 @@ if {$env(REMOTE_ADDR) eq "127.0.0.1"} {
 } else {
    puts $env(REMOTE_ADDR)
    puts [ncgi::nvlist]
+   puts $title
 }
 } error
 

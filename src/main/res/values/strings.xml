@@ -171,11 +171,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="about_settings_summary">Application information</string>
     <string name="visit_website_title">Help</string>
     <string name="visit_website_summary">Visit the Simpletask website</string>
-    <string name="visit_website_data">http://mpcjanssen.nl/cgi-bin/simpletask</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask</string>
 
     <string name="visit_tracker_title">Request a feature or log a bug</string>
     <string name="visit_tracker_summary">Request a new feature or enhancement or report a problem.</string>
-    <string name="visit_tracker_data">http://mpcjanssen.nl/cgi-bin/simpletask/tktnew</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manual Sync</string>
@@ -310,4 +310,9 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="save_filter">Save current filter</string>
     <string name="save_filter_message">Enter the name for the current filter to be displayed in the saved filters drawer</string>
+
+    <string name="donate_title">Donate</string>
+    <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be free.  </string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">Reverse sort</string>
 </resources>

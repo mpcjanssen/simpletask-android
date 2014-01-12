@@ -75,7 +75,7 @@ public class AddTask extends Activity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private Task m_backup;
+    private ArrayList<Task> m_backup = new ArrayList<Task>();
     private TodoApplication m_app;
     private TaskBag taskBag;
 
@@ -148,9 +148,14 @@ public class AddTask extends Activity {
         ArrayList<String> tasks = new ArrayList<String>();
         tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
         if (m_backup != null && tasks.size()>0) {
-            // When updating take the first line as the updated tasks
-            taskBag.updateTask(m_backup, tasks.get(0));
-            tasks.remove(0);
+            int numTasks = tasks.size();
+            int numBackup = m_backup.size();
+            Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
+            for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
+                 taskBag.updateTask(m_backup.get(0), tasks.get(0));
+                 tasks.remove(0);
+                 m_backup.remove(0);
+            }
         }
         // Add any other tasks
         for (String taskText : tasks) {
@@ -260,10 +265,20 @@ public class AddTask extends Activity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        m_backup = (Task) intent.getSerializableExtra(
+
+        String sTasks = intent.getStringExtra(
                 Constants.EXTRA_TASK);
-        if (m_backup != null) {
-            textInputField.setText(m_backup.inFileFormat());
+        if (sTasks != null && !sTasks.equals("")) {
+            ArrayList<String> prefill = new ArrayList<String>();
+            for (String txt : sTasks.split("\n",-1)) {
+                String[] parts = txt.split(":",2);
+                Task t = new Task(Integer.valueOf(parts[0]),"");
+                t.init(parts[1],null);
+                m_backup.add(t);
+                prefill.add(parts[1]);
+            }
+            String sPrefill = Util.join(prefill,"\n");
+            textInputField.setText(sPrefill);
             setTitle(R.string.updatetask);
         } else {
             if (textInputField.getText().length() == 0) {
@@ -397,7 +412,7 @@ public class AddTask extends Activity {
         });
 
         if (m_backup!=null) {
-            textInputField.setSelection(m_backup.inFileFormat().length());
+            textInputField.setSelection(textInputField.getText().length());
         }
     }
 
