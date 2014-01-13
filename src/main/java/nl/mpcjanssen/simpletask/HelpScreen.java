@@ -39,6 +39,7 @@ public class HelpScreen extends Activity {
         m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.help);
         WebView wvHelp = (WebView)findViewById(R.id.help_view);
 
