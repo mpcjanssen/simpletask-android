@@ -33,6 +33,24 @@ public class HelpScreen extends Activity {
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
 
+    private String htmlPreamble() {
+        return "<link rel=\"stylesheet\" type=\"text/css\" href=\"./markdown.css\" />\n";
+    }
+
+    private String markdownToHtml(String path) {
+        AssetManager am = getAssets();
+        String html;
+        try {
+        InputStream is = am.open(path);
+        html = new Markdown4jProcessor().process(Util.readFully(is, "UTF-8"));
+        is.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Couldn't load help: " + e);
+            html = e.toString();
+        }
+        return htmlPreamble()+html;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +61,6 @@ public class HelpScreen extends Activity {
         setContentView(R.layout.help);
         WebView wvHelp = (WebView)findViewById(R.id.help_view);
 
-        AssetManager assManager = getAssets();
-        String html;
-        try {
-        InputStream changelog_is = assManager.open("MYN.md");
-        html = new Markdown4jProcessor().process(Util.readFully(changelog_is, "UTF-8"));
-        changelog_is.close();
-        } catch (IOException e) {
-            Log.e(TAG, "Couldn't load help: " + e);
-            html = e.toString();
-        }
-        wvHelp.loadDataWithBaseURL("file:///android_asset/",html,"text/html","UTF-8","");
+        wvHelp.loadDataWithBaseURL("file:///android_asset/",markdownToHtml("MYN.md"),"text/html","UTF-8","");
     }
 }
