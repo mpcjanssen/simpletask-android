@@ -45,13 +45,13 @@ public class HelpScreen extends Activity {
         AssetManager assManager = getAssets();
         String html;
         try {
-        InputStream changelog_is = assManager.open("ChangeLog.md");
+        InputStream changelog_is = assManager.open("MYN.md");
         html = new Markdown4jProcessor().process(Util.readFully(changelog_is, "UTF-8"));
         changelog_is.close();
         } catch (IOException e) {
             Log.e(TAG, "Couldn't load help: " + e);
             html = e.toString();
         }
-        wvHelp.loadData(html,"text/html","UTF-8");
+        wvHelp.loadDataWithBaseURL("file:///android_asset/",html,"text/html","UTF-8","");
     }
 }

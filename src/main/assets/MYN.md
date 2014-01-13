@@ -33,4 +33,4 @@ defer to a specific date.
 After defering the task it will move to the bottom of the listview if it has
 been defered into the future and out of your face.
 
-![Sort for MYN](./MYN_sort.png)
+<img src="MYN_sort.png" alt="Sort for MYN" style="width: 50%;"/>
