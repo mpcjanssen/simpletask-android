@@ -1,5 +1,5 @@
 " vimrc in project root
-" loaded by https://github.com/embear/vim-localvimrc
+" loaded by autocommand in .vimrc
 
 if exists ("s:loaded")
     finish
