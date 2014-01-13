@@ -109,7 +109,6 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
     private void showHelp() {
         Intent i = new Intent(this, HelpScreen.class);
         startActivity(i);
-        finish();
     }
 
 
