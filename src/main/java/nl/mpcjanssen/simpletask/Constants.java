@@ -54,13 +54,13 @@ public class Constants {
     public final static String BROADCAST_UPDATE_UI = "UPDATE_UI";
     public final static String BROADCAST_SYNC_START = "SYNC_START";
     public final static String BROADCAST_SYNC_DONE = "SYNC_DONE";
+    public final static String BROADCAST_ADD_TASK_FROM_WIDGET = ".ADD_TASK_FROM_WIDGET";
 
 
     // Public intents
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
     public final static String INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK";
     public final static String EXTRA_BACKGROUND_TASK = "task";
-    public final static String INTENT_ADD_TASK_FROM_WIDGET = "nl.mpcjanssen.simpletask.ADD_TASK_FROM_WIDGET";
 
     // Android OS specific constants
     public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
