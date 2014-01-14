@@ -40,7 +40,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Log.v(TAG,"Received: " + intent.getAction());
-        if(Constants.INTENT_ADD_TASK_FROM_WIDGET.equals(intent.getAction())) {
+        if((context.getPackageName()+Constants.BROADCAST_ADD_TASK_FROM_WIDGET).equals(intent.getAction())) {
              final Intent addIntent = new Intent(context, AddTask.class);
              addIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
              addIntent.putExtras(intent.getExtras());
@@ -100,7 +100,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
-        intent = new Intent(Constants.INTENT_ADD_TASK_FROM_WIDGET);
+        Log.v(TAG, "Setting receiver:" +context.getPackageName()+Constants.BROADCAST_ADD_TASK_FROM_WIDGET);
+        intent = new Intent(context.getPackageName()+Constants.BROADCAST_ADD_TASK_FROM_WIDGET);
         putFilterExtras(intent, preferences, widgetId);
         pendingIntent = PendingIntent.getBroadcast(context, FROM_WIDGETS_START+widgetId , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
