@@ -133,6 +133,9 @@ You should have received a copy of the GNU General Public License along with Sim
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="nl.mpcjanssen.simpletask.ADD_TASK_FROM_WIDGET"/>
+            </intent-filter>
             <meta-data
                     android:name="android.appwidget.provider"
                     android:resource="@xml/appwidget_info"/>
