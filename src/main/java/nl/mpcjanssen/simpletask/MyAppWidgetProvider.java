@@ -36,6 +36,18 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         filter.saveInIntent(target);
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        Log.v(TAG,"Received: " + intent.getAction());
+        if(Constants.INTENT_ADD_TASK_FROM_WIDGET.equals(intent.getAction())) {
+             final Intent addIntent = new Intent(context, AddTask.class);
+             addIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+             addIntent.putExtras(intent.getExtras());
+             context.startActivity(addIntent) ;
+        }
+    }
+
 	public static RemoteViews updateView(int widgetId, Context context) {
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
         RemoteViews view ;
@@ -88,10 +100,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
-        intent = new Intent(context, AddTask.class);
+        intent = new Intent(Constants.INTENT_ADD_TASK_FROM_WIDGET);
         putFilterExtras(intent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(
-                context, FROM_WIDGETS_START+widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, FROM_WIDGETS_START+widgetId , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
         return view;
 	}
