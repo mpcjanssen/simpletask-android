@@ -4,6 +4,7 @@
 
 * Added setting to only display `.txt` files in todo file browser.
 * Added tutorial and help screens to application. Courtesy Tushar.
+* Add tasks from locksreen widget without unlocking.
 
 ### 4.1.3
 
