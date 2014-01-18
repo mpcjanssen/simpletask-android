@@ -111,7 +111,11 @@ public class TaskBag {
         try {
             Task task = new Task(tasks.size(), input,
                     (preferences.isPrependDateEnabled() ? new DateTime() : null));
-            tasks.add(task);
+	    if (preferences.addAtEnd()) {
+		tasks.add(task);
+	    } else {
+		tasks.add(0,task);
+	    }
             store();
             return task;
         } catch (Exception e) {
@@ -250,6 +254,10 @@ public class TaskBag {
         public boolean isOnline() {
             return !sharedPreferences.getBoolean("workofflinepref", false);
         }
+
+	public boolean addAtEnd() {
+	    return sharedPreferences.getBoolean("addtaskatendpref", true);
+	}
     }
 
 }
