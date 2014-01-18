@@ -1,10 +1,12 @@
 # ChangeLog
 
-### 4.1.4
+### 4.1.4 ###
 
 * Added setting to only display `.txt` files in todo file browser.
 * ChangeLog is viewable from inside the help menu.
 * Add tasks from locksreen widget without unlocking.
+* Setting to add new tasks at beginning of todo.txt.
+* Allow completing and uncompleting of tasks from CAB.
 
 ### 4.1.3
 
