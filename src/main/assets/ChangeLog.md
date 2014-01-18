@@ -3,7 +3,7 @@
 ### 4.1.4
 
 * Added setting to only display `.txt` files in todo file browser.
-* Added tutorial and help screens to application. Courtesy Tushar.
+* ChangeLog is viewable from inside the help menu.
 * Add tasks from locksreen widget without unlocking.
 
 ### 4.1.3

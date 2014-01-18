@@ -61,6 +61,6 @@ public class HelpScreen extends Activity {
         setContentView(R.layout.help);
         WebView wvHelp = (WebView)findViewById(R.id.help_view);
 
-        wvHelp.loadDataWithBaseURL("file:///android_asset/",markdownToHtml("MYN.md"),"text/html","UTF-8","");
+        wvHelp.loadDataWithBaseURL("file:///android_asset/",markdownToHtml("ChangeLog.md"),"text/html","UTF-8","");
     }
 }
