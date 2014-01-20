@@ -7,6 +7,7 @@
 * Add tasks from locksreen widget without unlocking.
 * Setting to add new tasks at beginning of todo.txt.
 * Allow completing and uncompleting of tasks from CAB.
+* Speed up task archiving and possible fix for [#58](http://mpcjanssen.nl/redmine/issues/58)
 
 ### 4.1.3
 
