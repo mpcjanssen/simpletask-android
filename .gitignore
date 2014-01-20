@@ -4,3 +4,6 @@ local.properties
 gradle.properties
 .gradle/
 tags
+.repo
+.fossil*
+_FOSSIL_
