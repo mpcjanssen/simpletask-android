@@ -76,10 +76,7 @@ public class TaskBag {
 
     public void archive(List<Task> tasksToArchive) {
         try {
-            reload();
-            localRepository.archive(tasks, tasksToArchive);
-            lastReload = null;
-            reload();
+            tasks=localRepository.archive(tasks, tasksToArchive);
         } catch (Exception e) {
             throw new TaskPersistException(
                     "An error occurred while archiving", e);

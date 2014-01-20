@@ -84,20 +84,20 @@ public class LocalFileTaskRepository {
 			}
 		}
 	}
-
-	public void store(ArrayList<Task> tasks) {
+    
+    public void store(ArrayList<Task> tasks) {
+	m_app.stopWatching();
+	TaskIo.writeToFile(tasks, TODO_TXT_FILE,
+			   preferences.isUseWindowsLineBreaksEnabled());
+		m_app.startWatching();
+    }
+    
+    public ArrayList<Task> archive(ArrayList<Task> tasks,  List<Task> tasksToArchive) {
         m_app.stopWatching();
-		TaskIo.writeToFile(tasks, TODO_TXT_FILE,
-				preferences.isUseWindowsLineBreaksEnabled());
-        m_app.startWatching();
-	}
+	boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
-	public void archive(ArrayList<Task> tasks,  List<Task> tasksToArchive) {
-        m_app.stopWatching();
-		boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
-
-		ArrayList<Task> archivedTasks = new ArrayList<Task>(tasks.size());
-		ArrayList<Task> remainingTasks = new ArrayList<Task>(tasks.size());
+	ArrayList<Task> archivedTasks = new ArrayList<Task>(tasks.size());
+	ArrayList<Task> remainingTasks = new ArrayList<Task>(tasks.size());
 
         for (Task task : tasks) {
             if (tasksToArchive!=null) {
@@ -117,21 +117,22 @@ public class LocalFileTaskRepository {
             }
         }
 
-		// append completed tasks to done.txt
-		TaskIo.writeToFile(archivedTasks, DONE_TXT_FILE, true,
-				windowsLineBreaks);
+	// append completed tasks to done.txt
+	TaskIo.writeToFile(archivedTasks, DONE_TXT_FILE, true,
+			   windowsLineBreaks);
 
-		// write incomplete tasks back to todo.txt
-		// TODO: remove blank lines (if we ever add support for
-		// PRESERVE_BLANK_LINES)
-		TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
-				windowsLineBreaks);
+	// write incomplete tasks back to todo.txt
+	// TODO: remove blank lines (if we ever add support for
+	// PRESERVE_BLANK_LINES)
+	TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
+			   windowsLineBreaks);
         m_app.startWatching();
-	}
-
-	public void loadDoneTasks(File file) {
-		Util.renameFile(file, DONE_TXT_FILE, true);
-	}
+	return remainingTasks;
+    }
+    
+    public void loadDoneTasks(File file) {
+	Util.renameFile(file, DONE_TXT_FILE, true);
+    }
 
     public void removeDoneFile() {
         DONE_TXT_FILE.delete();
