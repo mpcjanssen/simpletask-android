@@ -1,5 +1,10 @@
 # ChangeLog
 
+### 4.1.5 ###
+
+* Fix crash when removing priority and cursor in last position.
+	
+	
 ### 4.1.4 ###
 
 * Added setting to only display `.txt` files in todo file browser.
