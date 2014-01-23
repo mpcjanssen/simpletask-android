@@ -5,6 +5,6 @@ gradle.properties
 .gradle/
 tags
 .repo
-.fossil*
+.fslckout
 _FOSSIL_
 \#*
