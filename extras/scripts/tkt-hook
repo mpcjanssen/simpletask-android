@@ -1,36 +1,26 @@
 #!/usr/bin/env tclsh
 package require ncgi
 package require http
-package require sqlite3
 ::ncgi::parse
 ::ncgi::header
-puts "<html>"
-catch {
-set uuid [::ncgi::value uuid ""]
 
-if {$uuid eq ""} {
-	exit 0
+proc send_simple_message {recipient email_server subject body} {
+    package require smtp
+    package require mime
+
+    set token [mime::initialize -canonical text/plain -string $body]
+    mime::setheader $token Subject $subject
+    smtp::sendmessage $token -originator "Simpletask ticket <ticket@mpcjanssen.nl>" -recipients $recipient -servers $email_server
+    mime::finalize $token
 }
 
-
-sqlite3 db /var/repos/simpletask.fossil -readonly 1
-
-set result [db eval {SELECT title from ticket where tkt_uuid=$uuid}]
-set title [lindex $result 0]
-db close
+puts "<html>"
+set uuid [::ncgi::value uuid ""]
+set title [::ncgi::value title ""]
+set status [::ncgi::value status ""]
+set project [::ncgi::value project ""]
 
 if {$env(REMOTE_ADDR) eq "127.0.0.1"} {
-   set mail_cmd [open "|mailx -r \"Simpletask ticket <ticket@mpcjanssen.nl>\" -s \"Updated ticket [string range $uuid 0 7]: $title\" mpc.janssen@gmail.com" w]
-
-   set body "http://mpcjanssen.nl/fossil/simpletask/tktview/$uuid"
-   puts $mail_cmd $body
-   close $mail_cmd
-} else {
-   puts $env(REMOTE_ADDR)
-   puts [ncgi::nvlist]
-   puts $title
+   send_simple_message mpc.janssen@gmail.com 127.0.0.1 "Ticket \[[string range $uuid 0 5]\] ($status): $title " "http://mpcjanssen.nl/fossil/$project/tktview/$uuid"
 }
-} error
-
-puts $error
 puts "</html>"
