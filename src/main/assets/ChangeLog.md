@@ -1,9 +1,12 @@
 # ChangeLog
 
+### 4.1.6 ###
+
+* Set correct create date for recurring tasks. Fixes [b5608a1a97].
+
 ### 4.1.5 ###
 
 * Fix crash when removing priority and cursor in last position.
-	
 	
 ### 4.1.4 ###
 

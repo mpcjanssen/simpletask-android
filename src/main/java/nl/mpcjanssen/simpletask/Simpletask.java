@@ -570,7 +570,7 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 	for (Task t : tasks) {
 	    if (t != null && !t.isCompleted()) {
                 if (t.getRecurrencePattern()!=null) {
-                    Task newTask = taskBag.addAsTask(t.inFileFormat());
+                    Task newTask = taskBag.addAsTask(t.withoutCreateAndCompletionDate());
                     boolean fromOriginalDate = m_app.hasRecurOriginalDates();
                     if (newTask.getDueDate()==null && newTask.getThresholdDate()==null) {
                         newTask.deferDueDate(t.getRecurrencePattern(),fromOriginalDate);
