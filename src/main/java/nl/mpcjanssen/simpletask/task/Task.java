@@ -519,6 +519,22 @@ public class Task implements Serializable, Comparable<Task> {
         return "";
     }
 
+    public String withoutCreateAndCompletionDate() {
+        // remove completion and creation dates
+        String stext = getTextWithoutCompletionAndPriority();
+
+        // remove possible create date
+        Matcher m = SINGLE_DATE_PREFIX.matcher(stext);
+        if (m.matches()) {
+            stext = m.group(2);
+        }
+        // Re add priority
+        if (getPriority()!=Priority.NONE) {
+            stext = getPriority().inFileFormat() + " " + stext.trim();
+        }
+        return stext;
+    }
+
     public String datelessScreenFormat() {
         // remove completion and creation dates
         String stext = getTextWithoutCompletionAndPriority();
