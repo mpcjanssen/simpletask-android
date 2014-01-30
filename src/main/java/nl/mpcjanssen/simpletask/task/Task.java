@@ -60,15 +60,15 @@ public class Task implements Serializable, Comparable<Task> {
     private static final Pattern TAG_PATTERN = Pattern
             .compile("^\\S*[\\p{javaLetterOrDigit}_]$");
     private static final Pattern DUE_PATTERN = Pattern
-            .compile("\\s[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})");
+            .compile("(^||\\s)[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern THRESHOLD_PATTERN = Pattern
-            .compile("\\s[Tt]:(\\d{4}-\\d{2}-\\d{2})");
+            .compile("(^||\\s)[Tt]:(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern RECURRENCE_PATTERN = Pattern
-            .compile("\\s[Rr][Ee][Cc]:(\\d{1,}[dDwWmMyY])");
+            .compile("(^||\\s)[Rr][Ee][Cc]:(\\d{1,}[dDwWmMyY])");
     private final static Pattern PRIORITY_PATTERN = Pattern
             .compile("^\\(([A-Z])\\) (.*)");
     private final static Pattern SINGLE_DATE_PATTERN = Pattern
-            .compile("(\\s|^)(\\d{4}-\\d{2}-\\d{2})");
+            .compile("(^||\\s)(\\d{4}-\\d{2}-\\d{2})");
     private final static Pattern SINGLE_DATE_PREFIX = Pattern
             .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
     private final static Pattern COMPLETED_PATTERN = Pattern
@@ -113,7 +113,7 @@ public class Task implements Serializable, Comparable<Task> {
         Matcher matcher = datePattern.matcher(this.text);
         try {
             if (matcher.find()) {
-                date = formatter.parseDateTime(matcher.group(1));
+                date = formatter.parseDateTime(matcher.group(2));
             }
         } catch (IllegalFieldValueException e) {
             return null;
