@@ -175,7 +175,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="about_settings_summary">Application information</string>
     <string name="visit_website_title">Help</string>
     <string name="visit_website_summary">Visit the Simpletask website</string>
-    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
 
     <string name="visit_tracker_title">Request a feature or log a bug</string>
     <string name="visit_tracker_summary">Request a new feature or enhancement or report a problem.</string>
