@@ -49,18 +49,18 @@ Fdroid_ only offers the Cloudless version. The donate versions of the app are ex
 - Use this if you want to sync to other cloud options than Dropbox or if you want to use it in offline mode.
 
 
-###Starting Simpletask
 
 #Todo.txt Extensions
 
 Even though Simpletask tries to follow the todo.txt spec as closely as possible, it does use the extension mechanism to offer several extensions,
 
-##Due date
+## Due date
 
 Date as `due:YYYY-MM-DD`
 
-* Start/threshold date as `t:YYYY-MM-DD`
-* Recurrence with `rec:[0-9]+[dwmy]` as described [here]( https://github.com/bram85/todo.txt-tools/wiki/Recurrence) but with a twist.
+## Recurrence
+
+Recurrence with `rec:[0-9]+[dwmy]` as described [here]( https://github.com/bram85/todo.txt-tools/wiki/Recurrence) but with a twist.
    - By default Simpletask will use the dates in that task to create the recurring task not the date of completion as descibed in the link. This behaviour can be configured from the settings.
 
 ## Threshold date
