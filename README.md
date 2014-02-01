@@ -65,6 +65,8 @@ Date as `due:YYYY-MM-DD`
 
 ## Threshold date
 
+Date as `t:YYYY-MM-DD`
+
 The threshold functionality consists of two parts:
 
 1. The actual threshold date
