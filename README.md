@@ -63,6 +63,23 @@ Date as `due:YYYY-MM-DD`
 * Recurrence with `rec:[0-9]+[dwmy]` as described [here]( https://github.com/bram85/todo.txt-tools/wiki/Recurrence) but with a twist.
    - By default Simpletask will use the dates in that task to create the recurring task not the date of completion as descibed in the link. This behaviour can be configured from the settings.
 
+## Threshold date
+
+The threshold functionality consists of two parts:
+
+1. The actual threshold date
+2. The show tasks with threshold date in the future checkbox in the show filter.
+
+If you uncheck this checkbox, any task with a threshold date in the future will not be shown. This is very useful if you have tasks which you want to keep, but you also want them out of your face for a while or they will only become active at a certain time.
+In that case you will set the threshold date at the specific date in the future and only then will they become visible on your tasklist.
+
+What I do when I see a task which I don't want to keep seeing for a couple of weeks, I will set the threshold date 2 weeks in the future and it's out of my face for that time.
+
+The threshold syntax is based on the todo.txt extension with the same function: https://github.com/ginatrapani/todo.txt-cli/wiki/Todo.sh-Add-on-Directory#wiki-future-tasks
+
+The main reason this is added to Simpletask as well is because it is needed to implement the Manage Your Now method https://www.michaellinenberger.com/1MTDvsMYN.html which uses the "out of your face" approach extensively.
+
+
 #ChangeLog
 
 See [ChangeLog](./ChangeLog.md)
