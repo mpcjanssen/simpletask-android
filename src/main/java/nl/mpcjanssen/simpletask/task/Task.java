@@ -254,7 +254,7 @@ public class Task implements Serializable, Comparable<Task> {
     public String getRecurrencePattern() {
         Matcher matcher = RECURRENCE_PATTERN.matcher(this.text);
         if (matcher.find()) {
-            return matcher.group(1);
+            return matcher.group(2);
         } else {
             return null;
         }
