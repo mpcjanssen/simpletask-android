@@ -81,6 +81,15 @@ The threshold syntax is based on the todo.txt extension with the same function: 
 
 The main reason this is added to Simpletask as well is because it is needed to implement the Manage Your Now method https://www.michaellinenberger.com/1MTDvsMYN.html which uses the "out of your face" approach extensively.
 
+## Hidden tasks
+
+Tasks can be hidden by adding the key value pair: `h:1`. This is useful for making sure there is always a single task with a specific list or tag applied.
+
+For example if all `@@errands` tasks have been completed and deleted or archived, the `@errands` list will not be show in the menus or filters anymore. Adding the task:
+
+`@@errands h:1`
+
+will ensure that the list is always there.
 
 #ChangeLog
 
