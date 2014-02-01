@@ -3,6 +3,9 @@
 ### 4.1.6 ###
 
 * Set correct create date for recurring tasks. Fixes [b5608a1a97].
+* Fixed website URL (Thanks Kyle)
+* Fixed cursor position when adding a task with prefilled list or tag (#47)
+* Recognize dates at beginning of task (fixes #46)
 
 ### 4.1.5 ###
 

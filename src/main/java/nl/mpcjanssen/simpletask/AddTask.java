@@ -414,7 +414,7 @@ public class AddTask extends Activity {
             }
         });
 
-        if (m_backup!=null) {
+        if (m_backup.size()>0) {
             textInputField.setSelection(textInputField.getText().length());
         }
     }
