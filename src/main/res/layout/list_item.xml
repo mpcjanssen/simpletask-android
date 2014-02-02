@@ -42,6 +42,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
+        android:paddingLeft="4dip"
         android:layout_height="wrap_content">
 
         <TextView

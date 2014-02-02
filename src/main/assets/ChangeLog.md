@@ -1,5 +1,9 @@
 # ChangeLog
 
+### 4.1.7 ###
+
+* Added setting to hide the checkboxes for completing tasks.
+
 ### 4.1.6 ###
 
 * Set correct create date for recurring tasks. Fixes [b5608a1a97].
