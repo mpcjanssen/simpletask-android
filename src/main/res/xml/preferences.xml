@@ -86,8 +86,13 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/ui_show_edittext_hints"
-            android:summary="@string/show_edittext_hints_summary"
+            android:summary="@string/show_edittext_hints_summary"   
             android:title="@string/show_edittext_hints_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/ui_complete_checkbox"
+            android:summary="@string/show_complete_checkbox_summary"
+            android:title="@string/show_complete_checkbox_title" />        
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/ui_show_confirmation_dialogs"

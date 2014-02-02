@@ -1400,7 +1400,11 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 		}
 		Task task;
 		task = line.task;
-
+        if (m_app.showCompleteCheckbox()) {
+            holder.cbCompleted.setVisibility(View.VISIBLE);
+        } else {
+            holder.cbCompleted.setVisibility(View.GONE);
+        }
 		if (task != null) {
 		    SpannableString ss = new SpannableString(
 							     task.inScreenFormat(mFilter));
@@ -1580,6 +1584,10 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.task_context, menu);
 	    actionMode = mode;
+        if (!m_app.showCompleteCheckbox()) {
+            menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
 	    return true;
 	}
 

@@ -167,6 +167,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_edittext_hints_title">Show hints</string>
     <string name="show_edittext_hints_summary">Show editing hints in textboxes. If you find this distracting, disable this setting.</string>
 
+    <string name="show_complete_checkbox_title">Show completion checkbox</string>
+    <string name="show_complete_checkbox_summary">Show the checkbox in front of the tasks to complete or uncomplete them.</string>
+
     <string name="show_confirmation_dialogs_title">Show confirmation dialogs</string>
     <string name="show_confirmation_dialogs_summary">Show a confirmation dialog before executing undoable actions or actions that can lead to data loss.
         Disable this setting if you find this annoying. You have been warned though.</string>
