@@ -492,7 +492,7 @@ public class Task implements Serializable, Comparable<Task> {
     public String getThresholdDateString(String empty) {
         Matcher matcher = THRESHOLD_PATTERN.matcher(this.text);
         if (matcher.find()) {
-            return matcher.group(1);
+            return matcher.group(2);
         } else {
             return empty;
         }
