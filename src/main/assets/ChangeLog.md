@@ -3,6 +3,7 @@
 ### 4.1.7 ###
 
 * Added setting to hide the checkboxes for completing tasks.
+* Fix grouping by threshold date.
 
 ### 4.1.6 ###
 
