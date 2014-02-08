@@ -19,8 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.webkit.WebView;
-
-import org.markdown4j.Markdown4jProcessor;
+import android.webkit.WebViewClient;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -33,24 +32,6 @@ public class HelpScreen extends Activity {
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
 
-    private String htmlPreamble() {
-        return "<link rel=\"stylesheet\" type=\"text/css\" href=\"./markdown.css\" />\n";
-    }
-
-    private String markdownToHtml(String path) {
-        AssetManager am = getAssets();
-        String html;
-        try {
-        InputStream is = am.open(path);
-        html = new Markdown4jProcessor().process(Util.readFully(is, "UTF-8"));
-        is.close();
-        } catch (IOException e) {
-            Log.e(TAG, "Couldn't load help: " + e);
-            html = e.toString();
-        }
-        return htmlPreamble()+html;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +41,13 @@ public class HelpScreen extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.help);
         WebView wvHelp = (WebView)findViewById(R.id.help_view);
-
-        wvHelp.loadDataWithBaseURL("file:///android_asset/",markdownToHtml("ChangeLog.md"),"text/html","UTF-8","");
+        wvHelp.setWebViewClient(new WebViewClient()  {  
+            @Override  
+            public boolean shouldOverrideUrlLoading(WebView view, String url)  {  
+                Log.v("HELP", "Loading url: " + url);
+                return false;  
+            }  
+        });  
+        wvHelp.loadUrl("file:///android_asset/Changelog.html");
     }
 }
