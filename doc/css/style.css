@@ -1,0 +1,163 @@
+/* general style */
+body    { font: 18px/25px 'Palatino', 'Palatino Linotype', 'Georgia', serif;
+          margin: 0; padding: 0; }
+a       { /*color: #432165;*/ color: #234764; }
+a:hover { color: #3b185f; background: #f9f8fa; }
+
+/* headlines */
+h1, h2, h3, h4, h5, h6      { /*font-family: 'Vollkorn', 'Georgia', serif;*/
+                              font-family: 'Noticia Text', serif;
+                              font-weight: normal; color: #222; /*color: #AF3D04;*/ }
+h1 a, h2 a, h3 a, h4 a,
+h5 a, h6 a                  { text-decoration: none; }
+h1 a:hover, h2 a:hover,
+h3 a:hover, h4 a:hover      { color: #432165; text-decoration: underline; }
+h1.title                    { width: 80%; }
+h1, h2                      { margin: 10px 10px 25px 10px; }
+h1                          { font-size: 48px; line-height: 52px; }
+h2                          { font-size: 36px; line-height: 40px; }
+
+/* layout elements */
+div.container               { width: 90%; margin: 48px auto; padding: 0; }
+div.header                  { float: left; }
+div.navigation              { float: left; }
+div.navigation a            { text-decoration: none; 
+                              font-size: 22px; 
+                              padding: 10px;
+                            }
+
+div.separator               {border-bottom: 1px dotted #ddd; padding-bottom: 42px;
+                              margin-bottom: 42px; font-size: 16px; color: #888;
+                              text-align: center;}
+div.header, div.navigation  { height: 25px; margin-bottom: 42px; }
+div.navigation ul           { margin: 0; padding: 0; list-style: none; }
+div.navigation ul li        { display: inline; margin: 0 2px; padding: 0;}
+div.body                    { clear: both; }
+div.footer                  { border-top: 1px dotted #ddd; padding-top: 9px;
+                              margin-top: 42px; font-size: 16px; color: #888;
+                              text-align: center; }
+div.footer a                { color: #888; }
+div.footer p                { margin: 0; }
+
+div.social                  { padding-top: 20px; padding-bottom: 10px;}
+div.social a                { color: #888; text-decoration: none;}
+div.social ul               { margin: 0; padding: 0; list-style: none; }
+div.social ul li            { display: inline; margin: 0 2px; padding: 0; }
+
+/* margins and stuff */
+p, div.line-block, ul, ol, pre,
+    table                       { margin: 25px 0 25px 0; }
+dt                              { margin: 25px 0 16px 0; padding: 0; }
+dd                              { margin: 16px 0 25px 40px; padding: 0; }
+ul ol, ol ul, ul ul, ol ol      { margin: 10px 0; padding: 0 0 0 40px; }
+li                              { padding: 0; }
+h1 + p.date                     { margin-top: -20px; font-style: italic; }
+
+/* code formatting.  no monospace because of webkit (bug?) */
+pre, code, tt   { font-family: 'Consolas', 'Deja Vu Sans Mono',
+                  'Bitstream Vera Sans Mono', 'Monaco', 'Courier New';
+                  font-size: 0.85em;
+                  overflow: auto;
+                }
+pre             { /*line-height: 1.3;*/ border: 1px solid #ddd; padding: 10px;
+                  /* background: #fafafa; */
+                  background-color: ghostWhite;
+                  -moz-border-radius-bottomleft: 10px;
+                  -webkit-border-bottom-left-radius: 10px;
+                  -moz-border-radius-bottomright: 10px;
+                  -webkit-border-bottom-right-radius: 10px;
+                  -moz-border-radius-topleft: 10px;
+                  -webkit-border-top-left-radius: 10px;
+                  -moz-border-radius-topright: 10px;
+                  -webkit-border-top-right-radius: 10px;
+                }
+code, tt        { background: #eee; }
+
+/* tables */
+table           { border: 1px solid #ddd; border-collapse: collapse;
+                  background: #fafafa; }
+td, th          { padding: 2px 12px; border: 1px solid #ddd; }
+
+/* footnotes */
+table.footnote          { margin: 15px 0; background: transparent; border: none; }
+table.footnote td       { border: none; padding: 9px 0 0 0; font-size: 15px; }
+table.footnote td.label { padding-right: 10px; }
+table.footnote td p     { margin: 0; }
+table.footnote td p + p { margin-top: 15px; }
+
+/* blog overview */
+div.entry-overview                  { margin: 25px 122px 25px 102px; }
+div.entry-overview h1,
+div.entry-overview div.summary,
+div.entry-overview div.summary p    { display: inline; line-height: 25px; }
+div.entry-overview h1               { margin: 0; font-size: 20px; }
+div.entry-overview div.summary,
+div.entry-overview div.date,
+div.entry-overview div.summary p    { margin: 0; padding: 0; }
+div.entry-overview div.detail       { margin-left: 140px; }
+div.entry-overview div.date         { float: left; width: 120px; color: #888;
+                                      text-align: right; font-style: italic; }
+/*div.entry-overview h1:after         { content: " —"; }*/
+
+/* other alignment things */
+img.align-center        { margin: 15px auto; display: block; }
+
+/* pagination */
+div.pagination          { margin: 36px 0 0 0; text-align: center; }
+div.pagination strong   { font-weight: normal; font-style: italic; }
+
+/* tags */
+p.tags          { text-align: right; font-style: italic; }
+ul.tagcloud     { font-size: 16px; margin: 36px 0; padding: 0;
+                  list-style: none; }
+ul.tagcloud li  { margin: 0; padding: 0 10px; display: inline; }
+li.tag-4           {font-size: 100.0%;}
+li.tag-3           {font-size: 130.0%;}
+li.tag-2           {font-size: 160.0%;}
+li.tag-1           {font-size: 200.0%;}
+
+/* latex math */
+span.math img   { margin-bottom: -7px; }
+
+div.blog-epilogue           { margin-top: 100px; font-size: 19px; text-align: center;}
+div.blog-epilogue a         {text-decoration: none;
+                             padding-left: 30px; padding-right: 30px;}
+
+/* about img */
+img.align-left { 
+    float: left; 
+    margin: 20px; 
+}
+
+/* github gists */
+.gist{
+  margin: 15px 0 !important;
+}
+
+.gist-file{
+  border: none !important;
+}
+
+.gist-meta{
+  height: 17px !important;
+  border: 1px solid #D2d2d2 !important;
+  padding-top: 1px !important;;
+  /*padding: 0px !important;*/
+  -moz-border-radius-bottomleft: 10px !important;
+  -webkit-border-bottom-left-radius: 10px !important;
+  -moz-border-radius-bottomright: 10px !important;
+  -webkit-border-bottom-right-radius: 10px !important;
+  font-size: 0.50em !important;
+
+}
+
+.gist-data{
+  padding: 5px !important;
+  border: 1px solid #D2d2d2 !important;
+  border-bottom: none !important;
+  -moz-border-radius-topleft: 10px !important;
+  -webkit-border-top-left-radius: 10px !important;
+  -moz-border-radius-topright: 10px !important;
+  -webkit-border-top-right-radius: 10px !important;
+  font-size: 0.85em !important;
+}

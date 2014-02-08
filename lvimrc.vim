@@ -7,6 +7,8 @@ endif
 
 let s:loaded=1
 
+let g:project_root = expand('<sfile>:p:h')
+
 set tags=tags;/
 
 set makeprg=gradlew\ --no-color
@@ -37,7 +39,7 @@ function! MakeInProjectRoot(cmdline)
 endfunction
 
 function! AndroidMonitor()
-    let l:filename = g:project_root."local.properties"
+    let l:filename = g:project_root."/local.properties"
     execute "vimgrep /\\v^sdk\\.dir=(.*)\s*$/j ".l:filename
     for i in getqflist()
         echom "found ". i.text

@@ -1,3 +1,3 @@
 # Moved
 
-Moved [here](./src/main/assets/ChangeLog.md)
+Moved [here](./doc/ChangeLog.rst)

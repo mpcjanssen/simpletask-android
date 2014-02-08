@@ -1,35 +1,39 @@
-# ChangeLog
-
-### 4.1.7 ###
+4.1.7
+=====
 
 * Added setting to hide the checkboxes for completing tasks.
 * Fix grouping by threshold date.
 
-### 4.1.6 ###
+4.1.6
+=====
 
 * Set correct create date for recurring tasks. Fixes [b5608a1a97].
 * Fixed website URL (Thanks Kyle)
-* Fixed cursor position when adding a task with prefilled list or tag (#47)
-* Recognize dates at beginning of task (fixes #46)
+* Fixed cursor position when adding a task with prefilled list or tag.
+* Recognize dates at beginning of task. Fixes `#46 <http://mpcjanssen.nl/tracker/issues/46>`_.
 
-### 4.1.5 ###
+4.1.5
+=====
 
 * Fix crash when removing priority and cursor in last position.
 	
-### 4.1.4 ###
+4.1.4
+=====
 
 * Added setting to only display `.txt` files in todo file browser.
 * ChangeLog is viewable from inside the help menu.
 * Add tasks from locksreen widget without unlocking.
 * Setting to add new tasks at beginning of todo.txt.
 * Allow completing and uncompleting of tasks from CAB.
-* Speed up task archiving and possible fix for [#58](http://mpcjanssen.nl/redmine/issues/58)
+* Speed up task archiving and possible fix for `#58 <http://mpcjanssen.nl/tracker/issues/58>`_.
 
-### 4.1.3
+4.1.3
+=====
 
 * Removed Dropbox dependency of cloudless version. Only released through FDroid.
 
-### 4.1.2
+4.1.2
+=====
 
 * Archive selected tasks only.
 * Edit multiple tasks at once.
