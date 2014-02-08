@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -31,6 +33,7 @@ public class HelpScreen extends Activity {
 
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
+    private WebView wvHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class HelpScreen extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.help);
-        WebView wvHelp = (WebView)findViewById(R.id.help_view);
+        wvHelp = (WebView)findViewById(R.id.help_view);
         wvHelp.setWebViewClient(new WebViewClient()  {  
             @Override  
             public boolean shouldOverrideUrlLoading(WebView view, String url)  {  
@@ -48,6 +51,28 @@ public class HelpScreen extends Activity {
                 return false;  
             }  
         });  
-        wvHelp.loadUrl("file:///android_asset/Changelog.html");
+        wvHelp.loadUrl("file:///android_asset/simpletask.html");
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.help, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case R.id.menu_simpletask:
+                wvHelp.loadUrl("file:///android_asset/simpletask.html");
+                return true;
+            case R.id.menu_changelog:
+                wvHelp.loadUrl("file:///android_asset/Changelog.html");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
