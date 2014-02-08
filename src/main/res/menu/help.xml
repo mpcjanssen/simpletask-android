@@ -1,0 +1,15 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/menu_simpletask"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="Overview"/>
+    <item
+            android:id="@+id/menu_changelog"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="Changelog"/>
+</menu>
