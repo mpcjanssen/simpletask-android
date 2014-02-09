@@ -1,12 +1,8 @@
-
 # Creating the contexts for MYN
 
 MYN defines 3 urgency zones, we will map them to lists in Simpletask so that they sort correctly.
-
 -   Critical Now -> `@CriticalNow`
-
 -   Opportunity Now -> `@OpportunityNow`
-
 -   Over The Horizon -> `@OverTheHorizon`
 
 Furthermore MYN defines a Significant Outcome (SOC) zone which needs to be at the top of you list. To achieve that, we map it to:
@@ -28,7 +24,6 @@ each one of the e.g.:
 # Configuring the sort for MYN
 
 ![nil](./images/MYN_sort.png)
-
 
 To defer tasks in Simpletask for Defer-To-Do or Defer-To-Review we use the threshold date functionallity. So make sure in settings the `Defer by threshold date` is checked. You can then use threshold date `t:yyyy-mm-dd` as startdate in MYN/1MTD
 

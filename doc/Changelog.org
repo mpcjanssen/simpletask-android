@@ -89,171 +89,143 @@
 - Revert left drawer to checked views.
 - Allow renaming and updating of saved filters.
 
-4.0.1
-=====
+** 4.0.1
 
-* Fix dark theme for AddTask.
+- Fix dark theme for AddTask.
 
-4.0.0
-=====
+** 4.0.0
 
-Big update which should make starting with Simpletask more intuitive:
+- Big update which should make starting with Simpletask more intuitive:
+- Merged tag and list navigation drawer into the left drawer.
+- Click tag or list header to invert the filter.
+- Right drawer with favourite filters.
+- Long click saved filter to create homescreen shortcut.
+- Checkboxes in tasklist to quickly complete/uncomplete tasks.
+- Improved tag and list selection dialogs where you can also add new items.
+- Updated priority colors to reflect urgency better.
+- Added 'expert' user settings "hide hints" and "hide confirmation dialogs"
+- Keep priority when completing tasks.
+- Remember last used filter tab.
 
-* Merged tag and list navigation drawer into the left drawer.
-* Click tag or list header to invert the filter.
-* Right drawer with favourite filters.
-* Long click saved filter to create homescreen shortcut.
-* Checkboxes in tasklist to quickly complete/uncomplete tasks.
-* Improved tag and list selection dialogs where you can also add new items.
-* Updated priority colors to reflect urgency better.
-* Added 'expert' user settings "hide hints" and "hide confirmation dialogs"
-* Keep priority when completing tasks.
-* Remember last used filter tab.
+** 3.2.3
 
-3.2.3
-=====
+- Simplified version numbering.
 
-* Simplified version numbering.
+** 3.2.2
 
-3.2.2
-=====
+- Make landscape mode configurable between fixed and sliding drawers.
 
-* Make landscape mode configurable between fixed and sliding drawers.
+** 3.2.1
 
-3.2.1
-=====
+- Fix issues when adding tasks with some soft keyboards such as Swype.
 
-* Fix issues when adding tasks with some soft keyboards such as Swype.
+** 3.2.0
 
-3.2.0
-=====
+- Show tasks in widget as they are displayed in the main screen. One line view is still available as setting.
 
-* Show tasks in widget as they are displayed in the main screen. One line view is still available as setting.
+** 3.1.0
 
-3.1.0
-=====
+- New setting for recurring to use the original due or threshold date instead of today. (Default is true)
 
-* New setting for recurring to use the original due or threshold date instead of today. (Default is true)
+** 3.0.12
 
-3.0.12
-======
+- Also change threshold date for the new task when completing a recurring task.
 
-* Also change threshold date for the new task when completing a recurring task.
+** 3.0.11
 
-3.0.11
-======
+- Fixed issue with recurring tasks if auto archive is active.
 
-* Fixed issue with recurring tasks if auto archive is active.
+** 3.0.10
 
-3.0.10
-======
+- Remove spurious padding of widgets.
+- Use more space for navigation drawers.
+- Keep priority on recurring tasks.
 
-* Remove spurious padding of widgets.
-* Use more space for navigation drawers.
-* Keep priority on recurring tasks.
+** 3.0.9
 
-3.0.9
-=====
+- Make extended left drawer configurable.
 
-* Make extended left drawer configurable.
+** 3.0.8
 
-3.0.8
-=====
+- Show/Hide completed and future tasks from left navigation drawer.
 
-* Show/Hide completed and future tasks from left navigation drawer.
+** 3.0.7
 
-3.0.7
-=====
+- Improve relative date display around month boundaries. 30 sep - 1 oct is 1 day not 1 month.
 
-* Improve relative date display around month boundaries. 30 sep - 1 oct is 1 day not 1 month.
+** 3.0.6
 
-3.0.6
-=====
+- Replace existing due and threshold dates in Add Task screen, also prevents duplication caused by Android DatePicker bug http://code.google.com/p/android/issues/detail?id=34860.
 
-* Replace existing due and threshold dates in Add Task screen, also prevents duplication caused by Android DatePicker bug http://code.google.com/p/android/issues/detail?id=34860.
+** 3.0.5
 
-3.0.5
-=====
-
-* Back button configuration to apply filter.
-* Don't reset 'Other' filters when clearing filter.
+- Back button configuration to apply filter.
+- Don't reset =Other= filters when clearing filter.
 
 
-3.0.4
-=====
+** 3.0.4
 
-* Redid defer dialogs to require only one click.
-* Setting to save todos when pressing back key from Add Task screen.
+- Redid defer dialogs to require only one click.
+- Setting to save todos when pressing back key from Add Task screen.
 
-3.0.3
-=====
+** 3.0.3
 
-* Fix widget filters using inverted List filters.
-* Track file events on correct path after opening a different todo file.
+- Fix widget filters using inverted List filters.
+- Track file events on correct path after opening a different todo file.
 
-3.0.2
-=====
+** 3.0.2
 
-* Fix FC on start.
+- Fix FC on start.
 
-3.0.1
-=====
+** 3.0.1
 
-* Fix FCs when trying to open another todo file.
-* Add setting for automatic sync when opening app.
+- Fix FCs when trying to open another todo file.
+- Add setting for automatic sync when opening app.
 
-3.0.0
-=====
+** 3.0.0
 
-* Enable switching of todo files `Menu->Open todo file`.
+- Enable switching of todo files =Menu->Open todo file=.
 
-2.9.1
-=====
+** 2.9.1
 
-* Make the todo.txt extensions case insensitive, e.g. Due: or due: or DUE: now all work
-* Make use of the Split Action Bar configurable to have either easily reachable buttons or more screen real estate.
-* Don't add empty tasks from Add Task screen.
+- Make the todo.txt extensions case insensitive, e.g. =Due:= or =due:= or =DUE:= now all work
+- Make use of the Split Action Bar configurable to have either easily reachable buttons or more screen real estate.
+- Don't add empty tasks from Add Task screen.
 
-2.9.0
-=====
+** 2.9.0
 
-* Set due and threshold date for selected tasks from main screen.
-* Insert due or threshold date from Add Task screen.
-* Updated Add Task screen.
-* Create recurring tasks with the rec:[0-9]+[mwd] format.
+- Set due and threshold date for selected tasks from main screen.
+- Insert due or threshold date from Add Task screen.
+- Updated Add Task screen.
+- Create recurring tasks with the =rec:[0-9]+[mwd]= format.
   See http://github.com/bram85/todo.txt-tools/wiki/Recurrence
-* Removed setting for deferrable due date, both due date and threshold
+- Removed setting for deferrable due date, both due date and threshold
   date can be set and deferred from the main menu now so this setting is not
   needed anymore.
 
-2.8.2
-=====
+** 2.8.2
 
 - Allow 1x1 widget size.
 - Filter completed tasks and tasks with threshold date in future.
   1MTD/MYN is fully supported now.
 
-2.8.1
-=====
+** 2.8.1
 
-* Solved issue which could lead to Dropbox login loops.
+- Solved issue which could lead to Dropbox login loops.
 
-2.8.0
-=====
+** 2.8.0
 
-* Use long click to start drag and drop in sort screen. Old arrows can
+- Use long click to start drag and drop in sort screen. Old arrows can
   still be enabled in settings.
 
-2.7.11
-======
+** 2.7.11
 
-* Fix FC in share task logging.
+- Fix FC in share task logging.
 
-2.7.10
-======
+** 2.7.10
 
-* Fix FC in add task screen.
-* Split drawers on tablet landscape to better use space.
+- Fix FC in add task screen.
+- Split drawers on tablet landscape to better use space.
 
 2.7.9
 =====
@@ -347,14 +319,11 @@ Big update which should make starting with Simpletask more intuitive:
 
 * Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (\r\n) or linux (\n), you can still do so in the settings.
 
-2.6.6
-=====
+** 2.6.6
 
-* Fixed a bug which could lead to duplication of tasks when editing them from Simpletask.
+- Fixed a bug which could lead to duplication of tasks when editing them from Simpletask.
 
-2.6.5
-=====
-
-* Removed the donate button from the free version and created a
+** 2.6.5
+- Removed the donate button from the free version and created a
   separate paid version. This also makes Simpletask suitable for
-  `Google Play for Education <http://developer.android.com/distribute/googleplay/edu/index.html>`_.
+  [[http://developer.android.com/distribute/googleplay/edu/index.html][Google Play for Education]]
