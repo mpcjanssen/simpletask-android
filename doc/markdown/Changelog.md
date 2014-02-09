@@ -5,7 +5,7 @@
 
 ## 4.1.6
 
--   Set correct create date for recurring tasks. Fixes [b5608a1a97](http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97).
+-   Set correct create date for recurring tasks. Fixes [b5608a1a97](http://mpcjanssen.nl/fossil/simpletask/tktview?name=b5608a1a97).
 -   Fixed website URL (Thanks Kyle)
 -   Fixed cursor position when adding a task with prefilled list or tag.
 -   Recognize dates at beginning of task. Fixes [#46](http://mpcjanssen.nl/tracker/issues/46).
@@ -46,7 +46,7 @@
 
 ## 4.0.10
 
--   Don't crash on a `++tag` when show tags is unchecked. Fixes [9c5902](http://mpcjanssen.nl/fossil/simpletask/tktview?name%3D9c5902).
+-   Don't crash on a `++tag` when show tags is unchecked. Fixes [9c5902](http://mpcjanssen.nl/fossil/simpletask/tktview?name=9c5902).
 
 ## 4.0.9
 
