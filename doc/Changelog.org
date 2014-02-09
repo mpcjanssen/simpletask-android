@@ -1,21 +1,22 @@
-4.1.7
-=====
+#+OPTIONS: toc:nil, num:nil
+#+TITLE:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/style.css" />
 
-* Added setting to hide the checkboxes for completing tasks.
-* Fix grouping by threshold date.
+* 4.1.7
 
-4.1.6
-=====
+- Added setting to hide the checkboxes for completing tasks.
+- Fix grouping by threshold date.
 
-* Set correct create date for recurring tasks. Fixes `[b5608a1a97] <http://mpcjanssen.nl/fossil/simpletask/tktview?name=b5608a1a97>`_.
-* Fixed website URL (Thanks Kyle)
-* Fixed cursor position when adding a task with prefilled list or tag.
-* Recognize dates at beginning of task. Fixes `#46 <http://mpcjanssen.nl/tracker/issues/46>`_.
+* 4.1.6
 
-4.1.5
-=====
+- Set correct create date for recurring tasks. Fixes [[http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97][b5608a1a97]].
+- Fixed website URL (Thanks Kyle)
+- Fixed cursor position when adding a task with prefilled list or tag.
+- Recognize dates at beginning of task. Fixes [[http://mpcjanssen.nl/tracker/issues/46][#46]].
 
-* Fix crash when removing priority and cursor in last position.
+* 4.1.5
+
+- Fix crash when removing priority and cursor in last position.
 	
 4.1.4
 =====
@@ -243,8 +244,8 @@ Big update which should make starting with Simpletask more intuitive:
 2.8.2
 =====
 
-* Allow 1x1 widget size.
-* Filter completed tasks and tasks with threshold date in future.
+- Allow 1x1 widget size.
+- Filter completed tasks and tasks with threshold date in future.
   1MTD/MYN is fully supported now.
 
 2.8.1

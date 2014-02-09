@@ -12,4 +12,9 @@
             android:orderInCategory="100"
             android:showAsAction="never"
             android:title="Changelog"/>
+    <item
+            android:id="@+id/menu_myn"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="Tutorial: MYN"/>
 </menu>

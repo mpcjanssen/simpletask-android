@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title></title>
+<!-- 2014-02-09 zo 18:31 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title"></h1>
+<p>
+Master Your Now (MYN) is an email and todo list management system developed by <a href="http://www.michaellinenberger.com/1MTDvsMYN.html">Michael Linenberger</a>. Its main characteristic is that it prevents you becoming overwhelmed by your tasklist by getting tasks that are not urgent out of the way and using technology to automatically get relevant task in your face again. The todo list management alone is also refered to as the One Minute To-Do List (1MTD).
+</p>
+
+<p>
+Simpletask has all the building blocks to use it for MYN. This page describes how to configure Simpletask for MYN.
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Creating the contexts for MYN</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+MYN defines 3 urgency zones, we will map them to lists in Simpletask so that they sort correctly.
+</p>
+
+<ul class="org-ul">
+<li>Critical Now -&gt; <code>@CriticalNow</code>
+</li>
+<li>Opportunity Now -&gt; <code>@OpportunityNow</code>
+</li>
+<li>Over The Horizon -&gt; <code>@OverTheHorizon</code>
+</li>
+</ul>
+
+<p>
+Furthermore MYN defines a Significant Outcome (SOC) zone which needs to be at the top of you list. To achieve that, we map it to:
+</p>
+
+<ul class="org-ul">
+<li>Significant Outcome -&gt; <code>@!SOC</code>
+</li>
+</ul>
+
+<p>
+One disadvantage of the <code>todo.txt</code> format in combination with Simpletask is that if the file
+doesn't contain any items with a specific list, the list will not show
+up in Simpletask. To overcome this, Simpletask has a concept of hidden
+tasks. These tasked are marked with `h:1' and by default will not show
+up in the task list. However any tags and lists defined on this task
+will be available.
+</p>
+
+<p>
+So in order to make the MYN lists persistent, add a hidden task for
+each one of the e.g.:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt">@CriticalNow h:1
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Configuring the sort for MYN</h2>
+<div class="outline-text-2" id="text-2">
+
+<div class="figure">
+<p><img src="./images/MYN_sort.png" alt="MYN_sort.png" width="50%" align="center" />
+</p>
+</div>
+
+
+<p>
+To defer tasks in Simpletask for Defer-To-Do or Defer-To-Review we use the threshold date functionallity. So make sure in settings the <code>Defer by threshold date</code> is checked. You can then use threshold date <code>t:yyyy-mm-dd</code> as startdate in MYN/1MTD
+</p>
+
+<p>
+You can either hide future tasks (from the <code>Other</code> filter tab) or we can sort them to the end (so they are still visible but out of the way). To achieve that we use the <code>Threshold date in future</code> sort. The other main thing is to sort your list by reversed threshold date so that older tasks will be sorted lower on the list. Besides that it doesn't really matter how you sort after that, see picture the below for an example.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Using the list</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+When you are reviewing the items on your list and you want to defer one or more
+tasks, you can select them and use the <code>defer</code> menu item in the overflow menu.
+There are some prefilled options which you would use often in MYN/1MTD or you can
+defer to a specific date.
+After defering the task it will move to the bottom of the listview if it has
+been defered into the future and out of your face.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,391 +1,623 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
 <title>simpletask</title>
+<!-- 2014-02-09 zo 18:31 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
 <style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
 
-/* general style */
-body    { font: 18px/25px 'Palatino', 'Palatino Linotype', 'Georgia', serif;
-          margin: 0; padding: 0; }
-a       { /*color: #432165;*/ color: #234764; }
-a:hover { color: #3b185f; background: #f9f8fa; }
-
-/* headlines */
-h1, h2, h3, h4, h5, h6      { /*font-family: 'Vollkorn', 'Georgia', serif;*/
-                              font-family: 'Noticia Text', serif;
-                              font-weight: normal; color: #222; /*color: #AF3D04;*/ }
-h1 a, h2 a, h3 a, h4 a,
-h5 a, h6 a                  { text-decoration: none; }
-h1 a:hover, h2 a:hover,
-h3 a:hover, h4 a:hover      { color: #432165; text-decoration: underline; }
-h1.title                    { width: 80%; }
-h1, h2                      { margin: 10px 10px 25px 10px; }
-h1                          { font-size: 48px; line-height: 52px; }
-h2                          { font-size: 36px; line-height: 40px; }
-
-/* layout elements */
-div.container               { width: 90%; margin: 48px auto; padding: 0; }
-div.header                  { float: left; }
-div.navigation              { float: left; }
-div.navigation a            { text-decoration: none; 
-                              font-size: 22px; 
-                              padding: 10px;
-                            }
-
-div.separator               {border-bottom: 1px dotted #ddd; padding-bottom: 42px;
-                              margin-bottom: 42px; font-size: 16px; color: #888;
-                              text-align: center;}
-div.header, div.navigation  { height: 25px; margin-bottom: 42px; }
-div.navigation ul           { margin: 0; padding: 0; list-style: none; }
-div.navigation ul li        { display: inline; margin: 0 2px; padding: 0;}
-div.body                    { clear: both; }
-div.footer                  { border-top: 1px dotted #ddd; padding-top: 9px;
-                              margin-top: 42px; font-size: 16px; color: #888;
-                              text-align: center; }
-div.footer a                { color: #888; }
-div.footer p                { margin: 0; }
-
-div.social                  { padding-top: 20px; padding-bottom: 10px;}
-div.social a                { color: #888; text-decoration: none;}
-div.social ul               { margin: 0; padding: 0; list-style: none; }
-div.social ul li            { display: inline; margin: 0 2px; padding: 0; }
-
-/* margins and stuff */
-p, div.line-block, ul, ol, pre,
-    table                       { margin: 25px 0 25px 0; }
-dt                              { margin: 25px 0 16px 0; padding: 0; }
-dd                              { margin: 16px 0 25px 40px; padding: 0; }
-ul ol, ol ul, ul ul, ol ol      { margin: 10px 0; padding: 0 0 0 40px; }
-li                              { padding: 0; }
-h1 + p.date                     { margin-top: -20px; font-style: italic; }
-
-/* code formatting.  no monospace because of webkit (bug?) */
-pre, code, tt   { font-family: 'Consolas', 'Deja Vu Sans Mono',
-                  'Bitstream Vera Sans Mono', 'Monaco', 'Courier New';
-                  font-size: 0.85em;
-                  overflow: auto;
-                }
-pre             { /*line-height: 1.3;*/ border: 1px solid #ddd; padding: 10px;
-                  /* background: #fafafa; */
-                  background-color: ghostWhite;
-                  -moz-border-radius-bottomleft: 10px;
-                  -webkit-border-bottom-left-radius: 10px;
-                  -moz-border-radius-bottomright: 10px;
-                  -webkit-border-bottom-right-radius: 10px;
-                  -moz-border-radius-topleft: 10px;
-                  -webkit-border-top-left-radius: 10px;
-                  -moz-border-radius-topright: 10px;
-                  -webkit-border-top-right-radius: 10px;
-                }
-code, tt        { background: #eee; }
-
-/* tables */
-table           { border: 1px solid #ddd; border-collapse: collapse;
-                  background: #fafafa; }
-td, th          { padding: 2px 12px; border: 1px solid #ddd; }
-
-/* footnotes */
-table.footnote          { margin: 15px 0; background: transparent; border: none; }
-table.footnote td       { border: none; padding: 9px 0 0 0; font-size: 15px; }
-table.footnote td.label { padding-right: 10px; }
-table.footnote td p     { margin: 0; }
-table.footnote td p + p { margin-top: 15px; }
-
-/* blog overview */
-div.entry-overview                  { margin: 25px 122px 25px 102px; }
-div.entry-overview h1,
-div.entry-overview div.summary,
-div.entry-overview div.summary p    { display: inline; line-height: 25px; }
-div.entry-overview h1               { margin: 0; font-size: 20px; }
-div.entry-overview div.summary,
-div.entry-overview div.date,
-div.entry-overview div.summary p    { margin: 0; padding: 0; }
-div.entry-overview div.detail       { margin-left: 140px; }
-div.entry-overview div.date         { float: left; width: 120px; color: #888;
-                                      text-align: right; font-style: italic; }
-/*div.entry-overview h1:after         { content: " —"; }*/
-
-/* other alignment things */
-img.align-center        { margin: 15px auto; display: block; }
-
-/* pagination */
-div.pagination          { margin: 36px 0 0 0; text-align: center; }
-div.pagination strong   { font-weight: normal; font-style: italic; }
-
-/* tags */
-p.tags          { text-align: right; font-style: italic; }
-ul.tagcloud     { font-size: 16px; margin: 36px 0; padding: 0;
-                  list-style: none; }
-ul.tagcloud li  { margin: 0; padding: 0 10px; display: inline; }
-li.tag-4           {font-size: 100.0%;}
-li.tag-3           {font-size: 130.0%;}
-li.tag-2           {font-size: 160.0%;}
-li.tag-1           {font-size: 200.0%;}
-
-/* latex math */
-span.math img   { margin-bottom: -7px; }
-
-div.blog-epilogue           { margin-top: 100px; font-size: 19px; text-align: center;}
-div.blog-epilogue a         {text-decoration: none;
-                             padding-left: 30px; padding-right: 30px;}
-
-/* about img */
-img.align-left { 
-    float: left; 
-    margin: 20px; 
-}
-
-/* github gists */
-.gist{
-  margin: 15px 0 !important;
-}
-
-.gist-file{
-  border: none !important;
-}
-
-.gist-meta{
-  height: 17px !important;
-  border: 1px solid #D2d2d2 !important;
-  padding-top: 1px !important;;
-  /*padding: 0px !important;*/
-  -moz-border-radius-bottomleft: 10px !important;
-  -webkit-border-bottom-left-radius: 10px !important;
-  -moz-border-radius-bottomright: 10px !important;
-  -webkit-border-bottom-right-radius: 10px !important;
-  font-size: 0.50em !important;
-
-}
-
-.gist-data{
-  padding: 5px !important;
-  border: 1px solid #D2d2d2 !important;
-  border-bottom: none !important;
-  -moz-border-radius-topleft: 10px !important;
-  -webkit-border-top-left-radius: 10px !important;
-  -moz-border-radius-topright: 10px !important;
-  -webkit-border-top-right-radius: 10px !important;
-  font-size: 0.85em !important;
-}
-
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
 </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
 </head>
 <body>
-<div class="document" id="simpletask">
+<div id="content">
 <h1 class="title">simpletask</h1>
-
-<p>An Android application based on the brilliant <a class="reference external" href="http://todotxt.com">todo.txt</a> by
-<a class="reference external" href="http://ginatrapani.org">Gina Trapani</a> and the <a class="reference external" href="http://groups.yahoo.com/group/todotxt/">Todo.txt community</a>
-The goal of the application is to provide a tool to do GTD without providing an overwhelming amount of
-options. Even though Simpletask can be customised by a fairly large amount of settings, the defaults should be sane and require no change.</p>
-<p>You can download the latest versions from the Play Store. Simpletask comes in three version.</p>
-<p>You can look at the <a class="reference external" href="/redmine/projects/simpletask-android/repository/">code</a> or track changes by the <a class="reference external" href="/redmine/projects/simpletask-android/repository/revisions.atom">rss feed</a>. If you encounter any issues or want to request new features, you can use the <a class="reference external" href="/redmine/projects/simpletask-android/issues/">issue tracker</a>. The old issue tracker can be found at: <a class="reference external" href="http://mpcjanssen.nl/fossil/simpletask/rptview">http://mpcjanssen.nl/fossil/simpletask/rptview</a></p>
-<div class="contents topic" id="table-of-contents">
-<p class="topic-title first"><cite>Table of Contents</cite></p>
-<ul class="simple">
-<li><a class="reference internal" href="#getting-started" id="id4">Getting started</a><ul>
-<li><a class="reference internal" href="#installing-simpletask" id="id5">Installing Simpletask</a><ul>
-<li><a class="reference internal" href="#id1" id="id6">Simpletask</a></li>
-<li><a class="reference internal" href="#simpletask-cloudless" id="id7">Simpletask Cloudless</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#starting-simpletask" id="id8">Starting Simpletask</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#todo-txt-extensions" id="id9">Todo.txt Extensions</a><ul>
-<li><a class="reference internal" href="#due-date" id="id10">Due date</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#changelog" id="id11">ChangeLog</a></li>
-<li><a class="reference internal" href="#design-considerations" id="id12">Design considerations</a></li>
-<li><a class="reference internal" href="#why-does-simpletask-use-lists-and-tags" id="id13">Why does Simpletask use lists and tags?</a><ul>
-<li><a class="reference internal" href="#contexts-vs-lists" id="id14">Contexts vs Lists</a></li>
-<li><a class="reference internal" href="#projects-vs-tags" id="id15">Projects vs Tags</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#automate-simpletask-with-intents" id="id16">Automate Simpletask with Intents</a><ul>
-<li><a class="reference internal" href="#create-task-in-background" id="id17">Create task in background</a></li>
-<li><a class="reference internal" href="#open-with-specific-filter" id="id18">Open with specific filter</a><ul>
-<li><a class="reference internal" href="#sorts-extra" id="id19">Sorts extra</a><ul>
-<li><a class="reference internal" href="#direction" id="id20">Direction</a></li>
-<li><a class="reference internal" href="#sort-keys" id="id21">Sort keys</a></li>
-<li><a class="reference internal" href="#example" id="id22">Example</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-<hr class="docutils" />
-<div class="section" id="getting-started">
-<h1><a class="toc-backref" href="#id4">Getting started</a></h1>
-<div class="section" id="installing-simpletask">
-<h2><a class="toc-backref" href="#id5">Installing Simpletask</a></h2>
-<p>Simpletask can be downloaded from Google Play or from <a class="reference external" href="https://f-droid.org/">Fdroid</a>.</p>
-<p>Google Play has 4 different versions:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.todotxtholo&amp;hl=en">Simpletask</a></li>
-<li><a class="reference external" href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask&amp;hl=en">Simpletask Cloudless</a></li>
-<li><a class="reference external" href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate&amp;hl=en">Simpletask Donate</a></li>
-<li><a class="reference external" href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletaskdonate&amp;hl=en">Simpletask Cloudless Donate</a></li>
-</ul>
-<p><a class="reference external" href="https://f-droid.org/">Fdroid</a> only offers the Cloudless version. The donate versions of the app are exactly the same as the free versions. They offer no additional functionallity and should only be installed if you want to donate me some beer cash. This leaves only 2 distinct versions.</p>
-<div class="section" id="id1">
-<h3><a class="toc-backref" href="#id6">Simpletask</a></h3>
-<ul class="simple">
-<li>Version with built in support for Dropbox syncing.</li>
-<li>Todo files are stored in application storage so cleaned up on uninstall</li>
-<li>Use if you already have a Dropbox account and want a no hassle install which quickly works.</li>
-</ul>
-</div>
-<div class="section" id="simpletask-cloudless">
-<h3><a class="toc-backref" href="#id7">Simpletask Cloudless</a></h3>
-<ul class="simple">
-<li>No built in sync support. Depends on other offerings (such as Dropsync or Foldersync) to sync to a large number of cloud options.</li>
-<li>Doesn't require INTERNET permission so is acceptable for stringent export
-laws.</li>
-<li>Todo files are stored on sdcard (by default in <cite>data/nl.mpcjanssen.simpletask</cite>) so can also be used in offline mode.</li>
-<li>Will reload the tasklist if an external program changes the todo file.</li>
-<li>Use this if you want to sync to other cloud options than Dropbox or if you want to use it in offline mode.</li>
-</ul>
-</div>
-</div>
-<div class="section" id="starting-simpletask">
-<h2><a class="toc-backref" href="#id8">Starting Simpletask</a></h2>
-</div>
-</div>
-<div class="section" id="todo-txt-extensions">
-<h1><a class="toc-backref" href="#id9">Todo.txt Extensions</a></h1>
-<p>Even though Simpletask tries to follow the todo.txt spec as closely as possible, it does use the extension mechanism to offer several extensions,</p>
-<div class="section" id="due-date">
-<h2><a class="toc-backref" href="#id10">Due date</a></h2>
-<p>Date as <cite>due:YYYY-MM-DD</cite></p>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
 <ul>
-<li><p class="first">Start/threshold date as <cite>t:YYYY-MM-DD</cite></p>
+<li><a href="#sec-1">1. Start/threshold date as `t:YYYY-MM-DD`</a></li>
+<li><a href="#sec-2">2. Recurrence with `rec:[0-9]+[dwmy]` as described [here]( ) but with a twist.</a></li>
+<li><a href="#sec-3">3. Intent action: `nl.mpcjanssen.simpletask.BACKGROUND<sub>TASK`</sub></a></li>
+<li><a href="#sec-4">4. Intent string extra: `task`</a></li>
+<li><a href="#sec-5">5. Action: nl.mpcjanssen.simpletask.BACKGROUND<sub>TASK</sub></a></li>
+<li><a href="#sec-6">6. Cat: Default</a></li>
+<li><a href="#sec-7">7. Mime Type: text/*</a></li>
+<li><a href="#sec-8">8. Extra: task:\&lt;Task text with possible variables here\&gt; +tasker</a></li>
+<li><a href="#sec-9">9. Target: Activity</a></li>
+<li><a href="#sec-10">10. Intent action: `nl.mpcjanssen.simpletask.START<sub>WITH</sub><sub>FILTER`</sub></a></li>
+<li><a href="#sec-11">11. Intent string extra: `CONTEXTS` list of contexts in filter separated by '\\n' or ','</a></li>
+<li><a href="#sec-12">12. Intent string extra: `PROJECTS` list of contexts in filter separated by '\\n' or ','</a></li>
+<li><a href="#sec-13">13. Intent string extra: `PRIORITIES` list of contexts in filter separated by '\\n' or ','</a></li>
+<li><a href="#sec-14">14. Intent boolean extra: `CONTEXTSnot` true to invert the contexts filter.</a></li>
+<li><a href="#sec-15">15. Intent boolean extra: `PROJECTSnot` true to invert the projects filter.</a></li>
+<li><a href="#sec-16">16. Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.</a></li>
+<li><a href="#sec-17">17. Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.</a></li>
+<li><a href="#sec-18">18. Intent boolean extra: `HIDECOMPLETED` true to hide completed tasks.</a></li>
+<li><a href="#sec-19">19. Intent boolean extra: `HIDEFUTURE` true to hide tasks with a threshold date</a></li>
+<li><a href="#sec-20">20. Intent string extra: `SORTS` active sort.</a></li>
+<li><a href="#sec-21">21. `+`: Ascending</a></li>
+<li><a href="#sec-22">22. `-`: Descending</a></li>
+<li><a href="#sec-23">23. The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.</a></li>
+<li><a href="#sec-24">24. The sort `+!completed,-!alphabetical` sorts completed tasks last and then sorts reversed alphabetical.</a></li>
+</ul>
+</div>
+</div>
+<p>
+simpletask
+<code>========</code>
+</p>
+
+<p>
+An Android application based on the brilliant todo.txt_ by
+`Gina Trapani`_ and the `Todo.txt community`_ 
+The goal of the application is to provide a tool to do GTD without providing an overwhelming amount of
+options. Even though Simpletask can be customised by a fairly large amount of settings, the defaults should be sane and require no change.
+</p>
+
+<p>
+You can download the latest versions from the Play Store. Simpletask comes in three version. 
+</p>
+
+<p>
+You can look at the code_ or track changes by the `rss feed`_. If you encounter any issues or want to request new features, you can use the `issue tracker`_. The old issue tracker can be found at: <a href="http://mpcjanssen.nl/fossil/simpletask/rptview">http://mpcjanssen.nl/fossil/simpletask/rptview</a>
+</p>
+
+<p>
+.. _todo.txt: <a href="http://todotxt.com">http://todotxt.com</a> 
+.. _`Gina Trapani`: <a href="http://ginatrapani.org">http://ginatrapani.org</a> 
+.. _`Todo.txt community`: <a href="http://groups.yahoo.com/group/todotxt/">http://groups.yahoo.com/group/todotxt/</a>
+.. _code: <i>redmine/projects/simpletask-android/repository</i>
+.. _`rss feed`: <i>redmine/projects/simpletask-android/repository/revisions.atom
+.. _`issue tracker`: /redmine/projects/simpletask-android/issues</i>
+</p>
+
+<p>
+.. contents:: `Table of Contents`
+</p>
+
+<p>
+-&#x2014;
+</p>
+
+
+<p>
+Getting started
+</p>
+<hr  />
+
+<p>
+Installing Simpletask
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;
+</p>
+
+<p>
+Simpletask can be downloaded from Google Play or from Fdroid_.
+</p>
+
+<p>
+Google Play has 4 different versions:
+</p>
+
+<ul class="org-ul">
+<li>Simpletask_
 </li>
-<li><dl class="first docutils">
-<dt>Recurrence with <cite>rec:[0-9]+[dwmy]</cite> as described [here]( <a class="reference external" href="https://github.com/bram85/todo.txt-tools/wiki/Recurrence">https://github.com/bram85/todo.txt-tools/wiki/Recurrence</a>) but with a twist.</dt>
-<dd><ul class="first last simple">
-<li>By default Simpletask will use the dates in that task to create the recurring task not the date of completion as descibed in the link. This behaviour can be configured from the settings.</li>
-</ul>
-</dd>
-</dl>
+<li>`Simpletask Cloudless`_
+</li>
+<li>`Simpletask Donate`_
+</li>
+<li>`Simpletask Cloudless Donate`_
 </li>
 </ul>
-</div>
-</div>
-<div class="section" id="changelog">
-<h1><a class="toc-backref" href="#id11">ChangeLog</a></h1>
-<p>See [ChangeLog](./ChangeLog.md)</p>
-</div>
-<div class="section" id="design-considerations">
-<h1><a class="toc-backref" href="#id12">Design considerations</a></h1>
-<ul class="simple">
-<li>Should follow the Android Design Guidelines as closely as possible</li>
-<li>Any valid todo.txt file should be read into the application without issues</li>
-<li>It should remain simple</li>
-<li>It should always show an as accurate as possible view of your task list</li>
-<li>It should be battery efficient</li>
+
+<p>
+Fdroid_ only offers the Cloudless version. The donate versions of the app are exactly the same as the free versions. They offer no additional functionallity and should only be installed if you want to donate me some beer cash. This leaves only 2 distinct versions.
+</p>
+
+
+<p>
+Simpletask
+<code>~~~~~~~~</code>
+</p>
+
+<ul class="org-ul">
+<li>Version with built in support for Dropbox syncing. 
+</li>
+<li>Todo files are stored in application storage so cleaned up on uninstall
+</li>
+<li>Use if you already have a Dropbox account and want a no hassle install which quickly works.
+</li>
 </ul>
+
+<p>
+Simpletask Cloudless
+<code>~~~~~~~~~~~~~~~~~~</code>
+</p>
+
+<ul class="org-ul">
+<li>No built in sync support. Depends on other offerings (such as Dropsync or Foldersync) to sync to a large number of cloud options.
+</li>
+<li>Doesn't require INTERNET permission so is acceptable for stringent export
+laws.
+</li>
+<li>Todo files are stored on sdcard (by default in `data/nl.mpcjanssen.simpletask`) so can also be used in offline mode.
+</li>
+<li>Will reload the tasklist if an external program changes the todo file.
+</li>
+<li>Use this if you want to sync to other cloud options than Dropbox or if you want to use it in offline mode.
+</li>
+</ul>
+
+
+<p>
+Starting Simpletask
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.
+</p>
+
+<p>
+Todo.txt Extensions
+</p>
+<hr  />
+
+<p>
+Even though Simpletask tries to follow the todo.txt spec as closely as possible, it does use the extension mechanism to offer several extensions,
+</p>
+
+<p>
+Due date
+&#x2026;&#x2026;..
+</p>
+
+<p>
+Date as `due:YYYY-MM-DD`
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Start/threshold date as `t:YYYY-MM-DD`</h2>
 </div>
-<div class="section" id="why-does-simpletask-use-lists-and-tags">
-<h1><a class="toc-backref" href="#id13">Why does Simpletask use lists and tags?</a></h1>
-<div class="section" id="contexts-vs-lists">
-<h2><a class="toc-backref" href="#id14">Contexts vs Lists</a></h2>
-<p>Instead of the contexts and projects in todo.txt, simpletask calls <cite>&#64;something</cite>
-a list and <cite>+something</cite> a tag. Why was this chosen, isn't GTD all about
-contexts?</p>
-<p>Well no actually. Even though this is not as clearly articulated in the original
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Recurrence with `rec:[0-9]+[dwmy]` as described [here]( <a href="https://github.com/bram85/todo.txt-tools/wiki/Recurrence">https://github.com/bram85/todo.txt-tools/wiki/Recurrence</a>) but with a twist.</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>By default Simpletask will use the dates in that task to create the recurring task not the date of completion as descibed in the link. This behaviour can be configured from the settings.
+</li>
+</ul>
+
+<p>
+ChangeLog
+</p>
+<hr  />
+
+<p>
+See [ChangeLog](./ChangeLog.md)
+</p>
+
+<p>
+Design considerations
+</p>
+<hr  />
+
+<ul class="org-ul">
+<li>Should follow the Android Design Guidelines as closely as possible
+</li>
+<li>Any valid todo.txt file should be read into the application without issues
+</li>
+<li>It should remain simple
+</li>
+<li>It should always show an as accurate as possible view of your task list
+</li>
+<li>It should be battery efficient
+</li>
+</ul>
+
+
+<p>
+Why does Simpletask use lists and tags?
+</p>
+<hr  />
+
+<p>
+Contexts vs Lists
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;..
+</p>
+
+<p>
+Instead of the contexts and projects in todo.txt, simpletask calls `@something`
+a list and `+something` a tag. Why was this chosen, isn't GTD all about
+contexts?
+</p>
+
+<p>
+Well no actually. Even though this is not as clearly articulated in the original
 Getting Things Done book as it could be, in GTD the main organizing element is
 the list. Some of these lists contain next actions for a certain context (e.g.
-&#64;computer) but some don't (e.g. Projects or Waiting For).</p>
-<p>So even though a lot of the lists in GTD will contain next actions for
+@computer) but some don't (e.g. Projects or Waiting For).
+</p>
+
+<p>
+So even though a lot of the lists in GTD will contain next actions for
 a certain context, this doesn't imply that context is the main organizing
-element (e.g. Waiting For is not a context)</p>
-</div>
-<div class="section" id="projects-vs-tags">
-<h2><a class="toc-backref" href="#id15">Projects vs Tags</a></h2>
-<p>Projects are renamed to tags because tags is a more general concept. A tag can
-be anything from a project to a person's name. This allows using tasks like:</p>
-<p><cite>&#64;Call +DavidAllen regarding +GTD</cite></p>
-<p>In this case neither of the tags are projects.</p>
-</div>
-</div>
-<div class="section" id="automate-simpletask-with-intents">
-<h1><a class="toc-backref" href="#id16">Automate Simpletask with Intents</a></h1>
-<p>Simpletask supports a couple of intents which can be used by other applications (e.g. tasker) to create tasks or display lists.</p>
-<div class="section" id="create-task-in-background">
-<h2><a class="toc-backref" href="#id17">Create task in background</a></h2>
-<p>To create a task in the background, so without showing simpletask, you can use the intent:</p>
-<ul class="simple">
-<li>Intent action: <cite>nl.mpcjanssen.simpletask.BACKGROUND_TASK</cite></li>
-<li>Intent string extra: <cite>task</cite></li>
-</ul>
-<p>the intent will have one extra string <cite>task</cite> which contains the task to be added.</p>
-<p>For example to create a task from tasker use the following action:</p>
-<ul class="simple">
-<li>Action: nl.mpcjanssen.simpletask.BACKGROUND_TASK</li>
-<li>Cat: Default</li>
-<li>Mime Type: text/*</li>
-<li>Extra: task:&lt;Task text with possible variables here&gt; +tasker</li>
-<li>Target: Activity</li>
-</ul>
-<p>I like to add the +tasker tag to be able to quickly filter tasks that were created by tasker.</p>
-</div>
-<div class="section" id="open-with-specific-filter">
-<h2><a class="toc-backref" href="#id18">Open with specific filter</a></h2>
-<p>To open Simpletask with a specific filter you can use the intent:</p>
-<ul class="simple">
-<li>Intent action: <cite>nl.mpcjanssen.simpletask.START_WITH_FILTER</cite></li>
-<li>Intent string extra: <cite>CONTEXTS</cite> list of contexts in filter separated by '\n' or ','</li>
-<li>Intent string extra: <cite>PROJECTS</cite> list of contexts in filter separated by '\n' or ','</li>
-<li>Intent string extra: <cite>PRIORITIES</cite> list of contexts in filter separated by '\n' or ','</li>
-<li>Intent boolean extra: <cite>CONTEXTSnot</cite> true to invert the contexts filter.</li>
-<li>Intent boolean extra: <cite>PROJECTSnot</cite> true to invert the projects filter.</li>
-<li>Intent boolean extra: <cite>PRIORITIESnot</cite> true to invert the priorities filter.</li>
-<li>Intent boolean extra: <cite>PRIORITIESnot</cite> true to invert the priorities filter.</li>
-<li>Intent boolean extra: <cite>HIDECOMPLETED</cite> true to hide completed tasks.</li>
-<li>Intent boolean extra: <cite>HIDEFUTURE</cite> true to hide tasks with a threshold date
-in the future.</li>
-<li>Intent string extra: <cite>SORTS</cite> active sort.</li>
-</ul>
-<div class="section" id="sorts-extra">
-<h3><a class="toc-backref" href="#id19">Sorts extra</a></h3>
-<p>SORTS contains a comma or '\n' separated list of sort keys and their direction with a <cite>!</cite> in between.</p>
-<div class="section" id="direction">
-<h4><a class="toc-backref" href="#id20">Direction</a></h4>
-<ul class="simple">
-<li><cite>+</cite>: Ascending</li>
-<li><cite>-</cite>: Descending</li>
-</ul>
-</div>
-<div class="section" id="sort-keys">
-<h4><a class="toc-backref" href="#id21">Sort keys</a></h4>
-<p>See list in [source code](<a class="reference external" href="http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51">http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51</a>)</p>
-</div>
-<div class="section" id="example">
-<h4><a class="toc-backref" href="#id22">Example</a></h4>
-<ul class="simple">
-<li>The sort <cite>+!completed,+!alphabetical</cite> sorts completed tasks last and then sorts alphabetical.</li>
-<li>The sort <cite>+!completed,-!alphabetical</cite> sorts completed tasks last and then sorts reversed alphabetical.</li>
-</ul>
-<p>Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:</p>
-<p><cite>am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e SORTS +!completed,+!alphabetical -e PROJECTS project1,project2 -e CONTEXTS &#64;errands,&#64;computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S</cite></p>
-<p>The <cite>-S</cite> at the end will ensure the app is properly restarted if it's already visible. However with tasker the <cite>-S</cite> seems not to work. So there try it without.</p>
-<p>#### How can I configure Simpletask for MYN?</p>
-<p>See [MYN](./doc/MYN.md)</p>
-<p>#### Why shouldn't <cite>Defer Tasks</cite> use the due date?</p>
-<p>See [Defer Tasks](./doc/DeferTasks.md)</p>
-<p>#### Why the switch to Gradle?</p>
-<p>See [Gradle](./doc/Gradle.md)</p>
-<p><em>NB: [Here](http://mpcjanssen.nl/fossil/simpletask) is the main version of this file, use this in case of bad links.</em></p>
+element (e.g. Waiting For is not a context)
+</p>
+
+<p>
+Projects vs Tags
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.
+</p>
+
+<p>
+Projects are renamed to tags because tags is a more general concept. A tag can
+be anything from a project to a person's name. This allows using tasks like:
+</p>
+
+<p>
+`@Call +DavidAllen regarding +GTD`
+</p>
+
+<p>
+In this case neither of the tags are projects.
+</p>
+
+<p>
+Automate Simpletask with Intents
+</p>
+<hr  />
+
+<p>
+Simpletask supports a couple of intents which can be used by other applications (e.g. tasker) to create tasks or display lists.
+</p>
+
+<p>
+Create task in background
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.
+</p>
+
+<p>
+To create a task in the background, so without showing simpletask, you can use the intent:
+</p>
 </div>
 </div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Intent action: `nl.mpcjanssen.simpletask.BACKGROUND<sub>TASK`</sub></h2>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Intent string extra: `task`</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+the intent will have one extra string `task` which contains the task to be added.
+</p>
+
+<p>
+For example to create a task from tasker use the following action:
+</p>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Action: nl.mpcjanssen.simpletask.BACKGROUND<sub>TASK</sub></h2>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Cat: Default</h2>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Mime Type: text/*</h2>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Extra: task:\&lt;Task text with possible variables here\&gt; +tasker</h2>
+</div>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Target: Activity</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+I like to add the +tasker tag to be able to quickly filter tasks that were created by tasker.
+</p>
+
+<p>
+Open with specific filter
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.
+</p>
+
+<p>
+To open Simpletask with a specific filter you can use the intent:
+</p>
+</div>
+</div>
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Intent action: `nl.mpcjanssen.simpletask.START<sub>WITH</sub><sub>FILTER`</sub></h2>
+</div>
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> Intent string extra: `CONTEXTS` list of contexts in filter separated by '\\n' or ','</h2>
+</div>
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> Intent string extra: `PROJECTS` list of contexts in filter separated by '\\n' or ','</h2>
+</div>
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> Intent string extra: `PRIORITIES` list of contexts in filter separated by '\\n' or ','</h2>
+</div>
+<div id="outline-container-sec-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> Intent boolean extra: `CONTEXTSnot` true to invert the contexts filter.</h2>
+</div>
+<div id="outline-container-sec-15" class="outline-2">
+<h2 id="sec-15"><span class="section-number-2">15</span> Intent boolean extra: `PROJECTSnot` true to invert the projects filter.</h2>
+</div>
+<div id="outline-container-sec-16" class="outline-2">
+<h2 id="sec-16"><span class="section-number-2">16</span> Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.</h2>
+</div>
+<div id="outline-container-sec-17" class="outline-2">
+<h2 id="sec-17"><span class="section-number-2">17</span> Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.</h2>
+</div>
+<div id="outline-container-sec-18" class="outline-2">
+<h2 id="sec-18"><span class="section-number-2">18</span> Intent boolean extra: `HIDECOMPLETED` true to hide completed tasks.</h2>
+</div>
+<div id="outline-container-sec-19" class="outline-2">
+<h2 id="sec-19"><span class="section-number-2">19</span> Intent boolean extra: `HIDEFUTURE` true to hide tasks with a threshold date</h2>
+<div class="outline-text-2" id="text-19">
+<p>
+in the future.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-20" class="outline-2">
+<h2 id="sec-20"><span class="section-number-2">20</span> Intent string extra: `SORTS` active sort.</h2>
+<div class="outline-text-2" id="text-20">
+<p>
+Sorts extra
+<code>~~~~~~~~~</code>
+</p>
+
+<p>
+SORTS contains a comma or '\\n' separated list of sort keys and their direction with a `!` in between.
+</p>
+
+<p>
+Direction
+<del><del><del><del>+</del></del></del></del>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-21" class="outline-2">
+<h2 id="sec-21"><span class="section-number-2">21</span> `+`: Ascending</h2>
+</div>
+<div id="outline-container-sec-22" class="outline-2">
+<h2 id="sec-22"><span class="section-number-2">22</span> `-`: Descending</h2>
+<div class="outline-text-2" id="text-22">
+<p>
+Sort keys
+<del><del><del><del>+</del></del></del></del>
+</p>
+
+<p>
+See list in [source code](<a href="http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51">http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51</a>)
+</p>
+
+<p>
+Example
+<del><del><del>+</del></del></del>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-23" class="outline-2">
+<h2 id="sec-23"><span class="section-number-2">23</span> The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.</h2>
+</div>
+<div id="outline-container-sec-24" class="outline-2">
+<h2 id="sec-24"><span class="section-number-2">24</span> The sort `+!completed,-!alphabetical` sorts completed tasks last and then sorts reversed alphabetical.</h2>
+<div class="outline-text-2" id="text-24">
+<p>
+Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:
+</p>
+
+<p>
+`am start -a nl.mpcjanssen.simpletask.START<sub>WITH</sub><sub>FILTER</sub> -e SORTS +!completed,+!alphabetical -e PROJECTS project1,project2 -e CONTEXTS @errands,@computer &#x2013;ez CONTEXTSnot true -c android.intent.category.DEFAULT -S`
+</p>
+
+<p>
+The `-S` at the end will ensure the app is properly restarted if it's already visible. However with tasker the `-S` seems not to work. So there try it without.
+</p>
+
+
+
+<p>
+#### How can I configure Simpletask for MYN?
+</p>
+
+<p>
+See [MYN](./doc/MYN.md)
+</p>
+
+<p>
+#### Why shouldn't `Defer Tasks` use the due date?
+</p>
+
+<p>
+See [Defer Tasks](./doc/DeferTasks.md)
+</p>
+
+<p>
+#### Why the switch to Gradle?
+</p>
+
+<p>
+See [Gradle](./doc/Gradle.md)
+</p>
+
+<p>
+<b>NB: [Here](<a href="http://mpcjanssen.nl/fossil/simpletask">http://mpcjanssen.nl/fossil/simpletask</a>) is the main version of this file, use this in case of bad links.</b>
+</p>
+
+<p>
+.. _Simpletask: <a href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.todotxtholo&hl=en">https://play.google.com/store/apps/details?id=nl.mpcjanssen.todotxtholo&hl=en</a>
+.. _`Simpletask Cloudless`: <a href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask&hl=en">https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask&hl=en</a>
+.. _`Simpletask Donate`: <a href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate&hl=en">https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate&hl=en</a>
+.. _`Simpletask Cloudless Donate`: <a href="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletaskdonate&hl=en">https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletaskdonate&hl=en</a>
+.. _`Fdroid`: <a href="https://f-droid.org/">https://f-droid.org/</a>
+</p>
 </div>
 </div>
 </div>

@@ -1,608 +1,934 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
 <title></title>
+<!-- 2014-02-09 zo 18:31 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
 <style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
 
-/* general style */
-body    { font: 18px/25px 'Palatino', 'Palatino Linotype', 'Georgia', serif;
-          margin: 0; padding: 0; }
-a       { /*color: #432165;*/ color: #234764; }
-a:hover { color: #3b185f; background: #f9f8fa; }
-
-/* headlines */
-h1, h2, h3, h4, h5, h6      { /*font-family: 'Vollkorn', 'Georgia', serif;*/
-                              font-family: 'Noticia Text', serif;
-                              font-weight: normal; color: #222; /*color: #AF3D04;*/ }
-h1 a, h2 a, h3 a, h4 a,
-h5 a, h6 a                  { text-decoration: none; }
-h1 a:hover, h2 a:hover,
-h3 a:hover, h4 a:hover      { color: #432165; text-decoration: underline; }
-h1.title                    { width: 80%; }
-h1, h2                      { margin: 10px 10px 25px 10px; }
-h1                          { font-size: 48px; line-height: 52px; }
-h2                          { font-size: 36px; line-height: 40px; }
-
-/* layout elements */
-div.container               { width: 90%; margin: 48px auto; padding: 0; }
-div.header                  { float: left; }
-div.navigation              { float: left; }
-div.navigation a            { text-decoration: none; 
-                              font-size: 22px; 
-                              padding: 10px;
-                            }
-
-div.separator               {border-bottom: 1px dotted #ddd; padding-bottom: 42px;
-                              margin-bottom: 42px; font-size: 16px; color: #888;
-                              text-align: center;}
-div.header, div.navigation  { height: 25px; margin-bottom: 42px; }
-div.navigation ul           { margin: 0; padding: 0; list-style: none; }
-div.navigation ul li        { display: inline; margin: 0 2px; padding: 0;}
-div.body                    { clear: both; }
-div.footer                  { border-top: 1px dotted #ddd; padding-top: 9px;
-                              margin-top: 42px; font-size: 16px; color: #888;
-                              text-align: center; }
-div.footer a                { color: #888; }
-div.footer p                { margin: 0; }
-
-div.social                  { padding-top: 20px; padding-bottom: 10px;}
-div.social a                { color: #888; text-decoration: none;}
-div.social ul               { margin: 0; padding: 0; list-style: none; }
-div.social ul li            { display: inline; margin: 0 2px; padding: 0; }
-
-/* margins and stuff */
-p, div.line-block, ul, ol, pre,
-    table                       { margin: 25px 0 25px 0; }
-dt                              { margin: 25px 0 16px 0; padding: 0; }
-dd                              { margin: 16px 0 25px 40px; padding: 0; }
-ul ol, ol ul, ul ul, ol ol      { margin: 10px 0; padding: 0 0 0 40px; }
-li                              { padding: 0; }
-h1 + p.date                     { margin-top: -20px; font-style: italic; }
-
-/* code formatting.  no monospace because of webkit (bug?) */
-pre, code, tt   { font-family: 'Consolas', 'Deja Vu Sans Mono',
-                  'Bitstream Vera Sans Mono', 'Monaco', 'Courier New';
-                  font-size: 0.85em;
-                  overflow: auto;
-                }
-pre             { /*line-height: 1.3;*/ border: 1px solid #ddd; padding: 10px;
-                  /* background: #fafafa; */
-                  background-color: ghostWhite;
-                  -moz-border-radius-bottomleft: 10px;
-                  -webkit-border-bottom-left-radius: 10px;
-                  -moz-border-radius-bottomright: 10px;
-                  -webkit-border-bottom-right-radius: 10px;
-                  -moz-border-radius-topleft: 10px;
-                  -webkit-border-top-left-radius: 10px;
-                  -moz-border-radius-topright: 10px;
-                  -webkit-border-top-right-radius: 10px;
-                }
-code, tt        { background: #eee; }
-
-/* tables */
-table           { border: 1px solid #ddd; border-collapse: collapse;
-                  background: #fafafa; }
-td, th          { padding: 2px 12px; border: 1px solid #ddd; }
-
-/* footnotes */
-table.footnote          { margin: 15px 0; background: transparent; border: none; }
-table.footnote td       { border: none; padding: 9px 0 0 0; font-size: 15px; }
-table.footnote td.label { padding-right: 10px; }
-table.footnote td p     { margin: 0; }
-table.footnote td p + p { margin-top: 15px; }
-
-/* blog overview */
-div.entry-overview                  { margin: 25px 122px 25px 102px; }
-div.entry-overview h1,
-div.entry-overview div.summary,
-div.entry-overview div.summary p    { display: inline; line-height: 25px; }
-div.entry-overview h1               { margin: 0; font-size: 20px; }
-div.entry-overview div.summary,
-div.entry-overview div.date,
-div.entry-overview div.summary p    { margin: 0; padding: 0; }
-div.entry-overview div.detail       { margin-left: 140px; }
-div.entry-overview div.date         { float: left; width: 120px; color: #888;
-                                      text-align: right; font-style: italic; }
-/*div.entry-overview h1:after         { content: " —"; }*/
-
-/* other alignment things */
-img.align-center        { margin: 15px auto; display: block; }
-
-/* pagination */
-div.pagination          { margin: 36px 0 0 0; text-align: center; }
-div.pagination strong   { font-weight: normal; font-style: italic; }
-
-/* tags */
-p.tags          { text-align: right; font-style: italic; }
-ul.tagcloud     { font-size: 16px; margin: 36px 0; padding: 0;
-                  list-style: none; }
-ul.tagcloud li  { margin: 0; padding: 0 10px; display: inline; }
-li.tag-4           {font-size: 100.0%;}
-li.tag-3           {font-size: 130.0%;}
-li.tag-2           {font-size: 160.0%;}
-li.tag-1           {font-size: 200.0%;}
-
-/* latex math */
-span.math img   { margin-bottom: -7px; }
-
-div.blog-epilogue           { margin-top: 100px; font-size: 19px; text-align: center;}
-div.blog-epilogue a         {text-decoration: none;
-                             padding-left: 30px; padding-right: 30px;}
-
-/* about img */
-img.align-left { 
-    float: left; 
-    margin: 20px; 
-}
-
-/* github gists */
-.gist{
-  margin: 15px 0 !important;
-}
-
-.gist-file{
-  border: none !important;
-}
-
-.gist-meta{
-  height: 17px !important;
-  border: 1px solid #D2d2d2 !important;
-  padding-top: 1px !important;;
-  /*padding: 0px !important;*/
-  -moz-border-radius-bottomleft: 10px !important;
-  -webkit-border-bottom-left-radius: 10px !important;
-  -moz-border-radius-bottomright: 10px !important;
-  -webkit-border-bottom-right-radius: 10px !important;
-  font-size: 0.50em !important;
-
-}
-
-.gist-data{
-  padding: 5px !important;
-  border: 1px solid #D2d2d2 !important;
-  border-bottom: none !important;
-  -moz-border-radius-topleft: 10px !important;
-  -webkit-border-top-left-radius: 10px !important;
-  -moz-border-radius-topright: 10px !important;
-  -webkit-border-top-right-radius: 10px !important;
-  font-size: 0.85em !important;
-}
-
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
 </head>
 <body>
-<div class="document">
+<div id="content">
+<h1 class="title"></h1>
 
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">4.1.7</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Added setting to hide the checkboxes for completing tasks.
+</li>
+<li>Fix grouping by threshold date.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">4.1.6</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>Set correct create date for recurring tasks. Fixes <a href="http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97">b5608a1a97</a>.
+</li>
+<li>Fixed website URL (Thanks Kyle)
+</li>
+<li>Fixed cursor position when adding a task with prefilled list or tag.
+</li>
+<li>Recognize dates at beginning of task. Fixes <a href="http://mpcjanssen.nl/tracker/issues/46">#46</a>.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">4.1.5</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Fix crash when removing priority and cursor in last position.
+</li>
+</ul>
 
-<div class="section" id="id1">
-<h1>4.1.7</h1>
-<ul class="simple">
-<li>Added setting to hide the checkboxes for completing tasks.</li>
-<li>Fix grouping by threshold date.</li>
-</ul>
+<p>
+4.1.4
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id2">
-<h1>4.1.6</h1>
-<ul class="simple">
-<li>Set correct create date for recurring tasks. Fixes <a class="reference external" href="http://mpcjanssen.nl/fossil/simpletask/tktview?name=b5608a1a97">[b5608a1a97]</a>.</li>
-<li>Fixed website URL (Thanks Kyle)</li>
-<li>Fixed cursor position when adding a task with prefilled list or tag.</li>
-<li>Recognize dates at beginning of task. Fixes <a class="reference external" href="http://mpcjanssen.nl/tracker/issues/46">#46</a>.</li>
-</ul>
 </div>
-<div class="section" id="id4">
-<h1>4.1.5</h1>
-<ul class="simple">
-<li>Fix crash when removing priority and cursor in last position.</li>
-</ul>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Added setting to only display `.txt` files in todo file browser.</h2>
 </div>
-<div class="section" id="id5">
-<h1>4.1.4</h1>
-<ul class="simple">
-<li>Added setting to only display <cite>.txt</cite> files in todo file browser.</li>
-<li>ChangeLog is viewable from inside the help menu.</li>
-<li>Add tasks from locksreen widget without unlocking.</li>
-<li>Setting to add new tasks at beginning of todo.txt.</li>
-<li>Allow completing and uncompleting of tasks from CAB.</li>
-<li>Speed up task archiving and possible fix for <a class="reference external" href="http://mpcjanssen.nl/tracker/issues/58">#58</a>.</li>
-</ul>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">ChangeLog is viewable from inside the help menu.</h2>
 </div>
-<div class="section" id="id7">
-<h1>4.1.3</h1>
-<ul class="simple">
-<li>Removed Dropbox dependency of cloudless version. Only released through FDroid.</li>
-</ul>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">Add tasks from locksreen widget without unlocking.</h2>
 </div>
-<div class="section" id="id8">
-<h1>4.1.2</h1>
-<ul class="simple">
-<li>Archive selected tasks only.</li>
-<li>Edit multiple tasks at once.</li>
-<li>Re-added donation link for f-droid users.</li>
-<li>Changed default wordwrapping in AddTask to on.</li>
-</ul>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">Setting to add new tasks at beginning of todo.txt.</h2>
 </div>
-<div class="section" id="id9">
-<h1>4.1.1</h1>
-<ul class="simple">
-<li>Fix crashes with invalid dates such as 2013-11-31.</li>
-<li>Refactored header handling.</li>
-<li>Setting to hide headers with only hidden tasks.</li>
-</ul>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8">Allow completing and uncompleting of tasks from CAB.</h2>
 </div>
-<div class="section" id="id10">
-<h1>4.1.0</h1>
-<ul class="simple">
-<li>Support hidden tasks (with h:1). This allows persistent list/tags. Tasks can be unhidden from the settings.</li>
-</ul>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9">Speed up task archiving and possible fix for `#58 <a href="http://mpcjanssen.nl/tracker/issues/58">http://mpcjanssen.nl/tracker/issues/58</a>`_.</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+4.1.3
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id11">
-<h1>4.0.10</h1>
-<ul class="simple">
-<li>Don't crash on a '++tag' when show tags is unchecked. Fixes [9c5902].</li>
-</ul>
 </div>
-<div class="section" id="id12">
-<h1>4.0.9</h1>
-<ul class="simple">
-<li>Add setting to capitalize tasks.</li>
-<li>Sort list and tag popups in AddTask screen.</li>
-<li>Add option to toggle wordwrap when adding tasks.</li>
-<li>Add filter option to hide tags and lists on task display.</li>
-</ul>
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10">Removed Dropbox dependency of cloudless version. Only released through FDroid.</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+4.1.2
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id13">
-<h1>4.0.8</h1>
-<ul class="simple">
-<li>When using &quot;Share&quot; with simpletask, just add the task. You can restore the old behavior of showing
-the edit activity in the settings.</li>
-</ul>
 </div>
-<div class="section" id="id14">
-<h1>4.0.7</h1>
-<ul class="simple">
-<li>Configure widget transparency.</li>
-</ul>
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11">Archive selected tasks only.</h2>
 </div>
-<div class="section" id="id15">
-<h1>4.0.6</h1>
-<ul class="simple">
-<li>Fix rare crash when starting app.</li>
-</ul>
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12">Edit multiple tasks at once.</h2>
 </div>
-<div class="section" id="id16">
-<h1>4.0.5</h1>
-<ul class="simple">
-<li>Fix recurring tasks.</li>
-</ul>
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13">Re-added donation link for f-droid users.</h2>
 </div>
-<div class="section" id="id17">
-<h1>4.0.4</h1>
-<ul class="simple">
-<li>Fix issue with unsorted or duplicate headers.</li>
-</ul>
+<div id="outline-container-sec-14" class="outline-2">
+<h2 id="sec-14">Changed default wordwrapping in AddTask to on.</h2>
+<div class="outline-text-2" id="text-14">
+<p>
+4.1.1
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id18">
-<h1>4.0.3</h1>
-<ul class="simple">
-<li>Save text search in saved filter.</li>
-</ul>
 </div>
-<div class="section" id="id19">
-<h1>4.0.2</h1>
-<ul class="simple">
-<li>Revert left drawer to checked views.</li>
-<li>Allow renaming and updating of saved filters.</li>
-</ul>
+<div id="outline-container-sec-15" class="outline-2">
+<h2 id="sec-15">Fix crashes with invalid dates such as 2013-11-31.</h2>
 </div>
-<div class="section" id="id20">
-<h1>4.0.1</h1>
-<ul class="simple">
-<li>Fix dark theme for AddTask.</li>
-</ul>
+<div id="outline-container-sec-16" class="outline-2">
+<h2 id="sec-16">Refactored header handling.</h2>
 </div>
-<div class="section" id="id21">
-<h1>4.0.0</h1>
-<p>Big update which should make starting with Simpletask more intuitive:</p>
-<ul class="simple">
-<li>Merged tag and list navigation drawer into the left drawer.</li>
-<li>Click tag or list header to invert the filter.</li>
-<li>Right drawer with favourite filters.</li>
-<li>Long click saved filter to create homescreen shortcut.</li>
-<li>Checkboxes in tasklist to quickly complete/uncomplete tasks.</li>
-<li>Improved tag and list selection dialogs where you can also add new items.</li>
-<li>Updated priority colors to reflect urgency better.</li>
-<li>Added 'expert' user settings &quot;hide hints&quot; and &quot;hide confirmation dialogs&quot;</li>
-<li>Keep priority when completing tasks.</li>
-<li>Remember last used filter tab.</li>
-</ul>
+<div id="outline-container-sec-17" class="outline-2">
+<h2 id="sec-17">Setting to hide headers with only hidden tasks.</h2>
+<div class="outline-text-2" id="text-17">
+<p>
+4.1.0
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id22">
-<h1>3.2.3</h1>
-<ul class="simple">
-<li>Simplified version numbering.</li>
-</ul>
 </div>
-<div class="section" id="id23">
-<h1>3.2.2</h1>
-<ul class="simple">
-<li>Make landscape mode configurable between fixed and sliding drawers.</li>
-</ul>
+
+<div id="outline-container-sec-18" class="outline-2">
+<h2 id="sec-18">Support hidden tasks (with h:1). This allows persistent list/tags. Tasks can be unhidden from the settings.</h2>
+<div class="outline-text-2" id="text-18">
+<p>
+4.0.10
+<code>====</code>
+</p>
 </div>
-<div class="section" id="id24">
-<h1>3.2.1</h1>
-<ul class="simple">
-<li>Fix issues when adding tasks with some soft keyboards such as Swype.</li>
-</ul>
 </div>
-<div class="section" id="id25">
-<h1>3.2.0</h1>
-<ul class="simple">
-<li>Show tasks in widget as they are displayed in the main screen. One line view is still available as setting.</li>
-</ul>
+<div id="outline-container-sec-19" class="outline-2">
+<h2 id="sec-19">Don't crash on a '++tag' when show tags is unchecked. Fixes [9c5902].</h2>
+<div class="outline-text-2" id="text-19">
+<p>
+4.0.9
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id26">
-<h1>3.1.0</h1>
-<ul class="simple">
-<li>New setting for recurring to use the original due or threshold date instead of today. (Default is true)</li>
-</ul>
 </div>
-<div class="section" id="id27">
-<h1>3.0.12</h1>
-<ul class="simple">
-<li>Also change threshold date for the new task when completing a recurring task.</li>
-</ul>
+<div id="outline-container-sec-20" class="outline-2">
+<h2 id="sec-20">Add setting to capitalize tasks.</h2>
 </div>
-<div class="section" id="id28">
-<h1>3.0.11</h1>
-<ul class="simple">
-<li>Fixed issue with recurring tasks if auto archive is active.</li>
-</ul>
+<div id="outline-container-sec-21" class="outline-2">
+<h2 id="sec-21">Sort list and tag popups in AddTask screen.</h2>
 </div>
-<div class="section" id="id29">
-<h1>3.0.10</h1>
-<ul class="simple">
-<li>Remove spurious padding of widgets.</li>
-<li>Use more space for navigation drawers.</li>
-<li>Keep priority on recurring tasks.</li>
-</ul>
+<div id="outline-container-sec-22" class="outline-2">
+<h2 id="sec-22">Add option to toggle wordwrap when adding tasks.</h2>
 </div>
-<div class="section" id="id30">
-<h1>3.0.9</h1>
-<ul class="simple">
-<li>Make extended left drawer configurable.</li>
-</ul>
+<div id="outline-container-sec-23" class="outline-2">
+<h2 id="sec-23">Add filter option to hide tags and lists on task display.</h2>
+<div class="outline-text-2" id="text-23">
+<p>
+4.0.8
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id31">
-<h1>3.0.8</h1>
-<ul class="simple">
-<li>Show/Hide completed and future tasks from left navigation drawer.</li>
-</ul>
 </div>
-<div class="section" id="id32">
-<h1>3.0.7</h1>
-<ul class="simple">
-<li>Improve relative date display around month boundaries. 30 sep - 1 oct is 1 day not 1 month.</li>
-</ul>
+<div id="outline-container-sec-24" class="outline-2">
+<h2 id="sec-24">When using "Share" with simpletask, just add the task. You can restore the old behavior of showing</h2>
+<div class="outline-text-2" id="text-24">
+<p>
+the edit activity in the settings.
+</p>
+
+<p>
+4.0.7
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id33">
-<h1>3.0.6</h1>
-<ul class="simple">
-<li>Replace existing due and threshold dates in Add Task screen, also prevents duplication caused by Android DatePicker bug <a class="reference external" href="http://code.google.com/p/android/issues/detail?id=34860">http://code.google.com/p/android/issues/detail?id=34860</a>.</li>
-</ul>
 </div>
-<div class="section" id="id34">
-<h1>3.0.5</h1>
-<ul class="simple">
-<li>Back button configuration to apply filter.</li>
-<li>Don't reset 'Other' filters when clearing filter.</li>
-</ul>
+<div id="outline-container-sec-25" class="outline-2">
+<h2 id="sec-25">Configure widget transparency.</h2>
+<div class="outline-text-2" id="text-25">
+<p>
+4.0.6
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id35">
-<h1>3.0.4</h1>
-<ul class="simple">
-<li>Redid defer dialogs to require only one click.</li>
-<li>Setting to save todos when pressing back key from Add Task screen.</li>
-</ul>
 </div>
-<div class="section" id="id36">
-<h1>3.0.3</h1>
-<ul class="simple">
-<li>Fix widget filters using inverted List filters.</li>
-<li>Track file events on correct path after opening a different todo file.</li>
-</ul>
+<div id="outline-container-sec-26" class="outline-2">
+<h2 id="sec-26">Fix rare crash when starting app.</h2>
+<div class="outline-text-2" id="text-26">
+<p>
+4.0.5
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id37">
-<h1>3.0.2</h1>
-<ul class="simple">
-<li>Fix FC on start.</li>
-</ul>
 </div>
-<div class="section" id="id38">
-<h1>3.0.1</h1>
-<ul class="simple">
-<li>Fix FCs when trying to open another todo file.</li>
-<li>Add setting for automatic sync when opening app.</li>
-</ul>
+<div id="outline-container-sec-27" class="outline-2">
+<h2 id="sec-27">Fix recurring tasks.</h2>
+<div class="outline-text-2" id="text-27">
+<p>
+4.0.4
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id39">
-<h1>3.0.0</h1>
-<ul class="simple">
-<li>Enable switching of todo files <cite>Menu-&gt;Open todo file</cite>.</li>
-</ul>
 </div>
-<div class="section" id="id40">
-<h1>2.9.1</h1>
-<ul class="simple">
-<li>Make the todo.txt extensions case insensitive, e.g. Due: or due: or DUE: now all work</li>
-<li>Make use of the Split Action Bar configurable to have either easily reachable buttons or more screen real estate.</li>
-<li>Don't add empty tasks from Add Task screen.</li>
-</ul>
+<div id="outline-container-sec-28" class="outline-2">
+<h2 id="sec-28">Fix issue with unsorted or duplicate headers.</h2>
+<div class="outline-text-2" id="text-28">
+<p>
+4.0.3
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id41">
-<h1>2.9.0</h1>
-<ul class="simple">
-<li>Set due and threshold date for selected tasks from main screen.</li>
-<li>Insert due or threshold date from Add Task screen.</li>
-<li>Updated Add Task screen.</li>
-<li>Create recurring tasks with the rec:[0-9]+[mwd] format.
-See http://github.com/bram85/todo.txt-tools/wiki/Recurrence</li>
-<li>Removed setting for deferrable due date, both due date and threshold
+</div>
+<div id="outline-container-sec-29" class="outline-2">
+<h2 id="sec-29">Save text search in saved filter.</h2>
+<div class="outline-text-2" id="text-29">
+<p>
+4.0.2
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-30" class="outline-2">
+<h2 id="sec-30">Revert left drawer to checked views.</h2>
+</div>
+<div id="outline-container-sec-31" class="outline-2">
+<h2 id="sec-31">Allow renaming and updating of saved filters.</h2>
+<div class="outline-text-2" id="text-31">
+<p>
+4.0.1
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-32" class="outline-2">
+<h2 id="sec-32">Fix dark theme for AddTask.</h2>
+<div class="outline-text-2" id="text-32">
+<p>
+4.0.0
+<code>===</code>
+</p>
+
+<p>
+Big update which should make starting with Simpletask more intuitive:
+</p>
+</div>
+</div>
+<div id="outline-container-sec-33" class="outline-2">
+<h2 id="sec-33">Merged tag and list navigation drawer into the left drawer.</h2>
+</div>
+<div id="outline-container-sec-34" class="outline-2">
+<h2 id="sec-34">Click tag or list header to invert the filter.</h2>
+</div>
+<div id="outline-container-sec-35" class="outline-2">
+<h2 id="sec-35">Right drawer with favourite filters.</h2>
+</div>
+<div id="outline-container-sec-36" class="outline-2">
+<h2 id="sec-36">Long click saved filter to create homescreen shortcut.</h2>
+</div>
+<div id="outline-container-sec-37" class="outline-2">
+<h2 id="sec-37">Checkboxes in tasklist to quickly complete/uncomplete tasks.</h2>
+</div>
+<div id="outline-container-sec-38" class="outline-2">
+<h2 id="sec-38">Improved tag and list selection dialogs where you can also add new items.</h2>
+</div>
+<div id="outline-container-sec-39" class="outline-2">
+<h2 id="sec-39">Updated priority colors to reflect urgency better.</h2>
+</div>
+<div id="outline-container-sec-40" class="outline-2">
+<h2 id="sec-40">Added 'expert' user settings "hide hints" and "hide confirmation dialogs"</h2>
+</div>
+<div id="outline-container-sec-41" class="outline-2">
+<h2 id="sec-41">Keep priority when completing tasks.</h2>
+</div>
+<div id="outline-container-sec-42" class="outline-2">
+<h2 id="sec-42">Remember last used filter tab.</h2>
+<div class="outline-text-2" id="text-42">
+<p>
+3.2.3
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-43" class="outline-2">
+<h2 id="sec-43">Simplified version numbering.</h2>
+<div class="outline-text-2" id="text-43">
+<p>
+3.2.2
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-44" class="outline-2">
+<h2 id="sec-44">Make landscape mode configurable between fixed and sliding drawers.</h2>
+<div class="outline-text-2" id="text-44">
+<p>
+3.2.1
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-45" class="outline-2">
+<h2 id="sec-45">Fix issues when adding tasks with some soft keyboards such as Swype.</h2>
+<div class="outline-text-2" id="text-45">
+<p>
+3.2.0
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-46" class="outline-2">
+<h2 id="sec-46">Show tasks in widget as they are displayed in the main screen. One line view is still available as setting.</h2>
+<div class="outline-text-2" id="text-46">
+<p>
+3.1.0
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-47" class="outline-2">
+<h2 id="sec-47">New setting for recurring to use the original due or threshold date instead of today. (Default is true)</h2>
+<div class="outline-text-2" id="text-47">
+<p>
+3.0.12
+<code>====</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-48" class="outline-2">
+<h2 id="sec-48">Also change threshold date for the new task when completing a recurring task.</h2>
+<div class="outline-text-2" id="text-48">
+<p>
+3.0.11
+<code>====</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-49" class="outline-2">
+<h2 id="sec-49">Fixed issue with recurring tasks if auto archive is active.</h2>
+<div class="outline-text-2" id="text-49">
+<p>
+3.0.10
+<code>====</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-50" class="outline-2">
+<h2 id="sec-50">Remove spurious padding of widgets.</h2>
+</div>
+<div id="outline-container-sec-51" class="outline-2">
+<h2 id="sec-51">Use more space for navigation drawers.</h2>
+</div>
+<div id="outline-container-sec-52" class="outline-2">
+<h2 id="sec-52">Keep priority on recurring tasks.</h2>
+<div class="outline-text-2" id="text-52">
+<p>
+3.0.9
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-53" class="outline-2">
+<h2 id="sec-53">Make extended left drawer configurable.</h2>
+<div class="outline-text-2" id="text-53">
+<p>
+3.0.8
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-54" class="outline-2">
+<h2 id="sec-54">Show/Hide completed and future tasks from left navigation drawer.</h2>
+<div class="outline-text-2" id="text-54">
+<p>
+3.0.7
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-55" class="outline-2">
+<h2 id="sec-55">Improve relative date display around month boundaries. 30 sep - 1 oct is 1 day not 1 month.</h2>
+<div class="outline-text-2" id="text-55">
+<p>
+3.0.6
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-56" class="outline-2">
+<h2 id="sec-56">Replace existing due and threshold dates in Add Task screen, also prevents duplication caused by Android DatePicker bug <a href="http://code.google.com/p/android/issues/detail?id=34860">http://code.google.com/p/android/issues/detail?id=34860</a>.</h2>
+<div class="outline-text-2" id="text-56">
+<p>
+3.0.5
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-57" class="outline-2">
+<h2 id="sec-57">Back button configuration to apply filter.</h2>
+</div>
+<div id="outline-container-sec-58" class="outline-2">
+<h2 id="sec-58">Don't reset 'Other' filters when clearing filter.</h2>
+<div class="outline-text-2" id="text-58">
+<p>
+3.0.4
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-59" class="outline-2">
+<h2 id="sec-59">Redid defer dialogs to require only one click.</h2>
+</div>
+<div id="outline-container-sec-60" class="outline-2">
+<h2 id="sec-60">Setting to save todos when pressing back key from Add Task screen.</h2>
+<div class="outline-text-2" id="text-60">
+<p>
+3.0.3
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-61" class="outline-2">
+<h2 id="sec-61">Fix widget filters using inverted List filters.</h2>
+</div>
+<div id="outline-container-sec-62" class="outline-2">
+<h2 id="sec-62">Track file events on correct path after opening a different todo file.</h2>
+<div class="outline-text-2" id="text-62">
+<p>
+3.0.2
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-63" class="outline-2">
+<h2 id="sec-63">Fix FC on start.</h2>
+<div class="outline-text-2" id="text-63">
+<p>
+3.0.1
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-64" class="outline-2">
+<h2 id="sec-64">Fix FCs when trying to open another todo file.</h2>
+</div>
+<div id="outline-container-sec-65" class="outline-2">
+<h2 id="sec-65">Add setting for automatic sync when opening app.</h2>
+<div class="outline-text-2" id="text-65">
+<p>
+3.0.0
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-66" class="outline-2">
+<h2 id="sec-66">Enable switching of todo files `Menu-&gt;Open todo file`.</h2>
+<div class="outline-text-2" id="text-66">
+<p>
+2.9.1
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-67" class="outline-2">
+<h2 id="sec-67">Make the todo.txt extensions case insensitive, e.g. Due: or due: or DUE: now all work</h2>
+</div>
+<div id="outline-container-sec-68" class="outline-2">
+<h2 id="sec-68">Make use of the Split Action Bar configurable to have either easily reachable buttons or more screen real estate.</h2>
+</div>
+<div id="outline-container-sec-69" class="outline-2">
+<h2 id="sec-69">Don't add empty tasks from Add Task screen.</h2>
+<div class="outline-text-2" id="text-69">
+<p>
+2.9.0
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-70" class="outline-2">
+<h2 id="sec-70">Set due and threshold date for selected tasks from main screen.</h2>
+</div>
+<div id="outline-container-sec-71" class="outline-2">
+<h2 id="sec-71">Insert due or threshold date from Add Task screen.</h2>
+</div>
+<div id="outline-container-sec-72" class="outline-2">
+<h2 id="sec-72">Updated Add Task screen.</h2>
+</div>
+<div id="outline-container-sec-73" class="outline-2">
+<h2 id="sec-73">Create recurring tasks with the rec:[0-9]+[mwd] format.</h2>
+<div class="outline-text-2" id="text-73">
+<p>
+See <a href="http://github.com/bram85/todo.txt-tools/wiki/Recurrence">http://github.com/bram85/todo.txt-tools/wiki/Recurrence</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-74" class="outline-2">
+<h2 id="sec-74">Removed setting for deferrable due date, both due date and threshold</h2>
+<div class="outline-text-2" id="text-74">
+<p>
 date can be set and deferred from the main menu now so this setting is not
-needed anymore.</li>
-</ul>
-</div>
-<div class="section" id="id42">
-<h1>2.8.2</h1>
-<ul class="simple">
-<li>Allow 1x1 widget size.</li>
+needed anymore.
+</p>
+
+<p>
+2.8.2
+<code>===</code>
+</p>
+
+<ul class="org-ul">
+<li>Allow 1x1 widget size.
+</li>
 <li>Filter completed tasks and tasks with threshold date in future.
-1MTD/MYN is fully supported now.</li>
+1MTD/MYN is fully supported now.
+</li>
 </ul>
+
+<p>
+2.8.1
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id43">
-<h1>2.8.1</h1>
-<ul class="simple">
-<li>Solved issue which could lead to Dropbox login loops.</li>
-</ul>
 </div>
-<div class="section" id="id44">
-<h1>2.8.0</h1>
-<ul class="simple">
-<li>Use long click to start drag and drop in sort screen. Old arrows can
-still be enabled in settings.</li>
-</ul>
+<div id="outline-container-sec-75" class="outline-2">
+<h2 id="sec-75">Solved issue which could lead to Dropbox login loops.</h2>
+<div class="outline-text-2" id="text-75">
+<p>
+2.8.0
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id45">
-<h1>2.7.11</h1>
-<ul class="simple">
-<li>Fix FC in share task logging.</li>
-</ul>
 </div>
-<div class="section" id="id46">
-<h1>2.7.10</h1>
-<ul class="simple">
-<li>Fix FC in add task screen.</li>
-<li>Split drawers on tablet landscape to better use space.</li>
-</ul>
+<div id="outline-container-sec-76" class="outline-2">
+<h2 id="sec-76">Use long click to start drag and drop in sort screen. Old arrows can</h2>
+<div class="outline-text-2" id="text-76">
+<p>
+still be enabled in settings.
+</p>
+
+<p>
+2.7.11
+<code>====</code>
+</p>
 </div>
-<div class="section" id="id47">
-<h1>2.7.9</h1>
-<ul class="simple">
-<li>Fix coloring of tasks if it contains creation, due or threshold date.</li>
-</ul>
 </div>
-<div class="section" id="id48">
-<h1>2.7.8</h1>
-<ul class="simple">
-<li>Display due and threshold dates below task. Due dates can be colored (setting).</li>
-<li>Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.</li>
-<li>Show warning when logging out of dropbox that unsaved changes will be lost.</li>
-<li>Don't prefill new task when filter is inverted.</li>
-<li>Quick access to filter and sort from actionbar.</li>
-</ul>
+<div id="outline-container-sec-77" class="outline-2">
+<h2 id="sec-77">Fix FC in share task logging.</h2>
+<div class="outline-text-2" id="text-77">
+<p>
+2.7.10
+<code>====</code>
+</p>
 </div>
-<div class="section" id="id49">
-<h1>2.7.7</h1>
-<ul class="simple">
-<li>Fixed crash when installing for the first time.</li>
-</ul>
 </div>
-<div class="section" id="id50">
-<h1>2.7.6</h1>
-<ul class="simple">
-<li>Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.</li>
-<li>Clean up widget configuration when removing a widget from the homescreen.</li>
-</ul>
+<div id="outline-container-sec-78" class="outline-2">
+<h2 id="sec-78">Fix FC in add task screen.</h2>
 </div>
-<div class="section" id="id51">
-<h1>2.7.5</h1>
-<ul class="simple">
-<li>Fix issue with changing widget theme show &quot;Loading&quot; or nothing at all after switching</li>
-<li>Refactored Filter handling in a separate class</li>
-<li>Change detection of newline in todo.txt</li>
-<li>Do not trim whitespace from tasks</li>
-</ul>
+<div id="outline-container-sec-79" class="outline-2">
+<h2 id="sec-79">Split drawers on tablet landscape to better use space.</h2>
+<div class="outline-text-2" id="text-79">
+<p>
+2.7.9
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id52">
-<h1>2.7.4</h1>
-<ul class="simple">
-<li>Explicitly set task reminder start date to prevent 1970 tasks.</li>
-<li>Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.</li>
-<li>Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.</li>
-</ul>
 </div>
-<div class="section" id="id53">
-<h1>2.7.3</h1>
-<ul class="simple">
-<li>Add checkbox when adding multiple tasks to copy tags and lists from the previous line.</li>
-<li>Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.</li>
-<li>Add Intent to create task for automation tools such as tasker see <a class="reference external" href="http://goo.gl/v3tr2D">http://goo.gl/v3tr2D</a></li>
-<li>Make application intents package specific so you can install different simpletask versions at the same time.</li>
-<li>Integrate cloudless build so all versions are based on same source code</li>
-<li>Add Archive to context menu so you don't have to go to preferences to archive your tasks</li>
-<li>Changed complete icons to avoid confusion with CAB dismiss</li>
-</ul>
+<div id="outline-container-sec-80" class="outline-2">
+<h2 id="sec-80">Fix coloring of tasks if it contains creation, due or threshold date.</h2>
+<div class="outline-text-2" id="text-80">
+<p>
+2.7.8
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id54">
-<h1>2.7.2</h1>
-<ul class="simple">
-<li>Don't crash while demo-ing navigation drawers.</li>
-</ul>
 </div>
-<div class="section" id="id55">
-<h1>2.7.1</h1>
-<ul class="simple">
-<li>Added black theme for widgets. Widget and app theme can be configured seperately.</li>
-<li>Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.</li>
-</ul>
+<div id="outline-container-sec-81" class="outline-2">
+<h2 id="sec-81">Display due and threshold dates below task. Due dates can be colored (setting).</h2>
 </div>
-<div class="section" id="id56">
-<h1>2.7.0</h1>
-<ul class="simple">
-<li>Support for a Holo Dark theme. Can be configured from the Preferences.</li>
-<li>Added grouping by threshold date and priority.</li>
-<li>Demonstrate Navigation drawers on first run.</li>
-<li>Properly initialize side drawes after first sync with Dropbox.</li>
-<li>Do not reset preferences to default after logging out of Dropbox and logging in again.</li>
-<li>Fixed some sorting issues caused by bug in Alphabetical sort.</li>
-<li>Refactored header functionality so it will be easier to add new groupings.</li>
-</ul>
+<div id="outline-container-sec-82" class="outline-2">
+<h2 id="sec-82">Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.</h2>
 </div>
-<div class="section" id="id57">
-<h1>2.6.10</h1>
-<ul class="simple">
-<li>Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.</li>
-</ul>
+<div id="outline-container-sec-83" class="outline-2">
+<h2 id="sec-83">Show warning when logging out of dropbox that unsaved changes will be lost.</h2>
 </div>
-<div class="section" id="id58">
-<h1>2.6.8</h1>
-<ul class="simple">
-<li>Refresh the task view when updating task(s) through the drawer.</li>
-</ul>
+<div id="outline-container-sec-84" class="outline-2">
+<h2 id="sec-84">Don't prefill new task when filter is inverted.</h2>
 </div>
-<div class="section" id="id59">
-<h1>2.6.7</h1>
-<ul class="simple">
-<li>Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (rn) or linux (n), you can still do so in the settings.</li>
-</ul>
+<div id="outline-container-sec-85" class="outline-2">
+<h2 id="sec-85">Quick access to filter and sort from actionbar.</h2>
+<div class="outline-text-2" id="text-85">
+<p>
+2.7.7
+<code>===</code>
+</p>
 </div>
-<div class="section" id="id60">
-<h1>2.6.6</h1>
-<ul class="simple">
-<li>Fixed a bug which could lead to duplication of tasks when editing them from Simpletask.</li>
-</ul>
 </div>
-<div class="section" id="id61">
-<h1>2.6.5</h1>
-<ul class="simple">
-<li>Removed the donate button from the free version and created a
+<div id="outline-container-sec-86" class="outline-2">
+<h2 id="sec-86">Fixed crash when installing for the first time.</h2>
+<div class="outline-text-2" id="text-86">
+<p>
+2.7.6
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-87" class="outline-2">
+<h2 id="sec-87">Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.</h2>
+</div>
+<div id="outline-container-sec-88" class="outline-2">
+<h2 id="sec-88">Clean up widget configuration when removing a widget from the homescreen.</h2>
+<div class="outline-text-2" id="text-88">
+<p>
+2.7.5
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-89" class="outline-2">
+<h2 id="sec-89">Fix issue with changing widget theme show "Loading" or nothing at all after switching</h2>
+</div>
+<div id="outline-container-sec-90" class="outline-2">
+<h2 id="sec-90">Refactored Filter handling in a separate class</h2>
+</div>
+<div id="outline-container-sec-91" class="outline-2">
+<h2 id="sec-91">Change detection of newline in todo.txt</h2>
+</div>
+<div id="outline-container-sec-92" class="outline-2">
+<h2 id="sec-92">Do not trim whitespace from tasks</h2>
+<div class="outline-text-2" id="text-92">
+<p>
+2.7.4
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-93" class="outline-2">
+<h2 id="sec-93">Explicitly set task reminder start date to prevent 1970 tasks.</h2>
+</div>
+<div id="outline-container-sec-94" class="outline-2">
+<h2 id="sec-94">Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.</h2>
+</div>
+<div id="outline-container-sec-95" class="outline-2">
+<h2 id="sec-95">Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.</h2>
+<div class="outline-text-2" id="text-95">
+<p>
+2.7.3
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-96" class="outline-2">
+<h2 id="sec-96">Add checkbox when adding multiple tasks to copy tags and lists from the previous line.</h2>
+</div>
+<div id="outline-container-sec-97" class="outline-2">
+<h2 id="sec-97">Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.</h2>
+</div>
+<div id="outline-container-sec-98" class="outline-2">
+<h2 id="sec-98">Add Intent to create task for automation tools such as tasker see <a href="http://goo.gl/v3tr2D">http://goo.gl/v3tr2D</a></h2>
+</div>
+<div id="outline-container-sec-99" class="outline-2">
+<h2 id="sec-99">Make application intents package specific so you can install different simpletask versions at the same time.</h2>
+</div>
+<div id="outline-container-sec-100" class="outline-2">
+<h2 id="sec-100">Integrate cloudless build so all versions are based on same source code</h2>
+</div>
+<div id="outline-container-sec-101" class="outline-2">
+<h2 id="sec-101">Add Archive to context menu so you don't have to go to preferences to archive your tasks</h2>
+</div>
+<div id="outline-container-sec-102" class="outline-2">
+<h2 id="sec-102">Changed complete icons to avoid confusion with CAB dismiss</h2>
+<div class="outline-text-2" id="text-102">
+<p>
+2.7.2
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-103" class="outline-2">
+<h2 id="sec-103">Don't crash while demo-ing navigation drawers.</h2>
+<div class="outline-text-2" id="text-103">
+<p>
+2.7.1
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-104" class="outline-2">
+<h2 id="sec-104">Added black theme for widgets. Widget and app theme can be configured seperately.</h2>
+</div>
+<div id="outline-container-sec-105" class="outline-2">
+<h2 id="sec-105">Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.</h2>
+<div class="outline-text-2" id="text-105">
+<p>
+2.7.0
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-106" class="outline-2">
+<h2 id="sec-106">Support for a Holo Dark theme. Can be configured from the Preferences.</h2>
+</div>
+<div id="outline-container-sec-107" class="outline-2">
+<h2 id="sec-107">Added grouping by threshold date and priority.</h2>
+</div>
+<div id="outline-container-sec-108" class="outline-2">
+<h2 id="sec-108">Demonstrate Navigation drawers on first run.</h2>
+</div>
+<div id="outline-container-sec-109" class="outline-2">
+<h2 id="sec-109">Properly initialize side drawes after first sync with Dropbox.</h2>
+</div>
+<div id="outline-container-sec-110" class="outline-2">
+<h2 id="sec-110">Do not reset preferences to default after logging out of Dropbox and logging in again.</h2>
+</div>
+<div id="outline-container-sec-111" class="outline-2">
+<h2 id="sec-111">Fixed some sorting issues caused by bug in Alphabetical sort.</h2>
+</div>
+<div id="outline-container-sec-112" class="outline-2">
+<h2 id="sec-112">Refactored header functionality so it will be easier to add new groupings.</h2>
+<div class="outline-text-2" id="text-112">
+<p>
+2.6.10
+<code>====</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-113" class="outline-2">
+<h2 id="sec-113">Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.</h2>
+<div class="outline-text-2" id="text-113">
+<p>
+2.6.8
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-114" class="outline-2">
+<h2 id="sec-114">Refresh the task view when updating task(s) through the drawer.</h2>
+<div class="outline-text-2" id="text-114">
+<p>
+2.6.7
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-115" class="outline-2">
+<h2 id="sec-115">Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (\r\n) or linux (\n), you can still do so in the settings.</h2>
+<div class="outline-text-2" id="text-115">
+<p>
+2.6.6
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-116" class="outline-2">
+<h2 id="sec-116">Fixed a bug which could lead to duplication of tasks when editing them from Simpletask.</h2>
+<div class="outline-text-2" id="text-116">
+<p>
+2.6.5
+<code>===</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-117" class="outline-2">
+<h2 id="sec-117">Removed the donate button from the free version and created a</h2>
+<div class="outline-text-2" id="text-117">
+<p>
 separate paid version. This also makes Simpletask suitable for
-<a class="reference external" href="http://developer.android.com/distribute/googleplay/edu/index.html">Google Play for Education</a>.</li>
-</ul>
+`Google Play for Education <a href="http://developer.android.com/distribute/googleplay/edu/index.html">http://developer.android.com/distribute/googleplay/edu/index.html</a>`_.
+</p>
+</div>
 </div>
 </div>
 </body>
