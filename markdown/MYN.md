@@ -1,6 +1,3 @@
-Master Your Now (MYN) is an email and todo list management system developed by [Michael Linenberger](http://www.michaellinenberger.com/1MTDvsMYN.html). Its main characteristic is that it prevents you becoming overwhelmed by your tasklist by getting tasks that are not urgent out of the way and using technology to automatically get relevant task in your face again. The todo list management alone is also refered to as the One Minute To-Do List (1MTD).
-
-Simpletask has all the building blocks to use it for MYN. This page describes how to configure Simpletask for MYN.
 
 # Creating the contexts for MYN
 
