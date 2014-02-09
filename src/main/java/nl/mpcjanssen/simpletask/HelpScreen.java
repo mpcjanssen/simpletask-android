@@ -53,6 +53,7 @@ public class HelpScreen extends Activity {
 		    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		    startActivity(browserIntent);
 		    return true;
+
 		} else {
 		    return false;
 		}  
@@ -77,6 +78,9 @@ public class HelpScreen extends Activity {
                 return true;
             case R.id.menu_changelog:
                 wvHelp.loadUrl("file:///android_asset/Changelog.html");
+                return true;
+            case R.id.menu_myn:
+                wvHelp.loadUrl("file:///android_asset/MYN.html");
                 return true;
         }
         return super.onOptionsItemSelected(item);
