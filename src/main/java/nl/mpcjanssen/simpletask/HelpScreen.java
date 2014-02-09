@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.util.Linkify;
@@ -47,8 +48,14 @@ public class HelpScreen extends Activity {
         wvHelp.setWebViewClient(new WebViewClient()  {  
             @Override  
             public boolean shouldOverrideUrlLoading(WebView view, String url)  {  
-                Log.v("HELP", "Loading url: " + url);
-                return false;  
+                Log.v(TAG, "Loading url: " + url);
+		if (url.startsWith("http://") || url.startsWith("https://")) {
+		    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		    startActivity(browserIntent);
+		    return true;
+		} else {
+		    return false;
+		}  
             }  
         });  
         wvHelp.loadUrl("file:///android_asset/simpletask.html");
