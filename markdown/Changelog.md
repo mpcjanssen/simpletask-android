@@ -86,27 +86,23 @@
 
 -   Fix rare crash when starting app.
 
-4.0.5
-`===`
+## 4.0.5
 
-# Fix recurring tasks.
+-   Fix recurring tasks.
 
-4.0.4
-`===`
+## 4.0.4
 
-# Fix issue with unsorted or duplicate headers.
+-   Fix issue with unsorted or duplicate headers.
 
-4.0.3
-`===`
+## 4.0.3
 
-# Save text search in saved filter.
+-   Save text search in saved filter.
 
-4.0.2
-`===`
+## 4.0.2
 
-# Revert left drawer to checked views.
+-   Revert left drawer to checked views.
 
-# Allow renaming and updating of saved filters.
+-   Allow renaming and updating of saved filters.
 
 4.0.1
 `===`

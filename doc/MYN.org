@@ -1,6 +1,11 @@
 #+OPTIONS: toc:nil, num:nil
-#+TITLE: 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/style.css" />
+#+TITLE:
+
+** COMMENT html style specifications
+
+# Local Variables:
+# org-export-html-style: "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />"
+# End:
 
 Master Your Now (MYN) is an email and todo list management system developed by [[http://www.michaellinenberger.com/1MTDvsMYN.html][Michael Linenberger]]. Its main characteristic is that it prevents you becoming overwhelmed by your tasklist by getting tasks that are not urgent out of the way and using technology to automatically get relevant task in your face again. The todo list management alone is also refered to as the One Minute To-Do List (1MTD).
 
@@ -50,5 +55,6 @@ There are some prefilled options which you would use often in MYN/1MTD or you ca
 defer to a specific date.
 After defering the task it will move to the bottom of the listview if it has
 been defered into the future and out of your face.
+
 
 

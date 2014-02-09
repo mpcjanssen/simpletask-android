@@ -12,7 +12,15 @@ publishing directory.
 
 Return output file name."
   (org-publish-org-to 'md filename ".md"
-			      plist pub-dir))
+		      plist pub-dir))
+
+(setq org-html-head-include-default-style nil
+      org-html-head-include-scripts nil)
+
+
+
+(setq org-html-head
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />")
 
 (setq org-publish-project-alist
       '(
@@ -34,8 +42,9 @@ Return output file name."
 	 :publishing-function org-html-publish-to-html
 	 :recursive t
 	 :headline-levels 4             ; Just the default for this project.
-	 :auto-preamble t
+	 :auto-preamble f
 	 :html-postamble nil
+	 :html-head-include-default-style nil
 	 )
 	("markdown"
 	 :base-directory "."
@@ -44,7 +53,7 @@ Return output file name."
 	 :publishing-function org-md-publish-to-md
 	 :recursive t
 	 :headline-levels 4             ; Just the default for this project.
-	 :auto-preamble t
+	 :auto-preamble f
 	 :html-postamble nil
 	 )))
 (org-publish "docs" t)
