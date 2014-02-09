@@ -93,7 +93,7 @@ will ensure that the list is always there.
 
 #ChangeLog
 
-See [ChangeLog](./markdown/ChangeLog.md)
+See [Changelog](./markdown/Changelog.md)
 
 #Design considerations
 
