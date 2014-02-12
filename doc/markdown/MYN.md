@@ -23,7 +23,7 @@ each one of the e.g.:
 
 # Configuring the sort for MYN
 
-![nil](./images/MYN_sort.png)
+![img](./images/MYN_sort.png)
 
 To defer tasks in Simpletask for Defer-To-Do or Defer-To-Review we use the threshold date functionallity. So make sure in settings the `Defer by threshold date` is checked. You can then use threshold date `t:yyyy-mm-dd` as startdate in MYN/1MTD
 
