@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title></title>
-<!-- 2014-02-09 zo 23:12 -->
+<!-- 2014-02-11 di 12:19 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -71,7 +71,7 @@
 <h3 id="sec-0-2">4.1.6</h3>
 <div class="outline-text-3" id="text-0-2">
 <ul class="org-ul">
-<li>Set correct create date for recurring tasks. Fixes <a href="http://mpcjanssen.nl/fossil/simpletask/tktview?name=b5608a1a97">b5608a1a97</a>.
+<li>Set correct create date for recurring tasks. Fixes <a href="http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97">b5608a1a97</a>.
 </li>
 <li>Fixed website URL (Thanks Kyle)
 </li>
@@ -541,205 +541,191 @@ still be enabled in settings.
 <li>Split drawers on tablet landscape to better use space.
 </li>
 </ul>
+</div>
+</div>
+<div id="outline-container-sec-0-45" class="outline-3">
+<h3 id="sec-0-45">2.7.9</h3>
+<div class="outline-text-3" id="text-0-45">
+<ul class="org-ul">
+<li>Fix coloring of tasks if it contains creation, due or threshold date.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-0-46" class="outline-3">
+<h3 id="sec-0-46">2.7.8</h3>
+<div class="outline-text-3" id="text-0-46">
+<ul class="org-ul">
+<li>Display due and threshold dates below task. Due dates can be colored (setting).
+</li>
+<li>Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.
+</li>
+<li>Show warning when logging out of dropbox that unsaved changes will be lost.
+</li>
+<li>Don't prefill new task when filter is inverted.
+</li>
+<li>Quick access to filter and sort from actionbar.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-0-47" class="outline-3">
+<h3 id="sec-0-47">2.7.7</h3>
+<div class="outline-text-3" id="text-0-47">
+<ul class="org-ul">
+<li>Fixed crash when installing for the first time.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-0-48" class="outline-3">
+<h3 id="sec-0-48">2.7.6</h3>
+<div class="outline-text-3" id="text-0-48">
+<ul class="org-ul">
+<li>Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
+</li>
+<li>Clean up widget configuration when removing a widget from the homescreen.
+</li>
+</ul>
+</div>
+</div>
 
-<p>
-2.7.9
-<code>===</code>
-</p>
+<div id="outline-container-sec-0-49" class="outline-3">
+<h3 id="sec-0-49">2.7.5</h3>
+<div class="outline-text-3" id="text-0-49">
+<ul class="org-ul">
+<li>Fix issue with changing widget theme show "Loading" or nothing at all after switching.
+</li>
+<li>Refactored Filter handling in a separate class.
+</li>
+<li>Change detection of newline in todo.txt.
+</li>
+<li>Do not trim whitespace from tasks.
+</li>
+</ul>
 </div>
 </div>
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Fix coloring of tasks if it contains creation, due or threshold date.</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-2.7.8
-<code>===</code>
-</p>
+<div id="outline-container-sec-0-50" class="outline-3">
+<h3 id="sec-0-50">2.7.4</h3>
+<div class="outline-text-3" id="text-0-50">
+<ul class="org-ul">
+<li>Explicitly set task reminder start date to prevent 1970 tasks.
+</li>
+<li>Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.
+</li>
+<li>Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.
+</li>
+</ul>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Display due and threshold dates below task. Due dates can be colored (setting).</h2>
-</div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.</h2>
-</div>
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">Show warning when logging out of dropbox that unsaved changes will be lost.</h2>
-</div>
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">Don't prefill new task when filter is inverted.</h2>
-</div>
-<div id="outline-container-sec-6" class="outline-2">
-<h2 id="sec-6">Quick access to filter and sort from actionbar.</h2>
-<div class="outline-text-2" id="text-6">
-<p>
-2.7.7
-<code>===</code>
-</p>
-</div>
-</div>
-<div id="outline-container-sec-7" class="outline-2">
-<h2 id="sec-7">Fixed crash when installing for the first time.</h2>
-<div class="outline-text-2" id="text-7">
-<p>
-2.7.6
-<code>===</code>
-</p>
-</div>
-</div>
-<div id="outline-container-sec-8" class="outline-2">
-<h2 id="sec-8">Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.</h2>
-</div>
-<div id="outline-container-sec-9" class="outline-2">
-<h2 id="sec-9">Clean up widget configuration when removing a widget from the homescreen.</h2>
-<div class="outline-text-2" id="text-9">
-<p>
-2.7.5
-<code>===</code>
-</p>
-</div>
-</div>
-<div id="outline-container-sec-10" class="outline-2">
-<h2 id="sec-10">Fix issue with changing widget theme show "Loading" or nothing at all after switching</h2>
-</div>
-<div id="outline-container-sec-11" class="outline-2">
-<h2 id="sec-11">Refactored Filter handling in a separate class</h2>
-</div>
-<div id="outline-container-sec-12" class="outline-2">
-<h2 id="sec-12">Change detection of newline in todo.txt</h2>
-</div>
-<div id="outline-container-sec-13" class="outline-2">
-<h2 id="sec-13">Do not trim whitespace from tasks</h2>
-<div class="outline-text-2" id="text-13">
-<p>
-2.7.4
-<code>===</code>
-</p>
-</div>
-</div>
-<div id="outline-container-sec-14" class="outline-2">
-<h2 id="sec-14">Explicitly set task reminder start date to prevent 1970 tasks.</h2>
-</div>
-<div id="outline-container-sec-15" class="outline-2">
-<h2 id="sec-15">Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.</h2>
-</div>
-<div id="outline-container-sec-16" class="outline-2">
-<h2 id="sec-16">Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.</h2>
-<div class="outline-text-2" id="text-16">
-<p>
-2.7.3
-<code>===</code>
-</p>
-</div>
-</div>
-<div id="outline-container-sec-17" class="outline-2">
-<h2 id="sec-17">Add checkbox when adding multiple tasks to copy tags and lists from the previous line.</h2>
-</div>
-<div id="outline-container-sec-18" class="outline-2">
-<h2 id="sec-18">Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.</h2>
-</div>
-<div id="outline-container-sec-19" class="outline-2">
-<h2 id="sec-19">Add Intent to create task for automation tools such as tasker see <a href="http://goo.gl/v3tr2D">http://goo.gl/v3tr2D</a></h2>
-</div>
-<div id="outline-container-sec-20" class="outline-2">
-<h2 id="sec-20">Make application intents package specific so you can install different simpletask versions at the same time.</h2>
-</div>
-<div id="outline-container-sec-21" class="outline-2">
-<h2 id="sec-21">Integrate cloudless build so all versions are based on same source code</h2>
-</div>
-<div id="outline-container-sec-22" class="outline-2">
-<h2 id="sec-22">Add Archive to context menu so you don't have to go to preferences to archive your tasks</h2>
-</div>
-<div id="outline-container-sec-23" class="outline-2">
-<h2 id="sec-23">Changed complete icons to avoid confusion with CAB dismiss</h2>
-<div class="outline-text-2" id="text-23">
+
+<div id="outline-container-sec-0-51" class="outline-3">
+<h3 id="sec-0-51">2.7.3</h3>
+<div class="outline-text-3" id="text-0-51">
+<ul class="org-ul">
+<li>Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
+</li>
+<li>Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
+</li>
+<li>Add Intent to create task for automation tools such as tasker see <a href="intents.html">help</a>.
+</li>
+<li>Make application intents package specific so you can install different simpletask versions at the same time.
+</li>
+<li>Integrate cloudless build so all versions are based on same source code
+</li>
+<li>Add Archive to context menu so you don't have to go to preferences to archive your tasks
+</li>
+<li>Changed complete icons to avoid confusion with CAB dismiss
+</li>
+</ul>
+
 <p>
 2.7.2
 <code>===</code>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-24" class="outline-2">
-<h2 id="sec-24">Don't crash while demo-ing navigation drawers.</h2>
-<div class="outline-text-2" id="text-24">
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Don't crash while demo-ing navigation drawers.</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 2.7.1
 <code>===</code>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-25" class="outline-2">
-<h2 id="sec-25">Added black theme for widgets. Widget and app theme can be configured seperately.</h2>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Added black theme for widgets. Widget and app theme can be configured seperately.</h2>
 </div>
-<div id="outline-container-sec-26" class="outline-2">
-<h2 id="sec-26">Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.</h2>
-<div class="outline-text-2" id="text-26">
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 2.7.0
 <code>===</code>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-27" class="outline-2">
-<h2 id="sec-27">Support for a Holo Dark theme. Can be configured from the Preferences.</h2>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Support for a Holo Dark theme. Can be configured from the Preferences.</h2>
 </div>
-<div id="outline-container-sec-28" class="outline-2">
-<h2 id="sec-28">Added grouping by threshold date and priority.</h2>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">Added grouping by threshold date and priority.</h2>
 </div>
-<div id="outline-container-sec-29" class="outline-2">
-<h2 id="sec-29">Demonstrate Navigation drawers on first run.</h2>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">Demonstrate Navigation drawers on first run.</h2>
 </div>
-<div id="outline-container-sec-30" class="outline-2">
-<h2 id="sec-30">Properly initialize side drawes after first sync with Dropbox.</h2>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">Properly initialize side drawes after first sync with Dropbox.</h2>
 </div>
-<div id="outline-container-sec-31" class="outline-2">
-<h2 id="sec-31">Do not reset preferences to default after logging out of Dropbox and logging in again.</h2>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8">Do not reset preferences to default after logging out of Dropbox and logging in again.</h2>
 </div>
-<div id="outline-container-sec-32" class="outline-2">
-<h2 id="sec-32">Fixed some sorting issues caused by bug in Alphabetical sort.</h2>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9">Fixed some sorting issues caused by bug in Alphabetical sort.</h2>
 </div>
-<div id="outline-container-sec-33" class="outline-2">
-<h2 id="sec-33">Refactored header functionality so it will be easier to add new groupings.</h2>
-<div class="outline-text-2" id="text-33">
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10">Refactored header functionality so it will be easier to add new groupings.</h2>
+<div class="outline-text-2" id="text-10">
 <p>
 2.6.10
 <code>====</code>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-34" class="outline-2">
-<h2 id="sec-34">Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.</h2>
-<div class="outline-text-2" id="text-34">
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11">Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.</h2>
+<div class="outline-text-2" id="text-11">
 <p>
 2.6.8
 <code>===</code>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-35" class="outline-2">
-<h2 id="sec-35">Refresh the task view when updating task(s) through the drawer.</h2>
-<div class="outline-text-2" id="text-35">
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12">Refresh the task view when updating task(s) through the drawer.</h2>
+<div class="outline-text-2" id="text-12">
 <p>
 2.6.7
 <code>===</code>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-36" class="outline-2">
-<h2 id="sec-36">Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (\r\n) or linux (\n), you can still do so in the settings.</h2>
-<div class="outline-text-2" id="text-36">
-</div><div id="outline-container-sec-36-1" class="outline-3">
-<h3 id="sec-36-1">2.6.6</h3>
-<div class="outline-text-3" id="text-36-1">
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13">Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (\r\n) or linux (\n), you can still do so in the settings.</h2>
+<div class="outline-text-2" id="text-13">
+</div><div id="outline-container-sec-13-1" class="outline-3">
+<h3 id="sec-13-1">2.6.6</h3>
+<div class="outline-text-3" id="text-13-1">
 <ul class="org-ul">
 <li>Fixed a bug which could lead to duplication of tasks when editing them from Simpletask.
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-36-2" class="outline-3">
-<h3 id="sec-36-2">2.6.5</h3>
-<div class="outline-text-3" id="text-36-2">
+<div id="outline-container-sec-13-2" class="outline-3">
+<h3 id="sec-13-2">2.6.5</h3>
+<div class="outline-text-3" id="text-13-2">
 <ul class="org-ul">
 <li>Removed the donate button from the free version and created a
 separate paid version. This also makes Simpletask suitable for
