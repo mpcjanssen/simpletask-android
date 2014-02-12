@@ -183,7 +183,10 @@ SORTS contains a comma or '\\n' separated list of sort keys and their direction 
 
 See list in [source code](http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51)
 
-###Example
+* The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.
+* The sort `+!completed,-!alphabetical` sorts completed tasks last and then sorts reversed alphabetical.
+
+### Tasker example
 
 * Action: `nl.mpcjanssen.simpletask.START_WITH_FILTER`
 * Cat: `Default`
@@ -191,10 +194,6 @@ See list in [source code](http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9b
 * Extra: `CONTEXTS:Office,Online`
 * Extra: `SORTS:+!completed,+!alphabetical`
 * Target: `Activity`
-
-
-* The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.
-* The sort `+!completed,-!alphabetical` sorts completed tasks last and then sorts reversed alphabetical.
 
 Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:
 
