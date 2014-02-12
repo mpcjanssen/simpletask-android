@@ -1,3 +1,3 @@
 # simpletask
 
-See [here](./docs/makdown/simpletask.md).
+See [here](./docs/markdown/simpletask.md).
