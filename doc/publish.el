@@ -58,5 +58,6 @@ Return output file name."
 	 :auto-preamble f
 	 :html-postamble nil
 	 :html-preamle nil
+	 :html-extension "md"
 	 )))
 (org-publish "docs" t)
