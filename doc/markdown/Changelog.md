@@ -5,7 +5,7 @@
 
 ## 4.1.6
 
--   Set correct create date for recurring tasks. Fixes [b5608a1a97](http://mpcjanssen.nl/fossil/simpletask/tktview?name=b5608a1a97).
+-   Set correct create date for recurring tasks. Fixes [b5608a1a97](http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97).
 -   Fixed website URL (Thanks Kyle)
 -   Fixed cursor position when adding a task with prefilled list or tag.
 -   Recognize dates at beginning of task. Fixes [#46](http://mpcjanssen.nl/tracker/issues/46).
@@ -222,72 +222,49 @@
 -   Fix FC in add task screen.
 -   Split drawers on tablet landscape to better use space.
 
-2.7.9
-`===`
+## 2.7.9
 
-# Fix coloring of tasks if it contains creation, due or threshold date.
+-   Fix coloring of tasks if it contains creation, due or threshold date.
 
-2.7.8
-`===`
+## 2.7.8
 
-# Display due and threshold dates below task. Due dates can be colored (setting).
+-   Display due and threshold dates below task. Due dates can be colored (setting).
+-   Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.
+-   Show warning when logging out of dropbox that unsaved changes will be lost.
+-   Don't prefill new task when filter is inverted.
+-   Quick access to filter and sort from actionbar.
 
-# Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.
+## 2.7.7
 
-# Show warning when logging out of dropbox that unsaved changes will be lost.
+-   Fixed crash when installing for the first time.
 
-# Don't prefill new task when filter is inverted.
+## 2.7.6
 
-# Quick access to filter and sort from actionbar.
+-   Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
+-   Clean up widget configuration when removing a widget from the homescreen.
 
-2.7.7
-`===`
+## 2.7.5
 
-# Fixed crash when installing for the first time.
+-   Fix issue with changing widget theme show "Loading" or nothing at all after switching.
+-   Refactored Filter handling in a separate class.
+-   Change detection of newline in todo.txt.
+-   Do not trim whitespace from tasks.
 
-2.7.6
-`===`
+## 2.7.4
 
-# Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
+-   Explicitly set task reminder start date to prevent 1970 tasks.
+-   Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.
+-   Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.
 
-# Clean up widget configuration when removing a widget from the homescreen.
+## 2.7.3
 
-2.7.5
-`===`
-
-# Fix issue with changing widget theme show "Loading" or nothing at all after switching
-
-# Refactored Filter handling in a separate class
-
-# Change detection of newline in todo.txt
-
-# Do not trim whitespace from tasks
-
-2.7.4
-`===`
-
-# Explicitly set task reminder start date to prevent 1970 tasks.
-
-# Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.
-
-# Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.
-
-2.7.3
-`===`
-
-# Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
-
-# Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
-
-# Add Intent to create task for automation tools such as tasker see <http://goo.gl/v3tr2D>
-
-# Make application intents package specific so you can install different simpletask versions at the same time.
-
-# Integrate cloudless build so all versions are based on same source code
-
-# Add Archive to context menu so you don't have to go to preferences to archive your tasks
-
-# Changed complete icons to avoid confusion with CAB dismiss
+-   Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
+-   Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
+-   Add Intent to create task for automation tools such as tasker see [help](intents.html).
+-   Make application intents package specific so you can install different simpletask versions at the same time.
+-   Integrate cloudless build so all versions are based on same source code
+-   Add Archive to context menu so you don't have to go to preferences to archive your tasks
+-   Changed complete icons to avoid confusion with CAB dismiss
 
 2.7.2
 `===`

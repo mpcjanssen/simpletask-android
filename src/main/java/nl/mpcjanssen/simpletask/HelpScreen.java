@@ -82,6 +82,9 @@ public class HelpScreen extends Activity {
             case R.id.menu_myn:
                 wvHelp.loadUrl("file:///android_asset/MYN.html");
                 return true;
+            case R.id.menu_intents:
+                wvHelp.loadUrl("file:///android_asset/intents.html");
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -13,6 +13,11 @@
             android:showAsAction="never"
             android:title="Changelog"/>
     <item
+            android:id="@+id/menu_intents"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="Intents"/>
+    <item
             android:id="@+id/menu_myn"
             android:orderInCategory="100"
             android:showAsAction="never"
