@@ -158,17 +158,17 @@ I like to add the +tasker tag to be able to quickly filter tasks that were creat
 To open Simpletask with a specific filter you can use the intent:
 
 * Intent action: `nl.mpcjanssen.simpletask.START_WITH_FILTER`
-* Intent string extra: `CONTEXTS` list of contexts in filter separated by '\\n' or ','
-* Intent string extra: `PROJECTS` list of contexts in filter separated by '\\n' or ','
-* Intent string extra: `PRIORITIES` list of contexts in filter separated by '\\n' or ','
-* Intent boolean extra: `CONTEXTSnot` true to invert the contexts filter.
-* Intent boolean extra: `PROJECTSnot` true to invert the projects filter.
-* Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.
-* Intent boolean extra: `PRIORITIESnot` true to invert the priorities filter.
-* Intent boolean extra: `HIDECOMPLETED` true to hide completed tasks.
-* Intent boolean extra: `HIDEFUTURE` true to hide tasks with a threshold date
+* Intent string extra: `CONTEXTS:` list of contexts in filter separated by '\\n' or ','
+* Intent string extra: `PROJECTS:` list of contexts in filter separated by '\\n' or ','
+* Intent string extra: `PRIORITIES:` list of contexts in filter separated by '\\n' or ','
+* Intent boolean extra: `CONTEXTSnot:` true to invert the contexts filter.
+* Intent boolean extra: `PROJECTSnot:` true to invert the projects filter.
+* Intent boolean extra: `PRIORITIESnot:` true to invert the priorities filter.
+* Intent boolean extra: `PRIORITIESnot:` true to invert the priorities filter.
+* Intent boolean extra: `HIDECOMPLETED:` true to hide completed tasks.
+* Intent boolean extra: `HIDEFUTURE:` true to hide tasks with a threshold date
   in the future.
-* Intent string extra: `SORTS` active sort.
+* Intent string extra: `SORTS:` active sort.
 
 ###Sorts extra
 
@@ -184,6 +184,14 @@ SORTS contains a comma or '\\n' separated list of sort keys and their direction 
 See list in [source code](http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51)
 
 ###Example
+
+* Action: `nl.mpcjanssen.simpletask.START_WITH_FILTER`
+* Cat: `Default`
+* Mime Type:
+* Extra: `CONTEXTS:Office,Online`
+* Extra: `SORTS:+!completed,+!alphabetical`
+* Target: `Activity`
+
 
 * The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.
 * The sort `+!completed,-!alphabetical` sorts completed tasks last and then sorts reversed alphabetical.
