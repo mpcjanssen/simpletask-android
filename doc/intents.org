@@ -37,15 +37,15 @@ To open Simpletask with a specific filter you can use the intent:
 
 | Name            | Type    | Description                                          |
 |-----------------+---------+------------------------------------------------------|
-| =CONTEXTS=      | String  | list of lists in filter separated by '\n' or ','     |
-| =PROJECTS=      | String  | list of tags in filter separated by '\n' or ','      |
-| =PRIORITIES=    | String  | list of priorities in filter separated by '\n' or ', |
-| =CONTEXTSnot=   | Boolean | true to invert the lists filter                      |
-| =PROJECTSnot=   | Boolean | true to invert the tags filter                       |
-| =PRIORITIESnot= | Boolean | true to invert the priorities filter                 |
-| =HIDECOMPLETED= | Boolean | true to hide completed tasks                         |
-| =HIDEFUTURE=    | Boolean | true to hide tasks with a threshold date             |
-| =SORTS=         | String  | active sort (see below)                              |
+| CONTEXTS        | String  | list of lists in filter separated by '\n' or ','     |
+| PROJECTS        | String  | list of tags in filter separated by '\n' or ','      |
+| PRIORITIES      | String  | list of priorities in filter separated by '\n' or ', |
+| CONTEXTSnot     | Boolean | true to invert the lists filter                      |
+| PROJECTSnot     | Boolean | true to invert the tags filter                       |
+| PRIORITIESnot   | Boolean | true to invert the priorities filter                 |
+| HIDECOMPLETED   | Boolean | true to hide completed tasks                         |
+| HIDEFUTURE      | Boolean | true to hide tasks with a threshold date             |
+| SORTS           | String  | active sort (see below)                              |
 
 
 *** Sorts extra
