@@ -1,4 +1,4 @@
-#+OPTIONS: toc:nil, num:nil
+#+OPTIONS: toc:nil, num:nil, ^:nil
 #+TITLE:
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/style.css" />
 
@@ -17,39 +17,46 @@ the intent will have one extra string =task= which contains the task to be added
 
 For example to create a task from tasker use the following action:
 
-- Action: nl.mpcjanssen.simpletask.BACKGROUND_TASK
+- Action: =nl.mpcjanssen.simpletask.BACKGROUND_TASK=
 - Cat: Default
 - Mime Type: text/*
-- Extra: task:\<Task text with possible variables here\> +tasker
+- Extra: task: =<Task text with possible variables here> +tasker=
 - Target: Activity
 
-I like to add the +tasker tag to be able to quickly filter tasks that were created by tasker.
+I like to add the =+tasker= tag to be able to quickly filter tasks that were created by tasker.
 
 ** Open with specific filter
 
 To open Simpletask with a specific filter you can use the intent:
 
+
 - Intent action: =nl.mpcjanssen.simpletask.START_WITH_FILTER=
-- Intent string extra: =CONTEXTS:= list of contexts in filter separated by '\n' or ','
-- Intent string extra: =PROJECTS:= list of contexts in filter separated by '\n' or ','
-- Intent string extra: =PRIORITIES:= list of contexts in filter separated by '\n' or ','
-- Intent boolean extra: =CONTEXTSnot:= true to invert the contexts filter.
-- Intent boolean extra: =PROJECTSnot:= true to invert the projects filter.
-- Intent boolean extra: =PRIORITIESnot:= true to invert the priorities filter.
-- Intent boolean extra: =PRIORITIESnot:= true to invert the priorities filter.
-- Intent boolean extra: =HIDECOMPLETED:= true to hide completed tasks.
-- Intent boolean extra: =HIDEFUTURE:= true to hide tasks with a threshold date
-  in the future.
-- Intent string extra: =SORTS:= active sort.
+- Intent extras: The following extras can be added as part of the
+  intent. Note that currently the names still reflect the original
+  naming of lists/tags.
+
+| Name            | Type    | Description                                          |
+|-----------------+---------+------------------------------------------------------|
+| =CONTEXTS=      | String  | list of lists in filter separated by '\n' or ','     |
+| =PROJECTS=      | String  | list of tags in filter separated by '\n' or ','      |
+| =PRIORITIES=    | String  | list of priorities in filter separated by '\n' or ', |
+| =CONTEXTSnot=   | Boolean | true to invert the lists filter                      |
+| =PROJECTSnot=   | Boolean | true to invert the tags filter                       |
+| =PRIORITIESnot= | Boolean | true to invert the priorities filter                 |
+| =HIDECOMPLETED= | Boolean | true to hide completed tasks                         |
+| =HIDEFUTURE=    | Boolean | true to hide tasks with a threshold date             |
+| =SORTS=         | String  | active sort (see below)                              |
+
 
 *** Sorts extra
 
-SORTS contains a comma or '\\n' separated list of sort keys and their direction with a =!= in between.
+SORTS contains a comma or '\n' separated list of sort keys and their
+direction with a =!= in between. Giving =<direction>!<sort key>=.
 
 **** Direction
 
-- =+= :: Ascending
-- =-= :: Descending
+- =+= : Ascending
+- =-= : Descending
 
 **** Sort keys
 
@@ -72,7 +79,9 @@ See list in http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c230
 
 Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:
 
-=am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e SORTS +!completed,+!alphabetical -e PROJECTS project1,project2 -e CONTEXTS @errands,@computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S=
+#+BEGIN_SRC
+am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e SORTS +!completed,+!alphabetical -e PROJECTS project1,project2 -e CONTEXTS @errands,@computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S
+#+END_SRC
 
 The =-S= at the end will ensure the app is properly restarted if it's
 already visible. However with tasker the =-S= seems not to work. So there try it without.
