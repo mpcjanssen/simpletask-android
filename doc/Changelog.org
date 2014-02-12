@@ -2,12 +2,16 @@
 #+TITLE:
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/style.css" />
 
+** 4.1.8
+
+- Added in app documentation.
+- Switched to Android plugin 0.8 (requires gradle 1.10)
 
 ** 4.1.7
 
 - Added setting to hide the checkboxes for completing tasks.
 - Fix grouping by threshold date.
-
+  
 ** 4.1.6
 
 - Set correct create date for recurring tasks. Fixes [[http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97][b5608a1a97]].
