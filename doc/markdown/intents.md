@@ -48,63 +48,63 @@ To open Simpletask with a specific filter you can use the intent:
 
 <tbody>
 <tr>
-<td class="left">`CONTEXTS`</td>
+<td class="left">CONTEXTS</td>
 <td class="left">String</td>
 <td class="left">list of lists in filter separated by '\n' or ','</td>
 </tr>
 
 
 <tr>
-<td class="left">`PROJECTS`</td>
+<td class="left">PROJECTS</td>
 <td class="left">String</td>
 <td class="left">list of tags in filter separated by '\n' or ','</td>
 </tr>
 
 
 <tr>
-<td class="left">`PRIORITIES`</td>
+<td class="left">PRIORITIES</td>
 <td class="left">String</td>
 <td class="left">list of priorities in filter separated by '\n' or ',</td>
 </tr>
 
 
 <tr>
-<td class="left">`CONTEXTSnot`</td>
+<td class="left">CONTEXTSnot</td>
 <td class="left">Boolean</td>
 <td class="left">true to invert the lists filter</td>
 </tr>
 
 
 <tr>
-<td class="left">`PROJECTSnot`</td>
+<td class="left">PROJECTSnot</td>
 <td class="left">Boolean</td>
 <td class="left">true to invert the tags filter</td>
 </tr>
 
 
 <tr>
-<td class="left">`PRIORITIESnot`</td>
+<td class="left">PRIORITIESnot</td>
 <td class="left">Boolean</td>
 <td class="left">true to invert the priorities filter</td>
 </tr>
 
 
 <tr>
-<td class="left">`HIDECOMPLETED`</td>
+<td class="left">HIDECOMPLETED</td>
 <td class="left">Boolean</td>
 <td class="left">true to hide completed tasks</td>
 </tr>
 
 
 <tr>
-<td class="left">`HIDEFUTURE`</td>
+<td class="left">HIDEFUTURE</td>
 <td class="left">Boolean</td>
 <td class="left">true to hide tasks with a threshold date</td>
 </tr>
 
 
 <tr>
-<td class="left">`SORTS`</td>
+<td class="left">SORTS</td>
 <td class="left">String</td>
 <td class="left">active sort (see below)</td>
 </tr>
