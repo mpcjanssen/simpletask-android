@@ -44,6 +44,8 @@ Return output file name."
 	 :headline-levels 4             ; Just the default for this project.
 	 :auto-preamble f
 	 :html-postamble nil
+	 :html-preamble nil
+	 :time-stamp-file nil
 	 :html-head-include-default-style nil
 	 )
 	("markdown"
@@ -55,5 +57,6 @@ Return output file name."
 	 :headline-levels 4             ; Just the default for this project.
 	 :auto-preamble f
 	 :html-postamble nil
+	 :html-preamle nil
 	 )))
 (org-publish "docs" t)
