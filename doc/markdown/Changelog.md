@@ -260,7 +260,7 @@
 
 -   Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
 -   Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
--   Add Intent to create task for automation tools such as tasker see [help](intents.html).
+-   Add Intent to create task for automation tools such as tasker see [help](intents.md).
 -   Make application intents package specific so you can install different simpletask versions at the same time.
 -   Integrate cloudless build so all versions are based on same source code
 -   Add Archive to context menu so you don't have to go to preferences to archive your tasks
