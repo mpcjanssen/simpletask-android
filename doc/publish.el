@@ -51,7 +51,7 @@ Return output file name."
 	("markdown"
 	 :base-directory "."
 	 :base-extension "org"
-	 :publishing-directory "./markdown"
+	 :publishing-directory "."
 	 :publishing-function org-md-publish-to-md
 	 :recursive t
 	 :headline-levels 4             ; Just the default for this project.

@@ -1,1 +1,1 @@
-See [here](./doc/markdown/simpletask.md).
+See [here](./doc/simpletask.md).
