@@ -1,3 +1,8 @@
+## 4.1.8
+
+-   Added in app documentation.
+-   Switched to Android plugin 0.8 (requires gradle 1.10)
+
 ## 4.1.7
 
 -   Added setting to hide the checkboxes for completing tasks.
