@@ -5,7 +5,7 @@
 ** 4.1.8
 
 - Added in app documentation.
-- Switched to Android plugin 0.8 (requires gradle 1.10)
+- Switched to Android plugin 0.8 (requires gradle 1.10).
 
 ** 4.1.7
 
@@ -278,44 +278,38 @@
 - Add Archive to context menu so you don't have to go to preferences to archive your tasks
 - Changed complete icons to avoid confusion with CAB dismiss
 
-2.7.2
-=====
+** 2.7.2
 
-* Don't crash while demo-ing navigation drawers.
+- Don't crash while demo-ing navigation drawers.
 
-2.7.1
-=====
+** 2.7.1
 
-* Added black theme for widgets. Widget and app theme can be configured seperately.
-* Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.
+- Added black theme for widgets. Widget and app theme can be configured seperately.
+- Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.
 
-2.7.0
-=====
+** 2.7.0
 
-* Support for a Holo Dark theme. Can be configured from the Preferences.
-* Added grouping by threshold date and priority.
-* Demonstrate Navigation drawers on first run.
-* Properly initialize side drawes after first sync with Dropbox.
-* Do not reset preferences to default after logging out of Dropbox and logging in again.
-* Fixed some sorting issues caused by bug in Alphabetical sort.
-* Refactored header functionality so it will be easier to add new groupings.
+- Support for a Holo Dark theme. Can be configured from the Preferences.
+- Added grouping by threshold date and priority.
+- Demonstrate Navigation drawers on first run.
+- Properly initialize side drawes after first sync with Dropbox.
+- Do not reset preferences to default after logging out of Dropbox and logging in again.
+- Fixed some sorting issues caused by bug in Alphabetical sort.
+- Refactored header functionality so it will be easier to add new groupings.
 
 
-2.6.10
-======
+** 2.6.10
 
-* Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.
+- Fix issues with widgets where the PendingIntents were not correctly filled. This cause the title click and + click to misbehave.
 
-2.6.8
-=====
+** 2.6.8
 
-* Refresh the task view when updating task(s) through the drawer.
+- Refresh the task view when updating task(s) through the drawer.
 
 
-2.6.7
-=====
+** 2.6.7
 
-* Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (\r\n) or linux (\n), you can still do so in the settings.
+- Automatically detect the line break used when opening a todo file and make that the default. Your line endings will now stay the same without need to configure anything. If you want to change the used linebreak to windows (\r\n) or linux (\n), you can still do so in the settings.
 
 ** 2.6.6
 
