@@ -225,8 +225,8 @@ public class AddTask extends Activity {
             return;
         } else if (Intent.ACTION_SEND.equals(action)) {
             Log.d(TAG, "Share");
-            share_text = (String) intent
-                    .getCharSequenceExtra(Intent.EXTRA_TEXT);
+            share_text = intent
+		.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
             if (share_text == null) {
                 share_text = "";
             }
