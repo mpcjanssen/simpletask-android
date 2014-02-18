@@ -44,270 +44,29 @@ To open Simpletask with a specific filter you can use the intent:
    intent. Note that currently the names still reflect the original
    naming of lists/tags.
 
-.. raw:: html
 
-   <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
-
-   <colgroup>
-   <col  class="left" />
-
-   <col  class="left" />
-
-   <col  class="left" />
-   </colgroup>
-   <thead>
-   <tr>
-   <th scope="col" class="left">
-
-Name
-
-.. raw:: html
-
-   </th>
-   <th scope="col" class="left">
-
-Type
-
-.. raw:: html
-
-   </th>
-   <th scope="col" class="left">
-
-Description
-
-.. raw:: html
-
-   </th>
-   </tr>
-   </thead>
-
-   <tbody>
-   <tr>
-   <td class="left">
-
-CONTEXTS
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-String
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-list of lists in filter separated by '' or ','
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-PROJECTS
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-String
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-list of tags in filter separated by '' or ','
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-PRIORITIES
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-String
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-list of priorities in filter separated by '' or ',
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-CONTEXTSnot
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-Boolean
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-true to invert the lists filter
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-PROJECTSnot
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-Boolean
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-true to invert the tags filter
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-PRIORITIESnot
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-Boolean
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-true to invert the priorities filter
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-HIDECOMPLETED
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-Boolean
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-true to hide completed tasks
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-HIDEFUTURE
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-Boolean
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-true to hide tasks with a threshold date
-
-.. raw:: html
-
-   </td>
-   </tr>
-
-
-   <tr>
-   <td class="left">
-
-SORTS
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-String
-
-.. raw:: html
-
-   </td>
-   <td class="left">
-
-active sort (see below)
-
-.. raw:: html
-
-   </td>
-   </tr>
-   </tbody>
-   </table>
++---------------+---------+------------------------------------------------------+
+| Name          | Type    | Description                                          |
++===============+=========+======================================================+
+| CONTEXTS      | String  | list of lists in filter separated by '\n' or ','     |
++---------------+---------+------------------------------------------------------+
+| PROJECTS      | String  | list of tags in filter separated by '\n' or ','      |
++---------------+---------+------------------------------------------------------+
+| PRIORITIES    | String  | list of priorities in filter separated by '\n' or ', |
++---------------+---------+------------------------------------------------------+
+| CONTEXTSnot   | Boolean | true to invert the lists filter                      |
++---------------+---------+------------------------------------------------------+
+| PROJECTSnot   | Boolean | true to invert the tags filter                       |
++---------------+---------+------------------------------------------------------+
+| PRIORITIESnot | Boolean | true to invert the priorities filter                 |
++---------------+---------+------------------------------------------------------+
+| HIDECOMPLETED | Boolean | true to hide completed tasks                         |
++---------------+---------+------------------------------------------------------+
+| HIDEFUTURE    | Boolean | true to hide tasks with a threshold date             |
++---------------+---------+------------------------------------------------------+
+| SORTS         | String  | active sort (see below)                              |
++---------------+---------+------------------------------------------------------+
 
 Sorts extra
 ~~~~~~~~~~~
