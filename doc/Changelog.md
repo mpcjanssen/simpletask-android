@@ -1,3 +1,8 @@
+# 4.1.9
+
+-   Possible fix for crash when using Android "Share&#x2026;" mechanism to
+    add tasks.
+
 # 4.1.8
 
 -   Added in app documentation.

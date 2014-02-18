@@ -2,6 +2,11 @@
 #+TITLE:
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/style.css" />
 
+** 4.1.9
+
+- Possible fix for crash when using Android "Share..." mechanism to
+  add tasks.
+
 ** 4.1.8
 
 - Added in app documentation.
