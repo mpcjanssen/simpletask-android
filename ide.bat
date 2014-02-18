@@ -1,1 +1,1 @@
-C:\PortableApps\PortableApps\gVimPortable\gvimportable -S lvimrc.vim
+gvim -S lvimrc.vim
