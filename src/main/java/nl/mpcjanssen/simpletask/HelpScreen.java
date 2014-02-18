@@ -77,7 +77,7 @@ public class HelpScreen extends Activity {
                 wvHelp.loadUrl("file:///android_asset/simpletask.html");
                 return true;
             case R.id.menu_changelog:
-                wvHelp.loadUrl("file:///android_asset/Changelog.html");
+                wvHelp.loadUrl("file:///android_asset/changelog.html");
                 return true;
             case R.id.menu_myn:
                 wvHelp.loadUrl("file:///android_asset/MYN.html");

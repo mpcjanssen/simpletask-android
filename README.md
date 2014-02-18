@@ -1,1 +1,1 @@
-See [here](./doc/simpletask.md).
+See [here](./doc/simpletask.rst).

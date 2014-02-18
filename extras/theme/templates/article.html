@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} {{ article.title }} | {{ SITENAME }} {% endblock %}
+
+{% block content %}
+    <h1 class="title"> {{ article.title }}</h1>
+    <p class=date> {{ article.locale_date }} </p>
+    {{ article.content }}
+    
+    {% include "twitter.html" %}
+    {% if article.tags %}
+    <p class=tags>This entry was tagged as
+      {% for tag in article.tags %}
+      <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+      {% endfor %}
+    </p>
+    {% endif %}
+    {% if article.comments != 'no' %} 
+       {% include "disqus.html" %} 
+    {% endif %}
+{% endblock %}

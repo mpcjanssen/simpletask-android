@@ -1,9 +1,8 @@
 /* general style */
-body    { font: 18px/25px 'Palatino', 'Palatino Linotype', 'Georgia', serif;
-          margin: 10px; padding: 0px; }
+body    { font: 14px/20px 'Palatino', 'Palatino Linotype', 'Georgia', serif;
+          margin: 0; padding: 0; }
 a       { /*color: #432165;*/ color: #234764; }
 a:hover { color: #3b185f; background: #f9f8fa; }
-img { padding: 5px }
 
 /* headlines */
 h1, h2, h3, h4, h5, h6      { /*font-family: 'Vollkorn', 'Georgia', serif;*/
@@ -13,13 +12,13 @@ h1 a, h2 a, h3 a, h4 a,
 h5 a, h6 a                  { text-decoration: none; }
 h1 a:hover, h2 a:hover,
 h3 a:hover, h4 a:hover      { color: #432165; text-decoration: underline; }
-h1.title                    { width: 80%; }
-h1, h2                      { margin: 10px 10px 25px 10px; }
+h1.title                    { width: 560px; }
+h1, h2                      { margin: 10px 0 25px 0; }
 h1                          { font-size: 48px; line-height: 52px; }
 h2                          { font-size: 36px; line-height: 40px; }
 
 /* layout elements */
-div.container               { width: 90%; margin: 48px auto; padding: 0; }
+div.container               { width: 80%; margin: 48px auto; padding: 0; }
 div.header                  { float: left; }
 div.navigation              { float: left; }
 div.navigation a            { text-decoration: none; 
@@ -124,3 +123,41 @@ div.blog-epilogue           { margin-top: 100px; font-size: 19px; text-align: ce
 div.blog-epilogue a         {text-decoration: none;
                              padding-left: 30px; padding-right: 30px;}
 
+/* about img */
+img.align-left { 
+    float: left; 
+    margin: 20px; 
+}
+
+/* github gists */
+.gist{
+  margin: 15px 0 !important;
+}
+
+.gist-file{
+  border: none !important;
+}
+
+.gist-meta{
+  height: 17px !important;
+  border: 1px solid #D2d2d2 !important;
+  padding-top: 1px !important;;
+  /*padding: 0px !important;*/
+  -moz-border-radius-bottomleft: 10px !important;
+  -webkit-border-bottom-left-radius: 10px !important;
+  -moz-border-radius-bottomright: 10px !important;
+  -webkit-border-bottom-right-radius: 10px !important;
+  font-size: 0.50em !important;
+
+}
+
+.gist-data{
+  padding: 5px !important;
+  border: 1px solid #D2d2d2 !important;
+  border-bottom: none !important;
+  -moz-border-radius-topleft: 10px !important;
+  -webkit-border-top-left-radius: 10px !important;
+  -moz-border-radius-topright: 10px !important;
+  -webkit-border-top-right-radius: 10px !important;
+  font-size: 0.85em !important;
+}
