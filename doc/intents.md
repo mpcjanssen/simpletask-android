@@ -1,3 +1,4 @@
+
 # Introduction
 
 Simpletask supports a couple of intents which can be used by other applications (e.g. tasker) to create tasks or display lists.
@@ -5,7 +6,9 @@ Simpletask supports a couple of intents which can be used by other applications 
 ## Create task in background
 
 To create a task in the background, so without showing simpletask, you can use the intent:
+
 -   Intent action: `nl.mpcjanssen.simpletask.BACKGROUND_TASK`
+
 -   Intent string extra: `task`
 
 the intent will have one extra string `task` which contains the task to be added.
@@ -13,9 +16,13 @@ the intent will have one extra string `task` which contains the task to be added
 For example to create a task from tasker use the following action:
 
 -   Action: `nl.mpcjanssen.simpletask.BACKGROUND_TASK`
+
 -   Cat: Default
+
 -   Mime Type: text/\*
+
 -   Extra: task: `<Task text with possible variables here> +tasker`
+
 -   Target: Activity
 
 I like to add the `+tasker` tag to be able to quickly filter tasks that were created by tasker.
@@ -23,7 +30,10 @@ I like to add the `+tasker` tag to be able to quickly filter tasks that were cre
 ## Open with specific filter
 
 To open Simpletask with a specific filter you can use the intent:
+
+
 -   Intent action: `nl.mpcjanssen.simpletask.START_WITH_FILTER`
+
 -   Intent extras: The following extras can be added as part of the
     intent. Note that currently the names still reflect the original
     naming of lists/tags.
@@ -111,6 +121,7 @@ To open Simpletask with a specific filter you can use the intent:
 </tbody>
 </table>
 
+
 ### Sorts extra
 
 SORTS contains a comma or '\n' separated list of sort keys and their
@@ -119,6 +130,7 @@ direction with a `!` in between. Giving `<direction>!<sort key>`.
 #### Direction
 
 -   `+` : Ascending
+
 -   `-` : Descending
 
 #### Sort keys
@@ -128,16 +140,22 @@ See list in <http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23
 #### Example
 
 -   The sort `+!completed,+!alphabetical` sorts completed tasks last and then sorts alphabetical.
+
 -   The sort `+!completed,-!alphabetical` sorts completed tasks last and
     then sorts reversed alphabetical.
 
 ### Tasker example
 
 -   Action: `nl.mpcjanssen.simpletask.START_WITH_FILTER`
+
 -   Cat: `Default`
+
 -   Mime Type:
+
 -   Extra: `CONTEXTS:Office,Online`
+
 -   Extra: `SORTS:+!completed,+!alphabetical`
+
 -   Target: `Activity`
 
 Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:

@@ -1,3 +1,4 @@
+
 # 4.1.9
 
 -   Possible fix for crash when using Android "Share&#x2026;" mechanism to
@@ -6,18 +7,23 @@
 # 4.1.8
 
 -   Added in app documentation.
+
 -   Switched to Android plugin 0.8 (requires gradle 1.10).
 
 # 4.1.7
 
 -   Added setting to hide the checkboxes for completing tasks.
+
 -   Fix grouping by threshold date.
 
 # 4.1.6
 
 -   Set correct create date for recurring tasks. Fixes [b5608a1a97](http://mpcjanssen.nl/fossil/simpletask/tktview?name%3Db5608a1a97).
+
 -   Fixed website URL (Thanks Kyle)
+
 -   Fixed cursor position when adding a task with prefilled list or tag.
+
 -   Recognize dates at beginning of task. Fixes [#46](http://mpcjanssen.nl/tracker/issues/46).
 
 # 4.1.5
@@ -27,10 +33,15 @@
 # 4.1.4
 
 -   Added setting to only display `.txt` files in todo file browser.
+
 -   ChangeLog is viewable from inside the help menu.
+
 -   Add tasks from locksreen widget without unlocking.
+
 -   Setting to add new tasks at beginning of todo.txt.
+
 -   Allow completing and uncompleting of tasks from CAB.
+
 -   Speed up task archiving and possible fix for [#58](http://mpcjanssen.nl/tracker/issues/58).
 
 # 4.1.3
@@ -40,14 +51,19 @@
 # 4.1.2
 
 -   Archive selected tasks only.
+
 -   Edit multiple tasks at once.
+
 -   Re-added donation link for f-droid users.
+
 -   Changed default wordwrapping in `AddTask` to on.
 
 # 4.1.1
 
 -   Fix crashes with invalid dates such as `2013-11-31`.
+
 -   Refactored header handling.
+
 -   Setting to hide headers with only hidden tasks.
 
 # 4.1.0
@@ -61,8 +77,11 @@
 # 4.0.9
 
 -   Add setting to capitalize tasks.
+
 -   Sort list and tag popups in AddTask screen.
+
 -   Add option to toggle wordwrap when adding tasks.
+
 -   Add filter option to hide tags and lists on task display.
 
 # 4.0.8
@@ -93,6 +112,7 @@
 # 4.0.2
 
 -   Revert left drawer to checked views.
+
 -   Allow renaming and updating of saved filters.
 
 # 4.0.1
@@ -102,15 +122,25 @@
 # 4.0.0
 
 -   Big update which should make starting with Simpletask more intuitive:
+
 -   Merged tag and list navigation drawer into the left drawer.
+
 -   Click tag or list header to invert the filter.
+
 -   Right drawer with favourite filters.
+
 -   Long click saved filter to create homescreen shortcut.
+
 -   Checkboxes in tasklist to quickly complete/uncomplete tasks.
+
 -   Improved tag and list selection dialogs where you can also add new items.
+
 -   Updated priority colors to reflect urgency better.
+
 -   Added 'expert' user settings "hide hints" and "hide confirmation dialogs"
+
 -   Keep priority when completing tasks.
+
 -   Remember last used filter tab.
 
 # 3.2.3
@@ -144,7 +174,9 @@
 # 3.0.10
 
 -   Remove spurious padding of widgets.
+
 -   Use more space for navigation drawers.
+
 -   Keep priority on recurring tasks.
 
 # 3.0.9
@@ -166,16 +198,19 @@
 # 3.0.5
 
 -   Back button configuration to apply filter.
+
 -   Don't reset `Other` filters when clearing filter.
 
 # 3.0.4
 
 -   Redid defer dialogs to require only one click.
+
 -   Setting to save todos when pressing back key from Add Task screen.
 
 # 3.0.3
 
 -   Fix widget filters using inverted List filters.
+
 -   Track file events on correct path after opening a different todo file.
 
 # 3.0.2
@@ -185,6 +220,7 @@
 # 3.0.1
 
 -   Fix FCs when trying to open another todo file.
+
 -   Add setting for automatic sync when opening app.
 
 # 3.0.0
@@ -194,16 +230,22 @@
 # 2.9.1
 
 -   Make the todo.txt extensions case insensitive, e.g. `Due:` or `due:` or `DUE:` now all work
+
 -   Make use of the Split Action Bar configurable to have either easily reachable buttons or more screen real estate.
+
 -   Don't add empty tasks from Add Task screen.
 
 # 2.9.0
 
 -   Set due and threshold date for selected tasks from main screen.
+
 -   Insert due or threshold date from Add Task screen.
+
 -   Updated Add Task screen.
+
 -   Create recurring tasks with the `rec:[0-9]+[mwd]` format.
     See <http://github.com/bram85/todo.txt-tools/wiki/Recurrence>
+
 -   Removed setting for deferrable due date, both due date and threshold
     date can be set and deferred from the main menu now so this setting is not
     needed anymore.
@@ -211,6 +253,7 @@
 # 2.8.2
 
 -   Allow 1x1 widget size.
+
 -   Filter completed tasks and tasks with threshold date in future.
     1MTD/MYN is fully supported now.
 
@@ -230,6 +273,7 @@
 # 2.7.10
 
 -   Fix FC in add task screen.
+
 -   Split drawers on tablet landscape to better use space.
 
 # 2.7.9
@@ -239,9 +283,13 @@
 # 2.7.8
 
 -   Display due and threshold dates below task. Due dates can be colored (setting).
+
 -   Removed work offline option, you should at least log in into dropbox once. If that's not wanted, then use Simpletask Cloudless.
+
 -   Show warning when logging out of dropbox that unsaved changes will be lost.
+
 -   Don't prefill new task when filter is inverted.
+
 -   Quick access to filter and sort from actionbar.
 
 # 2.7.7
@@ -251,29 +299,41 @@
 # 2.7.6
 
 -   Updates to intent handling for easier automation with tasker or am shell scripts. See website for documentation.
+
 -   Clean up widget configuration when removing a widget from the homescreen.
 
 # 2.7.5
 
 -   Fix issue with changing widget theme show "Loading" or nothing at all after switching.
+
 -   Refactored Filter handling in a separate class.
+
 -   Change detection of newline in todo.txt.
+
 -   Do not trim whitespace from tasks.
 
 # 2.7.4
 
 -   Explicitly set task reminder start date to prevent 1970 tasks.
+
 -   Reinitialize due and threshold date after updating a task. This fixes weird sort and defer issues.
+
 -   Allow adding tasks while updating an existing task and use same enter behaviour as with Add Task.
 
 # 2.7.3
 
 -   Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
+
 -   Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
+
 -   Add Intent to create task for automation tools such as tasker see [help](intents.md).
+
 -   Make application intents package specific so you can install different simpletask versions at the same time.
+
 -   Integrate cloudless build so all versions are based on same source code
+
 -   Add Archive to context menu so you don't have to go to preferences to archive your tasks
+
 -   Changed complete icons to avoid confusion with CAB dismiss
 
 # 2.7.2
@@ -283,16 +343,23 @@
 # 2.7.1
 
 -   Added black theme for widgets. Widget and app theme can be configured seperately.
+
 -   Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.
 
 # 2.7.0
 
 -   Support for a Holo Dark theme. Can be configured from the Preferences.
+
 -   Added grouping by threshold date and priority.
+
 -   Demonstrate Navigation drawers on first run.
+
 -   Properly initialize side drawes after first sync with Dropbox.
+
 -   Do not reset preferences to default after logging out of Dropbox and logging in again.
+
 -   Fixed some sorting issues caused by bug in Alphabetical sort.
+
 -   Refactored header functionality so it will be easier to add new groupings.
 
 # 2.6.10
