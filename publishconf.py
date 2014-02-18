@@ -18,7 +18,7 @@ DELETE_OUTPUT_DIRECTORY = True
 
 SECTIONS = [('Blog', '../../index.html'),
         ('Tags', '../../tags.html'),
-        ('Simpletask', '/'),
+        ('Simpletask', ''),
         ('Tracker', '../../tracker/projects/simpletask-android')]
 #       ('About', 'pages/about-me.html')]
 
