@@ -7,6 +7,8 @@ SITENAME = u'Simpletask'
 SITEURL = '.'
 
 PAGE_DIR = ""
+# PAGE_EXCLUDES = ('online',)
+
 ARTICLE_DIR = "articles"
 DELETE_OUTPUT_DIRECTORY = True
 PAGE_URL = '{slug}.html'
@@ -17,6 +19,7 @@ CATEGORIES_SAVE_AS = None
 ARCHIVES_SAVE_AS = None
 TAGS_SAVE_AS = None
 DIRECT_TEMPLATES = ()
+
 
 TIMEZONE = 'Europe/Paris'
 
