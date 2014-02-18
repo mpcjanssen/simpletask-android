@@ -1,0 +1,9 @@
+
+      <div class=navigation>
+        <ul>
+          {% for section in SECTIONS %}
+            <li><a href="{{ SITEURL }}/{{ section[1]}}">{{ section[0] }}</a> </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class=separator></div>

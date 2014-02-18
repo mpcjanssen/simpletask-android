@@ -59,7 +59,7 @@ public class HelpScreen extends Activity {
 		}  
             }  
         });  
-        wvHelp.loadUrl("file:///android_asset/simpletask.html");
+        wvHelp.loadUrl("file:///android_asset/index.html");
     }
 
     @Override
@@ -74,7 +74,7 @@ public class HelpScreen extends Activity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.menu_simpletask:
-                wvHelp.loadUrl("file:///android_asset/simpletask.html");
+                wvHelp.loadUrl("file:///android_asset/index.html");
                 return true;
             case R.id.menu_changelog:
                 wvHelp.loadUrl("file:///android_asset/changelog.html");
