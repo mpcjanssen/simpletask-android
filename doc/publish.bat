@@ -1,1 +1,0 @@
-emacs --script publish.el

@@ -1,6 +1,9 @@
+DeferTasks
+==========
+
 NOTE: In newer versions you can defer both due date and threshold date and this discussion is moot.
 
-The deferring functionality in Simpletask is the [MYN](http://www.michaellinenberger.com/1MTDvsMYN.html) defer to do/review deferring.
+The deferring functionality in Simpletask is the `MYN <http://www.michaellinenberger.com/1MTDvsMYN.html>`_ defer to do/review deferring.
 
 It does not intend to be a due date. It is just meant to get low priority tasks out of the way for now and have them reappear at a certain time in the future (1 week, 2 weeks or 1 month). To achieve this I filter task with threshold date in future. When the deferred start date arrives, the tasks will automatically come back into active view (with the right sorts)
 

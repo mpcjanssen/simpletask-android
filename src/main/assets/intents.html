@@ -1,124 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<title></title>
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
-<script type="text/javascript">
-<!--/*--><![CDATA[/*><!--*/
-    MathJax.Hub.Config({
-        // Only one of the two following lines, depending on user settings
-        // First allows browser-native MathML display, second forces HTML/CSS
-        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
-                     "TeX/noUndefined.js"],
-        tex2jax: {
-            inlineMath: [ ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
-            skipTags: ["script","noscript","style","textarea","pre","code"],
-            ignoreClass: "tex2jax_ignore",
-            processEscapes: false,
-            processEnvironments: true,
-            preview: "TeX"
-        },
-        showProcessingMessages: true,
-        displayAlign: "center",
-        displayIndent: "2em",
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title> Simpletask </title>
 
-        "HTML-CSS": {
-             scale: 100,
-             availableFonts: ["STIX","TeX"],
-             preferredFont: "TeX",
-             webFont: "TeX",
-             imageFont: "TeX",
-             showMathMenu: true,
-        },
-        MMLorHTML: {
-             prefer: {
-                 MSIE:    "MML",
-                 Firefox: "MML",
-                 Opera:   "HTML",
-                 other:   "HTML"
-             }
-        }
-    });
-/*]]>*///-->
-</script>
-</head>
-<body>
-<div id="content">
-<h1 class="title"></h1>
-
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Introduction</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-Simpletask supports a couple of intents which can be used by other applications (e.g. tasker) to create tasks or display lists.
-</p>
-</div>
-
-<div id="outline-container-sec-1-1" class="outline-3">
-<h3 id="sec-1-1">Create task in background</h3>
-<div class="outline-text-3" id="text-1-1">
-<p>
-To create a task in the background, so without showing simpletask, you can use the intent:
-</p>
-
-<ul class="org-ul">
-<li>Intent action: <code>nl.mpcjanssen.simpletask.BACKGROUND_TASK</code>
-</li>
-<li>Intent string extra: <code>task</code>
-</li>
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="./theme/css/pygments.css" type="text/css" />
+  </head>
+  <body>
+    <div class=container>
+        <div class=body>
+    <div class='page'>
+        <h1> Intents </h1>
+        <p>Simpletask supports a couple of intents which can be used by other
+applications (e.g. tasker) to create tasks or display lists.</p>
+<div class="section" id="create-task-in-background">
+<h2>Create task in background</h2>
+<p>To create a task in the background, so without showing simpletask, you
+can use the intent:</p>
+<ul class="simple">
+<li>Intent action: <tt class="docutils literal">nl.mpcjanssen.simpletask.BACKGROUND_TASK</tt></li>
+<li>Intent string extra: <tt class="docutils literal">task</tt></li>
 </ul>
-
-<p>
-the intent will have one extra string <code>task</code> which contains the task to be added.
-</p>
-
-<p>
-For example to create a task from tasker use the following action:
-</p>
-
-<ul class="org-ul">
-<li>Action: <code>nl.mpcjanssen.simpletask.BACKGROUND_TASK</code>
-</li>
-<li>Cat: Default
-</li>
-<li>Mime Type: text/*
-</li>
-<li>Extra: task: <code>&lt;Task text with possible variables here&gt; +tasker</code>
-</li>
-<li>Target: Activity
-</li>
+<p>the intent will have one extra string <tt class="docutils literal">task</tt> which contains the task
+to be added.</p>
+<p>For example to create a task from tasker use the following action:</p>
+<ul class="simple">
+<li>Action: <tt class="docutils literal">nl.mpcjanssen.simpletask.BACKGROUND_TASK</tt></li>
+<li>Cat: Default</li>
+<li>Mime Type: text/*</li>
+<li>Extra: task: <tt class="docutils literal">&lt;Task text with possible variables here&gt; +tasker</tt></li>
+<li>Target: Activity</li>
 </ul>
-
-<p>
-I like to add the <code>+tasker</code> tag to be able to quickly filter tasks that were created by tasker.
-</p>
+<p>I like to add the <tt class="docutils literal">+tasker</tt> tag to be able to quickly filter tasks
+that were created by tasker.</p>
 </div>
-</div>
-<div id="outline-container-sec-1-2" class="outline-3">
-<h3 id="sec-1-2">Open with specific filter</h3>
-<div class="outline-text-3" id="text-1-2">
-<p>
-To open Simpletask with a specific filter you can use the intent:
-</p>
-
-
-<ul class="org-ul">
-<li>Intent action: <code>nl.mpcjanssen.simpletask.START_WITH_FILTER</code>
-</li>
+<div class="section" id="open-with-specific-filter">
+<h2>Open with specific filter</h2>
+<p>To open Simpletask with a specific filter you can use the intent:</p>
+<ul class="simple">
+<li>Intent action: <tt class="docutils literal">nl.mpcjanssen.simpletask.START_WITH_FILTER</tt></li>
 <li>Intent extras: The following extras can be added as part of the
 intent. Note that currently the names still reflect the original
-naming of lists/tags.
-</li>
+naming of lists/tags.</li>
 </ul>
-
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -131,145 +57,155 @@ naming of lists/tags.
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="left">Name</th>
-<th scope="col" class="left">Type</th>
-<th scope="col" class="left">Description</th>
+<th scope="col" class="left"><p>Name</p>
+</th>
+<th scope="col" class="left"><p>Type</p>
+</th>
+<th scope="col" class="left"><p>Description</p>
+</th>
 </tr>
 </thead>
+
 <tbody>
 <tr>
-<td class="left">CONTEXTS</td>
-<td class="left">String</td>
-<td class="left">list of lists in filter separated by '\n' or ','</td>
+<td class="left"><p>CONTEXTS</p>
+</td>
+<td class="left"><p>String</p>
+</td>
+<td class="left"><p>list of lists in filter separated by '' or ','</p>
+</td>
 </tr>
 
-<tr>
-<td class="left">PROJECTS</td>
-<td class="left">String</td>
-<td class="left">list of tags in filter separated by '\n' or ','</td>
-</tr>
 
 <tr>
-<td class="left">PRIORITIES</td>
-<td class="left">String</td>
-<td class="left">list of priorities in filter separated by '\n' or ',</td>
+<td class="left"><p>PROJECTS</p>
+</td>
+<td class="left"><p>String</p>
+</td>
+<td class="left"><p>list of tags in filter separated by '' or ','</p>
+</td>
 </tr>
 
-<tr>
-<td class="left">CONTEXTSnot</td>
-<td class="left">Boolean</td>
-<td class="left">true to invert the lists filter</td>
-</tr>
 
 <tr>
-<td class="left">PROJECTSnot</td>
-<td class="left">Boolean</td>
-<td class="left">true to invert the tags filter</td>
+<td class="left"><p>PRIORITIES</p>
+</td>
+<td class="left"><p>String</p>
+</td>
+<td class="left"><p>list of priorities in filter separated by '' or ',</p>
+</td>
 </tr>
 
-<tr>
-<td class="left">PRIORITIESnot</td>
-<td class="left">Boolean</td>
-<td class="left">true to invert the priorities filter</td>
-</tr>
 
 <tr>
-<td class="left">HIDECOMPLETED</td>
-<td class="left">Boolean</td>
-<td class="left">true to hide completed tasks</td>
+<td class="left"><p>CONTEXTSnot</p>
+</td>
+<td class="left"><p>Boolean</p>
+</td>
+<td class="left"><p>true to invert the lists filter</p>
+</td>
 </tr>
 
-<tr>
-<td class="left">HIDEFUTURE</td>
-<td class="left">Boolean</td>
-<td class="left">true to hide tasks with a threshold date</td>
-</tr>
 
 <tr>
-<td class="left">SORTS</td>
-<td class="left">String</td>
-<td class="left">active sort (see below)</td>
+<td class="left"><p>PROJECTSnot</p>
+</td>
+<td class="left"><p>Boolean</p>
+</td>
+<td class="left"><p>true to invert the tags filter</p>
+</td>
+</tr>
+
+
+<tr>
+<td class="left"><p>PRIORITIESnot</p>
+</td>
+<td class="left"><p>Boolean</p>
+</td>
+<td class="left"><p>true to invert the priorities filter</p>
+</td>
+</tr>
+
+
+<tr>
+<td class="left"><p>HIDECOMPLETED</p>
+</td>
+<td class="left"><p>Boolean</p>
+</td>
+<td class="left"><p>true to hide completed tasks</p>
+</td>
+</tr>
+
+
+<tr>
+<td class="left"><p>HIDEFUTURE</p>
+</td>
+<td class="left"><p>Boolean</p>
+</td>
+<td class="left"><p>true to hide tasks with a threshold date</p>
+</td>
+</tr>
+
+
+<tr>
+<td class="left"><p>SORTS</p>
+</td>
+<td class="left"><p>String</p>
+</td>
+<td class="left"><p>active sort (see below)</p>
+</td>
 </tr>
 </tbody>
-</table>
+</table><div class="section" id="sorts-extra">
+<h3>Sorts extra</h3>
+<p>SORTS contains a comma or '' separated list of sort keys and their
+direction with a <tt class="docutils literal">!</tt> in between. Giving <tt class="docutils literal"><span class="pre">&lt;direction&gt;!&lt;sort</span> key&gt;</tt>.</p>
+<div class="section" id="direction">
+<h4>Direction</h4>
+<ul class="simple">
+<li><tt class="docutils literal">+</tt> : Ascending</li>
+<li><tt class="docutils literal">-</tt> : Descending</li>
+</ul>
 </div>
-
-
-<div id="outline-container-sec-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">Sorts extra</h4>
-<div class="outline-text-4" id="text-1-2-1">
-<p>
-SORTS contains a comma or '\n' separated list of sort keys and their
-direction with a <code>!</code> in between. Giving <code>&lt;direction&gt;!&lt;sort key&gt;</code>.
-</p>
+<div class="section" id="sort-keys">
+<h4>Sort keys</h4>
+<p>See list in
+<a class="reference external" href="http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51">http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51</a></p>
 </div>
-
-<div id="outline-container-sec-1-2-1-1" class="outline-5">
-<h5 id="sec-1-2-1-1">Direction</h5>
-<div class="outline-text-5" id="text-1-2-1-1">
-<ul class="org-ul">
-<li><code>+</code> : Ascending
-</li>
-<li><code>-</code> : Descending
-</li>
+<div class="section" id="example">
+<h4>Example</h4>
+<ul class="simple">
+<li>The sort <tt class="docutils literal"><span class="pre">+!completed,+!alphabetical</span></tt> sorts completed tasks last
+and then sorts alphabetical.</li>
+<li>The sort <tt class="docutils literal"><span class="pre">+!completed,-!alphabetical</span></tt> sorts completed tasks last
+and then sorts reversed alphabetical.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-1-2-1-2" class="outline-5">
-<h5 id="sec-1-2-1-2">Sort keys</h5>
-<div class="outline-text-5" id="text-1-2-1-2">
-<p>
-See list in <a href="http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51">http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51</a>
-</p>
-</div>
-</div>
-<div id="outline-container-sec-1-2-1-3" class="outline-5">
-<h5 id="sec-1-2-1-3">Example</h5>
-<div class="outline-text-5" id="text-1-2-1-3">
-<ul class="org-ul">
-<li>The sort <code>+!completed,+!alphabetical</code> sorts completed tasks last and then sorts alphabetical.
-</li>
-<li>The sort <code>+!completed,-!alphabetical</code> sorts completed tasks last and
-then sorts reversed alphabetical.
-</li>
+<div class="section" id="tasker-example">
+<h3>Tasker example</h3>
+<ul class="simple">
+<li>Action: <tt class="docutils literal">nl.mpcjanssen.simpletask.START_WITH_FILTER</tt></li>
+<li>Cat: <tt class="docutils literal">Default</tt></li>
+<li>Mime Type:</li>
+<li>Extra: <tt class="docutils literal">CONTEXTS:Office,Online</tt></li>
+<li>Extra: <tt class="docutils literal"><span class="pre">SORTS:+!completed,+!alphabetical</span></tt></li>
+<li>Target: <tt class="docutils literal">Activity</tt></li>
 </ul>
-</div>
-</div>
-</div>
-<div id="outline-container-sec-1-2-2" class="outline-4">
-<h4 id="sec-1-2-2">Tasker example</h4>
-<div class="outline-text-4" id="text-1-2-2">
-<ul class="org-ul">
-<li>Action: <code>nl.mpcjanssen.simpletask.START_WITH_FILTER</code>
-</li>
-<li>Cat: <code>Default</code>
-</li>
-<li>Mime Type:
-</li>
-<li>Extra: <code>CONTEXTS:Office,Online</code>
-</li>
-<li>Extra: <code>SORTS:+!completed,+!alphabetical</code>
-</li>
-<li>Target: <code>Activity</code>
-</li>
-</ul>
-
-<p>
-Due to limitations in Tasker you can only add 2 extras. So instead you can use the am shell command. For example:
-</p>
-
-<pre class="example">
-am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e SORTS +!completed,+!alphabetical -e PROJECTS project1,project2 -e CONTEXTS @errands,@computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S
+<p>Due to limitations in Tasker you can only add 2 extras. So instead you
+can use the am shell command. For example:</p>
+<pre class="literal-block">
+am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e SORTS +!completed,+!alphabetical -e PROJECTS project1,project2 -e CONTEXTS &#64;errands,&#64;computer --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S
 </pre>
+<p>The <tt class="docutils literal"><span class="pre">-S</span></tt> at the end will ensure the app is properly restarted if it's
+already visible. However with tasker the <tt class="docutils literal"><span class="pre">-S</span></tt> seems not to work. So
+there try it without.</p>
+</div>
+</div>
 
-<p>
-The <code>-S</code> at the end will ensure the app is properly restarted if it's
-already visible. However with tasker the <code>-S</code> seems not to work. So there try it without.
-</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</body>
+    </div>
+        </div>
+        
+    </div>
+  </body>
 </html>
