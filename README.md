@@ -1,1 +1,1 @@
-See [here](./doc/simpletask.rst).
+See [here](http://mpcjanssen.nl/doc/simpletask/).
