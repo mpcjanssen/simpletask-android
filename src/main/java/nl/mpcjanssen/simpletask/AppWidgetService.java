@@ -23,33 +23,33 @@ import java.util.*;
 
 public class AppWidgetService extends RemoteViewsService {
 
-	@Override
-	public RemoteViewsFactory onGetViewFactory(Intent intent) {
-		// TODO Auto-generated method stub
-		return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
-	}
+    @Override
+    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+	// TODO Auto-generated method stub
+	return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
+    }
 
 }
 
 class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-	final static String TAG = AppWidgetRemoteViewsFactory.class.getSimpleName();
+    final static String TAG = AppWidgetRemoteViewsFactory.class.getSimpleName();
 
     private ActiveFilter mFilter;
 
-	private Context mContext;
+    private Context mContext;
     private TodoApplication application;
-	ArrayList<Task> visibleTasks = new ArrayList<Task>();
+    ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
-	public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
+    public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-		Log.v(TAG, "Creating view for widget: " + widgetId);
-		mContext = TodoApplication.getAppContext();
+	Log.v(TAG, "Creating view for widget: " + widgetId);
+	mContext = TodoApplication.getAppContext();
         SharedPreferences preferences = mContext.getSharedPreferences("" + widgetId, 0);
         mFilter = new ActiveFilter(mContext.getResources());
         mFilter.initFromPrefs(preferences);
         this.application = application;
-		setFilteredTasks();
-	}
+	setFilteredTasks();
+    }
 	
     private Intent createFilterIntent(Task selectedTask) {
     	Intent target = new Intent();
@@ -58,121 +58,120 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return target;
     }
 
-
-
-	void setFilteredTasks() {
-		Log.v(TAG, "setFilteredTasks called");
-		visibleTasks.clear();
+    
+    void setFilteredTasks() {
+	Log.v(TAG, "setFilteredTasks called");
+	visibleTasks.clear();
         for (Task t : mFilter.apply(application.getTaskBag().getTasks())) {
             if (!t.isHidden()) {
                 visibleTasks.add(t);
             }
         }
-		Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort()));
-	}
+	Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort()));
+    }
 
-	@Override
-	public int getCount() {
-		// TODO Auto-generated method stub
-		return visibleTasks.size();
-	}
+    @Override
+    public int getCount() {
+	// TODO Auto-generated method stub
+	return visibleTasks.size();
+    }
 
-	@Override
-	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
-		return arg0;
-	}
+    @Override
+    public long getItemId(int arg0) {
+	// TODO Auto-generated method stub
+	return arg0;
+    }
 
-	@Override
-	public RemoteViews getLoadingView() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public RemoteViews getLoadingView() {
+	// TODO Auto-generated method stub
+	return null;
+    }
 
     private RemoteViews getExtendedView(int position) {
-            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
-            Task task;
-            task = visibleTasks.get(position);
+	RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+	Task task;
+	task = visibleTasks.get(position);
 
-            if (task != null) {
-                SpannableString ss = new SpannableString(
-                        task.inScreenFormat(mFilter));
+	if (task != null) {
+	    SpannableString ss = new SpannableString(
+						     task.inScreenFormat(mFilter));
 
-                if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
-                    rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.white));
-                } else {
-                    rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.black));
-                }
-                ArrayList<String> colorizeStrings = new ArrayList<String>();
-                for (String context : task.getLists()) {
-                    colorizeStrings.add("@" + context);
-                }
-                Util.setColor(ss, Color.GRAY, colorizeStrings);
-                colorizeStrings.clear();
-                for (String project : task.getTags()) {
-                    colorizeStrings.add("+" + project);
-                }
-                Util.setColor(ss, Color.GRAY, colorizeStrings);
+	    if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
+		rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.white));
+	    } else {
+		rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.black));
+	    }
+	    ArrayList<String> colorizeStrings = new ArrayList<String>();
+	    for (String context : task.getLists()) {
+		colorizeStrings.add("@" + context);
+	    }
+	    Util.setColor(ss, Color.GRAY, colorizeStrings);
+	    colorizeStrings.clear();
+	    for (String project : task.getTags()) {
+		colorizeStrings.add("+" + project);
+	    }
+	    Util.setColor(ss, Color.GRAY, colorizeStrings);
 
-                Resources res = mContext.getResources();
-                int prioColor;
-                switch (task.getPriority()) {
-                    case A:
-                        prioColor = res.getColor(android.R.color.holo_red_dark);
-                        break;
-                    case B:
-                        prioColor = res.getColor(android.R.color.holo_orange_dark);
-                        break;
-                    case C:
-                        prioColor = res.getColor(android.R.color.holo_green_dark);
-                        break;
-                    case D:
-                        prioColor = res.getColor(android.R.color.holo_blue_dark);
-                        break;
-                    default:
-                        prioColor = res.getColor(android.R.color.darker_gray);
-                }
-                if (prioColor!=0) {
-                    Util.setColor(ss, prioColor, task.getPriority()
-                           .inFileFormat());
-                }
-                if (task.isCompleted()) {
-                    ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                rv.setTextViewText(R.id.tasktext,ss);
+	    Resources res = mContext.getResources();
+	    int prioColor;
+	    switch (task.getPriority()) {
+	    case A:
+		prioColor = res.getColor(android.R.color.holo_red_dark);
+		break;
+	    case B:
+		prioColor = res.getColor(android.R.color.holo_orange_dark);
+		break;
+	    case C:
+		prioColor = res.getColor(android.R.color.holo_green_dark);
+		break;
+	    case D:
+		prioColor = res.getColor(android.R.color.holo_blue_dark);
+		break;
+	    default:
+		prioColor = res.getColor(android.R.color.darker_gray);
+	    }
+	    if (prioColor!=0) {
+		Util.setColor(ss, prioColor, task.getPriority()
+			      .inFileFormat());
+	    }
+	    if (task.isCompleted()) {
+		ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    }
+	    rv.setTextViewText(R.id.tasktext,ss);
 
-                String relAge = task.getRelativeAge();
-                SpannableString relDue = task.getRelativeDueDate(res, true);
-                String relThres = task.getRelativeThresholdDate();
-                boolean anyDateShown = false;
-                if (!Strings.isEmptyOrNull(relAge)) {
-                    rv.setTextViewText(R.id.taskage,relAge);
-                    anyDateShown = true;
-                } else {
-                    rv.setTextViewText(R.id.taskage, "");
-                }
-                if (relDue!=null) {
-                    anyDateShown = true;
-                    rv.setTextViewText(R.id.taskdue,relDue);
-                } else {
-                    rv.setTextViewText(R.id.taskdue, "");
-                }
-                if (!Strings.isEmptyOrNull(relThres)) {
-                    anyDateShown = true;
-                    rv.setTextViewText(R.id.taskthreshold, relThres);
-                } else {
-                    rv.setTextViewText(R.id.taskthreshold, "");
-                }
-                if (!anyDateShown || task.isCompleted()) {
-                    rv.setViewVisibility(R.id.datebar, View.GONE);
-                    //rv.setViewPadding(R.id.tasktext,
-                    //       4, 4, 4, 4);
-                } else {
-                    rv.setViewVisibility(R.id.datebar,View.VISIBLE);
-                    //rv.setViewPadding(R.id.tasktext,
-                    //        4, 4, 4, 0);
-                }
-            }
+	    String relAge = task.getRelativeAge();
+	    SpannableString relDue = task.getRelativeDueDate(res, true);
+	    String relThres = task.getRelativeThresholdDate();
+	    boolean anyDateShown = false;
+	    if (!Strings.isEmptyOrNull(relAge)) {
+		rv.setTextViewText(R.id.taskage,relAge);
+		anyDateShown = true;
+	    } else {
+		rv.setTextViewText(R.id.taskage, "");
+	    }
+	    if (relDue!=null) {
+		anyDateShown = true;
+		rv.setTextViewText(R.id.taskdue,relDue);
+	    } else {
+		rv.setTextViewText(R.id.taskdue, "");
+	    }
+	    if (!Strings.isEmptyOrNull(relThres)) {
+		anyDateShown = true;
+		rv.setTextViewText(R.id.taskthreshold, relThres);
+	    } else {
+		rv.setTextViewText(R.id.taskthreshold, "");
+	    }
+	    if (!anyDateShown || task.isCompleted()) {
+		rv.setViewVisibility(R.id.datebar, View.GONE);
+		//rv.setViewPadding(R.id.tasktext,
+		//       4, 4, 4, 4);
+	    } else {
+		rv.setViewVisibility(R.id.datebar,View.VISIBLE);
+		//rv.setViewPadding(R.id.tasktext,
+		//        4, 4, 4, 0);
+	    }
+	}
         rv.setOnClickFillInIntent(R.id.taskline, createFilterIntent(visibleTasks.get(position)));
         return rv;
     }
@@ -182,7 +181,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
         Task task = visibleTasks.get(position);
         SpannableString ss = new SpannableString(
-                task.inScreenFormat(mFilter));
+						 task.inScreenFormat(mFilter));
         if (task.isCompleted()) {
             ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -199,7 +198,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 
     @Override
-	public RemoteViews getViewAt(int position) {
+    public RemoteViews getViewAt(int position) {
         //Log.v(TAG,"GetViewAt:" + position);
         RemoteViews rv;
         boolean extended_widget =  TodoApplication.getPrefs().getBoolean("widget_extended",true);
@@ -209,38 +208,35 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             rv = getSimpleView(position);
         }
         return rv;
-	}
+    }
 
 
     @Override
-	public int getViewTypeCount() {
-		return 2;
-	}
+    public int getViewTypeCount() {
+	return 2;
+    }
 
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
+    @Override
+    public boolean hasStableIds() {
+	return true;
+    }
 
-	@Override
-	public void onCreate() {
+    @Override
+    public void onCreate() {
         Log.v(TAG, "OnCreate called in ViewFactory");
-		// TODO Auto-generated method stub
+	// TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onDataSetChanged() {
-		// TODO Auto-generated method stub
-		Log.v(TAG, "Data set changed, refresh");
-		setFilteredTasks();
+    @Override
+    public void onDataSetChanged() {
+	Log.v(TAG, "Data set changed, refresh");
+	setFilteredTasks();
+    }
 
-	}
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-
-	}
+    @Override
+    public void onDestroy() {
+	// TODO Auto-generated method stub
+    }
 }
 
