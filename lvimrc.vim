@@ -6,6 +6,9 @@ if exists ("s:loaded")
 endif
 
 let s:loaded=1
+" Absolute path of script file:
+let s:path = expand('<sfile>:p:h')
+let g:project_root = s:path 
 
 set tags=tags;/
 
@@ -37,7 +40,7 @@ function! MakeInProjectRoot(cmdline)
 endfunction
 
 function! AndroidMonitor()
-    let l:filename = g:project_root."local.properties"
+    let l:filename = g:project_root."/local.properties"
     execute "vimgrep /\\v^sdk\\.dir=(.*)\s*$/j ".l:filename
     for i in getqflist()
         echom "found ". i.text
