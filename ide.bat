@@ -1,1 +1,1 @@
-gvim -S lvimrc.vim
+gvim -S lvimrc.vim --remote-silent

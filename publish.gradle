@@ -1,0 +1,45 @@
+configurations {
+    sshAntTask
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    sshAntTask 'org.apache.ant:ant-jsch:1.7.1', 'jsch:jsch:0.1.29'
+}
+
+task(html) << {
+    exec { 
+        executable 'pelican' 
+        args 'doc', '-s', 'pelican/pelicanconf.py' , '-o', 'src/main/assets' 
+    }
+}
+
+task sitehtml {
+    exec { 
+        executable 'pelican' 
+        args 'doc', '-s', 'pelican/publishconf.py', '-o', 'build/html' 
+    }
+}
+
+task upload {
+    description = 'Update files on remote server.'
+    sitehtml
+ 
+    // Redefine scp Ant task, with the classpath property set to our newly defined
+    // sshAntTask configuration classpath.
+    ant.taskdef(name: 'scp', classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
+            classpath: configurations.sshAntTask.asPath)
+            
+    // Invoke the scp Ant task. (Use gradle -i upload to see the output of the Ant task.)
+    ant.scp(todir: 'mpcjanssen@mpcjanssen.nl:/srv/http/doc/simpletask',
+            keyfile: '${user.home}/.ssh/id_rsa', 
+            passphrase: '',
+            verbose: 'true') {
+        fileset(dir: 'build/html') {
+            include(name: '**/**')
+        }
+    }            
+}

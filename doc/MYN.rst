@@ -6,7 +6,7 @@ Manage Your Now
 Creating the contexts for MYN
 =============================
 
-MYN defines 3 urgency zones, we will map them to lists in Simpletask so
+MYN defines 3 urgency zones, which we will map to lists in Simpletask in such a way 
 that they sort correctly.
 
 -  Critical Now -> ``@CriticalNow``

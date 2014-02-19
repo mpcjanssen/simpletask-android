@@ -7,12 +7,12 @@ from __future__ import unicode_literals
 
 import os
 import sys
-sys.path.append(os.curdir)
+sys.path.append(os.curdir + '/pelican')
 from pelicanconf import *
 
 SITEURL = '//mpcjanssen.nl/doc/simpletask'
 RELATIVE_URLS = False
-THEME = 'extras/online-theme'
+THEME = 'pelican/online-theme'
 
 DELETE_OUTPUT_DIRECTORY = True
 

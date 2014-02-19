@@ -35,4 +35,4 @@ LOCALE = ""
 
 STATIC_PATHS=['images']
 
-THEME='extras/mobile-theme'
+THEME='pelican/mobile-theme'
