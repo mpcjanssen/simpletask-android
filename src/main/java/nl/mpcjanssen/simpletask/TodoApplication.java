@@ -544,6 +544,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
             return android.R.style.Theme_Holo;
         } else if (theme.equals("android.R.style.Theme_Holo_Light_DarkActionBar")) {
             return android.R.style.Theme_Holo_Light_DarkActionBar;
+        } else if (theme.equals("android.R.style.Theme_Holo_Light")) {
+            return android.R.style.Theme_Holo_Light;
         } else  {
             return android.R.style.Theme_Holo_Light_DarkActionBar;
         }

@@ -125,7 +125,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="font_size_delta_pref_summary">Change the font size in units of sp.
         Use negative values to decrease the font size</string>
     <string name="theme_pref_title">Application theme</string>
-    <string name="theme_pref_summary">Change the theme used for the application, restart the application after changing the setting</string>
+    <string name="theme_pref_summary">Change the theme used for the application</string>
 
     <string name="share_task_show_edit_pref_title">Edit shared task</string>
     <string name="share_task_show_edit_summary">Allow editing of a shared task before saving it.

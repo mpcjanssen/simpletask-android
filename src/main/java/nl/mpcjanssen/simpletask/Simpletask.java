@@ -21,7 +21,6 @@ import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -85,7 +84,7 @@ import java.util.*;
 import static java.lang.Thread.sleep;
 
 
-public class Simpletask extends ListActivity  implements AdapterView.OnItemLongClickListener {
+public class Simpletask extends ThemedListActivity  implements AdapterView.OnItemLongClickListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
     private final static int REQUEST_FILTER = 1;
@@ -388,13 +387,8 @@ public class Simpletask extends ListActivity  implements AdapterView.OnItemLongC
 
     @Override
     protected void onRestart() {
-	super.onRestart();
-	Log.v(TAG, "onRestart: " + getIntent().getExtras());
-        if(m_app.hasSyncOnResume()) {
-            syncClient(false);
-        }
-	handleIntent(null);
-
+        super.onRestart();
+        recreate();
     }
 
     @Override
