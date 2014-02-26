@@ -1580,7 +1580,11 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.task_context, menu);
+        if (m_app.isDarkActionbar()) {
+            inflater.inflate(R.menu.task_context, menu);
+        } else {
+            inflater.inflate(R.menu.task_context_light, menu);
+        }
 	    actionMode = mode;
         if (!m_app.showCompleteCheckbox()) {
             menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
