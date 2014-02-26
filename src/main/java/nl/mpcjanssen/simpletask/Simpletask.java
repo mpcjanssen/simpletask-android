@@ -401,7 +401,11 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	MenuInflater inflater = getMenuInflater();
-	inflater.inflate(R.menu.main, menu);
+    if (m_app.isDarkActionbar()) {
+        inflater.inflate(R.menu.main, menu);
+    } else {
+        inflater.inflate(R.menu.main_light, menu);
+    }
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	SearchView searchView = (SearchView) menu.findItem(R.id.search)
 	    .getActionView();

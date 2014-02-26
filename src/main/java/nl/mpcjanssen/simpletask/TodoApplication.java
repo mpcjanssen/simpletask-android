@@ -562,6 +562,19 @@ public class TodoApplication extends Application implements SharedPreferences.On
             case android.R.style.Theme_Holo:
                 return true;
             case android.R.style.Theme_Holo_Light_DarkActionBar:
+            case android.R.style.Theme_Holo_Light:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isDarkActionbar() {
+        switch (getActiveTheme()) {
+            case android.R.style.Theme_Holo:
+            case android.R.style.Theme_Holo_Light_DarkActionBar:
+                return true;
+            case android.R.style.Theme_Holo_Light:
                 return false;
             default:
                 return false;
