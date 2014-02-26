@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
+
+Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+
+LICENSE:
+
+Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+later version.
+
+Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
+<http://www.gnu.org/licenses/>.
+
+@author Todo.txt contributors <todotxt@yahoogroups.com>
+@license http://www.gnu.org/licenses/gpl.html
+@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+-->
+
+<!--suppress ALL -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/done"
+        android:id="@+id/complete"
+        android:icon="@drawable/complete" 
+        android:showAsAction="never"
+        />
+    <item    
+	android:title="@string/unComplete"
+        android:icon="@drawable/ic_action_uncomplete" 
+        android:id="@+id/uncomplete"
+        android:showAsAction="never"
+        />
+    <item
+        android:title="@string/update"
+        android:showAsAction="always"
+        android:id="@+id/update"
+        android:icon="@drawable/edit_light" />
+    <item
+        android:title="@string/update_lists"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_collections_view_as_list_light"
+        android:id="@+id/update_lists" />
+    <item
+        android:title="@string/update_tags"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_collections_new_label_light"
+        android:id="@+id/update_tags" />
+    <item
+        android:title="@string/priority"
+        android:showAsAction="ifRoom"
+        android:id="@+id/priority"
+        android:icon="@drawable/prio_light" />
+    <item
+        android:title="@string/share"
+        android:showAsAction="ifRoom"
+        android:id="@+id/share"
+        android:icon="@drawable/share_light" />
+    <item
+        android:title="@string/add_to_calendar"
+        android:showAsAction="never"
+        android:id="@+id/calendar" />
+    <item
+        android:title="@string/defer_due"
+        android:id="@+id/defer_due"
+        android:showAsAction="never" />
+    <item
+        android:title="@string/defer_threshold"
+        android:id="@+id/defer_threshold"
+        android:showAsAction="never" />
+    <item
+        android:title="@string/delete"
+        android:id="@+id/delete"
+        android:showAsAction="never"
+        android:icon="@drawable/delete_light" />
+    <item
+        android:title="@string/archive"
+        android:id="@+id/archive"
+        android:showAsAction="never"
+        />
+    <item
+        android:id="@+id/url"
+        android:showAsAction="never"
+        android:visible="false" />
+    <item
+        android:id="@+id/mail"
+        android:showAsAction="never"
+        android:visible="false" />
+    <item
+        android:id="@+id/phone_number"
+        android:showAsAction="never"
+        android:visible="false" />
+</menu>
