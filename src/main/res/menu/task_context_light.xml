@@ -28,12 +28,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
         android:title="@string/done"
         android:id="@+id/complete"
-        android:icon="@drawable/complete" 
+        android:icon="@drawable/complete_light" 
         android:showAsAction="never"
         />
     <item    
 	android:title="@string/unComplete"
-        android:icon="@drawable/ic_action_uncomplete" 
+        android:icon="@drawable/uncomplete_light" 
         android:id="@+id/uncomplete"
         android:showAsAction="never"
         />
