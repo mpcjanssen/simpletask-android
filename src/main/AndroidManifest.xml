@@ -44,7 +44,8 @@ You should have received a copy of the GNU General Public License along with Sim
             android:allowBackup="false"
             android:icon="@drawable/icon"
             android:label="@string/app_label"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
+            android:theme="@android:style/Theme.NoTitleBar">
+            
 
         <activity
                 android:name="nl.mpcjanssen.simpletask.LoginScreen"

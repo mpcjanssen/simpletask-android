@@ -1,1 +1,1 @@
-gvim -S lvimrc.vim --remote-silent
+c:\vim\vim74\gvim -S lvimrc.vim

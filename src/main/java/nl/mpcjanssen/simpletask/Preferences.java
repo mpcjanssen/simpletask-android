@@ -22,9 +22,9 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -36,7 +36,7 @@ import android.util.Log;
 
 import nl.mpcjanssen.simpletask.util.Util;
 
-public class Preferences extends Activity {
+public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
     final static String TAG = Preferences.class.getSimpleName();
 	public static final int RESULT_LOGOUT = RESULT_FIRST_USER + 1;
@@ -54,18 +54,18 @@ public class Preferences extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-        m_app = (TodoApplication) getApplication();
-        // Set the proper theme
-        setTheme(m_app.getActiveTheme());
 		super.onCreate(savedInstanceState);
 		// Display the fragment as the main content.
+
+        TodoTxtPrefFragment prefFragment = new TodoTxtPrefFragment();
+
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new TodoTxtPrefFragment())
 				.commit();
-
 	}
 
-	public static class TodoTxtPrefFragment extends PreferenceFragment {
+	public static class TodoTxtPrefFragment extends PreferenceFragment implements
+    SharedPreferences.OnSharedPreferenceChangeListener {
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -84,11 +84,34 @@ public class Preferences extends Activity {
                 PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
                 getPreferenceScreen().removePreference(dropboxCategory);
             }
-		}
+        }
 
-		@Override
-		public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-				Preference preference) {
+        @Override
+        public void onResume() {
+            super.onResume();
+            // Set up a listener whenever a key changes
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            // Set up a listener whenever a key changes
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            // just update all
+            if ("theme".equals(key)) {
+                ThemedActivity act = (ThemedActivity)getActivity();
+                act.recreate();
+            }
+        }
+
+        @Override
+        public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+                Preference preference) {
 			if (preference.getKey() == null) {
 				return false;
 			}
@@ -115,7 +138,7 @@ public class Preferences extends Activity {
                     }
                 }, R.string.dropbox_logout_pref_title);
 
-			}
+			} 
 			return true;
 		}
 	}
