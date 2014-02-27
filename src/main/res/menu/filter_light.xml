@@ -1,0 +1,11 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/menu_filter_action"
+            android:orderInCategory="100"
+            android:showAsAction="always"
+            android:icon="@drawable/complete_light"
+            android:title="@string/filter"/>
+</menu>
