@@ -6,7 +6,8 @@ Changelog
 
 -  Possible fix for crash when using Android "Share…" mechanism to add
    task.
--  Added theme with light Action Bar. App doesn't have to be restarted for theme change.
+-  Added Holo Light theme. 
+-  App doesn't have to be restarted for theme change.
 
 4.1.8
 =====
