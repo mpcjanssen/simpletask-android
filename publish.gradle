@@ -37,6 +37,7 @@ task upload {
     ant.scp(todir: 'mpcjanssen@mpcjanssen.nl:/srv/http/doc/simpletask',
             keyfile: '${user.home}/.ssh/id_rsa', 
             passphrase: '',
+            trust: 'true',
             verbose: 'true') {
         fileset(dir: 'build/html') {
             include(name: '**/**')
