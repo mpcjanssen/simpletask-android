@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -21,7 +22,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class FilterActivity extends Activity {
+public class FilterActivity extends ThemedActivity {
 
     final static String TAG = FilterActivity.class.getSimpleName();
     final static String CONTEXT_TAB = "context";
@@ -68,15 +69,13 @@ public class FilterActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {    	
+    public void onCreate(Bundle savedInstanceState) {    	
     	Log.v(TAG, "Called with intent: " + getIntent().toString());
         m_app = (TodoApplication) getApplication();
         prefs = getPreferences(MODE_PRIVATE);
         m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
 
-        // Set the proper theme
-        setTheme(m_app.getActiveTheme());
         setContentView(R.layout.filter);
 
         Bundle arguments;
@@ -147,7 +146,12 @@ public class FilterActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.filter, menu);
+        MenuInflater inflater = getMenuInflater();
+        if (m_app.isDarkActionbar()) {
+            inflater.inflate(R.menu.filter, menu);
+        } else {
+            inflater.inflate(R.menu.filter_light, menu);
+        }
         return true;
     }
 
