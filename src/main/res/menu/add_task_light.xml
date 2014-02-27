@@ -1,0 +1,17 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_cancel_task"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/cancel"
+        android:icon="@drawable/uncomplete_light" />
+    <item
+        android:id="@+id/menu_save_task"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/save_task"
+        android:icon="@drawable/complete_light" />
+</menu>

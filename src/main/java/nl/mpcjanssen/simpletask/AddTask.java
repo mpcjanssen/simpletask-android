@@ -38,6 +38,7 @@ import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -72,7 +73,7 @@ import java.util.Locale;
 import java.util.Set;
 
 
-public class AddTask extends Activity {
+public class AddTask extends ThemedActivity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
@@ -107,7 +108,12 @@ public class AddTask extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.add_task, menu);
+         MenuInflater inflater = getMenuInflater();
+        if (m_app.isDarkActionbar()) {
+            inflater.inflate(R.menu.add_task, menu);
+        } else {
+            inflater.inflate(R.menu.add_task_light, menu);
+        }
         return true;
     }
 
@@ -205,9 +211,6 @@ public class AddTask extends Activity {
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
-
-        // Set the proper theme
-        setTheme(m_app.getActiveTheme());
 
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
