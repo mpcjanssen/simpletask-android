@@ -79,8 +79,8 @@ public class Preferences extends ThemedActivity {
 			} catch (NameNotFoundException e) {
 				e.printStackTrace();
 			}
-            TodoApplication app = (TodoApplication)getActivity().getApplication();
-            if (app.isCloudLess()) {
+            m_app = (TodoApplication)getActivity().getApplication();
+            if (m_app.isCloudLess()) {
                 PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
                 getPreferenceScreen().removePreference(dropboxCategory);
             }
