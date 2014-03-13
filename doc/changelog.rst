@@ -1,6 +1,11 @@
 Changelog
 +++++++++
 
+4.1.10
+======
+
+- Fix crash with "Archive now" from settings.
+
 4.1.9
 =====
 
