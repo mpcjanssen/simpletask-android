@@ -189,26 +189,5 @@
             android:key="app_version"
             android:title="@string/app_label" />
 
-        <PreferenceScreen
-            android:summary="@string/visit_website_summary"
-            android:title="@string/visit_website_title">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/visit_website_data" />
-        </PreferenceScreen>
-        <PreferenceScreen
-            android:summary="@string/visit_tracker_summary"
-            android:title="@string/visit_tracker_title">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/visit_tracker_data" />
-        </PreferenceScreen>
-                <PreferenceScreen
-            android:summary="@string/donate_summary"
-            android:title="@string/donate_title" >
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/visit_donate_data" />
-        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

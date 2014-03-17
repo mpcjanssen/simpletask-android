@@ -50,8 +50,7 @@ public class HelpScreen extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, String url)  {  
                 Log.v(TAG, "Loading url: " + url);
 		if (url.startsWith("http://") || url.startsWith("https://")) {
-		    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		    startActivity(browserIntent);
+            openUrl(url);
 		    return true;
 
 		} else {
@@ -69,6 +68,12 @@ public class HelpScreen extends Activity {
         return true;
     }
 
+    public void openUrl (String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -84,6 +89,12 @@ public class HelpScreen extends Activity {
                 return true;
             case R.id.menu_intents:
                 wvHelp.loadUrl("file:///android_asset/intents.html");
+                return true;
+            case R.id.menu_donate:
+                openUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=P85EZWWR3PDDE&lc=NL&item_name=mpcjanssen%2enl&item_number=simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+                return true;
+            case R.id.menu_tracker:
+                openUrl("http://mpcjanssen.nl/tracker/projects/simpletask-android");
                 return true;
         }
         return super.onOptionsItemSelected(item);

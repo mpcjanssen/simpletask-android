@@ -5,6 +5,7 @@ Changelog
 ======
 
 - Fix crash with "Archive now" from settings.
+- Moved donation and tracker links to Help screen. (#75)
 
 4.1.9
 =====
