@@ -15,6 +15,7 @@ complex action manager for GTD or `Manage Your Now <{filename}MYN.rst>`__.
 
 If you want to log an issue or feature request for Simpletask_ you can go to `the tracker <http://mpcjanssen.nl/tracker/projects/simpletask-android>`__.
 If you find Simpletask useful, you can donate_ me some beers.
+
 Check the menu for more help sections.
 
 .. _Simpletask: http://mpcjanssen.nl/doc/simpletask/
