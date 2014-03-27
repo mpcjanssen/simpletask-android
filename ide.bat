@@ -1,1 +1,1 @@
-c:\vim\vim74\gvim -S lvimrc.vim
+start c:\vim\vim74\gvim -S lvimrc.vim
