@@ -105,6 +105,12 @@ public class TaskTest extends TestCase {
         assertEquals("Test", t.inFileFormat());
     }
 
+    public void testCompletedPriority() {
+        Task t = new Task(0,"x 1111-11-11 Test pri:A bcd");
+        assertTrue(t.isCompleted());
+        assertEquals(Priority.A,t.getPriority());
+    }
+
     public void testRemoveTag() {
         Task t = new Task(0, "Milk @@errands");
         t.removeTag("@errands");
