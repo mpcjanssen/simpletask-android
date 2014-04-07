@@ -13,6 +13,20 @@ require no change.
 Simpletask_ can be used as a very simple todo list manager or as a more
 complex action manager for GTD or `Manage Your Now <{filename}MYN.rst>`__.
 
+Extensions
+----------
+
+Simpletask supports the following todo.txt extensions:
+
+- Due date as `due:YYYY-MM-DD`
+- Start/threshold date as `t:YYYY-MM-DD`
+- Recurrence with `rec:[0-9]+[dwmy]` as described `here <https://github.com/bram85/todo.txt-tools/wiki/Recurrence>`_ but with a twist.
+
+  - By default Simpletask will use the dates in that task to create the recurring task not the date of completion as descibed in the link. This behaviour can be configured from the settings.
+
+Support
+-------
+
 If you want to log an issue or feature request for Simpletask_ you can go to `the tracker <http://mpcjanssen.nl/tracker/projects/simpletask-android>`__.
 If you find Simpletask useful, you can donate_ me some beers.
 
