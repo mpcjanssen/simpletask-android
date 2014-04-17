@@ -21,7 +21,7 @@ android {
         mavenCentral()
     }
 
-    buildToolsVersion "19.0.0"
+    buildToolsVersion "19.0.3"
     compileSdkVersion 19
 
     defaultConfig {
@@ -65,7 +65,6 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    check.dependsOn 'connectedInstrumentTestUnitDebug'
 }
 
 // Only sign if we have keystore properties in the gradle.properties
