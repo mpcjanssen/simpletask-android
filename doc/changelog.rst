@@ -1,6 +1,11 @@
 Changelog
 +++++++++
 
+4.1.11
+======
+
+- Document todo.txt extensions on main help page.
+
 4.1.10
 ======
 
