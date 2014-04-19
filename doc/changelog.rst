@@ -1,6 +1,11 @@
 Changelog
 +++++++++
 
+4.1.12
+======
+
+- Updated launcher icons thanks to Robert Chudy.
+
 4.1.11
 ======
 
