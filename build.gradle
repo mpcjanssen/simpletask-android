@@ -25,8 +25,8 @@ android {
     compileSdkVersion 19
 
     defaultConfig {
-        versionName '4.1.12'
-        versionCode 1078
+        versionName '4.1.13'
+        versionCode 1079
     }
 
 
