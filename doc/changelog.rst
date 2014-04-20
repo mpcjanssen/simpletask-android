@@ -1,10 +1,15 @@
 Changelog
 +++++++++
 
+4.1.13
+======
+
+- Scaled down launcher icons to satisfy lint.
+
 4.1.12
 ======
 
-- Updated launcher icons thanks to Robert Chudy.
+- Updated launcher icons thanks to Robert Chudy.
 
 4.1.11
 ======
