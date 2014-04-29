@@ -174,8 +174,7 @@ public class AddTask extends ThemedActivity {
         if (m_app.isAutoArchive()) {
             taskBag.archive(null);
         }
-        sendBroadcast(new Intent(
-                getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+        sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE));
         finish();
     }
 
@@ -202,7 +201,7 @@ public class AddTask extends ThemedActivity {
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         sendBroadcast(new Intent(
-                getPackageName() + Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+                Constants.BROADCAST_START_SYNC_WITH_REMOTE));
         m_app.showToast(R.string.task_added);
     }
 

@@ -160,12 +160,12 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
 
 	final IntentFilter intentFilter = new IntentFilter();
-	intentFilter.addAction(getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE);
-	intentFilter.addAction(getPackageName()+Constants.BROADCAST_SYNC_CONFLICT);
-	intentFilter.addAction(getPackageName()+Constants.BROADCAST_ACTION_LOGOUT);
-	intentFilter.addAction(getPackageName()+Constants.BROADCAST_UPDATE_UI);
-	intentFilter.addAction(getPackageName()+Constants.BROADCAST_SYNC_START);
-	intentFilter.addAction(getPackageName()+Constants.BROADCAST_SYNC_DONE);
+	intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
+	intentFilter.addAction(Constants.BROADCAST_SYNC_CONFLICT);
+	intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT);
+	intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+	intentFilter.addAction(Constants.BROADCAST_SYNC_START);
+	intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
 
 	m_broadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -416,8 +416,9 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	    .getActionView();
 	searchView.setSearchableInfo(searchManager
 				     .getSearchableInfo(getComponentName()));
-	searchView.setIconifiedByDefault(false); // Do not iconify the widget;
+    // Do not iconify the widget;
 	// expand it by default
+	searchView.setIconifiedByDefault(false); 
 
 	this.options_menu = menu;
 	if (m_app.isCloudLess()) {

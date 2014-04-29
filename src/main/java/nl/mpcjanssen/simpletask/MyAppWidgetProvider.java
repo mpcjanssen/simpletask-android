@@ -29,23 +29,11 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
 
-    public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
+    public static void putFilterExtras (ApplicationIntent target , SharedPreferences preferences,  int widgetId) {
         Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter(null);
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        Log.v(TAG,"Received: " + intent.getAction());
-        if((context.getPackageName()+Constants.BROADCAST_ADD_TASK_FROM_WIDGET).equals(intent.getAction())) {
-             final Intent addIntent = new Intent(context, AddTask.class);
-             addIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-             addIntent.putExtras(intent.getExtras());
-             context.startActivity(addIntent) ;
-        }
     }
 
 	public static RemoteViews updateView(int widgetId, Context context) {
@@ -90,20 +78,21 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         // Make sure we use different intents for the different pendingIntents or
         // they will replace each other
+        
+        ApplicationIntent appIntent;
 
-        intent = new Intent(Constants.INTENT_START_FILTER);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        appIntent = new ApplicationIntent(context, Simpletask.class, Constants.INTENT_START_FILTER);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
-        intent = new Intent(Constants.INTENT_START_FILTER);
-        putFilterExtras(intent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        appIntent = new ApplicationIntent(context, Simpletask.class, Constants.INTENT_START_FILTER);
+        putFilterExtras(appIntent, preferences, widgetId);
+        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
-        Log.v(TAG, "Setting receiver:" +context.getPackageName()+Constants.BROADCAST_ADD_TASK_FROM_WIDGET);
-        intent = new Intent(context.getPackageName()+Constants.BROADCAST_ADD_TASK_FROM_WIDGET);
-        putFilterExtras(intent, preferences, widgetId);
-        pendingIntent = PendingIntent.getBroadcast(context, FROM_WIDGETS_START+widgetId , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        appIntent = new ApplicationIntent(context, AddTask.class, Constants.INTENT_ADD_TASK);
+        putFilterExtras(appIntent, preferences, widgetId);
+        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
         return view;
 	}
@@ -113,7 +102,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 			int[] appWidgetIds) {
         for (int i = 0; i < appWidgetIds.length; i++) {
             int widgetId = appWidgetIds[i];
-			//Log.v(TAG, "Updating widget:" + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
