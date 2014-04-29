@@ -329,7 +329,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	if(selectedTask!=null) {
 	    String[] parts = selectedTask.split(":", 2);
 	    setSelectedTask(Integer.valueOf(parts[0]), parts[1]);
-	    intent.removeExtra(Constants.INTENT_SELECTED_TASK);
+	    //intent.removeExtra(Constants.INTENT_SELECTED_TASK);
 	    setIntent(intent);
 	} else {
 	    // Set the adapter for the list view
@@ -386,16 +386,21 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        recreate();
+    protected void onResume() {
+        super.onResume();
+        handleIntent(null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFilter.saveInPrefs(TodoApplication.getPrefs());
     }
 
     @Override
     protected void onStop() {
-	super.onStop();
+        super.onStop();
         finishActionmode();
-        mFilter.saveInPrefs(TodoApplication.getPrefs());
     }
 
     @Override
@@ -1887,7 +1892,6 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-	    //view.setSelected(true);
 	    ArrayList<String> tags;
 	    ListView lv = (ListView) parent;
 	    DrawerAdapter adapter = (DrawerAdapter) lv.getAdapter();
