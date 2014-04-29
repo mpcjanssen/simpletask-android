@@ -21,10 +21,10 @@ public class TaskTest extends TestCase {
     }
 
     public void testEquals() {
-        Task a = new Task(1, "Test");
-        Task b = new Task(1, "Test");
-        Task c = new Task(1, "Test ");
-        Task d = new Task(2, "Test");
+        Task a = new Task(1, "Test abcd");
+        Task b = new Task(1, "Test abcd");
+        Task c = new Task(1, "Test abcd ");
+        Task d = new Task(2, "Test abcd");
         assertNotSame(a,b);
         assertEquals(a,b);
         assertFalse(b.equals(c));
@@ -106,7 +106,7 @@ public class TaskTest extends TestCase {
     }
 
     public void testCompletedPriority() {
-        Task t = new Task(0,"x 1111-11-11 Test pri:A bcd");
+        Task t = new Task(0,"x 1111-11-11 (A) Test bcd");
         assertTrue(t.isCompleted());
         assertEquals(Priority.A,t.getPriority());
     }
