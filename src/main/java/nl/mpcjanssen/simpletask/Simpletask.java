@@ -144,20 +144,20 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	if (requestCode == REQUEST_FILTER) {
 	    if (resultCode == RESULT_OK) {
-		setIntent(data);
-		handleIntent(null);
-	    }
-	}
+            setIntent(data);
+            handleIntent(null);
+        }
+    }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	Log.v(TAG, "onCreate");
 	m_app = (TodoApplication) getApplication();
-        m_app.setActionBarStyle(getWindow());
+    m_app.setActionBarStyle(getWindow());
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    super.onCreate(savedInstanceState);
 
 	final IntentFilter intentFilter = new IntentFilter();
 	intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
@@ -170,14 +170,12 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-		    if (intent.getAction().endsWith(
-						    Constants.BROADCAST_ACTION_ARCHIVE)) {
+		    if (intent.getAction().equals(Constants.BROADCAST_ACTION_ARCHIVE)) {
 			// archive
 			// refresh screen to remove completed tasks
 			// push to remote
 			archiveTasks(null);
-		    } else if (intent.getAction().endsWith(
-							   Constants.BROADCAST_ACTION_LOGOUT)) {
+		    } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
 			Log.v(TAG, "Logging out from Dropbox");
 			m_app.getRemoteClientManager().getRemoteClient()
 			    .deauthenticate();
@@ -185,17 +183,14 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 			Intent i = new Intent(context, LoginScreen.class);
 			startActivity(i);
 			finish();
-		    } else if (intent.getAction().endsWith(
-							   Constants.BROADCAST_UPDATE_UI)) {
+		    } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
 			handleIntent(null);
 		    } else if (intent.getAction().endsWith(
 							   Constants.BROADCAST_SYNC_CONFLICT)) {
 			handleSyncConflict();
-		    } else if (intent.getAction().endsWith(
-							   Constants.BROADCAST_SYNC_START) && !m_app.isCloudLess()) {
+		    } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START) && !m_app.isCloudLess()) {
 			setProgressBarIndeterminateVisibility(true);
-		    } else if (intent.getAction().endsWith(
-							   Constants.BROADCAST_SYNC_DONE) && !m_app.isCloudLess()) {
+		    } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE) && !m_app.isCloudLess()) {
 			setProgressBarIndeterminateVisibility(false);
 		    }
 		}
@@ -499,7 +494,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 								     m_app.setNeedToPush(true);
 								     // We have change the data, views should refresh
 								     m_adapter.setFilteredTasks(false);
-								     sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+								     sendBroadcast(new ApplicationIntent(Simpletask.this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
 
 								 }
 							     });
@@ -533,7 +528,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 								     m_app.setNeedToPush(true);
 								     // We have change the data, views should refresh
 								     m_adapter.setFilteredTasks(false);
-								     sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+								     sendBroadcast(new ApplicationIntent(Simpletask.this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
 
 								 }
 							     });
@@ -598,7 +593,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_app.setNeedToPush(true);
 	// We have change the data, views should refresh
 	m_adapter.setFilteredTasks(true);
-	sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+    sendBroadcast(new ApplicationIntent(this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -612,7 +607,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_app.setNeedToPush(true);
 	// We have change the data, views should refresh
 	m_adapter.setFilteredTasks(true);
-	sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+    sendBroadcast(new ApplicationIntent(this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deferTasks(List<Task> tasks, final int dateType ) {
