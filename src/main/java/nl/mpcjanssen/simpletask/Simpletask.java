@@ -713,13 +713,11 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	    @Override
 		protected void onPostExecute(Boolean result) {
 		if (result) {
-		    Util.showToastLong(Simpletask.this,
-				       "Archived tasks");
 		    m_adapter.setFilteredTasks(false);
 		    m_app.updateWidgets();
 		    m_app.setNeedToPush(true);
 		    updateDrawers();
-		    sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+		    sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
 		} else {
 		    Util.showToastLong(Simpletask.this,
 				       "Could not archive tasks");
