@@ -1,6 +1,12 @@
 Changelog
 +++++++++
 
+4.1.14
+======
+
+- Possible fix for truncated done.txt files.
+- Select correct task when opening from widget (Fixes part of #78).
+
 4.1.13
 ======
 
