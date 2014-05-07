@@ -587,7 +587,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	}
         taskBag.store();
 	if (m_app.isAutoArchive()) {
-	    taskBag.archive(null);
+	    archiveTasks(null);
 	}
 	m_app.updateWidgets();
 	m_app.setNeedToPush(true);
