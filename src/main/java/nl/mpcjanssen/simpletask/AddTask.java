@@ -227,9 +227,9 @@ public class AddTask extends ThemedActivity {
             return;
         } else if (Intent.ACTION_SEND.equals(action)) {
             Log.d(TAG, "Share");
-            share_text = intent
-		.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
-            if (share_text == null) {
+            if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+                share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
+            } else {
                 share_text = "";
             }
             if (!m_app.hasShareTaskShowsEdit()) {
