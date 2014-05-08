@@ -174,7 +174,6 @@ public class Util {
                                                  CharSequence[] keys, String[] values, int selected, Integer titleId,
                                                  Integer iconId, final OnSingleChoiceDialogListener listener) {
 
-        assert(values.length == keys.length);
         AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
         if (iconId != null) {
             builder.setIcon(iconId);
@@ -357,7 +356,7 @@ public class Util {
 
     public static DateTime addInterval(DateTime date, String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
-        Matcher m = p.matcher(interval.toLowerCase());
+        Matcher m = p.matcher(interval.toLowerCase(Locale.getDefault()));
         int amount;
         String type;
         if (date == null) {
@@ -366,7 +365,7 @@ public class Util {
         m.find();
         if(m.groupCount()==2) {
             amount = Integer.parseInt(m.group(1));
-            type = m.group(2).toLowerCase();
+            type = m.group(2).toLowerCase(Locale.getDefault());
         } else {
             return null;
         }

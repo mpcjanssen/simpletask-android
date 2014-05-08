@@ -91,6 +91,7 @@ public class FilterListFragment extends Fragment {
                     MotionEvent cancelEvent = MotionEvent.obtain(event);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
                     v.onTouchEvent(cancelEvent);
+                    cancelEvent.recycle();
                     return true;
                 }
                 return false;
