@@ -6,6 +6,7 @@ Changelog
 
 - Possible fix for truncated done.txt files.
 - Select correct task when opening from widget (Fixes part of #78).
+- Fix crash when incorrectly calling AddTask intent from for example tasker.
 
 4.1.13
 ======
