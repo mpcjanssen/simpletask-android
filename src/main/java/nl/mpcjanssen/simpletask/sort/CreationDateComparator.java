@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 public class CreationDateComparator extends ReversableComparator {
 
@@ -26,10 +27,8 @@ public class CreationDateComparator extends ReversableComparator {
         } else if (Strings.isEmptyOrNull(b.getPrependedDate())) {
             result = -1;
         } else {
-
-            DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+            DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT,Locale.US);
             // a and b are both not null
-
             try {
                 Date dateA = formatter.parse(a.getPrependedDate());
                 Date dateB = formatter.parse(b.getPrependedDate());
