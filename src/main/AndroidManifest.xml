@@ -62,6 +62,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
                 android:name="nl.mpcjanssen.simpletask.AddTask"
                 android:exported="true"
+                android:taskAffinity=":nl.mpcjanssen.simpletask.affinity.add_task"
                 android:label="@string/addtask"
                 android:windowSoftInputMode="adjustResize"
                 android:parentActivityName="nl.mpcjanssen.simpletask.Simpletask" >

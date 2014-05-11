@@ -29,7 +29,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
 
-    public static void putFilterExtras (ApplicationIntent target , SharedPreferences preferences,  int widgetId) {
+    public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
         Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter(null);
         filter.initFromPrefs(preferences);
@@ -79,18 +79,18 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         // Make sure we use different intents for the different pendingIntents or
         // they will replace each other
         
-        ApplicationIntent appIntent;
+        Intent appIntent;
 
-        appIntent = new ApplicationIntent(context, Simpletask.class, Constants.INTENT_START_FILTER);
+        appIntent = new Intent(Constants.INTENT_START_FILTER);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
-        appIntent = new ApplicationIntent(context, Simpletask.class, Constants.INTENT_START_FILTER);
+        appIntent = new Intent(Constants.INTENT_START_FILTER);
         putFilterExtras(appIntent, preferences, widgetId);
         pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
-        appIntent = new ApplicationIntent(context, AddTask.class, Constants.INTENT_ADD_TASK);
+        appIntent = new Intent(context,AddTask.class);
         putFilterExtras(appIntent, preferences, widgetId);
         pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
