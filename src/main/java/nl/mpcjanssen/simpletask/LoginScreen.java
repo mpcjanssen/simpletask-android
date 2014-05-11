@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.support.v4.content.LocalBroadcastManager;
 import nl.mpcjanssen.simpletask.remote.RemoteClient;
 
 
@@ -40,6 +41,7 @@ public class LoginScreen extends Activity {
 
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class LoginScreen extends Activity {
         m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
         setContentView(R.layout.login);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("nl.mpcjanssen.simpletask.ACTION_LOGIN");
@@ -59,7 +62,7 @@ public class LoginScreen extends Activity {
                 finish();
             }
         };
-        registerReceiver(m_broadcastReceiver, intentFilter);
+        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
 
         Button m_LoginButton = (Button) findViewById(R.id.login);
         m_LoginButton.setOnClickListener(new OnClickListener() {
@@ -96,14 +99,14 @@ public class LoginScreen extends Activity {
         remoteClient.finishLogin();
         if (remoteClient.finishLogin() && remoteClient.isAuthenticated()) {
             switchToTodolist();
-            sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE));
+            localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_FROM_REMOTE));
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(m_broadcastReceiver);
+        localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
     }
 
     void startLogin() {

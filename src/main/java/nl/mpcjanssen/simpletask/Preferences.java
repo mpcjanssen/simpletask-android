@@ -33,6 +33,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -41,11 +42,12 @@ public class Preferences extends ThemedActivity {
     final static String TAG = Preferences.class.getSimpleName();
 	public static final int RESULT_LOGOUT = RESULT_FIRST_USER + 1;
 	public static final int RESULT_ARCHIVE = RESULT_FIRST_USER + 2;
+    private LocalBroadcastManager localBroadcastManager;
 
 	private void broadcastIntentAndClose(String intent, int result) {
 
 		Intent broadcastIntent = new Intent(intent);
-		sendBroadcast(broadcastIntent);
+		localBroadcastManager.sendBroadcast(broadcastIntent);
 
 		// Close preferences screen
 		setResult(result);
@@ -58,6 +60,7 @@ public class Preferences extends ThemedActivity {
 		// Display the fragment as the main content.
 
         TodoTxtPrefFragment prefFragment = new TodoTxtPrefFragment();
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new TodoTxtPrefFragment())
@@ -122,7 +125,7 @@ public class Preferences extends ThemedActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ((Preferences) getActivity()).broadcastIntentAndClose(
-                                getActivity().getPackageName()+Constants.BROADCAST_ACTION_ARCHIVE,
+                                Constants.BROADCAST_ACTION_ARCHIVE,
                                 Preferences.RESULT_ARCHIVE);
                     }
                 }, R.string.archive_task_title);
@@ -133,7 +136,7 @@ public class Preferences extends ThemedActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ((Preferences) getActivity()).broadcastIntentAndClose(
-                                getActivity().getPackageName()+Constants.BROADCAST_ACTION_LOGOUT,
+                                Constants.BROADCAST_ACTION_LOGOUT,
                                 Preferences.RESULT_LOGOUT);
                     }
                 }, R.string.dropbox_logout_pref_title);

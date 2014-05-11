@@ -72,6 +72,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
@@ -98,6 +99,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
     ActiveFilter mFilter;
     TaskAdapter m_adapter;
     private BroadcastReceiver m_broadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
     private ActionMode actionMode;
     // Drawer vars
     private ListView m_leftDrawerList;
@@ -167,6 +169,8 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	intentFilter.addAction(Constants.BROADCAST_SYNC_START);
 	intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
 
+    localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
 	m_broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -195,7 +199,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 		    }
 		}
 	    };
-	registerReceiver(m_broadcastReceiver, intentFilter);
+	localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
 
 
 	// Set the proper theme
@@ -371,7 +375,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
 	super.onDestroy();
-	unregisterReceiver(m_broadcastReceiver);
+	localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
     }
 
     @Override
@@ -494,8 +498,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 								     m_app.setNeedToPush(true);
 								     // We have change the data, views should refresh
 								     m_adapter.setFilteredTasks(false);
-								     sendBroadcast(new ApplicationIntent(Simpletask.this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
-
+								     localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
 								 }
 							     });
 	tagChooser.show();
@@ -528,7 +531,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 								     m_app.setNeedToPush(true);
 								     // We have change the data, views should refresh
 								     m_adapter.setFilteredTasks(false);
-								     sendBroadcast(new ApplicationIntent(Simpletask.this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
+								     localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
 
 								 }
 							     });
@@ -557,7 +560,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 		    m_app.setNeedToPush(true);
 		    // We have change the data, views should refresh
 		    m_adapter.setFilteredTasks(false);
-		    sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+		    localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
 		}
 	    });
 	builder.show();
@@ -593,7 +596,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_app.setNeedToPush(true);
 	// We have change the data, views should refresh
 	m_adapter.setFilteredTasks(true);
-    sendBroadcast(new ApplicationIntent(this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
+    localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -607,7 +610,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_app.setNeedToPush(true);
 	// We have change the data, views should refresh
 	m_adapter.setFilteredTasks(true);
-    sendBroadcast(new ApplicationIntent(this, Simpletask.class, Constants.BROADCAST_START_SYNC_TO_REMOTE));
+    sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deferTasks(List<Task> tasks, final int dateType ) {
@@ -655,7 +658,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_app.updateWidgets();
 	m_app.setNeedToPush(true);
 	// We have change the data, views should refresh
-	sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+	localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deferTasks(String selected, List<Task> tasksToDefer, int type) {
@@ -673,7 +676,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	m_app.updateWidgets();
 	m_app.setNeedToPush(true);
 	// We have change the data, views should refresh
-	sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+	localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deleteTasks(final List<Task> tasks) {
@@ -691,7 +694,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 		    m_app.setNeedToPush(true);
 		    updateDrawers();
 		    // We have change the data, views should refresh
-		    sendBroadcast(new Intent(getPackageName() + Constants.BROADCAST_START_SYNC_TO_REMOTE));
+		    localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
 		}
 	    }, R.string.delete_task_title);
     }
@@ -717,7 +720,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 		    m_app.updateWidgets();
 		    m_app.setNeedToPush(true);
 		    updateDrawers();
-		    sendBroadcast(new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE));
+		    localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
 		} else {
 		    Util.showToastLong(Simpletask.this,
 				       "Could not archive tasks");
@@ -825,11 +828,11 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	} else {
 	    Log.i(TAG, "auto sync mode; should automatically sync; force = "
 		  + force);
-	    Intent i = new Intent(getPackageName()+Constants.BROADCAST_START_SYNC_WITH_REMOTE);
+	    Intent i = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
 	    if (force) {
 		i.putExtra(Constants.EXTRA_FORCE_SYNC, true);
 	    }
-	    sendBroadcast(i);
+	    localBroadcastManager.sendBroadcast(i);
 	}
     }
 
@@ -849,8 +852,8 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 					   new DialogInterface.OnClickListener() {
 					       @Override
 					       public void onClick(DialogInterface arg0, int arg1) {
-						   sendBroadcast(new Intent(
-									    getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE)
+						   localBroadcastManager.sendBroadcast(new Intent(
+									    Constants.BROADCAST_START_SYNC_TO_REMOTE)
 								 .putExtra(Constants.EXTRA_FORCE_SYNC, true));
 						   // backgroundPushToRemote();
 						   showToast(getString(R.string.sync_upload_message));
@@ -861,8 +864,8 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 					   new DialogInterface.OnClickListener() {
 					       @Override
 					       public void onClick(DialogInterface arg0, int arg1) {
-						   sendBroadcast(new Intent(
-									    getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE)
+						   localBroadcastManager.sendBroadcast(new Intent(
+									    Constants.BROADCAST_START_SYNC_FROM_REMOTE)
 								 .putExtra(Constants.EXTRA_FORCE_SYNC, true));
 						   // backgroundPullFromRemote();
 						   showToast(getString(R.string.sync_download_message));
@@ -880,8 +883,8 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 					       @Override
 					       public void onClick(DialogInterface arg0, int arg1) {
 						   Log.v(TAG, "User selected PUSH");
-						   sendBroadcast(new Intent(
-									    getPackageName()+Constants.BROADCAST_START_SYNC_TO_REMOTE)
+						   localBroadcastManager.sendBroadcast(new Intent(
+									    Constants.BROADCAST_START_SYNC_TO_REMOTE)
 								 .putExtra(Constants.EXTRA_OVERWRITE, true)
 								 .putExtra(Constants.EXTRA_FORCE_SYNC, true));
 						   // backgroundPushToRemote();
@@ -894,8 +897,8 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 					       @Override
 					       public void onClick(DialogInterface arg0, int arg1) {
 						   Log.v(TAG, "User selected PULL");
-						   sendBroadcast(new Intent(
-									    getPackageName()+Constants.BROADCAST_START_SYNC_FROM_REMOTE)
+						   localBroadcastManager.sendBroadcast(new Intent(
+									    Constants.BROADCAST_START_SYNC_FROM_REMOTE)
 								 .putExtra(Constants.EXTRA_FORCE_SYNC, true));
 						   // backgroundPullFromRemote();
 						   showToast(getString(R.string.sync_download_message));
@@ -1735,7 +1738,7 @@ public class Simpletask extends ThemedListActivity  implements AdapterView.OnIte
 	public void onDestroyActionMode(ActionMode mode) {
 	    actionMode = null;
 	    if (m_drawerLayout!=null) {
-		m_drawerLayout.closeDrawers();
+            m_drawerLayout.closeDrawers();
 	    }
 	    updateDrawers();
         }

@@ -49,6 +49,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -82,6 +83,7 @@ public class AddTask extends ThemedActivity {
     private TaskBag taskBag;
 
     private String share_text;
+    private LocalBroadcastManager localBroadcastManager ; 
 
 
     private EditText textInputField;
@@ -174,7 +176,9 @@ public class AddTask extends ThemedActivity {
         if (m_app.isAutoArchive()) {
             taskBag.archive(null);
         }
-        sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+        Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
+        Log.v(TAG, "Broadcast " + sync);
+        localBroadcastManager.sendBroadcast(sync);
         finish();
     }
 
@@ -200,8 +204,9 @@ public class AddTask extends ThemedActivity {
         }
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
-        sendBroadcast(new Intent(
-                Constants.BROADCAST_START_SYNC_WITH_REMOTE));
+        Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
+        Log.v(TAG, "Broadcast " + sync);
+        localBroadcastManager.sendBroadcast(sync);
         m_app.showToast(R.string.task_added);
     }
 
@@ -215,6 +220,7 @@ public class AddTask extends ThemedActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.v(TAG, "onCreate()");
         taskBag = m_app.getTaskBag();
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
         final Intent intent = getIntent();
         ActiveFilter mFilter = new ActiveFilter(getResources());
         mFilter.initFromIntent(intent);

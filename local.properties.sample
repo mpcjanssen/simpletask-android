@@ -4,7 +4,4 @@
 # This file must *NOT* be checked into Version Control Systems,
 # as it contains information specific to your local configuration.
 
-# location of the SDK. This is only used by Ant
-# For customization when using a Version Control System, please read the
-# header note.
-sdk.dir=C:\\Users\\A156712\\Documents\\Android\\adt-bundle\\sdk
+sdk.dir=C:/Users/name/Documents/Android/adt-bundle/sdk
