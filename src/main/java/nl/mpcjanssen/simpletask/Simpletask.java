@@ -355,7 +355,15 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             updateDrawers();
         }
         if (m_savedInstanceState != null && selectedTask == null) {
-            lv.onRestoreInstanceState(m_savedInstanceState.getParcelable("state"));
+            ArrayList<String> selection = m_savedInstanceState.getStringArrayList("selection");
+            int position = m_savedInstanceState.getInt("position");
+            if (selection != null) {
+                for (String selected : selection) {
+                    String[] parts = selected.split(":", 2);
+                    setSelectedTask(Integer.valueOf(parts[0]), parts[1]);
+                }
+            }
+            lv.setSelectionFromTop(position,0);
         }
     }
 
@@ -408,9 +416,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         for (Task t : getCheckedTasks()) {
             selection.add("" + t.getId() + ":" + t.inFileFormat());
         }
-        //outState.putStringArrayList("selection", selection);
-        outState.putParcelable("state", getListView().onSaveInstanceState());
-
+        outState.putStringArrayList("selection", selection);
+        outState.putInt("position",getListView().getFirstVisiblePosition());
     }
 
     @Override

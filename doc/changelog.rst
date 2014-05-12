@@ -1,10 +1,16 @@
 Changelog
 +++++++++
 
+4.1.16
+======
+
+- Retain task selection when rotating the device.
+
 4.1.15
 ======
 
 - Fix an issue with widgets not refreshing when changing the todo.txt in the background (cloudless only).
+- Fix issues with syncing with dropbox not working.
 
 
 4.1.14
