@@ -176,7 +176,8 @@ public class FilterActivity extends ThemedActivity {
 	}
 
     private Intent createFilterIntent() {
-        Intent target = new Intent(Constants.INTENT_START_FILTER);
+        Intent target = new Intent(this, Simpletask.class);
+        target.setAction(Constants.INTENT_START_FILTER);
         updateFilterFromFragments();
         mFilter.setName(mFilter.getProposedName());
         mFilter.saveInIntent(target);
@@ -326,7 +327,7 @@ public class FilterActivity extends ThemedActivity {
 
 	private void applyFilter() {
    		Intent data = createFilterIntent();
-   		setResult(RESULT_OK,data);
+   		startActivity(data);
         finish();
     }
 

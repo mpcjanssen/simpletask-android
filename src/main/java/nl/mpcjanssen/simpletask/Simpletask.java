@@ -162,16 +162,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_FILTER) {
-            if (resultCode == RESULT_OK) {
-                setIntent(data);
-                handleIntent();
-            }
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         m_app = (TodoApplication) getApplication();
@@ -1246,7 +1236,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Intent i = new Intent(this, FilterActivity.class);
         mFilter.saveInIntent(i);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivityForResult(i, REQUEST_FILTER);
+        startActivity(i);
+        finish();
     }
 
     private static class ViewHolder {
