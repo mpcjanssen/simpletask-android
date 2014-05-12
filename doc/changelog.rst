@@ -1,6 +1,12 @@
 Changelog
 +++++++++
 
+4.1.17
+======
+
+- Fixed issue with filter activity not applying.
+- Fixed issue with launching from widget.
+
 4.1.16
 ======
 
