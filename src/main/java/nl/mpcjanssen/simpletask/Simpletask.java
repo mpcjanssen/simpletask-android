@@ -419,7 +419,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     @Override
     protected void onPause() {
         super.onPause();
-        mFilter.saveInPrefs(TodoApplication.getPrefs());
+        if (mFilter!=null) {
+            mFilter.saveInPrefs(TodoApplication.getPrefs());
+        }
     }
 
     @Override
