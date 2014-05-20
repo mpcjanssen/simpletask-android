@@ -1,5 +1,5 @@
 /* general style */
-body    { margin: 0; padding: 0; }
+body    { margin: 0; padding: 10px; }
 a       { /*color: #432165;*/ color: #234764; }
 a:hover { color: #3b185f; background: #f9f8fa; }
 
@@ -11,7 +11,7 @@ h1 a, h2 a, h3 a, h4 a,
 h5 a, h6 a                  { text-decoration: none; }
 h1 a:hover, h2 a:hover,
 h3 a:hover, h4 a:hover      { color: #432165; text-decoration: underline; }
-h1.title                    { width: 560px; }
+h1.title                    { width: 95%; }
 h1, h2                      { margin: 10px 0 25px 0; }
 h1                          { font-size: 48px; line-height: 52px; }
 h2                          { font-size: 36px; line-height: 40px; }
