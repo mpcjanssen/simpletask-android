@@ -1,9 +1,6 @@
 Manage Your Now
 ===============
 
-slug  
-MYN
-
 Creating the contexts for MYN
 -----------------------------
 

@@ -43,6 +43,11 @@ public class HelpScreen extends Activity {
     private BroadcastReceiver m_broadcastReceiver;
     private WebView wvHelp;
 
+    private void loadDesktop (WebView wv, String url) {
+        wv.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+        wv.loadUrl(url);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,18 +61,23 @@ public class HelpScreen extends Activity {
             @Override  
             public boolean shouldOverrideUrlLoading(WebView view, String url)  {  
                 Log.v(TAG, "Loading url: " + url);
-		if (url.startsWith("http://") || url.startsWith("https://")) {
-            openUrl(url);
-		    return true;
-
-		} else if ( url.endsWith(".md")) {
-            url = url.replace(BASE_URL,"");
-            showMarkdownAsset(view,HelpScreen.this,url);
-            return true;
-        } else {
-		    return false;
-		}  
-        }});  
+                if (url.startsWith("https://www.paypal.com")) {
+                    // Paypal links don't work in the mobile browser so this hack is needed
+                    loadDesktop(view,url);
+                    return true;
+                }
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    view.getSettings().setUserAgentString(null);
+                    openUrl(url);
+                    return true;
+                } else if ( url.endsWith(".md")) {
+                    url = url.replace(BASE_URL,"");
+                    showMarkdownAsset(view,HelpScreen.this,url);
+                    return true;
+                } else {
+                    return false;
+                }  
+            }});  
         showMarkdownAsset(wvHelp,this,"index.md");
     }
 
@@ -131,7 +141,7 @@ public class HelpScreen extends Activity {
                 showMarkdownAsset(wvHelp, this, "intents.md");
                 return true;
             case R.id.menu_donate:
-                openUrl("./donate.html");
+                loadDesktop(wvHelp, "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
                 return true;
             case R.id.menu_tracker:
                 openUrl("https://github.com/mpcjanssen/simpletask-android/issues");

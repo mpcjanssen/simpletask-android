@@ -1,6 +1,11 @@
 Changelog
 =========
 
+4.1.18
+------
+
+- Updated documentation so that donate page opens in app.
+
 4.1.17
 ------
 
