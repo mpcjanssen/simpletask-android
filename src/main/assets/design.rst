@@ -33,3 +33,8 @@ Tags (Projects in todo.txt)
 Notes (No equivalent in todo.txt)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+Other considerations
+--------------------
+
+- Simpletask is written in such a way that the same documentation is used on Github and in the app. This requires some additional dependencies for the app (a Markdown and a HTML parser), but it makes keeping all the docs in sync much easier.
