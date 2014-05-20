@@ -104,7 +104,7 @@ SORTS contains a comma or '' separated list of sort keys and their direction wit
 
 #### Sort keys
 
-See list in <http://mpcjanssen.nl/fossil/simpletask/artifact/ac6b9bf579b8d1a9c23083031852a0fdd81efb75?ln=42-51>
+See list in [arrays.xml](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/res/values/arrays.xml#L42-51)
 
 #### Example
 
