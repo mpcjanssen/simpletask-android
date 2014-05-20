@@ -23,14 +23,21 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.view.Menu;
 import android.view.MenuItem;
+import org.markdown4j.Markdown4jProcessor;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.*;
 
 public class HelpScreen extends Activity {
 
-    final static String TAG = LoginScreen.class.getSimpleName();
+    final static String TAG = HelpScreen.class.getSimpleName();
+    final static String BASE_URL = "file:///android_asset/"; 
 
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
@@ -53,12 +60,15 @@ public class HelpScreen extends Activity {
             openUrl(url);
 		    return true;
 
-		} else {
+		} else if ( url.endsWith(".md")) {
+            url = url.replace(BASE_URL,"");
+            showMarkdownAsset(view,HelpScreen.this,url);
+            return true;
+        } else {
 		    return false;
 		}  
-            }  
-        });  
-        wvHelp.loadUrl("file:///android_asset/index.html");
+        }});  
+        showMarkdownAsset(wvHelp,this,"index.md");
     }
 
     @Override
@@ -73,16 +83,46 @@ public class HelpScreen extends Activity {
         startActivity(browserIntent);
     }
 
+    public static String readAsset(AssetManager assets, String name) throws IOException  {
+        StringBuilder buf=new StringBuilder();
+        InputStream input =assets.open(name);
+        BufferedReader in=
+            new BufferedReader(new InputStreamReader(input));
+        String str;
+
+        while ((str=in.readLine()) != null) {
+            buf.append(str + "\n");
+        }
+
+        in.close();
+        return buf.toString();
+    }
+
+    public static void showMarkdownAsset(WebView wv, Context ctxt,  String name) {
+        Log.v(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")"); 
+        String html = "";
+        try {
+            html = new Markdown4jProcessor().process(readAsset(ctxt.getAssets(), name));
+            Document doc = Jsoup.parse(html);
+            doc.head().getElementsByTag("link").remove();
+            doc.head().appendElement("link").attr("rel", "stylesheet").attr("type", "text/css").attr("href", "css/style.css");
+            html = doc.outerHtml();
+        } catch (IOException e) {
+            Log.e(TAG,""+e);
+        }
+        wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8",null);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.menu_simpletask:
-                wvHelp.loadUrl("file:///android_asset/index.html");
+                showMarkdownAsset(wvHelp,this,"index.md");
                 return true;
             case R.id.menu_changelog:
-                wvHelp.loadUrl("file:///android_asset/changelog.html");
+                showMarkdownAsset(wvHelp, this, "changelog.md");
                 return true;
             case R.id.menu_myn:
                 wvHelp.loadUrl("file:///android_asset/MYN.html");
