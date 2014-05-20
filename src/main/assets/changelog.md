@@ -5,6 +5,7 @@ Changelog
 ------
 
 - Updated documentation so that donate page opens in app.
+- Added rationale for Lists and Tags to in app help.
 
 4.1.17
 ------
