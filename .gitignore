@@ -10,3 +10,5 @@ _FOSSIL_
 \#*
 *~
 *.pyc
+.idea/
+*.iml
