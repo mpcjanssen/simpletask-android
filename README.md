@@ -1,4 +1,4 @@
 README
 ======
 
-See [here](http://mpcjanssen.nl/doc/simpletask/).
+See [here](./src/main/assets/index.md)
