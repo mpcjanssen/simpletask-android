@@ -23,5 +23,6 @@ If you want to log an issue or feature request for [Simpletask](https://github.c
 Check the menu for more help sections or click below.
 
 - [Changelog](./changelog.md)
+- [Defined intents](./intents.md) Intents that can be used for automating Simpletask
 - [Using Simpletask for 1MTD/MYN](./MYN.md)
 
