@@ -33,11 +33,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.Stack;
 
 public class HelpScreen extends Activity {
 
     final static String TAG = HelpScreen.class.getSimpleName();
     final static String BASE_URL = "file:///android_asset/"; 
+
+    private Stack<String> history = new Stack<String>();
 
     private TodoApplication m_app;
     private BroadcastReceiver m_broadcastReceiver;
@@ -47,6 +50,19 @@ public class HelpScreen extends Activity {
         wv.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
         wv.loadUrl(url);
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Log.v(TAG, "History " + history  + "empty: " + history.empty() );
+        history.pop();
+        if(!history.empty()) {
+            showMarkdownAsset(wvHelp, this, history.pop());
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +80,10 @@ public class HelpScreen extends Activity {
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
                     loadDesktop(view,url);
+                    // Don't store paypal redirects in history
+                    if (!history.peek().equals("paypal")) {
+                        history.push("paypal");
+                    }
                     return true;
                 }
                 if (url.startsWith("http://") || url.startsWith("https://")) {
@@ -108,7 +128,7 @@ public class HelpScreen extends Activity {
         return buf.toString();
     }
 
-    public static void showMarkdownAsset(WebView wv, Context ctxt,  String name) {
+    public void showMarkdownAsset(WebView wv, Context ctxt,  String name) {
         Log.v(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")"); 
         String html = "";
         try {
@@ -120,7 +140,8 @@ public class HelpScreen extends Activity {
         } catch (IOException e) {
             Log.e(TAG,""+e);
         }
-        wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8",null);
+        history.push(name);
+        wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8","file:///android_asset/index.md");
     }
 
 
