@@ -4,8 +4,9 @@ Changelog
 4.1.18
 ------
 
-- Updated documentation so that donate page opens in app.
-- Added rationale for Lists and Tags to in app help.
+- Updated documentation so that donate page opens in desktop view (mobile view doesn't work).
+- Added rationale for Lists and Tags in help.
+- Improve back button handling when reading help.
 
 4.1.17
 ------
