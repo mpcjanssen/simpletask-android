@@ -8,7 +8,7 @@
     android:paddingRight="16dp"
     android:orientation="vertical">
 
-    <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    <CheckBox 
         android:id="@+id/cb_show_completed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,6 @@
 
     <CheckBox
         android:id="@+id/cb_show_future"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter_show_future" />
@@ -24,14 +23,12 @@
 
     <CheckBox
         android:id="@+id/cb_show_lists"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter_show_lists" />
 
     <CheckBox
         android:id="@+id/cb_show_tags"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter_show_tags" />
