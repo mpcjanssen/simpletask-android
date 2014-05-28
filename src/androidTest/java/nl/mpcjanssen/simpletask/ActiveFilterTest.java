@@ -2,8 +2,6 @@ package nl.mpcjanssen.simpletask;
 
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
-
 import java.util.Date;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
