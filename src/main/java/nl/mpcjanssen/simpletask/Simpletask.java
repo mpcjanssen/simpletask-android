@@ -8,16 +8,6 @@
 
 package nl.mpcjanssen.simpletask;
 
-import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
-import nl.mpcjanssen.simpletask.remote.RemoteClient;
-import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
-import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -40,6 +30,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.util.Log;
@@ -70,17 +61,29 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.support.v4.content.LocalBroadcastManager;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
-
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
 
-import static java.lang.Thread.sleep;
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
+import nl.mpcjanssen.simpletask.remote.RemoteClient;
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.util.Strings;
+import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
 
 
 public class Simpletask extends ThemedListActivity implements AdapterView.OnItemLongClickListener {
@@ -614,7 +617,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                         }
                     }
                 }
-                t.markComplete(new DateTime());
+                t.markComplete(DateTime.today(TimeZone.getDefault()));
             }
         }
         taskBag.store();
@@ -648,20 +651,20 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onClick(String selected) {
                 if (selected != null && selected.equals("pick")) {
-                    final DateTime today = new DateTime();
+                    final DateTime today = DateTime.today(TimeZone.getDefault());
                     DatePickerDialog dialog = new DatePickerDialog(Simpletask.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             month++;
 
-                            DateTime date = ISODateTimeFormat.date().parseDateTime(year + "-" + month + "-" + day);
+                            DateTime date = DateTime.forDateOnly(year, month,day);
                             deferTasks(date, tasksToDefer, dateType);
 
                         }
                     },
                             today.getYear(),
-                            today.getMonthOfYear() - 1,
-                            today.getDayOfMonth()
+                            today.getMonth(),
+                            today.getDay()
                     );
 
                     dialog.show();
@@ -1511,7 +1514,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
 
                     String relAge = task.getRelativeAge();
-                    SpannableString relDue = task.getRelativeDueDate(res, m_app.hasColorDueDates());
+                    SpannableString relDue = task.getRelativeDueDate(res.getColor(android.R.color.holo_green_light),
+                            res.getColor(android.R.color.holo_red_light),
+                            m_app.hasColorDueDates());
                     String relThres = task.getRelativeThresholdDate();
                     boolean anyDateShown = false;
                     if (!Strings.isEmptyOrNull(relAge)) {

@@ -22,27 +22,21 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import android.content.res.Resources;
 import android.text.SpannableString;
-
-import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.util.RelativeDate;
-import nl.mpcjanssen.simpletask.util.Util;
-
-import hirondelle.date4j.DateTime;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.ActiveFilter;
+import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.util.RelativeDate;
+import nl.mpcjanssen.simpletask.util.Util;
 
 
 @SuppressWarnings("serial")
@@ -98,7 +92,7 @@ public class Task implements Serializable, Comparable<Task> {
             Priority p = getPriority();
             setPriority(Priority.NONE);
 
-            this.text = defaultPrependedDate.format("YYYY-MM-DD") + " " + text;
+            this.text = defaultPrependedDate.format(Constants.DATE_FORMAT) + " " + text;
             setPriority(p);
         }
     }
@@ -106,12 +100,8 @@ public class Task implements Serializable, Comparable<Task> {
     private DateTime getDate(Pattern datePattern) {
         DateTime date = null;
         Matcher matcher = datePattern.matcher(this.text);
-        try {
-            if (matcher.find()) {
-                date = formatter.parseDateTime(matcher.group(2));
-            }
-        } catch (IllegalFieldValueException e) {
-            return null;
+        if (matcher.find()) {
+            date = new DateTime(matcher.group(2));
         }
         return date;
     }
@@ -121,7 +111,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setDueDate(DateTime dueDate) {
-        setDueDate(formatter.print(dueDate));
+        setDueDate(dueDate.format(Constants.DATE_FORMAT));
     }
 
     public void setDueDate(String dueDateString) {
@@ -139,7 +129,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setThresholdDate(DateTime thresholdDate) {
-        setThresholdDate(formatter.print(thresholdDate));
+        setThresholdDate(thresholdDate.format(Constants.DATE_FORMAT));
     }
 
     public void setThresholdDate(String thresholdDateString) {
@@ -205,23 +195,21 @@ public class Task implements Serializable, Comparable<Task> {
         if (prependDate==null) {
             return null;
         }
-        try {
-            dt = formatter.parseDateTime(prependDate);
-        } catch (IllegalFieldValueException e) {
-            return prependDate;
-        }
+        dt = new DateTime(prependDate);
+
         return RelativeDate.getRelativeDate(dt);
     }
 
-    public SpannableString getRelativeDueDate(Resources res, boolean useColor) {
+    public SpannableString getRelativeDueDate(int dueTodayColor, int overDueColor, boolean useColor) {
         DateTime dueDate = getDueDate();
+        DateTime today = DateTime.today(TimeZone.getDefault());
         if (dueDate!=null) {
             String relativeDate = RelativeDate.getRelativeDate(dueDate);
             SpannableString ss = new SpannableString("Due: " +  relativeDate);
-            if (relativeDate.equals(res.getString(R.string.dates_today)) && useColor) {
-                Util.setColor(ss, res.getColor(android.R.color.holo_green_light));
-            } else if (dueDate.isBefore(new DateTime()) && useColor) {
-                Util.setColor(ss,res.getColor(android.R.color.holo_red_light));
+            if (dueDate.isSameDayAs(today) && useColor) {
+                Util.setColor(ss, dueTodayColor);
+            } else if (dueDate.isInThePast(TimeZone.getDefault()) && useColor) {
+                Util.setColor(ss, overDueColor);
             }
             return ss;
         } else {
@@ -326,7 +314,7 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void markComplete(DateTime date) {
         if (!this.isCompleted()) {
-            String completionDate = formatter.print(date);
+            String completionDate = date.format(Constants.DATE_FORMAT);
             this.text = "x " + completionDate + " " + inFileFormat();
         }
     }
@@ -365,8 +353,8 @@ public class Task implements Serializable, Comparable<Task> {
             return false;
         } else {
             DateTime thresholdDate = this.getThresholdDate();
-            DateTime now = new DateTime();
-            return thresholdDate.isAfter(now);
+            DateTime now = DateTime.today(TimeZone.getDefault());
+            return thresholdDate.gt(now);
         }
     }
 
@@ -458,7 +446,7 @@ public class Task implements Serializable, Comparable<Task> {
             setThresholdDate("");
             return;
         }
-        DateTime olddate = new DateTime();
+        DateTime olddate = DateTime.today(TimeZone.getDefault());
         if (original) {
             olddate = getThresholdDate();
         }
@@ -473,7 +461,7 @@ public class Task implements Serializable, Comparable<Task> {
             setDueDate("");
             return;
         }
-        DateTime olddate = new DateTime();
+        DateTime olddate = DateTime.today(TimeZone.getDefault());
         if (original) {
             olddate = getDueDate();
         }

@@ -24,7 +24,7 @@ package nl.mpcjanssen.simpletask;
 
 public class Constants {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_FORMAT = "YYYY-MM-DD";
 
     public static final String PREF_FIRSTRUN = "firstrun";
     public static final String PREF_ACCESSTOKEN_KEY = "accesstokenkey";

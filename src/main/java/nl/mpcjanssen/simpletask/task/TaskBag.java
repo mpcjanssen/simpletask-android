@@ -24,17 +24,22 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.SharedPreferences;
 
-import org.joda.time.DateTime;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
 
+import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.remote.PullTodoResult;
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 
 /**
@@ -107,7 +112,7 @@ public class TaskBag {
     public Task addAsTask(String input) {
         try {
             Task task = new Task(tasks.size(), input,
-                    (preferences.isPrependDateEnabled() ? new DateTime() : null));
+                    (preferences.isPrependDateEnabled() ? DateTime.today(TimeZone.getDefault()) : null));
 	    if (preferences.addAtEnd()) {
 		tasks.add(task);
 	    } else {
