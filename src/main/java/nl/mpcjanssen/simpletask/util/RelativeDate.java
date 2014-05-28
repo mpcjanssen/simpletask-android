@@ -6,29 +6,12 @@
 package nl.mpcjanssen.simpletask.util;
 
 import android.content.Context;
-import android.util.Log;
 
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Period;
-import org.joda.time.ReadableDuration;
-import org.joda.time.Weeks;
-import org.joda.time.Years;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import java.util.TimeZone;
 
-import nl.mpcjanssen.simpletask.TodoApplication;
+import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import nl.mpcjanssen.simpletask.TodoApplication;
 
 
 public class RelativeDate {
@@ -55,14 +38,13 @@ public class RelativeDate {
 	 */
 
     public static String computeRelativeDate(DateTime now, DateTime when) {
-        if (when.isBefore(now) || when.equals(now)) {
-            Interval interval = new Interval(when, now);
-            Period period = interval.toPeriod();
+        if (when.lteq(now)) {
+            int period = when.numDaysFrom(now);
 
-            int months = period.getMonths();
-            int weeks = period.getWeeks();
-            int years = period.getYears();
-            int days = period.getDays();
+            int months = period/31;
+            int weeks = period/7;
+            int years = period/365;
+            int days = period;
 
             if (years == 1) {
                 return context.getString(R.string.dates_one_year_ago);
@@ -87,7 +69,7 @@ public class RelativeDate {
                 return context.getString(R.string.dates_today);
             }
         }
-        return when.toString(ISODateTimeFormat.date());
+        return when.toString();
     }
 
     /**
@@ -100,7 +82,7 @@ public class RelativeDate {
 
 	public static String getRelativeDate(DateTime when) {
 
-		DateTime now = new DateTime();
+		DateTime now = DateTime.today(TimeZone.getDefault());
 		return computeRelativeDate(now, when);
 
 	}

@@ -14,12 +14,13 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import nl.mpcjanssen.simpletask.sort.*;
-import nl.mpcjanssen.simpletask.task.*;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
+import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-
-import java.util.*;
 
 public class AppWidgetService extends RemoteViewsService {
 
@@ -141,7 +142,9 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	    rv.setTextViewText(R.id.tasktext,ss);
 
 	    String relAge = task.getRelativeAge();
-	    SpannableString relDue = task.getRelativeDueDate(res, true);
+	    SpannableString relDue = task.getRelativeDueDate(res.getColor(android.R.color.holo_green_light),
+                res.getColor(android.R.color.holo_red_light),
+                true);
 	    String relThres = task.getRelativeThresholdDate();
 	    boolean anyDateShown = false;
 	    if (!Strings.isEmptyOrNull(relAge)) {

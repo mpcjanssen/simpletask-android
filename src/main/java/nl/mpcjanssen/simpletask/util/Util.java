@@ -24,23 +24,17 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
-import nl.mpcjanssen.simpletask.TodoException;
-import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.task.Task;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -49,13 +43,27 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletask.TodoException;
+import nl.mpcjanssen.simpletask.task.Task;
 
 public class Util {
 
@@ -360,7 +368,7 @@ public class Util {
         int amount;
         String type;
         if (date == null) {
-            date = new DateTime();
+            date = DateTime.today(TimeZone.getDefault());
         }
         m.find();
         if(m.groupCount()==2) {
@@ -369,17 +377,16 @@ public class Util {
         } else {
             return null;
         }
-        Period period = new Period(0);
         if (type.equals("d")) {
-            period = period.plusDays(amount);
+            date = date.plusDays(amount);
         } else if (type.equals("w")) {
-            period = period.plusWeeks(amount);
+            date = date.plusDays(7 * amount);
         } else if (type.equals("m")) {
-            period = period.plusMonths(amount);
+            date = date.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
         } else if (type.equals("y")) {
-            period = period.plusYears(amount);
+            date = date.plus(0, 0, amount, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
         }
-        return date.plus(period);
+        return date;
     }
 
     public static ArrayList<String> prefixItems(String prefix, ArrayList<String> items) {

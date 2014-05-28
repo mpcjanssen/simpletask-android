@@ -22,7 +22,6 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -31,17 +30,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
 import android.util.Log;
-import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -49,29 +49,21 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.support.v4.content.LocalBroadcastManager;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeSet;
 
+import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.TreeSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 
 public class AddTask extends ThemedActivity {
@@ -438,22 +430,23 @@ public class AddTask extends ThemedActivity {
                      * With the current implementation which replaces the dates this is not an
                      * issue. The date is just replaced twice
                      */
-                    final DateTime today = new DateTime();
+                    final DateTime today = DateTime.today(TimeZone.getDefault());
                     DatePickerDialog dialog = new DatePickerDialog(AddTask.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             month++;
-                            DateTime date = ISODateTimeFormat.date().parseDateTime(year+"-"+month+"-"+day);
+
+                            DateTime date = new DateTime(year+"-"+month+"-"+day);
                             insertDateAtSelection(dateType, date);
                         }
                     },
                             today.getYear(),
-                            today.getMonthOfYear()-1,
-                            today.getDayOfMonth());
+                            today.getMonth(),
+                            today.getDay());
 
                     dialog.show();
                 } else {
-                    insertDateAtSelection(dateType, Util.addInterval(new DateTime(), selected));
+                    insertDateAtSelection(dateType, Util.addInterval(DateTime.today(TimeZone.getDefault()), selected));
                 }
             }
         });
@@ -469,8 +462,7 @@ public class AddTask extends ThemedActivity {
     }
 
     private void insertDateAtSelection(int dateType, DateTime date) {
-        DateTimeFormatter formatter = ISODateTimeFormat.date();
-        replaceDate(dateType, formatter.print(date));
+        replaceDate(dateType, date.format("YYYY-MM-DD"));
     }
 
     private void showTagMenu() {
