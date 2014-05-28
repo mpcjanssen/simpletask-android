@@ -25,9 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import org.markdown4j.Markdown4jProcessor;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -133,10 +130,7 @@ public class HelpScreen extends Activity {
         String html = "";
         try {
             html = new Markdown4jProcessor().process(readAsset(ctxt.getAssets(), name));
-            Document doc = Jsoup.parse(html);
-            doc.head().getElementsByTag("link").remove();
-            doc.head().appendElement("link").attr("rel", "stylesheet").attr("type", "text/css").attr("href", "css/style.css");
-            html = doc.outerHtml();
+            html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + html + "</body></html>";
         } catch (IOException e) {
             Log.e(TAG,""+e);
         }
