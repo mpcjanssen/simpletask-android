@@ -101,7 +101,12 @@ public class Task implements Serializable, Comparable<Task> {
         DateTime date = null;
         Matcher matcher = datePattern.matcher(this.text);
         if (matcher.find()) {
-            date = new DateTime(matcher.group(2));
+            String dateString = matcher.group(2);
+            if (DateTime.isParseable(dateString)) {
+                date = new DateTime(dateString);
+            } else {
+                date = null;
+            }
         }
         return date;
     }

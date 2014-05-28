@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+4.2.0
+-----
+
+- Removed JodaTime and Jsoup dependencies for smaller apk size.
+
 4.1.19
 ------
 
