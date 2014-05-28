@@ -1,5 +1,10 @@
-Changelog
+﻿Changelog
 =========
+
+4.1.19
+------
+
+- Fixed issue with sort resetting in Filter activity when switching tabs (Fixes [#89](http://mpcjanssen.nl/tracker/issues/89))
 
 4.1.18
 ------
