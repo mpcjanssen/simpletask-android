@@ -91,7 +91,6 @@ public class Task implements Serializable, Comparable<Task> {
                 && getPrependedDate() == null) {
             Priority p = getPriority();
             setPriority(Priority.NONE);
-
             this.text = defaultPrependedDate.format(Constants.DATE_FORMAT) + " " + text;
             setPriority(p);
         }
