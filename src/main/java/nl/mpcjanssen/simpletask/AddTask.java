@@ -650,7 +650,8 @@ public class AddTask extends ThemedActivity {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
-	int length = textInputField.getText().length();
+        Log.v(TAG, "Current selection: " + start + "-" + end);
+        int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<String>();
         Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
@@ -663,6 +664,7 @@ public class AddTask extends ThemedActivity {
         }
         if (currentLine != -1) {
             Task t = new Task(0, lines.get(currentLine));
+            Log.v(TAG,"Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString()); 
             t.setPriority(Priority.toPriority(newPrio.toString()));
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
@@ -673,6 +675,7 @@ public class AddTask extends ThemedActivity {
         int newStart = Math.max(0, start + sizeDelta);
         int newEnd = Math.min(end + sizeDelta, newLength);
         newEnd = Math.max(newStart, newEnd);
+        Log.v(TAG, "New selection (" + sizeDelta + "): " + newStart + "-" + newEnd);
         textInputField.setSelection(newStart, newEnd);
 
     }
