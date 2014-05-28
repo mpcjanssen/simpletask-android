@@ -25,17 +25,13 @@ package nl.mpcjanssen.simpletask.task;
 import android.content.res.Resources;
 import android.text.SpannableString;
 
-import org.joda.time.DateTime;
-import org.joda.time.IllegalFieldValueException;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-
-
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Util;
+
+import hirondelle.date4j.DateTime;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -74,7 +70,6 @@ public class Task implements Serializable, Comparable<Task> {
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
     private static final String COMPLETED = "x ";
-    private static DateTimeFormatter formatter = ISODateTimeFormat.date();
     private String text;
     private long id = 0;
 
@@ -103,7 +98,7 @@ public class Task implements Serializable, Comparable<Task> {
             Priority p = getPriority();
             setPriority(Priority.NONE);
 
-            this.text = formatter.print(defaultPrependedDate) + " " + text;
+            this.text = defaultPrependedDate.format("YYYY-MM-DD") + " " + text;
             setPriority(p);
         }
     }
