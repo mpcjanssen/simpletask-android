@@ -395,6 +395,7 @@ public class FilterActivity extends ThemedActivity {
             mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
+                Log.v(TAG,"Created new fragment: " + mClz.getName());
                 mFragment = Fragment.instantiate(mActivity, mClz.getName(), mArguments);
                 ft.add(android.R.id.content, mFragment, mTag);
             } else {

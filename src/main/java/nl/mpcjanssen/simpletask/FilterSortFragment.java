@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 public class FilterSortFragment extends Fragment {
     
     private final static String STATE_SELECTED = "selectedItem";
+    final static String TAG = FilterActivity.class.getSimpleName();
 
     private ArrayList<String> originalItems;
     private DragSortListView lv;
@@ -71,11 +73,14 @@ public class FilterSortFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
-        if (savedInstanceState != null) {
-            originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED);
-        } else {
-            originalItems = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS);
+        if (originalItems == null) {
+            if (savedInstanceState != null) {
+                originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED);
+            } else {
+                originalItems = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS);
+            }
         }
+        Log.v(TAG, "Created view with: " + originalItems);
         m_app = (TodoApplication) getActivity().getApplication();
 
         // Set the proper theme
@@ -153,6 +158,12 @@ public class FilterSortFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(STATE_SELECTED, getSelectedItem());
+    }
+
+    @Override
+    public void onDestroyView () {
+        originalItems = getSelectedItem();
+        super.onDestroyView();
     }
 
     public ArrayList<String> getSelectedItem() {
