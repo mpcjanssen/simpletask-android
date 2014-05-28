@@ -1,25 +1,17 @@
 package nl.mpcjanssen.simpletask.adapters;
 
-import android.content.Context;
-import android.database.DataSetObserver;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckedTextView;
-import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.task.Task;
 
 public class DrawerAdapter extends BaseAdapter implements ListAdapter {
 
@@ -68,7 +60,7 @@ public class DrawerAdapter extends BaseAdapter implements ListAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView tv;
         if (isHeader(position)) {
-            convertView = m_inflater.inflate(R.layout.drawer_list_header, null);
+            convertView = m_inflater.inflate(R.layout.drawer_list_header, parent, false);
             tv = (TextView) convertView;
             ListView lv = (ListView) parent;
             if (lv.isItemChecked(position)) {
@@ -79,7 +71,7 @@ public class DrawerAdapter extends BaseAdapter implements ListAdapter {
 
         } else {
             if (convertView == null) {
-                convertView = m_inflater.inflate(R.layout.drawer_list_item_checked, null);
+                convertView = m_inflater.inflate(R.layout.drawer_list_item_checked, parent, false);
             }
             tv = (TextView) convertView;
             tv.setText(items.get(position).substring(1));

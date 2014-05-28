@@ -9,7 +9,7 @@
     <com.mobeta.android.dslv.DragSortListView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:dslv="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/listview"
+            android:id="@+id/dslistview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="3dp"

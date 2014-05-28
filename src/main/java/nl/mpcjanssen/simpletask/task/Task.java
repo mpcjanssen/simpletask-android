@@ -312,9 +312,9 @@ public class Task implements Serializable, Comparable<Task> {
         return getCompletionDate() != null;
     }
 
-    public boolean isHidden() {
+    public boolean isVisible() {
         Matcher hiddenMatch = HIDDEN_PATTERN.matcher(text);
-        return hiddenMatch.find();
+        return !hiddenMatch.find();
     }
 
     public void markComplete(DateTime date) {

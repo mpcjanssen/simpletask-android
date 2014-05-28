@@ -3,33 +3,25 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import nl.mpcjanssen.simpletask.util.Util;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.util.Linkify;
 import android.util.Log;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
 import org.markdown4j.Markdown4jProcessor;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.*;
 import java.util.Stack;
 
 public class HelpScreen extends Activity {
@@ -118,7 +110,7 @@ public class HelpScreen extends Activity {
         String str;
 
         while ((str=in.readLine()) != null) {
-            buf.append(str + "\n");
+            buf.append(str).append("\n");
         }
 
         in.close();

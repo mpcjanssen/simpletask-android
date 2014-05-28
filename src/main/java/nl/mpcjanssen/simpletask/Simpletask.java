@@ -129,7 +129,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         SparseBooleanArray checkedItems = getListView()
                 .getCheckedItemPositions();
         for (int i = 0; i < checkedItems.size(); i++) {
-            if (checkedItems.valueAt(i) == true) {
+            if (checkedItems.valueAt(i)) {
                 checkedTasks.add(getTaskAt(checkedItems.keyAt(i)));
             }
         }
@@ -657,7 +657,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             month++;
 
-                            DateTime date = DateTime.forDateOnly(year, month,day);
+                            DateTime date = DateTime.forDateOnly(year, month, day);
                             deferTasks(date, tasksToDefer, dateType);
 
                         }
@@ -1351,7 +1351,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     header = newHeader;
                 }
 
-                if (!t.isHidden() || m_app.showHidden()) {
+                if (t.isVisible() || m_app.showHidden()) {
                     // enduring tasks should not be displayed
                     VisibleLine taskLine = new VisibleLine(t);
                     visibleLines.add(taskLine);
@@ -1412,7 +1412,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         public View getView(int position, View convertView, ViewGroup parent) {
             VisibleLine line = visibleLines.get(position);
             if (line.header) {
-                convertView = m_inflater.inflate(R.layout.list_header, null);
+                convertView = m_inflater.inflate(R.layout.list_header, parent, false);
                 TextView t = (TextView) convertView
                         .findViewById(R.id.list_header_title);
                 t.setText(line.title);
@@ -1420,7 +1420,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             } else {
                 final ViewHolder holder;
                 if (convertView == null) {
-                    convertView = m_inflater.inflate(R.layout.list_item, null);
+                    convertView = m_inflater.inflate(R.layout.list_item, parent, false);
                     holder = new ViewHolder();
                     holder.tasktext = (TextView) convertView
                             .findViewById(R.id.tasktext);
@@ -1774,7 +1774,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         }
 
 
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()])));
@@ -1845,7 +1845,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         }
 
 
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 projects.toArray(new String[projects.size()])));
