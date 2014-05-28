@@ -21,7 +21,8 @@ You should have received a copy of the GNU General Public License along with Sim
 <!-- suppress ALL -->
 <!-- package name and version codes are overwritten by Gradle -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="nl.mpcjanssen.simpletask" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="nl.mpcjanssen.simpletask" >
 
     <uses-sdk
             android:minSdkVersion="14"
@@ -52,7 +53,8 @@ You should have received a copy of the GNU General Public License along with Sim
 
         <activity
                 android:name="nl.mpcjanssen.simpletask.HelpScreen"
-                android:parentActivityName="nl.mpcjanssen.simpletask.Simpletask" >
+                android:parentActivityName="nl.mpcjanssen.simpletask.Simpletask"
+            tools:ignore="UnusedAttribute">
                 android:label="@string/help">
         </activity>
         

@@ -474,7 +474,7 @@ public class AddTask extends ThemedActivity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
@@ -540,7 +540,7 @@ public class AddTask extends ThemedActivity {
         contexts.addAll(t.getLists());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);

@@ -7,15 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mobeta.android.dslv.DragSortListView;
-
-import nl.mpcjanssen.simpletask.util.Strings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import nl.mpcjanssen.simpletask.util.Strings;
 
 public class FilterSortFragment extends Fragment {
     
@@ -131,7 +135,7 @@ public class FilterSortFragment extends Fragment {
             }
         }
 
-        lv = (DragSortListView) layout.findViewById(R.id.listview);
+        lv = (DragSortListView) layout.findViewById(R.id.dslistview);
         lv.setDropListener(onDrop);
         lv.setRemoveListener(onRemove);
 

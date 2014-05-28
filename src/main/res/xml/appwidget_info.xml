@@ -1,4 +1,5 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:minWidth="110dp"
     android:minHeight="110dp"
     android:minResizeWidth="55dp"
@@ -9,4 +10,5 @@
     android:widgetCategory="home_screen|keyguard"
     android:configure="nl.mpcjanssen.simpletask.FilterActivity" 
     android:resizeMode="horizontal|vertical"
-    android:previewImage="@drawable/appwidget_preview"/>
+    android:previewImage="@drawable/appwidget_preview"
+    tools:ignore="UnusedAttribute" />

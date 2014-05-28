@@ -2,11 +2,9 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
+import java.util.TimeZone;
 
-import java.util.Date;
-
-import nl.mpcjanssen.simpletask.task.Task;
+import hirondelle.date4j.DateTime;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,15 +31,15 @@ public class TaskTest extends TestCase {
     
 
     public void testHidden() {
-        assertTrue(new Task(0,"Test h:1").isHidden());
-        assertFalse(new Task(0,"Test").isHidden());
-        assertTrue(new Task(0,"h:1").isHidden());
+        assertTrue(!new Task(0,"Test h:1").isVisible());
+        assertFalse(!new Task(0,"Test").isVisible());
+        assertTrue(!new Task(0,"h:1").isVisible());
     }
 
     public void testCompletion() {
         String rawText = "Test";
         Task t = new Task(0, rawText);
-        DateTime completionDate = new DateTime();
+        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
@@ -50,9 +48,9 @@ public class TaskTest extends TestCase {
     }
     public void testCompletionWithPrependDate() {
         String rawText = "Test";
-        Task t = new Task(0, rawText, new DateTime());
+        Task t = new Task(0, rawText, DateTime.today(TimeZone.getDefault()));
         rawText = t.inFileFormat();
-        DateTime completionDate = new DateTime();
+        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
@@ -65,7 +63,7 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, rawText);
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
-        DateTime completionDate = new DateTime();
+        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.setPriority(Priority.B);
@@ -80,7 +78,7 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, rawText);
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
-        DateTime completionDate = new DateTime();
+        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
