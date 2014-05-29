@@ -199,6 +199,9 @@ public class Task implements Serializable, Comparable<Task> {
         if (prependDate==null) {
             return null;
         }
+        if (!DateTime.isParseable(prependDate)) {
+            return prependDate;
+        }
         dt = new DateTime(prependDate);
 
         return RelativeDate.getRelativeDate(dt);
