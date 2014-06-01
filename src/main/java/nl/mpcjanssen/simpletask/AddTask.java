@@ -441,7 +441,7 @@ public class AddTask extends ThemedActivity {
                         }
                     },
                             today.getYear(),
-                            today.getMonth(),
+                            today.getMonth()-1,
                             today.getDay());
 
                     dialog.show();

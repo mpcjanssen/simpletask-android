@@ -54,7 +54,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class TaskBag {
     final static String TAG = Simpletask.class.getSimpleName();
     private Preferences preferences;
-    private final LocalFileTaskRepository localRepository;
+    private final LocalTaskRepository localRepository;
     private ArrayList<Task> tasks = new ArrayList<Task>();
     private Date lastReload = null;
     private Date lastSync = null;
@@ -144,10 +144,10 @@ public class TaskBag {
         if (this.preferences.isOnline() || overridePreference) {
             File doneFile = null;
             if (localRepository.doneFileModifiedSince(lastSync)) {
-                doneFile = localRepository.DONE_TXT_FILE;
+                doneFile = localRepository.getDoneTxtFile();
             }
             remoteClientManager.getRemoteClient().pushTodo(
-                    localRepository.TODO_TXT_FILE,
+                    localRepository.getTodoTxtFile(),
                     doneFile,
                     overwrite);
             lastSync = new Date();

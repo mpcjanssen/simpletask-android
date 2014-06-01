@@ -663,7 +663,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                         }
                     },
                             today.getYear(),
-                            today.getMonth(),
+                            today.getMonth()-1,
                             today.getDay()
                     );
 
