@@ -60,7 +60,7 @@ public class TaskBag {
     private Date lastSync = null;
 
     public TaskBag(Preferences taskBagPreferences,
-                   LocalFileTaskRepository localTaskRepository) {
+                   LocalTaskRepository localTaskRepository) {
         this.preferences = taskBagPreferences;
         this.localRepository = localTaskRepository;
     }
