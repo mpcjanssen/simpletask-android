@@ -161,6 +161,6 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
 
     @Override
     public File getDoneTxtFile() {
-        return TODO_TXT_FILE;
+        return DONE_TXT_FILE;
     }
 }
