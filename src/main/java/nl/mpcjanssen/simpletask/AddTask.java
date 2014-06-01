@@ -214,7 +214,7 @@ public class AddTask extends ThemedActivity {
         taskBag = m_app.getTaskBag();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         final Intent intent = getIntent();
-        ActiveFilter mFilter = new ActiveFilter(getResources());
+        ActiveFilter mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
         final String action = intent.getAction();
         // create shortcut and exit

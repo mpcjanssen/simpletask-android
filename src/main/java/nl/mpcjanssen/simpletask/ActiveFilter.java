@@ -49,8 +49,6 @@ public class ActiveFilter {
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
-    private  Resources mResources;
-
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
     private ArrayList<String> m_contexts = new ArrayList<String>();
     private ArrayList<String> m_projects = new ArrayList<String>();
@@ -77,8 +75,7 @@ public class ActiveFilter {
 
     private String mName;
 
-    public ActiveFilter(Resources resources) {
-        this.mResources = resources;
+    public ActiveFilter() {
     }
 
 
@@ -165,25 +162,25 @@ public class ActiveFilter {
                 || !Strings.isEmptyOrNull(m_search);
     }
 
-    public String getTitle () {
-        String filterTitle = mResources.getString(R.string.title_filter_applied);
+    public String getTitle (CharSequence prio, CharSequence tag, CharSequence list, CharSequence search, CharSequence filterApplied, CharSequence noFilter) {
+        String filterTitle = "" + filterApplied ;
         if (hasFilter()) {
             if (m_prios.size() > 0) {
-                filterTitle += " " + mResources.getString(R.string.priority_prompt);
+                filterTitle += " " + prio;
             }
 
             if (m_projects.size() > 0) {
-                filterTitle += " " + mResources.getString(R.string.project_prompt);
+                filterTitle += tag;
             }
 
             if (m_contexts.size() > 0) {
-                filterTitle += " " + mResources.getString(R.string.context_prompt);
+                filterTitle += list;
             }
             if (m_search != null) {
-                filterTitle += " " + mResources.getString(R.string.search);
+                filterTitle += search;
             }
         } else {
-                filterTitle = mResources.getString(R.string.no_filter);
+                filterTitle = "" + noFilter;
         }
         return filterTitle;
     }
@@ -202,12 +199,12 @@ public class ActiveFilter {
         }
     }
 
-    public ArrayList<String> getSort() {
+    public ArrayList<String> getSort(String[] defaultSort) {
         if (m_sorts == null || m_sorts.size() == 0
                 || Strings.isEmptyOrNull(m_sorts.get(0))) {
             // Set a default sort
             m_sorts = new ArrayList<String>();
-            for (String type : mResources.getStringArray(R.array.sortKeys)) {
+            for (String type : defaultSort) {
                 m_sorts.add(NORMAL_SORT + SORT_SEPARATOR
                         + type);
             }
