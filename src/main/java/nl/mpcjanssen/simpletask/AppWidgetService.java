@@ -46,7 +46,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	Log.v(TAG, "Creating view for widget: " + widgetId);
 	mContext = TodoApplication.getAppContext();
         SharedPreferences preferences = mContext.getSharedPreferences("" + widgetId, 0);
-        mFilter = new ActiveFilter(mContext.getResources());
+        mFilter = new ActiveFilter();
         mFilter.initFromPrefs(preferences);
         this.application = application;
 	setFilteredTasks();
@@ -68,7 +68,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 visibleTasks.add(t);
             }
         }
-	Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort()));
+	Collections.sort(visibleTasks,MultiComparator.create(mFilter.getSort(null)));
     }
 
     @Override

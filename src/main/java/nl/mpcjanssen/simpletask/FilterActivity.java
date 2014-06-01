@@ -82,7 +82,7 @@ public class FilterActivity extends ThemedActivity {
         actionbar = getActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         Intent intent = getIntent();
-        mFilter = new ActiveFilter(getResources());
+        mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
         TaskBag taskBag = ((TodoApplication)getApplication()).getTaskBag();
         if (intent.getAction()!=null) {
@@ -135,7 +135,7 @@ public class FilterActivity extends ThemedActivity {
                 .setText(getString(R.string.sort))
                 .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class, arguments))
                 .setTag(SORT_TAB);
-        arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort());
+        arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort(m_app.getDefaultSorts()));
         actionbar.addTab(sortTab);
         int previousTab = getLastActiveTab();
         if (previousTab < actionbar.getTabCount()) {

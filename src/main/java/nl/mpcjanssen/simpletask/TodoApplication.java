@@ -42,6 +42,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
@@ -226,6 +227,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     }
 
+    public String[] getDefaultSorts () {
+        return getResources().getStringArray(R.array.sortKeys);
+    }
 
     /**
      * Check network status, then push.

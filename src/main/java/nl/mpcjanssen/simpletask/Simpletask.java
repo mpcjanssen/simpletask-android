@@ -257,7 +257,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             }
         }
 
-        mFilter = new ActiveFilter(getResources());
+        mFilter = new ActiveFilter();
 
         m_leftDrawerList = (ListView) findViewById(R.id.left_drawer);
         m_rightDrawerList = (ListView) findViewById(R.id.right_drawer_list);
@@ -386,7 +386,14 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         } else {
             actionbar_clear.setVisibility(View.GONE);
         }
-        filterText.setText(mFilter.getTitle());
+        filterText.setText(mFilter.getTitle(
+                getText(R.string.priority_prompt),
+                getText(R.string.project_prompt),
+                getText(R.string.context_prompt),
+                getText(R.string.search),
+                getText(R.string.title_filter_applied),
+                getText(R.string.no_filter)
+        ));
     }
 
     private void startLogin() {
@@ -966,7 +973,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Set<String> filterIds = saved_filter_ids.getStringSet("ids", new HashSet<String>());
         for (String id : filterIds) {
             SharedPreferences filter_pref = getSharedPreferences(id, MODE_PRIVATE);
-            ActiveFilter filter = new ActiveFilter(getResources());
+            ActiveFilter filter = new ActiveFilter();
             filter.initFromPrefs(filter_pref);
             filter.setPrefName(id);
             saved_filters.add(filter);
@@ -1149,7 +1156,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
     private void updateSavedFilter(String prefsName) {
         SharedPreferences filter_pref = getSharedPreferences(prefsName, MODE_PRIVATE);
-        ActiveFilter old_filter = new ActiveFilter(getResources());
+        ActiveFilter old_filter = new ActiveFilter();
         old_filter.initFromPrefs(filter_pref);
         String filterName = old_filter.getName();
         mFilter.setName(filterName);
@@ -1159,7 +1166,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
     private void renameSavedFilter(String prefsName) {
         final SharedPreferences filter_pref = getSharedPreferences(prefsName, MODE_PRIVATE);
-        ActiveFilter old_filter = new ActiveFilter(getResources());
+        ActiveFilter old_filter = new ActiveFilter();
         old_filter.initFromPrefs(filter_pref);
         String filterName = old_filter.getName();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -1321,7 +1328,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             visibleTasks.clear();
             visibleLines.clear();
             visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
-            ArrayList<String> sorts = mFilter.getSort();
+            ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
             Collections.sort(visibleTasks, MultiComparator.create(sorts));
             String header = "";
             String newHeader = "";
