@@ -40,7 +40,7 @@ import android.util.Log;
  * 
  * @author Tim Barlotta
  */
-public class LocalFileTaskRepository {
+public class LocalFileTaskRepository implements LocalTaskRepository {
 	private  final String TAG = LocalFileTaskRepository.class
 			.getSimpleName();
 	final File TODO_TXT_FILE;
@@ -59,7 +59,8 @@ public class LocalFileTaskRepository {
         return TODO_TXT_FILE;
     }
 
-	public void init() {
+	@Override
+    public void init() {
 		try {
 			if (!TODO_TXT_FILE.exists()) {
 				Util.createParentDirectory(TODO_TXT_FILE);
@@ -70,7 +71,8 @@ public class LocalFileTaskRepository {
 		}
 	}
 
-	public ArrayList<Task> load() {
+	@Override
+    public ArrayList<Task> load() {
 		init();
 		if (!TODO_TXT_FILE.exists()) {
 			Log.w(TAG, TODO_TXT_FILE.getAbsolutePath() + " does not exist!");
@@ -85,6 +87,7 @@ public class LocalFileTaskRepository {
 		}
 	}
     
+    @Override
     public void store(ArrayList<Task> tasks) {
 	m_app.stopWatching();
 	TaskIo.writeToFile(tasks, TODO_TXT_FILE,
@@ -92,7 +95,8 @@ public class LocalFileTaskRepository {
 		m_app.startWatching();
     }
     
-    public ArrayList<Task> archive(ArrayList<Task> tasks,  List<Task> tasksToArchive) {
+    @Override
+    public ArrayList<Task> archive(ArrayList<Task> tasks, List<Task> tasksToArchive) {
         m_app.stopWatching();
 	boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
@@ -137,7 +141,8 @@ public class LocalFileTaskRepository {
     public void removeDoneFile() {
         DONE_TXT_FILE.delete();
     }
-	public boolean todoFileModifiedSince(Date date) {
+	@Override
+    public boolean todoFileModifiedSince(Date date) {
 		long date_ms = 0l;
 		if (date != null) {
 			date_ms = date.getTime();
@@ -145,11 +150,17 @@ public class LocalFileTaskRepository {
 		return date_ms < TODO_TXT_FILE.lastModified();
 	}
 
-	public boolean doneFileModifiedSince(Date date) {
+	@Override
+    public boolean doneFileModifiedSince(Date date) {
 		long date_ms = 0l;
 		if (date != null) {
 			date_ms = date.getTime();
 		}
 		return date_ms < DONE_TXT_FILE.lastModified();
 	}
+
+    @Override
+    public File getDoneTxtFile() {
+        return TODO_TXT_FILE;
+    }
 }
