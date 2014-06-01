@@ -55,17 +55,14 @@ public class TaskBag {
     final static String TAG = Simpletask.class.getSimpleName();
     private Preferences preferences;
     private final LocalFileTaskRepository localRepository;
-    private final RemoteClientManager remoteClientManager;
     private ArrayList<Task> tasks = new ArrayList<Task>();
     private Date lastReload = null;
     private Date lastSync = null;
 
     public TaskBag(Preferences taskBagPreferences,
-                   LocalFileTaskRepository localTaskRepository,
-                   RemoteClientManager remoteClientManager) {
+                   LocalFileTaskRepository localTaskRepository) {
         this.preferences = taskBagPreferences;
         this.localRepository = localTaskRepository;
-        this.remoteClientManager = remoteClientManager;
     }
 
 
@@ -139,11 +136,11 @@ public class TaskBag {
     }
 
     /* REMOTE APIS */
-    public void pushToRemote(boolean overwrite) {
-        pushToRemote(false, overwrite);
+    public void pushToRemote(RemoteClientManager remoteClientManager, boolean overwrite) {
+        pushToRemote(remoteClientManager, false, overwrite);
     }
 
-    public void pushToRemote(boolean overridePreference, boolean overwrite) {
+    public void pushToRemote(RemoteClientManager remoteClientManager, boolean overridePreference, boolean overwrite) {
         if (this.preferences.isOnline() || overridePreference) {
             File doneFile = null;
             if (localRepository.doneFileModifiedSince(lastSync)) {
@@ -157,7 +154,7 @@ public class TaskBag {
         }
     }
 
-    public void pullFromRemote(boolean overridePreference) {
+    public void pullFromRemote(RemoteClientManager remoteClientManager, boolean overridePreference) {
         try {
             if (this.preferences.isOnline() || overridePreference) {
                 PullTodoResult result = remoteClientManager.getRemoteClient()

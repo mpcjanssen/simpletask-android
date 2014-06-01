@@ -130,7 +130,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 m_prefs);
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, local_todo, taskBagPreferences);
         if (isCloudLess()) {
-            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, null);
+            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
             Log.v(TAG, "Obs: " + localTaskRepository.getTodoTxtFile().getPath());
             m_observer = new FileObserver(localTaskRepository.getTodoTxtFile().getParent(),
                     FileObserver.ALL_EVENTS) {
@@ -150,7 +150,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
             };
         } else {
             remoteClientManager = new RemoteClientManager(this, getPrefs());
-            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository, remoteClientManager);
+            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
         }
         this.startWatching();
         taskBag.reload();
@@ -424,7 +424,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 protected Integer doInBackground(Void... params) {
                     try {
                         Log.d(TAG, "start taskBag.pushToRemote");
-                        taskBag.pushToRemote(true, overwrite);
+                        taskBag.pushToRemote(getRemoteClientManager(), true, overwrite);
                     } catch (RemoteConflictException c) {
                         Log.e(TAG, c.getMessage());
                         return CONFLICT;
@@ -483,7 +483,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 protected Boolean doInBackground(Void... params) {
                     try {
                         Log.d(TAG, "start taskBag.pullFromRemote");
-                        taskBag.pullFromRemote(true);
+                        taskBag.pullFromRemote(getRemoteClientManager(),true);
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                         return false;
