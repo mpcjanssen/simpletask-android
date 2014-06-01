@@ -94,6 +94,15 @@ public class TaskBag {
         }
     }
 
+    public void reload (String tasks) {
+        this.tasks.clear();
+        int index = 0;
+        for (String s :tasks.split("\n")) {
+            this.tasks.add(new Task(index, s));
+            index ++;
+        }
+    }
+
     public int size() {
         return tasks.size();
     }
