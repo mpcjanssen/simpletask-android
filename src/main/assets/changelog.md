@@ -4,7 +4,8 @@
 4.2.0
 -----
 
-- Removed JodaTime and Jsoup dependencies for smaller apk size.
+- Removed JodaTime and Jsoup dependencies for smaller apk size and better performance.
+- Ignore create date and prio with alphabetical sort. 
 
 4.1.19
 ------
