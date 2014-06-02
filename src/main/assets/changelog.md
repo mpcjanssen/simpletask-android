@@ -7,7 +7,7 @@
 - Removed JodaTime and Jsoup dependencies for smaller apk size and better performance.
 - Ignore create date and prio with alphabetical sort.
 - Fixed tracker url.
-- Added donation via play store.
+- Added donation via play store.(Fixes [#93](http://mpcjanssen.nl/tracker/issues/93))
 
 4.1.19
 ------
