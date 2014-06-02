@@ -2,6 +2,8 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 
+import nl.mpcjanssen.simpletask.ActiveFilter;
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 
 /**
@@ -15,5 +17,11 @@ public class BugsTest extends TestCase {
         String taskContents = "x test";
         Task t = new Task(0, taskContents);
         assertEquals(taskContents, t.inFileFormat());
+    }
+
+    public void testActiveSortNullCrash() {
+        ActiveFilter f = new ActiveFilter();
+        MultiComparator mc =  MultiComparator.create(f.getSort(null));
+        assertNotNull(mc);
     }
 }

@@ -203,6 +203,7 @@ public class ActiveFilter {
                 || Strings.isEmptyOrNull(m_sorts.get(0))) {
             // Set a default sort
             m_sorts = new ArrayList<String>();
+            if (defaultSort==null) return  m_sorts;
             for (String type : defaultSort) {
                 m_sorts.add(NORMAL_SORT + SORT_SEPARATOR
                         + type);
