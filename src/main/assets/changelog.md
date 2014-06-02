@@ -6,7 +6,7 @@
 
 - Fix issue with filter reapplying after refresh.
 - Added setting for font size.
-
+- Fix NPE with empty widget sort.
 4.2.0
 -----
 
