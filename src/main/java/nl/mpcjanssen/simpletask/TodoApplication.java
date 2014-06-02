@@ -379,6 +379,15 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
+    public boolean hasDonated() {
+        try {
+            getPackageManager().getInstallerPackageName("nl.mpcjanssen.simpletask.donate");
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public void setWordWrap(boolean bool) {
         m_prefs.edit()
                 .putBoolean(getString(R.string.word_wrap_key),bool)

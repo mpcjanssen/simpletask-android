@@ -87,6 +87,14 @@ public class Preferences extends ThemedActivity {
                 PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
                 getPreferenceScreen().removePreference(dropboxCategory);
             }
+            Preference toHide;
+            PreferenceCategory aboutCategory = (PreferenceCategory) findPreference("about");
+            if (m_app.hasDonated()) {
+                toHide = findPreference("donate");
+            } else {
+                toHide = findPreference("donated");
+            }
+            aboutCategory.removePreference(toHide);
         }
 
         @Override
@@ -142,7 +150,7 @@ public class Preferences extends ThemedActivity {
                 }, R.string.dropbox_logout_pref_title);
 
 			} 
-			return true;
+			return false;
 		}
 	}
 }
