@@ -436,7 +436,7 @@ public class AddTask extends ThemedActivity {
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             month++;
 
-                            DateTime date = new DateTime(year+"-"+month+"-"+day);
+                            DateTime date = DateTime.forDateOnly(year,month,day);
                             insertDateAtSelection(dateType, date);
                         }
                     },
