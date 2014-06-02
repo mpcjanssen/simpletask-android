@@ -305,11 +305,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
         // Show search or filter results
         Intent intent = getIntent();
-        if (m_savedInstanceState != null) {
-            Log.v(TAG, "handleIntent: savedInstance state");
-            mFilter.initFromBundle(m_savedInstanceState);
-
-        } else if (intent.getExtras() != null) {
+        if (intent.getExtras() != null) {
             Log.v(TAG, "handleIntent launched with filter:" + intent.getExtras().keySet());
             mFilter.initFromIntent(intent);
         } else {
@@ -411,7 +407,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mFilter.saveInBundle(outState);
         ArrayList<String> selection = new ArrayList<String>();
         for (Task t : getCheckedTasks()) {
             selection.add("" + t.getId() + ":" + t.inFileFormat());
@@ -1050,7 +1045,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Intent intent = new Intent();
         mFilter.clear();
         mFilter.saveInIntent(intent);
-        //setIntent(intent);
+        setIntent(intent);
         finishActionmode();
         updateDrawers();
     }
