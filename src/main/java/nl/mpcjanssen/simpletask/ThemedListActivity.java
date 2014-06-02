@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask;
 import android.app.ListActivity;
 import android.os.Bundle;
 
-class ThemedListActivity extends ListActivity {
+abstract class ThemedListActivity extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

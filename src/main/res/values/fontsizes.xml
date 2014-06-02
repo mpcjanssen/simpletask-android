@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="headerTextSize" format="float" type="string">16.0</item>
-    <item name="taskPrioTextSize" format="float" type="string">16.0</item>
-    <item name="taskTextSize" format="float" type="string">16.0</item>
-    <item name="taskAgeTextSize" format="float" type="string">11.0</item>
-</resources>

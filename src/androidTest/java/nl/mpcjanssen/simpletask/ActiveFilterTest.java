@@ -2,10 +2,6 @@ package nl.mpcjanssen.simpletask;
 
 import junit.framework.TestCase;
 
-import java.util.Date;
-
-import nl.mpcjanssen.simpletask.ActiveFilter;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Mark Janssen

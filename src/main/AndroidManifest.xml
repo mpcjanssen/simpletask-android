@@ -67,7 +67,8 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:taskAffinity=":nl.mpcjanssen.simpletask.affinity.add_task"
                 android:label="@string/addtask"
                 android:windowSoftInputMode="adjustResize"
-                android:parentActivityName="nl.mpcjanssen.simpletask.Simpletask" >
+                android:parentActivityName="nl.mpcjanssen.simpletask.Simpletask"
+                tools:ignore="UnusedAttribute">
                 <!-- Parent activity meta-data to support 4.0 and lower -->
                 <meta-data
                     android:name="android.support.PARENT_ACTIVITY"

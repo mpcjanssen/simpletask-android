@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.LocalTaskRepository;
 import nl.mpcjanssen.simpletask.task.Task;
 

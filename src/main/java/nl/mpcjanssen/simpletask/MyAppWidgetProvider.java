@@ -1,12 +1,6 @@
 package nl.mpcjanssen.simpletask;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.util.Util;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -14,11 +8,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.RemoteViews;
 
 public class MyAppWidgetProvider extends AppWidgetProvider {
