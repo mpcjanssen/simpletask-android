@@ -53,7 +53,6 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:paddingLeft="0dip"
                 android:paddingRight="4dip"
                 android:paddingTop="4dip"
-                android:textSize="16sp"
                 />
 
     <LinearLayout

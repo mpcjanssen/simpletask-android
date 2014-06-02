@@ -112,7 +112,7 @@ public class Preferences extends ThemedActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             // just update all
-            if ("theme".equals(key)) {
+            if ("theme".equals(key) || "fontsize".equals(key)) {
                 ThemedActivity act = (ThemedActivity)getActivity();
                 act.recreate();
             }
