@@ -1,0 +1,10 @@
+<resources>
+    <style name="FontSizeSmall">
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="FontSizeMedium">
+    </style>
+    <style name="FontSizeLarge">
+        <item name="android:textSize">20sp</item>
+    </style>
+</resources>

@@ -9,6 +9,7 @@ abstract class ThemedListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         TodoApplication app = (TodoApplication) getApplication();
         setTheme(app.getActiveTheme());
+        setTheme(app.getActiveFont());
         super.onCreate(savedInstanceState);
     }
 }

@@ -73,4 +73,16 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>android.R.style.Theme_Holo_Light_DarkActionBar</item>
         <item>android.R.style.Theme_Holo</item>
     </string-array>
+
+    <!-- Defined themes -->
+    <string-array name="fontsize">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="fontsize_values">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
 </resources>

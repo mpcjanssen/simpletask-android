@@ -30,6 +30,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -42,6 +43,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
 import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
@@ -606,6 +608,17 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 s.equals(getString(R.string.widget_background_transparency)) ||
                 s.equals(getString(R.string.widget_header_transparency))) {
             redrawWidgets();
+        }
+    }
+
+    public int getActiveFont() {
+        String fontsize =  getPrefs().getString("fontsize", "medium");
+        if (fontsize.equals("small")) {
+            return R.style.FontSizeSmall;
+        } else if (fontsize.equals("large")) {
+            return R.style.FontSizeLarge;
+        } else {
+            return R.style.FontSizeMedium;
         }
     }
 
