@@ -547,6 +547,14 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getTitle() {
-        return datelessScreenFormat();
+        String stext = getTextWithoutCompletionAndPriority();
+
+        // remove possible create date
+        Matcher m = SINGLE_DATE_PREFIX.matcher(stext);
+        if (m.matches()) {
+            stext = m.group(2);
+        }
+
+        return stext;
     }
 }
