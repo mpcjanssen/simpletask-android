@@ -79,6 +79,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
         appIntent = new Intent(context,Simpletask.class);
+        appIntent.putExtra(Constants.INTENT_SELECTED_TASK,"");
         appIntent.setAction(Constants.INTENT_START_FILTER);
         putFilterExtras(appIntent, preferences, widgetId);
         pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);

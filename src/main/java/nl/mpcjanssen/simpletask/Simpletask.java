@@ -333,8 +333,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         // If we were started with a selected task,
         // select it now and clear it from the intent
         String selectedTask = intent.getStringExtra(Constants.INTENT_SELECTED_TASK);
-        if (selectedTask != null) {
-
+        if (!Strings.isEmptyOrNull(selectedTask)) {
             String[] parts = selectedTask.split(":", 2);
             setSelectedTask(Integer.valueOf(parts[0]), parts[1]);
             intent.removeExtra(Constants.INTENT_SELECTED_TASK);
@@ -343,7 +342,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             // Set the adapter for the list view
             updateDrawers();
         }
-        if (m_savedInstanceState != null && selectedTask == null) {
+        if (m_savedInstanceState != null) {
             ArrayList<String> selection = m_savedInstanceState.getStringArrayList("selection");
             int position = m_savedInstanceState.getInt("position");
             if (selection != null) {
