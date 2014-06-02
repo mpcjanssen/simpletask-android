@@ -9,6 +9,6 @@ public class AlphabeticalComparator extends ReversableComparator {
 
     @Override
     public int unreversedCompare(Task a, Task b) {
-        return a.getText().compareToIgnoreCase(b.getText());
+        return a.getTitle().compareToIgnoreCase(b.getTitle());
     }
 }
