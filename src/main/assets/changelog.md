@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+4.2.2
+-----
+
+- Fix crash with datepicker in AddTask.
+
 4.2.1
 -----
 
