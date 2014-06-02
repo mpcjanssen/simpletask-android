@@ -184,10 +184,28 @@
             android:summary="@string/archive_now_pref_summary"
             android:title="@string/archive_now_pref_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/about_settings_header">
+    <PreferenceCategory
+        android:title="@string/about_settings_header"
+        android:key="about">
         <Preference
             android:key="app_version"
             android:title="@string/app_label" />
 
+        <Preference
+            android:title="Donate"
+            android:key="donate"
+            android:summary="Donate via Play Store">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
+        </Preference>
+        <Preference
+            android:title="Donate"
+            android:key="donated"
+            android:summary="Thanks for your donation">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
