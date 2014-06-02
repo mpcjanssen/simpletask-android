@@ -545,4 +545,8 @@ public class Task implements Serializable, Comparable<Task> {
         }
         return stext;
     }
+
+    public String getTitle() {
+        return datelessScreenFormat();
+    }
 }
