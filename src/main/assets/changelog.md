@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+4.2.1
+-----
+
+- Fix issue with filter reapplying after refresh.
+- Added setting for font size.
+
 4.2.0
 -----
 
