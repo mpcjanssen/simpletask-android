@@ -5,7 +5,8 @@
 -----
 
 - Removed JodaTime and Jsoup dependencies for smaller apk size and better performance.
-- Ignore create date and prio with alphabetical sort. 
+- Ignore create date and prio with alphabetical sort.
+- Fixed tracker url.
 
 4.1.19
 ------
