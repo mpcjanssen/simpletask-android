@@ -2,10 +2,8 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 import com.dropbox.client2.DropboxAPI;
@@ -15,8 +13,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import nl.mpcjanssen.simpletask.remote.DropboxFile;
 
 public class DropboxFileDialog {
     private static final String PARENT_DIR = "..";

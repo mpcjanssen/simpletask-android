@@ -4,10 +4,7 @@ import junit.framework.TestCase;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.TimeZone;
 
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class SortTest extends TestCase {

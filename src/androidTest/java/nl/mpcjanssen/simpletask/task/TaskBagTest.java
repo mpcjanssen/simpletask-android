@@ -10,7 +10,6 @@ import java.util.Set;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.TestLocalTaskRepository;
-import nl.mpcjanssen.simpletask.util.Strings;
 
 /**
  * Created with IntelliJ IDEA.

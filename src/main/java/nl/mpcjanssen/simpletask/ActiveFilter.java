@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 
 import java.util.ArrayList;

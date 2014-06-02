@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask.sort;
 import android.util.Log;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.Constants;
 
 import java.util.ArrayList;
 import java.util.Comparator;

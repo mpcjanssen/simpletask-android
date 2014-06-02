@@ -3,9 +3,6 @@ package nl.mpcjanssen.simpletask.util;
 import junit.framework.TestCase;
 
 
-import java.util.Calendar;
-
-
 /**
  * Created with IntelliJ IDEA.
  * User: Mark Janssen

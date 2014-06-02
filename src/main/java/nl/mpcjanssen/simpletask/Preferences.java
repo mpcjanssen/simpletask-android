@@ -35,8 +35,6 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
 
-import nl.mpcjanssen.simpletask.util.Util;
-
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
     final static String TAG = Preferences.class.getSimpleName();
