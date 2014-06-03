@@ -1821,6 +1821,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 getTaskBag().store();
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
                 updateDrawers();
             }
         });
@@ -1891,6 +1892,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
                 updateDrawers();
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
