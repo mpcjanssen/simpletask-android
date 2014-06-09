@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.11.1'
     }
 }
 
@@ -27,22 +27,25 @@ android {
     defaultConfig {
         versionName '4.2.1'
         versionCode 1087
+	    minSdkVersion 14
+        targetSdkVersion 19
+
     }
 
 
     productFlavors {
         free {
-            packageName 'nl.mpcjanssen.todotxtholo'
+            applicationId 'nl.mpcjanssen.todotxtholo'
             buildConfigField "boolean", "CLOUDLESS", "false"
         }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
         unit {
-            packageName 'nl.mpcjanssen.simpletask.test'
+            applicationId 'nl.mpcjanssen.simpletask.test'
             buildConfigField "boolean", "CLOUDLESS", "true"
         }
         cloudless {
-            packageName 'nl.mpcjanssen.simpletask'
+            applicationId 'nl.mpcjanssen.simpletask'
             buildConfigField "boolean", "CLOUDLESS", "true"
         }
     }

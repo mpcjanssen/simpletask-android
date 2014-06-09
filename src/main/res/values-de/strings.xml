@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
+
+Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+
+LICENSE:
+
+Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+later version.
+
+Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with Todo.txt Touch. If not, see
+<http://www.gnu.org/licenses/>.
+
+@author Todo.txt contributors <todotxt@yahoogroups.com>
+@license http://www.gnu.org/licenses/gpl.html
+@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+@copyright 2013 Mark Janssen
+-->
+<!--suppress ALL -->
+<resources>
+    <string name="invalid_context">Ungültiger Listenname</string>
+    <string name="invalid_project">Ungültiger tag Name</string>
+    <string name="app_label">Simpletask</string>
+    <string name="added_task">Aufgabe hinzugefügt</string>
+    <string name="add_task_failed">Aufgabe kann nicht hinzugfügt werden</string>
+    <string name="save_task">Aufgabe speichern</string>
+    <string name="update_task_failed">Aufgabe konnte nicht aktualisiert werden</string>
+    <string name="sort">Sortieren</string>
+    <string name="filter">Filter</string>
+    <string name="main_no_items">Keine Aufgaben angezeigt.</string>
+    <string name="set_preferences">Einstellungen</string>
+    <string name="preferences">Einstellungen</string>
+    <string name="archive">Speicherung</string>
+    <string name="help">Hilfe</string>
+   <string name="open_file">Öffne todo Datei</string>
+    <string name="sync">Aktualisieren</string>
+    <string name="changelist">Liste auswählen</string>
+    <string name="search">Suchen</string>
+    <string name="add">Hinzufügen</string>
+    <string name="task">Aufgabe</string>
+    <string name="addtask">Aufgabe hinzufügen</string>
+    <string name="updatetask">Update</string>
+    <string name="viewtask">Aufgabe zeigen</string>
+    <string name="cleartask">Aufgabe löschen</string>
+    <string name="done">Fertig</string>
+    <string name="priority">Priorisieren</string>
+    <string name="select_priority">Priorität auswählen</string>
+    <string name="add_list_or_tag">Listen und tags hinzufügen</string>
+    <string name="update_lists">Listen aktualisieren</string>
+    <string name="update_tags">tags aktualisieren</string>
+    <string name="remove_list_or_tag">Listen und tags entfernen</string>
+    <string name="update">Aktualisieren</string>
+    <string name="delete">Löschen</string>
+    <string name="defer_due">Termin(e) setzen</string>
+    <string name="defer_threshold">Zeitlimit Daten einstellen</string>
+    <string name="insert_due">Termin einfügen</string>
+    <string name="insert_threshold">Zeitlimit einfügen</string>
+    <string name="share">Teilen</string>
+    <string name="unComplete">Fertig rückgängig machen</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="clear_filter">Filter löschen</string>
+
+    <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
+
+    <string name="filter_name_empty">No name specified, not adding filter</string>
+    <string name="widget_name_empty">No widget name specified, not adding widget</string>
+    <string name="add_task_help">Add or update a task to the task list. When adding tasks,
+        each line is a separate task for quick adding.\n
+        <b>Priority</b>\n
+        start the line with (.), like (A)\n
+        <b>Tags</b>
+        start with a + sign, like +Kitchen\n
+        <b>Lists</b>
+        start with an @ sign, like @home\n
+        A task can include any number of tags or be on multiple
+        lists.
+    </string>
+
+    <!-- preferences -->
+    <string name="ARCHIVE_settings_header">Speicherung</string>
+   <string name="ARCHIVE_settings_summary">Einstellungen für das Speichern erledigter Aufgaben in done.txt</string>
+    <string name="auto_archive_pref_title">Auto Speicher</string>
+    <string name="auto_archive_pref_summary">Automatisches Speichern von Aufgaben in done.txt nach Erledigung.</string>
+    <string name="archive_now_pref_title">Jetzt Speichern</string>
+    <string name="archive_now_pref_summary">Verschiebe erledigte Aufgaben von todo.txt nach done.txt.</string>
+    <string name="dropbox_logout_pref_title">Log out</string>
+    <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>
+    <string name="TODOTXTPATH_title">Datei Speicherort</string>
+    <string name="TODOTXTPATH_summary">Der Dropbox Ordner in dem todo.txt gespeichert ist.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Einstellungen für Dropbox Synchronisation</string>
+
+    <string name="todotxt_ui_settings_header">Benutzer Schnittstelle</string>
+    <string name="todotxt_behavior_settings_header">Verhalten</string>
+    <string name="todotxt_settings_summary">Einstellungen der Anwendung</string>
+    <string name="sort_complete_last_pref_title">Zeige erledigte zuletzt</string>
+    <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste
+    </string>
+    <string name="use_prio_pref_title">Prioritäten aktivieren</string>
+    <string name="use_prio_pref_summary">GTD Schlägt nicht den Gebrauch von Prioritäten vor, aber sie können verwendet werden wenn benötigt.
+    </string>
+    <string name="prepend_date_pref_title">Neue Aufgaben terminieren</string>
+    <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
+    <string name="line_breaks_pref_title">Windows line breaks</string>
+    <string name="line_breaks_pref_summary">Windows-friendly Umbrüche in Textdateien verwenden.
+    Standardeinstellung ist Beibehalten des Umbruchs der geladenen todo-Datei.</string>
+    <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Daten</string>
+    <string name="recur_from_original_date_pref_summary">Erhöhe die Orginaldaten der Aufgabe, wenn die Aufgabe wiederholt wird.
+        Uncheck hier um die neuen Daten relativ zu heute zu setzen.</string>
+    <string name="swipe_complete_pref_title">Wischen zum Fertigstellen</string>
+    <string name="swipe_complete_pref_summary">Wische über eine Aufgabe zum Fertigstellen.</string>
+    <string name="manual_sync_pref_title">Manueller sync</string>
+    <string name="manual_sync_pref_summary">Nicht jede Änderung automatisch zu Dropbox hochladen.</string>
+    <string name="resume_sync_pref_title">Sync fortsetzen</string>
+    <string name="resume_sync_pref_summary">Sync mit Dropbox wenn die App geöffnet wird.</string>
+    <string name="font_size_delta_pref_title">Fontgröße ändern</string>
+    <string name="font_size_delta_pref_summary">Fontgröße in sp Einheiten ändern.
+        Verwende negative Einheiten um die Fontgröße zu verringern</string>
+    <string name="theme_pref_title">Anwendungs-Theme</string>
+    <string name="theme_pref_summary">Anwendungs-Theme ändern</string>
+
+    <string name="share_task_show_edit_pref_title">Geteilte Aufgabe editieren</string>
+    <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben.
+        Disable this to have the shared task stored without intervention.</string>
+
+    <string name="capitalize_tasks_pref_title">Neue Aufgaben mit Großbuchstaben</string>
+    <string name="back_saves_pref_title">Zurück Schaltfläche</string>
+    <string name="back_saves_summary">Beim betätigen von Zurück, speichere die eingebenen todos oder wende den Filter an.</string>
+
+    <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
+    <string name="show_txt_only_summary">Zeige .txt-Dateien nur im Dateiauswahldialog.</string>
+
+    <string name="drawer_fixed_landscape_title">Öffne im Querformat</string>
+    <string name="drawer_fixed_landscape_summary">Immer im Querformat öffnen.</string>
+
+
+    <string name="widget_theme_pref_title">Widget theme</string>
+    <string name="widget_theme_pref_summary">Ändere das wiget theme</string>
+
+    <string name="widget_header_transparency_title">Widget Kopfleiste Transparenz</string>
+    <string name="widget_background_transparency_title">Widget Hintergrundtransparenz</string>
+
+    <string name="widget_extended_pref_title">Erweitertes widget</string>
+    <string name="widget_extended_pref_summary">Zeige Aufgaben im widget mit getrennten Datenlinien.</string>
+
+    <string name="color_due_pref_title">Farbe der Fälligkeitsdaten</string>
+    <string name="color_due_pref_summary">Farbe der Fälligkeitsdaten abhängig von Fälligkeit heute, zukünftig oder überfallig.</string>
+
+    <string name="show_hidden_title">Zeige versteckte Aufgaben</string>
+    <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben um sie zu editieren. Nach dem Editieren deaktiviere diese Einstellung wieder.</string>
+
+    <string name="show_empty_lists_title">Zeige leere Kopfzeile</string>
+    <string name="show_empty_lists_summary">Zeige die Kopfzeile auch wenn alle Aufgaben unter dieser Kopfzeile versteckt sind.</string>
+
+    <string name="split_actionbar_pref_title">Use split action bar</string>
+    <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
+        For more screen estate for the todo list turn this off. </string>
+
+    <string name="show_edittext_hints_title">Zeige Hinweise</string>
+    <string name="show_edittext_hints_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
+
+    <string name="show_complete_checkbox_title">Zeige die !fertig! checkbox</string>
+    <string name="show_complete_checkbox_summary">Zeige die checkbox vor den Aufgaben um sie fertigzustellen oder nicht.</string>
+
+    <string name="show_confirmation_dialogs_title">Zeige Bestätigungsdialoge</string>
+    <string name="show_confirmation_dialogs_summary">Zeige einen Bestätigungsdialog vor dem Ausführen unzulässiger Operationen oder Operationen, die zu Datenverlust führen können.
+        Deaktiviere diese Einstellung, wenn sie stört. Sie wurden gewarnt.</string>
+
+    <string name="about_settings_header">Über</string>
+    <string name="about_settings_summary">Application information</string>
+    <string name="visit_website_title">Hilfe</string>
+    <string name="visit_website_summary">Besuche die Simpletask website</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+
+    <string name="visit_tracker_title">Frage nach einer Funktion oder berichte einen bug</string>
+    <string name="visit_tracker_summary">Frage nach einer neuen Funktion oder Verbesserung oder berichte von einem Problem.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+
+    <!-- sync dialog -->
+    <string name="sync_dialog_title">Manualler Sync</string>
+    <string name="sync_dialog_msg">Willst du upload oder download deinen todo.txt Datei?</string>
+    <string name="sync_dialog_upload">Upload zu Dropbox</string>
+    <string name="sync_dialog_download">Download zum Gerät</string>
+    <string name="sync_upload_message">Uploading todo.txt…</string>
+    <string name="sync_download_message">Downloading todo.txt…</string>
+    <!-- sync conflict dialog -->
+    <string name="sync_conflict_dialog_title">Datei Konflikt</string>
+    <string name="sync_conflict_dialog_msg">Oops! Es gibt eine neuere Version deiner todo.txt Datei in Dropbox. \willst du deine
+            lokalen Änderungen upload, oder download die Dropbox Version?
+    </string>
+    <!-- login -->
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_screen_button">Log in to Dropbox</string>
+    <string name="login_cloudless">Wenn du keinen Dropbox Account hast oder keinen benutzen möchtest um deine todo-Liste zu speichern,
+        kannst du download Simpletask Cloudless aus dem Play Store.
+        \nhttp://goo.gl/X1C55P
+    </string>
+    <!-- delete -->
+    <string name="delete_task_title">Aufgabe(n) löschen</string>
+    <string name="archive_task_title">Aufgabe(n) speichern</string>
+    <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
+    <string name="logout_message">Bitte überprüfe ob alle Änderungen mit Dropbox synchronisiert sind oder ob du alle kompletten Aufgabenlisten geteilt hast, wenn du nicht mit Dropbox verbunden bist.\n
+        Alle nicht synchronisierten Änderungen sind nach dem logout verloren.</string>
+     <string name="dropbox_open">Bitte überprüfe ob alle Änderungen mit Dropbox synchronisiert sind oder ob du alle kompletten Aufgabenlisten geteilt hast, wenn du nicht mit Dropbox verbunden bist.\n
+        Alle nicht synchronisierten Änderungen sind nach dem Öffnen einer anderen Datei verloren.</string>
+    <string name="delete_task_confirm">Löschen</string>
+    <!-- search -->
+
+    <string name="clone_tags">Next copies</string>
+    <string name="word_wrap">Word wrap</string>
+    <string name="search_hint">Suche todo.txt</string>
+    <!-- sort -->
+    <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.</string>
+    <string name="alphabetical">Alphabetisch</string>
+    <string name="file_order">Nach datei (Nicht sortiert)</string>
+    <string name="by_prio">Nach Priorität</string>
+    <string name="by_project">Nach Tag</string>
+    <string name="by_context">Nach Liste</string>
+    <string name="completed">Erledigt</string>
+    <string name="by_creation_date">Nach Erstellungsdatum</string>
+    <string name="in_future">Zeitlimit in der Zukunft</string>
+    <string name="by_due_date">Nach Fälligkeitsdatum</string>
+    <string name="by_threshold_date">Nach Zeitlimit</string>
+
+    <!-- filter -->
+    <string name="filter_select_all">Alles auswählen</string>
+    <string name="filter_clear_all">Filter löschen</string>
+    <string name="filter_invert">Filter umkehren</string>
+    <string name="add_filter_shortcut">To homescreen</string>
+    <string name="rename_filter">Umbenennen</string>
+    <string name="rename_filter_message">Neuen Namen für den gespeicherten Filter eingeben:</string>
+    <string name="update_filter">Aktualisieren</string>
+    <string name="create_widget">Widget erstellen</string>
+    <string name="filter_show_completed">Zeige erledigte Aufgaben</string>
+    <string name="filter_show_future">Zeige Aufgaben mit Zeitlimit in der Zukunft</string>
+    <string name="filter_show_lists">Zeige Listen in den Aufgaben</string>
+    <string name="filter_show_tags">Zeige tags in den Aufgaben</string>
+
+    <string name="filter_show_completed_short">Erledigt</string>
+    <string name="filter_show_future_short">Zukünftig</string>
+    <string name="filter_show_prompt">Zeige</string>
+    <string name="filter_saved_prompt">Gespeicherte Filter</string>
+
+
+    <!-- title bar changes -->
+    <string name="title_filter_applied">Gefiltert nach:</string>
+    <string name="add_task_help_btn">Hilfe</string>
+    <string name="priority_prompt">Priorität</string>
+    <string name="priority_short_prompt">Prio</string>
+    <string name="project_prompt">Tag</string>
+    <string name="context_prompt">Liste</string>
+
+    <string name="priority_format">(prio)</string>
+    <string name="context_format">\@list</string>
+    <string name="project_format">+tag</string>
+
+    <string name="separator">Separator</string>
+
+    <!-- launcher shortcut -->
+    <string name="shortcut_addtask_name">Aufgabe hinzufügen</string>
+    <!-- share -->
+    <string name="share_addtask_name">Zu Simpletask hinzufügen</string>
+
+    <string name="none">none</string>
+    <!-- Relative Dates -->
+    <string name="dates_days_ago">vor %d Tagen</string>
+    <string name="dates_one_day_ago">vor 1 Tag</string>
+    <string name="dates_years_ago">vor %d Jahren</string>
+    <string name="dates_one_year_ago">vor 1 Jahr</string>
+    <string name="dates_months_ago">vor %d Monaten</string>
+    <string name="dates_one_month_ago">vor 1 Monat</string>
+    <string name="dates_weeks_ago">vor %d Wochen</string>
+    <string name="dates_one_week_ago">vor 1 Woche</string>
+
+
+    <string name="dates_one_week">1 Woche</string>
+    <string name="dates_two_weeks">2 Wochen</string>
+    <string name="dates_one_month">1 Monat</string>
+
+    <string name="dates_today">Heute</string>
+    <string name="date_pick">Datum auswählen</string>
+    <string name="dates_tomorrow">Morgen</string>
+
+
+    <string name="title_activity_filter">Filter</string>
+    <string name="selected">ausgewählt</string>
+    <string name="no_context">Inbox</string>
+    <string name="no_project">Kein tag</string>
+    <string name="no_creation_date">Kein Erstellungstatum</string>
+    <string name="no_threshold_date">Kein Zeitlimit</string>
+    <string name="no_header">None</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">Erinnerung hinzufügen</string>
+    <string name="calendar_title">Simpletask Erinnerung</string>
+    <string name="share_title">Simpletask Aufgabe</string>
+    <string name="version_copied">Version info copied to clipboard</string>
+
+    <string name="task_added">Aufgabe zu Simpletask hinzugefügt</string>
+    <string name="default_sort">Standardsortierung</string>
+    <string name="pull_to_refresh_refreshing_label">Syncing with dropbox…</string>
+    <string name="not_tagged">Aufgaben nicht auf der Liste oder tagged</string>
+    <string name="new_list_name">Neue Liste erstellen</string>
+    <string name="new_tag_name">Neuen tag erstellen</string>
+    <string name="no_filter">Kein Filter</string>
+    <string name="dropbox">Dropbox</string>
+
+
+    <string name="save_filter">Aktuellen Filter speichern</string>
+    <string name="save_filter_message">Gib den Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird</string>
+
+    <string name="donate_title">Spenden</string>
+    <string name="donate_summary">Spende wenn dir simpletask gefällt. NOTE: Spenden ist freiwillig, simpletask wird  immer frei verfügbar sein. </string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">Umgekehrte Sortierung</string>
+</resources>
+
+
