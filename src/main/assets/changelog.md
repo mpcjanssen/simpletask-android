@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+4.2.2
+-----
+
+- Added German translation thanks to Christian Orjeda.
+
+
 4.2.1
 -----
 
