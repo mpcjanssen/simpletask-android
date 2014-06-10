@@ -25,7 +25,7 @@ public interface FileStoreInterface {
     boolean supportsAuthentication();
     void deauthenticate();
     boolean isLocal();
-    void openNewFile(Activity act, FileSelectedListener listener );
+    void browseForNewFile(Activity act, FileSelectedListener listener);
     void init(String todoFile);
 
     public interface FileSelectedListener {
