@@ -4,8 +4,9 @@
 4.2.2
 -----
 
-- Added German translation thanks to Christian Orjeda.
-
+- Added initial German translation thanks to Christian Orjeda.
+- Allow selecting all visible tasks from CAB (fixes [#100](http://mpcjanssen.nl/tracker/issues/100))
+- Renamed "Next copies" to "Prefill next" which I hope is more intuitive.
 
 4.2.1
 -----
