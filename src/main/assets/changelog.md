@@ -1,12 +1,17 @@
 ﻿Changelog
 =========
 
-4.2.2
+4.2.3
 -----
 
 - Added initial German translation thanks to Christian Orjeda.
 - Allow selecting all visible tasks from CAB (fixes [#100](http://mpcjanssen.nl/tracker/issues/100))
 - Renamed "Next copies" to "Prefill next" which I hope is more intuitive.
+
+4.2.2
+-----
+
+- Fix crash with datepicker in AddTask.
 
 4.2.1
 -----

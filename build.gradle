@@ -29,7 +29,6 @@ android {
         versionCode 1088
 	    minSdkVersion 14
         targetSdkVersion 19
-
     }
 
 
