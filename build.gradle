@@ -70,7 +70,7 @@ android {
     check.dependsOn 'connectedAndroidTestUnitDebug'
 }
 
-// Only sign if we have keystore properties in the gradle.properties
+// Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&
         project.hasProperty('storePassword') &&
         project.hasProperty('keyPassword')) {
