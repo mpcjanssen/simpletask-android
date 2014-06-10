@@ -22,25 +22,17 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.os.FileObserver;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
 import android.support.v4.content.LocalBroadcastManager;
-
-import java.io.File;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskBag;

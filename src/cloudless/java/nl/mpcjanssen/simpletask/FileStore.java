@@ -133,26 +133,21 @@ public class FileStore implements FileStoreInterface {
 
 
     @Override
-    public void openNewFile(Activity act, FileSelectedListener listener) {
-        FileDialog dialog = new FileDialog(act, mTodoFile, true);
+    public void browseForNewFile(Activity act, FileSelectedListener listener) {
+        FileDialog dialog = new FileDialog(act, mTodoFile.getParentFile(), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
     }
 
-
-
     private class FileDialog {
-        private static final String PARENT_DIR = "..";
-        private final String TAG = getClass().getName();
+        private static final String PARENT_DIR = "src/androidTest";
         private String[] fileList;
         private File currentPath;
 
         private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
         private ListenerList<DirectorySelectedListener> dirListenerList = new ListenerList<DirectorySelectedListener>();
         private final Activity activity;
-        private boolean selectDirectoryOption;
         private boolean txtOnly;
-        private String fileEndsWith;
 
         /**
          * @param activity
@@ -173,15 +168,6 @@ public class FileStore implements FileStoreInterface {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
             builder.setTitle(currentPath.getPath());
-            if (selectDirectoryOption) {
-                builder.setPositiveButton("Select directory", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Log.d(TAG, currentPath.getPath());
-                        fireDirectorySelectedEvent(currentPath);
-                    }
-                });
-            }
 
             builder.setItems(fileList, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -203,22 +189,6 @@ public class FileStore implements FileStoreInterface {
 
         public void addFileListener(FileSelectedListener listener) {
             fileListenerList.add(listener);
-        }
-
-        public void removeFileListener(FileSelectedListener listener) {
-            fileListenerList.remove(listener);
-        }
-
-        public void setSelectDirectoryOption(boolean selectDirectoryOption) {
-            this.selectDirectoryOption = selectDirectoryOption;
-        }
-
-        public void addDirectoryListener(DirectorySelectedListener listener) {
-            dirListenerList.add(listener);
-        }
-
-        public void removeDirectoryListener(DirectorySelectedListener listener) {
-            dirListenerList.remove(listener);
         }
 
         /**
@@ -253,7 +223,6 @@ public class FileStore implements FileStoreInterface {
                     public boolean accept(File dir, String filename) {
                         File sel = new File(dir, filename);
                         if (!sel.canRead()) return false;
-                        if (selectDirectoryOption) return sel.isDirectory();
                         else {
                             boolean txtFile = filename.toLowerCase(Locale.getDefault()).endsWith(".txt");
                             return !txtOnly ||  sel.isDirectory() || txtFile;
@@ -270,10 +239,6 @@ public class FileStore implements FileStoreInterface {
         private File getChosenFile(String fileChosen) {
             if (fileChosen.equals(PARENT_DIR)) return currentPath.getParentFile();
             else return new File(currentPath, fileChosen);
-        }
-
-        public void setFileEndsWith(String fileEndsWith) {
-            this.fileEndsWith = fileEndsWith != null ? fileEndsWith.toLowerCase(Locale.getDefault()) : fileEndsWith;
         }
     }
 }

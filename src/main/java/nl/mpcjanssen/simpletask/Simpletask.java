@@ -798,11 +798,11 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }, R.string.archive_task_title);
                 break;
             case R.id.open_file:
-                m_app.getFileStore().openNewFile(this,new FileStoreInterface.FileSelectedListener() {
+                m_app.getFileStore().browseForNewFile(this, new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {
+                        m_app.setTodoFile(file);
                         m_app.initStorage(file);
-
                     }
                 });
                 break;

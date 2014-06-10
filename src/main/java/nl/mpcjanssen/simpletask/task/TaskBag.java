@@ -24,22 +24,16 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.SharedPreferences;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.FileStore;
 import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
