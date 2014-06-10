@@ -26,6 +26,11 @@ You should have received a copy of the GNU General Public License along with Tod
 <!--suppress ALL -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:title="@string/select_all"
+        android:id="@+id/select_all"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_content_select_all" />
+    <item
         android:title="@string/done"
         android:id="@+id/complete"
         android:icon="@drawable/complete" 
@@ -44,12 +49,12 @@ You should have received a copy of the GNU General Public License along with Tod
         android:icon="@drawable/edit" />
     <item
         android:title="@string/update_lists"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_collections_view_as_list"
         android:id="@+id/update_lists" />
     <item
         android:title="@string/update_tags"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_collections_new_label"
         android:id="@+id/update_tags" />
     <item
