@@ -76,7 +76,7 @@ import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
-import nl.mpcjanssen.simpletask.remote.RemoteClient;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -205,9 +205,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
                     Log.v(TAG, "Logging out from Dropbox");
-                    m_app.getRemoteClientManager().getRemoteClient()
-                            .deauthenticate();
-                    m_app.setManualMode(false);
+                    m_app.getFileStore().deauthenticate();
                     Intent i = new Intent(context, LoginScreen.class);
                     startActivity(i);
                     finish();
@@ -215,10 +213,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     handleIntent();
                 } else if (intent.getAction().endsWith(
                         Constants.BROADCAST_SYNC_CONFLICT)) {
-                    handleSyncConflict();
-                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START) && !m_app.isCloudLess()) {
+
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
-                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE) && !m_app.isCloudLess()) {
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
                     setProgressBarIndeterminateVisibility(false);
                 }
             }
@@ -257,17 +255,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void handleIntent() {
-        if (!m_app.isCloudLess()) {
-            RemoteClient remoteClient = m_app.getRemoteClientManager()
-                    .getRemoteClient();
-            // Keep allowing use of the app in manual unauthenticated mode
-            // This will probably be removed in the future.
-            if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
-                startLogin();
-                return;
-            }
+        if (!m_app.getFileStore().isAuthenticated()) {
+            startLogin();
+            return;
         }
-
         mFilter = new ActiveFilter();
 
         m_leftDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -463,7 +454,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         searchView.setIconifiedByDefault(false);
 
         this.options_menu = menu;
-        if (m_app.isCloudLess()) {
+        if (m_app.getFileStore().isLocal()) {
             menu.findItem(R.id.sync).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
@@ -807,16 +798,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }, R.string.archive_task_title);
                 break;
             case R.id.open_file:
-                if (m_app.isCloudLess()) {
-                    m_app.openCloudlessFile(this);
-                } else {
-                    m_app.showConfirmationDialog(this, R.string.dropbox_open, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            m_app.openDropboxFile(Simpletask.this);
-                        }
-                    }, R.string.dropbox);
-                }
+                m_app.getFileStore().openNewFile(this,new FileStoreInterface.FileSelectedListener() {
+                    @Override
+                    public void fileSelected(String file) {
+                        m_app.initStorage(file);
+
+                    }
+                });
                 break;
             default:
                 return super.onMenuItemSelected(featureId, item);
@@ -844,26 +832,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES);
     }
 
-    /**
-     * Called when we can't sync due to a merge conflict. Prompts the user to
-     * force an upload or download.
-     */
-    private void handleSyncConflict() {
-        m_app.m_pushing = false;
-        m_app.m_pulling = false;
-        showDialog(SYNC_CONFLICT_DIALOG);
-    }
 
-    /**
-     * Sync with remote client.
-     * <p/>
-     * <ul>
-     * <li>Will Pull in auto mode.
-     * <li>Will ask "push or pull" in manual mode.
-     * </ul>
-     *
-     * @param force true to force pull
-     */
+
     private void syncClient(boolean force) {
         if (isManualMode()) {
             Log.v(TAG,

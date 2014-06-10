@@ -35,9 +35,10 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.FileStore;
 import nl.mpcjanssen.simpletask.Simpletask;
-import nl.mpcjanssen.simpletask.remote.PullTodoResult;
-import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -53,23 +54,27 @@ import nl.mpcjanssen.simpletask.util.Util;
  */
 public class TaskBag {
     final static String TAG = Simpletask.class.getSimpleName();
+    private final FileStoreInterface mFileStore;
     private Preferences preferences;
-    private final LocalTaskRepository localRepository;
     private ArrayList<Task> tasks = new ArrayList<Task>();
-    private Date lastReload = null;
-    private Date lastSync = null;
+
 
     public TaskBag(Preferences taskBagPreferences,
-                   LocalTaskRepository localTaskRepository) {
+                   FileStoreInterface fileStore) {
         this.preferences = taskBagPreferences;
-        this.localRepository = localTaskRepository;
+        this.mFileStore = fileStore;
     }
 
+    private String contents () {
+        ArrayList<String> contents = new ArrayList<String>();
+        for (Task t : tasks) {
+            contents.add(t.inFileFormat());
+        }
+        return Util.join(contents,"\n");
+    }
 
     private void store(ArrayList<Task> tasks) {
-        localRepository.store(tasks);
-
-        lastReload = null;
+        mFileStore.store(this.contents());
     }
 
     public void store() {
@@ -77,27 +82,17 @@ public class TaskBag {
     }
 
     public void archive(List<Task> tasksToArchive) {
-        try {
-            tasks=localRepository.archive(tasks, tasksToArchive);
-        } catch (Exception e) {
-            throw new TaskPersistException(
-                    "An error occurred while archiving", e);
-        }
+
     }
 
     public void reload() {
-        if (lastReload == null || localRepository.todoFileModifiedSince(lastReload)) {
-            localRepository.init();
-            this.tasks = localRepository.load();
-            lastReload = new Date();
-
-        }
+       this.reload(mFileStore.get(preferences));
     }
 
-    public void reload (String tasks) {
+    public void reload (ArrayList<String> loadedLines) {
         this.tasks.clear();
         int index = 0;
-        for (String s :tasks.split("\n")) {
+        for (String s : loadedLines) {
             this.tasks.add(new Task(index, s));
             index ++;
         }
@@ -142,53 +137,6 @@ public class TaskBag {
 
     public void delete(Task task) {
         tasks.remove(task);
-    }
-
-    /* REMOTE APIS */
-    public void pushToRemote(RemoteClientManager remoteClientManager, boolean overwrite) {
-        pushToRemote(remoteClientManager, false, overwrite);
-    }
-
-    public void pushToRemote(RemoteClientManager remoteClientManager, boolean overridePreference, boolean overwrite) {
-        if (this.preferences.isOnline() || overridePreference) {
-            File doneFile = null;
-            if (localRepository.doneFileModifiedSince(lastSync)) {
-                doneFile = localRepository.getDoneTxtFile();
-            }
-            remoteClientManager.getRemoteClient().pushTodo(
-                    localRepository.getTodoTxtFile(),
-                    doneFile,
-                    overwrite);
-            lastSync = new Date();
-        }
-    }
-
-    public void pullFromRemote(RemoteClientManager remoteClientManager, boolean overridePreference) {
-        try {
-            if (this.preferences.isOnline() || overridePreference) {
-                PullTodoResult result = remoteClientManager.getRemoteClient()
-                        .pullTodo();
-                File todoFile = result.getTodoFile();
-                if (todoFile != null && todoFile.exists()) {
-                    ArrayList<Task> remoteTasks = TaskIo
-                            .loadTasksFromFile(todoFile, preferences);
-                    store(remoteTasks);
-                    reload();
-                }
-
-                File doneFile = result.getDoneFile();
-                if (doneFile != null && doneFile.exists()) {
-                    localRepository.loadDoneTasks(doneFile);
-                } else if (doneFile == null) {
-                    // Dropbox has no done file so remove this one
-                    localRepository.removeDoneFile();
-                }
-                lastSync = new Date();
-            }
-        } catch (IOException e) {
-            throw new TaskPersistException(
-                    "Error loading tasks from remote file", e);
-        }
     }
 
     public ArrayList<Priority> getPriorities() {

@@ -85,9 +85,9 @@ public class TaskIo {
         return sb.length() == 0 ? null : sb.toString();
     }
 
-    public static ArrayList<Task> loadTasksFromFile(File file, TaskBag.Preferences preferences)
+    public static ArrayList<String> loadFromFile(File file, TaskBag.Preferences preferences)
             throws IOException {
-        ArrayList<Task> items = new ArrayList<Task>();
+        ArrayList<String> items = new ArrayList<String>();
         BufferedReader in = null;
         if (!file.exists()) {
             Log.w(TAG, file.getAbsolutePath() + " does not exist!");
@@ -101,7 +101,7 @@ public class TaskIo {
                 while ((line = readLine(in)) != null) {
                     line = line.trim();
                     if (line.length() > 0) {
-                        items.add(new Task(counter, line));
+                        items.add(line);
                     }
                     counter++;
                 }
@@ -115,30 +115,12 @@ public class TaskIo {
     }
 
 
-    public static void writeToFile(List<Task> tasks, File file,
-                                   boolean useWindowsBreaks) {
-        writeToFile(tasks, file, false, useWindowsBreaks);
-    }
-
-    public static void writeToFile(List<Task> tasks, File file,
-                                   boolean append, boolean useWindowsBreaks) {
+    public static void writeToFile(String contents, File file, boolean append) {
         try {
             Util.createParentDirectory(file);
             Writer fw = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(file, append), "UTF-8"));
-                for (Task task : tasks) {
-                    if (task!=null) {
-                    String fileFormat = task.inFileFormat();
-                    fw.write(fileFormat);
-                    if (useWindowsBreaks) {
-                        // Log.v(TAG, "Using Windows line breaks");
-                        fw.write("\r\n");
-                    } else {
-                        // Log.v(TAG, "NOT using Windows line breaks");
-                        fw.write("\n");
-                    }
-                }
-            }
+            fw.write(contents);
             fw.close();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());

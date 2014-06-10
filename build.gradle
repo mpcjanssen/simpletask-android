@@ -35,17 +35,14 @@ android {
     productFlavors {
         free {
             applicationId 'nl.mpcjanssen.todotxtholo'
-            buildConfigField "boolean", "CLOUDLESS", "false"
         }
         // Special flavor for testing as this is uninstalled after
         // completion of the test run
         unit {
             applicationId 'nl.mpcjanssen.simpletask.test'
-            buildConfigField "boolean", "CLOUDLESS", "true"
         }
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
-            buildConfigField "boolean", "CLOUDLESS", "true"
         }
     }
 

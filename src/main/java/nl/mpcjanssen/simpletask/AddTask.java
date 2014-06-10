@@ -163,7 +163,6 @@ public class AddTask extends ThemedActivity {
             taskBag.addAsTask(taskText);
         }
 
-        m_app.setNeedToPush(true);
         m_app.updateWidgets();
         if (m_app.isAutoArchive()) {
             taskBag.archive(null);
@@ -194,7 +193,6 @@ public class AddTask extends ThemedActivity {
         for (String task : taskText.split("\r\n|\r|\n")) {
             taskBag.addAsTask(task);
         }
-        m_app.setNeedToPush(true);
         m_app.updateWidgets();
         Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
         Log.v(TAG, "Broadcast " + sync);

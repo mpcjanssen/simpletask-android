@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by a156712 on 19-9-13.
  */
-class ListenerList<L> {
+public class ListenerList<L> {
     private List<L> listenerList = new ArrayList<L>();
 
     public interface FireHandler<L> {
