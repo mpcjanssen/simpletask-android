@@ -24,4 +24,12 @@ public class BugsTest extends TestCase {
         MultiComparator mc =  MultiComparator.create(f.getSort(null));
         assertNotNull(mc);
     }
+
+    public void testBug50() {
+        ActiveFilter f = new ActiveFilter();
+        Task t = new Task(0,"2012-01-01 @list test");
+        f.setHideLists(true);
+        assertEquals("test",t.inScreenFormat(f));
+        
+    }
 }
