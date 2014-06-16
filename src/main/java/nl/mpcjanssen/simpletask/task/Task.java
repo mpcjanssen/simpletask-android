@@ -352,7 +352,7 @@ public class Task implements Serializable, Comparable<Task> {
             }
             screenText = screenText.replaceAll("[ ]+", " ");
         }
-        return screenText;
+        return screenText.trim();
     }
 
     public boolean inFuture() {
