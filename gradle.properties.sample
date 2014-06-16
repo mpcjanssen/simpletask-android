@@ -1,5 +1,0 @@
-storeFile = file:/path_to_keystore
-storePassword = storepass
-keyPassword = keypass
-org.gradle.daemon=false
-org.gradle.jvmargs=-Xmx512m -XX:MaxPermSize=512m

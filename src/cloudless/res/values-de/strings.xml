@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -21,12 +20,11 @@ You should have received a copy of the GNU General Public License along with Tod
 @author Todo.txt contributors <todotxt@yahoogroups.com>
 @license http://www.gnu.org/licenses/gpl.html
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+@copyright 2013 Mark Janssen
 -->
 <!--suppress ALL -->
 <resources>
-    <!--
-    First, copy this file to dropbox.xml, then delete this line and fill in the appropriate values
-        <string translatable="false" name="dropbox_consumer_key">Enter your Dropbox app consumer key here</string>
-        <string translatable="false" name="dropbox_consumer_secret">Enter your Dropbox app consumer secret here</string>
-    -->
+
+    <string name="app_label">Simpletask Cloudless</string>
+
 </resources>

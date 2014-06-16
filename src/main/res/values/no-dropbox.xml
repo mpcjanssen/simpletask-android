@@ -6,6 +6,6 @@ This is are dummy dropbox keys needed to make the unit tests compile
 -->
 <!--suppress ALL -->
 <resources>
-  <string name="dropbox_consumer_key"/>
-  <string name="dropbox_consumer_secret"/>
+  <string translatable="false" name="dropbox_consumer_key"/>
+  <string translatable="false" name="dropbox_consumer_secret"/>
 </resources>

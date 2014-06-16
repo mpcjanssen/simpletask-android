@@ -130,7 +130,11 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 .getCheckedItemPositions();
         for (int i = 0; i < checkedItems.size(); i++) {
             if (checkedItems.valueAt(i)) {
-                checkedTasks.add(getTaskAt(checkedItems.keyAt(i)));
+                Task t = getTaskAt(checkedItems.keyAt(i));
+                // Ignore headers
+                if (t!=null) {
+                    checkedTasks.add(getTaskAt(checkedItems.keyAt(i)));
+                }
             }
         }
         return checkedTasks;
@@ -142,6 +146,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             result.add(t.inFileFormat());
         }
         return Util.join(result, "\n");
+    }
+
+    private void selectAllTasks() {
+        int itemCount = getListView().getCount();
+        for(int i=0 ; i < itemCount ; i++){
+            getListView().setItemChecked(i, true);
+        }
     }
 
     @Override
@@ -1563,7 +1574,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             String title = "" + numSelected;
             mode.setTitle(title);
             menu.removeGroup(Menu.CATEGORY_SECONDARY);
-            for (Task t : getCheckedTasks()) {
+            for (Task t : checkedTasks ) {
                 for (String s : t.getPhoneNumbers()) {
                     menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
                             Menu.NONE, s);
@@ -1588,6 +1599,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 case R.id.complete:
                     completeTasks(checkedTasks);
                     break;
+                case R.id.select_all:
+                    selectAllTasks();
+                    return true;
                 case R.id.uncomplete:
                     undoCompleteTasks(checkedTasks);
                     break;
