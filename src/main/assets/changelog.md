@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+4.2.4
+-----
+
+- Updated German translations thanks to Christian Orjeda.
+- Don't show spurious whitespace when hiding tags or lists (fixes [#50](http://mpcjanssen.nl/tracker/issues/50))
+
 4.2.3
 -----
 
