@@ -1,7 +1,6 @@
 dropbox.xml
 build/
 local.properties
-gradle.properties
 .gradle/
 tags
 .repo
