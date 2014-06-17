@@ -23,9 +23,6 @@ import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 
-/**
- * Created by a156712 on 10-6-2014.
- */
 public class FileStore implements FileStoreInterface {
     private String mTodoFileName;
     private File mTodoFile;
@@ -140,7 +137,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     private class FileDialog {
-        private static final String PARENT_DIR = "src/androidTest";
+        private static final String PARENT_DIR = "..";
         private String[] fileList;
         private File currentPath;
 
