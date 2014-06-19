@@ -48,6 +48,8 @@ public class FileStore implements FileStoreInterface {
     private DbxFileSystem dbxFs;
     private Context mCtx;
     private ArrayList<String> lines;
+    private LocalBroadcastManager bm;
+    private Intent bmIntent;
 
     public FileStore( Context ctx, String todoFile) {
         this.init(ctx, todoFile);
@@ -104,12 +106,14 @@ public class FileStore implements FileStoreInterface {
     public void store(String data) {
         if (isAuthenticated()) {
             try {
+                stopWatching();
                 dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                 dbxFs.awaitFirstSync();
                 DbxFile file = dbxFs.open(mTodoFile);
                 file.writeString(data);
                 file.close();
                 init(mCtx,mTodoFileName);
+                startWatching(bm, bmIntent);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -142,6 +146,8 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void startWatching(final LocalBroadcastManager broadCastManager, final Intent intent) {
+        this.bm = broadCastManager;
+        this.bmIntent = intent;
         if (dbxFs==null) {
             try {
                 dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
@@ -160,12 +166,12 @@ public class FileStore implements FileStoreInterface {
                     public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
                         try {
                             if(!dbxFileSystem.getSyncStatus().anyInProgress()) {
-                                Log.v (TAG, "Sync done " + dbxPath.getName());
-                                init(mCtx,mTodoFileName);
-                                mCtx.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                                Log.v(TAG, "Sync done " + dbxPath.getName());
+                                init(mCtx, mTodoFileName);
+                                broadCastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                                 broadCastManager.sendBroadcast(intent);
                             } else {
-                                mCtx.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                                broadCastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
                             }
                         } catch (DbxException e) {
                             e.printStackTrace();
