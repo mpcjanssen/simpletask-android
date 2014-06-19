@@ -419,6 +419,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     @Override
     protected void onResume() {
         super.onResume();
+        m_app.startWatching();
         handleIntent();
     }
 
@@ -428,6 +429,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         if (mFilter!=null) {
             mFilter.saveInPrefs(TodoApplication.getPrefs());
         }
+        m_app.stopWatching();
     }
 
     @Override
