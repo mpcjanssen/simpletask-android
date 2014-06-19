@@ -33,7 +33,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="update_task_failed">Aufgabe konnte nicht aktualisiert werden</string>
     <string name="sort">Sortieren</string>
     <string name="filter">Filter</string>
-    <string name="main_no_items">Keine Aufgaben angezeigt.</string>
+    <string name="main_no_items">Keine Aufgaben vorhanden.</string>
     <string name="set_preferences">Einstellungen</string>
     <string name="preferences">Einstellungen</string>
     <string name="archive">Speicherung</string>
@@ -49,9 +49,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="viewtask">Aufgabe zeigen</string>
     <string name="cleartask">Aufgabe löschen</string>
     <string name="done">Fertig</string>
+    <string name="select_all">Alle markieren</string>
     <string name="priority">Priorisieren</string>
     <string name="select_priority">Priorität auswählen</string>
-    <string name="select_all">Select all</string>
     <string name="add_list_or_tag">Listen und tags hinzufügen</string>
     <string name="update_lists">Listen aktualisieren</string>
     <string name="update_tags">tags aktualisieren</string>
@@ -70,18 +70,17 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
 
-    <string name="filter_name_empty">No name specified, not adding filter</string>
-    <string name="widget_name_empty">No widget name specified, not adding widget</string>
-    <string name="add_task_help">Add or update a task to the task list. When adding tasks,
-        each line is a separate task for quick adding.\n
-        <b>Priority</b>\n
-        start the line with (.), like (A)\n
+    <string name="filter_name_empty">Kein Name angegeben, es wird kein Filter hinzugefügt</string>
+    <string name="widget_name_empty">Kein Widgtname angegeben, es wird kein Widget hinzugefügt</string>
+    <string name="add_task_help">Hinzufügen oder Aktualisieren einer Aufgabe in der Aufgabenliste. Wenn Aufgaben hizugefügt werden,
+        ist jede Linie eine Aufgabe um schnelles Hinzufügen zu ermöglichen.\n
+        <b>Priorität</b>\n
+        beginne die Linie mit (.), wie (A)\n
         <b>Tags</b>
-        start with a + sign, like +Kitchen\n
-        <b>Lists</b>
-        start with an @ sign, like @home\n
-        A task can include any number of tags or be on multiple
-        lists.
+        beginne mit einem + Zeichen, wie +Kitchen\n
+        <b>Listen</b>
+        beginne mit einem @ Zeichen, wie @home\n
+        Eine Aufgabe kann eine belibige Anzahl tags beinhalten oder in beliebig vielen Listen sein.
     </string>
 
     <!-- preferences -->
@@ -92,7 +91,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="archive_now_pref_title">Jetzt Speichern</string>
     <string name="archive_now_pref_summary">Verschiebe erledigte Aufgaben von todo.txt nach done.txt.</string>
     <string name="dropbox_logout_pref_title">Log out</string>
-    <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>
+    <string name="dropbox_logout_pref_summary">Log out von Dropbox.</string>
     <string name="TODOTXTPATH_title">Datei Speicherort</string>
     <string name="TODOTXTPATH_summary">Der Dropbox Ordner in dem todo.txt gespeichert ist.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
@@ -110,8 +109,8 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <string name="prepend_date_pref_title">Neue Aufgaben terminieren</string>
     <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
-    <string name="line_breaks_pref_title">Windows line breaks</string>
-    <string name="line_breaks_pref_summary">Windows-friendly Umbrüche in Textdateien verwenden.
+    <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
+    <string name="line_breaks_pref_summary">Windows-freundliche Umbrüche in Textdateien verwenden.
     Standardeinstellung ist Beibehalten des Umbruchs der geladenen todo-Datei.</string>
     <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Daten</string>
     <string name="recur_from_original_date_pref_summary">Erhöhe die Orginaldaten der Aufgabe, wenn die Aufgabe wiederholt wird.
@@ -130,7 +129,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="share_task_show_edit_pref_title">Geteilte Aufgabe editieren</string>
     <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben.
-        Disable this to have the shared task stored without intervention.</string>
+        Deaktiere dies für die Speicherung einer geteilten Aufgabe ohne Eingriffe.</string>
 
     <string name="capitalize_tasks_pref_title">Neue Aufgaben mit Großbuchstaben</string>
     <string name="back_saves_pref_title">Zurück Schaltfläche</string>
@@ -144,7 +143,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="widget_theme_pref_title">Widget theme</string>
-    <string name="widget_theme_pref_summary">Ändere das wiget theme</string>
+    <string name="widget_theme_pref_summary">Ändere das widget theme</string>
 
     <string name="widget_header_transparency_title">Widget Kopfleiste Transparenz</string>
     <string name="widget_background_transparency_title">Widget Hintergrundtransparenz</string>
@@ -161,9 +160,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_empty_lists_title">Zeige leere Kopfzeile</string>
     <string name="show_empty_lists_summary">Zeige die Kopfzeile auch wenn alle Aufgaben unter dieser Kopfzeile versteckt sind.</string>
 
-    <string name="split_actionbar_pref_title">Use split action bar</string>
-    <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
-        For more screen estate for the todo list turn this off. </string>
+    <string name="split_actionbar_pref_title">Verwende split action bar</string>
+    <string name="split_actionbar_pref_summary">Verwnde eine split action bar damit die Schaltflächen am unteren Ende des Bildschirms sind.
+        Für mehr Bilschimfläche deaktiviere diese Möglichkeit.</string>
 
     <string name="show_edittext_hints_title">Zeige Hinweise</string>
     <string name="show_edittext_hints_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
@@ -216,15 +215,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- search -->
 
     <string name="clone_tags">Next copies</string>
-    <string name="word_wrap">Word wrap</string>
+    <string name="word_wrap">Zeilenumbruch</string>
     <string name="search_hint">Suche todo.txt</string>
     <!-- sort -->
     <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.</string>
     <string name="alphabetical">Alphabetisch</string>
-    <string name="file_order">Nach datei (Nicht sortiert)</string>
     <string name="by_prio">Nach Priorität</string>
     <string name="by_project">Nach Tag</string>
     <string name="by_context">Nach Liste</string>
+    <string name="file_order">Nach Zeilennummer</string>
     <string name="completed">Erledigt</string>
     <string name="by_creation_date">Nach Erstellungsdatum</string>
     <string name="in_future">Zeitlimit in der Zukunft</string>
