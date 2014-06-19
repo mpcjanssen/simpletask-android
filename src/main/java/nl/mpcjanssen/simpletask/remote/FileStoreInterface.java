@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.remote;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -18,7 +19,6 @@ public interface FileStoreInterface {
     ArrayList<String> get(TaskBag.Preferences preferences);
     void store(String data);
     void append(String data);
-    void prepend(String data);
     void startLogin(Activity caller, int i);
     void startWatching(LocalBroadcastManager broadCastManager, Intent intent);
     void stopWatching();
@@ -26,7 +26,7 @@ public interface FileStoreInterface {
     void deauthenticate();
     boolean isLocal();
     void browseForNewFile(Activity act, FileSelectedListener listener);
-    void init(String todoFile);
+    void init(Context ctx, String todoFile);
 
     public interface FileSelectedListener {
         void fileSelected(String file);
