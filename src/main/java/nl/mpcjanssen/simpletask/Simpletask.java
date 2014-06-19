@@ -497,84 +497,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         startActivity(Intent.createChooser(shareIntent, "Share"));
     }
 
-    private void removeTaskTags(final List<Task> tasks) {
-        LinkedHashSet<String> contexts = new LinkedHashSet<String>();
-        LinkedHashSet<String> projects = new LinkedHashSet<String>();
-        for (Task task : tasks) {
-            for (String s : task.getLists()) {
-                contexts.add("@" + s);
-            }
-            for (String s : task.getTags()) {
-                projects.add("+" + s);
-            }
-        }
-        final ArrayList<String> items = new ArrayList<String>();
-        items.addAll(contexts);
-        items.addAll(projects);
-        if (items.size() == 0) {
-            showToast(R.string.not_tagged);
-            return;
-        }
-        String[] values = items.toArray(new String[items.size()]);
-        Dialog tagChooser = Util.createMultiChoiceDialog(this, values, null, R.string.remove_list_or_tag,
-                null, new OnMultiChoiceDialogListener() {
-                    @Override
-                    public void onClick(boolean[] selected) {
-
-                        for (int i = 0; i < selected.length; i++) {
-                            if (selected[i]) {
-                                for (Task t : tasks) {
-                                    t.removeTag(items.get(i));
-                                }
-                            }
-                        }
-                        getTaskBag().store();
-                        m_app.updateWidgets();
-                        m_app.setNeedToPush(true);
-                        // We have change the data, views should refresh
-                        m_adapter.setFilteredTasks(false);
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-                    }
-                }
-        );
-        tagChooser.show();
-    }
-
-    private void tagTasks(final List<Task> tasks) {
-        TaskBag taskBag = getTaskBag();
-        List<String> strings = new ArrayList<String>();
-        for (String s : taskBag.getContexts(false)) {
-            strings.add("@" + s);
-        }
-        for (String s : taskBag.getProjects(false)) {
-            strings.add("+" + s);
-        }
-        final String[] items = strings.toArray(new String[strings.size()]);
-        Dialog tagChooser = Util.createMultiChoiceDialog(this, items, null, R.string.add_list_or_tag,
-                null, new OnMultiChoiceDialogListener() {
-                    @Override
-                    public void onClick(boolean[] selected) {
-
-                        for (int i = 0; i < selected.length; i++) {
-                            if (selected[i]) {
-                                for (Task t : tasks) {
-                                    t.append(items[i]);
-                                }
-                            }
-                        }
-                        getTaskBag().store();
-                        m_app.updateWidgets();
-                        m_app.setNeedToPush(true);
-                        // We have change the data, views should refresh
-                        m_adapter.setFilteredTasks(false);
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-
-                    }
-                }
-        );
-        tagChooser.show();
-    }
-
     private void prioritizeTasks(final List<Task> tasks) {
         List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
         final String[] prioArr = strings.toArray(new String[strings.size()]);
@@ -1807,6 +1729,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 getTaskBag().store();
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
                 updateDrawers();
             }
         });
@@ -1877,6 +1800,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 m_app.updateWidgets();
                 m_app.setNeedToPush(true);
                 updateDrawers();
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
