@@ -23,16 +23,21 @@
 package nl.mpcjanssen.simpletask.remote;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 
+import android.content.SharedPreferences;
+
 public class DropboxRemoteClient implements RemoteClient {
+    private SharedPreferences prefs;
 
     // Stubs for cloudless versions	
     public DropboxRemoteClient(Object todoApplication,
-			Object sharedPreferences) {
+			SharedPreferences sharedPreferences) {
+        this.prefs = sharedPreferences;
 	}
 
 	@Override
@@ -65,7 +70,15 @@ public class DropboxRemoteClient implements RemoteClient {
 
     @Override
     public String getDonePath() {
-        return null;
+        String todoPath =  prefs.getString("todo_file", null);
+        File donePath = new File(todoPath).getParentFile();
+        File doneFile = new File(donePath, "done.txt");
+        try {
+            return doneFile.getCanonicalPath();
+        } catch (IOException e) {
+            // Should never happen
+            return null;
+        }
     }
 
     @Override

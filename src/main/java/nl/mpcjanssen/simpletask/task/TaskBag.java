@@ -88,12 +88,9 @@ public class TaskBag {
     }
 
     public void reload() {
-        if (lastReload == null || localRepository.todoFileModifiedSince(lastReload)) {
             localRepository.init();
             this.tasks = localRepository.load();
             lastReload = new Date();
-
-        }
     }
 
     public void reload (String tasks) {

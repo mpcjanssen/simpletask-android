@@ -51,6 +51,7 @@ import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.DropboxFileDialog;
 import nl.mpcjanssen.simpletask.util.FileDialog;
+import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.simpletask.remote.DropboxRemoteClient;
 
@@ -132,6 +133,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
         LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, local_todo, taskBagPreferences);
+        remoteClientManager = new RemoteClientManager(this, getPrefs());
         if (isCloudLess()) {
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
             Log.v(TAG, "Obs: " + localTaskRepository.getTodoTxtFile().getPath());
@@ -152,7 +154,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 }
             };
         } else {
-            remoteClientManager = new RemoteClientManager(this, getPrefs());
             this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
         }
         this.startWatching();
@@ -321,7 +322,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         } else {
             default_path="/todo/todo.txt";
         }
-        return m_prefs.getString(getString(R.string.todo_file_key), default_path);
+        String path =  m_prefs.getString(getString(R.string.todo_file_key), null);
+        if (Strings.isEmptyOrNull(path)) {
+            path = default_path;
+            setTodoFile(new File(path));
+        }
+        return path;
     }
 
     public void setTodoFile(File todo) {

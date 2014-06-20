@@ -123,7 +123,7 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
         }
         boolean result = true;
         try {
-            remote.append(doneFile, tasksToArchive, preferences.isUseWindowsLineBreaksEnabled());
+            remote.append(doneFile, archivedTasks, preferences.isUseWindowsLineBreaksEnabled());
             TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
                     windowsLineBreaks);
         } catch (Exception e) {
