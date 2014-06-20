@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+4.2.5
+-----
+
+- Don't cache done.txt from Dropbox. This should fix issues with done.txt being overwritten ([#58](http://mpcjanssen.nl/tracker/issues/58)).
+
 4.2.4
 -----
 
