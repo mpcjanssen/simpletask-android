@@ -22,13 +22,18 @@
  */
 package nl.mpcjanssen.simpletask.remote;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.Simpletask;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import nl.mpcjanssen.simpletask.R;
 import android.content.Intent;
@@ -38,6 +43,7 @@ import android.util.Log;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
@@ -273,6 +279,34 @@ public class DropboxRemoteClient implements RemoteClient {
             Log.e("DROPBOX", e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public void append( String doneFile, List<Task> archivedTasks, boolean windowsLineBreak)  throws Exception  {
+        DropboxAPI api = getApi();
+        ArrayList<String> currentArchive = new ArrayList<String>();
+        try {
+            DropboxAPI.DropboxInputStream dbxStream = api.getFileStream(doneFile, null);
+            currentArchive.addAll(TaskIo.loadTasksFromStream(dbxStream));
+        } catch (DropboxServerException e) {
+            if (e.error != 404) {
+                // Rethrow if error is not equal to file not found
+                throw e;
+            }
+        }
+        for (Task t: archivedTasks) {
+            currentArchive.add(t.inFileFormat());
+        }
+        String newContents;
+        if (windowsLineBreak) {
+            newContents = Util.join(currentArchive,"\r\n");
+        } else {
+            newContents = Util.join(currentArchive,"\n");
+        }
+        InputStream is = new ByteArrayInputStream(newContents.getBytes());
+        DropboxAPI.UploadRequest req = api.putFileOverwriteRequest(doneFile, is, newContents.getBytes().length,null);
+        req.upload();
+
     }
 
     public DropboxAPI getApi() {

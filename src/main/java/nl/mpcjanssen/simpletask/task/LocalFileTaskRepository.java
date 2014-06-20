@@ -22,24 +22,19 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.TodoException;
-import nl.mpcjanssen.simpletask.remote.DropboxRemoteClient;
+import nl.mpcjanssen.simpletask.remote.RemoteClient;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import android.util.Log;
-
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.ProgressListener;
-import com.dropbox.client2.exception.DropboxServerException;
 
 
 /**
@@ -107,6 +102,7 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
 
 	ArrayList<Task> archivedTasks = new ArrayList<Task>();
 	final ArrayList<Task> remainingTasks = new ArrayList<Task>();
+    RemoteClient remote =  m_app.getRemoteClientManager().getRemoteClient();
 
         for (Task task : tasks) {
             if (tasksToArchive!=null) {
@@ -127,30 +123,7 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
         }
         boolean result = true;
         try {
-            DropboxRemoteClient remote = (DropboxRemoteClient) m_app.getRemoteClientManager().getRemoteClient();
-            DropboxAPI api = remote.getApi();
-            ArrayList<String> currentArchive = new ArrayList<String>();
-            try {
-                DropboxAPI.DropboxInputStream dbxStream = api.getFileStream(doneFile, null);
-                currentArchive.addAll(TaskIo.loadTasksFromStream(dbxStream));
-            } catch (DropboxServerException e) {
-                if (e.error != 404) {
-                    // Rethrow if error is not equal to file not found
-                    throw e;
-                }
-            }
-            for (Task t: archivedTasks) {
-                currentArchive.add(t.inFileFormat());
-            }
-            String newContents;
-            if (preferences.isUseWindowsLineBreaksEnabled()) {
-                newContents = Util.join(currentArchive,"\r\n");
-            } else {
-                newContents = Util.join(currentArchive,"\n");
-            }
-            InputStream is = new ByteArrayInputStream(newContents.getBytes());
-            DropboxAPI.UploadRequest req = api.putFileOverwriteRequest(doneFile, is, newContents.getBytes().length,null);
-            req.upload();
+            remote.append(doneFile, tasksToArchive, preferences.isUseWindowsLineBreaksEnabled());
             TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
                     windowsLineBreaks);
         } catch (Exception e) {
@@ -158,7 +131,7 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
             Log.v(TAG, e.toString());
         }
         m_app.startWatching();
-	    return result;
+	   return result;
     }
 
 	@Override
