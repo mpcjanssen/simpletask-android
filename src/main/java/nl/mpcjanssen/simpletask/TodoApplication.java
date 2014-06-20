@@ -68,6 +68,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private Handler handler = new Handler();
     private FileObserver m_observer;
     private File local_todo;
+    private String doneName;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -620,6 +621,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         } else {
             return R.style.FontSizeMedium;
         }
+    }
+
+    public String getDonePath() {
+        return getRemoteClientManager().getRemoteClient().getDonePath();
     }
 
     private final class BroadcastReceiverExtension extends BroadcastReceiver {

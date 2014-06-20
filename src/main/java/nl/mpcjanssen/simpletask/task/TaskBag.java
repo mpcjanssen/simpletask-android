@@ -76,13 +76,15 @@ public class TaskBag {
         store(this.tasks);
     }
 
-    public void archive(List<Task> tasksToArchive) {
+    public boolean archive(List<Task> tasksToArchive, String doneFile) {
+        boolean succes = false;
         try {
-            tasks=localRepository.archive(tasks, tasksToArchive);
+            succes = localRepository.archive(tasks, tasksToArchive, doneFile);
         } catch (Exception e) {
             throw new TaskPersistException(
                     "An error occurred while archiving", e);
         }
+        return succes;
     }
 
     public void reload() {
@@ -151,13 +153,9 @@ public class TaskBag {
 
     public void pushToRemote(RemoteClientManager remoteClientManager, boolean overridePreference, boolean overwrite) {
         if (this.preferences.isOnline() || overridePreference) {
-            File doneFile = null;
-            if (localRepository.doneFileModifiedSince(lastSync)) {
-                doneFile = localRepository.getDoneTxtFile();
-            }
+
             remoteClientManager.getRemoteClient().pushTodo(
                     localRepository.getTodoTxtFile(),
-                    doneFile,
                     overwrite);
             lastSync = new Date();
         }
@@ -176,13 +174,6 @@ public class TaskBag {
                     reload();
                 }
 
-                File doneFile = result.getDoneFile();
-                if (doneFile != null && doneFile.exists()) {
-                    localRepository.loadDoneTasks(doneFile);
-                } else if (doneFile == null) {
-                    // Dropbox has no done file so remove this one
-                    localRepository.removeDoneFile();
-                }
                 lastSync = new Date();
             }
         } catch (IOException e) {

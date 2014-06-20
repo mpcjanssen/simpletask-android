@@ -26,18 +26,13 @@ import java.io.File;
 
 public class PullTodoResult {
 	private File todoFile;
-	private File doneFile;
 	
-	public PullTodoResult(File todoFile, File doneFile) {
+	public PullTodoResult(File todoFile) {
 		this.todoFile = todoFile;
-		this.doneFile = doneFile;
 	}
 	
 	public File getTodoFile() {
 		return todoFile;
 	}
 	
-	public File getDoneFile() {
-		return doneFile;
-	}
 }

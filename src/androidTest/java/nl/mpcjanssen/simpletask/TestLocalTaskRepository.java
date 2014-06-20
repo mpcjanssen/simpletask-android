@@ -28,7 +28,7 @@ public class TestLocalTaskRepository implements LocalTaskRepository {
     }
 
     @Override
-    public ArrayList<Task> archive(ArrayList<Task> tasks, List<Task> tasksToArchive) {
+    public boolean archive(ArrayList<Task> tasks, List<Task> tasksToArchive) {
         return null;
     }
 

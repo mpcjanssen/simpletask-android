@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.task;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,17 +17,10 @@ public interface LocalTaskRepository {
 
     abstract void store(ArrayList<Task> tasks);
 
-    abstract ArrayList<Task> archive(ArrayList<Task> tasks, List<Task> tasksToArchive);
+    abstract boolean archive(ArrayList<Task> tasks, List<Task> tasksToArchive, String doneFile);
 
     abstract boolean todoFileModifiedSince(Date date);
 
-    abstract boolean doneFileModifiedSince(Date date);
-
-    abstract File getDoneTxtFile();
-
     abstract File getTodoTxtFile();
 
-    abstract void loadDoneTasks(File doneFile);
-
-    abstract void removeDoneFile();
 }

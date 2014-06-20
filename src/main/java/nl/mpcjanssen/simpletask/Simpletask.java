@@ -672,7 +672,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
-                    getTaskBag().archive(tasksToArchive);
+                    getTaskBag().archive(tasksToArchive, m_app.getDonePath());
                     return true;
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -683,7 +683,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             protected void onPostExecute(Boolean result) {
                 if (result) {
-                    m_adapter.setFilteredTasks(false);
+                    m_adapter.setFilteredTasks(true);
                     m_app.updateWidgets();
                     m_app.setNeedToPush(true);
                     updateDrawers();

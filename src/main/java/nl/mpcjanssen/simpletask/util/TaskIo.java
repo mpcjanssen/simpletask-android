@@ -40,19 +40,16 @@ public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
     private static boolean sWindowsLineBreaks;
 
-    public static ArrayList<Task> loadTasksFromStream(InputStream is)
+    public static ArrayList<String> loadTasksFromStream(InputStream is)
             throws IOException {
-        ArrayList<Task> items = new ArrayList<Task>();
+        ArrayList<String> items = new ArrayList<String>();
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(is));
             String line;
             long counter = 0L;
             while ((line = in.readLine()) != null) {
-                line = line.trim();
-                if (line.length() > 0) {
-                    items.add(new Task(counter, line));
-                }
+                items.add(line);
                 counter++;
             }
         } finally {
