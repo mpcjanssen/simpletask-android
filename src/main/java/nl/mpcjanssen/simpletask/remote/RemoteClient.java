@@ -23,6 +23,9 @@
 package nl.mpcjanssen.simpletask.remote;
 
 import java.io.File;
+import java.util.List;
+
+import nl.mpcjanssen.simpletask.task.Task;
 
 public interface RemoteClient {
 
@@ -80,4 +83,5 @@ public interface RemoteClient {
 
     String getDonePath();
 
+    void append (String doneFile, List<Task> archiveTasks, boolean windowsLineBreak) throws Exception;
 }

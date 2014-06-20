@@ -28,8 +28,8 @@ public class TestLocalTaskRepository implements LocalTaskRepository {
     }
 
     @Override
-    public boolean archive(ArrayList<Task> tasks, List<Task> tasksToArchive) {
-        return null;
+    public boolean archive(ArrayList<Task> tasks, List<Task> tasksToArchive, String doneFile) {
+        return true;
     }
 
     @Override
@@ -37,28 +37,10 @@ public class TestLocalTaskRepository implements LocalTaskRepository {
         return false;
     }
 
-    @Override
-    public boolean doneFileModifiedSince(Date date) {
-        return false;
-    }
-
-    @Override
-    public File getDoneTxtFile() {
-        return null;
-    }
 
     @Override
     public File getTodoTxtFile() {
         return null;
     }
 
-    @Override
-    public void loadDoneTasks(File doneFile) {
-
-    }
-
-    @Override
-    public void removeDoneFile() {
-
-    }
 }

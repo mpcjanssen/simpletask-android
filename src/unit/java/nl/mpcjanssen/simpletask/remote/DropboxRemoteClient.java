@@ -23,6 +23,9 @@
 package nl.mpcjanssen.simpletask.remote;
 
 import java.io.File;
+import java.util.List;
+
+import nl.mpcjanssen.simpletask.task.Task;
 
 public class DropboxRemoteClient implements RemoteClient {
 
@@ -55,11 +58,22 @@ public class DropboxRemoteClient implements RemoteClient {
 		return null;
 	}
 
-	@Override
-	public void pushTodo(File todoFile, File doneFile, boolean overwrite) {
-	}
+    @Override
+    public void pushTodo(File todoFile, boolean overwrite) {
 
-	@Override
+    }
+
+    @Override
+    public String getDonePath() {
+        return null;
+    }
+
+    @Override
+    public void append(String doneFile, List<Task> archiveTasks, boolean windowsLineBreak) throws Exception {
+
+    }
+
+    @Override
 	public boolean startLogin() {
 		return true;
 	}
