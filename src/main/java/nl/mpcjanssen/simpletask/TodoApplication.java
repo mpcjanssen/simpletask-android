@@ -72,11 +72,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 m_prefs);
         if (mFileStore!=null) {
             mFileStore.stopWatching();
+            mFileStore.init(this,todoFile);
+        } else {
+            mFileStore = new FileStore(this, todoFile);
         }
-        mFileStore = new FileStore(todoFile);
         this.taskBag = new TaskBag(taskBagPreferences, mFileStore);
-        mFileStore.startWatching(localBroadcastManager, new Intent(Constants.BROADCAST_UPDATE_UI));
-        taskBag.reload();
         updateUI();
     }
 

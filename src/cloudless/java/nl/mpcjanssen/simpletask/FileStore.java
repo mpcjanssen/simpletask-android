@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Environment;
@@ -30,11 +31,11 @@ public class FileStore implements FileStoreInterface {
     private final String TAG = getClass().getName();
     private FileObserver m_observer;
 
-    public FileStore(String todoFile) {
-        this.init(todoFile);
+    public FileStore(Context ctx, String todoFile) {
+        this.init(ctx, todoFile);
     }
 
-    public void init (String todoFile) {
+    public void init (Context ctx, String todoFile) {
         if (todoFile.equals("")) {
             todoFile = Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
         }
