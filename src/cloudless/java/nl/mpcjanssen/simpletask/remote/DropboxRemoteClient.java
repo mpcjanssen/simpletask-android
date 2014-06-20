@@ -56,10 +56,15 @@ public class DropboxRemoteClient implements RemoteClient {
 	}
 
 	@Override
-	public void pushTodo(File todoFile, File doneFile, boolean overwrite) {
+	public void pushTodo(File todoFile, boolean overwrite) {
 	}
 
-	@Override
+    @Override
+    public String getDonePath() {
+        return null;
+    }
+
+    @Override
 	public boolean startLogin() {
 		return true;
 	}

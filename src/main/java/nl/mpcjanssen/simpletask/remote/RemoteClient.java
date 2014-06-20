@@ -22,9 +22,6 @@
  */
 package nl.mpcjanssen.simpletask.remote;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.android.AndroidAuthSession;
-
 import java.io.File;
 
 public interface RemoteClient {
