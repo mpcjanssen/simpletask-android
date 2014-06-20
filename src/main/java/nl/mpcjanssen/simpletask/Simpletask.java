@@ -1345,7 +1345,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         public View getView(int position, View convertView, ViewGroup parent) {
             VisibleLine line = visibleLines.get(position);
             if (line.header) {
-                convertView = m_inflater.inflate(R.layout.list_header, parent, false);
+                if (convertView == null) {
+                    convertView = m_inflater.inflate(R.layout.list_header, parent, false);
+                }
                 TextView t = (TextView) convertView
                         .findViewById(R.id.list_header_title);
                 t.setText(line.title);
@@ -1804,8 +1806,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
-                ArrayList<String> uncheckedItesm = new ArrayList<String>();
-                uncheckedItesm.addAll(Util.getCheckedItems(lv, false));
+                ArrayList<String> uncheckedItems = new ArrayList<String>();
+                uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
                 if (!newText.equals("")) {
@@ -1816,7 +1818,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                         t.addTag(item);
                     }
                 }
-                for (String item : uncheckedItesm) {
+                for (String item : uncheckedItems) {
                     for (Task t : checkedTasks) {
                         t.removeTag("+" + item);
                     }
