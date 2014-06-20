@@ -22,6 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.remote;
 
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.android.AndroidAuthSession;
+
 import java.io.File;
 
 public interface RemoteClient {
@@ -73,10 +76,11 @@ public interface RemoteClient {
 	 * Push mobile
 	 * 
 	 * @param todoFile
-	 * @param doneFile
 	 * @param overwrite if true, upload the files even if there
 	 * 	is a remote conflict.
 	 */
-	void pushTodo(File todoFile, File doneFile, boolean overwrite);
+	void pushTodo(File todoFile, boolean overwrite);
+
+    String getDonePath();
 
 }

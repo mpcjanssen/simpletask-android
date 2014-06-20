@@ -30,7 +30,6 @@ public class Constants {
     public static final String PREF_ACCESSTOKEN_KEY = "accesstokenkey";
     public static final String PREF_ACCESSTOKEN_SECRET = "accesstokensecret";
     public static final String PREF_TODO_REV = "todo_rev";
-    public static final String PREF_DONE_REV = "done_rev";
     public static final String PREF_NEED_TO_PUSH = "need_to_push";
     public static final String DROPBOX_MODUS = "dropbox";
 

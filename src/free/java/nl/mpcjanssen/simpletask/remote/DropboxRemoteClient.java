@@ -50,9 +50,6 @@ public class DropboxRemoteClient implements RemoteClient {
 	private static final File TODO_TXT_TMP_FILE = new File(
 			TodoApplication.getAppContext().getFilesDir(),
 			"tmp/todo.txt");
-	private static final File DONE_TXT_TMP_FILE = new File(
-			TodoApplication.getAppContext().getFilesDir(),
-			"tmp/done.txt");
 
 	private DropboxAPI<AndroidAuthSession> dropboxApi;
 	private TodoApplication todoApplication;
@@ -178,36 +175,24 @@ public class DropboxRemoteClient implements RemoteClient {
 		DropboxFile todoFile = new DropboxFile(
 				getTodoFile(), TODO_TXT_TMP_FILE,
 				loadRev(Constants.PREF_TODO_REV));
-		DropboxFile doneFile = new DropboxFile(
-				getDoneFile(), DONE_TXT_TMP_FILE,
-				loadRev(Constants.PREF_DONE_REV));
 		ArrayList<DropboxFile> dropboxFiles = new ArrayList<DropboxFile>(2);
 		dropboxFiles.add(todoFile);
-		dropboxFiles.add(doneFile);
 		
 		DropboxFileDownloader downloader = new DropboxFileDownloader(
 				dropboxApi, dropboxFiles);
 		downloader.pullFiles();
 
 		File downloadedTodoFile = null;
-		File downloadedDoneFile = null;
 		if (todoFile.getStatus() == DropboxFileStatus.SUCCESS) {
 			downloadedTodoFile = todoFile.getLocalFile();
 			storeRev(Constants.PREF_TODO_REV, todoFile.getLoadedMetadata().rev);
 		}
-		if (doneFile.getStatus() == DropboxFileStatus.SUCCESS) {
-			downloadedDoneFile = doneFile.getLocalFile();
-			storeRev(Constants.PREF_DONE_REV, doneFile.getLoadedMetadata().rev);
-		} else if (doneFile.getStatus() == DropboxFileStatus.NOT_FOUND) {
-            // Couldn't download done file from dropbox
-            downloadedDoneFile = null;
-        }
 
-		return new PullTodoResult(downloadedTodoFile, downloadedDoneFile);
+		return new PullTodoResult(downloadedTodoFile);
 	}
 
 	@Override
-	public void pushTodo(File todoFile, File doneFile, boolean overwrite) {
+	public void pushTodo(File todoFile, boolean overwrite) {
 		ArrayList<DropboxFile> dropboxFiles = new ArrayList<DropboxFile>(2);
 		if (todoFile != null) {
 			dropboxFiles.add(new DropboxFile(
@@ -215,11 +200,6 @@ public class DropboxRemoteClient implements RemoteClient {
 					loadRev(Constants.PREF_TODO_REV)));
 		}
 
-		if (doneFile != null) {
-			dropboxFiles.add(new DropboxFile(
-					getDoneFile(), doneFile,
-					loadRev(Constants.PREF_DONE_REV)));
-		}
 
 		DropboxFileUploader uploader = new DropboxFileUploader(dropboxApi,
 				dropboxFiles, overwrite);
@@ -231,13 +211,6 @@ public class DropboxRemoteClient implements RemoteClient {
 				if (todoDropboxFile.getStatus() == DropboxFileStatus.SUCCESS) {
 					storeRev(Constants.PREF_TODO_REV,
 							todoDropboxFile.getLoadedMetadata().rev);
-				}
-			}
-			if (dropboxFiles.size() > 1) {
-				DropboxFile doneDropboxFile = dropboxFiles.get(1);
-				if (doneDropboxFile.getStatus() == DropboxFileStatus.SUCCESS) {
-					storeRev(Constants.PREF_DONE_REV,
-							doneDropboxFile.getLoadedMetadata().rev);
 				}
 			}
 		}
@@ -271,14 +244,6 @@ public class DropboxRemoteClient implements RemoteClient {
 		return false;
 	}
 
-	void sendBroadcast(Intent intent) {
-		todoApplication.sendBroadcast(intent);
-	}
-
-	void showToast(String string) {
-		Util.showToastLong(todoApplication, string);
-	}
-
 	DropboxAPI<AndroidAuthSession> getAPI() {
 		return dropboxApi;
 	}
@@ -296,7 +261,8 @@ public class DropboxRemoteClient implements RemoteClient {
         return rawPath;
     }
 
-    String getDoneFile() {
+    @Override
+    public String getDonePath() {
         String todoPath = getTodoFile();
         File donePath = new File(todoPath).getParentFile();
         File doneFile = new File(donePath, "done.txt");

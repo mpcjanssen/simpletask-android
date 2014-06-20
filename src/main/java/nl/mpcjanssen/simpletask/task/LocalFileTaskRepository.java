@@ -22,17 +22,24 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.TodoException;
+import nl.mpcjanssen.simpletask.remote.DropboxRemoteClient;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import android.util.Log;
+
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.ProgressListener;
+import com.dropbox.client2.exception.DropboxServerException;
 
 
 /**
@@ -44,7 +51,6 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
 	private  final String TAG = LocalFileTaskRepository.class
 			.getSimpleName();
 	final File TODO_TXT_FILE;
-	final File DONE_TXT_FILE;
 	private final TaskBag.Preferences preferences;
     private final TodoApplication m_app;
 
@@ -52,7 +58,6 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
         this.m_app = app;
 		this.preferences = preferences;
         this.TODO_TXT_FILE = todo;
-        this.DONE_TXT_FILE = new File(todo.getParentFile(), "done.txt");
 	}
 
     public File getTodoTxtFile() {
@@ -96,12 +101,12 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
     }
     
     @Override
-    public ArrayList<Task> archive(ArrayList<Task> tasks, List<Task> tasksToArchive) {
+    public boolean archive(ArrayList<Task> tasks, List<Task> tasksToArchive, String doneFile)  {
         m_app.stopWatching();
-	boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
+	final boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
-	ArrayList<Task> archivedTasks = new ArrayList<Task>(tasks.size());
-	ArrayList<Task> remainingTasks = new ArrayList<Task>(tasks.size());
+	ArrayList<Task> archivedTasks = new ArrayList<Task>();
+	final ArrayList<Task> remainingTasks = new ArrayList<Task>();
 
         for (Task task : tasks) {
             if (tasksToArchive!=null) {
@@ -120,27 +125,42 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
                 }
             }
         }
-
-	// append completed tasks to done.txt
-	TaskIo.writeToFile(archivedTasks, DONE_TXT_FILE, true,
-			   windowsLineBreaks);
-
-	// write incomplete tasks back to todo.txt
-	// TODO: remove blank lines (if we ever add support for
-	// PRESERVE_BLANK_LINES)
-	TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
-			   windowsLineBreaks);
+        boolean result = true;
+        try {
+            DropboxRemoteClient remote = (DropboxRemoteClient) m_app.getRemoteClientManager().getRemoteClient();
+            DropboxAPI api = remote.getApi();
+            ArrayList<String> currentArchive = new ArrayList<String>();
+            try {
+                DropboxAPI.DropboxInputStream dbxStream = api.getFileStream(doneFile, null);
+                currentArchive.addAll(TaskIo.loadTasksFromStream(dbxStream));
+            } catch (DropboxServerException e) {
+                if (e.error != 404) {
+                    // Rethrow if error is not equal to file not found
+                    throw e;
+                }
+            }
+            for (Task t: archivedTasks) {
+                currentArchive.add(t.inFileFormat());
+            }
+            String newContents;
+            if (preferences.isUseWindowsLineBreaksEnabled()) {
+                newContents = Util.join(currentArchive,"\r\n");
+            } else {
+                newContents = Util.join(currentArchive,"\n");
+            }
+            InputStream is = new ByteArrayInputStream(newContents.getBytes());
+            DropboxAPI.UploadRequest req = api.putFileOverwriteRequest(doneFile, is, newContents.getBytes().length,null);
+            req.upload();
+            TaskIo.writeToFile(remainingTasks, TODO_TXT_FILE, false,
+                    windowsLineBreaks);
+        } catch (Exception e) {
+            result = false;
+            Log.v(TAG, e.toString());
+        }
         m_app.startWatching();
-	return remainingTasks;
-    }
-    
-    public void loadDoneTasks(File file) {
-	Util.renameFile(file, DONE_TXT_FILE, true);
+	    return result;
     }
 
-    public void removeDoneFile() {
-        DONE_TXT_FILE.delete();
-    }
 	@Override
     public boolean todoFileModifiedSince(Date date) {
 		long date_ms = 0l;
@@ -150,17 +170,4 @@ public class LocalFileTaskRepository implements LocalTaskRepository {
 		return date_ms < TODO_TXT_FILE.lastModified();
 	}
 
-	@Override
-    public boolean doneFileModifiedSince(Date date) {
-		long date_ms = 0l;
-		if (date != null) {
-			date_ms = date.getTime();
-		}
-		return date_ms < DONE_TXT_FILE.lastModified();
-	}
-
-    @Override
-    public File getDoneTxtFile() {
-        return DONE_TXT_FILE;
-    }
 }

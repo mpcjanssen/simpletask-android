@@ -166,7 +166,7 @@ public class AddTask extends ThemedActivity {
         m_app.setNeedToPush(true);
         m_app.updateWidgets();
         if (m_app.isAutoArchive()) {
-            taskBag.archive(null);
+            taskBag.archive(null, m_app.getDonePath());
         }
         Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
         Log.v(TAG, "Broadcast " + sync);
