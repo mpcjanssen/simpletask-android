@@ -1,15 +1,15 @@
 package nl.mpcjanssen.simpletask.task;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
+import android.widget.ArrayAdapter;
 
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.TestLocalTaskRepository;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,79 +19,26 @@ import nl.mpcjanssen.simpletask.TestLocalTaskRepository;
  */
 
 public class TaskBagTest extends TestCase {
-    TaskBag.Preferences pref;
-
-    public void setUp () {
-        pref = new TaskBag.Preferences(new SharedPreferences() {
-            @Override
-            public Map<String, ?> getAll() {
-                return null;
-            }
-
-            @Override
-            public String getString(String s, String s2) {
-                return null;
-            }
-
-            @Override
-            public Set<String> getStringSet(String s, Set<String> strings) {
-                return null;
-            }
-
-            @Override
-            public int getInt(String s, int i) {
-                return 0;
-            }
-
-            @Override
-            public long getLong(String s, long l) {
-                return 0;
-            }
-
-            @Override
-            public float getFloat(String s, float v) {
-                return 0;
-            }
-
-            @Override
-            public boolean getBoolean(String s, boolean b) {
-                return false;
-            }
-
-            @Override
-            public boolean contains(String s) {
-                return false;
-            }
-
-            @Override
-            public Editor edit() {
-                return null;
-            }
-
-            @Override
-            public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
-
-            }
-
-            @Override
-            public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
-
-            }
-        });
-    }
-
 
     public void testInit() {
-        TaskBag tb = new TaskBag(pref, new TestLocalTaskRepository());
-        tb.reload("Test\nTest2");
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add("Test");
+        lines.add("Test2");
+        TestFileStore testFileStore = new TestFileStore(lines);
+        TaskBag tb = new TaskBag(null, testFileStore, null);
+        tb.reload();
         assertEquals(2, tb.size());
         assertEquals("Test", tb.getTaskAt(0).inFileFormat());
         assertEquals(0, tb.getContexts(false).size());
     }
 
-    public void testSimpleFilter () {
-        TaskBag tb = new TaskBag(pref, new TestLocalTaskRepository());
-        tb.reload("Test\nTest2 @Match");
+    public void testSimpleFilter() {
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add("Test");
+        lines.add("Test2 @Match");
+        TestFileStore testFileStore = new TestFileStore(lines);
+        TaskBag tb = new TaskBag(null, testFileStore, null);
+        tb.reload();
         ActiveFilter filter = new ActiveFilter();
         ArrayList<String> contexts = new ArrayList<String>();
         contexts.add("NoMatch");
@@ -103,5 +50,70 @@ public class TaskBagTest extends TestCase {
         filter.setContexts(contexts);
         visibleTasks = filter.apply(tb.getTasks());
         assertEquals(1, visibleTasks.size());
+    }
+
+    class TestFileStore implements FileStoreInterface {
+
+        private ArrayList<String> mContents;
+
+        public TestFileStore(ArrayList<String> contents) {
+            mContents = contents;
+        }
+
+        @Override
+        public boolean isAuthenticated() {
+            return false;
+        }
+
+        @Override
+        public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
+            return mContents;
+        }
+
+        @Override
+        public void store(String path, String data) {
+
+        }
+
+        @Override
+        public boolean append(String path, String data) {
+            return false;
+        }
+
+        @Override
+        public void startLogin(Activity caller, int i) {
+
+        }
+
+        @Override
+        public void startWatching(String path) {
+
+        }
+
+        @Override
+        public void stopWatching(String path) {
+
+        }
+
+        @Override
+        public boolean supportsAuthentication() {
+            return false;
+        }
+
+        @Override
+        public void deauthenticate() {
+
+        }
+
+        @Override
+        public boolean isLocal() {
+            return false;
+        }
+
+        @Override
+        public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
+
+        }
+
     }
 }

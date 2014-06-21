@@ -24,8 +24,6 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.SharedPreferences;
 
-import com.dropbox.sync.android.DbxPath;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;

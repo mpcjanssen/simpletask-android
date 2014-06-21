@@ -25,29 +25,17 @@ import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 
 public class FileStore implements FileStoreInterface {
-    private String mTodoFileName;
-    private File mTodoFile;
 
     private final String TAG = getClass().getName();
+    private final Context mCtx;
+    private final LocalBroadcastManager bm;
+    private final Intent bmIntent;
     private FileObserver m_observer;
 
-    public FileStore(Context ctx, String todoFile) {
-        this.init(ctx, todoFile);
-    }
-
-    public void init (Context ctx, String todoFile) {
-        if (todoFile.equals("")) {
-            todoFile = Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
-        }
-        this.mTodoFileName = todoFile;
-        this.mTodoFile = new File(todoFile);
-        if (!mTodoFile.exists()) {
-            try {
-                mTodoFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
+        mCtx = ctx;
+        this.bm = broadCastManager;
+        this.bmIntent = intent;
     }
 
     @Override
@@ -56,9 +44,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(TaskBag.Preferences preferences) {
+    public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
         try {
-            return TaskIo.loadFromFile(mTodoFile, preferences);
+            return TaskIo.loadFromFile(new File(path), preferences);
         } catch (IOException e) {
             ArrayList<String> failed = new ArrayList<String>();
             return failed;
@@ -66,19 +54,14 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void store(String data) {
-        TaskIo.writeToFile(data,mTodoFile,false);
+    public void store(String path, String data) {
+        TaskIo.writeToFile(data,new File(path),false);
     }
 
     @Override
-    public void append(String data) {
-        TaskIo.writeToFile(data,mTodoFile,true);
-
-    }
-
-    @Override
-    public void prepend(String data) {
-
+    public boolean append(String path, String data) {
+        TaskIo.writeToFile(data,new File(path),true);
+        return true;
     }
 
     @Override
@@ -87,18 +70,19 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void startWatching(final LocalBroadcastManager broadCastManager, final Intent intent) {
+    public void startWatching(String path) {
         if (m_observer==null) {
-            m_observer = new FileObserver(mTodoFile.getParent(),
+            final File file = new File(path);
+            m_observer = new FileObserver(file.getParent(),
                     FileObserver.ALL_EVENTS) {
                 @Override
                 public void onEvent(int event, String path) {
-                    if (path != null && path.equals(mTodoFileName)) {
+                    if (path != null && path.equals(file)) {
                         if (event == FileObserver.CLOSE_WRITE ||
                                 event == FileObserver.MODIFY ||
                                 event == FileObserver.MOVED_TO) {
                             Log.v(TAG, path + " modified...update UI");
-                            broadCastManager.sendBroadcast(intent);
+                            bm.sendBroadcast(bmIntent);
                         }
                     }
                 }
@@ -107,7 +91,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void stopWatching() {
+    public void stopWatching(String path) {
         if (m_observer!=null) {
             m_observer.stopWatching();
             m_observer = null;
@@ -131,10 +115,14 @@ public class FileStore implements FileStoreInterface {
 
 
     @Override
-    public void browseForNewFile(Activity act, FileSelectedListener listener) {
-        FileDialog dialog = new FileDialog(act, mTodoFile.getParentFile(), true);
+    public void browseForNewFile(Activity act, String path,  FileSelectedListener listener) {
+        FileDialog dialog = new FileDialog(act, new File(path).getParentFile(), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
+    }
+
+    public static String getDefaultPath() {
+        return Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
     }
 
     private class FileDialog {
@@ -143,7 +131,6 @@ public class FileStore implements FileStoreInterface {
         private File currentPath;
 
         private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
-        private ListenerList<DirectorySelectedListener> dirListenerList = new ListenerList<DirectorySelectedListener>();
         private final Activity activity;
         private boolean txtOnly;
 
@@ -162,7 +149,7 @@ public class FileStore implements FileStoreInterface {
          * @return file dialog
          */
         public Dialog createFileDialog() {
-            Dialog dialog = null;
+            Dialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
             builder.setTitle(currentPath.getPath());
@@ -200,14 +187,6 @@ public class FileStore implements FileStoreInterface {
             fileListenerList.fireEvent(new ListenerList.FireHandler<FileSelectedListener>() {
                 public void fireEvent(FileSelectedListener listener) {
                     listener.fileSelected(file.toString());
-                }
-            });
-        }
-
-        private void fireDirectorySelectedEvent(final File directory) {
-            dirListenerList.fireEvent(new ListenerList.FireHandler<DirectorySelectedListener>() {
-                public void fireEvent(DirectorySelectedListener listener) {
-                    listener.directorySelected(directory);
                 }
             });
         }
