@@ -45,7 +45,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private static SharedPreferences m_prefs;
     private TaskBag taskBag;
     private LocalBroadcastManager localBroadcastManager;
-    private FileStore mFileStore;
+    private FileStoreInterface mFileStore;
 
     public static Context getAppContext() {
         return m_appContext;

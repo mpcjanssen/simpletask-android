@@ -658,33 +658,16 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void archiveTasks(final List<Task> tasksToArchive) {
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    getTaskBag().archive(tasksToArchive);
-                    return true;
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    return false;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    m_adapter.setFilteredTasks(false);
-                    m_app.updateWidgets();
-                    m_app.setNeedToPush(true);
-                    updateDrawers();
-                    localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-                } else {
-                    Util.showToastLong(Simpletask.this,
-                            "Could not archive tasks");
-                }
-            }
-        }.execute();
+        if (getTaskBag().archive(tasksToArchive)) {
+            m_adapter.setFilteredTasks(false);
+            m_app.updateWidgets();
+            m_app.setNeedToPush(true);
+            updateDrawers();
+            localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
+        } else {
+            Util.showToastLong(Simpletask.this,
+                    "Could not archive tasks");
+        }
     }
 
     @Override

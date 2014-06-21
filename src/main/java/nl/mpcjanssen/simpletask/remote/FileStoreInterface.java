@@ -18,7 +18,7 @@ public interface FileStoreInterface {
     boolean isAuthenticated();
     ArrayList<String> get(String path, TaskBag.Preferences preferences);
     void store(String path, String data);
-    void append(String path, String data);
+    boolean append(String path, String data);
     void startLogin(Activity caller, int i);
     void startWatching(String path);
     void stopWatching(String path);
@@ -29,8 +29,5 @@ public interface FileStoreInterface {
 
     public interface FileSelectedListener {
         void fileSelected(String file);
-    }
-    public interface DirectorySelectedListener {
-        void directorySelected(File directory);
     }
 }
