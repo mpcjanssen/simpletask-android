@@ -164,18 +164,6 @@
         android:title="@string/DROPBOX_settings_header"
         android:key="@string/dropbox_cat_key">
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/manual_sync_pref_key"
-            android:summary="@string/manual_sync_pref_summary"
-            android:title="@string/manual_sync_pref_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/resume_sync_pref_key"
-            android:summary="@string/resume_sync_pref_summary"
-            android:title="@string/resume_sync_pref_title" />
-
         <Preference
             android:key="logout_dropbox"
             android:summary="@string/dropbox_logout_pref_summary"
