@@ -91,13 +91,20 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
+        Log.v(TAG, "Getting contents from: " + path);
         ArrayList<String> result = new ArrayList<String>();
         DbxFileSystem fs = getDbxFS();
-        if (isAuthenticated()==false || getDbxFS()==null) {
+        if (isAuthenticated()==false || fs==null) {
             return result;
         }
         try {
-            DbxFile dbFile = getDbxFS().open(new DbxPath(path));
+            DbxFile dbFile;
+            DbxPath dbPath = new DbxPath(path);
+            if (mDbxFs.exists(dbPath)) {
+                dbFile = mDbxFs.open(dbPath);
+            } else {
+                dbFile = mDbxFs.create(dbPath);
+            }
             String [] lines = dbFile.readString().split("\r|\n|\r\n");
             dbFile.close();
             for (String line: lines) {
@@ -118,9 +125,15 @@ public class FileStore implements FileStoreInterface {
         if (isAuthenticated() && getDbxFS()!=null) {
             try {
                 stopWatching(path);
-                DbxFile file = mDbxFs.open(new DbxPath(path));
-                file.writeString(data);
-                file.close();
+                DbxFile dbFile;
+                DbxPath dbPath = new DbxPath(path);
+                if (mDbxFs.exists(dbPath)) {
+                    dbFile = mDbxFs.open(dbPath);
+                } else {
+                    dbFile = mDbxFs.create(dbPath);
+                }
+                dbFile.writeString(data);
+                dbFile.close();
                 startWatching(path);
 
             } catch (IOException e) {
