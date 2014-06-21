@@ -18,7 +18,7 @@ public interface FileStoreInterface {
     boolean isAuthenticated();
     ArrayList<String> get(TaskBag.Preferences preferences);
     void store(String data);
-    void append(String data);
+    void append(String path, String data);
     void startLogin(Activity caller, int i);
     void startWatching(LocalBroadcastManager broadCastManager, Intent intent);
     void stopWatching();

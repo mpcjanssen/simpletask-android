@@ -88,7 +88,11 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public boolean isAuthenticated() {
-        return mDbxAcctMgr.hasLinkedAccount();
+        if(mDbxAcctMgr!=null) {
+            return mDbxAcctMgr.hasLinkedAccount();
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -123,12 +127,12 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(String data) {
+    public void append(String path, String data) {
         if (isAuthenticated()) {
             try {
                 dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                 dbxFs.awaitFirstSync();
-                DbxFile file = dbxFs.open(mTodoFile);
+                DbxFile file = dbxFs.open(new DbxPath(path));
                 file.appendString(data);
                 file.close();
             } catch (IOException e) {
@@ -148,8 +152,12 @@ public class FileStore implements FileStoreInterface {
     public void startWatching(final LocalBroadcastManager broadCastManager, final Intent intent) {
         this.bm = broadCastManager;
         this.bmIntent = intent;
+        if (mDbxAcctMgr==null || mDbxAcctMgr.getLinkedAccount()==null) {
+            return;
+        }
         if (dbxFs==null) {
             try {
+                Log.v("XXX", "" + mDbxAcctMgr.getLinkedAccount());
                 dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                 dbxFs.awaitFirstSync();
             } catch (DbxException e) {
