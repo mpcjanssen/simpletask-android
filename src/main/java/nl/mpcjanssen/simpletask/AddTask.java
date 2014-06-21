@@ -167,9 +167,6 @@ public class AddTask extends ThemedActivity {
         if (m_app.isAutoArchive()) {
             taskBag.archive(null);
         }
-        Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-        Log.v(TAG, "Broadcast " + sync);
-        localBroadcastManager.sendBroadcast(sync);
         finish();
     }
 
@@ -194,9 +191,6 @@ public class AddTask extends ThemedActivity {
             taskBag.addAsTask(task);
         }
         m_app.updateWidgets();
-        Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-        Log.v(TAG, "Broadcast " + sync);
-        localBroadcastManager.sendBroadcast(sync);
         m_app.showToast(R.string.task_added);
     }
 
