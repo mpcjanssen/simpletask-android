@@ -242,7 +242,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             }
         }
         setProgressBarIndeterminateVisibility(false);
-        getTaskBag().reload();
         if (m_app.hasSyncOnResume()) {
             syncClient(false);
         }
