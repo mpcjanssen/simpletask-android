@@ -302,17 +302,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return mFileStore;
     }
 
-    public void setNeedToPush(boolean b) {
-
-    }
-
-    private final class BroadcastReceiverExtension extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    }
-
     public void showConfirmationDialog(Context cxt, int msgid,
                                               DialogInterface.OnClickListener oklistener, int titleid) {
         boolean show = getPrefs().getBoolean(getString(R.string.ui_show_confirmation_dialogs), true);

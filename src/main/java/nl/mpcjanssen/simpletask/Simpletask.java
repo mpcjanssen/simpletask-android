@@ -185,7 +185,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
-        intentFilter.addAction(Constants.BROADCAST_SYNC_CONFLICT);
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT);
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
@@ -209,9 +208,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     handleIntent();
-                } else if (intent.getAction().endsWith(
-                        Constants.BROADCAST_SYNC_CONFLICT)) {
-
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -242,9 +238,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             }
         }
         setProgressBarIndeterminateVisibility(false);
-        if (m_app.hasSyncOnResume()) {
-            syncClient(false);
-        }
     }
 
     private TaskBag getTaskBag() {
@@ -513,10 +506,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 finishActionmode();
                 getTaskBag().store();
                 m_app.updateWidgets();
-                m_app.setNeedToPush(true);
                 // We have change the data, views should refresh
                 m_adapter.setFilteredTasks(false);
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         });
         builder.show();
@@ -549,10 +540,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             archiveTasks(null);
         }
         m_app.updateWidgets();
-        m_app.setNeedToPush(true);
         // We have change the data, views should refresh
         m_adapter.setFilteredTasks(true);
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -563,10 +552,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         }
         getTaskBag().store();
         m_app.updateWidgets();
-        m_app.setNeedToPush(true);
         // We have change the data, views should refresh
         m_adapter.setFilteredTasks(true);
-        sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -612,10 +599,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         }
         m_adapter.setFilteredTasks(false);
         getTaskBag().store();
-        m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deferTasks(String selected, List<Task> tasksToDefer, int type) {
@@ -631,9 +614,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         m_adapter.setFilteredTasks(false);
         getTaskBag().store();
         m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
     }
 
     private void deleteTasks(final List<Task> tasks) {
@@ -648,10 +628,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 m_adapter.setFilteredTasks(false);
                 getTaskBag().store();
                 m_app.updateWidgets();
-                m_app.setNeedToPush(true);
                 updateDrawers();
                 // We have change the data, views should refresh
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         }, R.string.delete_task_title);
     }
@@ -660,9 +638,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         if (getTaskBag().archive(tasksToArchive)) {
             m_adapter.setFilteredTasks(false);
             m_app.updateWidgets();
-            m_app.setNeedToPush(true);
             updateDrawers();
-            localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
         } else {
             Util.showToastLong(Simpletask.this,
                     "Could not archive tasks");
@@ -686,9 +662,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 break;
             case R.id.share:
                 shareTodoList();
-                break;
-            case R.id.sync:
-                syncClient(false);
                 break;
             case R.id.help:
                 showHelp();
@@ -734,103 +707,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Intent settingsActivity = new Intent(getBaseContext(),
                 Preferences.class);
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES);
-    }
-
-
-
-    private void syncClient(boolean force) {
-        if (isManualMode()) {
-            Log.v(TAG,
-                    "Manual mode, choice forced; prompt user to ask which way to sync");
-            showDialog(SYNC_CHOICE_DIALOG);
-        } else {
-            Log.i(TAG, "auto sync mode; should automatically sync; force = "
-                    + force);
-            Intent i = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-            if (force) {
-                i.putExtra(Constants.EXTRA_FORCE_SYNC, true);
-            }
-            localBroadcastManager.sendBroadcast(i);
-        }
-    }
-
-    private boolean isManualMode() {
-        return m_app.isManualMode();
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        final Dialog d;
-        if (id == SYNC_CHOICE_DIALOG) {
-            Log.v(TAG, "Time to show the sync choice dialog");
-            AlertDialog.Builder upDownChoice = new AlertDialog.Builder(this);
-            upDownChoice.setTitle(R.string.sync_dialog_title);
-            upDownChoice.setMessage(R.string.sync_dialog_msg);
-            upDownChoice.setPositiveButton(R.string.sync_dialog_upload,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_TO_REMOTE)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPushToRemote();
-                            showToast(getString(R.string.sync_upload_message));
-                            removeDialog(SYNC_CHOICE_DIALOG);
-                        }
-                    }
-            );
-            upDownChoice.setNegativeButton(R.string.sync_dialog_download,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_FROM_REMOTE)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPullFromRemote();
-                            showToast(getString(R.string.sync_download_message));
-                            removeDialog(SYNC_CHOICE_DIALOG);
-                        }
-                    }
-            );
-            return upDownChoice.show();
-        } else if (id == SYNC_CONFLICT_DIALOG) {
-            Log.v(TAG, "Time to show the sync conflict dialog");
-            AlertDialog.Builder upDownChoice = new AlertDialog.Builder(this);
-            upDownChoice.setTitle(R.string.sync_conflict_dialog_title);
-            upDownChoice.setMessage(R.string.sync_conflict_dialog_msg);
-            upDownChoice.setPositiveButton(R.string.sync_dialog_upload,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            Log.v(TAG, "User selected PUSH");
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_TO_REMOTE)
-                                    .putExtra(Constants.EXTRA_OVERWRITE, true)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPushToRemote();
-                            showToast(getString(R.string.sync_upload_message));
-                            removeDialog(SYNC_CONFLICT_DIALOG);
-                        }
-                    }
-            );
-            upDownChoice.setNegativeButton(R.string.sync_dialog_download,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            Log.v(TAG, "User selected PULL");
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_FROM_REMOTE)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPullFromRemote();
-                            showToast(getString(R.string.sync_download_message));
-                            removeDialog(SYNC_CONFLICT_DIALOG);
-                        }
-                    }
-            );
-            return upDownChoice.show();
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -1708,8 +1584,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 m_adapter.setFilteredTasks(false);
                 getTaskBag().store();
                 m_app.updateWidgets();
-                m_app.setNeedToPush(true);
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
                 updateDrawers();
             }
         });
@@ -1778,9 +1652,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 m_adapter.setFilteredTasks(false);
                 getTaskBag().store();
                 m_app.updateWidgets();
-                m_app.setNeedToPush(true);
                 updateDrawers();
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

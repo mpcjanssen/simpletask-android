@@ -142,11 +142,11 @@ public class TaskBag {
         try {
             Task task = new Task(tasks.size(), input,
                     (preferences.isPrependDateEnabled() ? DateTime.today(TimeZone.getDefault()) : null));
-	    if (preferences.addAtEnd()) {
-		tasks.add(task);
-	    } else {
-		tasks.add(0,task);
-	    }
+            if (preferences.addAtEnd()) {
+                tasks.add(task);
+            } else {
+                tasks.add(0, task);
+            }
             store();
             return task;
         } catch (Exception e) {
