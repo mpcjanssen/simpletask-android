@@ -15,8 +15,10 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
+import com.dropbox.sync.android.DbxFileStatus;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
+import com.dropbox.sync.android.DbxSyncStatus;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -37,53 +39,45 @@ import nl.mpcjanssen.simpletask.util.TaskIo;
  * Created by a156712 on 10-6-2014.
  */
 public class FileStore implements FileStoreInterface {
-    private String mTodoFileName;
-    private DbxPath mTodoFile;
 
     private final String TAG = getClass().getName();
     private DbxFileSystem.PathListener m_observer;
     private String app_key;
     private String app_secret;
     private DbxAccountManager mDbxAcctMgr;
-    private DbxFileSystem dbxFs;
     private Context mCtx;
-    private ArrayList<String> lines;
     private LocalBroadcastManager bm;
     private Intent bmIntent;
+    private DbxFileSystem mDbxFs;
 
-    public FileStore( Context ctx, String todoFile) {
-        this.init(ctx, todoFile);
-    }
-
-    @Override
-    public void init (Context ctx, String todoFile) {
+    public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
         mCtx = ctx;
+        this.bm = broadCastManager;
+        this.bmIntent = intent;
         app_key = ctx.getString(R.string.dropbox_consumer_key);
         app_key = app_key.replaceFirst("^db-","");
         app_secret = ctx.getString(R.string.dropbox_consumer_secret);
         mDbxAcctMgr = DbxAccountManager.getInstance(ctx, app_key, app_secret);
-        if (Strings.isEmptyOrNull(todoFile)) {
-            mTodoFileName = "/todo/todo.txt";
-            mTodoFile = new DbxPath(mTodoFileName);
+    }
+
+    private DbxFileSystem getDbxFS () {
+        if (mDbxFs!=null) {
+            return mDbxFs;
         }
-        lines = new ArrayList<String>();
         if (isAuthenticated()) {
             try {
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                dbxFs.awaitFirstSync();
-                DbxFile file = dbxFs.open(mTodoFile);
-                String contents = file.readString();
-                for (String line :  contents.split("(\r\n|\r|\n)")) {
-                    lines.add(line);
-                }
-
-                file.close();
-
+                this.mDbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                mDbxFs.awaitFirstSync();
+                return mDbxFs;
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new TodoException("Dropbox", e);
             }
         }
+        return null;
+    }
+    static public String getDefaultPath() {
+        return "/todo/todo.txt";
     }
 
     @Override
@@ -96,28 +90,38 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(TaskBag.Preferences preferences) {
+    public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
         ArrayList<String> result = new ArrayList<String>();
-        for (String line: lines) {
-            if (!line.trim().equals("")) {
-                result.add(line);
-            }
+        DbxFileSystem fs = getDbxFS();
+        if (isAuthenticated()==false || getDbxFS()==null) {
+            return result;
         }
+        try {
+            DbxFile dbFile = getDbxFS().open(new DbxPath(path));
+            String [] lines = dbFile.readString().split("\r|\n|\r\n");
+            dbFile.close();
+            for (String line: lines) {
+                if (!line.trim().equals("")) {
+                    result.add(line);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return result;
     }
 
     @Override
-    public void store(String data) {
-        if (isAuthenticated()) {
+    public void store(String path, String data) {
+        if (isAuthenticated() && getDbxFS()!=null) {
             try {
-                stopWatching();
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                dbxFs.awaitFirstSync();
-                DbxFile file = dbxFs.open(mTodoFile);
+                stopWatching(path);
+                DbxFile file = mDbxFs.open(new DbxPath(path));
                 file.writeString(data);
                 file.close();
-                init(mCtx,mTodoFileName);
-                startWatching(bm, bmIntent);
+                startWatching(path);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -128,11 +132,9 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void append(String path, String data) {
-        if (isAuthenticated()) {
+        if (isAuthenticated() && getDbxFS()!=null ) {
             try {
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                dbxFs.awaitFirstSync();
-                DbxFile file = dbxFs.open(new DbxPath(path));
+                DbxFile file = mDbxFs.open(new DbxPath(path));
                 file.appendString(data);
                 file.close();
             } catch (IOException e) {
@@ -149,53 +151,54 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void startWatching(final LocalBroadcastManager broadCastManager, final Intent intent) {
-        this.bm = broadCastManager;
-        this.bmIntent = intent;
-        if (mDbxAcctMgr==null || mDbxAcctMgr.getLinkedAccount()==null) {
-            return;
-        }
-        if (dbxFs==null) {
-            try {
-                Log.v("XXX", "" + mDbxAcctMgr.getLinkedAccount());
-                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                dbxFs.awaitFirstSync();
-            } catch (DbxException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-        m_observer = new DbxFileSystem.PathListener() {
-            @Override
-            public void onPathChange(DbxFileSystem dbxFileSystem, final DbxPath dbxPath, Mode mode) {
-                Log.v (TAG, "Sync change detected on dropbox, reloading " + dbxPath.getName());
-                dbxFileSystem.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
-                    @Override
-                    public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
-                        try {
-                            if(!dbxFileSystem.getSyncStatus().anyInProgress()) {
-                                Log.v(TAG, "Sync done " + dbxPath.getName());
-                                init(mCtx, mTodoFileName);
-                                broadCastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                                broadCastManager.sendBroadcast(intent);
-                            } else {
-                                broadCastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-                            }
-                        } catch (DbxException e) {
-                            e.printStackTrace();
-                        }
+    public void startWatching(String path) {
+        if (isAuthenticated() && getDbxFS() != null) {
+
+            m_observer = new DbxFileSystem.PathListener() {
+                @Override
+                public void onPathChange(DbxFileSystem dbxFileSystem, final DbxPath dbxPath, Mode mode) {
+                    Log.v(TAG, "Sync change detected on dropbox, reloading " + dbxPath.getName());
+                    boolean latest = false;
+                    try {
+                        DbxFile fInfo = dbxFileSystem.open(dbxPath);
+                        latest = fInfo.getSyncStatus().isLatest;
+                        fInfo.close();
+                        Log.v(TAG, "File " + dbxPath.getName() + " changed. Latest? :" + latest);
+                    } catch (DbxException e) {
+
+
                     }
-                });
-            }
-        };
-        Log.v (TAG, "Listening for changes on " +  mTodoFile.getName());
-        dbxFs.addPathListener(m_observer,mTodoFile, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+                    // If we got triggered because of local changes we are already at latest versionm
+                    if(latest) {
+                        return;
+                    }
+                    dbxFileSystem.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
+                        @Override
+                        public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+                            try {
+                                DbxSyncStatus status = dbxFileSystem.getSyncStatus();
+                                if (status.anyInProgress()) {
+                                    bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                                } else {
+                                    bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                                    bm.sendBroadcast(bmIntent);
+                                    dbxFileSystem.removeSyncStatusListener(this);
+                                }
+                            } catch (DbxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            };
+            mDbxFs.addPathListener(m_observer, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        }
     }
 
     @Override
-    public void stopWatching() {
-        if (m_observer!=null) {
-            dbxFs.removePathListener(m_observer,mTodoFile, DbxFileSystem.PathListener.Mode.PATH_ONLY);
+    public void stopWatching(String path) {
+        if (m_observer!=null && getDbxFS() != null) {
+            mDbxFs.removePathListener(m_observer,new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
             m_observer = null;
         }
     }
@@ -217,8 +220,8 @@ public class FileStore implements FileStoreInterface {
 
 
     @Override
-    public void browseForNewFile(Activity act, FileSelectedListener listener) {
-        FileDialog dialog = new FileDialog(act, mTodoFile.getParent(), true);
+    public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
+        FileDialog dialog = new FileDialog(act, new DbxPath(path), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
     }
@@ -240,6 +243,7 @@ public class FileStore implements FileStoreInterface {
         public FileDialog(Activity activity, DbxPath path, boolean txtOnly) {
             this.activity = activity;
             this.txtOnly=txtOnly;
+            this.currentPath = path;
             loadFileList(path.getParent());
         }
 
@@ -247,6 +251,9 @@ public class FileStore implements FileStoreInterface {
          * @return file dialog
          */
         public Dialog createFileDialog() {
+            if (getDbxFS()==null) {
+                return null;
+            }
             Dialog dialog = null;
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
@@ -257,7 +264,7 @@ public class FileStore implements FileStoreInterface {
                     String fileChosen = fileList[which];
                     DbxPath chosenFile = getChosenFile(fileChosen);
                     try {
-                        if (dbxFs.getFileInfo(chosenFile).isFolder) {
+                        if (mDbxFs.getFileInfo(chosenFile).isFolder) {
                             loadFileList(chosenFile);
                             dialog.cancel();
                             dialog.dismiss();
@@ -305,9 +312,9 @@ public class FileStore implements FileStoreInterface {
             this.currentPath = path;
             List<String> f = new ArrayList<String>();
             List<String> d = new ArrayList<String>();
-            if (path.getParent() != null) d.add(PARENT_DIR);
+            if (path.getParent() != DbxPath.ROOT) d.add(PARENT_DIR);
             try {
-                for (DbxFileInfo fInfo : dbxFs.listFolder(path)) {
+                for (DbxFileInfo fInfo : mDbxFs.listFolder(path)) {
                     if (fInfo.isFolder) {
                         d.add(fInfo.path.getName());
                     } else {

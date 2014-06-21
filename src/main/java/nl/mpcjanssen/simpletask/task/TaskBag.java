@@ -49,14 +49,16 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class TaskBag {
     final static String TAG = Simpletask.class.getSimpleName();
     private final FileStoreInterface mFileStore;
+    private String mTodoName;
     private Preferences preferences;
     private ArrayList<Task> tasks = new ArrayList<Task>();
 
 
     public TaskBag(Preferences taskBagPreferences,
-                   FileStoreInterface fileStore) {
+                   FileStoreInterface fileStore, String todoName) {
         this.preferences = taskBagPreferences;
         this.mFileStore = fileStore;
+        this.mTodoName = todoName;
     }
 
     private String contents () {
@@ -68,7 +70,7 @@ public class TaskBag {
     }
 
     private void store(ArrayList<Task> tasks) {
-        mFileStore.store(this.contents());
+        mFileStore.store(mTodoName, this.contents());
     }
 
     public void store() {
@@ -80,7 +82,7 @@ public class TaskBag {
     }
 
     public void reload() {
-       this.reload(mFileStore.get(preferences));
+       this.reload(mFileStore.get(mTodoName, preferences));
     }
 
     public void reload (ArrayList<String> loadedLines) {
