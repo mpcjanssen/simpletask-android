@@ -45,7 +45,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private static SharedPreferences m_prefs;
     private TaskBag taskBag;
     private LocalBroadcastManager localBroadcastManager;
-    private String mTodoFile;
     private FileStore mFileStore;
 
     public static Context getAppContext() {
@@ -62,33 +61,29 @@ public class TodoApplication extends Application implements SharedPreferences.On
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        mTodoFile = getTodoFileName();
-        initStorage(mTodoFile);
+        initStorage();
 
     }
 
-    public void initStorage(String todoFile) {
+    public void initStorage() {
         TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
                 m_prefs);
-        if (mFileStore!=null) {
-            mFileStore.stopWatching();
-            mFileStore.init(this,todoFile);
-        } else {
-            mFileStore = new FileStore(this, todoFile);
+        if (mFileStore==null) {
+            mFileStore = new FileStore(this, localBroadcastManager, new Intent(Constants.BROADCAST_UPDATE_UI));
         }
-        this.taskBag = new TaskBag(taskBagPreferences, mFileStore);
+        this.taskBag = new TaskBag(taskBagPreferences, mFileStore, getTodoFileName());
         updateUI();
     }
 
     public void startWatching() {
         if (mFileStore!=null) {
-            mFileStore.startWatching(localBroadcastManager,new Intent(Constants.BROADCAST_UPDATE_UI));
+            mFileStore.startWatching(getTodoFileName());
         }
     }
 
     public void stopWatching() {
         if (mFileStore!=null) {
-            mFileStore.stopWatching();
+            mFileStore.stopWatching(getTodoFileName());
         }
     }
 
@@ -130,7 +125,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public String getTodoFileName() {
-        return m_prefs.getString(getString(R.string.todo_file_key), "");
+        return m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath());
     }
 
     public void setTodoFile(String todo) {

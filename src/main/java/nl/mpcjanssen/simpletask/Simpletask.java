@@ -69,7 +69,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -83,7 +82,6 @@ import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
 
 
 public class Simpletask extends ThemedListActivity implements AdapterView.OnItemLongClickListener {
@@ -722,11 +720,11 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }, R.string.archive_task_title);
                 break;
             case R.id.open_file:
-                m_app.getFileStore().browseForNewFile(this, new FileStoreInterface.FileSelectedListener() {
+                m_app.getFileStore().browseForNewFile(this, m_app.getTodoFileName(), new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {
                         m_app.setTodoFile(file);
-                        m_app.initStorage(file);
+                        m_app.initStorage();
                     }
                 });
                 break;
