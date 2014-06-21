@@ -131,17 +131,26 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(String path, String data) {
+    public boolean append(String path, String data) {
         if (isAuthenticated() && getDbxFS()!=null ) {
             try {
-                DbxFile file = mDbxFs.open(new DbxPath(path));
+                DbxPath dbxPath = new DbxPath(path);
+                DbxFile file;
+                if (mDbxFs.exists(dbxPath)) {
+                    file = mDbxFs.open(dbxPath);
+                } else {
+                    file = mDbxFs.create(dbxPath);
+                }
                 file.appendString(data);
                 file.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new TodoException("Dropbox", e);
+                return false;
             }
+        } else {
+            return false;
         }
+        return true;
 
     }
 
@@ -232,7 +241,6 @@ public class FileStore implements FileStoreInterface {
         private DbxPath currentPath;
 
         private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
-        private ListenerList<DirectorySelectedListener> dirListenerList = new ListenerList<DirectorySelectedListener>();
         private final Activity activity;
         private boolean txtOnly;
 
@@ -256,8 +264,11 @@ public class FileStore implements FileStoreInterface {
             }
             Dialog dialog = null;
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-            builder.setTitle(currentPath.getParent().getName());
+            String title = currentPath.getName();
+            if (Strings.isEmptyOrNull(title)) {
+                title = "/";
+            }
+            builder.setTitle(currentPath.getName());
 
             builder.setItems(fileList, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -300,19 +311,11 @@ public class FileStore implements FileStoreInterface {
             });
         }
 
-        private void fireDirectorySelectedEvent(final File directory) {
-            dirListenerList.fireEvent(new ListenerList.FireHandler<DirectorySelectedListener>() {
-                public void fireEvent(DirectorySelectedListener listener) {
-                    listener.directorySelected(directory);
-                }
-            });
-        }
-
         private void loadFileList(DbxPath path) {
             this.currentPath = path;
             List<String> f = new ArrayList<String>();
             List<String> d = new ArrayList<String>();
-            if (path.getParent() != DbxPath.ROOT) d.add(PARENT_DIR);
+            if (path != DbxPath.ROOT) d.add(PARENT_DIR);
             try {
                 for (DbxFileInfo fInfo : mDbxFs.listFolder(path)) {
                     if (fInfo.isFolder) {

@@ -24,6 +24,9 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.SharedPreferences;
 
+import com.dropbox.sync.android.DbxPath;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -70,15 +73,46 @@ public class TaskBag {
     }
 
     private void store(ArrayList<Task> tasks) {
-        mFileStore.store(mTodoName, this.contents());
+        mFileStore.store(mTodoName, Util.tasksToString(tasks, preferences.isUseWindowsLineBreaksEnabled()));
     }
 
     public void store() {
         store(this.tasks);
     }
 
-    public void archive(List<Task> tasksToArchive) {
+    public boolean archive(List<Task> tasksToArchive) {
+        boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
+        ArrayList<Task> archivedTasks = new ArrayList<Task>(tasks.size());
+        ArrayList<Task> remainingTasks = new ArrayList<Task>(tasks.size());
+
+        for (Task task : tasks) {
+            if (tasksToArchive != null) {
+                // Archive selected tasks
+                if (tasksToArchive.indexOf(task) != -1) {
+                    archivedTasks.add(task);
+                } else {
+                    remainingTasks.add(task);
+                }
+            } else {
+                // Archive completed tasks
+                if (task.isCompleted()) {
+                    archivedTasks.add(task);
+                } else {
+                    remainingTasks.add(task);
+                }
+            }
+        }
+
+        // append completed tasks to done.txt
+        if (!mFileStore.append(new File(mTodoName).getParent() + "/done.txt",
+                Util.tasksToString(archivedTasks, windowsLineBreaks))) {
+            return false;
+        }
+        this.tasks.clear();
+        this.tasks.addAll(remainingTasks);
+        this.store();
+        return true;
     }
 
     public void reload() {

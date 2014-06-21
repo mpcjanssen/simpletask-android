@@ -173,6 +173,19 @@ public class Util {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public static String tasksToString(ArrayList<Task> tasks, boolean useWindowsLineBreaksEnabled) {
+        StringBuilder result = new StringBuilder();
+        for (Task t: tasks) {
+            result.append(t.inFileFormat());
+            if (useWindowsLineBreaksEnabled) {
+                result.append("\r\n");
+            } else {
+                result.append("" + "\n");
+            }
+        }
+        return result.toString();
+    }
+
 
     public interface OnSingleChoiceDialogListener {
         void onClick(String selected);
