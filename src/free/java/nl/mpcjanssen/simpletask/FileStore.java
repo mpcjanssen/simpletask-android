@@ -180,37 +180,36 @@ public class FileStore implements FileStoreInterface {
                 @Override
                 public void onPathChange(DbxFileSystem dbxFileSystem, final DbxPath dbxPath, Mode mode) {
                     Log.v(TAG, "Sync change detected on dropbox, reloading " + dbxPath.getName());
-                    boolean latest = false;
+
                     try {
                         DbxFile fInfo = dbxFileSystem.open(dbxPath);
-                        latest = fInfo.getSyncStatus().isLatest;
+                        final boolean latest = fInfo.getSyncStatus().isLatest;
                         fInfo.close();
-                        Log.v(TAG, "File " + dbxPath.getName() + " changed. Latest? :" + latest);
-                    } catch (DbxException e) {
-
-
-                    }
-                    // If we got triggered because of local changes we are already at latest versionm
-                    if(latest) {
-                        return;
-                    }
-                    dbxFileSystem.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
-                        @Override
-                        public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
-                            try {
-                                DbxSyncStatus status = dbxFileSystem.getSyncStatus();
-                                if (status.anyInProgress()) {
-                                    bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-                                } else {
-                                    bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                                    bm.sendBroadcast(bmIntent);
-                                    dbxFileSystem.removeSyncStatusListener(this);
+                        Log.v(TAG, "File " + dbxPath.getName() + " changed. Latest: " + latest);
+                        dbxFileSystem.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
+                            @Override
+                            public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+                                try {
+                                    DbxSyncStatus status = dbxFileSystem.getSyncStatus();
+                                    if (status.anyInProgress()) {
+                                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                                    } else {
+                                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                                        // If we got triggered because of local changes we are already at latest version
+                                        // Otherwise we call the refresh callback
+                                        if (!latest) {
+                                            bm.sendBroadcast(bmIntent);
+                                        }
+                                        dbxFileSystem.removeSyncStatusListener(this);
+                                    }
+                                } catch (DbxException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (DbxException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    });
+                        });
+                    } catch (DbxException e) {
+                        e.printStackTrace();
+                    }
                 }
             };
             mDbxFs.addPathListener(m_observer, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
