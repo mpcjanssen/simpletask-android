@@ -49,6 +49,7 @@ public class FileStore implements FileStoreInterface {
     private LocalBroadcastManager bm;
     private Intent bmIntent;
     private DbxFileSystem mDbxFs;
+    private DbxFileSystem.SyncStatusListener m_syncstatus;
 
     public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
         mCtx = ctx;
@@ -175,7 +176,24 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void startWatching(String path) {
         if (isAuthenticated() && getDbxFS() != null) {
+            m_syncstatus = new DbxFileSystem.SyncStatusListener() {
 
+                @Override
+                public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+                    DbxSyncStatus status = null;
+                    try {
+                        status = dbxFileSystem.getSyncStatus();
+                        if (status.anyInProgress()) {
+                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                        } else {
+                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                        }
+                    } catch (DbxException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            mDbxFs.addSyncStatusListener(m_syncstatus);
             m_observer = new DbxFileSystem.PathListener() {
                 @Override
                 public void onPathChange(DbxFileSystem dbxFileSystem, final DbxPath dbxPath, Mode mode) {
@@ -191,10 +209,7 @@ public class FileStore implements FileStoreInterface {
                             public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
                                 try {
                                     DbxSyncStatus status = dbxFileSystem.getSyncStatus();
-                                    if (status.anyInProgress()) {
-                                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-                                    } else {
-                                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                                    if (!status.anyInProgress()) {
                                         // If we got triggered because of local changes we are already at latest version
                                         // Otherwise we call the refresh callback
                                         if (!latest) {
@@ -218,9 +233,16 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void stopWatching(String path) {
-        if (m_observer!=null && getDbxFS() != null) {
+        if (getDbxFS()==null) {
+            return;
+        }
+        if (m_observer!=null) {
             mDbxFs.removePathListener(m_observer,new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
             m_observer = null;
+        }
+        if (m_syncstatus!=null) {
+            mDbxFs.removeSyncStatusListener(m_syncstatus);
+            m_syncstatus = null;
         }
     }
 
