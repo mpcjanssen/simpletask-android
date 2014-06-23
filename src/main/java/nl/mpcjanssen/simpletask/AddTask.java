@@ -72,13 +72,13 @@ public class AddTask extends ThemedActivity {
 
     private ArrayList<Task> m_backup = new ArrayList<Task>();
     private TodoApplication m_app;
-    private TaskBag taskBag;
 
     private String share_text;
     private LocalBroadcastManager localBroadcastManager ; 
 
 
     private EditText textInputField;
+    private TaskBag m_taskBag;
 
     public boolean hasWordWrap() {
         return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
@@ -153,19 +153,19 @@ public class AddTask extends ThemedActivity {
             int numBackup = m_backup.size();
             Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                 taskBag.updateTask(m_backup.get(0), tasks.get(0));
+                 getTaskBag().updateTask(m_backup.get(0), tasks.get(0));
                  tasks.remove(0);
                  m_backup.remove(0);
             }
         }
         // Add any other tasks
         for (String taskText : tasks) {
-            taskBag.addAsTask(taskText);
+            getTaskBag().addAsTask(taskText);
         }
 
         m_app.updateWidgets();
         if (m_app.isAutoArchive()) {
-            taskBag.archive(null);
+            getTaskBag().archive(null);
         }
         finish();
     }
@@ -188,7 +188,7 @@ public class AddTask extends ThemedActivity {
 
     private void addBackgroundTask(String taskText) {
         for (String task : taskText.split("\r\n|\r|\n")) {
-            taskBag.addAsTask(task);
+            getTaskBag().addAsTask(task);
         }
         m_app.updateWidgets();
         m_app.showToast(R.string.task_added);
@@ -199,11 +199,10 @@ public class AddTask extends ThemedActivity {
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
-
+        m_app.startWatching();
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.v(TAG, "onCreate()");
-        taskBag = m_app.getTaskBag();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         final Intent intent = getIntent();
         ActiveFilter mFilter = new ActiveFilter();
@@ -411,6 +410,15 @@ public class AddTask extends ThemedActivity {
         }
     }
 
+    private TaskBag getTaskBag() {
+        if (m_taskBag==null) {
+            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+                    m_app.getFileStore(),
+                    m_app.getTodoFileName());
+        }
+        return m_taskBag;
+    }
+
 
     private void insertDate(final int dateType) {
         Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
@@ -459,7 +467,7 @@ public class AddTask extends ThemedActivity {
 
     private void showTagMenu() {
         final Set<String> projects = new TreeSet<String>();
-        projects.addAll(taskBag.getProjects(false));
+        projects.addAll(getTaskBag().getProjects(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         projects.addAll(t.getTags());
@@ -526,7 +534,7 @@ public class AddTask extends ThemedActivity {
 
     private void showContextMenu() {
         final Set<String> contexts = new TreeSet<String>();
-        contexts.addAll(taskBag.getContexts(false));
+        contexts.addAll(getTaskBag().getContexts(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         contexts.addAll(t.getLists());
@@ -690,5 +698,11 @@ public class AddTask extends ThemedActivity {
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         setResult(RESULT_OK, intent);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();:w
+                
+        m_app.stopWatching();
     }
 }

@@ -19,6 +19,7 @@ import java.util.Collections;
 
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -40,6 +41,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     private Context mContext;
     private TodoApplication application;
     ArrayList<Task> visibleTasks = new ArrayList<Task>();
+    private TaskBag m_taskBag;
 
     public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
@@ -63,7 +65,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     void setFilteredTasks() {
         Log.v(TAG, "setFilteredTasks called");
         visibleTasks.clear();
-        for (Task t : mFilter.apply(application.getTaskBag().getTasks())) {
+        for (Task t : mFilter.apply(getTaskBag().getTasks())) {
             if (t.isVisible()) {
                 visibleTasks.add(t);
             }
@@ -233,13 +235,27 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onDataSetChanged() {
-	Log.v(TAG, "Data set changed, refresh");
-	setFilteredTasks();
+	    Log.v(TAG, "Data set changed, refresh");
+	    resetTaskBag();
+        setFilteredTasks();
     }
 
     @Override
     public void onDestroy() {
 	// TODO Auto-generated method stub
+    }
+
+    private TaskBag getTaskBag() {
+        if (m_taskBag==null) {
+            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+                    application.getFileStore(),
+                    application.getTodoFileName());
+        }
+        return m_taskBag;
+    }
+
+    private void resetTaskBag() {
+        m_taskBag = null;
     }
 }
 

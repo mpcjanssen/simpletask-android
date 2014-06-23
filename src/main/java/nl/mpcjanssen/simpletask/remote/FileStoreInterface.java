@@ -26,7 +26,6 @@ public interface FileStoreInterface {
     void deauthenticate();
     boolean isLocal();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener);
-
     public interface FileSelectedListener {
         void fileSelected(String file);
     }
