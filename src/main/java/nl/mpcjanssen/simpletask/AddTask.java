@@ -701,8 +701,7 @@ public class AddTask extends ThemedActivity {
     }
 
     public void onDestroy() {
-        super.onDestroy();:w
-                
+        super.onDestroy();
         m_app.stopWatching();
     }
 }
