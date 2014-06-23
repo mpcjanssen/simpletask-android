@@ -52,7 +52,7 @@ public class TaskBag {
     private final FileStoreInterface mFileStore;
     private String mTodoName;
     private Preferences preferences;
-    private ArrayList<Task> tasks = null;
+    private ArrayList<Task> mTasks = null;
 
 
     public TaskBag(Preferences taskBagPreferences,
@@ -65,7 +65,7 @@ public class TaskBag {
 
     private String contents () {
         ArrayList<String> contents = new ArrayList<String>();
-        for (Task t : tasks) {
+        for (Task t : getTasks()) {
             contents.add(t.inFileFormat());
         }
         return Util.join(contents,"\n");
@@ -73,20 +73,20 @@ public class TaskBag {
 
     private void store(ArrayList<Task> tasks) {
         mFileStore.store(mTodoName, Util.tasksToString(tasks, preferences.isUseWindowsLineBreaksEnabled()));
+        mTasks = null;
     }
 
     public void store() {
-        store(this.tasks);
-        tasks = null;
+        store(getTasks());
     }
 
     public boolean archive(List<Task> tasksToArchive) {
         boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
 
-        ArrayList<Task> archivedTasks = new ArrayList<Task>(tasks.size());
-        ArrayList<Task> remainingTasks = new ArrayList<Task>(tasks.size());
+        ArrayList<Task> archivedTasks = new ArrayList<Task>(getTasks().size());
+        ArrayList<Task> remainingTasks = new ArrayList<Task>(getTasks().size());
 
-        for (Task task : tasks) {
+        for (Task task : getTasks()) {
             if (tasksToArchive != null) {
                 // Archive selected tasks
                 if (tasksToArchive.indexOf(task) != -1) {
@@ -109,9 +109,7 @@ public class TaskBag {
                 Util.tasksToString(archivedTasks, windowsLineBreaks))) {
             return false;
         }
-        this.tasks.clear();
-        this.tasks.addAll(remainingTasks);
-        this.store();
+        this.store(remainingTasks);
         return true;
     }
 
@@ -120,30 +118,31 @@ public class TaskBag {
     }
 
     private void reload (ArrayList<String> loadedLines) {
-        this.tasks = new ArrayList<Task>();
+        this.mTasks = new ArrayList<Task>();
         int index = 0;
         for (String s : loadedLines) {
-            this.tasks.add(new Task(index, s));
+            this.mTasks.add(new Task(index, s));
             index ++;
         }
     }
 
     public int size() {
-        return tasks.size();
+        return getTasks().size();
     }
 
     public ArrayList<Task> getTasks() {
-        if (tasks == null) {
+        if (mTasks == null) {
             reload();
         }
-        return tasks;
+        return mTasks;
     }
 
     public Task getTaskAt(int position) {
-        return tasks.get(position);
+        return getTasks().get(position);
     }
 
     public Task addAsTask(String input) {
+        ArrayList<Task> tasks = getTasks();
         try {
             Task task = new Task(tasks.size(), input,
                     (preferences.isPrependDateEnabled() ? DateTime.today(TimeZone.getDefault()) : null));
@@ -161,21 +160,27 @@ public class TaskBag {
     }
 
     public void updateTask(Task task, String input) {
-        int index = tasks.indexOf(task);
+        int index = getTasks().indexOf(task);
         if (index!=-1) {
-            tasks.get(index).init(input, null);
+            getTasks().get(index).init(input, null);
             store();
         }
     }
 
-    public void delete(Task task) {
-        tasks.remove(task);
+    public void delete(List<Task> tasksToDelete) {
+        ArrayList<Task> tasks = getTasks();
+        for (Task t : tasksToDelete) {
+            if (t!=null) {
+                tasks.remove(t);
+            }
+        }
+        store();
     }
 
     public ArrayList<Priority> getPriorities() {
         // TODO cache this after reloads?
         Set<Priority> res = new HashSet<Priority>();
-        for (Task item : tasks) {
+        for (Task item : getTasks()) {
             res.add(item.getPriority());
         }
         ArrayList<Priority> ret = new ArrayList<Priority>(res);
@@ -186,7 +191,7 @@ public class TaskBag {
     public ArrayList<String> getContexts(boolean includeNone) {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
-        for (Task item : tasks) {
+        for (Task item : getTasks()) {
             res.addAll(item.getLists());
         }
         ArrayList<String> ret = new ArrayList<String>(res);
@@ -200,7 +205,7 @@ public class TaskBag {
     public ArrayList<String> getProjects(boolean includeNone) {
         // TODO cache this after reloads?
         Set<String> res = new HashSet<String>();
-        for (Task item : tasks) {
+        for (Task item : getTasks()) {
             res.addAll(item.getTags());
         }
         ArrayList<String> ret = new ArrayList<String>(res);

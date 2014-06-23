@@ -606,15 +606,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                for (Task t : tasks) {
-                    if (t != null) {
-                        getTaskBag().delete(t);
-                    }
-                }
-                m_adapter.setFilteredTasks(false);
-                getTaskBag().store();
-                m_app.updateWidgets();
-                updateDrawers();
+                getTaskBag().delete(tasks);
+                m_app.updateUI();
                 // We have change the data, views should refresh
             }
         }, R.string.delete_task_title);
