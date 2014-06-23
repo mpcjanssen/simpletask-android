@@ -44,7 +44,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
-    private TaskBag taskBag;
     private LocalBroadcastManager localBroadcastManager;
     private FileStoreInterface mFileStore;
 
@@ -62,18 +61,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        initStorage();
-
-    }
-
-    public void initStorage() {
-        TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
-                m_prefs);
-        if (mFileStore==null) {
-            mFileStore = new FileStore(this, localBroadcastManager, new Intent(Constants.BROADCAST_UPDATE_UI));
-        }
-        this.taskBag = new TaskBag(taskBagPreferences, mFileStore, getTodoFileName());
-        updateUI();
     }
 
     public void startWatching() {
@@ -98,11 +85,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public String[] getDefaultSorts () {
         return getResources().getStringArray(R.array.sortKeys);
-    }
-
-
-    public TaskBag getTaskBag() {
-        return taskBag;
     }
 
     public boolean showCompleteCheckbox() {
@@ -200,7 +182,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * if it is visible (by broadcasting an intent). All widgets will be updated as well.
      * This method should be called whenever the TaskBag changes.
      */
-    private void updateUI() {
+    public void updateUI() {
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
         updateWidgets();
     }
@@ -286,6 +268,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public FileStoreInterface getFileStore() {
+        if (mFileStore==null) {
+            mFileStore = new FileStore(this, localBroadcastManager, new Intent(Constants.BROADCAST_UPDATE_UI));
+        }
         return mFileStore;
     }
 

@@ -40,6 +40,7 @@ public class FilterActivity extends ThemedActivity {
     SharedPreferences prefs;
 
     private ActionBar actionbar;
+    private TaskBag m_taskBag;
 
     private int getLastActiveTab() {
         return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
@@ -81,7 +82,7 @@ public class FilterActivity extends ThemedActivity {
         Intent intent = getIntent();
         mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
-        TaskBag taskBag = ((TodoApplication)getApplication()).getTaskBag();
+        TaskBag taskBag = getTaskBag();
         if (intent.getAction()!=null) {
         	asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         }
@@ -408,6 +409,15 @@ public class FilterActivity extends ThemedActivity {
                 ft.detach(mFragment);
             }
         }
+    }
+
+    private TaskBag getTaskBag() {
+        if (m_taskBag==null) {
+            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+                    m_app.getFileStore(),
+                    m_app.getTodoFileName());
+        }
+        return m_taskBag;
     }
 }
 

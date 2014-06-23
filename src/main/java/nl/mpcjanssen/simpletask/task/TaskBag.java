@@ -52,7 +52,7 @@ public class TaskBag {
     private final FileStoreInterface mFileStore;
     private String mTodoName;
     private Preferences preferences;
-    private ArrayList<Task> tasks = new ArrayList<Task>();
+    private ArrayList<Task> tasks = null;
 
 
     public TaskBag(Preferences taskBagPreferences,
@@ -60,6 +60,7 @@ public class TaskBag {
         this.preferences = taskBagPreferences;
         this.mFileStore = fileStore;
         this.mTodoName = todoName;
+        reload();
     }
 
     private String contents () {
@@ -76,6 +77,7 @@ public class TaskBag {
 
     public void store() {
         store(this.tasks);
+        tasks = null;
     }
 
     public boolean archive(List<Task> tasksToArchive) {
@@ -113,12 +115,12 @@ public class TaskBag {
         return true;
     }
 
-    public void reload() {
+    private void reload() {
        this.reload(mFileStore.get(mTodoName, preferences));
     }
 
-    public void reload (ArrayList<String> loadedLines) {
-        this.tasks.clear();
+    private void reload (ArrayList<String> loadedLines) {
+        this.tasks = new ArrayList<Task>();
         int index = 0;
         for (String s : loadedLines) {
             this.tasks.add(new Task(index, s));
@@ -131,6 +133,9 @@ public class TaskBag {
     }
 
     public ArrayList<Task> getTasks() {
+        if (tasks == null) {
+            reload();
+        }
         return tasks;
     }
 

@@ -87,16 +87,14 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class Simpletask extends ThemedListActivity implements AdapterView.OnItemLongClickListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
-    private final static int REQUEST_FILTER = 1;
+
     private final static int REQUEST_PREFERENCES = 2;
-    private final static int DRAWER_CONTEXT = 1;
-    private final static int DRAWER_PROJECT = 2;
-    private static final int SYNC_CHOICE_DIALOG = 100;
-    private static final int SYNC_CONFLICT_DIALOG = 101;
+
     Menu options_menu;
     TodoApplication m_app;
     ActiveFilter mFilter;
     TaskAdapter m_adapter;
+    TaskBag m_taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
     private ActionMode actionMode;
@@ -207,6 +205,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+                    resetTaskBag();
                     handleIntent();
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
@@ -240,8 +239,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         setProgressBarIndeterminateVisibility(false);
     }
 
-    private TaskBag getTaskBag() {
-        return m_app.getTaskBag();
+    private void resetTaskBag() {
+        m_taskBag = null;
     }
 
     private void handleIntent() {
@@ -409,8 +408,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     @Override
     protected void onResume() {
         super.onResume();
-        m_app.startWatching();
         handleIntent();
+        m_app.startWatching();
     }
 
     @Override
@@ -420,11 +419,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             mFilter.saveInPrefs(TodoApplication.getPrefs());
         }
         m_app.stopWatching();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
         finishActionmode();
     }
 
@@ -505,9 +499,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
                 finishActionmode();
                 getTaskBag().store();
-                m_app.updateWidgets();
-                // We have change the data, views should refresh
-                m_adapter.setFilteredTasks(false);
+                m_app.updateUI();
             }
         });
         builder.show();
@@ -515,11 +507,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void completeTasks(List<Task> tasks) {
-        TaskBag taskBag = getTaskBag();
         for (Task t : tasks) {
             if (t != null && !t.isCompleted()) {
                 if (t.getRecurrencePattern() != null) {
-                    Task newTask = taskBag.addAsTask(t.withoutCreateAndCompletionDate());
+                    Task newTask = getTaskBag().addAsTask(t.withoutCreateAndCompletionDate());
                     boolean fromOriginalDate = m_app.hasRecurOriginalDates();
                     if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
                         newTask.deferDueDate(t.getRecurrencePattern(), fromOriginalDate);
@@ -535,13 +526,11 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 t.markComplete(DateTime.today(TimeZone.getDefault()));
             }
         }
-        taskBag.store();
+        getTaskBag().store();
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
-        m_app.updateWidgets();
-        // We have change the data, views should refresh
-        m_adapter.setFilteredTasks(true);
+        m_app.updateUI();
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
@@ -551,9 +540,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             }
         }
         getTaskBag().store();
-        m_app.updateWidgets();
-        // We have change the data, views should refresh
-        m_adapter.setFilteredTasks(true);
+        m_app.updateUI();
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -611,9 +598,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
             }
         }
-        m_adapter.setFilteredTasks(false);
         getTaskBag().store();
-        m_app.updateWidgets();
+        m_app.updateUI();
     }
 
     private void deleteTasks(final List<Task> tasks) {
@@ -679,7 +665,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     @Override
                     public void fileSelected(String file) {
                         m_app.setTodoFile(file);
-                        m_app.initStorage();
+                        m_app.updateUI();
                     }
                 });
                 break;
@@ -984,6 +970,15 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         m_leftDrawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(), mFilter.getProjectsNot());
     }
 
+    private TaskBag getTaskBag() {
+        if (m_taskBag==null) {
+            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+                    m_app.getFileStore(),
+                    m_app.getTodoFileName());
+        }
+        return m_taskBag;
+    }
+
     public void storeKeys(String accessTokenKey, String accessTokenSecret) {
         Editor editor = m_app.getPrefs().edit();
         editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
@@ -1073,13 +1068,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         void setFilteredTasks(boolean reload) {
             ArrayList<Task> visibleTasks = new ArrayList<Task>();
             Log.v(TAG, "setFilteredTasks called, reload: " + reload);
-            if (reload) {
-                getTaskBag().reload();
-                // Update lists in side drawer
-                // Set the adapter for the list view
-                updateDrawers();
-            }
-
+            resetTaskBag();
             visibleTasks.clear();
             visibleLines.clear();
             visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
