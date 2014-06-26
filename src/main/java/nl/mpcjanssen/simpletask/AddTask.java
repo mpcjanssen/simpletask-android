@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -74,7 +75,6 @@ public class AddTask extends ThemedActivity {
     private TodoApplication m_app;
 
     private String share_text;
-    private LocalBroadcastManager localBroadcastManager ; 
 
 
     private EditText textInputField;
@@ -196,14 +196,17 @@ public class AddTask extends ThemedActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate()");
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         m_app.startWatching();
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        Log.v(TAG, "onCreate()");
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         final Intent intent = getIntent();
         ActiveFilter mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);

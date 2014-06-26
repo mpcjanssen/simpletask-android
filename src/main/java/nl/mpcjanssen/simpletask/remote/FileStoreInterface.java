@@ -1,18 +1,13 @@
 package nl.mpcjanssen.simpletask.remote;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import nl.mpcjanssen.simpletask.LoginScreen;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 
 /**
- * Created by a156712 on 10-6-2014.
+ * Interface definition of the storage backend used.
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();

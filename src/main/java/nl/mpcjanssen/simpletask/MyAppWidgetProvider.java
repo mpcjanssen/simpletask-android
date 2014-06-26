@@ -1,7 +1,5 @@
 package nl.mpcjanssen.simpletask;
 
-import java.io.File;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -12,6 +10,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.io.File;
 
 public class MyAppWidgetProvider extends AppWidgetProvider {
 

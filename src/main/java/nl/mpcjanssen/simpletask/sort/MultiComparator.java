@@ -2,11 +2,11 @@ package nl.mpcjanssen.simpletask.sort;
 
 import android.util.Log;
 
-import nl.mpcjanssen.simpletask.ActiveFilter;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import nl.mpcjanssen.simpletask.ActiveFilter;
 
 public class MultiComparator<Task> implements Comparator<Task> {
     private List<Comparator<Task>> comparators;

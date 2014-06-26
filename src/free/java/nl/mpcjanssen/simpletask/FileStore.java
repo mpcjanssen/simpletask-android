@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Environment;
-import android.os.FileObserver;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -15,35 +13,27 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
-import com.dropbox.sync.android.DbxFileStatus;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxSyncStatus;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
-import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.simpletask.util.TaskIo;
 
 /**
- * Created by a156712 on 10-6-2014.
+ * FileStore implementation backed by Dropbox
  */
 public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getName();
     private DbxFileSystem.PathListener m_observer;
-    private String app_key;
-    private String app_secret;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
     private LocalBroadcastManager bm;
@@ -55,13 +45,13 @@ public class FileStore implements FileStoreInterface {
         mCtx = ctx;
         this.bm = broadCastManager;
         this.bmIntent = intent;
-        app_secret = ctx.getString(R.string.dropbox_consumer_secret);
         setDbxAcctMgr();
     }
 
     private void setDbxAcctMgr () {
         if (mDbxAcctMgr==null) {
-            app_key = mCtx.getString(R.string.dropbox_consumer_key);
+            String app_secret = mCtx.getString(R.string.dropbox_consumer_secret);
+            String app_key = mCtx.getString(R.string.dropbox_consumer_key);
             app_key = app_key.replaceFirst("^db-","");
             mDbxAcctMgr = DbxAccountManager.getInstance(mCtx, app_key, app_secret);
         }
@@ -89,11 +79,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public boolean isAuthenticated() {
-    if(mDbxAcctMgr!=null) {
-            return mDbxAcctMgr.hasLinkedAccount();
-        } else {
-            return false;
-        }
+        return mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount();
     }
 
     @Override
@@ -101,7 +87,7 @@ public class FileStore implements FileStoreInterface {
         Log.v(TAG, "Getting contents from: " + path);
         ArrayList<String> result = new ArrayList<String>();
         DbxFileSystem fs = getDbxFS();
-        if (isAuthenticated()==false || fs==null) {
+        if (!isAuthenticated() || fs==null) {
             return result;
         }
         try {
@@ -187,7 +173,7 @@ public class FileStore implements FileStoreInterface {
 
                 @Override
                 public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
-                    DbxSyncStatus status = null;
+                    DbxSyncStatus status;
                     try {
                         status = dbxFileSystem.getSyncStatus();
                         if (status.anyInProgress()) {
@@ -256,15 +242,14 @@ public class FileStore implements FileStoreInterface {
 
         private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
         private final Activity activity;
-        private boolean txtOnly;
 
         /**
-         * @param activity
-         * @param path
+         * @param activity  Activity to display the file dialog
+         * @param path      File path to start the dialog at
+         * @param txtOnly   Show only txt files?
          */
         public FileDialog(Activity activity, DbxPath path, boolean txtOnly) {
             this.activity = activity;
-            this.txtOnly=txtOnly;
             this.currentPath = path;
             loadFileList(path.getParent());
         }
@@ -276,13 +261,13 @@ public class FileStore implements FileStoreInterface {
             if (getDbxFS()==null) {
                 return null;
             }
-            Dialog dialog = null;
+            Dialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             String title = currentPath.getName();
             if (Strings.isEmptyOrNull(title)) {
                 title = "/";
             }
-            builder.setTitle(currentPath.getName());
+            builder.setTitle(title);
 
             builder.setItems(fileList, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {

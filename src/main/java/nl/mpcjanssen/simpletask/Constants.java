@@ -42,7 +42,6 @@ public class Constants {
 
 
     // Public intents
-    public final static String INTENT_ADD_TASK = "nl.mpcjanssen.simpletask.AddTask";
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
     public final static String INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK";
     public final static String EXTRA_BACKGROUND_TASK = "task";
