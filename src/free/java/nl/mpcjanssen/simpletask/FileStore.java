@@ -246,9 +246,10 @@ public class FileStore implements FileStoreInterface {
         /**
          * @param activity  Activity to display the file dialog
          * @param path      File path to start the dialog at
-         * @param txtOnly   Show only txt files?
+         * @param txtOnly   Show only txt files. Not used for Dropbox
          */
-        public FileDialog(Activity activity, DbxPath path, boolean txtOnly) {
+        @SuppressWarnings({"UnusedDeclaration"})
+        public FileDialog(Activity activity, DbxPath path, boolean txtOnly ) {
             this.activity = activity;
             this.currentPath = path;
             loadFileList(path.getParent());
