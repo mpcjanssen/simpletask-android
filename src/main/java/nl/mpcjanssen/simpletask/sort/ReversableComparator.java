@@ -1,8 +1,8 @@
 package nl.mpcjanssen.simpletask.sort;
 
-import nl.mpcjanssen.simpletask.task.Task;
-
 import java.util.Comparator;
+
+import nl.mpcjanssen.simpletask.task.Task;
 
 abstract class ReversableComparator implements Comparator<Task> {
     private final boolean reversed;

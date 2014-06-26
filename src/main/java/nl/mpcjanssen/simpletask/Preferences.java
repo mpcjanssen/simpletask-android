@@ -32,8 +32,8 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;

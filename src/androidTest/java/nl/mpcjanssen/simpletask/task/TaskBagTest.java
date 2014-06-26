@@ -1,8 +1,6 @@
 package nl.mpcjanssen.simpletask.task;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.widget.ArrayAdapter;
 
 import junit.framework.TestCase;
 

@@ -1,9 +1,9 @@
 package nl.mpcjanssen.simpletask.sort;
 
-import nl.mpcjanssen.simpletask.task.Task;
-
 import java.util.Collections;
 import java.util.List;
+
+import nl.mpcjanssen.simpletask.task.Task;
 
 public class ContextComparator extends ReversableComparator {
 
