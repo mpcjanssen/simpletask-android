@@ -200,7 +200,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
                     Log.v(TAG, "Logging out from Dropbox");
-                    m_app.getFileStore().deauthenticate();
+                    m_app.deauthenticate();
                     Intent i = new Intent(context, LoginScreen.class);
                     startActivity(i);
                     finish();

@@ -69,6 +69,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
+    public void deauthenticate() {
+        if (mFileStore!=null) {
+            mFileStore.deauthenticate();
+            mFileStore=null;
+        }
+    }
+
     public void stopWatching() {
         if (mFileStore!=null) {
             mFileStore.stopWatching(getTodoFileName());
