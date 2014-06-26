@@ -31,7 +31,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
@@ -138,7 +137,12 @@ public class AddTask extends ThemedActivity {
         
         // strip line breaks
         textInputField = (EditText) findViewById(R.id.taskText);
-        String input = textInputField.getText().toString();
+        String input;
+                if (textInputField!=null) {
+                    input = textInputField.getText().toString();
+                } else {
+                    input = "";
+                }
 
         // Don't add empty tasks
         if (input.trim().equals("")) {
