@@ -868,7 +868,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target);
 
         // Set shortcut icon
-        Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.icon);
+        Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_launcher);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, filter.getName());
         sendBroadcast(shortcut);

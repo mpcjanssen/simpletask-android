@@ -694,7 +694,7 @@ public class AddTask extends ThemedActivity {
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
                 getString(R.string.shortcut_addtask_name));
         Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this,
-                R.drawable.icon);
+                R.drawable.ic_launcher);
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         setResult(RESULT_OK, intent);
