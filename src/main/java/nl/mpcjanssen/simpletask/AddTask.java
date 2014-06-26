@@ -544,8 +544,9 @@ public class AddTask extends ThemedActivity {
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
-                contexts.toArray(new String[contexts.size()] )));
+        String [] choices = contexts.toArray(new String[contexts.size()]);
+                lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+                choices ));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         m_app.setEditTextHint(ed,R.string.new_list_name);
 
@@ -553,7 +554,9 @@ public class AddTask extends ThemedActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> uncheckedItems = new ArrayList<String>();
                 items.addAll(Util.getCheckedItems(lv, true));
+                uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 String newText = ed.getText().toString();
                 if (!newText.equals("")) {
                     items.add(ed.getText().toString());
