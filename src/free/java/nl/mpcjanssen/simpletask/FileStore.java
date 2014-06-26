@@ -55,10 +55,16 @@ public class FileStore implements FileStoreInterface {
         mCtx = ctx;
         this.bm = broadCastManager;
         this.bmIntent = intent;
-        app_key = ctx.getString(R.string.dropbox_consumer_key);
-        app_key = app_key.replaceFirst("^db-","");
         app_secret = ctx.getString(R.string.dropbox_consumer_secret);
-        mDbxAcctMgr = DbxAccountManager.getInstance(ctx, app_key, app_secret);
+        setDbxAcctMgr();
+    }
+
+    private void setDbxAcctMgr () {
+        if (mDbxAcctMgr==null) {
+            app_key = mCtx.getString(R.string.dropbox_consumer_key);
+            app_key = app_key.replaceFirst("^db-","");
+            mDbxAcctMgr = DbxAccountManager.getInstance(mCtx, app_key, app_secret);
+        }
     }
 
     private DbxFileSystem getDbxFS () {
@@ -83,7 +89,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public boolean isAuthenticated() {
-        if(mDbxAcctMgr!=null) {
+    if(mDbxAcctMgr!=null) {
             return mDbxAcctMgr.hasLinkedAccount();
         } else {
             return false;
