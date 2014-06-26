@@ -89,7 +89,7 @@ public class TaskBag {
         for (Task task : getTasks()) {
             if (tasksToArchive != null) {
                 // Archive selected tasks
-                if (tasksToArchive.indexOf(task) != -1) {
+                if (tasksToArchive.indexOf(task) != -1 ) {
                     archivedTasks.add(task);
                 } else {
                     remainingTasks.add(task);

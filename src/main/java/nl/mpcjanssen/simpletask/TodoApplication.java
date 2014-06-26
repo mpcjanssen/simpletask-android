@@ -36,7 +36,6 @@ import android.widget.EditText;
 import android.support.v4.content.LocalBroadcastManager;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -45,6 +44,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
+
     private FileStoreInterface mFileStore;
 
     public static Context getAppContext() {
