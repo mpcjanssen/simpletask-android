@@ -212,8 +212,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     /** Save the position **/
                     ListView lv = getListView();
-                    int currentPosition = lv.getFirstVisiblePosition();
                     resetTaskBag();
+                    int currentPosition = lv.getFirstVisiblePosition();
                     handleIntent();
                     lv.setSelection(currentPosition);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {

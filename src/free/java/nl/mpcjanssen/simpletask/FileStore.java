@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -40,11 +41,13 @@ public class FileStore implements FileStoreInterface {
     private Intent bmIntent;
     private DbxFileSystem mDbxFs;
     private DbxFileSystem.SyncStatusListener m_syncstatus;
+    private ArrayList<String> mLines;
 
     public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
         mCtx = ctx;
         this.bm = broadCastManager;
         this.bmIntent = intent;
+        this.mLines = null;
         setDbxAcctMgr();
     }
 
@@ -64,7 +67,6 @@ public class FileStore implements FileStoreInterface {
         if (isAuthenticated()) {
             try {
                 this.mDbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                mDbxFs.awaitFirstSync();
                 return mDbxFs;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,57 +86,94 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
-        Log.v(TAG, "Getting contents from: " + path);
-        ArrayList<String> result = new ArrayList<String>();
-        DbxFileSystem fs = getDbxFS();
-        if (!isAuthenticated() || fs==null) {
-            return result;
+        if (mLines != null) {
+            return mLines;
         }
-        try {
-            DbxFile dbFile;
-            DbxPath dbPath = new DbxPath(path);
-            if (mDbxFs.exists(dbPath)) {
-                dbFile = mDbxFs.open(dbPath);
-            } else {
-                dbFile = mDbxFs.create(dbPath);
-            }
-            dbFile.update();
-            String [] lines = dbFile.readString().split("\r|\n|\r\n");
-            dbFile.close();
-            for (String line: lines) {
-                if (!line.trim().equals("")) {
-                    result.add(line);
+        reload(path);
+        return new ArrayList<String>();
+    }
+
+    private void reload(String path) {
+        new AsyncTask<String, Void, String>() {
+
+            @Override
+            protected String doInBackground(String... params) {
+                String path = params[0];
+                Log.v(TAG, "Getting contents from: " + path);
+                DbxFileSystem fs = getDbxFS();
+                if (!isAuthenticated() || fs == null) {
+                    return "";
                 }
+                try {
+                    DbxFile dbFile;
+                    mDbxFs.awaitFirstSync();
+                    DbxPath dbPath = new DbxPath(path);
+                    if (mDbxFs.exists(dbPath)) {
+                        dbFile = mDbxFs.open(dbPath);
+                    } else {
+                        dbFile = mDbxFs.create(dbPath);
+                    }
+                    dbFile.update();
+                    String result =  dbFile.readString();
+                    dbFile.close();
+                    return result;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return "";
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+            @Override
+            protected void onPostExecute(String result) {
+                String[] lines = result.split("\r|\n|\r\n");
+                mLines = new ArrayList<String>();
+                for (String line : lines) {
+                    if (!line.trim().equals("")) {
+                        mLines.add(line);
+                    }
+                }
+                triggerUiUpdate();
+            }
+        }.execute(path);
     }
 
     @Override
     public void store(String path, String data) {
-        if (isAuthenticated() && getDbxFS()!=null) {
-            try {
-                stopWatching(path);
-                DbxFile dbFile;
-                DbxPath dbPath = new DbxPath(path);
-                if (mDbxFs.exists(dbPath)) {
-                    dbFile = mDbxFs.open(dbPath);
-                } else {
-                    dbFile = mDbxFs.create(dbPath);
-                }
-                dbFile.writeString(data);
-                dbFile.close();
-                startWatching(path);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new TodoException("Dropbox", e);
+        String[] lines = data.split("\r|\n|\r\n");
+        mLines = new ArrayList<String>();
+        for (String line : lines) {
+            if (!line.trim().equals("")) {
+                mLines.add(line);
             }
         }
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... params) {
+                String path = params[0];
+                String data = params[1];
+                Log.v(TAG, "Saving " + path + "in background thread" );
+                if (isAuthenticated() && getDbxFS() != null) {
+                    try {
+                        stopWatching(path);
+                        DbxFile dbFile;
+                        DbxPath dbPath = new DbxPath(path);
+                        if (mDbxFs.exists(dbPath)) {
+                            dbFile = mDbxFs.open(dbPath);
+                        } else {
+                            dbFile = mDbxFs.create(dbPath);
+                        }
+                        dbFile.writeString(data);
+                        dbFile.close();
+                        startWatching(path);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new TodoException("Dropbox", e);
+                    }
+                }
+                return null;
+            }
+        }.execute(path,data);
     }
 
     @Override
@@ -161,13 +200,17 @@ public class FileStore implements FileStoreInterface {
 
     }
 
+    private void triggerUiUpdate() {
+        bm.sendBroadcast(bmIntent);
+    }
+
     @Override
     public void startLogin(Activity caller, int i) {
         mDbxAcctMgr.startLink(caller, 0);
     }
 
     @Override
-    public void startWatching(String path) {
+    public void startWatching(final String path) {
         if (isAuthenticated() && getDbxFS() != null) {
             m_syncstatus = new DbxFileSystem.SyncStatusListener() {
 
@@ -180,7 +223,8 @@ public class FileStore implements FileStoreInterface {
                             bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
                         } else {
                             bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                            bm.sendBroadcast(bmIntent);
+                            reload(path);
+                            triggerUiUpdate();
                         }
                     } catch (DbxException e) {
                         e.printStackTrace();
