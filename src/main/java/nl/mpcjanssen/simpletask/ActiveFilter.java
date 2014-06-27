@@ -16,6 +16,7 @@ import nl.mpcjanssen.simpletask.task.ByProjectFilter;
 import nl.mpcjanssen.simpletask.task.ByTextFilter;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.task.TaskFilter;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -75,22 +76,6 @@ public class ActiveFilter {
     private String mName;
 
     public ActiveFilter() {
-    }
-
-
-    public void initFromBundle(Bundle bundle) {
-        m_prios = Priority.toPriority(bundle.getStringArrayList(INTENT_PRIORITIES_FILTER));
-        m_contexts = bundle.getStringArrayList(INTENT_CONTEXTS_FILTER);
-        m_projects = bundle.getStringArrayList(INTENT_PROJECTS_FILTER);
-        m_search = bundle.getString(SearchManager.QUERY);
-        m_contextsNot = bundle.getBoolean(INTENT_CONTEXTS_FILTER_NOT);
-        m_priosNot = bundle.getBoolean(INTENT_PRIORITIES_FILTER_NOT);
-        m_projectsNot = bundle.getBoolean(INTENT_PROJECTS_FILTER_NOT);
-        m_sorts = bundle.getStringArrayList(INTENT_SORT_ORDER);
-        m_hideCompleted = bundle.getBoolean(INTENT_HIDE_COMPLETED_FILTER);
-        m_hideFuture = bundle.getBoolean(INTENT_HIDE_FUTURE_FILTER);
-        m_hideLists = bundle.getBoolean(INTENT_HIDE_LISTS_FILTER);
-        m_hideTags = bundle.getBoolean(INTENT_HIDE_TAGS_FILTER);
     }
 
     public void initFromIntent(Intent intent) {
@@ -213,55 +198,43 @@ public class ActiveFilter {
         return m_sorts;
     }
 
-    public void saveInBundle(Bundle bundle) {
-        bundle.putStringArrayList(INTENT_PRIORITIES_FILTER, Priority.inCode(m_prios));
-        bundle.putStringArrayList(INTENT_CONTEXTS_FILTER, m_contexts);
-        bundle.putStringArrayList(INTENT_PROJECTS_FILTER, m_projects);
-        bundle.putStringArrayList(INTENT_SORT_ORDER, m_sorts);
-        bundle.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
-        bundle.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-        bundle.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-        bundle.putBoolean(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
-        bundle.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
-        bundle.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
-        bundle.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
-        bundle.putString(SearchManager.QUERY, m_search);
+    public void saveInIntent(Intent target) {
+        if (target != null) {
+            target.putExtra(INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
+            target.putExtra(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+            target.putExtra(INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
+            target.putExtra(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+            target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
+            target.putExtra(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+            target.putExtra(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
+            target.putExtra(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
+            target.putExtra(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
+            target.putExtra(INTENT_HIDE_LISTS_FILTER, m_hideLists);
+            target.putExtra(INTENT_HIDE_TAGS_FILTER, m_hideTags);
+            target.putExtra(SearchManager.QUERY, m_search);
+        }
     }
 
     public void saveInPrefs(SharedPreferences prefs) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(INTENT_TITLE, mName);
-        editor.putString(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
-        editor.putStringSet(INTENT_CONTEXTS_FILTER, new HashSet<String>(m_contexts));
-        editor.putStringSet(INTENT_PRIORITIES_FILTER,
-                new HashSet<String>(Priority.inCode(m_prios)));
-        editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<String>(m_projects));
-        editor.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-        editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
-        editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-        editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
-        editor.putBoolean(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
-        editor.putBoolean(INTENT_HIDE_LISTS_FILTER,m_hideLists);
-        editor.putBoolean(INTENT_HIDE_TAGS_FILTER,m_hideTags);
-        editor.putString(SearchManager.QUERY,m_search);
-        editor.commit();
+        if (prefs!=null) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(INTENT_TITLE, mName);
+            editor.putString(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
+            editor.putStringSet(INTENT_CONTEXTS_FILTER, new HashSet<String>(m_contexts));
+            editor.putStringSet(INTENT_PRIORITIES_FILTER,
+                    new HashSet<String>(Priority.inCode(m_prios)));
+            editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<String>(m_projects));
+            editor.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
+            editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
+            editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
+            editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
+            editor.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
+            editor.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
+            editor.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
+            editor.putString(SearchManager.QUERY, m_search);
+            editor.commit();
+        }
     }
-
-    public void saveInIntent(Intent target) {
-        target.putExtra(INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
-        target.putExtra(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
-        target.putExtra(INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
-        target.putExtra(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-        target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
-        target.putExtra(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
-        target.putExtra(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
-        target.putExtra(INTENT_HIDE_COMPLETED_FILTER,m_hideCompleted);
-        target.putExtra(INTENT_HIDE_FUTURE_FILTER,m_hideFuture);
-        target.putExtra(INTENT_HIDE_LISTS_FILTER,m_hideLists);
-        target.putExtra(INTENT_HIDE_TAGS_FILTER,m_hideTags);
-        target.putExtra(SearchManager.QUERY, m_search);
-    }
-
 
     public void clear() {
         m_prios = new ArrayList<Priority>();
