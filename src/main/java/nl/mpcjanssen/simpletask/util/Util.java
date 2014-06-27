@@ -173,17 +173,12 @@ public class Util {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static String tasksToString(ArrayList<Task> tasks, boolean useWindowsLineBreaksEnabled) {
-        StringBuilder result = new StringBuilder();
+    public static ArrayList<String> tasksToString(ArrayList<Task> tasks) {
+        ArrayList<String> result = new ArrayList<String>();
         for (Task t: tasks) {
-            result.append(t.inFileFormat());
-            if (useWindowsLineBreaksEnabled) {
-                result.append("\r\n");
-            } else {
-                result.append("" + "\n");
-            }
+            result.add(t.inFileFormat());
         }
-        return result.toString();
+        return result;
     }
 
 

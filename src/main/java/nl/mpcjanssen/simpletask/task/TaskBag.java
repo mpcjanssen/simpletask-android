@@ -72,7 +72,7 @@ public class TaskBag {
     }
 
     private void store(ArrayList<Task> tasks) {
-        mFileStore.store(mTodoName, Util.tasksToString(tasks, preferences.isUseWindowsLineBreaksEnabled()));
+        mFileStore.store(mTodoName, Util.tasksToString(tasks));
     }
 
     public void store() {
@@ -104,10 +104,8 @@ public class TaskBag {
         }
 
         // append completed tasks to done.txt
-        if (!mFileStore.append(new File(mTodoName).getParent() + "/done.txt",
-                Util.tasksToString(archivedTasks, windowsLineBreaks))) {
-            return false;
-        }
+        mFileStore.append(new File(mTodoName).getParent() + "/done.txt",
+                Util.tasksToString(archivedTasks));
         this.store(remainingTasks);
         return true;
     }

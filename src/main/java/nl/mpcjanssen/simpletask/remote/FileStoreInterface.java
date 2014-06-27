@@ -12,8 +12,8 @@ import nl.mpcjanssen.simpletask.task.TaskBag;
 public interface FileStoreInterface {
     boolean isAuthenticated();
     ArrayList<String> get(String path, TaskBag.Preferences preferences);
-    void store(String path, String data);
-    boolean append(String path, String data);
+    void store(String path, ArrayList<String> lines);
+    void append(String path, ArrayList<String> lines);
     void startLogin(Activity caller, int i);
     void startWatching(String path);
     void stopWatching(String path);

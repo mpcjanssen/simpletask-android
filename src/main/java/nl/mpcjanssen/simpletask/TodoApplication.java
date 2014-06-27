@@ -280,7 +280,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public FileStoreInterface getFileStore() {
         if (mFileStore==null) {
-            mFileStore = new FileStore(this, localBroadcastManager, new Intent(Constants.BROADCAST_UPDATE_UI));
+            mFileStore = new FileStore(this, new Intent(Constants.BROADCAST_UPDATE_UI));
         }
         return mFileStore;
     }
