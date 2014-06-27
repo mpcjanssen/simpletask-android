@@ -228,7 +228,6 @@ public class FileStore implements FileStoreInterface {
                         } else {
                             bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                             reload(path);
-                            triggerUiUpdate();
                         }
                     } catch (DbxException e) {
                         e.printStackTrace();
