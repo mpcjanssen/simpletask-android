@@ -73,7 +73,6 @@ public class TaskBag {
 
     private void store(ArrayList<Task> tasks) {
         mFileStore.store(mTodoName, Util.tasksToString(tasks, preferences.isUseWindowsLineBreaksEnabled()));
-        mTasks = null;
     }
 
     public void store() {
