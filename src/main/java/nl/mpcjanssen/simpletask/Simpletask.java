@@ -497,7 +497,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
                 finishActionmode();
                 getTaskBag().store();
-                m_app.updateUI();
             }
         });
         builder.show();
@@ -582,7 +581,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
             }
         }
-        m_adapter.setFilteredTasks(false);
         getTaskBag().store();
     }
 
@@ -612,11 +610,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void archiveTasks(final List<Task> tasksToArchive) {
-        if (getTaskBag().archive(tasksToArchive)) {
-            m_adapter.setFilteredTasks(false);
-            m_app.updateWidgets();
-            updateDrawers();
-        } else {
+        if (!getTaskBag().archive(tasksToArchive)) {
             Util.showToastLong(Simpletask.this,
                     "Could not archive tasks");
         }
@@ -1513,7 +1507,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
 
-        TaskBag taskbag = getTaskBag();
+        final TaskBag taskbag = getTaskBag();
         contexts.addAll(taskbag.getContexts(false));
         for (Task t : checkedTasks) {
             selectedContexts.addAll(t.getLists());
@@ -1562,10 +1556,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                m_adapter.setFilteredTasks(false);
-                getTaskBag().store();
-                m_app.updateWidgets();
-                updateDrawers();
+                taskbag.store();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1583,7 +1574,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         final ArrayList<String> projects = new ArrayList<String>();
         Set<String> selectedProjects = new HashSet<String>();
 
-        TaskBag taskbag = getTaskBag();
+        final TaskBag taskbag = getTaskBag();
         projects.addAll(taskbag.getProjects(false));
         for (Task t : checkedTasks) {
             selectedProjects.addAll(t.getTags());
@@ -1630,10 +1621,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                m_adapter.setFilteredTasks(false);
-                getTaskBag().store();
-                m_app.updateWidgets();
-                updateDrawers();
+                taskbag.store();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

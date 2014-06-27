@@ -1,7 +1,8 @@
 /**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
+ * This file is part of Simpletask.
  *
  * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * Copyright (c) 2013- Mark Janssen
  *
  * LICENSE:
  *
@@ -16,9 +17,10 @@
  * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * @author Todo.txt contributors <todotxt@yahoogroups.com>
+ * @author Mark Janssen
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * @copyright 2013- Mark Janssen
  */
 package nl.mpcjanssen.simpletask;
 
@@ -74,7 +76,6 @@ public class AddTask extends ThemedActivity {
     private TodoApplication m_app;
 
     private String share_text;
-
 
     private EditText textInputField;
     private TaskBag m_taskBag;
@@ -177,7 +178,7 @@ public class AddTask extends ThemedActivity {
     private void noteToSelf(Intent intent) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            // This was a voice note
+            Log.v(TAG,"Voice note added.");
         }
         addBackgroundTask(task);
     }
