@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskBag;
@@ -41,13 +42,15 @@ public class FileStore implements FileStoreInterface {
     private Intent bmIntent;
     private DbxFileSystem mDbxFs;
     private DbxFileSystem.SyncStatusListener m_syncstatus;
-    private ArrayList<String> mLines;
+    ArrayList<String> mCachedLines;
+    String mCachedPath;
 
     public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
         mCtx = ctx;
         this.bm = broadCastManager;
         this.bmIntent = intent;
-        this.mLines = null;
+        this.mCachedLines = null;
+        this.mCachedPath = null;
         setDbxAcctMgr();
     }
 
@@ -86,14 +89,14 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
-        if (mLines != null) {
-            return mLines;
+        if (mCachedLines != null && path.equals(mCachedPath)) {
+            return mCachedLines;
         }
         reload(path);
         return new ArrayList<String>();
     }
 
-    private void reload(String path) {
+    private void reload(final String path) {
         new AsyncTask<String, Void, String>() {
 
             @Override
@@ -126,10 +129,11 @@ public class FileStore implements FileStoreInterface {
             @Override
             protected void onPostExecute(String result) {
                 String[] lines = result.split("\r|\n|\r\n");
-                mLines = new ArrayList<String>();
+                mCachedPath = path;
+                mCachedLines = new ArrayList<String>();
                 for (String line : lines) {
                     if (!line.trim().equals("")) {
-                        mLines.add(line);
+                        mCachedLines.add(line);
                     }
                 }
                 triggerUiUpdate();
@@ -140,10 +144,10 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void store(String path, String data) {
         String[] lines = data.split("\r|\n|\r\n");
-        mLines = new ArrayList<String>();
+        mCachedLines = new ArrayList<String>();
         for (String line : lines) {
             if (!line.trim().equals("")) {
-                mLines.add(line);
+                mCachedLines.add(line);
             }
         }
         new AsyncTask<String, Void, Void>() {
