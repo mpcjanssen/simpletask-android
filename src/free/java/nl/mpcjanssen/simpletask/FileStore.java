@@ -28,6 +28,7 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
+import nl.mpcjanssen.simpletask.util.Util;
 
 /**
  * FileStore implementation backed by Dropbox
@@ -38,16 +39,14 @@ public class FileStore implements FileStoreInterface {
     private DbxFileSystem.PathListener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
-    private LocalBroadcastManager bm;
     private Intent bmIntent;
     private DbxFileSystem mDbxFs;
     private DbxFileSystem.SyncStatusListener m_syncstatus;
     ArrayList<String> mCachedLines;
     String mCachedPath;
 
-    public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
+    public FileStore( Context ctx, Intent intent) {
         mCtx = ctx;
-        this.bm = broadCastManager;
         this.bmIntent = intent;
         this.mCachedLines = null;
         this.mCachedPath = null;
@@ -142,8 +141,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void store(String path, String data) {
-        String[] lines = data.split("\r|\n|\r\n");
+    public void store(String path, ArrayList<String> lines) {
         mCachedLines = new ArrayList<String>();
         for (String line : lines) {
             if (!line.trim().equals("")) {
@@ -177,35 +175,49 @@ public class FileStore implements FileStoreInterface {
                 }
                 return null;
             }
-        }.execute(path,data);
+        }.execute(path, Util.join(lines, "\r\n"));
     }
 
     @Override
-    public boolean append(String path, String data) {
-        if (isAuthenticated() && getDbxFS()!=null ) {
-            try {
-                DbxPath dbxPath = new DbxPath(path);
-                DbxFile file;
-                if (mDbxFs.exists(dbxPath)) {
-                    file = mDbxFs.open(dbxPath);
-                } else {
-                    file = mDbxFs.create(dbxPath);
+    public void append(String path, ArrayList<String> lines) {
+        if (isAuthenticated() && getDbxFS() != null) {
+            new AsyncTask<String, Void, Void>() {
+                @Override
+                protected Void doInBackground(String... params) {
+                    String path = params[0];
+                    String data = params[1];
+                    Log.v(TAG, "Saving " + path + "in background thread");
+                    try {
+                        DbxPath dbxPath = new DbxPath(path);
+                        DbxFile file;
+                        if (mDbxFs.exists(dbxPath)) {
+                            file = mDbxFs.open(dbxPath);
+                        } else {
+                            file = mDbxFs.create(dbxPath);
+                        }
+                        file.appendString(data);
+                        file.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
                 }
-                file.appendString(data);
-                file.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return false;
+            }.execute(path, Util.join(lines, "\r\n"));
         }
-        return true;
-
     }
 
     private void triggerUiUpdate() {
+        LocalBroadcastManager bm = LocalBroadcastManager.getInstance(mCtx);
         bm.sendBroadcast(bmIntent);
+    }
+
+    private void syncInProgress(boolean inProgress) {
+        LocalBroadcastManager bm = LocalBroadcastManager.getInstance(mCtx);
+        if (inProgress) {
+            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        } else {
+            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+        }
     }
 
     @Override
@@ -224,9 +236,9 @@ public class FileStore implements FileStoreInterface {
                     try {
                         status = dbxFileSystem.getSyncStatus();
                         if (status.anyInProgress()) {
-                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                            syncInProgress(true);
                         } else {
-                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                            syncInProgress(false);
                             reload(path);
                         }
                     } catch (DbxException e) {
