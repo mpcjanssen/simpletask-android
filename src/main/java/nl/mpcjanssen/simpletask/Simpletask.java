@@ -420,9 +420,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     @Override
     protected void onPause() {
         super.onPause();
-        if (mFilter!=null) {
-            mFilter.saveInPrefs(TodoApplication.getPrefs());
-        }
         m_app.stopWatching();
         finishActionmode();
     }
@@ -786,6 +783,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Intent intent = new Intent();
         mFilter.clear();
         mFilter.saveInIntent(intent);
+        mFilter.saveInPrefs(TodoApplication.getPrefs());
         setIntent(intent);
         finishActionmode();
         updateDrawers();
@@ -1669,8 +1667,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 mFilter.setProjects(filteredProjects);
             }
             Intent intent = getIntent();
-
             mFilter.saveInIntent(intent);
+            mFilter.saveInPrefs(TodoApplication.getPrefs());
             setIntent(intent);
             adapter.notifyDataSetChanged();
             finishActionmode();
