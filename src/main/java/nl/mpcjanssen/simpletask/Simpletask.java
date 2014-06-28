@@ -812,8 +812,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFilter = filters.get(position);
-                saveInPrefs(mFilter);
-                saveInIntent(mFilter);
+                Intent intent = getIntent();
+                mFilter.saveInIntent(intent);
+                setIntent(intent);
+                mFilter.saveInPrefs(TodoApplication.getPrefs());
                 m_adapter.setFilteredTasks(false);
                 if (m_drawerLayout != null) {
                     m_drawerLayout.closeDrawer(Gravity.RIGHT);
