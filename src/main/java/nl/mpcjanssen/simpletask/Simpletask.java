@@ -1674,7 +1674,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             mFilter.saveInIntent(intent);
             mFilter.saveInPrefs(TodoApplication.getPrefs());
             setIntent(intent);
-            adapter.notifyDataSetChanged();
             finishActionmode();
             m_adapter.setFilteredTasks(false);
             //m_drawerLayout.closeDrawer(Gravity.LEFT);
