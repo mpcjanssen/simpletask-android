@@ -28,11 +28,15 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
@@ -79,6 +83,8 @@ public class AddTask extends ThemedActivity {
 
     private EditText textInputField;
     private TaskBag m_taskBag;
+    private BroadcastReceiver m_broadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     public boolean hasWordWrap() {
         return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
@@ -164,10 +170,7 @@ public class AddTask extends ThemedActivity {
             }
         }
         // Add any other tasks
-        for (String taskText : tasks) {
-            getTaskBag().addAsTask(taskText);
-        }
-
+        m_app.getFileStore().append(m_app.getTodoFileName(),tasks);
         m_app.updateWidgets();
         if (m_app.isAutoArchive()) {
             getTaskBag().archive(null);
@@ -205,8 +208,29 @@ public class AddTask extends ThemedActivity {
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
-        m_app.startWatching();
         super.onCreate(savedInstanceState);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+        intentFilter.addAction(Constants.BROADCAST_SYNC_START);
+        intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        m_broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
+                    setProgressBarIndeterminateVisibility(true);
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
+                    setProgressBarIndeterminateVisibility(false);
+                }
+            }
+        };
+        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
+        m_app.startWatching();
+
 
         ActionBar actionBar = getActionBar();
         if (actionBar!=null) {
@@ -713,6 +737,7 @@ public class AddTask extends ThemedActivity {
 
     public void onDestroy() {
         super.onDestroy();
+        localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
         m_app.stopWatching();
     }
 }
