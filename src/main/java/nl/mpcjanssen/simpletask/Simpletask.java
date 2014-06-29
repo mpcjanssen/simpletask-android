@@ -81,7 +81,7 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -96,7 +96,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     TodoApplication m_app;
     ActiveFilter mFilter;
     TaskAdapter m_adapter;
-    TaskBag m_taskBag;
+    TaskCache m_taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
     private ActionMode actionMode;
@@ -193,7 +193,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager = m_app.getLocalBroadCastManager();
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -497,7 +497,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                getTaskBag().store();
+                // TODO change implementation
             }
         });
         builder.show();
@@ -953,7 +953,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
 
     private void updateLeftDrawer() {
-        TaskBag taskBag = getTaskBag();
+        TaskCache taskBag = getTaskBag();
         DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
                 taskBag.getDecoratedContexts(true), taskBag.getDecoratedProjects(true));
 
@@ -978,9 +978,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         m_leftDrawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(), mFilter.getProjectsNot());
     }
 
-    private TaskBag getTaskBag() {
+    private TaskCache getTaskBag() {
         if (m_taskBag==null) {
-            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
                     m_app.getFileStore(),
                     m_app.getTodoFileName());
         }
@@ -1513,7 +1513,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
 
-        final TaskBag taskbag = getTaskBag();
+        final TaskCache taskbag = getTaskBag();
         contexts.addAll(taskbag.getContexts(false));
         for (Task t : checkedTasks) {
             selectedContexts.addAll(t.getLists());
@@ -1580,7 +1580,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         final ArrayList<String> projects = new ArrayList<String>();
         Set<String> selectedProjects = new HashSet<String>();
 
-        final TaskBag taskbag = getTaskBag();
+        final TaskCache taskbag = getTaskBag();
         projects.addAll(taskbag.getProjects(false));
         for (Task t : checkedTasks) {
             selectedProjects.addAll(t.getTags());

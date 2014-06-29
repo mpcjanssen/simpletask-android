@@ -22,10 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -87,7 +86,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
+    public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
         if (mCachedLines != null && path.equals(mCachedPath)) {
             return mCachedLines;
         }
@@ -180,6 +179,11 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void append(String path, ArrayList<String> lines) {
+        append(path, Util.join(lines, "\r\n"));
+    }
+
+    @Override
+    public void append(String path, String tasks) {
         if (isAuthenticated() && getDbxFS() != null) {
             new AsyncTask<String, Void, Void>() {
                 @Override
@@ -202,7 +206,7 @@ public class FileStore implements FileStoreInterface {
                     }
                     return null;
                 }
-            }.execute(path, Util.join(lines, "\r\n"));
+            }.execute(path, tasks);
         }
     }
 
@@ -292,6 +296,11 @@ public class FileStore implements FileStoreInterface {
         FileDialog dialog = new FileDialog(act, new DbxPath(path), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
+    }
+
+    @Override
+    public void update(String o, String s) {
+        //fixme
     }
 
     private class FileDialog {

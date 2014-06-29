@@ -67,6 +67,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
     }
 
+    public LocalBroadcastManager getLocalBroadCastManager() {
+        return localBroadcastManager;
+    }
+
     public void startWatching() {
         if (mFileStore!=null) {
             mFileStore.startWatching(getTodoFileName());

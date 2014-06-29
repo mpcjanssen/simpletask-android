@@ -19,7 +19,7 @@ import java.util.Collections;
 
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -41,7 +41,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     private Context mContext;
     private TodoApplication application;
     ArrayList<Task> visibleTasks = new ArrayList<Task>();
-    private TaskBag m_taskBag;
+    private TaskCache m_taskBag;
 
     public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
@@ -245,9 +245,9 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	// TODO Auto-generated method stub
     }
 
-    private TaskBag getTaskBag() {
+    private TaskCache getTaskBag() {
         if (m_taskBag==null) {
-            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
                     application.getFileStore(),
                     application.getTodoFileName());
         }

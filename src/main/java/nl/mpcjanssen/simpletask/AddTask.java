@@ -46,6 +46,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
@@ -66,9 +67,10 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -82,7 +84,7 @@ public class AddTask extends ThemedActivity {
     private String share_text;
 
     private EditText textInputField;
-    private TaskBag m_taskBag;
+    private TaskCache m_taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
 
@@ -163,8 +165,9 @@ public class AddTask extends ThemedActivity {
             int numTasks = tasks.size();
             int numBackup = m_backup.size();
             Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
+            ArrayList<String> updatedTasks = new ArrayList<String>();
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                 getTaskBag().updateTask(m_backup.get(0), tasks.get(0));
+                 getFileStore().update(m_backup.get(0).inFileFormat(), tasks.get(0));
                  tasks.remove(0);
                  m_backup.remove(0);
             }
@@ -195,9 +198,7 @@ public class AddTask extends ThemedActivity {
     }
 
     private void addBackgroundTask(String taskText) {
-        for (String task : taskText.split("\r\n|\r|\n")) {
-            getTaskBag().addAsTask(task);
-        }
+        getFileStore().append(m_app.getTodoFileName(),taskText);
         m_app.updateWidgets();
         m_app.showToast(R.string.task_added);
     }
@@ -208,19 +209,20 @@ public class AddTask extends ThemedActivity {
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager = m_app.getLocalBroadCastManager();
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-
+                   getTaskBag().reload();
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -442,13 +444,17 @@ public class AddTask extends ThemedActivity {
         }
     }
 
-    private TaskBag getTaskBag() {
+    private TaskCache getTaskBag() {
         if (m_taskBag==null) {
-            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
                     m_app.getFileStore(),
                     m_app.getTodoFileName());
         }
         return m_taskBag;
+    }
+
+    private FileStoreInterface getFileStore() {
+        return m_app.getFileStore();
     }
 
 

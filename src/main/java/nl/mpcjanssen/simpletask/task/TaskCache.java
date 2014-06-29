@@ -47,16 +47,16 @@ import nl.mpcjanssen.simpletask.util.Util;
  *         It is loaded from and stored to the local copy of the todo.txt file and
  *         it is global to the application so all activities operate on the same copy
  */
-public class TaskBag {
-    final static String TAG = Simpletask.class.getSimpleName();
+public class TaskCache {
+    final static String TAG = TaskCache.class.getSimpleName();
     private final FileStoreInterface mFileStore;
     private String mTodoName;
     private Preferences preferences;
     private ArrayList<Task> mTasks = null;
 
 
-    public TaskBag(Preferences taskBagPreferences,
-                   FileStoreInterface fileStore, String todoName) {
+    public TaskCache(Preferences taskBagPreferences,
+                     FileStoreInterface fileStore, String todoName) {
         this.preferences = taskBagPreferences;
         this.mFileStore = fileStore;
         this.mTodoName = todoName;
@@ -73,10 +73,6 @@ public class TaskBag {
 
     private void store(ArrayList<Task> tasks) {
         mFileStore.store(mTodoName, Util.tasksToString(tasks));
-    }
-
-    public void store() {
-        store(getTasks());
     }
 
     public boolean archive(List<Task> tasksToArchive) {
@@ -110,7 +106,7 @@ public class TaskBag {
         return true;
     }
 
-    private void reload() {
+    public void reload() {
        this.reload(mFileStore.get(mTodoName, preferences));
     }
 
@@ -136,42 +132,6 @@ public class TaskBag {
 
     public Task getTaskAt(int position) {
         return getTasks().get(position);
-    }
-
-    public Task addAsTask(String input) {
-        ArrayList<Task> tasks = getTasks();
-        try {
-            Task task = new Task(tasks.size(), input,
-                    (preferences.isPrependDateEnabled() ? DateTime.today(TimeZone.getDefault()) : null));
-            if (preferences.addAtEnd()) {
-                tasks.add(task);
-            } else {
-                tasks.add(0, task);
-            }
-            store();
-            return task;
-        } catch (Exception e) {
-            throw new TaskPersistException("An error occurred while adding {"
-                    + input + "}", e);
-        }
-    }
-
-    public void updateTask(Task task, String input) {
-        int index = getTasks().indexOf(task);
-        if (index!=-1) {
-            getTasks().get(index).init(input, null);
-            store();
-        }
-    }
-
-    public void delete(List<Task> tasksToDelete) {
-        ArrayList<Task> tasks = getTasks();
-        for (Task t : tasksToDelete) {
-            if (t!=null) {
-                tasks.remove(t);
-            }
-        }
-        store();
     }
 
     public ArrayList<Priority> getPriorities() {
@@ -219,6 +179,19 @@ public class TaskBag {
 
     public ArrayList<String> getDecoratedProjects(boolean includeNone) {
         return Util.prefixItems("+", getProjects(includeNone));
+    }
+
+    public void store() {
+        // fixme remove
+    }
+
+    public Task addAsTask(String s) {
+        //fixme remove
+        return null;
+    }
+
+    public void delete(List<Task> tasks) {
+        //fixme remove
     }
 
     public static class Preferences {

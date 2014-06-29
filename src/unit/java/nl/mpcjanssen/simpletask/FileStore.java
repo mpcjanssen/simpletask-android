@@ -8,7 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 
 public class FileStore implements FileStoreInterface {
 
@@ -23,7 +23,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
+    public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
         return null;
     }
 
