@@ -23,7 +23,7 @@ public class TaskBagTest extends TestCase {
         lines.add("Test");
         lines.add("Test2");
         TestFileStore testFileStore = new TestFileStore(lines);
-        TaskBag tb = new TaskBag(null, testFileStore, null);
+        TaskCache tb = new TaskCache(null, testFileStore, null);
         assertEquals(2, tb.size());
         assertEquals("Test", tb.getTaskAt(0).inFileFormat());
         assertEquals(0, tb.getContexts(false).size());
@@ -34,7 +34,7 @@ public class TaskBagTest extends TestCase {
         lines.add("Test");
         lines.add("Test2 @Match");
         TestFileStore testFileStore = new TestFileStore(lines);
-        TaskBag tb = new TaskBag(null, testFileStore, null);
+        TaskCache tb = new TaskCache(null, testFileStore, null);
         ActiveFilter filter = new ActiveFilter();
         ArrayList<String> contexts = new ArrayList<String>();
         contexts.add("NoMatch");
@@ -62,7 +62,7 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
-        public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
+        public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
             return mContents;
         }
 

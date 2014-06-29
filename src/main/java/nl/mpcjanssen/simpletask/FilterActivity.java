@@ -21,7 +21,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
 
 public class FilterActivity extends ThemedActivity {
@@ -45,7 +45,7 @@ public class FilterActivity extends ThemedActivity {
     SharedPreferences prefs;
 
     private ActionBar actionbar;
-    private TaskBag m_taskBag;
+    private TaskCache m_taskBag;
 
     private int getLastActiveTab() {
         return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
@@ -87,7 +87,7 @@ public class FilterActivity extends ThemedActivity {
         Intent intent = getIntent();
         mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
-        TaskBag taskBag = getTaskBag();
+        TaskCache taskBag = getTaskBag();
         if (intent.getAction()!=null) {
         	asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         }
@@ -416,9 +416,9 @@ public class FilterActivity extends ThemedActivity {
         }
     }
 
-    private TaskBag getTaskBag() {
+    private TaskCache getTaskBag() {
         if (m_taskBag==null) {
-            m_taskBag = new TaskBag(new TaskBag.Preferences(TodoApplication.getPrefs()),
+            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
                     m_app.getFileStore(),
                     m_app.getTodoFileName());
         }

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 
@@ -44,7 +44,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(String path, TaskBag.Preferences preferences) {
+    public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
         try {
             return TaskIo.loadFromFile(new File(path), preferences);
         } catch (IOException e) {

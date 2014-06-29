@@ -36,7 +36,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 
 
 /**
@@ -90,7 +90,7 @@ public class TaskIo {
         return sb.length() == 0 ? null : sb.toString();
     }
 
-    public static ArrayList<String> loadFromFile(File file, TaskBag.Preferences preferences)
+    public static ArrayList<String> loadFromFile(File file, TaskCache.Preferences preferences)
             throws IOException {
         ArrayList<String> items = new ArrayList<String>();
         BufferedReader in = null;

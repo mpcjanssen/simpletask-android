@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import nl.mpcjanssen.simpletask.task.ByProjectFilter;
 import nl.mpcjanssen.simpletask.task.ByTextFilter;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
 import nl.mpcjanssen.simpletask.task.TaskFilter;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
