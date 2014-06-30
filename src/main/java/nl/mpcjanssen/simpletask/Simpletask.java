@@ -212,9 +212,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     /** Save the position **/
                     ListView lv = getListView();
-                    resetTaskBag();
                     int currentPosition = lv.getFirstVisiblePosition();
-                    handleIntent();
+                    m_adapter.setFilteredTasks(true);
                     lv.setSelection(currentPosition);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
@@ -407,7 +406,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             selection.add("" + t.getId() + ":" + t.inFileFormat());
         }
         outState.putStringArrayList("selection", selection);
-        outState.putInt("position",getListView().getFirstVisiblePosition());
+        outState.putInt("position", getListView().getFirstVisiblePosition());
     }
 
     @Override
@@ -604,7 +603,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 getTaskBag().delete(tasks);
-                m_app.updateUI();
+                m_adapter.setFilteredTasks(false);
                 // We have change the data, views should refresh
             }
         }, R.string.delete_task_title);
@@ -1061,7 +1060,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         void setFilteredTasks(boolean reload) {
             ArrayList<Task> visibleTasks = new ArrayList<Task>();
             Log.v(TAG, "setFilteredTasks called, reload: " + reload);
-            resetTaskBag();
+            if (reload) {
+                resetTaskBag();
+            }
             visibleTasks.clear();
             visibleLines.clear();
             visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));

@@ -191,7 +191,9 @@ public class TaskCache {
     }
 
     public void delete(List<Task> tasks) {
-        //fixme remove
+        mTasks.removeAll(tasks);
+        mFileStore.delete(mTodoName, Util.tasksToString(tasks));
+
     }
 
     public static class Preferences {
