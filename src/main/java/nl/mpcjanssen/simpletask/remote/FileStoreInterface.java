@@ -24,7 +24,7 @@ public interface FileStoreInterface {
     boolean isLocal();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener);
     void update(String o, String s);
-
+    void delete(String mTodoName, ArrayList<String> strings);
     public interface FileSelectedListener {
         void fileSelected(String file);
     }

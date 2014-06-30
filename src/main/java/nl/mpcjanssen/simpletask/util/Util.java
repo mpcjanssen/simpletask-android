@@ -173,7 +173,7 @@ public class Util {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static ArrayList<String> tasksToString(ArrayList<Task> tasks) {
+    public static ArrayList<String> tasksToString(List<Task> tasks) {
         ArrayList<String> result = new ArrayList<String>();
         for (Task t: tasks) {
             result.add(t.inFileFormat());
