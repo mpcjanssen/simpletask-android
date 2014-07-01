@@ -159,8 +159,7 @@ public class FileStore implements FileStoreInterface {
         append(path, "\r\n" + Util.join(lines, "\r\n").trim());
     }
 
-    @Override
-    public void append(String path, String tasks) {
+    private void append(String path, String tasks) {
         if (isAuthenticated() && getDbxFS() != null) {
             new AsyncTask<String, Void, Void>() {
                 @Override
@@ -252,15 +251,6 @@ public class FileStore implements FileStoreInterface {
         FileDialog dialog = new FileDialog(act, new DbxPath(path), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
-    }
-
-    @Override
-    public void update(String filename, String original, String updated) {
-        ArrayList<String> alOriginal = new ArrayList<String>();
-        ArrayList<String> alUpdated = new ArrayList<String>();
-        alOriginal.add(original);
-        alUpdated.add(updated);
-        update(filename, alOriginal, alUpdated);
     }
 
     @Override
