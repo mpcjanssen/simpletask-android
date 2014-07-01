@@ -58,6 +58,8 @@ public class TaskCache {
     private final String mTodoName;
     private final FileStoreInterface mFileStore;
     private ArrayList<Task> mTasks = null;
+    private ArrayList<String> mLists = null;
+    private ArrayList<String> mTags = null;
 
 
     public TaskCache(Context context, FileStoreInterface fileStore, String todoName) {
@@ -108,32 +110,39 @@ public class TaskCache {
     }
 
     public ArrayList<String> getContexts(boolean includeNone) {
-        // TODO cache this after reloads?
+        if(mLists!=null) {
+            return mLists;
+        }
         Set<String> res = new HashSet<String>();
-        for (Task item : getTasks()) {
+        for (Task item : mTasks) {
             res.addAll(item.getLists());
         }
-        ArrayList<String> ret = new ArrayList<String>(res);
-        Collections.sort(ret);
+        mLists = new ArrayList<String>();
+        mLists.addAll(res);
+        Collections.sort(mLists);
         if (includeNone) {
-            ret.add(0, "-");
+            mLists.add(0, "-");
         }
-        return ret;
+        return mLists;
     }
 
     public ArrayList<String> getProjects(boolean includeNone) {
-        // TODO cache this after reloads?
+        if(mTags!=null) {
+            return mTags;
+        }
         Set<String> res = new HashSet<String>();
-        for (Task item : getTasks()) {
+        for (Task item : mTasks) {
             res.addAll(item.getTags());
         }
-        ArrayList<String> ret = new ArrayList<String>(res);
-        Collections.sort(ret);
+        mTags = new ArrayList<String>();
+        mTags.addAll(res);
+        Collections.sort(mTags);
         if (includeNone) {
-            ret.add(0, "-");
+            mTags.add(0, "-");
         }
-        return ret;
+        return mTags;
     }
+
 
     public ArrayList<String> getDecoratedContexts(boolean includeNone) {
         return Util.prefixItems("@", getContexts(includeNone));
@@ -152,6 +161,11 @@ public class TaskCache {
     }
 
     private void notifyChanged() {
+        // We have changes in cache
+        // Invalidate cached lists and tags
+        mLists = null;
+        mTags = null;
+        // Update any visible activity
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
