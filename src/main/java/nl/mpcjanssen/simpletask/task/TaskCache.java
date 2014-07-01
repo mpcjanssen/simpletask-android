@@ -190,28 +190,21 @@ public class TaskCache {
 
     public void undoComplete(List<Task> tasks) {
         ArrayList<String> originalStrings = new ArrayList<String>();
-        ArrayList<String> replacementStrings = new ArrayList<String>();
 
         for (Task t : tasks) {
             originalStrings.add(t.inFileFormat());
             t.markIncomplete();
-            replacementStrings.add(t.inFileFormat());
         }
-        mFileStore.update(mTodoName,originalStrings,replacementStrings);
-        notifyChanged();
+        update(originalStrings, tasks);
     }
 
     public void complete(List<Task> tasks) {
         ArrayList<String> originalStrings = new ArrayList<String>();
-        ArrayList<String> replacementStrings = new ArrayList<String>();
-
         for (Task t : tasks) {
             originalStrings.add(t.inFileFormat());
             t.markComplete(DateTime.now(TimeZone.getDefault()));
-            replacementStrings.add(t.inFileFormat());
         }
-        mFileStore.update(mTodoName,originalStrings,replacementStrings);
-        notifyChanged();
+        update(originalStrings, tasks);
     }
 
     public void append(String taskText) {
@@ -234,10 +227,21 @@ public class TaskCache {
     }
 
     public void defer(DateTime date, List<Task> tasksToDefer, int dateType) {
-        // fixme
+        ArrayList<String> orginalTasks = Util.tasksToString(tasksToDefer);
+        for (Task t : tasksToDefer) {
+            if (t != null) {
+                if (dateType == Task.DUE_DATE) {
+                    t.setDueDate(date);
+                } else {
+                    t.setThresholdDate(date);
+                }
+            }
+        }
+        update(orginalTasks, tasksToDefer);
     }
 
     public void defer(String selected, List<Task> tasksToDefer, int dateType) {
-        // fixme
+        DateTime deferDate = Util.addInterval(DateTime.now(TimeZone.getDefault()), selected);
+        defer(deferDate,tasksToDefer,dateType);
     }
 }
