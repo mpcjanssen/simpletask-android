@@ -38,17 +38,14 @@ public class FileStore implements FileStoreInterface {
     private DbxFileSystem.PathListener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
-    private Intent bmIntent;
     private DbxFileSystem mDbxFs;
     private DbxFileSystem.SyncStatusListener m_syncstatus;
-    ArrayList<String> mCachedLines;
-    String mCachedPath;
+    String activePath;
+    private ArrayList<String> mLines;
 
-    public FileStore( Context ctx, Intent intent) {
+    public FileStore( Context ctx) {
         mCtx = ctx;
-        this.bmIntent = intent;
-        this.mCachedLines = null;
-        this.mCachedPath = null;
+        this.activePath = null;
         setDbxAcctMgr();
     }
 
@@ -86,11 +83,33 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
-        if (mCachedLines != null && path.equals(mCachedPath)) {
-            return mCachedLines;
+    public ArrayList<String> get(String path) {
+        if (activePath != null && activePath.equals(path) && mLines!=null) {
+            return mLines;
         }
-        reload(path);
+
+        // Clear and reload cache
+        mLines = null;
+        new AsyncTask<String, Void, ArrayList<String>>() {
+
+            @Override
+            protected ArrayList<String> doInBackground(String... params) {
+                String path = params[0];
+                activePath = path;
+                ArrayList<String> results;
+                DbxFile openFile = openDbFile(path);
+                results =  syncGetLines(openFile);
+                openFile.close();
+                return results;
+            }
+            @Override
+            protected void onPostExecute(ArrayList<String> results) {
+                mLines = new ArrayList<String>();
+                mLines.addAll(results);
+                // Trigger update
+                syncInProgress(false);
+            }
+        }.execute(path);
         return new ArrayList<String>();
     }
 
@@ -102,28 +121,25 @@ public class FileStore implements FileStoreInterface {
         }
         try {
             fs.awaitFirstSync();
-
             DbxPath dbPath = new DbxPath(path);
             if (fs.exists(dbPath)) {
                 dbFile = fs.open(dbPath);
             } else {
                 dbFile = fs.create(dbPath);
             }
-        } catch (Exception e) {
+        } catch (DbxException e) {
             e.printStackTrace();
         }
         return dbFile;
     }
 
-    private ArrayList<String> syncGetLines(DbxFile dbFile, String path) {
-        Log.v(TAG, "Getting contents from: " + path);
+    private ArrayList<String> syncGetLines(DbxFile dbFile) {
         ArrayList<String> result = new ArrayList<String>();
         DbxFileSystem fs = getDbxFS();
         if (!isAuthenticated() || fs == null || dbFile == null) {
             return result;
         }
         try {
-
             dbFile.update();
             String contents =  dbFile.readString();
             for (String line : contents.split("\r|\n|\r\n")) {
@@ -136,68 +152,6 @@ public class FileStore implements FileStoreInterface {
         }
         return result;
 
-    }
-
-    private void reload(final String path) {
-        new AsyncTask<String, Void, ArrayList<String>>() {
-
-            @Override
-            protected ArrayList<String> doInBackground(String... params) {
-                String path = params[0];
-                ArrayList<String> results = new ArrayList<String>();
-                DbxFile dbFile = openDbFile(path);
-                results.addAll(syncGetLines(dbFile, path));
-                dbFile.close();
-                return results;
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<String> result) {
-
-                mCachedPath = path;
-                mCachedLines = new ArrayList<String>();
-                mCachedLines.addAll(result);
-                triggerUiUpdate();
-            }
-        }.execute(path);
-    }
-
-    @Override
-    public void store(String path, ArrayList<String> lines) {
-        mCachedLines = new ArrayList<String>();
-        for (String line : lines) {
-            if (!line.trim().equals("")) {
-                mCachedLines.add(line);
-            }
-        }
-        new AsyncTask<String, Void, Void>() {
-            @Override
-            protected Void doInBackground(String... params) {
-                String path = params[0];
-                String data = params[1];
-                Log.v(TAG, "Saving " + path + "in background thread" );
-                if (isAuthenticated() && getDbxFS() != null) {
-                    try {
-                        stopWatching(path);
-                        DbxFile dbFile;
-                        DbxPath dbPath = new DbxPath(path);
-                        if (mDbxFs.exists(dbPath)) {
-                            dbFile = mDbxFs.open(dbPath);
-                        } else {
-                            dbFile = mDbxFs.create(dbPath);
-                        }
-                        dbFile.writeString(data);
-                        dbFile.close();
-                        startWatching(path);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new TodoException("Dropbox", e);
-                    }
-                }
-                return null;
-            }
-        }.execute(path, Util.join(lines, "\r\n"));
     }
 
     @Override
@@ -215,15 +169,9 @@ public class FileStore implements FileStoreInterface {
                     String data = params[1];
                     Log.v(TAG, "Saving " + path + "in background thread");
                     try {
-                        DbxPath dbxPath = new DbxPath(path);
-                        DbxFile file;
-                        if (mDbxFs.exists(dbxPath)) {
-                            file = mDbxFs.open(dbxPath);
-                        } else {
-                            file = mDbxFs.create(dbxPath);
-                        }
-                        file.appendString(data);
-                        file.close();
+                        DbxFile openFile = openDbFile(path);
+                        openFile.appendString(data);
+                        openFile.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -231,11 +179,6 @@ public class FileStore implements FileStoreInterface {
                 }
             }.execute(path, tasks);
         }
-    }
-
-    private void triggerUiUpdate() {
-        LocalBroadcastManager bm = LocalBroadcastManager.getInstance(mCtx);
-        bm.sendBroadcast(bmIntent);
     }
 
     private void syncInProgress(boolean inProgress) {
@@ -262,11 +205,11 @@ public class FileStore implements FileStoreInterface {
                     DbxSyncStatus status;
                     try {
                         status = dbxFileSystem.getSyncStatus();
-                        if (status.anyInProgress()) {
-                            syncInProgress(true);
+                        if (!status.anyInProgress() || status.anyFailure() != null) {
+                            mLines = null;
+                            get(path);
                         } else {
-                            syncInProgress(false);
-                            reload(path);
+                            syncInProgress(true);
                         }
                     } catch (DbxException e) {
                         e.printStackTrace();
@@ -277,7 +220,7 @@ public class FileStore implements FileStoreInterface {
             m_observer = new DbxFileSystem.PathListener() {
                 @Override
                 public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-
+                    //
                 }
             };
             mDbxFs.addPathListener(m_observer, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
@@ -295,6 +238,7 @@ public class FileStore implements FileStoreInterface {
         }
         if (m_observer!=null) {
             mDbxFs.removePathListener(m_observer,new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+            m_observer = null;
         }
     }
 
@@ -322,9 +266,38 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(String o, String s) {
-        //fixme
+    public void update(String filename, String original, String updated) {
+        ArrayList<String> alOriginal = new ArrayList<String>();
+        ArrayList<String> alUpdated = new ArrayList<String>();
+        alOriginal.add(original);
+        alUpdated.add(updated);
+        update(filename, alOriginal, alUpdated);
     }
+
+    @Override
+    public void update(final String filename, final ArrayList<String> alOriginal, final ArrayList<String> alUpdated) {
+        new AsyncTask<String,Void, Void>() {
+            @Override
+            protected Void doInBackground(String... params) {
+                if (isAuthenticated() && getDbxFS() != null) {
+                    try {
+                        DbxFile openFile = openDbFile(filename);
+                        ArrayList<String> contents = new ArrayList<String>();
+                        contents.addAll(syncGetLines(openFile));
+                        contents.addAll(alUpdated);
+                        contents.removeAll(alOriginal);
+                        openFile.writeString(Util.join(contents, "\r\n"));
+                        openFile.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new TodoException("Dropbox", e);
+                    }
+                }
+                return null;
+            }
+        }.execute();
+    }
+
 
     @Override
     public void delete(final String mTodoName, final ArrayList<String> stringsToDelete) {
@@ -336,7 +309,7 @@ public class FileStore implements FileStoreInterface {
                     try {
                         DbxFile dbFile = openDbFile(mTodoName);
                         ArrayList<String> contents = new ArrayList<String>();
-                        contents.addAll(syncGetLines(dbFile, mTodoName));
+                        contents.addAll(syncGetLines(dbFile));
                         contents.removeAll(stringsToDelete);
                         dbFile.writeString(Util.join(contents, "\r\n"));
                         dbFile.close();
@@ -348,6 +321,11 @@ public class FileStore implements FileStoreInterface {
                 return null;
             }
         }.execute();
+    }
+
+    @Override
+    public int getType() {
+        return Constants.STORE_DROPBOX;
     }
 
     private class FileDialog {

@@ -90,7 +90,7 @@ public class TaskIo {
         return sb.length() == 0 ? null : sb.toString();
     }
 
-    public static ArrayList<String> loadFromFile(File file, TaskCache.Preferences preferences)
+    public static ArrayList<String> loadFromFile(File file)
             throws IOException {
         ArrayList<String> items = new ArrayList<String>();
         BufferedReader in = null;
@@ -115,7 +115,6 @@ public class TaskIo {
                 Util.closeStream(is);
             }
         }
-        preferences.setUseWindowsLineBreaksEnabled(sWindowsLineBreaks);
         return items;
     }
 

@@ -165,19 +165,20 @@ public class AddTask extends ThemedActivity {
             int numTasks = tasks.size();
             int numBackup = m_backup.size();
             Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
-            ArrayList<String> updatedTasks = new ArrayList<String>();
+            ArrayList<Task> originalTasks = new ArrayList<Task>();
+            ArrayList<Task> updatedTasks = new ArrayList<Task>();
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                 getFileStore().update(m_backup.get(0).inFileFormat(), tasks.get(0));
-                 tasks.remove(0);
-                 m_backup.remove(0);
+                originalTasks.add(m_backup.get(0));
+                updatedTasks.add(new Task(0,tasks.get(0)));
+                tasks.remove(0);
+                m_backup.remove(0);
             }
+            // Update change tasks
+            m_app.getTaskCache().update(originalTasks,updatedTasks);
+
         }
-        // Add any other tasks
-        m_app.getFileStore().append(m_app.getTodoFileName(),tasks);
-        m_app.updateWidgets();
-        if (m_app.isAutoArchive()) {
-            getTaskBag().archive(null);
-        }
+        // Append new tasks
+        m_app.getTaskCache().append(tasks);
         finish();
     }
 
@@ -198,7 +199,7 @@ public class AddTask extends ThemedActivity {
     }
 
     private void addBackgroundTask(String taskText) {
-        getFileStore().append(m_app.getTodoFileName(),taskText);
+        m_app.getTaskCache().append(taskText);
         m_app.updateWidgets();
         m_app.showToast(R.string.task_added);
     }
@@ -222,7 +223,7 @@ public class AddTask extends ThemedActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                   getTaskBag().reload();
+                    // Nothing to do here
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -444,20 +445,6 @@ public class AddTask extends ThemedActivity {
         }
     }
 
-    private TaskCache getTaskBag() {
-        if (m_taskBag==null) {
-            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
-                    m_app.getFileStore(),
-                    m_app.getTodoFileName());
-        }
-        return m_taskBag;
-    }
-
-    private FileStoreInterface getFileStore() {
-        return m_app.getFileStore();
-    }
-
-
     private void insertDate(final int dateType) {
         Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
             @Override
@@ -505,7 +492,7 @@ public class AddTask extends ThemedActivity {
 
     private void showTagMenu() {
         final Set<String> projects = new TreeSet<String>();
-        projects.addAll(getTaskBag().getProjects(false));
+        projects.addAll(m_app.getTaskCache().getProjects(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         projects.addAll(t.getTags());
@@ -572,7 +559,7 @@ public class AddTask extends ThemedActivity {
 
     private void showContextMenu() {
         final Set<String> contexts = new TreeSet<String>();
-        contexts.addAll(getTaskBag().getContexts(false));
+        contexts.addAll(m_app.getTaskCache().getContexts(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         contexts.addAll(t.getLists());
