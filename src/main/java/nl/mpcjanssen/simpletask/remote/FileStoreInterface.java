@@ -25,6 +25,8 @@ public interface FileStoreInterface {
     void update(String mTodoName, List<String> original, List<String> updated);
     void delete(String mTodoName, List<String> strings);
     int getType();
+    void move(String sourcePath, String targetPath, ArrayList<String> strings);
+
     public interface FileSelectedListener {
         void fileSelected(String file);
     }

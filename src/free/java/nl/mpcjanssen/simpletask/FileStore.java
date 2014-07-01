@@ -27,6 +27,7 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
+import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 
 /**
@@ -319,6 +320,34 @@ public class FileStore implements FileStoreInterface {
     @Override
     public int getType() {
         return Constants.STORE_DROPBOX;
+    }
+
+    @Override
+    public void move(final String sourcePath, final String targetPath, final ArrayList<String> strings) {
+
+        new AsyncTask<String,Void, Void>() {
+            @Override
+            protected Void doInBackground(String... params) {
+                if (isAuthenticated() && getDbxFS() != null) {
+                    try {
+                        Log.v(TAG, "Moving lines from " + sourcePath + " to " + targetPath);
+                        DbxFile destFile = openDbFile(targetPath);
+                        ArrayList<String> contents = new ArrayList<String>();
+                        destFile.appendString("\r\n"+Util.join(strings, "\r\n"));
+                        destFile.close();
+                        DbxFile srcFile = openDbFile(sourcePath);
+                        contents.addAll(syncGetLines(srcFile));
+                        contents.removeAll(strings);
+                        srcFile.writeString(Util.join(contents, "\r\n"));
+                        srcFile.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new TodoException("Dropbox", e);
+                    }
+                }
+                return null;
+            }
+        }.execute();
     }
 
     private class FileDialog {

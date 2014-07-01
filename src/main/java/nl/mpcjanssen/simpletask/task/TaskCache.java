@@ -69,9 +69,22 @@ public class TaskCache {
         this.mTasks = loadTasksFromStore(todoName);
     }
 
-    public boolean archive(List<Task> tasksToArchive) {
-        // fixme
-        return true;
+    public void archive(String targetPath, List<Task> selectedTasks) {
+        ArrayList<Task> tasksToArchive = new ArrayList<Task>();
+        if (selectedTasks==null) {
+            selectedTasks = mTasks;
+        }
+        for (Task t: selectedTasks) {
+            if (t.isCompleted()) {
+                tasksToArchive.add(t);
+            }
+        }
+        if (tasksToArchive.size()==0) {
+            return;
+        }
+        mTasks.removeAll(tasksToArchive);
+        notifyChanged();
+        mFileStore.move(mTodoName, targetPath, Util.tasksToString(tasksToArchive));
     }
 
     private ArrayList<Task> loadTasksFromStore (String path) {
