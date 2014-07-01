@@ -222,6 +222,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void resetTaskCache() {
         m_taskCache = null;
         getTaskCache();
+        updateUI();
     }
 
     public TaskCache getTaskCache() {
