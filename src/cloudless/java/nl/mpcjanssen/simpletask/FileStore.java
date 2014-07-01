@@ -23,19 +23,19 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
+import nl.mpcjanssen.simpletask.util.Util;
 
 public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getName();
     private final Context mCtx;
     private final LocalBroadcastManager bm;
-    private final Intent bmIntent;
     private FileObserver m_observer;
 
-    public FileStore( Context ctx, LocalBroadcastManager broadCastManager, Intent intent) {
+    public FileStore( Context ctx) {
         mCtx = ctx;
-        this.bm = broadCastManager;
-        this.bmIntent = intent;
+        m_observer = null;
+        this.bm = LocalBroadcastManager.getInstance(ctx);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FileStore implements FileStoreInterface {
     @Override
     public ArrayList<String> get(String path) {
         try {
-            return TaskIo.loadFromFile(new File(path));
+            return TaskIo.loadFromFile(new File(path), new ArrayList<String>());
         } catch (IOException e) {
             ArrayList<String> failed = new ArrayList<String>();
             return failed;
@@ -54,14 +54,13 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void store(String path, String data) {
-        TaskIo.writeToFile(data,new File(path),false);
+    public void append(String path, List<String> lines) {
+        append(path, "\r\n"+ Util.join(lines, "\r\n"));
     }
 
-    @Override
-    public boolean append(String path, String data) {
+
+    private void append(String path, String data) {
         TaskIo.writeToFile(data,new File(path),true);
-        return true;
     }
 
     @Override
@@ -70,38 +69,39 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void startWatching(String path) {
+    public void startWatching(final String path) {
         if (m_observer==null) {
-            final File file = new File(path);
-            m_observer = new FileObserver(file.getParent(),
-                    FileObserver.ALL_EVENTS) {
+            Log.v(TAG,"Observer adding on: " + new File(path).getParentFile().getAbsolutePath());
+            final String folder = new File(path).getParentFile().getAbsolutePath();
+            final String filename = new File(path).getName();
+            m_observer = new FileObserver(folder) {
                 @Override
-                public void onEvent(int event, String path) {
-                    if (path != null && path.equals(file)) {
+                public void onEvent(int event, String eventPath) {
+                    if (eventPath!=null && eventPath.equals(filename)) {
+                        // Log.v(TAG, "Observer event: " + eventPath + ":" + event);
                         if (event == FileObserver.CLOSE_WRITE ||
                                 event == FileObserver.MODIFY ||
                                 event == FileObserver.MOVED_TO) {
-                            Log.v(TAG, path + " modified...update UI");
-                            bm.sendBroadcast(bmIntent);
+                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                            Log.v(TAG, "Observer " + path + " modified....sync done");
+                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                         }
                     }
                 }
             };
+            m_observer.startWatching();
         }
     }
 
     @Override
     public void stopWatching(String path) {
         if (m_observer!=null) {
+            Log.v(TAG,"Observer removing on: " + path);
             m_observer.stopWatching();
             m_observer = null;
         }
     }
 
-    @Override
-    public boolean supportsAuthentication() {
-        return false;
-    }
 
     @Override
     public void deauthenticate() {
@@ -109,16 +109,55 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean isLocal() {
-        return true;
-    }
-
-
-    @Override
     public void browseForNewFile(Activity act, String path,  FileSelectedListener listener) {
         FileDialog dialog = new FileDialog(act, new File(path).getParentFile(), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
+    }
+
+    @Override
+    public void update(String mTodoName, List<String> original, List<String> updated) {
+        ArrayList<String> detectedEOL = new ArrayList<String>();
+        try {
+            File file = new File(mTodoName);
+            ArrayList<String> lines = TaskIo.loadFromFile(file, detectedEOL);
+            for (int i=0 ; i<original.size();i++) {
+                int index = lines.indexOf(original.get(i));
+                if (index!=-1) {
+                    lines.remove(index);
+                    lines.add(index,updated.get(i));
+                }
+            }
+            String strEOL = detectedEOL.get(0);
+            TaskIo.writeToFile(Util.join(lines, strEOL), file, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(String mTodoName, List<String> strings) {
+        ArrayList<String> detectedEOL = new ArrayList<String>();
+        try {
+            File file = new File(mTodoName);
+            ArrayList<String> lines = TaskIo.loadFromFile(file, detectedEOL);
+            lines.removeAll(strings);
+            String strEOL = detectedEOL.get(0);
+            TaskIo.writeToFile(Util.join(lines, strEOL), file, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int getType() {
+        return Constants.STORE_SDCARD;
+    }
+
+    @Override
+    public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
+        append(targetPath,strings);
+        delete(sourcePath,strings);
     }
 
     public static String getDefaultPath() {

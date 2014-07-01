@@ -166,7 +166,9 @@ public class TaskCache {
     }
 
     public Task addAsTask(String toAdd) {
-        mFileStore.append(mTodoName,toAdd);
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add(toAdd);
+        mFileStore.append(mTodoName, lines);
         Task t = new Task(0,toAdd);
         mTasks.add(t);
         notifyChanged();
