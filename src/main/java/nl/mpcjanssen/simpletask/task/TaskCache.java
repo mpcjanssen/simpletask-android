@@ -64,7 +64,7 @@ public class TaskCache {
         this.mCtx = context;
         this.mTodoName = todoName;
         this.mFileStore = fileStore;
-        reload();
+        this.mTasks = loadTasksFromStore(todoName);
     }
 
     public boolean archive(List<Task> tasksToArchive) {
@@ -72,21 +72,16 @@ public class TaskCache {
         return true;
     }
 
-    private void reload() {
-       this.reload(mFileStore.get(mTodoName));
-    }
-
-    private void reload (ArrayList<String> loadedLines) {
-        this.mTasks = new ArrayList<Task>();
+    private ArrayList<Task> loadTasksFromStore (String path) {
+        ArrayList<Task> result = new ArrayList<Task>();
         int index = 0;
-        for (String s : loadedLines) {
+        for (String s : mFileStore.get(path)) {
             if (!"".equals(s.trim())) {
-                this.mTasks.add(new Task(index, s));
+                result.add(new Task(index, s));
             }
             index ++;
         }
-        // File changed update widgets and UI
-        notifyChanged();
+        return result;
     }
 
     public int size() {
@@ -94,14 +89,11 @@ public class TaskCache {
     }
 
     public ArrayList<Task> getTasks() {
-        if (mTasks == null) {
-            reload();
-        }
         return mTasks;
     }
 
     public Task getTaskAt(int position) {
-        return getTasks().get(position);
+        return mTasks.get(position);
     }
 
     public ArrayList<Priority> getPriorities() {
