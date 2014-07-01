@@ -242,20 +242,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean supportsAuthentication() {
-        return true;
-    }
-
-    @Override
     public void deauthenticate() {
         mDbxAcctMgr.unlink();
     }
-
-    @Override
-    public boolean isLocal() {
-        return false;
-    }
-
 
     @Override
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
@@ -283,8 +272,13 @@ public class FileStore implements FileStoreInterface {
                         DbxFile openFile = openDbFile(filename);
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(openFile));
-                        contents.addAll(alUpdated);
-                        contents.removeAll(alOriginal);
+                        for (int i=0 ; i<alOriginal.size();i++) {
+                            int index = contents.indexOf(alOriginal.get(i));
+                            if (index!=-1) {
+                                contents.remove(index);
+                                contents.add(index,alUpdated.get(i));
+                            }
+                        }
                         openFile.writeString(Util.join(contents, "\r\n"));
                         openFile.close();
                     } catch (IOException e) {

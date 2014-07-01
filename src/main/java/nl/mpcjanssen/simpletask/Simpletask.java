@@ -489,8 +489,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             public void onClick(DialogInterface dialog, final int which) {
 
                 dialog.dismiss();
+                List<Task> tasks = getCheckedTasks();
                 Priority prio = Priority.toPriority(prioArr[which]);
-                //fixme
+                ArrayList<String> originalTasks = Util.tasksToString(tasks);
+                for (Task t : tasks) {
+                    t.setPriority(prio);
+                }
+                getTaskBag().update(originalTasks,tasks);
                 finishActionmode();
             }
         });

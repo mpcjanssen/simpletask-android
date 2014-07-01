@@ -19,9 +19,7 @@ public interface FileStoreInterface {
     void startLogin(Activity caller, int i);
     void startWatching(String path);
     void stopWatching(String path);
-    boolean supportsAuthentication();
     void deauthenticate();
-    boolean isLocal();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener);
     void update(String mTodoName, String original, String updated);
     void update(String mTodoName, List<String> original, List<String> updated);
