@@ -936,7 +936,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         mFilter.saveInIntent(i);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
-        finish();
     }
 
     private static class ViewHolder {
