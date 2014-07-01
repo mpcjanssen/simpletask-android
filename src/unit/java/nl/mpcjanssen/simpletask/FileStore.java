@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
@@ -17,24 +18,20 @@ public class FileStore implements FileStoreInterface {
 
     }
 
+
     @Override
     public boolean isAuthenticated() {
         return false;
     }
 
     @Override
-    public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
+    public ArrayList<String> get(String path) {
         return null;
     }
 
     @Override
-    public void store(String path, String data) {
+    public void append(String path, List<String> lines) {
 
-    }
-
-    @Override
-    public boolean append(String path, String data) {
-        return false;
     }
 
     @Override
@@ -53,26 +50,32 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean supportsAuthentication() {
-        return false;
-    }
-
-    @Override
     public void deauthenticate() {
 
     }
 
-    static public String getDefaultPath() {
-        return "";
-    }
-
-    @Override
-    public boolean isLocal() {
-        return false;
-    }
-
     @Override
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
+
+    }
+
+    @Override
+    public void update(String mTodoName, List<String> original, List<String> updated) {
+
+    }
+
+    @Override
+    public void delete(String mTodoName, List<String> strings) {
+
+    }
+
+    @Override
+    public int getType() {
+        return 0;
+    }
+
+    @Override
+    public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
 
     }
 }
