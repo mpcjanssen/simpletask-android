@@ -51,4 +51,5 @@ public class Constants {
 
     // Supported backends
     public static final int STORE_DROPBOX = 0x0;
+    public static final int STORE_SDCARD = 0x1;
 }

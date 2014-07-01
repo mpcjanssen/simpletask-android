@@ -174,11 +174,15 @@ public class AddTask extends ThemedActivity {
                 m_backup.remove(0);
             }
             // Update change tasks
-            m_app.getTaskCache().update(originalLines,updatedTasks);
+            if (updatedTasks.size()>0) {
+                m_app.getTaskCache().update(originalLines, updatedTasks);
+            }
 
         }
         // Append new tasks
-        m_app.getTaskCache().append(tasks);
+        if (tasks.size()>0) {
+            m_app.getTaskCache().append(tasks);
+        }
         finish();
     }
 

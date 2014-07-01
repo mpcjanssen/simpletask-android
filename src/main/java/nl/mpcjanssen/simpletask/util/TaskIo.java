@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.mpcjanssen.simpletask.task.TaskCache;
 
@@ -67,18 +68,12 @@ public class TaskIo {
         return items;
     }
 
-    public static String detectNewLine(String string, String defaultNewline) {
-        String eolString = defaultNewline;
-        if (string.contains("\r\n")) return "\r\n";
-        if (string.contains("\r")) return "\r";
-        if (string.contains("\n")) return "\n";
-        return defaultNewline;
-    }
-
-    private static String readLine(BufferedReader r) throws IOException {
+    private static String readLine(BufferedReader r, List<String> detectedEOLs) throws IOException {
         StringBuilder sb = new StringBuilder();
         boolean eol = false;
         int c;
+        detectedEOLs.clear();
+        detectedEOLs.add("\n");
         while(!eol && (c = r.read()) >= 0) {
             sb.append((char)c);
             eol = (c == '\r' || c == '\n');
@@ -89,8 +84,11 @@ public class TaskIo {
                 c = r.read();
                 if (c != '\n') {
                     r.reset();
+                    detectedEOLs.clear();
+                    detectedEOLs.add("\r");
                 } else {
-                    sWindowsLineBreaks = true;
+                    detectedEOLs.clear();
+                    detectedEOLs.add("\r\n");
                     sb.append((char)c);
                 }
             }
@@ -98,7 +96,7 @@ public class TaskIo {
         return sb.length() == 0 ? null : sb.toString();
     }
 
-    public static ArrayList<String> loadFromFile(File file, NewLine detectedEol)
+    public static ArrayList<String> loadFromFile(File file, List<String> detectedEOLs)
             throws IOException {
         ArrayList<String> items = new ArrayList<String>();
         BufferedReader in = null;
@@ -111,7 +109,7 @@ public class TaskIo {
                 String line;
                 long counter = 0L;
                 sWindowsLineBreaks = false;
-                while ((line = readLine(in)) != null) {
+                while ((line = readLine(in, detectedEOLs)) != null) {
                     line = line.trim();
                     if (line.length() > 0) {
                         items.add(line);
@@ -136,23 +134,6 @@ public class TaskIo {
             fw.close();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
-        }
-    }
-
-    public class NewLine {
-        private String eol = "\n";
-
-        public void setWindows() {
-            eol = "\r\n";
-        }
-        public void setMac() {
-            eol = "\r";
-        }
-        public void setUnix() {
-            eol = "\n";
-        }
-        public String getEol () {
-            return eol;
         }
     }
 }
