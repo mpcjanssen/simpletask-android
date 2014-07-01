@@ -74,6 +74,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
@@ -82,6 +83,8 @@ import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.TaskCompleter;
+import nl.mpcjanssen.simpletask.task.TaskPrioritizer;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -213,7 +216,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     /** Save the position **/
                     ListView lv = getListView();
                     int currentPosition = lv.getFirstVisiblePosition();
-                    m_adapter.setFilteredTasks(true);
+                    handleIntent();
                     lv.setSelection(currentPosition);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
@@ -247,12 +250,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         setProgressBarIndeterminateVisibility(false);
     }
 
-    private void resetTaskBag() {
-        m_taskBag = null;
-    }
-
     private void handleIntent() {
-        if (!m_app.getFileStore().isAuthenticated()) {
+        if (!m_app.isAuthenticated()) {
             startLogin();
             return;
         }
@@ -316,7 +315,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             m_adapter = new TaskAdapter(this, R.layout.list_item,
                     getLayoutInflater(), getListView());
         }
-        m_adapter.setFilteredTasks(true);
+        m_adapter.setFilteredTasks();
 
         setListAdapter(this.m_adapter);
 
@@ -490,13 +489,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             public void onClick(DialogInterface dialog, final int which) {
 
                 dialog.dismiss();
-                for (Task task : tasks) {
-                    if (task != null) {
-                        task.setPriority(Priority.toPriority(prioArr[which]));
-                    }
-                }
+                Priority prio = Priority.toPriority(prioArr[which]);
+                //fixme
                 finishActionmode();
-                // TODO change implementation
             }
         });
         builder.show();
@@ -520,24 +515,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                         }
                     }
                 }
-                t.markComplete(DateTime.today(TimeZone.getDefault()));
             }
         }
-        getTaskBag().store();
-        if (m_app.isAutoArchive()) {
-            archiveTasks(null);
-        }
-        m_app.updateUI();
+        getTaskBag().complete(tasks);
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
-        for (Task t : tasks) {
-            if (t != null && t.isCompleted()) {
-                t.markIncomplete();
-            }
-        }
-        getTaskBag().store();
-        m_app.updateUI();
+        getTaskBag().undoComplete(tasks);
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -553,7 +537,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            deferTasks(date, tasksToDefer, dateType);
+                            getTaskBag().defer(date, tasksToDefer, dateType);
 
                         }
                     },
@@ -564,46 +548,18 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
                     dialog.show();
                 } else {
-                    deferTasks(selected, tasksToDefer, dateType);
+                    getTaskBag().defer(selected, tasksToDefer, dateType);
                 }
             }
         });
         d.show();
     }
 
-    private void deferTasks(DateTime selected, List<Task> tasksToDefer, int type) {
-        for (Task t : tasksToDefer) {
-            if (t != null) {
-                if (type == Task.DUE_DATE) {
-                    t.setDueDate(selected);
-                } else {
-                    t.setThresholdDate(selected);
-                }
-            }
-        }
-        getTaskBag().store();
-    }
-
-    private void deferTasks(String selected, List<Task> tasksToDefer, int type) {
-        for (Task t : tasksToDefer) {
-            if (t != null) {
-                if (type == Task.DUE_DATE) {
-                    t.deferDueDate(selected, false);
-                } else {
-                    t.deferThresholdDate(selected, false);
-                }
-            }
-        }
-        getTaskBag().store();
-        m_app.updateUI();
-    }
-
     private void deleteTasks(final List<Task> tasks) {
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                getTaskBag().delete(tasks);
-                m_adapter.setFilteredTasks(false);
+                m_app.getTaskCache().delete(tasks);
                 // We have change the data, views should refresh
             }
         }, R.string.delete_task_title);
@@ -646,13 +602,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }, R.string.archive_task_title);
                 break;
             case R.id.open_file:
-                m_app.getFileStore().browseForNewFile(this, m_app.getTodoFileName(), new FileStoreInterface.FileSelectedListener() {
-                    @Override
-                    public void fileSelected(String file) {
-                        m_app.setTodoFile(file);
-                        m_app.updateUI();
-                    }
-                });
+                m_app.browseForNewFile(this);
                 break;
             default:
                 return super.onMenuItemSelected(featureId, item);
@@ -690,7 +640,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             options_menu.findItem(R.id.search).collapseActionView();
         }
         clearFilter();
-        m_adapter.setFilteredTasks(false);
+        m_adapter.setFilteredTasks();
     }
 
     public ArrayList<ActiveFilter> getSavedFilter() {
@@ -815,7 +765,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 mFilter.saveInIntent(intent);
                 setIntent(intent);
                 mFilter.saveInPrefs(TodoApplication.getPrefs());
-                m_adapter.setFilteredTasks(false);
+                m_adapter.setFilteredTasks();
                 if (m_drawerLayout != null) {
                     m_drawerLayout.closeDrawer(Gravity.RIGHT);
                 }
@@ -978,12 +928,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private TaskCache getTaskBag() {
-        if (m_taskBag==null) {
-            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
-                    m_app.getFileStore(),
-                    m_app.getTodoFileName());
-        }
-        return m_taskBag;
+        return m_app.getTaskCache();
     }
 
     public void startFilterActivity() {
@@ -1057,12 +1002,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             this.m_inflater = inflater;
         }
 
-        void setFilteredTasks(boolean reload) {
+        void setFilteredTasks() {
             ArrayList<Task> visibleTasks = new ArrayList<Task>();
-            Log.v(TAG, "setFilteredTasks called, reload: " + reload);
-            if (reload) {
-                resetTaskBag();
-            }
+            Log.v(TAG, "setFilteredTasks called");
             visibleTasks.clear();
             visibleLines.clear();
             visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
@@ -1346,7 +1288,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 @Override
                 protected void publishResults(CharSequence charSequence,
                                               FilterResults filterResults) {
-                    setFilteredTasks(false);
+                    setFilteredTasks();
                 }
             };
         }
@@ -1513,7 +1455,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     private void updateLists(final List<Task> checkedTasks) {
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
-
         final TaskCache taskbag = getTaskBag();
         contexts.addAll(taskbag.getContexts(false));
         for (Task t : checkedTasks) {
@@ -1544,6 +1485,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                ArrayList<Task> originalTasks = new ArrayList<Task>();
+                originalTasks.addAll(getCheckedTasks());
                 ArrayList<String> items = new ArrayList<String>();
                 ArrayList<String> uncheckedItesm = new ArrayList<String>();
                 uncheckedItesm.addAll(Util.getCheckedItems(lv, false));
@@ -1563,7 +1506,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                taskbag.store();
+                m_app.getTaskCache().update(
+                        originalTasks,
+                        checkedTasks
+                        );
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1610,6 +1556,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
+                ArrayList<Task> originalTasks = new ArrayList<Task>();
+                originalTasks.addAll(checkedTasks);
                 ArrayList<String> uncheckedItems = new ArrayList<String>();
                 uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 items.addAll(Util.getCheckedItems(lv, true));
@@ -1628,7 +1576,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                taskbag.store();
+                m_app.getTaskCache().update(
+                        originalTasks,
+                        checkedTasks
+                );
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1676,7 +1627,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             mFilter.saveInPrefs(TodoApplication.getPrefs());
             setIntent(intent);
             finishActionmode();
-            m_adapter.setFilteredTasks(false);
+            m_adapter.setFilteredTasks();
             //m_drawerLayout.closeDrawer(Gravity.LEFT);
         }
     }

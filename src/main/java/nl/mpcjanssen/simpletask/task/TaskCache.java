@@ -22,7 +22,10 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +36,9 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.Simpletask;
+import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -49,65 +54,27 @@ import nl.mpcjanssen.simpletask.util.Util;
  */
 public class TaskCache {
     final static String TAG = TaskCache.class.getSimpleName();
+    private final Context mCtx;
+    private final String mTodoName;
     private final FileStoreInterface mFileStore;
-    private String mTodoName;
-    private Preferences preferences;
     private ArrayList<Task> mTasks = null;
 
 
-    public TaskCache(Preferences taskBagPreferences,
-                     FileStoreInterface fileStore, String todoName) {
-        this.preferences = taskBagPreferences;
-        this.mFileStore = fileStore;
+    public TaskCache(Context context, FileStoreInterface fileStore, String todoName) {
+        this.mCtx = context;
         this.mTodoName = todoName;
+        this.mFileStore = fileStore;
         reload();
     }
 
-    private String contents () {
-        ArrayList<String> contents = new ArrayList<String>();
-        for (Task t : getTasks()) {
-            contents.add(t.inFileFormat());
-        }
-        return Util.join(contents,"\n");
-    }
-
-    private void store(ArrayList<Task> tasks) {
-        mFileStore.store(mTodoName, Util.tasksToString(tasks));
-    }
-
     public boolean archive(List<Task> tasksToArchive) {
-        boolean windowsLineBreaks = preferences.isUseWindowsLineBreaksEnabled();
-
-        ArrayList<Task> archivedTasks = new ArrayList<Task>(getTasks().size());
-        ArrayList<Task> remainingTasks = new ArrayList<Task>(getTasks().size());
-
-        for (Task task : getTasks()) {
-            if (tasksToArchive != null) {
-                // Archive selected tasks
-                if (tasksToArchive.indexOf(task) != -1 ) {
-                    archivedTasks.add(task);
-                } else {
-                    remainingTasks.add(task);
-                }
-            } else {
-                // Archive completed tasks
-                if (task.isCompleted()) {
-                    archivedTasks.add(task);
-                } else {
-                    remainingTasks.add(task);
-                }
-            }
-        }
-
-        // append completed tasks to done.txt
-        mFileStore.append(new File(mTodoName).getParent() + "/done.txt",
-                Util.tasksToString(archivedTasks));
-        this.store(remainingTasks);
+        // fixme
         return true;
     }
 
-    public void reload() {
-       this.reload(mFileStore.get(mTodoName, preferences));
+    private void reload() {
+       this.reload(mFileStore.get(mTodoName));
+        notifyChanged();
     }
 
     private void reload (ArrayList<String> loadedLines) {
@@ -117,6 +84,8 @@ public class TaskCache {
             this.mTasks.add(new Task(index, s));
             index ++;
         }
+        // File changed update widgets and UI
+        notifyChanged();
     }
 
     public int size() {
@@ -181,49 +150,82 @@ public class TaskCache {
         return Util.prefixItems("+", getProjects(includeNone));
     }
 
-    public void store() {
-        // fixme remove
+    public Task addAsTask(String toAdd) {
+        mFileStore.append(mTodoName,toAdd);
+        Task t = new Task(0,toAdd);
+        mTasks.add(t);
+        notifyChanged();
+        return t;
     }
 
-    public Task addAsTask(String s) {
-        //fixme remove
-        return null;
+    private void notifyChanged() {
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     public void delete(List<Task> tasks) {
         mTasks.removeAll(tasks);
-        mFileStore.delete(mTodoName, Util.tasksToString(tasks));
-
+        mFileStore.delete(mTodoName,Util.tasksToString(tasks));
+        notifyChanged();
     }
 
-    public static class Preferences {
-        private final SharedPreferences sharedPreferences;
+    public void undoComplete(List<Task> tasks) {
+        ArrayList<String> originalStrings = new ArrayList<String>();
+        ArrayList<String> replacementStrings = new ArrayList<String>();
 
-        public Preferences(SharedPreferences sharedPreferences) {
-            this.sharedPreferences = sharedPreferences;
+        for (Task t : tasks) {
+            originalStrings.add(t.inFileFormat());
+            t.markIncomplete();
+            replacementStrings.add(t.inFileFormat());
         }
-
-        public void setUseWindowsLineBreaksEnabled(boolean enabled) {
-            SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putBoolean("linebreakspref", enabled);
-            edit.commit();
-
-        }
-        public boolean isUseWindowsLineBreaksEnabled() {
-            return sharedPreferences.getBoolean("linebreakspref", false);
-        }
-
-        public boolean isPrependDateEnabled() {
-            return sharedPreferences.getBoolean("todotxtprependdate", true);
-        }
-
-        public boolean isOnline() {
-            return !sharedPreferences.getBoolean("workofflinepref", false);
-        }
-
-	public boolean addAtEnd() {
-	    return sharedPreferences.getBoolean("addtaskatendpref", true);
-	}
+        mFileStore.update(mTodoName,originalStrings,replacementStrings);
+        notifyChanged();
     }
 
+    public void complete(List<Task> tasks) {
+        ArrayList<String> originalStrings = new ArrayList<String>();
+        ArrayList<String> replacementStrings = new ArrayList<String>();
+
+        for (Task t : tasks) {
+            originalStrings.add(t.inFileFormat());
+            t.markComplete(DateTime.now(TimeZone.getDefault()));
+            replacementStrings.add(t.inFileFormat());
+        }
+        mFileStore.update(mTodoName,originalStrings,replacementStrings);
+        // fixme run autoarchive
+        notifyChanged();
+    }
+
+    public void append(String taskText) {
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add(taskText);
+        append(lines);
+    }
+
+    public void append(ArrayList<String> lines) {
+        mFileStore.append(mTodoName,lines);
+        for (String line: lines ) {
+            mTasks.add(new Task(0,line));
+        }
+        notifyChanged();
+    }
+
+    public void update(List<Task> originalTasks, List<Task> updatedTasks) {
+        for (int i=0; i<originalTasks.size(); i++) {
+            int found = mTasks.indexOf(originalTasks.get(i));
+            if (found!=-1) {
+                mTasks.remove(found);
+                mTasks.add(found,updatedTasks.get(i));
+            }
+        }
+        mFileStore.update(mTodoName,Util.tasksToString(originalTasks),Util.tasksToString(updatedTasks));
+        notifyChanged();
+    }
+
+    public void defer(DateTime date, List<Task> tasksToDefer, int dateType) {
+        // fixme
+    }
+
+    public void defer(String selected, List<Task> tasksToDefer, int dateType) {
+        // fixme
+    }
 }

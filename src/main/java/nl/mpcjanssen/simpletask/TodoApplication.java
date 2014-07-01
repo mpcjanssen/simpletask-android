@@ -23,14 +23,17 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.preference.PreferenceManager;
@@ -39,7 +42,10 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -50,6 +56,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private LocalBroadcastManager localBroadcastManager;
 
     private FileStoreInterface mFileStore;
+    private TaskCache m_taskCache;
+    private BroadcastReceiver m_broadcastReceiver;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -65,6 +73,21 @@ public class TodoApplication extends Application implements SharedPreferences.On
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
+        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+        m_broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
+                    // File change reload task cache
+                    resetTaskCache();
+                } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+                    updateWidgets();
+                }
+            }
+        };
+        localBroadcastManager.registerReceiver(m_broadcastReceiver,intentFilter);
     }
 
     public LocalBroadcastManager getLocalBroadCastManager() {
@@ -94,6 +117,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void onTerminate() {
         Log.v(TAG, "Deregistered receiver");
         m_prefs.unregisterOnSharedPreferenceChangeListener(this);
+        if (m_broadcastReceiver!=null) {
+            localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
+        }
         super.onTerminate();
     }
 
@@ -185,6 +211,22 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 .putBoolean(getString(R.string.word_wrap_key),bool)
                 .commit();
     }
+
+    public void resetTaskCache() {
+        m_taskCache = null;
+        getTaskCache();
+    }
+
+    public TaskCache getTaskCache() {
+        if (m_taskCache==null) {
+            m_taskCache = new TaskCache(this,
+                    getFileStore(),
+                    getTodoFileName());
+        }
+        return m_taskCache;
+    }
+
+
 
     public void showToast(int resid) {
         Util.showToastLong(this, resid);
@@ -282,9 +324,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    public FileStoreInterface getFileStore() {
+    private FileStoreInterface getFileStore() {
         if (mFileStore==null) {
-            mFileStore = new FileStore(this, new Intent(Constants.BROADCAST_UPDATE_UI));
+            mFileStore = new FileStore(this);
         }
         return mFileStore;
     }
@@ -305,5 +347,40 @@ public class TodoApplication extends Application implements SharedPreferences.On
         } else {
             oklistener.onClick(dialog , DialogInterface.BUTTON_POSITIVE);
         }
+    }
+
+    public boolean isAuthenticated() {
+        FileStoreInterface fs = getFileStore();
+        if (fs==null) {
+            return false;
+        }
+        return getFileStore().isAuthenticated();
+    }
+
+    public void startLogin(LoginScreen loginScreen, int i) {
+        getFileStore().startLogin(loginScreen,i);
+    }
+
+    public int storeType() {
+        return getFileStore().getType();
+    }
+
+    public void browseForNewFile(Activity act) {
+        FileStoreInterface fileStore = getFileStore();
+        if (fileStore == null) {
+            Util.showToastShort(act, "can't access filesystem");
+            return;
+        }
+        fileStore.browseForNewFile(
+                act,
+                getTodoFileName(),
+                new FileStoreInterface.FileSelectedListener() {
+                    @Override
+                    public void fileSelected(String file) {
+                        setTodoFile(file);
+                        resetTaskCache();
+                        updateUI();
+                    }
+                });
     }
 }

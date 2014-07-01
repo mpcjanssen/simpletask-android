@@ -73,10 +73,7 @@ public class LoginScreen extends Activity {
             }
         });
 
-
-
-        FileStoreInterface remoteClient = m_app.getFileStore();
-        if (remoteClient.isAuthenticated()) {
+        if (m_app.isAuthenticated()) {
             switchToTodolist();
         }
     }
@@ -94,7 +91,7 @@ public class LoginScreen extends Activity {
     }
 
     private void finishLogin() {
-        if (m_app.getFileStore().isAuthenticated()) {
+        if (m_app.isAuthenticated()) {
             switchToTodolist();
         }
     }
@@ -106,7 +103,7 @@ public class LoginScreen extends Activity {
     }
 
     void startLogin() {
-        m_app.getFileStore().startLogin(this, 0);
+        m_app.startLogin(this, 0);
     }
 
 }

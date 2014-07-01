@@ -12,8 +12,7 @@ import nl.mpcjanssen.simpletask.task.TaskCache;
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
-    ArrayList<String> get(String path, TaskCache.Preferences preferences);
-    void store(String path, ArrayList<String> lines);
+    ArrayList<String> get(String path);
     void append(String path, ArrayList<String> lines);
     void append(String path, String tasks);
     void startLogin(Activity caller, int i);
@@ -23,8 +22,10 @@ public interface FileStoreInterface {
     void deauthenticate();
     boolean isLocal();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener);
-    void update(String o, String s);
+    void update(String mTodoName, String original, String updated);
+    void update(String mTodoName, ArrayList<String> original, ArrayList<String> updated);
     void delete(String mTodoName, ArrayList<String> strings);
+    int getType();
     public interface FileSelectedListener {
         void fileSelected(String file);
     }

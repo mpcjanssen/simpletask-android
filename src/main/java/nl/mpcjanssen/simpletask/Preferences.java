@@ -81,7 +81,7 @@ public class Preferences extends ThemedActivity {
 				e.printStackTrace();
 			}
             m_app = (TodoApplication)getActivity().getApplication();
-            if (!m_app.getFileStore().supportsAuthentication()) {
+            if (m_app.storeType() == Constants.STORE_DROPBOX) {
                 PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
                 getPreferenceScreen().removePreference(dropboxCategory);
             }

@@ -87,13 +87,12 @@ public class FilterActivity extends ThemedActivity {
         Intent intent = getIntent();
         mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
-        TaskCache taskBag = getTaskBag();
         if (intent.getAction()!=null) {
         	asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         }
         // Fill arguments for fragment
         arguments = new Bundle();        
-        arguments.putStringArrayList(FILTER_ITEMS, taskBag.getContexts(true));
+        arguments.putStringArrayList(FILTER_ITEMS, m_app.getTaskCache().getContexts(true));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
@@ -103,7 +102,7 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, taskBag.getProjects(true));
+        arguments.putStringArrayList(FILTER_ITEMS, m_app.getTaskCache().getProjects(true));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()
@@ -113,7 +112,7 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(taskBag.getPriorities()));
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTaskCache().getPriorities()));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
         arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
         actionbar.addTab(actionbar.newTab()
@@ -414,15 +413,6 @@ public class FilterActivity extends ThemedActivity {
                 ft.detach(mFragment);
             }
         }
-    }
-
-    private TaskCache getTaskBag() {
-        if (m_taskBag==null) {
-            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
-                    m_app.getFileStore(),
-                    m_app.getTodoFileName());
-        }
-        return m_taskBag;
     }
 }
 

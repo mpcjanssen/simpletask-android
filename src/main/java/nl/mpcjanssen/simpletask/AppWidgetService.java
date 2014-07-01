@@ -65,7 +65,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     void setFilteredTasks() {
         Log.v(TAG, "setFilteredTasks called");
         visibleTasks.clear();
-        for (Task t : mFilter.apply(getTaskBag().getTasks())) {
+        for (Task t : mFilter.apply(application.getTaskCache().getTasks())) {
             if (t.isVisible()) {
                 visibleTasks.add(t);
             }
@@ -243,15 +243,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     @Override
     public void onDestroy() {
 	// TODO Auto-generated method stub
-    }
-
-    private TaskCache getTaskBag() {
-        if (m_taskBag==null) {
-            m_taskBag = new TaskCache(new TaskCache.Preferences(TodoApplication.getPrefs()),
-                    application.getFileStore(),
-                    application.getTodoFileName());
-        }
-        return m_taskBag;
     }
 
     private void resetTaskBag() {

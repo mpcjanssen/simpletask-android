@@ -48,4 +48,7 @@ public class Constants {
 
     // Android OS specific constants
     public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
+
+    // Supported backends
+    public static final int STORE_DROPBOX = 0x0;
 }

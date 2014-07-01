@@ -44,9 +44,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
+    public ArrayList<String> get(String path) {
         try {
-            return TaskIo.loadFromFile(new File(path), preferences);
+            return TaskIo.loadFromFile(new File(path));
         } catch (IOException e) {
             ArrayList<String> failed = new ArrayList<String>();
             return failed;
