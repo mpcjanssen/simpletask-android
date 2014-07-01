@@ -211,7 +211,6 @@ public class TaskCache {
             replacementStrings.add(t.inFileFormat());
         }
         mFileStore.update(mTodoName,originalStrings,replacementStrings);
-        // fixme run autoarchive
         notifyChanged();
     }
 
