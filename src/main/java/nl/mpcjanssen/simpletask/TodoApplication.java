@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -390,5 +391,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
                         updateUI();
                     }
                 });
+    }
+
+    public String getDoneFileName() {
+        return new File(getTodoFileName()).getParent()+"/done.txt";
     }
 }

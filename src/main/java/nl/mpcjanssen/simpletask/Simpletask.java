@@ -571,10 +571,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void archiveTasks(final List<Task> tasksToArchive) {
-        if (!getTaskBag().archive(tasksToArchive)) {
-            Util.showToastLong(Simpletask.this,
-                    "Could not archive tasks");
-        }
+        getTaskBag().archive(m_app.getDoneFileName(), tasksToArchive);
     }
 
     @Override

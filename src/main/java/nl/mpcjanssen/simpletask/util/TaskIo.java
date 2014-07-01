@@ -67,6 +67,14 @@ public class TaskIo {
         return items;
     }
 
+    public static String detectNewLine(String string, String defaultNewline) {
+        String eolString = defaultNewline;
+        if (string.contains("\r\n")) return "\r\n";
+        if (string.contains("\r")) return "\r";
+        if (string.contains("\n")) return "\n";
+        return defaultNewline;
+    }
+
     private static String readLine(BufferedReader r) throws IOException {
         StringBuilder sb = new StringBuilder();
         boolean eol = false;
@@ -90,7 +98,7 @@ public class TaskIo {
         return sb.length() == 0 ? null : sb.toString();
     }
 
-    public static ArrayList<String> loadFromFile(File file)
+    public static ArrayList<String> loadFromFile(File file, NewLine detectedEol)
             throws IOException {
         ArrayList<String> items = new ArrayList<String>();
         BufferedReader in = null;
@@ -128,6 +136,23 @@ public class TaskIo {
             fw.close();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public class NewLine {
+        private String eol = "\n";
+
+        public void setWindows() {
+            eol = "\r\n";
+        }
+        public void setMac() {
+            eol = "\r";
+        }
+        public void setUnix() {
+            eol = "\n";
+        }
+        public String getEol () {
+            return eol;
         }
     }
 }
