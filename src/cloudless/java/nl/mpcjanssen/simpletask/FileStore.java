@@ -89,8 +89,8 @@ public class FileStore implements FileStoreInterface {
                     }
                 }
             };
-            m_observer.startWatching();
         }
+        m_observer.startWatching();
     }
 
     @Override
