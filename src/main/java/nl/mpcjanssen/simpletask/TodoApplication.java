@@ -108,9 +108,16 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public void stopWatching() {
+        if (hasPushSync()) {
+            return;
+        }
         if (mFileStore!=null) {
             mFileStore.stopWatching(getTodoFileName());
         }
+    }
+
+    private boolean hasPushSync() {
+        return true;
     }
 
     @Override

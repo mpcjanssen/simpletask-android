@@ -142,8 +142,7 @@ public class FileStore implements FileStoreInterface {
         try {
             dbFile.update();
             String contents =  dbFile.readString();
-            for (String line : contents.split("\r|\n|\r\n")) {
-                if (!"".equals(line))
+            for (String line : contents.split("\r\n|\r|\n")) {
                 result.add(line);
             }
             return result;
@@ -155,7 +154,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(String path, ArrayList<String> lines) {
+    public void append(String path, List<String> lines) {
         append(path, "\r\n" + Util.join(lines, "\r\n").trim());
     }
 
@@ -275,7 +274,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(final String filename, final ArrayList<String> alOriginal, final ArrayList<String> alUpdated) {
+    public void update(final String filename, final List<String> alOriginal, final List<String> alUpdated) {
         new AsyncTask<String,Void, Void>() {
             @Override
             protected Void doInBackground(String... params) {
@@ -300,7 +299,7 @@ public class FileStore implements FileStoreInterface {
 
 
     @Override
-    public void delete(final String mTodoName, final ArrayList<String> stringsToDelete) {
+    public void delete(final String mTodoName, final List<String> stringsToDelete) {
 
         new AsyncTask<String,Void, Void>() {
             @Override
