@@ -74,14 +74,15 @@ public class TaskCache {
 
     private void reload() {
        this.reload(mFileStore.get(mTodoName));
-        notifyChanged();
     }
 
     private void reload (ArrayList<String> loadedLines) {
         this.mTasks = new ArrayList<Task>();
         int index = 0;
         for (String s : loadedLines) {
-            this.mTasks.add(new Task(index, s));
+            if (!"".equals(s.trim())) {
+                this.mTasks.add(new Task(index, s));
+            }
             index ++;
         }
         // File changed update widgets and UI
@@ -209,15 +210,8 @@ public class TaskCache {
         notifyChanged();
     }
 
-    public void update(List<Task> originalTasks, List<Task> updatedTasks) {
-        for (int i=0; i<originalTasks.size(); i++) {
-            int found = mTasks.indexOf(originalTasks.get(i));
-            if (found!=-1) {
-                mTasks.remove(found);
-                mTasks.add(found,updatedTasks.get(i));
-            }
-        }
-        mFileStore.update(mTodoName,Util.tasksToString(originalTasks),Util.tasksToString(updatedTasks));
+    public void update(List<String> originalTasks, List<Task> updatedTasks) {
+        mFileStore.update(mTodoName,originalTasks,Util.tasksToString(updatedTasks));
         notifyChanged();
     }
 

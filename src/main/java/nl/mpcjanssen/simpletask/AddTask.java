@@ -78,7 +78,7 @@ public class AddTask extends ThemedActivity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private ArrayList<Task> m_backup = new ArrayList<Task>();
+    private ArrayList<String> m_backup = new ArrayList<String>();
     private TodoApplication m_app;
 
     private String share_text;
@@ -165,16 +165,16 @@ public class AddTask extends ThemedActivity {
             int numTasks = tasks.size();
             int numBackup = m_backup.size();
             Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
-            ArrayList<Task> originalTasks = new ArrayList<Task>();
+            ArrayList<String> originalLines = new ArrayList<String>();
             ArrayList<Task> updatedTasks = new ArrayList<Task>();
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                originalTasks.add(m_backup.get(0));
+                originalLines.add(m_backup.get(0));
                 updatedTasks.add(new Task(0,tasks.get(0)));
                 tasks.remove(0);
                 m_backup.remove(0);
             }
             // Update change tasks
-            m_app.getTaskCache().update(originalTasks,updatedTasks);
+            m_app.getTaskCache().update(originalLines,updatedTasks);
 
         }
         // Append new tasks
@@ -301,9 +301,7 @@ public class AddTask extends ThemedActivity {
             ArrayList<String> prefill = new ArrayList<String>();
             for (String txt : sTasks.split("\n",-1)) {
                 String[] parts = txt.split(":",2);
-                Task t = new Task(Integer.valueOf(parts[0]),"");
-                t.init(parts[1],null);
-                m_backup.add(t);
+                m_backup.add(parts[1]);
                 prefill.add(parts[1]);
             }
             String sPrefill = Util.join(prefill,"\n");

@@ -214,10 +214,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     /** Save the position **/
-                    ListView lv = getListView();
-                    int currentPosition = lv.getFirstVisiblePosition();
+                    int currentPosition = getListView().getFirstVisiblePosition();
+                    Log.v(TAG, "Updating UI because of broadcast");
                     handleIntent();
-                    lv.setSelection(currentPosition);
+                    getListView().setSelection(currentPosition);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -1485,8 +1485,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<Task> originalTasks = new ArrayList<Task>();
-                originalTasks.addAll(getCheckedTasks());
+                ArrayList<String> originalLines = new ArrayList<String>();
+                originalLines.addAll(Util.tasksToString(getCheckedTasks()));
                 ArrayList<String> items = new ArrayList<String>();
                 ArrayList<String> uncheckedItesm = new ArrayList<String>();
                 uncheckedItesm.addAll(Util.getCheckedItems(lv, false));
@@ -1507,7 +1507,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
                 finishActionmode();
                 m_app.getTaskCache().update(
-                        originalTasks,
+                        originalLines,
                         checkedTasks
                         );
             }
@@ -1556,8 +1556,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
-                ArrayList<Task> originalTasks = new ArrayList<Task>();
-                originalTasks.addAll(checkedTasks);
+                ArrayList<String> originalLines = new ArrayList<String>();
+                originalLines.addAll(Util.tasksToString(checkedTasks));
                 ArrayList<String> uncheckedItems = new ArrayList<String>();
                 uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 items.addAll(Util.getCheckedItems(lv, true));
@@ -1577,7 +1577,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
                 finishActionmode();
                 m_app.getTaskCache().update(
-                        originalTasks,
+                        originalLines,
                         checkedTasks
                 );
             }
