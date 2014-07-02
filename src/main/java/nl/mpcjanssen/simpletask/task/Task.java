@@ -23,9 +23,11 @@
 package nl.mpcjanssen.simpletask.task;
 
 import android.text.SpannableString;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
@@ -41,10 +43,12 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 @SuppressWarnings("serial")
 public class Task implements Serializable, Comparable<Task> {
-
+    public static String TAG = Task.class.getName();
     public final static int DUE_DATE = 0;
     public final static int THRESHOLD_DATE = 1;
     private static final long serialVersionUID = 0L;
+    private final static Pattern LIST_PATTERN = Pattern
+            .compile("^@(\\S*\\w)(.*)");
     private static final Pattern HIDDEN_PATTERN = Pattern
             .compile("(^|\\s)[Hh]:1");
     private static final Pattern TAG_PATTERN = Pattern
@@ -63,9 +67,10 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
-    private static final String COMPLETED = "x ";
     private String text;
+    private boolean completed;
     private long id = 0;
+    private ArrayList<Token> tokens = new ArrayList<Token>();
 
 
     public Task(long id, String rawText, DateTime defaultPrependedDate) {
@@ -77,16 +82,13 @@ public class Task implements Serializable, Comparable<Task> {
         this(id, rawText, null);
     }
 
-    public static boolean validTag(String tag) {
-        return TAG_PATTERN.matcher(tag).find();
-    }
-
     public void update(String rawText) {
         this.init(rawText, null);
     }
 
     public void init(String rawText, DateTime defaultPrependedDate) {
         this.text = rawText;
+        this.tokens = parse(rawText);
         if (defaultPrependedDate != null
                 && getPrependedDate() == null) {
             Priority p = getPriority();
@@ -95,6 +97,7 @@ public class Task implements Serializable, Comparable<Task> {
             setPriority(p);
         }
     }
+
 
     private DateTime getDate(Pattern datePattern) {
         DateTime date = null;
@@ -311,7 +314,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public boolean isCompleted() {
-        return getCompletionDate() != null;
+        return this.completed;
     }
 
     public boolean isVisible() {
@@ -323,11 +326,13 @@ public class Task implements Serializable, Comparable<Task> {
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
             this.text = "x " + completionDate + " " + inFileFormat();
+            parse(this.text);
         }
     }
 
     public void markIncomplete() {
         this.text = getTextWithoutCompletionInfo();
+        parse(this.text);
     }
 
     public void delete() {
@@ -380,7 +385,7 @@ public class Task implements Serializable, Comparable<Task> {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (((Object) this).getClass() != obj.getClass())
             return false;
         Task other = (Task) obj;
         if (id != other.id)
@@ -557,4 +562,75 @@ public class Task implements Serializable, Comparable<Task> {
 
         return stext;
     }
+
+    private ArrayList<Token> parse(String text) {
+        String remaining = text;
+        tokens.clear();
+        this.completed = false;
+        if (remaining.startsWith("x ")) {
+            tokens.add(new Token(Token.COMPLETED, "x ", null));
+            this.completed = true;
+            remaining = text.substring(2);
+            // read optional completion date (this 'violates' the format spec)
+            // be liberal with date format errors
+        }
+
+        while (remaining.length()>0) {
+            if (remaining.startsWith(" ")) {
+                String leading = "";
+                while (remaining.length()>0 && remaining.startsWith(" ")) {
+                    leading = leading + " ";
+                    remaining = remaining.substring(1);
+                }
+                Token ws = new Token(Token.WHITE_SPACE,leading,null);
+                tokens.add(ws);
+                continue;
+            }
+            Matcher m = LIST_PATTERN.matcher(remaining);
+            if (m.matches()) {
+                String list = m.group(1);
+                remaining = m.group(2);
+                Token ws = new Token(Token.LIST,list,null);
+                tokens.add(ws);
+                continue;
+            }
+
+            if (!remaining.startsWith(" ")) {
+                String leading = "";
+                while (remaining.length()>0 && !remaining.startsWith(" ")) {
+                    leading = leading + remaining.substring(0,1);
+                    remaining = remaining.substring(1);
+                }
+                Token ws = new Token(Token.TEXT,leading,null);
+                tokens.add(ws);
+                continue;
+            }
+
+
+        }
+        Log.v(TAG, "Lexed " + text + " as " + tokens );
+        return tokens;
+    }
+
+    class Token {
+        static final String WHITE_SPACE = "WS";
+        static final String LIST = "LIST";
+        static final String COMPLETED = "COMPLETED";
+        static final String TEXT = "TEXT";
+        public String type;
+        public String value;
+        public Object objValue;
+        public Token (String type, String value, Object objValue) {
+            this.type = type;
+            this.value = value;
+            this.objValue = objValue;
+        }
+
+        @Override
+        public String toString() {
+            return type + ":'" + value + "'";
+        }
+
+    }
+
 }

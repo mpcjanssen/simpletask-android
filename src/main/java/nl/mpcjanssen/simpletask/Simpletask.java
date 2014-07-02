@@ -99,7 +99,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     TodoApplication m_app;
     ActiveFilter mFilter;
     TaskAdapter m_adapter;
-    TaskCache m_taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
     private ActionMode actionMode;
@@ -1005,13 +1004,12 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         }
 
         void setFilteredTasks() {
-            ArrayList<Task> visibleTasks = new ArrayList<Task>();
+            ArrayList<Task> visibleTasks;
             Log.v(TAG, "setFilteredTasks called");
-            visibleTasks.clear();
-            visibleLines.clear();
-            visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
-            Collections.sort(visibleTasks, MultiComparator.create(sorts));
+            visibleTasks = getTaskBag().getTasks(mFilter, sorts);
+            visibleLines.clear();
+
             String header = "";
             String newHeader = "";
             int firstGroupSortIndex = 0;

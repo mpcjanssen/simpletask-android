@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,10 +37,12 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.Simpletask;
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -60,6 +63,7 @@ public class TaskCache {
     private ArrayList<Task> mTasks = null;
     private ArrayList<String> mLists = null;
     private ArrayList<String> mTags = null;
+    private ArrayList<String> mSorts;
 
 
     public TaskCache(Context context, FileStoreInterface fileStore, String todoName) {
@@ -245,5 +249,10 @@ public class TaskCache {
     public void defer(String selected, List<Task> tasksToDefer, int dateType) {
         DateTime deferDate = Util.addInterval(DateTime.now(TimeZone.getDefault()), selected);
         defer(deferDate,tasksToDefer,dateType);
+    }
+
+    public ArrayList<Task> getTasks(ActiveFilter filter, ArrayList<String> sorts) {
+        Collections.sort(mTasks, MultiComparator.create(sorts));
+        return filter.apply(mTasks);
     }
 }
