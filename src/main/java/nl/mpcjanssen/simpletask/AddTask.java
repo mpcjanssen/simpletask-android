@@ -169,7 +169,7 @@ public class AddTask extends ThemedActivity {
             ArrayList<Task> updatedTasks = new ArrayList<Task>();
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
                 originalLines.add(m_backup.get(0));
-                updatedTasks.add(new Task(0,tasks.get(0)));
+                updatedTasks.add(new Task(0, tasks.get(0)));
                 tasks.remove(0);
                 m_backup.remove(0);
             }
@@ -177,10 +177,17 @@ public class AddTask extends ThemedActivity {
             if (updatedTasks.size()>0) {
                 m_app.getTaskCache().update(originalLines, updatedTasks);
             }
-
         }
         // Append new tasks
         if (tasks.size()>0) {
+            if (m_app.hasPrependDate()) {
+                ArrayList<String> original = new ArrayList<String>();
+                original.addAll(tasks);
+                tasks.clear();
+                for (String task: original) {
+                    tasks.add(new Task(0,task, DateTime.today(TimeZone.getDefault())).inFileFormat());
+                }
+            }
             m_app.getTaskCache().append(tasks);
         }
         finish();
