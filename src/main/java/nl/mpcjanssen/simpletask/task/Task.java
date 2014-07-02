@@ -188,6 +188,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
         temp.addAll(mTokens);
         mTokens = temp;
+        mPrio = priority;
     }
 
     public List<String> getTags() {
