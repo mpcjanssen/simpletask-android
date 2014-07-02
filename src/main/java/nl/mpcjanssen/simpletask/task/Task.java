@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -49,10 +50,10 @@ public class Task implements Serializable, Comparable<Task> {
     private static final long serialVersionUID = 0L;
     private final static Pattern LIST_PATTERN = Pattern
             .compile("^@(\\S*\\w)(.*)");
+    private final static Pattern TAG_PATTERN = Pattern
+            .compile("^\\+(\\S*\\w)(.*)");
     private static final Pattern HIDDEN_PATTERN = Pattern
             .compile("(^|\\s)[Hh]:1");
-    private static final Pattern TAG_PATTERN = Pattern
-            .compile("^\\S*[\\p{javaLetterOrDigit}_]$");
     private static final Pattern DUE_PATTERN = Pattern
             .compile("(^||\\s)[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern THRESHOLD_PATTERN = Pattern
@@ -68,9 +69,14 @@ public class Task implements Serializable, Comparable<Task> {
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
     private String text;
-    private boolean completed;
+
+
     private long id = 0;
-    private ArrayList<Token> tokens = new ArrayList<Token>();
+    private ArrayList<Token> mTokens = new ArrayList<Token>();
+    private boolean mCompleted;
+    private ArrayList<String> mLists;
+    private ArrayList<String> mTags;
+
 
 
     public Task(long id, String rawText, DateTime defaultPrependedDate) {
@@ -88,7 +94,7 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void init(String rawText, DateTime defaultPrependedDate) {
         this.text = rawText;
-        this.tokens = parse(rawText);
+        parse(rawText);
         if (defaultPrependedDate != null
                 && getPrependedDate() == null) {
             Priority p = getPriority();
@@ -174,16 +180,8 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public List<String> getLists() {
-        List<String> lists =  ListParser.getInstance().parse(text);
-        Collections.sort(lists);
-        return lists;
-    }
-
     public List<String> getTags() {
-        List<String> tags =  TagParser.getInstance().parse(text);
-        Collections.sort(tags);
-        return tags;
+        return mTags;
     }
 
     public String getPrependedDate() {
@@ -314,7 +312,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public boolean isCompleted() {
-        return this.completed;
+        return this.mCompleted;
     }
 
     public boolean isVisible() {
@@ -345,14 +343,14 @@ public class Task implements Serializable, Comparable<Task> {
             return screenText;
         }
         if (filter.getHideLists()) {
-            for (String list : getLists()) {
+            for (String list : mLists) {
                 screenText = screenText.replace("@" + list,"");
             }
             screenText = screenText.replaceAll("[ ]+", " ");
         }
 
         if (filter.getHideTags()) {
-            for (String tag : getTags()) {
+            for (String tag : mTags) {
                 screenText = screenText.replace("+" + tag,"");
             }
             screenText = screenText.replaceAll("[ ]+", " ");
@@ -439,7 +437,7 @@ public class Task implements Serializable, Comparable<Task> {
     ** If the task is already on that list, it does nothing
      */
     public void addList(String listName) {
-        if (!getLists().contains(listName)) {
+        if (!mLists.contains(listName)) {
             append("@" + listName);
         }
     }
@@ -448,7 +446,7 @@ public class Task implements Serializable, Comparable<Task> {
     ** If the task already has te tag, it does nothing
     */
     public void addTag(String tag) {
-        if (!getTags().contains(tag)) {
+        if (!mTags.contains(tag)) {
             append("+" + tag);
         }
     }
@@ -495,14 +493,14 @@ public class Task implements Serializable, Comparable<Task> {
 
     public String getHeader(String sort, String empty) {
         if (sort.contains("by_context")) {
-            if (getLists().size() > 0) {
-                return getLists().get(0);
+            if (mLists.size() > 0) {
+                return mLists.get(0);
             } else {
                 return empty;
             }
         } else if (sort.contains("by_project")) {
-            if (getTags().size() > 0) {
-                return getTags().get(0);
+            if (mTags.size() > 0) {
+                return mTags.get(0);
             } else {
                 return empty;
             }
@@ -563,13 +561,15 @@ public class Task implements Serializable, Comparable<Task> {
         return stext;
     }
 
-    private ArrayList<Token> parse(String text) {
+    private void parse(String text) {
         String remaining = text;
-        tokens.clear();
-        this.completed = false;
+        mTokens.clear();
+        mLists = new ArrayList<String>();
+        mTags =  new ArrayList<String>();
+        mCompleted = false;
         if (remaining.startsWith("x ")) {
-            tokens.add(new Token(Token.COMPLETED, "x ", null));
-            this.completed = true;
+            mTokens.add(new Token(Token.COMPLETED, "x ", null));
+            mCompleted = true;
             remaining = text.substring(2);
             // read optional completion date (this 'violates' the format spec)
             // be liberal with date format errors
@@ -583,15 +583,25 @@ public class Task implements Serializable, Comparable<Task> {
                     remaining = remaining.substring(1);
                 }
                 Token ws = new Token(Token.WHITE_SPACE,leading,null);
-                tokens.add(ws);
+                mTokens.add(ws);
                 continue;
             }
             Matcher m = LIST_PATTERN.matcher(remaining);
             if (m.matches()) {
                 String list = m.group(1);
                 remaining = m.group(2);
-                Token ws = new Token(Token.LIST,list,null);
-                tokens.add(ws);
+                Token listToken = new Token(Token.LIST,list,null);
+                mTokens.add(listToken);
+                mLists.add(list);
+                continue;
+            }
+            m = TAG_PATTERN.matcher(remaining);
+            if (m.matches()) {
+                String match = m.group(1);
+                remaining = m.group(2);
+                Token listToken = new Token(Token.TAG,match,null);
+                mTokens.add(listToken);
+                mTags.add(match);
                 continue;
             }
 
@@ -602,19 +612,25 @@ public class Task implements Serializable, Comparable<Task> {
                     remaining = remaining.substring(1);
                 }
                 Token ws = new Token(Token.TEXT,leading,null);
-                tokens.add(ws);
+                mTokens.add(ws);
                 continue;
             }
 
 
         }
-        Log.v(TAG, "Lexed " + text + " as " + tokens );
-        return tokens;
+        Log.v(TAG, "Lexed " + text + " as " + mTokens );
+        Collections.sort(mLists);
+        Collections.sort(mTags);
+    }
+
+    public ArrayList<String> getLists() {
+        return mLists;
     }
 
     class Token {
         static final String WHITE_SPACE = "WS";
         static final String LIST = "LIST";
+        static final String TAG = "TAG";
         static final String COMPLETED = "COMPLETED";
         static final String TEXT = "TEXT";
         public String type;
