@@ -446,7 +446,7 @@ public class AddTask extends ThemedActivity {
             }
         });
 
-        if (m_backup.size()>0) {
+        if (m_backup!=null && m_backup.size()>0) {
             textInputField.setSelection(textInputField.getText().length());
         }
     }

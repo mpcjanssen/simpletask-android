@@ -3,18 +3,18 @@ package nl.mpcjanssen.simpletask.task;
 /**
  * Created Mark Janssen
  */
-class Token {
-    static final String WHITE_SPACE = "WS";
-    static final String LIST = "LIST";
-    static final String TAG = "TAG";
-    static final String COMPLETED = "X";
-    static final String COMPLETED_DATE = "COMPLDATE";
-    static final String CREATION_DATE = "COMPLDATE";
-    static final String TEXT = "TEXT";
-    public String type;
+public class Token {
+    public static final int WHITE_SPACE =      0x1;
+    public static final int LIST =             0x1<<1;
+    public static final int TAG =              0x1<<2;
+    public static final int COMPLETED =        0x1<<3;
+    public static final int COMPLETED_DATE =   0x1<<4;
+    public static final int CREATION_DATE =    0x1<<5;
+    public static final int TEXT =             0x1<<6;
+    public int type;
     public String value;
     public Object objValue;
-    public Token (String type, String value, Object objValue) {
+    public Token (int type, String value, Object objValue) {
         this.type = type;
         this.value = value;
         this.objValue = objValue;
@@ -32,7 +32,7 @@ class Token {
 
         Token token = (Token) o;
 
-        if (!type.equals(token.type)) return false;
+        if (!(type==token.type)) return false;
         if (!value.equals(token.value)) return false;
 
         return true;
@@ -40,7 +40,7 @@ class Token {
 
     @Override
     public int hashCode() {
-        int result = type.hashCode();
+        int result = type;
         result = 31 * result + value.hashCode();
         return result;
     }
