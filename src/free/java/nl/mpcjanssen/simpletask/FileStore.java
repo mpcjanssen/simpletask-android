@@ -120,7 +120,6 @@ public class FileStore implements FileStoreInterface {
             return null;
         }
         try {
-            fs.awaitFirstSync();
             DbxPath dbPath = new DbxPath(path);
             if (fs.exists(dbPath)) {
                 dbFile = fs.open(dbPath);
