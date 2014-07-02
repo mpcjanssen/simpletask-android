@@ -104,6 +104,9 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
+    private ArrayList<Token> getTokens() {
+        return mTokens;
+    }
 
     private DateTime getDate(Pattern datePattern) {
         DateTime date = null;
@@ -626,27 +629,4 @@ public class Task implements Serializable, Comparable<Task> {
     public ArrayList<String> getLists() {
         return mLists;
     }
-
-    class Token {
-        static final String WHITE_SPACE = "WS";
-        static final String LIST = "LIST";
-        static final String TAG = "TAG";
-        static final String COMPLETED = "COMPLETED";
-        static final String TEXT = "TEXT";
-        public String type;
-        public String value;
-        public Object objValue;
-        public Token (String type, String value, Object objValue) {
-            this.type = type;
-            this.value = value;
-            this.objValue = objValue;
-        }
-
-        @Override
-        public String toString() {
-            return type + ":'" + value + "'";
-        }
-
-    }
-
 }

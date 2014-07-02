@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
@@ -14,9 +15,6 @@ import hirondelle.date4j.DateTime;
  */
 
 public class TaskTest extends TestCase {
-    public void testValidTag() throws Exception {
-       assertEquals(false, Task.validTag(" "));
-    }
 
     public void testEquals() {
         Task a = new Task(1, "Test abcd");
@@ -153,5 +151,12 @@ public class TaskTest extends TestCase {
     public void testInvalidCompleteDate() {
         Task t1 = new Task(0, "x 2013-11-31 Test");
         assertEquals("2013-11-31",t1.getCompletionDate());
+    }
+
+    public void testParseText() {
+        Task t1 = new Task(0, "abcd");
+        ArrayList<Token> expected = new ArrayList<Token>();
+        expected.add(new Token(Token.TEXT,"abcd",null));
+        assertEquals(expected, null );
     }
 }
