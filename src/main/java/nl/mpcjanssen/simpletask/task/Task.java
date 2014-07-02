@@ -188,6 +188,7 @@ public class Task implements Serializable, Comparable<Task> {
             mTokens.remove(0);
         }
         temp.add(new Token(Token.CREATION_DATE, newCreateDate));
+        temp.add(new Token(Token.WHITE_SPACE, " "));
         temp.addAll(mTokens);
         mTokens = temp;
         mCreateDate = newCreateDate;
@@ -203,7 +204,12 @@ public class Task implements Serializable, Comparable<Task> {
                 temp.add(mTokens.get(0));
                 mTokens.remove(0);
             }
+            while (mTokens.size()>0 && mTokens.get(0).type == Token.WHITE_SPACE) {
+                temp.add(mTokens.get(0));
+                mTokens.remove(0);
+            }
         }
+
         if (mTokens.size()>0 && mTokens.get(0).type == Token.PRIO) {
             mTokens.remove(0);
         }
@@ -321,8 +327,7 @@ public class Task implements Serializable, Comparable<Task> {
     public void markComplete(DateTime date) {
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
-            this.text = "x " + completionDate + " " + inFileFormat();
-            parse(this.text);
+            parse("x " + completionDate + " " + inFileFormat());
         }
     }
 
