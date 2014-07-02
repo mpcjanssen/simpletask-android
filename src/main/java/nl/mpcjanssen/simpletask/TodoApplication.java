@@ -76,11 +76,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
+                if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
                     // File change reload task cache
                     resetTaskCache();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
@@ -251,7 +251,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
      */
     public void updateUI() {
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-        updateWidgets();
     }
 
     public void updateWidgets() {

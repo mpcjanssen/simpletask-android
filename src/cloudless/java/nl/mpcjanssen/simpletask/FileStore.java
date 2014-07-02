@@ -85,6 +85,7 @@ public class FileStore implements FileStoreInterface {
                             bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
                             Log.v(TAG, "Observer " + path + " modified....sync done");
                             bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                            bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
                         }
                     }
                 }
