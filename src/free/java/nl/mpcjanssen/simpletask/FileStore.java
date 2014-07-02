@@ -105,10 +105,9 @@ public class FileStore implements FileStoreInterface {
             }
             @Override
             protected void onPostExecute(ArrayList<String> results) {
-                mLines = new ArrayList<String>();
-                mLines.addAll(results);
                 // Trigger update
-                syncInProgress(false);
+                notifyFileChanged();
+                mLines = results;
             }
         }.execute(path);
         return new ArrayList<String>();
@@ -207,6 +206,7 @@ public class FileStore implements FileStoreInterface {
                         if (!status.anyInProgress() || status.anyFailure() != null) {
                             mLines = null;
                             get(path);
+                            syncInProgress(false);
                         } else {
                             syncInProgress(true);
                         }
@@ -224,6 +224,10 @@ public class FileStore implements FileStoreInterface {
             };
             mDbxFs.addPathListener(m_observer, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
         }
+    }
+
+    private void notifyFileChanged() {
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
     }
 
     @Override
