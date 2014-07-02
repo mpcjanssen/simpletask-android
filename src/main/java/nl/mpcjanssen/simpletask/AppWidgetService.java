@@ -20,6 +20,7 @@ import java.util.Collections;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -97,8 +98,11 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 	task = visibleTasks.get(position);
 
 	if (task != null) {
+        int tokensToShow = ~0;
+        tokensToShow = tokensToShow & ~Token.COMPLETED;
+        tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
 	    SpannableString ss = new SpannableString(
-						     task.inScreenFormat(mFilter));
+						     task.inScreenFormat(tokensToShow));
 
 	    if (TodoApplication.getPrefs().getString("widget_theme","").equals("android.R.style.Theme_Holo")) {
 		rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.white));
@@ -185,8 +189,11 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         RemoteViews rv;
         rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
         Task task = visibleTasks.get(position);
+        int tokensToShow = ~0;
+        tokensToShow = tokensToShow & ~Token.COMPLETED;
+        tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
         SpannableString ss = new SpannableString(
-						 task.inScreenFormat(mFilter));
+						 task.inScreenFormat(tokensToShow));
         if (task.isCompleted()) {
             ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

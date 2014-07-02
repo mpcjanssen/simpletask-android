@@ -80,6 +80,7 @@ import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -1119,9 +1120,12 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     holder.cbCompleted.setVisibility(View.GONE);
                 }
                 if (task != null) {
+                    int tokensToShow = ~0;
+                    tokensToShow = tokensToShow & ~Token.CREATION_DATE;
+                    tokensToShow = tokensToShow & ~Token.COMPLETED;
+                    tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
                     SpannableString ss = new SpannableString(
-                            task.inScreenFormat(mFilter));
-
+                            task.inScreenFormat(tokensToShow));
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getLists()) {
                         colorizeStrings.add("@" + context);

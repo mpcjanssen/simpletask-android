@@ -250,7 +250,7 @@ public class Task implements Serializable, Comparable<Task> {
         return LinkParser.getInstance().parse(text);
     }
 
-    public String getTextWithoutCompletionInfo() {
+    private String getTextWithoutCompletionInfo() {
         Matcher xMatch = COMPLETED_PATTERN.matcher(text);
         if (!xMatch.matches()) {
             return text;
@@ -264,7 +264,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public String getTextWithoutCompletionAndPriority() {
+    private String getTextWithoutCompletionAndPriority() {
         String rest = getTextWithoutCompletionInfo() ;
         Matcher prioMatch = PRIORITY_PATTERN.matcher(rest);
         if (!prioMatch.matches()) {
@@ -274,7 +274,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public String getCompletionPrefix() {
+    private String getCompletionPrefix() {
         Matcher xMatch = COMPLETED_PATTERN.matcher(text);
         String result = "";
         if (!xMatch.matches()) {
@@ -322,25 +322,15 @@ public class Task implements Serializable, Comparable<Task> {
         this.update("");
     }
 
-    public String inScreenFormat(ActiveFilter filter) {
-        String screenText = datelessScreenFormat();
-        if (filter==null) {
-            return screenText;
-        }
-        if (filter.getHideLists()) {
-            for (String list : mLists) {
-                screenText = screenText.replace("@" + list,"");
+    public String inScreenFormat(int flags) {
+        StringBuilder sb = new StringBuilder();
+        for (Token token: mTokens) {
+            if ((flags & token.type)!=0) {
+                sb.append(token.value);
             }
-            screenText = screenText.replaceAll("[ ]+", " ");
-        }
 
-        if (filter.getHideTags()) {
-            for (String tag : mTags) {
-                screenText = screenText.replace("+" + tag,"");
-            }
-            screenText = screenText.replaceAll("[ ]+", " ");
         }
-        return screenText.trim();
+        return sb.toString().trim();
     }
 
     public boolean inFuture() {
@@ -513,39 +503,6 @@ public class Task implements Serializable, Comparable<Task> {
         return stext;
     }
 
-    public String datelessScreenFormat() {
-        // remove completion and creation dates
-        String stext = getTextWithoutCompletionAndPriority();
-
-        // remove possible create date
-        Matcher m = SINGLE_DATE_PREFIX.matcher(stext);
-        if (m.matches()) {
-            stext = m.group(2);
-        }
-        // remove due dates
-        stext = stext.replaceAll(DUE_PATTERN.pattern(), "");
-        // remove threshold dates
-        stext = stext.replaceAll(THRESHOLD_PATTERN.pattern(), "");
-
-        // Re add priority
-        if (getPriority()!=Priority.NONE) {
-            stext = getPriority().inFileFormat() + " " + stext.trim();
-        }
-        return stext;
-    }
-
-    public String getTitle() {
-        String stext = getTextWithoutCompletionAndPriority();
-
-        // remove possible create date
-        Matcher m = SINGLE_DATE_PREFIX.matcher(stext);
-        if (m.matches()) {
-            stext = m.group(2);
-        }
-
-        return stext;
-    }
-
     private void parse(String text) {
         String remaining = text;
         mTokens.clear();
@@ -572,7 +529,7 @@ public class Task implements Serializable, Comparable<Task> {
         if (m.matches()) {
             mCreateDate = m.group(1);
             remaining = m.group(2);
-            mTokens.add(new Token(Token.CREATION_DATE,mCompletionDate,null));
+            mTokens.add(new Token(Token.CREATION_DATE,mCreateDate,null));
             DateTime dt;
             String prependDate = getPrependedDate();
             if (!DateTime.isParseable(prependDate)) {
@@ -598,7 +555,7 @@ public class Task implements Serializable, Comparable<Task> {
             if (m.matches()) {
                 String list = m.group(1);
                 remaining = m.group(2);
-                Token listToken = new Token(Token.LIST,list,null);
+                Token listToken = new Token(Token.LIST,"@"+list,null);
                 mTokens.add(listToken);
                 mLists.add(list);
                 continue;
@@ -607,7 +564,7 @@ public class Task implements Serializable, Comparable<Task> {
             if (m.matches()) {
                 String match = m.group(1);
                 remaining = m.group(2);
-                Token listToken = new Token(Token.TAG,match,null);
+                Token listToken = new Token(Token.TAG,"+"+match,null);
                 mTokens.add(listToken);
                 mTags.add(match);
                 continue;
