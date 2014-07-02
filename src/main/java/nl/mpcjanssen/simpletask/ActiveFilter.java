@@ -284,11 +284,10 @@ public class ActiveFilter {
         this.m_projects = projects;
     }
 
-    public ArrayList<Integer> apply(ArrayList<Task> tasks) {
+    public ArrayList<Task> apply(ArrayList<Task> tasks) {
         AndFilter filter = new AndFilter();
-        ArrayList<Integer> matched = new ArrayList<Integer>();
-        for (int i= 0 ; i<tasks.size(); i++) {
-            Task t = tasks.get(i);
+        ArrayList<Task> matched = new ArrayList<Task>();
+        for (Task t : tasks) {
             if (t.isCompleted() && this.getHideCompleted()) {
                 continue;
             }
@@ -296,7 +295,7 @@ public class ActiveFilter {
                 continue;
             }
             if (filter.apply(t)) {
-                matched.add(i);
+                matched.add(t);
             }
         }
         return matched;
