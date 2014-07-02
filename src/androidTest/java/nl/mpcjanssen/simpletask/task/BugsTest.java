@@ -25,10 +25,8 @@ public class BugsTest extends TestCase {
     }
 
     public void testBug50() {
-        ActiveFilter f = new ActiveFilter();
         Task t = new Task(0,"2012-01-01 @list test");
-        f.setHideLists(true);
-        assertEquals("test",t.inScreenFormat(f));
+        assertEquals("test",t.inScreenFormat(~0 & ~Token.LIST & ~Token.CREATION_DATE));
         
     }
 }

@@ -37,7 +37,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getName();
-    private DbxFileSystem.PathListener m_observer;
+    private DbxFile.Listener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
     private DbxFileSystem mDbxFs;
@@ -45,6 +45,7 @@ public class FileStore implements FileStoreInterface {
     String activePath;
     private ArrayList<String> mLines;
     private boolean mReloadFile;
+    private DbxFile mDbxFile;
 
     public FileStore( Context ctx) {
         mCtx = ctx;
@@ -101,8 +102,12 @@ public class FileStore implements FileStoreInterface {
                 activePath = path;
                 ArrayList<String> results;
                 DbxFile openFile = openDbFile(path);
+                try {
+                    openFile.update();
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 results =  syncGetLines(openFile);
-                openFile.close();
                 return results;
             }
             @Override
@@ -116,7 +121,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     private DbxFile openDbFile(String path) {
-        DbxFile dbFile = null;
+        if (mDbxFile != null) {
+            return mDbxFile;
+        };
         DbxFileSystem fs = getDbxFS();
         if (fs == null) {
             return null;
@@ -131,14 +138,14 @@ public class FileStore implements FileStoreInterface {
         try {
             DbxPath dbPath = new DbxPath(path);
             if (fs.exists(dbPath)) {
-                dbFile = fs.open(dbPath);
+                mDbxFile = fs.open(dbPath);
             } else {
-                dbFile = fs.create(dbPath);
+                mDbxFile = fs.create(dbPath);
             }
         } catch (DbxException e) {
             e.printStackTrace();
         }
-        return dbFile;
+        return mDbxFile;
     }
 
     private ArrayList<String> syncGetLines(DbxFile dbFile) {
@@ -177,7 +184,6 @@ public class FileStore implements FileStoreInterface {
                     try {
                         DbxFile openFile = openDbFile(path);
                         openFile.appendString(data);
-                        openFile.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -204,49 +210,53 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void startWatching(final String path) {
         if (isAuthenticated() && getDbxFS() != null) {
-            m_syncstatus = new DbxFileSystem.SyncStatusListener() {
+            if (m_syncstatus==null) {
+                m_syncstatus = new DbxFileSystem.SyncStatusListener() {
 
-                @Override
-                public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
-                    DbxSyncStatus status;
-                    try {
-                        status = dbxFileSystem.getSyncStatus();
-                        Log.v(TAG, "Synchronizing: v " + status.download + " ^ " + status.upload);
-                        if (!status.anyInProgress() || status.anyFailure() != null) {
-                            Log.v(TAG, "Synchronizing done");
-                            if (mReloadFile) {
-                                mLines = null;
-                                get(path);
+                    @Override
+                    public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+                        DbxSyncStatus status;
+                        try {
+                            status = dbxFileSystem.getSyncStatus();
+                            Log.v(TAG, "Synchronizing: v " + status.download + " ^ " + status.upload);
+                            if (!status.anyInProgress() || status.anyFailure() != null) {
+                                Log.v(TAG, "Synchronizing done");
+                                if (mReloadFile) {
+                                    mLines = null;
+                                    get(path);
+                                }
+                                syncInProgress(false);
+                            } else {
+                                syncInProgress(true);
                             }
-                            syncInProgress(false);
-                        } else {
-                            syncInProgress(true);
+                        } catch (DbxException e) {
+                            e.printStackTrace();
                         }
-                    } catch (DbxException e) {
-                        e.printStackTrace();
                     }
-                }
-            };
-            mDbxFs.addSyncStatusListener(m_syncstatus);
-            m_observer = new DbxFileSystem.PathListener() {
-                @Override
-                public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-                    try {
-                        DbxFile file = dbxFileSystem.open(dbxPath);
-                        DbxFileStatus status = file.getSyncStatus();
-                        Log.v(TAG, "Synchronizing path change: " + file.getPath().getName() + " latest: " + status.isLatest);
-                        file.close();
-                        if (!status.isLatest) {
-                            mReloadFile = true;
-                        } else {
-                            mReloadFile = false;
+                };
+                mDbxFs.addSyncStatusListener(m_syncstatus);
+            }
+            if (m_observer==null) {
+                m_observer = new DbxFile.Listener() {
+                    @Override
+                    public void onFileChange(DbxFile dbxFile) {
+                        DbxFileStatus status = null;
+                        try {
+                            status = dbxFile.getSyncStatus();
+                            Log.v(TAG, "Synchronizing path change: " + dbxFile.getPath().getName() + " latest: " + status.isLatest +
+                                       status.bytesTransferred + "/" + status.bytesTotal);
+                            if (!status.isLatest) {
+                                mReloadFile = true;
+                            } else {
+                                mReloadFile = false;
+                            }
+                        } catch (DbxException e) {
+                            e.printStackTrace();
                         }
-                    } catch (DbxException e) {
-                        e.printStackTrace();
                     }
-                }
-            };
-            mDbxFs.addPathListener(m_observer, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+                };
+                openDbFile(path).addListener(m_observer);
+            }
         }
     }
 
@@ -264,7 +274,7 @@ public class FileStore implements FileStoreInterface {
             m_syncstatus = null;
         }
         if (m_observer!=null) {
-            mDbxFs.removePathListener(m_observer,new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+            mDbxFile.removeListener(m_observer);
             m_observer = null;
         }
     }
@@ -299,7 +309,6 @@ public class FileStore implements FileStoreInterface {
                             }
                         }
                         openFile.writeString(Util.join(contents, "\r\n"));
-                        openFile.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
@@ -324,7 +333,6 @@ public class FileStore implements FileStoreInterface {
                         contents.addAll(syncGetLines(dbFile));
                         contents.removeAll(stringsToDelete);
                         dbFile.writeString(Util.join(contents, "\r\n"));
-                        dbFile.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
@@ -357,7 +365,6 @@ public class FileStore implements FileStoreInterface {
                         contents.addAll(syncGetLines(srcFile));
                         contents.removeAll(strings);
                         srcFile.writeString(Util.join(contents, "\r\n"));
-                        srcFile.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);

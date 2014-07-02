@@ -113,7 +113,7 @@ public class TaskTest extends TestCase {
         assertEquals("Milk @@errands", t.inFileFormat());
         t.removeTag("@@errands");
         assertEquals("Milk", t.inFileFormat());
-        assertEquals("Milk", t.inScreenFormat(null));
+        assertEquals("Milk", t.inScreenFormat(~0));
         t = new Task(0, "Milk @@errands +supermarket");
         t.removeTag("@@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());
@@ -156,7 +156,7 @@ public class TaskTest extends TestCase {
     public void testParseText() {
         Task t1 = new Task(0, "abcd");
         ArrayList<Token> expected = new ArrayList<Token>();
-        expected.add(new Token(Token.TEXT,"abcd",null));
+        expected.add(new Token(Token.TEXT,"abcd"));
         assertEquals(expected, t1.getTokens());
     }
 }
