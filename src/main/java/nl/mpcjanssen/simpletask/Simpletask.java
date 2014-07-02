@@ -1124,6 +1124,12 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     tokensToShow = tokensToShow & ~Token.CREATION_DATE;
                     tokensToShow = tokensToShow & ~Token.COMPLETED;
                     tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
+                    if (mFilter.getHideLists()) {
+                        tokensToShow = tokensToShow & ~ Token.LIST;
+                    }
+                    if (mFilter.getHideTags()) {
+                        tokensToShow = tokensToShow & ~ Token.TAG;
+                    }
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat(tokensToShow));
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
