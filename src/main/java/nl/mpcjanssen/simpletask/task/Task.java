@@ -191,17 +191,6 @@ public class Task implements Serializable, Comparable<Task> {
         mPrio = priority;
     }
 
-    public List<String> getTags() {
-        return mTags;
-    }
-
-    public String getCreateDate() {
-        return mCreateDate;
-    }
-
-    public String getRelativeAge() {
-        return mRelativeAge;
-    }
 
     public SpannableString getRelativeDueDate(int dueTodayColor, int overDueColor, boolean useColor) {
         DateTime dueDate = getDueDate();
@@ -601,4 +590,17 @@ public class Task implements Serializable, Comparable<Task> {
     public ArrayList<String> getLists() {
         return mLists;
     }
+
+    public List<String> getTags() {
+        return mTags;
+    }
+
+    public String getCreateDate() {
+        return mCreateDate;
+    }
+
+    public String getRelativeAge() {
+        return mRelativeAge;
+    }
+
 }
