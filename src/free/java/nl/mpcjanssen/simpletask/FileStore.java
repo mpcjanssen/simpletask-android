@@ -91,8 +91,12 @@ public class FileStore implements FileStoreInterface {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
-
         // Clear and reload cache
+        if (activePath!=null && mDbxFile != null) {
+            // We switched files
+            mDbxFile.close();
+            mDbxFile = null;
+        }
         mLines = null;
         new AsyncTask<String, Void, ArrayList<String>>() {
 
