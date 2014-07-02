@@ -120,6 +120,13 @@ public class FileStore implements FileStoreInterface {
             return null;
         }
         try {
+            // Try intial sync to prevent creating new
+            // todo files because first sync wasn't done yet
+            fs.awaitFirstSync();
+        } catch (DbxException e) {
+            Log.v(TAG, "Initial sync failed, are you connected?");
+        }
+        try {
             DbxPath dbPath = new DbxPath(path);
             if (fs.exists(dbPath)) {
                 dbFile = fs.open(dbPath);
