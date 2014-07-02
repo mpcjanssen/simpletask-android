@@ -85,7 +85,8 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
-public class Simpletask extends ThemedListActivity implements AdapterView.OnItemLongClickListener {
+public class Simpletask extends ThemedListActivity implements
+        AdapterView.OnItemLongClickListener  {
 
     final static String TAG = Simpletask.class.getSimpleName();
 
@@ -208,11 +209,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                    /** Save the position **/
-                    int currentPosition = getListView().getFirstVisiblePosition();
                     Log.v(TAG, "Updating UI because of broadcast");
                     handleIntent();
-                    getListView().setSelection(currentPosition);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -318,7 +316,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
-
         // If we were started with a selected task,
         // select it now and clear it from the intent
         String selectedTask = intent.getStringExtra(Constants.INTENT_SELECTED_TASK);

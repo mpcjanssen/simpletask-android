@@ -14,6 +14,7 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
+import com.dropbox.sync.android.DbxFileStatus;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxSyncStatus;
@@ -43,6 +44,7 @@ public class FileStore implements FileStoreInterface {
     private DbxFileSystem.SyncStatusListener m_syncstatus;
     String activePath;
     private ArrayList<String> mLines;
+    private boolean mReloadFile;
 
     public FileStore( Context ctx) {
         mCtx = ctx;
@@ -209,9 +211,13 @@ public class FileStore implements FileStoreInterface {
                     DbxSyncStatus status;
                     try {
                         status = dbxFileSystem.getSyncStatus();
+                        Log.v(TAG, "Synchronizing: v " + status.download + " ^ " + status.upload);
                         if (!status.anyInProgress() || status.anyFailure() != null) {
-                            mLines = null;
-                            get(path);
+                            Log.v(TAG, "Synchronizing done");
+                            if (mReloadFile) {
+                                mLines = null;
+                                get(path);
+                            }
                             syncInProgress(false);
                         } else {
                             syncInProgress(true);
@@ -225,7 +231,19 @@ public class FileStore implements FileStoreInterface {
             m_observer = new DbxFileSystem.PathListener() {
                 @Override
                 public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-                    //
+                    try {
+                        DbxFile file = dbxFileSystem.open(dbxPath);
+                        DbxFileStatus status = file.getSyncStatus();
+                        Log.v(TAG, "Synchronizing path change: " + file.getPath().getName() + " latest: " + status.isLatest);
+                        file.close();
+                        if (!status.isLatest) {
+                            mReloadFile = true;
+                        } else {
+                            mReloadFile = false;
+                        }
+                    } catch (DbxException e) {
+                        e.printStackTrace();
+                    }
                 }
             };
             mDbxFs.addPathListener(m_observer, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
