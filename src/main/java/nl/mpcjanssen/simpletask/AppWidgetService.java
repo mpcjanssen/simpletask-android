@@ -65,7 +65,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     void setFilteredTasks() {
         Log.v(TAG, "setFilteredTasks called");
         visibleTasks.clear();
-        for (Task t : mFilter.apply(application.getTaskCache().getTasks())) {
+        for (Integer i : mFilter.apply(application.getTaskCache().getTasks())) {
+            Task t = application.getTaskCache().getTaskAt(i);
             if (t.isVisible()) {
                 visibleTasks.add(t);
             }

@@ -940,7 +940,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     public class TaskAdapter extends BaseAdapter implements ListAdapter,
             Filterable {
         public class VisibleLine {
-            private Task task = null;
+            private Integer cacheIndex = null;
             private String title = null;
             private boolean header = false;
 
@@ -949,8 +949,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 this.header = true;
             }
 
-            public VisibleLine(Task task) {
-                this.task = task;
+            public VisibleLine(Integer cacheIndex) {
+                this.cacheIndex= cacheIndex;
                 this.header = false;
             }
 
@@ -969,7 +969,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 if (other.header) {
                     return title.equals(other.title);
                 } else {
-                    return this.task.equals(other.task);
+                    return this.cacheIndex.equals(other.cacheIndex);
                 }
             }
 
@@ -978,7 +978,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 final int prime = 31;
                 int result = 1;
                 result = prime * result + ((title == null) ? 0 : title.hashCode());
-                result = prime * result + ((task == null) ? 0 : task.hashCode());
+                result = prime * result + ((cacheIndex == null) ? 0 : cacheIndex.hashCode());
                 return result;
             }
         }
@@ -993,10 +993,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         }
 
         void setFilteredTasks() {
-            ArrayList<Task> visibleTasks;
+            ArrayList<Integer> visibleTaskIdxs;
             Log.v(TAG, "setFilteredTasks called");
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
-            visibleTasks = getTaskBag().getTasks(mFilter, sorts);
+            visibleTaskIdxs = getTaskBag().getTaskPositions(mFilter, sorts);
             visibleLines.clear();
 
             String header = "";
@@ -1012,7 +1012,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }
             }
             String firstSort = sorts.get(firstGroupSortIndex);
-            for (Task t : visibleTasks) {
+            for (Integer i : visibleTaskIdxs) {
+                Task t = getTaskBag().getTaskAt(i);
                 newHeader = t.getHeader(firstSort, getString(R.string.no_header));
                 if (!header.equals(newHeader)) {
                     VisibleLine headerLine = new VisibleLine(newHeader);
@@ -1027,7 +1028,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
                 if (t.isVisible() || m_app.showHidden()) {
                     // enduring tasks should not be displayed
-                    VisibleLine taskLine = new VisibleLine(t);
+                    VisibleLine taskLine = new VisibleLine(i);
                     visibleLines.add(taskLine);
                 }
             }
@@ -1047,8 +1048,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         ** Get the adapter position for task
         */
         public int getPosition(Task task) {
-            VisibleLine line = new VisibleLine(task);
-            return visibleLines.indexOf(line);
+            // fixme
+            return 0;
         }
 
         @Override
@@ -1067,7 +1068,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             if (line.header) {
                 return null;
             }
-            return line.task;
+            return getTaskBag().getTaskAt(line.cacheIndex);
         }
 
         @Override
@@ -1112,7 +1113,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     holder = (ViewHolder) convertView.getTag();
                 }
                 Task task;
-                task = line.task;
+                task = getTaskBag().getTaskAt(line.cacheIndex);
                 if (m_app.showCompleteCheckbox()) {
                     holder.cbCompleted.setVisibility(View.VISIBLE);
                 } else {
