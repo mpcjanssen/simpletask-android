@@ -11,13 +11,13 @@ public class Token {
     public static final int COMPLETED_DATE =   0x1<<4;
     public static final int CREATION_DATE =    0x1<<5;
     public static final int TEXT =             0x1<<6;
+    public static final int PRIO =             0x1<<7;
     public int type;
     public String value;
     public Object objValue;
-    public Token (int type, String value, Object objValue) {
+    public Token (int type, String value) {
         this.type = type;
         this.value = value;
-        this.objValue = objValue;
     }
 
     @Override
