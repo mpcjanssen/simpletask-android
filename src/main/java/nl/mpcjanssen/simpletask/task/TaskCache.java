@@ -251,7 +251,7 @@ public class TaskCache {
         defer(deferDate,tasksToDefer,dateType);
     }
 
-    public ArrayList<Integer> getTaskPositions(ActiveFilter filter, ArrayList<String> sorts) {
+    public ArrayList<Task> getTasks(ActiveFilter filter, ArrayList<String> sorts) {
         Collections.sort(mTasks, MultiComparator.create(sorts));
         return filter.apply(mTasks);
     }
