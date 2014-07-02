@@ -209,8 +209,10 @@ public class Simpletask extends ThemedListActivity implements
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+                    int position = getListView().getFirstVisiblePosition();
                     Log.v(TAG, "Updating UI because of broadcast");
                     handleIntent();
+                    getListView().setSelectionFromTop(position,0);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
