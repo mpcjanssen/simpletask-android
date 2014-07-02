@@ -47,7 +47,7 @@ public class Task implements Serializable, Comparable<Task> {
     public static String TAG = Task.class.getName();
     public final static int DUE_DATE = 0;
     public final static int THRESHOLD_DATE = 1;
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
     private final static Pattern LIST_PATTERN = Pattern
             .compile("^@(\\S*\\w)(.*)");
     private final static Pattern TAG_PATTERN = Pattern
@@ -63,7 +63,7 @@ public class Task implements Serializable, Comparable<Task> {
     private final static Pattern PRIORITY_PATTERN = Pattern
             .compile("^\\(([A-Z])\\) (.*)");
     private final static Pattern SINGLE_DATE_PATTERN = Pattern
-            .compile("(^||\\s)(\\d{4}-\\d{2}-\\d{2})");
+            .compile("^(\\d{4}-\\d{2}-\\d{2})(.*)");
     private final static Pattern SINGLE_DATE_PREFIX = Pattern
             .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
     private final static Pattern COMPLETED_PATTERN = Pattern
@@ -76,7 +76,9 @@ public class Task implements Serializable, Comparable<Task> {
     private boolean mCompleted;
     private ArrayList<String> mLists;
     private ArrayList<String> mTags;
-
+    private String mCompletionDate;
+    private String mRelativeAge;
+    private String mCreateDate;
 
 
     public Task(long id, String rawText, DateTime defaultPrependedDate) {
@@ -94,7 +96,6 @@ public class Task implements Serializable, Comparable<Task> {
 
     public void init(String rawText, DateTime defaultPrependedDate) {
         this.text = rawText;
-        parse(rawText);
         if (defaultPrependedDate != null
                 && getPrependedDate() == null) {
             Priority p = getPriority();
@@ -102,6 +103,7 @@ public class Task implements Serializable, Comparable<Task> {
             this.text = defaultPrependedDate.format(Constants.DATE_FORMAT) + " " + text;
             setPriority(p);
         }
+        parse(rawText);
     }
 
     public ArrayList<Token> getTokens() {
@@ -198,17 +200,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getRelativeAge() {
-        DateTime dt;
-        String prependDate = getPrependedDate();
-        if (prependDate==null) {
-            return null;
-        }
-        if (!DateTime.isParseable(prependDate)) {
-            return prependDate;
-        }
-        dt = new DateTime(prependDate);
-
-        return RelativeDate.getRelativeDate(dt);
+        return mRelativeAge;
     }
 
     public SpannableString getRelativeDueDate(int dueTodayColor, int overDueColor, boolean useColor) {
@@ -301,17 +293,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getCompletionDate() {
-        Matcher xMatch = COMPLETED_PATTERN.matcher(text);
-        if (!xMatch.matches()) {
-            return null;
-        }
-        String restText = xMatch.group(2);
-        Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
-        if (!dateMatch.matches()) {
-            return "";
-        } else {
-            return dateMatch.group(1);
-        }
+        return mCompletionDate;
     }
 
     public boolean isCompleted() {
@@ -567,6 +549,7 @@ public class Task implements Serializable, Comparable<Task> {
     private void parse(String text) {
         String remaining = text;
         mTokens.clear();
+        Matcher m;
         mLists = new ArrayList<String>();
         mTags =  new ArrayList<String>();
         mCompleted = false;
@@ -574,8 +557,30 @@ public class Task implements Serializable, Comparable<Task> {
             mTokens.add(new Token(Token.COMPLETED, "x ", null));
             mCompleted = true;
             remaining = text.substring(2);
+            m = SINGLE_DATE_PATTERN.matcher(remaining);
             // read optional completion date (this 'violates' the format spec)
             // be liberal with date format errors
+            if (m.matches()) {
+                mCompletionDate = m.group(1);
+                remaining = m.group(2);
+                mTokens.add(new Token(Token.COMPLETED_DATE,mCompletionDate,null));
+            }
+        }
+
+        // Check for optional creation date
+        m = SINGLE_DATE_PATTERN.matcher(remaining);
+        if (m.matches()) {
+            mCreateDate = m.group(1);
+            remaining = m.group(2);
+            mTokens.add(new Token(Token.CREATION_DATE,mCompletionDate,null));
+            DateTime dt;
+            String prependDate = getPrependedDate();
+            if (!DateTime.isParseable(prependDate)) {
+                mRelativeAge = mCreateDate;
+            } else {
+                dt = new DateTime(prependDate);
+                mRelativeAge = RelativeDate.getRelativeDate(dt);
+            }
         }
 
         while (remaining.length()>0) {
@@ -589,7 +594,7 @@ public class Task implements Serializable, Comparable<Task> {
                 mTokens.add(ws);
                 continue;
             }
-            Matcher m = LIST_PATTERN.matcher(remaining);
+            m = LIST_PATTERN.matcher(remaining);
             if (m.matches()) {
                 String list = m.group(1);
                 remaining = m.group(2);

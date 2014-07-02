@@ -7,7 +7,9 @@ class Token {
     static final String WHITE_SPACE = "WS";
     static final String LIST = "LIST";
     static final String TAG = "TAG";
-    static final String COMPLETED = "COMPLETED";
+    static final String COMPLETED = "X";
+    static final String COMPLETED_DATE = "COMPLDATE";
+    static final String CREATION_DATE = "COMPLDATE";
     static final String TEXT = "TEXT";
     public String type;
     public String value;
