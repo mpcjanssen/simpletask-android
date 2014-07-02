@@ -13,15 +13,15 @@ public class CreationDateComparator extends ReversableComparator {
     @Override
     public int unreversedCompare(Task a, Task b) {
         int result = 0;
-        if (Strings.isEmptyOrNull(a.getPrependedDate()) && Strings.isEmptyOrNull(b.getPrependedDate())) {
+        if (Strings.isEmptyOrNull(a.getCreateDate()) && Strings.isEmptyOrNull(b.getCreateDate())) {
             result = 0;
-        } else if (Strings.isEmptyOrNull(a.getPrependedDate())) {
+        } else if (Strings.isEmptyOrNull(a.getCreateDate())) {
             result = 1;
-        } else if (Strings.isEmptyOrNull(b.getPrependedDate())) {
+        } else if (Strings.isEmptyOrNull(b.getCreateDate())) {
             result = -1;
         } else {
-            DateTime dateA = new DateTime(a.getPrependedDate());
-            DateTime dateB = new DateTime(b.getPrependedDate());
+            DateTime dateA = new DateTime(a.getCreateDate());
+            DateTime dateB = new DateTime(b.getCreateDate());
             result = dateA.compareTo(dateB);
         }
         return result;
