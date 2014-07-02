@@ -32,8 +32,6 @@ public class Constants {
     // Constants for creating shortcuts
     public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
-    public final static String EXTRA_TASK = "TASK";
-
     public final static String BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE";
     public final static String BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT";
     public final static String BROADCAST_UPDATE_UI = "UPDATE_UI";

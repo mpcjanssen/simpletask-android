@@ -61,9 +61,9 @@ public class TaskCache {
     private final String mTodoName;
     private final FileStoreInterface mFileStore;
     private ArrayList<Task> mTasks = null;
+    private List<Task> mTasksToUpdate;
     private ArrayList<String> mLists = null;
     private ArrayList<String> mTags = null;
-    private ArrayList<String> mSorts;
 
 
     public TaskCache(Context context, FileStoreInterface fileStore, String todoName) {
@@ -254,5 +254,13 @@ public class TaskCache {
     public ArrayList<Task> getTasks(ActiveFilter filter, ArrayList<String> sorts) {
         Collections.sort(mTasks, MultiComparator.create(sorts));
         return filter.apply(mTasks);
+    }
+
+    public List<Task> getTasksToUpdate() {
+        return mTasksToUpdate;
+    }
+
+    public void setTasksToUpdate(List<Task> mTasksToUpdate) {
+        this.mTasksToUpdate = mTasksToUpdate;
     }
 }

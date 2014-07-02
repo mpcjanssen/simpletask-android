@@ -78,7 +78,7 @@ public class AddTask extends ThemedActivity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private ArrayList<String> m_backup = new ArrayList<String>();
+    private List<Task> m_backup;
     private TodoApplication m_app;
 
     private String share_text;
@@ -168,8 +168,9 @@ public class AddTask extends ThemedActivity {
             ArrayList<String> originalLines = new ArrayList<String>();
             ArrayList<Task> updatedTasks = new ArrayList<Task>();
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                originalLines.add(m_backup.get(0));
-                updatedTasks.add(new Task(0, tasks.get(0)));
+                originalLines.add(m_backup.get(0).inFileFormat());
+                m_backup.get(0).init(tasks.get(0),null);
+                updatedTasks.add(m_backup.get(0));
                 tasks.remove(0);
                 m_backup.remove(0);
             }
@@ -305,15 +306,11 @@ public class AddTask extends ThemedActivity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-
-        String sTasks = intent.getStringExtra(
-                Constants.EXTRA_TASK);
-        if (sTasks != null && !sTasks.equals("")) {
+        m_backup = m_app.getTaskCache().getTasksToUpdate();
+        if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<String>();
-            for (String txt : sTasks.split("\n",-1)) {
-                String[] parts = txt.split(":",2);
-                m_backup.add(parts[1]);
-                prefill.add(parts[1]);
+            for (Task t : m_backup) {
+                prefill.add(t.inFileFormat());
             }
             String sPrefill = Util.join(prefill,"\n");
             textInputField.setText(sPrefill);

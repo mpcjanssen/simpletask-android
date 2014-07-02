@@ -609,14 +609,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
     private void startAddTaskActivity(List<Task> tasks) {
         Log.v(TAG, "Starting addTask activity");
-        ArrayList<String> payload = new ArrayList<String>();
-        if (tasks != null) {
-            for (Task t : tasks) {
-                payload.add("" + t.getId() + ":" + t.inFileFormat());
-            }
-        }
+        getTaskBag().setTasksToUpdate(getCheckedTasks());
         Intent intent = new Intent(this, AddTask.class);
-        intent.putExtra(Constants.EXTRA_TASK, Util.join(payload, "\n"));
         mFilter.saveInIntent(intent);
         startActivity(intent);
     }
