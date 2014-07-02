@@ -5,6 +5,7 @@ import android.app.Activity;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -62,18 +63,13 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
-        public ArrayList<String> get(String path, TaskCache.Preferences preferences) {
+        public ArrayList<String> get(String path) {
             return mContents;
         }
 
         @Override
-        public void store(String path, String data) {
-
-        }
-
-        @Override
-        public boolean append(String path, String data) {
-            return false;
+        public void append(String path, List<String> lines) {
+            
         }
 
         @Override
@@ -91,23 +87,35 @@ public class TaskBagTest extends TestCase {
 
         }
 
-        @Override
-        public boolean supportsAuthentication() {
-            return false;
-        }
 
         @Override
         public void deauthenticate() {
 
         }
 
-        @Override
-        public boolean isLocal() {
-            return false;
-        }
 
         @Override
         public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
+
+        }
+
+        @Override
+        public void update(String mTodoName, List<String> original, List<String> updated) {
+
+        }
+
+        @Override
+        public void delete(String mTodoName, List<String> strings) {
+
+        }
+
+        @Override
+        public int getType() {
+            return 0;
+        }
+
+        @Override
+        public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
 
         }
 

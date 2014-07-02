@@ -14,7 +14,7 @@ import nl.mpcjanssen.simpletask.task.TaskCache;
 public class FileStore implements FileStoreInterface {
 
 
-    public FileStore(Context todoApplication, LocalBroadcastManager localBroadcastManager, Intent intent) {
+    public FileStore(Context todoApplication) {
 
     }
 
@@ -77,5 +77,9 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
 
+    }
+
+    public static String getDefaultPath() {
+        return null;
     }
 }
