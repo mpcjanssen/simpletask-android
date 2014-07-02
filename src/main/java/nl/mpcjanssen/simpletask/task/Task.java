@@ -100,7 +100,7 @@ public class Task implements Serializable, Comparable<Task> {
         parse(rawText);
         if (defaultCreateDate != null
             && getCreateDate() == null) {
-            // fixme
+            setCreateDate(defaultCreateDate.format(Constants.DATE_FORMAT));
         }
     }
 
@@ -170,15 +170,39 @@ public class Task implements Serializable, Comparable<Task> {
         return mPrio;
     }
 
-    public void setPriority(Priority priority) {
+    public void setCreateDate(String newCreateDate) {
         ArrayList<Token> temp = new ArrayList<Token>();
-        if (mTokens.size()>0 && mTokens.get(0).type == Token.COMPLETED) {
+        if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED) {
+            temp.add(mTokens.get(0));
+            mTokens.remove(0);
+            if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED_DATE) {
+                temp.add(mTokens.get(0));
+                mTokens.remove(0);
+            }
+        }
+        if (mTokens.size()>0 && mTokens.get(0).type == Token.PRIO) {
             temp.add(mTokens.get(0));
             mTokens.remove(0);
         }
-        if (mTokens.size()>0 && mTokens.get(0).type == Token.COMPLETED_DATE) {
+        if (mTokens.size()>0 && mTokens.get(0).type == Token.CREATION_DATE) {
+            mTokens.remove(0);
+        }
+        temp.add(new Token(Token.CREATION_DATE, newCreateDate));
+        temp.addAll(mTokens);
+        mTokens = temp;
+        mCreateDate = newCreateDate;
+        mRelativeAge = calculateRelativeAge(newCreateDate);
+    }
+
+    public void setPriority(Priority priority) {
+        ArrayList<Token> temp = new ArrayList<Token>();
+        if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED) {
             temp.add(mTokens.get(0));
             mTokens.remove(0);
+            if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED_DATE) {
+                temp.add(mTokens.get(0));
+                mTokens.remove(0);
+            }
         }
         if (mTokens.size()>0 && mTokens.get(0).type == Token.PRIO) {
             mTokens.remove(0);
@@ -532,12 +556,7 @@ public class Task implements Serializable, Comparable<Task> {
             mCreateDate = m.group(1);
             remaining = m.group(2);
             mTokens.add(new Token(Token.CREATION_DATE,mCreateDate));
-            if (!DateTime.isParseable(mCreateDate)) {
-                mRelativeAge = mCreateDate;
-            } else {
-                DateTime dt = new DateTime(mCreateDate);
-                mRelativeAge = RelativeDate.getRelativeDate(dt);
-            }
+            mRelativeAge = calculateRelativeAge(mCreateDate);
         }
 
         while (remaining.length()>0) {
@@ -585,6 +604,17 @@ public class Task implements Serializable, Comparable<Task> {
         }
         Collections.sort(mLists);
         Collections.sort(mTags);
+    }
+
+    private String calculateRelativeAge(String date) {
+        String result;
+        if (!DateTime.isParseable(date)) {
+            result = date;
+        } else {
+            DateTime dt = new DateTime(date);
+            result = RelativeDate.getRelativeDate(dt);
+        }
+        return result;
     }
 
     public ArrayList<String> getLists() {
