@@ -104,7 +104,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    private ArrayList<Token> getTokens() {
+    public ArrayList<Token> getTokens() {
         return mTokens;
     }
 
@@ -621,7 +621,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 
         }
-        Log.v(TAG, "Lexed " + text + " as " + mTokens );
         Collections.sort(mLists);
         Collections.sort(mTags);
     }

@@ -157,6 +157,6 @@ public class TaskTest extends TestCase {
         Task t1 = new Task(0, "abcd");
         ArrayList<Token> expected = new ArrayList<Token>();
         expected.add(new Token(Token.TEXT,"abcd",null));
-        assertEquals(expected, null );
+        assertEquals(expected, t1.getTokens());
     }
 }
