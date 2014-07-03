@@ -149,9 +149,10 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private void selectAllTasks() {
-        int itemCount = getListView().getCount();
+        ListView lv = getListView();
+        int itemCount = lv.getCount();
         for(int i=0 ; i < itemCount ; i++){
-            getListView().setItemChecked(i, true);
+            lv.setItemChecked(i, true);
         }
     }
 
@@ -1293,12 +1294,37 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     class ActionBarListener implements AbsListView.MultiChoiceModeListener {
+        int numSelected;
+        Menu menu;
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position,
                                               long id, boolean checked) {
-            getListView().invalidateViews();
-            mode.invalidate();
+            if(checked) {
+                numSelected++;
+            } else {
+                numSelected--;
+            }
+            String title = "" + numSelected;
+            mode.setTitle(title);
+            if (numSelected==1) {
+            Task t = getTaskAt(position);
+                for (String s : t.getPhoneNumbers()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
+                            Menu.NONE, s);
+                }
+                for (String s : t.getMailAddresses()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s);
+                }
+                for (URL u : t.getLinks()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
+                            u.toString());
+                }
+                menu.setGroupVisible(Menu.CATEGORY_SECONDARY, true);
+            } else {
+                menu.removeGroup(Menu.CATEGORY_SECONDARY);
+                menu.setGroupVisible(Menu.CATEGORY_SECONDARY, false);
+            }
         }
 
         @Override
@@ -1314,29 +1340,13 @@ public class Simpletask extends ThemedListActivity implements
                 menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            numSelected = 0;
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            List<Task> checkedTasks = getCheckedTasks();
-            int numSelected = checkedTasks.size();
-            String title = "" + numSelected;
-            mode.setTitle(title);
-            menu.removeGroup(Menu.CATEGORY_SECONDARY);
-            for (Task t : checkedTasks ) {
-                for (String s : t.getPhoneNumbers()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
-                            Menu.NONE, s);
-                }
-                for (String s : t.getMailAddresses()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s);
-                }
-                for (URL u : t.getLinks()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
-                            u.toString());
-                }
-            }
+            this.menu = menu;
             return true;
         }
 
