@@ -210,6 +210,14 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
+    public String getEol() {
+        if( m_prefs.getBoolean(getString(R.string.line_breaks_pref_key),true)) {
+            return "\r\n";
+        } else {
+            return "\n";
+        }
+    }
+
     public boolean hasDonated() {
         try {
             getPackageManager().getInstallerPackageName("nl.mpcjanssen.simpletask.donate");
@@ -339,7 +347,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     private FileStoreInterface getFileStore() {
         if (mFileStore==null) {
-            mFileStore = new FileStore(this);
+            mFileStore = new FileStore(this, getEol());
         }
         return mFileStore;
     }

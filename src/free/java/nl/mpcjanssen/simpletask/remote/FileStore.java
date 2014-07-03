@@ -1,4 +1,4 @@
-package nl.mpcjanssen.simpletask;
+package nl.mpcjanssen.simpletask.remote;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,12 +18,17 @@ import com.dropbox.sync.android.DbxFileStatus;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxSyncStatus;
+import com.google.common.io.CharStreams;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
@@ -37,6 +42,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getName();
+    private final String mEol;
     private DbxFile.Listener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
@@ -45,10 +51,11 @@ public class FileStore implements FileStoreInterface {
     String activePath;
     private ArrayList<String> mLines;
     private boolean mReloadFile;
-    private DbxFile mDbxFile;
+    DbxFile mDbxFile;
 
-    public FileStore( Context ctx) {
+    public FileStore( Context ctx, String eol) {
         mCtx = ctx;
+        mEol = eol;
         this.activePath = null;
         setDbxAcctMgr();
     }
@@ -125,7 +132,7 @@ public class FileStore implements FileStoreInterface {
         return new ArrayList<String>();
     }
 
-    private DbxFile openDbFile(String path) {
+    private synchronized DbxFile openDbFile(String path) {
         if (mDbxFile != null) {
             return mDbxFile;
         };
@@ -153,7 +160,7 @@ public class FileStore implements FileStoreInterface {
         return mDbxFile;
     }
 
-    private ArrayList<String> syncGetLines(DbxFile dbFile) {
+    private synchronized ArrayList<String> syncGetLines(DbxFile dbFile) {
         ArrayList<String> result = new ArrayList<String>();
         DbxFileSystem fs = getDbxFS();
         if (!isAuthenticated() || fs == null || dbFile == null) {
@@ -161,10 +168,7 @@ public class FileStore implements FileStoreInterface {
         }
         try {
             dbFile.update();
-            String contents =  dbFile.readString();
-            for (String line : contents.split("\r\n|\r|\n")) {
-                result.add(line);
-            }
+            result.addAll(CharStreams.readLines(new InputStreamReader(dbFile.getReadStream())));
             return result;
         } catch (IOException e) {
             e.printStackTrace();
@@ -293,7 +297,7 @@ public class FileStore implements FileStoreInterface {
                 public void onPostExecute (Void v) {
                     mLines.addAll(lines);
                 }
-            }.execute(path, "\r\n" + Util.join(lines, "\r\n").trim());
+            }.execute(path, mEol + Util.join(lines, mEol).trim());
         }
     }
 
@@ -314,7 +318,7 @@ public class FileStore implements FileStoreInterface {
                                 contents.add(index,alUpdated.get(i));
                             }
                         }
-                        openFile.writeString(Util.join(contents, "\r\n"));
+                        openFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
@@ -338,7 +342,7 @@ public class FileStore implements FileStoreInterface {
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(dbFile));
                         contents.removeAll(stringsToDelete);
-                        dbFile.writeString(Util.join(contents, "\r\n"));
+                        dbFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
@@ -372,12 +376,12 @@ public class FileStore implements FileStoreInterface {
                             destFile = fs.create(dbPath);
                         }
                         ArrayList<String> contents = new ArrayList<String>();
-                        destFile.appendString("\r\n"+Util.join(strings, "\r\n"));
+                        destFile.appendString(mEol+Util.join(strings, mEol));
                         destFile.close();
                         DbxFile srcFile = openDbFile(sourcePath);
                         contents.addAll(syncGetLines(srcFile));
                         contents.removeAll(strings);
-                        srcFile.writeString(Util.join(contents, "\r\n"));
+                        srcFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);

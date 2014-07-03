@@ -120,6 +120,7 @@
             android:summary="@string/back_saves_summary"
             android:title="@string/back_saves_pref_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
