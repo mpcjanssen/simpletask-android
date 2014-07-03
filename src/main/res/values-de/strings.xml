@@ -110,8 +110,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="prepend_date_pref_title">Neue Aufgaben terminieren</string>
     <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
-    <string name="line_breaks_pref_summary">Windows-freundliche Umbrüche in Textdateien verwenden.
-    Standardeinstellung ist Beibehalten des Umbruchs der geladenen todo-Datei.</string>
+    <string name="line_breaks_pref_summary">Windows-freundliche Umbrüche in Textdateien verwenden.</string>
     <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Daten</string>
     <string name="recur_from_original_date_pref_summary">Erhöhe die Orginaldaten der Aufgabe, wenn die Aufgabe wiederholt wird.
         Uncheck hier um die neuen Daten relativ zu heute zu setzen.</string>

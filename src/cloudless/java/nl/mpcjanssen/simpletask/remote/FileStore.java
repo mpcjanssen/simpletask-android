@@ -14,15 +14,14 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -32,12 +31,14 @@ public class FileStore implements FileStoreInterface {
     private final String TAG = getClass().getName();
     private final Context mCtx;
     private final LocalBroadcastManager bm;
+    private final String mEol;
     private FileObserver m_observer;
     private String activePath;
     private ArrayList<String> mLines;
 
-    public FileStore(Context ctx) {
+    public FileStore(Context ctx, String eol) {
         mCtx = ctx;
+        mEol = eol;
         m_observer = null;
         this.bm = LocalBroadcastManager.getInstance(ctx);
     }
@@ -52,7 +53,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public ArrayList<String> get(final String path) {
+    synchronized public List<String> get(final String path) {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
@@ -63,12 +64,7 @@ public class FileStore implements FileStoreInterface {
         new AsyncTask<String, Void, ArrayList<String>>() {
             @Override
             protected ArrayList<String> doInBackground(String... params) {
-                try {
-                    return TaskIo.loadFromFile(new File(path), new ArrayList<String>());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return new ArrayList<String>();
-                }
+                return TaskIo.loadFromFile(new File(path));
             }
             @Override
             protected void onPostExecute(ArrayList<String> results) {
@@ -84,7 +80,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void append(String path, List<String> lines) {
-        append(path, "\r\n"+ Util.join(lines, "\r\n"));
+        append(path, mEol + Util.join(lines, mEol));
     }
 
 
@@ -146,37 +142,52 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(String mTodoName, List<String> original, List<String> updated) {
-        ArrayList<String> detectedEOL = new ArrayList<String>();
-        try {
-            File file = new File(mTodoName);
-            ArrayList<String> lines = TaskIo.loadFromFile(file, detectedEOL);
-            for (int i=0 ; i<original.size();i++) {
-                int index = lines.indexOf(original.get(i));
-                if (index!=-1) {
-                    lines.remove(index);
-                    lines.add(index,updated.get(i));
+    public void update(String mTodoName, final List<String> original, final List<String> updated) {
+            final File file = new File(mTodoName);
+            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+            new AsyncTask<Void,Void,Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    ArrayList<String> lines = TaskIo.loadFromFile(file);
+                    for (int i=0 ; i<original.size();i++) {
+                        int index = lines.indexOf(original.get(i));
+                        if (index!=-1) {
+                            mLines.remove(index);
+                            mLines.add(updated.get(i));
+                            lines.remove(index);
+                            lines.add(index,updated.get(i));
+                        }
+                    }
+                    TaskIo.writeToFile(Util.join(lines, mEol), file, false);
+                    return null;
                 }
-            }
-            String strEOL = detectedEOL.get(0);
-            TaskIo.writeToFile(Util.join(lines, strEOL), file, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+                @Override
+                protected void onPostExecute(Void v) {
+                    bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                }
+            }.execute();
     }
 
     @Override
-    public void delete(String mTodoName, List<String> strings) {
-        ArrayList<String> detectedEOL = new ArrayList<String>();
-        try {
-            File file = new File(mTodoName);
-            ArrayList<String> lines = TaskIo.loadFromFile(file, detectedEOL);
-            lines.removeAll(strings);
-            String strEOL = detectedEOL.get(0);
-            TaskIo.writeToFile(Util.join(lines, strEOL), file, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void delete(final String mTodoName, final List<String> strings) {
+        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        new AsyncTask<Void,Void,Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                File file = new File(mTodoName);
+               final List<String> lines = TaskIo.loadFromFile(file);
+                mLines.removeAll(strings);
+                lines.removeAll(strings);
+                TaskIo.writeToFile(Util.join(lines, mEol), file, false);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+            }
+        }.execute();
     }
 
     @Override

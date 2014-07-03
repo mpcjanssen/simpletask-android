@@ -13,7 +13,7 @@ import nl.mpcjanssen.simpletask.task.TaskCache;
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
-    ArrayList<String> get(String path);
+    List<String> get(String path);
     void append(String path, List<String> lines);
     void startLogin(Activity caller, int i);
     void startWatching(String path);

@@ -24,6 +24,10 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.util.Log;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Utf8;
+import com.google.common.io.Files;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -37,9 +41,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.mpcjanssen.simpletask.task.TaskCache;
-
-
 /**
  * A utility class for performing Task level I/O
  *
@@ -47,83 +48,16 @@ import nl.mpcjanssen.simpletask.task.TaskCache;
  */
 public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
-    private static boolean sWindowsLineBreaks;
 
-    public static ArrayList<String> loadTasksFromStream(InputStream is)
-            throws IOException {
-        ArrayList<String> items = new ArrayList<String>();
-        BufferedReader in = null;
+    public static ArrayList<String> loadFromFile(File file) {
+        ArrayList<String> result = new ArrayList<String>();
         try {
-            in = new BufferedReader(new InputStreamReader(is));
-            String line;
-            long counter = 0L;
-            while ((line = in.readLine()) != null) {
-                items.add(line);
-                counter++;
-            }
-        } finally {
-            Util.closeStream(in);
-            Util.closeStream(is);
+            result.addAll(Files.readLines(file, Charsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return items;
+        return result;
     }
-
-    private static String readLine(BufferedReader r, List<String> detectedEOLs) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        boolean eol = false;
-        int c;
-        detectedEOLs.clear();
-        detectedEOLs.add("\n");
-        while(!eol && (c = r.read()) >= 0) {
-            sb.append((char)c);
-            eol = (c == '\r' || c == '\n');
-
-            // check for \r\n
-            if (c == '\r') {
-                r.mark(1);
-                c = r.read();
-                if (c != '\n') {
-                    r.reset();
-                    detectedEOLs.clear();
-                    detectedEOLs.add("\r");
-                } else {
-                    detectedEOLs.clear();
-                    detectedEOLs.add("\r\n");
-                    sb.append((char)c);
-                }
-            }
-        }
-        return sb.length() == 0 ? null : sb.toString();
-    }
-
-    public static ArrayList<String> loadFromFile(File file, List<String> detectedEOLs)
-            throws IOException {
-        ArrayList<String> items = new ArrayList<String>();
-        BufferedReader in = null;
-        if (!file.exists()) {
-            Log.w(TAG, file.getAbsolutePath() + " does not exist!");
-        } else {
-            InputStream is = new FileInputStream(file);
-            try {
-                in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                String line;
-                long counter = 0L;
-                sWindowsLineBreaks = false;
-                while ((line = readLine(in, detectedEOLs)) != null) {
-                    line = line.trim();
-                    if (line.length() > 0) {
-                        items.add(line);
-                    }
-                    counter++;
-                }
-            } finally {
-                Util.closeStream(in);
-                Util.closeStream(is);
-            }
-        }
-        return items;
-    }
-
 
     public static void writeToFile(String contents, File file, boolean append) {
         try {
