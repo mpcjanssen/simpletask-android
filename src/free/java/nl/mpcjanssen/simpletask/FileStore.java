@@ -91,12 +91,8 @@ public class FileStore implements FileStoreInterface {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
+
         // Clear and reload cache
-        if (activePath!=null && mDbxFile != null) {
-            // We switched files
-            mDbxFile.close();
-            mDbxFile = null;
-        }
         mLines = null;
         new AsyncTask<String, Void, ArrayList<String>>() {
 
@@ -358,10 +354,17 @@ public class FileStore implements FileStoreInterface {
         new AsyncTask<String,Void, Void>() {
             @Override
             protected Void doInBackground(String... params) {
+                DbxFileSystem fs  = getDbxFS();
                 if (isAuthenticated() && getDbxFS() != null) {
                     try {
                         Log.v(TAG, "Moving lines from " + sourcePath + " to " + targetPath);
-                        DbxFile destFile = openDbFile(targetPath);
+                        DbxPath dbPath = new DbxPath(targetPath);
+                        DbxFile destFile;
+                        if (fs.exists(dbPath)) {
+                            destFile = fs.open(dbPath);
+                        } else {
+                            destFile = fs.create(dbPath);
+                        }
                         ArrayList<String> contents = new ArrayList<String>();
                         destFile.appendString("\r\n"+Util.join(strings, "\r\n"));
                         destFile.close();
