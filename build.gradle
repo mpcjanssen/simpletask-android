@@ -25,12 +25,11 @@ android {
     compileSdkVersion 19
 
     defaultConfig {
-        versionName '5.0.0'
-        versionCode 1500
+        versionName '5.0.0beta1'
+        versionCode 1501
 	    minSdkVersion 14
         targetSdkVersion 19
     }
-
 
     productFlavors {
         free {
