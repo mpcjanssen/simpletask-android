@@ -20,6 +20,7 @@ import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxSyncStatus;
 import com.google.common.io.CharStreams;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -168,7 +169,9 @@ public class FileStore implements FileStoreInterface {
         }
         try {
             dbFile.update();
-            result.addAll(CharStreams.readLines(new InputStreamReader(dbFile.getReadStream())));
+            FileInputStream stream = dbFile.getReadStream();
+            result.addAll(CharStreams.readLines(new InputStreamReader(stream)));
+            stream.close();
             return result;
         } catch (IOException e) {
             e.printStackTrace();
