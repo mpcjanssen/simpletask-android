@@ -43,8 +43,8 @@ import android.view.Window;
 import android.widget.EditText;
 
 import java.io.File;
-import java.util.ArrayList;
 
+import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
