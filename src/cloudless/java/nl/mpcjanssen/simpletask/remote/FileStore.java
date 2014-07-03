@@ -53,7 +53,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public List<String> get(final String path) {
+    public List<String> get(final String path) {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
@@ -79,8 +79,22 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(String path, List<String> lines) {
-        append(path, mEol + Util.join(lines, mEol));
+    public void append(final String path, final List<String> lines) {
+        updateStart(path);
+        mLines.addAll(lines);
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                append(path, mEol + Util.join(lines, mEol));
+                return null;
+            }
+
+            @Override
+            public void onPostExecute(Void v) {
+                updateDone(path);
+            }
+        }.execute();
     }
 
 
@@ -95,27 +109,26 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void startWatching(final String path) {
-        if (m_observer==null) {
-            Log.v(TAG,"Observer adding on: " + new File(path).getParentFile().getAbsolutePath());
-            final String folder = new File(path).getParentFile().getAbsolutePath();
-            final String filename = new File(path).getName();
-            m_observer = new FileObserver(folder) {
-                @Override
-                public void onEvent(int event, String eventPath) {
-                    if (eventPath!=null && eventPath.equals(filename)) {
-                        // Log.v(TAG, "Observer event: " + eventPath + ":" + event);
-                        if (event == FileObserver.CLOSE_WRITE ||
-                                event == FileObserver.MODIFY ||
-                                event == FileObserver.MOVED_TO) {
-                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-                            Log.v(TAG, "Observer " + path + " modified....sync done");
-                            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                            bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
-                        }
-                    }
+        Log.v(TAG,"Observer adding on: " + new File(path).getParentFile().getAbsolutePath());
+        final String folder = new File(path).getParentFile().getAbsolutePath();
+        final String filename = new File(path).getName();
+        m_observer = new FileObserver(folder) {
+            @Override
+            public void onEvent(int event, String eventPath) {
+                if (eventPath!=null && eventPath.equals(filename)) {
+                    // Log.v(TAG, "Observer event: " + eventPath + ":" + event);
+                    if (event == FileObserver.CLOSE_WRITE ||
+                            event == FileObserver.MODIFY ||
+                            event == FileObserver.MOVED_TO) {
+                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                        Log.v(TAG, "Observer " + path + " modified....sync done");
+                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                        bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                        mLines=null;
+                            }
                 }
-            };
-        }
+            }
+        };
         m_observer.startWatching();
     }
 
@@ -142,9 +155,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(String mTodoName, final List<String> original, final List<String> updated) {
+    public void update(final String mTodoName, final List<String> original, final List<String> updated) {
             final File file = new File(mTodoName);
-            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+            updateStart(mTodoName);
             new AsyncTask<Void,Void,Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
@@ -164,20 +177,31 @@ public class FileStore implements FileStoreInterface {
 
                 @Override
                 protected void onPostExecute(Void v) {
-                    bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                    updateDone(mTodoName);
                 }
             }.execute();
     }
 
+
+    private void updateStart(String path) {
+        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        stopWatching(path);
+    }
+
+    private void updateDone(String path) {
+        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+        startWatching(path);
+    }
+
     @Override
     public void delete(final String mTodoName, final List<String> strings) {
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        updateStart(mTodoName);
+        mLines.removeAll(strings);
         new AsyncTask<Void,Void,Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 File file = new File(mTodoName);
-               final List<String> lines = TaskIo.loadFromFile(file);
-                mLines.removeAll(strings);
+                final List<String> lines = TaskIo.loadFromFile(file);
                 lines.removeAll(strings);
                 TaskIo.writeToFile(Util.join(lines, mEol), file, false);
                 return null;
@@ -185,7 +209,7 @@ public class FileStore implements FileStoreInterface {
 
             @Override
             protected void onPostExecute(Void v) {
-                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                updateDone(mTodoName);
             }
         }.execute();
     }
