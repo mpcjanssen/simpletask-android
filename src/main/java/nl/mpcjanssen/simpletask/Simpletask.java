@@ -1308,7 +1308,8 @@ public class Simpletask extends ThemedListActivity implements
             String title = "" + numSelected;
             mode.setTitle(title);
             if (numSelected==1) {
-            Task t = getTaskAt(position);
+                Task t = getTaskAt(position);
+                menu.removeGroup(Menu.CATEGORY_SECONDARY);
                 for (String s : t.getPhoneNumbers()) {
                     menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
                             Menu.NONE, s);
@@ -1322,7 +1323,6 @@ public class Simpletask extends ThemedListActivity implements
                 }
                 menu.setGroupVisible(Menu.CATEGORY_SECONDARY, true);
             } else {
-                menu.removeGroup(Menu.CATEGORY_SECONDARY);
                 menu.setGroupVisible(Menu.CATEGORY_SECONDARY, false);
             }
         }
