@@ -10,6 +10,6 @@ public class AlphabeticalComparator extends ReversableComparator {
 
     @Override
     public int unreversedCompare(Task a, Task b) {
-        return a.inScreenFormat(Token.TEXT).compareToIgnoreCase(b.inScreenFormat(Token.TEXT));
+        return a.showParts(Token.TEXT).compareToIgnoreCase(b.showParts(Token.TEXT));
     }
 }

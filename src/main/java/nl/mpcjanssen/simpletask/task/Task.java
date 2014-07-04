@@ -299,30 +299,6 @@ public class Task implements Serializable, Comparable<Task> {
         return LinkParser.getInstance().parse(inFileFormat());
     }
 
-    private String getTextWithoutCompletionInfo() {
-        Matcher xMatch = COMPLETED_PATTERN.matcher(inFileFormat());
-        if (!xMatch.matches()) {
-            return inFileFormat();
-        }
-        String restText = xMatch.group(2);
-        Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
-        if (!dateMatch.matches()) {
-            return restText;
-        } else {
-            return dateMatch.group(2);
-        }
-    }
-
-    private String getTextWithoutCompletionAndPriority() {
-        String rest = getTextWithoutCompletionInfo() ;
-        Matcher prioMatch = PRIORITY_PATTERN.matcher(rest);
-        if (!prioMatch.matches()) {
-            return rest;
-        } else {
-            return prioMatch.group(2);
-        }
-    }
-
     public String getCompletionDate() {
         return mCompletionDate;
     }
@@ -357,7 +333,7 @@ public class Task implements Serializable, Comparable<Task> {
         this.update("");
     }
 
-    public String inScreenFormat(int flags) {
+    public String showParts(int flags) {
         StringBuilder sb = new StringBuilder();
         for (Token token: mTokens) {
             if ((flags & token.type)!=0) {
@@ -379,11 +355,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String inFileFormat() {
-        StringBuilder sb = new StringBuilder();
-        for (Token t: mTokens) {
-            sb.append(t.value);
-        }
-        return sb.toString();
+       return showParts(Token.SHOW_ALL);
     }
 
     @Override
@@ -528,20 +500,9 @@ public class Task implements Serializable, Comparable<Task> {
         return "";
     }
 
-    public String withoutCreateAndCompletionDate() {
-        // remove completion and creation dates
-        String stext = getTextWithoutCompletionAndPriority();
-
-        // remove possible create date
-        Matcher m = SINGLE_DATE_PREFIX.matcher(stext);
-        if (m.matches()) {
-            stext = m.group(2);
-        }
-        // Re add priority
-        if (getPriority()!=Priority.NONE) {
-            stext = getPriority().inFileFormat() + " " + stext.trim();
-        }
-        return stext;
+    public String getTextWithoutCompletionInfo() {
+        int flags = Token.SHOW_ALL & ~Token.COMPLETED &~ Token.COMPLETED_DATE &~Token.CREATION_DATE;
+        return showParts(flags);
     }
 
     private void parse(String text) {
