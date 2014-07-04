@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.task.token.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,8 +62,8 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, rawText);
         assertEquals(Priority.A, t.getPriority());
         ArrayList<Token> expectedTokens = new ArrayList<Token>();
-        expectedTokens.add(new Token(Token.PRIO,"(A) "));
-        expectedTokens.add(new Token(Token.TEXT,"Test"));
+        expectedTokens.add(new PRIO("(A) "));
+        expectedTokens.add(new TEXT("Test"));
         assertEquals(expectedTokens, t.getTokens());
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate);
@@ -107,10 +108,10 @@ public class TaskTest extends TestCase {
     public void testCompletedPriority() {
         Task t = new Task(0,"x 1111-11-11 (A) Test");
         ArrayList<Token> expectedTokens = new ArrayList<Token>();
-        expectedTokens.add(new Token(Token.COMPLETED,"x "));
-        expectedTokens.add(new Token(Token.COMPLETED_DATE,"1111-11-11 "));
-        expectedTokens.add(new Token(Token.PRIO,"(A) "));
-        expectedTokens.add(new Token(Token.TEXT,"Test"));
+        expectedTokens.add(new COMPLETED());
+        expectedTokens.add(new COMPLETED_DATE("1111-11-11 "));
+        expectedTokens.add(new PRIO("(A) "));
+        expectedTokens.add(new TEXT("Test"));
         assertEquals(expectedTokens, t.getTokens());
         assertTrue(t.isCompleted());
         assertEquals(Priority.A,t.getPriority());
@@ -165,7 +166,7 @@ public class TaskTest extends TestCase {
     public void testParseText() {
         Task t1 = new Task(0, "abcd");
         ArrayList<Token> expected = new ArrayList<Token>();
-        expected.add(new Token(Token.TEXT,"abcd"));
+        expected.add(new TEXT("abcd"));
         assertEquals(expected, t1.getTokens());
     }
 }

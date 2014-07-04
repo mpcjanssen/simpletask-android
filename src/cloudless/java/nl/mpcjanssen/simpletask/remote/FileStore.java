@@ -14,6 +14,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class FileStore implements FileStoreInterface {
     private final String TAG = getClass().getName();
     private final Context mCtx;
     private final LocalBroadcastManager bm;
-    private final String mEol;
+    private String mEol;
     private FileObserver m_observer;
     private String activePath;
     private ArrayList<String> mLines;
@@ -52,6 +53,10 @@ public class FileStore implements FileStoreInterface {
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
     }
 
+    @Override
+    public void setEol(String eol) {
+        mEol = eol;
+    }
     @Override
     public List<String> get(final String path) {
         if (activePath != null && activePath.equals(path) && mLines!=null) {

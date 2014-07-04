@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.task.token.*;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -187,8 +188,8 @@ public class Task implements Serializable, Comparable<Task> {
         if (mTokens.size()>0 && mTokens.get(0).type == Token.CREATION_DATE) {
             mTokens.remove(0);
         }
-        temp.add(new Token(Token.CREATION_DATE, newCreateDate));
-        temp.add(new Token(Token.WHITE_SPACE, " "));
+        temp.add(new CREATION_DATE(newCreateDate));
+        temp.add(new WHITE_SPACE(" "));
         temp.addAll(mTokens);
         mTokens = temp;
         mCreateDate = newCreateDate;
@@ -214,7 +215,7 @@ public class Task implements Serializable, Comparable<Task> {
             mTokens.remove(0);
         }
         if (!priority.equals(Priority.NONE)) {
-            temp.add(new Token(Token.PRIO, priority.inFileFormat()+" "));
+            temp.add(new PRIO(priority.inFileFormat()+" "));
         }
         temp.addAll(mTokens);
         mTokens = temp;
@@ -332,8 +333,14 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void markIncomplete() {
-        this.text = getTextWithoutCompletionInfo();
-        parse(this.text);
+        this.mCompleted = false;
+        this.mCompletionDate=null;
+        if (new COMPLETED().equals(mTokens.get(0))) {
+            mTokens.remove(0);
+            if (mTokens.size()>0 && mTokens.get(0).type==Token.COMPLETED_DATE) {
+                mTokens.remove(0);
+            }
+        }
     }
 
     public void delete() {
@@ -533,7 +540,7 @@ public class Task implements Serializable, Comparable<Task> {
         mTags =  new ArrayList<String>();
         mCompleted = false;
         if (remaining.startsWith("x ")) {
-            mTokens.add(new Token(Token.COMPLETED, "x "));
+            mTokens.add(new COMPLETED());
             mCompleted = true;
             remaining = text.substring(2);
             m = SINGLE_DATE_PATTERN.matcher(remaining);
@@ -542,14 +549,14 @@ public class Task implements Serializable, Comparable<Task> {
             if (m.matches()) {
                 mCompletionDate = m.group(1).trim();
                 remaining = m.group(2);
-                mTokens.add(new Token(Token.COMPLETED_DATE,m.group(1)));
+                mTokens.add(new COMPLETED_DATE(m.group(1)));
                 m = SINGLE_DATE_PATTERN.matcher(remaining);
                 // read optional completion date (this 'violates' the format spec)
                 // be liberal with date format errors
                 if (m.matches()) {
                     mCompletionDate = m.group(1);
                     remaining = m.group(2);
-                    mTokens.add(new Token(Token.COMPLETED_DATE,m.group(1)));
+                    mTokens.add(new COMPLETED_DATE(m.group(1)));
 
                 }
             }
@@ -560,7 +567,7 @@ public class Task implements Serializable, Comparable<Task> {
         if (m.matches()) {
             mPrio = Priority.toPriority(m.group(2));
             remaining = m.group(3);
-            mTokens.add(new Token(Token.PRIO,m.group(1)));
+            mTokens.add(new PRIO(m.group(1)));
         } else {
             mPrio = Priority.NONE;
         }
@@ -569,7 +576,7 @@ public class Task implements Serializable, Comparable<Task> {
         if (m.matches()) {
             mCreateDate = m.group(1).trim();
             remaining = m.group(2);
-            mTokens.add(new Token(Token.CREATION_DATE,m.group(1)));
+            mTokens.add(new CREATION_DATE(m.group(1)));
             mRelativeAge = calculateRelativeAge(mCreateDate);
         }
 
@@ -580,7 +587,7 @@ public class Task implements Serializable, Comparable<Task> {
                     leading = leading + " ";
                     remaining = remaining.substring(1);
                 }
-                Token ws = new Token(Token.WHITE_SPACE,leading);
+                Token ws = new WHITE_SPACE(leading);
                 mTokens.add(ws);
                 continue;
             }
@@ -588,7 +595,7 @@ public class Task implements Serializable, Comparable<Task> {
             if (m.matches()) {
                 String list = m.group(1);
                 remaining = m.group(2);
-                Token listToken = new Token(Token.LIST,"@"+list);
+                Token listToken = new LIST("@"+list);
                 mTokens.add(listToken);
                 mLists.add(list);
                 continue;
@@ -597,7 +604,7 @@ public class Task implements Serializable, Comparable<Task> {
             if (m.matches()) {
                 String match = m.group(1);
                 remaining = m.group(2);
-                Token listToken = new Token(Token.TAG,"+"+match);
+                Token listToken = new TTAG("+"+match);
                 mTokens.add(listToken);
                 mTags.add(match);
                 continue;
@@ -609,7 +616,7 @@ public class Task implements Serializable, Comparable<Task> {
                     leading = leading + remaining.substring(0,1);
                     remaining = remaining.substring(1);
                 }
-                Token ws = new Token(Token.TEXT,leading);
+                Token ws = new TEXT(leading);
                 mTokens.add(ws);
                 continue;
             }

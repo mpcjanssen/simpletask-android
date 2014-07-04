@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
+import nl.mpcjanssen.simpletask.task.token.Token;
 
 /**
  * Created by Mark Janssen on 22-7-13.

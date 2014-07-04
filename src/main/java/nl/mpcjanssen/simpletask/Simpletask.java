@@ -80,7 +80,7 @@ import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
-import nl.mpcjanssen.simpletask.task.Token;
+import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -1139,7 +1139,7 @@ public class Simpletask extends ThemedListActivity implements
                         tokensToShow = tokensToShow & ~ Token.LIST;
                     }
                     if (mFilter.getHideTags()) {
-                        tokensToShow = tokensToShow & ~ Token.TAG;
+                        tokensToShow = tokensToShow & ~ Token.TTAG;
                     }
                     SpannableString ss = new SpannableString(
                             task.inScreenFormat(tokensToShow));
