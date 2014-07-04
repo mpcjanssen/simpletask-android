@@ -59,8 +59,11 @@ public class TaskTest extends TestCase {
     public void testCompletionWithPriority1() {
         String rawText = "(A) Test";
         Task t = new Task(0, rawText);
-        t.update(rawText);
-        assertEquals(t.getPriority(), Priority.A);
+        assertEquals(Priority.A, t.getPriority());
+        ArrayList<Token> expectedTokens = new ArrayList<Token>();
+        expectedTokens.add(new Token(Token.PRIO,"(A) "));
+        expectedTokens.add(new Token(Token.TEXT,"Test"));
+        assertEquals(expectedTokens, t.getTokens());
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate);
         assertTrue(t.isCompleted());
@@ -102,7 +105,13 @@ public class TaskTest extends TestCase {
     }
 
     public void testCompletedPriority() {
-        Task t = new Task(0,"x 1111-11-11 (A) Test bcd");
+        Task t = new Task(0,"x 1111-11-11 (A) Test");
+        ArrayList<Token> expectedTokens = new ArrayList<Token>();
+        expectedTokens.add(new Token(Token.COMPLETED,"x "));
+        expectedTokens.add(new Token(Token.COMPLETED_DATE,"1111-11-11 "));
+        expectedTokens.add(new Token(Token.PRIO,"(A) "));
+        expectedTokens.add(new Token(Token.TEXT,"Test"));
+        assertEquals(expectedTokens, t.getTokens());
         assertTrue(t.isCompleted());
         assertEquals(Priority.A,t.getPriority());
     }
