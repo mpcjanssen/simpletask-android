@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.List;
 import java.util.TimeZone;
@@ -58,7 +59,7 @@ public class Task implements Serializable, Comparable<Task> {
     private static final Pattern DUE_PATTERN = Pattern
             .compile("(^||\\s)[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern THRESHOLD_PATTERN = Pattern
-            .compile("(^||\\s)[Tt]:(\\d{4}-\\d{2}-\\d{2})");
+            .compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)");
     private static final Pattern RECURRENCE_PATTERN = Pattern
             .compile("(^||\\s)[Rr][Ee][Cc]:(\\d{1,}[dDwWmMyY])");
     private final static Pattern PRIORITY_PATTERN = Pattern
@@ -81,6 +82,8 @@ public class Task implements Serializable, Comparable<Task> {
     private String mRelativeAge;
     private String mCreateDate;
     private Priority mPrio;
+    private String mThresholdate;
+    private String mDuedate;
 
 
     public Task(long id, String rawText, DateTime defaultPrependedDate) {
@@ -141,8 +144,18 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
+    public DateTime stringToDateTime(String dateString) {
+        DateTime date;
+        if (DateTime.isParseable(dateString)) {
+            date = new DateTime(dateString);
+        } else {
+            date = null;
+        }
+        return date;
+    }
+
     public DateTime getThresholdDate() {
-        return getDate(THRESHOLD_PATTERN);
+        return stringToDateTime(mThresholdate);
     }
 
     public void setThresholdDate(DateTime thresholdDate) {
@@ -150,12 +163,25 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setThresholdDate(String thresholdDateString) {
-        if (thresholdDateString.equals("")) {
-            text = text.replaceAll(THRESHOLD_PATTERN.pattern(),"");
-        } else if (this.getThresholdDate()!=null) {
-            text = text.replaceFirst(THRESHOLD_PATTERN.pattern(), " t:" + thresholdDateString);
+        int currentThresholdIdx;
+        // Find and remove current threshold token
+        for (currentThresholdIdx=0; currentThresholdIdx<mTokens.size(); currentThresholdIdx++) {
+            if (mTokens.get(currentThresholdIdx).type == Token.THRESHOLD_DATE) {
+                mTokens.remove(currentThresholdIdx);
+                break;
+            }
+        }
+        if ("".equals(thresholdDateString)) {
+            mThresholdate = null;
+            return;
+        }
+        mThresholdate = thresholdDateString;
+        Token newTok = new THRESHOLD_DATE(thresholdDateString);
+        if (currentThresholdIdx < mTokens.size()) {
+            mTokens.add(currentThresholdIdx, newTok);
         } else {
-            text = text + " t:" + thresholdDateString;
+            mTokens.add(new WHITE_SPACE(" "));
+            mTokens.add(newTok);
         }
     }
 
@@ -487,11 +513,10 @@ public class Task implements Serializable, Comparable<Task> {
 
 
     public String getThresholdDateString(String empty) {
-        Matcher matcher = THRESHOLD_PATTERN.matcher(this.text);
-        if (matcher.find()) {
-            return matcher.group(2);
-        } else {
+        if (mThresholdate==null) {
             return empty;
+        } else {
+            return mThresholdate;
         }
     }
 
@@ -533,12 +558,19 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     private void parse(String text) {
-        String remaining = text;
         mTokens.clear();
-        Matcher m;
+        mThresholdate = null;
+        mDuedate = null;
+        mPrio = null;
+        mCompleted = false;
+        mCompletionDate = null;
+        mCreateDate = null;
         mLists = new ArrayList<String>();
         mTags =  new ArrayList<String>();
-        mCompleted = false;
+        mRelativeAge = null;
+
+        Matcher m;
+        String remaining = text;
         if (remaining.startsWith("x ")) {
             mTokens.add(new COMPLETED());
             mCompleted = true;
@@ -609,7 +641,15 @@ public class Task implements Serializable, Comparable<Task> {
                 mTags.add(match);
                 continue;
             }
-
+            m = THRESHOLD_PATTERN.matcher(remaining);
+            if (m.matches()) {
+                String match = m.group(1);
+                remaining = m.group(2);
+                Token tok = new THRESHOLD_DATE(match);
+                mTokens.add(tok);
+                mThresholdate = match;
+                continue;
+            }
             if (!remaining.startsWith(" ")) {
                 String leading = "";
                 while (remaining.length()>0 && !remaining.startsWith(" ")) {
