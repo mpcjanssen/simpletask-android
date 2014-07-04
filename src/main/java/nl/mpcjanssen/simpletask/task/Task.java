@@ -57,7 +57,7 @@ public class Task implements Serializable, Comparable<Task> {
     private static final Pattern HIDDEN_PATTERN = Pattern
             .compile("(^|\\s)[Hh]:1");
     private static final Pattern DUE_PATTERN = Pattern
-            .compile("(^||\\s)[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})");
+            .compile("^[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})(.*)");
     private static final Pattern THRESHOLD_PATTERN = Pattern
             .compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)");
     private static final Pattern RECURRENCE_PATTERN = Pattern
@@ -127,7 +127,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public DateTime getDueDate() {
-        return getDate(DUE_PATTERN);
+        return stringToDateTime(mDuedate);
     }
 
     public void setDueDate(DateTime dueDate) {
@@ -135,12 +135,29 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setDueDate(String dueDateString) {
-        if (dueDateString.equals("")) {
-            text = text.replaceAll(DUE_PATTERN.pattern(),"");
-        } else if (this.getDueDate()!=null) {
-            text = text.replaceFirst(DUE_PATTERN.pattern(), " due:" + dueDateString);
+        int currentIdx;
+        int size = mTokens.size();
+        // Find and remove current threshold token
+        for (currentIdx=0; currentIdx<size; currentIdx++) {
+            if (mTokens.get(currentIdx).type == Token.DUE_DATE) {
+                mTokens.remove(currentIdx);
+                if (currentIdx>0 && mTokens.get(currentIdx-1).type==Token.WHITE_SPACE) {
+                    mTokens.remove(currentIdx-1);
+                }
+                break;
+            }
+        }
+        if ("".equals(dueDateString)) {
+            mDuedate = null;
+            return;
+        }
+        mDuedate = dueDateString;
+        Token newTok = new DUE_DATE(dueDateString);
+        if (currentIdx < size-1) {
+            mTokens.add(currentIdx, newTok);
         } else {
-            text = text + " due:" + dueDateString;
+            mTokens.add(new WHITE_SPACE(" "));
+            mTokens.add(newTok);
         }
     }
 
@@ -163,11 +180,15 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setThresholdDate(String thresholdDateString) {
-        int currentThresholdIdx;
+        int currentIdx;
+        int size = mTokens.size();
         // Find and remove current threshold token
-        for (currentThresholdIdx=0; currentThresholdIdx<mTokens.size(); currentThresholdIdx++) {
-            if (mTokens.get(currentThresholdIdx).type == Token.THRESHOLD_DATE) {
-                mTokens.remove(currentThresholdIdx);
+        for (currentIdx=0; currentIdx<size; currentIdx++) {
+            if (mTokens.get(currentIdx).type == Token.THRESHOLD_DATE) {
+                mTokens.remove(currentIdx);
+                if (currentIdx>0 && mTokens.get(currentIdx-1).type==Token.WHITE_SPACE) {
+                    mTokens.remove(currentIdx-1);
+                }
                 break;
             }
         }
@@ -177,14 +198,13 @@ public class Task implements Serializable, Comparable<Task> {
         }
         mThresholdate = thresholdDateString;
         Token newTok = new THRESHOLD_DATE(thresholdDateString);
-        if (currentThresholdIdx < mTokens.size()) {
-            mTokens.add(currentThresholdIdx, newTok);
+        if (currentIdx < size-1) {
+            mTokens.add(currentIdx, newTok);
         } else {
             mTokens.add(new WHITE_SPACE(" "));
             mTokens.add(newTok);
         }
     }
-
     public String getText() {
         return text;
     }
@@ -482,6 +502,10 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void deferThresholdDate(String deferString, boolean original) {
+        if (DateTime.isParseable(deferString)) {
+            setThresholdDate(deferString);
+            return;
+        }
         if (deferString.equals("")) {
             setThresholdDate("");
             return;
@@ -497,6 +521,10 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void deferDueDate(String deferString, boolean original) {
+        if (DateTime.isParseable(deferString)) {
+            setDueDate(deferString);
+            return;
+        }
         if (deferString.equals("")) {
             setDueDate("");
             return;
@@ -648,6 +676,15 @@ public class Task implements Serializable, Comparable<Task> {
                 Token tok = new THRESHOLD_DATE(match);
                 mTokens.add(tok);
                 mThresholdate = match;
+                continue;
+            }
+            m = DUE_PATTERN.matcher(remaining);
+            if (m.matches()) {
+                String match = m.group(1);
+                remaining = m.group(2);
+                Token tok = new DUE_DATE(match);
+                mTokens.add(tok);
+                mDuedate = match;
                 continue;
             }
             if (!remaining.startsWith(" ")) {
