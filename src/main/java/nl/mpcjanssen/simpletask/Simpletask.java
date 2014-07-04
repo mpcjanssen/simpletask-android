@@ -86,7 +86,8 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 
 public class Simpletask extends ThemedListActivity implements
-        AdapterView.OnItemLongClickListener  {
+        AdapterView.OnItemLongClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
 
@@ -185,6 +186,8 @@ public class Simpletask extends ThemedListActivity implements
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+
+        m_app.prefsChangeListener(this);
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
@@ -390,6 +393,14 @@ public class Simpletask extends ThemedListActivity implements
     protected void onDestroy() {
         super.onDestroy();
         localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // just update all
+        if ("theme".equals(key) || "fontsize".equals(key)) {
+            this.recreate();
+        }
     }
 
     @Override
