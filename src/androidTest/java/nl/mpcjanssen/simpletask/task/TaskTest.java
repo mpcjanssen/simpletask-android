@@ -139,8 +139,17 @@ public class TaskTest extends TestCase {
     public void testThreshold() {
         Task t1 = new Task(0, "t:2013-12-12 Test");
         Task t2 = new Task(0, "Test t:2013-12-12");
+        ArrayList<Token> eTok = new ArrayList<Token>();
+        eTok.add(new THRESHOLD_DATE("2013-12-12"));
+        eTok.add(new WHITE_SPACE(" "));
+        eTok.add(new TEXT("Test"));
+        assertEquals(eTok, t1.getTokens());
         assertEquals("2013-12-12", t1.getThresholdDateString(""));
         assertEquals("2013-12-12", t2.getThresholdDateString(""));
+        Task t3 = new Task(0, "Test");
+        assertNull(t3.getThresholdDate());
+        t3.setThresholdDate("2013-12-12");
+        assertEquals("Test t:2013-12-12", t3.inFileFormat());
     }
 
     public void testInvalidThresholdDate() {
