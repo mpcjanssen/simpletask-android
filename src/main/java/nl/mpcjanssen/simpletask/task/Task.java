@@ -55,7 +55,7 @@ public class Task implements Serializable, Comparable<Task> {
     private final static Pattern TAG_PATTERN = Pattern
             .compile("^\\+(\\S*\\w)(.*)");
     private static final Pattern HIDDEN_PATTERN = Pattern
-            .compile("(^|\\s)[Hh]:1");
+            .compile("^[Hh]:([01])(.*)");
     private static final Pattern DUE_PATTERN = Pattern
             .compile("^[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})(.*)");
     private static final Pattern THRESHOLD_PATTERN = Pattern
@@ -84,6 +84,7 @@ public class Task implements Serializable, Comparable<Task> {
     private Priority mPrio;
     private String mThresholdate;
     private String mDuedate;
+    private boolean mIsHidden;
 
 
     public Task(long id, String rawText, DateTime defaultPrependedDate) {
@@ -367,8 +368,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public boolean isVisible() {
-        Matcher hiddenMatch = HIDDEN_PATTERN.matcher(text);
-        return !hiddenMatch.find();
+        return !mIsHidden;
     }
 
     public void markComplete(DateTime date) {
@@ -593,6 +593,7 @@ public class Task implements Serializable, Comparable<Task> {
         mCompleted = false;
         mCompletionDate = null;
         mCreateDate = null;
+        mIsHidden = false;
         mLists = new ArrayList<String>();
         mTags =  new ArrayList<String>();
         mRelativeAge = null;
@@ -685,6 +686,19 @@ public class Task implements Serializable, Comparable<Task> {
                 Token tok = new DUE_DATE(match);
                 mTokens.add(tok);
                 mDuedate = match;
+                continue;
+            }
+            m = HIDDEN_PATTERN.matcher(remaining);
+            if (m.matches()) {
+                String match = m.group(1);
+                remaining = m.group(2);
+                Token tok = new HIDDEN(match);
+                mTokens.add(tok);
+                if (match.equals("1")) {
+                    mIsHidden = true;
+                } else {
+                    mIsHidden = false;
+                }
                 continue;
             }
             if (!remaining.startsWith(" ")) {
