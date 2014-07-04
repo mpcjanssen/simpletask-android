@@ -13,7 +13,8 @@ abstract public class Token {
     public static final int TEXT = 0x1 << 6;
     public static final int PRIO = 0x1 << 7;
     public static final int THRESHOLD_DATE = 0x1 << 8;
-    public static final int DUE_DATE = 0x1 << 8;
+    public static final int DUE_DATE = 0x1 << 9;
+    public static final int HIDDEN = 0x1 << 10;
     public int type;
     public String value;
 
