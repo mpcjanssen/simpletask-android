@@ -513,7 +513,7 @@ public class Simpletask extends ThemedListActivity implements
         for (Task t : tasks) {
             if (t != null && !t.isCompleted()) {
                 if (t.getRecurrencePattern() != null) {
-                    Task newTask = new Task(0,t.withoutCreateAndCompletionDate());
+                    Task newTask = new Task(0,t.getTextWithoutCompletionInfo());
                     boolean fromOriginalDate = m_app.hasRecurOriginalDates();
                     if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
                         newTask.deferDueDate(t.getRecurrencePattern(), fromOriginalDate);
@@ -1131,7 +1131,7 @@ public class Simpletask extends ThemedListActivity implements
                     holder.cbCompleted.setVisibility(View.GONE);
                 }
                 if (task != null) {
-                    int tokensToShow = ~0;
+                    int tokensToShow = Token.SHOW_ALL;
                     tokensToShow = tokensToShow & ~Token.CREATION_DATE;
                     tokensToShow = tokensToShow & ~Token.COMPLETED;
                     tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
@@ -1142,7 +1142,7 @@ public class Simpletask extends ThemedListActivity implements
                         tokensToShow = tokensToShow & ~ Token.TTAG;
                     }
                     SpannableString ss = new SpannableString(
-                            task.inScreenFormat(tokensToShow));
+                            task.showParts(tokensToShow));
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getLists()) {
                         colorizeStrings.add("@" + context);
