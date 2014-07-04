@@ -24,7 +24,7 @@ public interface FileStoreInterface {
     void delete(String mTodoName, List<String> strings);
     int getType();
     void move(String sourcePath, String targetPath, ArrayList<String> strings);
-
+    void setEol(String eol);
     public interface FileSelectedListener {
         void fileSelected(String file);
     }

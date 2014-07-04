@@ -43,7 +43,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getName();
-    private final String mEol;
+    private String mEol;
     private DbxFile.Listener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
@@ -398,6 +398,11 @@ public class FileStore implements FileStoreInterface {
                mLines.removeAll(strings);
             }
         }.execute();
+    }
+
+    @Override
+    public void setEol(String eol) {
+        mEol = eol;
     }
 
     @Override

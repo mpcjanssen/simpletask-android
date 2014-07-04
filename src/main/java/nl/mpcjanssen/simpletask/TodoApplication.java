@@ -335,6 +335,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 s.equals(getString(R.string.widget_background_transparency)) ||
                 s.equals(getString(R.string.widget_header_transparency))) {
             redrawWidgets();
+        } else if (s.equals(getString(R.string.line_breaks_pref_key))) {
+            if (mFileStore!=null) {
+                mFileStore.setEol(getEol());
+            }
         }
     }
 
