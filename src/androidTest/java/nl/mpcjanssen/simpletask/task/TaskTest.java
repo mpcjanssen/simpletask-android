@@ -136,6 +136,18 @@ public class TaskTest extends TestCase {
         assertEquals("1d", t2.getRecurrencePattern());
     }
 
+    public void testDue() {
+        Task t1 = new Task(0,"Test");
+        t1.setDueDate("2013-01-01");
+        assertEquals("Test due:2013-01-01", t1.inFileFormat());
+        // Don't add extra whitespace
+        t1.setDueDate("2013-01-01");
+        assertEquals("Test due:2013-01-01", t1.inFileFormat());
+        // Don't leave behind whitespace
+        t1.setDueDate("");
+        assertEquals("Test", t1.inFileFormat());
+    }
+
     public void testThreshold() {
         Task t1 = new Task(0, "t:2013-12-12 Test");
         Task t2 = new Task(0, "Test t:2013-12-12");

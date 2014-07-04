@@ -232,23 +232,19 @@ public class TaskCache {
         notifyChanged();
     }
 
-    public void defer(DateTime date, List<Task> tasksToDefer, int dateType) {
-        ArrayList<String> orginalTasks = Util.tasksToString(tasksToDefer);
-        for (Task t : tasksToDefer) {
-            if (t != null) {
-                if (dateType == Task.DUE_DATE) {
-                    t.setDueDate(date);
-                } else {
-                    t.setThresholdDate(date);
-                }
+    public void defer(String selected, List<Task> tasksToDefer, int dateType, boolean original) {
+        ArrayList<String> originalTasks = Util.tasksToString(tasksToDefer);
+        for (Task t: tasksToDefer) {
+            switch (dateType) {
+                case Task.DUE_DATE:
+                    t.deferDueDate(selected, original);
+                    break;
+                case Task.THRESHOLD_DATE:
+                    t.deferThresholdDate(selected, original);
+                    break;
             }
         }
-        update(orginalTasks, tasksToDefer);
-    }
-
-    public void defer(String selected, List<Task> tasksToDefer, int dateType) {
-        DateTime deferDate = Util.addInterval(DateTime.now(TimeZone.getDefault()), selected);
-        defer(deferDate,tasksToDefer,dateType);
+        update(originalTasks,tasksToDefer);
     }
 
     public ArrayList<Task> getTasks(ActiveFilter filter, ArrayList<String> sorts) {
