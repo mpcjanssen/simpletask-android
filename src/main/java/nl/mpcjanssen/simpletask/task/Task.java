@@ -61,11 +61,11 @@ public class Task implements Serializable, Comparable<Task> {
     private static final Pattern RECURRENCE_PATTERN = Pattern
             .compile("(^||\\s)[Rr][Ee][Cc]:(\\d{1,}[dDwWmMyY])");
     private final static Pattern PRIORITY_PATTERN = Pattern
-            .compile("^\\(([A-Z])\\) (.*)");
+            .compile("^(\\(([A-Z])\\) )(.*)");
     private final static Pattern SINGLE_DATE_PATTERN = Pattern
-            .compile("^(\\d{4}-\\d{2}-\\d{2})(.*)");
+            .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static Pattern SINGLE_DATE_PREFIX = Pattern
-            .compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
+            .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
     private String text;
@@ -540,27 +540,36 @@ public class Task implements Serializable, Comparable<Task> {
             // read optional completion date (this 'violates' the format spec)
             // be liberal with date format errors
             if (m.matches()) {
-                mCompletionDate = m.group(1);
+                mCompletionDate = m.group(1).trim();
                 remaining = m.group(2);
-                mTokens.add(new Token(Token.COMPLETED_DATE,mCompletionDate));
+                mTokens.add(new Token(Token.COMPLETED_DATE,m.group(1)));
+                m = SINGLE_DATE_PATTERN.matcher(remaining);
+                // read optional completion date (this 'violates' the format spec)
+                // be liberal with date format errors
+                if (m.matches()) {
+                    mCompletionDate = m.group(1);
+                    remaining = m.group(2);
+                    mTokens.add(new Token(Token.COMPLETED_DATE,m.group(1)));
+
+                }
             }
         }
 
         // Check for optional priority
         m = PRIORITY_PATTERN.matcher(remaining);
         if (m.matches()) {
-            mPrio = Priority.toPriority(m.group(1));
-            remaining = m.group(2);
-            mTokens.add(new Token(Token.PRIO,mPrio.inFileFormat()+" "));
+            mPrio = Priority.toPriority(m.group(2));
+            remaining = m.group(3);
+            mTokens.add(new Token(Token.PRIO,m.group(1)));
         } else {
             mPrio = Priority.NONE;
         }
         // Check for optional creation date
         m = SINGLE_DATE_PATTERN.matcher(remaining);
         if (m.matches()) {
-            mCreateDate = m.group(1);
+            mCreateDate = m.group(1).trim();
             remaining = m.group(2);
-            mTokens.add(new Token(Token.CREATION_DATE,mCreateDate));
+            mTokens.add(new Token(Token.CREATION_DATE,m.group(1)));
             mRelativeAge = calculateRelativeAge(mCreateDate);
         }
 

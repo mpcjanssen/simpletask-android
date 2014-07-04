@@ -119,5 +119,10 @@ public class TaskBagTest extends TestCase {
 
         }
 
+        @Override
+        public void setEol(String eol) {
+
+        }
+
     }
 }

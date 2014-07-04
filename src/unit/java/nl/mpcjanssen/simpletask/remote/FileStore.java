@@ -79,6 +79,11 @@ public class FileStore implements FileStoreInterface {
 
     }
 
+    @Override
+    public void setEol(String eol) {
+
+    }
+
     public static String getDefaultPath() {
         return null;
     }
