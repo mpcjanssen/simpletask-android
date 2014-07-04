@@ -70,7 +70,7 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static Pattern COMPLETED_PATTERN = Pattern
             .compile("^([Xx] )(.*)");
-    private String text;
+    //private String text;
 
 
     private long id = 0;
@@ -101,7 +101,6 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void init(String rawText, DateTime defaultCreateDate) {
-        this.text = rawText;
         parse(rawText);
         if (defaultCreateDate != null
             && getCreateDate() == null) {
@@ -111,20 +110,6 @@ public class Task implements Serializable, Comparable<Task> {
 
     public ArrayList<Token> getTokens() {
         return mTokens;
-    }
-
-    private DateTime getDate(Pattern datePattern) {
-        DateTime date = null;
-        Matcher matcher = datePattern.matcher(this.text);
-        if (matcher.find()) {
-            String dateString = matcher.group(2);
-            if (DateTime.isParseable(dateString)) {
-                date = new DateTime(dateString);
-            } else {
-                date = null;
-            }
-        }
-        return date;
     }
 
     public DateTime getDueDate() {
@@ -205,9 +190,6 @@ public class Task implements Serializable, Comparable<Task> {
             mTokens.add(new WHITE_SPACE(" "));
             mTokens.add(newTok);
         }
-    }
-    public String getText() {
-        return text;
     }
 
     public long getId() {
@@ -297,15 +279,15 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public List<String> getPhoneNumbers() {
-        return PhoneNumberParser.getInstance().parse(text);
+        return PhoneNumberParser.getInstance().parse(inFileFormat());
     }
 
     public List<String> getMailAddresses() {
-        return MailAddressParser.getInstance().parse(text);
+        return MailAddressParser.getInstance().parse(inFileFormat());
     }
 
     public String getRecurrencePattern() {
-        Matcher matcher = RECURRENCE_PATTERN.matcher(this.text);
+        Matcher matcher = RECURRENCE_PATTERN.matcher(inFileFormat());
         if (matcher.find()) {
             return matcher.group(2);
         } else {
@@ -314,13 +296,13 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public List<URL> getLinks() {
-        return LinkParser.getInstance().parse(text);
+        return LinkParser.getInstance().parse(inFileFormat());
     }
 
     private String getTextWithoutCompletionInfo() {
-        Matcher xMatch = COMPLETED_PATTERN.matcher(text);
+        Matcher xMatch = COMPLETED_PATTERN.matcher(inFileFormat());
         if (!xMatch.matches()) {
-            return text;
+            return inFileFormat();
         }
         String restText = xMatch.group(2);
         Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
@@ -339,24 +321,6 @@ public class Task implements Serializable, Comparable<Task> {
         } else {
             return prioMatch.group(2);
         }
-    }
-
-    private String getCompletionPrefix() {
-        Matcher xMatch = COMPLETED_PATTERN.matcher(text);
-        String result = "";
-        if (!xMatch.matches()) {
-            return result;
-        } else {
-            result = xMatch.group(1);
-        }
-        String restText = xMatch.group(2);
-        Matcher dateMatch = SINGLE_DATE_PREFIX.matcher(restText);
-        if (!dateMatch.matches()) {
-            return result;
-        } else {
-            return result + dateMatch.group(1) + " ";
-        }
-
     }
 
     public String getCompletionDate() {
@@ -422,11 +386,6 @@ public class Task implements Serializable, Comparable<Task> {
         return sb.toString();
     }
 
-    public void copyInto(Task destination) {
-        destination.id = this.id;
-        destination.init(this.inFileFormat(), null);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -438,7 +397,7 @@ public class Task implements Serializable, Comparable<Task> {
         Task other = (Task) obj;
         if (id != other.id)
             return false;
-        return (this.text.equals(other.text));
+        return (this.inFileFormat().equals(other.inFileFormat()));
     }
 
     @Override
@@ -447,7 +406,7 @@ public class Task implements Serializable, Comparable<Task> {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result +  inFileFormat().hashCode();
         return result;
     }
 
@@ -745,4 +704,20 @@ public class Task implements Serializable, Comparable<Task> {
         return mRelativeAge;
     }
 
+    public String getText() {
+        StringBuilder sb = new StringBuilder();
+        for (Token t : mTokens) {
+            switch (t.type) {
+                case Token.PRIO:
+                case Token.TEXT:
+                case Token.WHITE_SPACE:
+                    sb.append(t.value);
+                    break;
+                default:
+                    break;
+
+            }
+        }
+        return sb.toString();
+    }
 }
