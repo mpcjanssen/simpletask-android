@@ -89,7 +89,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
             }
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver,intentFilter);
-        m_prefs.registerOnSharedPreferenceChangeListener(this);
+        prefsChangeListener(this);
+    }
+
+    public void prefsChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        m_prefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
     public LocalBroadcastManager getLocalBroadCastManager() {
