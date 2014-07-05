@@ -185,6 +185,7 @@ public class Task implements Serializable, Comparable<Task> {
         mThresholdate = thresholdDateString;
         Token newTok = new THRESHOLD_DATE(thresholdDateString);
         if (currentIdx < size-1) {
+            mTokens.add(currentIdx, new WHITE_SPACE(" "));
             mTokens.add(currentIdx, newTok);
         } else {
             mTokens.add(new WHITE_SPACE(" "));
@@ -501,7 +502,10 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public String getTextWithoutCompletionInfo() {
-        int flags = Token.SHOW_ALL & ~Token.COMPLETED &~ Token.COMPLETED_DATE &~Token.CREATION_DATE;
+        int flags = Token.SHOW_ALL;
+        flags = flags  & ~Token.COMPLETED;
+        flags =  flags & ~Token.COMPLETED_DATE; 
+        flags = flags & ~Token.CREATION_DATE;
         return showParts(flags);
     }
 

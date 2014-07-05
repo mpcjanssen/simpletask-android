@@ -525,6 +525,9 @@ public class Simpletask extends ThemedListActivity implements
                             newTask.deferThresholdDate(t.getRecurrencePattern(), fromOriginalDate);
                         }
                     }
+                    if (m_app.hasPrependDate()) {
+                        newTask.setCreateDate(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT));
+                    }
                     getTaskBag().append(newTask.inFileFormat());
                 }
             }
