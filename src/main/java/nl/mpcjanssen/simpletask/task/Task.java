@@ -341,7 +341,7 @@ public class Task implements Serializable, Comparable<Task> {
             }
 
         }
-        return sb.toString().trim();
+        return sb.toString();
     }
 
     public boolean inFuture() {
