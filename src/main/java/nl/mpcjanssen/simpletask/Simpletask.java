@@ -1142,7 +1142,7 @@ public class Simpletask extends ThemedListActivity implements
                         tokensToShow = tokensToShow & ~ Token.TTAG;
                     }
                     SpannableString ss = new SpannableString(
-                            task.showParts(tokensToShow));
+                            task.showParts(tokensToShow).trim());
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getLists()) {
                         colorizeStrings.add("@" + context);

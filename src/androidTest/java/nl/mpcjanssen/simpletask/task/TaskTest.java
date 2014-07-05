@@ -29,6 +29,11 @@ public class TaskTest extends TestCase {
     }
     
 
+    public void testParseIdemPotence() {
+        String s = "Test abcd ";
+        assertEquals(s,new Task(0,s).inFileFormat());
+    }
+
     public void testHidden() {
         assertTrue(!new Task(0,"Test h:1").isVisible());
         assertFalse(!new Task(0,"Test").isVisible());
@@ -123,7 +128,7 @@ public class TaskTest extends TestCase {
         assertEquals("Milk @@errands", t.inFileFormat());
         t.removeTag("@@errands");
         assertEquals("Milk", t.inFileFormat());
-        assertEquals("Milk", t.inScreenFormat(~0));
+        assertEquals("Milk", t.showParts(Token.SHOW_ALL));
         t = new Task(0, "Milk @@errands +supermarket");
         t.removeTag("@@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());

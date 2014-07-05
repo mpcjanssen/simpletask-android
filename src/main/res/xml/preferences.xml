@@ -149,12 +149,6 @@
             android:key="@string/capitalize_tasks"
             android:title="@string/capitalize_tasks_pref_title"
 	 />
-	<CheckBoxPreference
-            android:defaultValue="true"
-            android:key="addtaskatendpref"
-	    android:title="Add task at end"
-            android:summary="Add new tasks at end of todo file. If unchecked add them at the beginning" /> 
-
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/show_txt_only"
