@@ -34,6 +34,11 @@ public class TaskTest extends TestCase {
         assertEquals(s,new Task(0,s).inFileFormat());
     }
 
+    public void testWithoutCompletionInfo() {
+        Task t = new Task(0, "(B) 2014-07-05 Test t:2014-07-05 rec:2d");
+        assertEquals("(B) Test t:2014-07-05 rec:2d", t.getTextWithoutCompletionInfo());
+    }
+
     public void testHidden() {
         assertTrue(!new Task(0,"Test h:1").isVisible());
         assertFalse(!new Task(0,"Test").isVisible());
