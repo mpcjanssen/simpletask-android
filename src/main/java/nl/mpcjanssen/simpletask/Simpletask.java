@@ -533,7 +533,7 @@ public class Simpletask extends ThemedListActivity implements
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            getTaskBag().defer(date.format(Constants.DATE_FORMAT), tasksToDefer, dateType, false);
+                            getTaskBag().defer(date.format(Constants.DATE_FORMAT), tasksToDefer, dateType);
 
                         }
                     },
@@ -544,7 +544,7 @@ public class Simpletask extends ThemedListActivity implements
 
                     dialog.show();
                 } else {
-                    getTaskBag().defer(selected, tasksToDefer, dateType, false);
+                    getTaskBag().defer(selected, tasksToDefer, dateType);
                 }
             }
         });

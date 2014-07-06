@@ -314,25 +314,29 @@ public class Task implements Serializable, Comparable<Task> {
         return !mIsHidden;
     }
 
-    public Task markComplete(DateTime date, boolean originalDate) {
+    public Task markComplete(DateTime date, boolean useOriginalDate) {
         Task newTask = null;
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
+            String deferFromDate = "";
+            if (!useOriginalDate) {
+                deferFromDate = completionDate;
+            }
             parse("x " + completionDate + " " + inFileFormat());
             if (getRecurrencePattern() != null) {
                 newTask = new Task(0,getTextWithoutCompletionInfo());
                 if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
-                    newTask.deferDueDate(getRecurrencePattern(), originalDate);
+                    newTask.deferDueDate(getRecurrencePattern(), deferFromDate);
                 } else {
                     if (newTask.getDueDate() != null) {
-                        newTask.deferDueDate(getRecurrencePattern(), originalDate);
+                        newTask.deferDueDate(getRecurrencePattern(), deferFromDate);
                     }
                     if (newTask.getThresholdDate() != null) {
-                        newTask.deferThresholdDate(getRecurrencePattern(), originalDate);
+                        newTask.deferThresholdDate(getRecurrencePattern(), deferFromDate);
                     }
                 }
                 if (!Strings.isNullOrEmpty(getCreateDate())) {
-                    newTask.setCreateDate(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT));
+                    newTask.setCreateDate(date.format(Constants.DATE_FORMAT));
                 }
             }
         }
@@ -453,7 +457,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferThresholdDate(String deferString, boolean original) {
+    public void deferThresholdDate(String deferString, String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setThresholdDate(deferString);
             return;
@@ -462,9 +466,12 @@ public class Task implements Serializable, Comparable<Task> {
             setThresholdDate("");
             return;
         }
-        DateTime olddate = DateTime.today(TimeZone.getDefault());
-        if (original) {
+
+        DateTime olddate;
+        if (Strings.isNullOrEmpty(deferFromDate)) {
             olddate = getThresholdDate();
+        } else {
+            olddate = new DateTime(deferFromDate);
         }
         DateTime newDate = Util.addInterval(olddate,deferString);
         if (newDate!=null) {
@@ -472,7 +479,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferDueDate(String deferString, boolean original) {
+    public void deferDueDate(String deferString, String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setDueDate(deferString);
             return;
@@ -481,10 +488,13 @@ public class Task implements Serializable, Comparable<Task> {
             setDueDate("");
             return;
         }
-        DateTime olddate = DateTime.today(TimeZone.getDefault());
-        if (original) {
+        DateTime olddate;
+        if (Strings.isNullOrEmpty(deferFromDate)) {
             olddate = getDueDate();
+        } else {
+            olddate = new DateTime(deferFromDate);
         }
+
         DateTime newDate = Util.addInterval(olddate, deferString);
         if (newDate!=null) {
             setDueDate(newDate);
