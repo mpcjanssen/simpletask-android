@@ -511,28 +511,9 @@ public class Simpletask extends ThemedListActivity implements
 
     private void completeTasks(List<Task> tasks) {
         for (Task t : tasks) {
-            if (t != null && !t.isCompleted()) {
-                if (t.getRecurrencePattern() != null) {
-                    Task newTask = new Task(0,t.getTextWithoutCompletionInfo());
-                    boolean fromOriginalDate = m_app.hasRecurOriginalDates();
-                    if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
-                        newTask.deferDueDate(t.getRecurrencePattern(), fromOriginalDate);
-                    } else {
-                        if (newTask.getDueDate() != null) {
-                            newTask.deferDueDate(t.getRecurrencePattern(), fromOriginalDate);
-                        }
-                        if (newTask.getThresholdDate() != null) {
-                            newTask.deferThresholdDate(t.getRecurrencePattern(), fromOriginalDate);
-                        }
-                    }
-                    if (m_app.hasPrependDate()) {
-                        newTask.setCreateDate(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT));
-                    }
-                    getTaskBag().append(newTask.inFileFormat());
-                }
-            }
+
         }
-        getTaskBag().complete(tasks);
+        getTaskBag().complete(tasks, m_app.hasRecurOriginalDates());
     }
 
     private void undoCompleteTasks(List<Task> tasks) {

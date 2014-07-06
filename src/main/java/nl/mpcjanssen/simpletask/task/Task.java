@@ -25,6 +25,8 @@ package nl.mpcjanssen.simpletask.task;
 import android.text.SpannableString;
 import android.util.Log;
 
+import com.google.common.base.Strings;
+
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -312,11 +314,29 @@ public class Task implements Serializable, Comparable<Task> {
         return !mIsHidden;
     }
 
-    public void markComplete(DateTime date) {
+    public Task markComplete(DateTime date, boolean originalDate) {
+        Task newTask = null;
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
             parse("x " + completionDate + " " + inFileFormat());
+            if (getRecurrencePattern() != null) {
+                newTask = new Task(0,getTextWithoutCompletionInfo());
+                if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
+                    newTask.deferDueDate(getRecurrencePattern(), originalDate);
+                } else {
+                    if (newTask.getDueDate() != null) {
+                        newTask.deferDueDate(getRecurrencePattern(), originalDate);
+                    }
+                    if (newTask.getThresholdDate() != null) {
+                        newTask.deferThresholdDate(getRecurrencePattern(), originalDate);
+                    }
+                }
+                if (!Strings.isNullOrEmpty(getCreateDate())) {
+                    newTask.setCreateDate(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT));
+                }
+            }
         }
+        return newTask;
     }
 
     public void markIncomplete() {
