@@ -49,7 +49,7 @@ public class TaskTest extends TestCase {
         String rawText = "Test";
         Task t = new Task(0, rawText);
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
-        t.markComplete(completionDate);
+        t.markComplete(completionDate, originalDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
         assertFalse(t.isCompleted());
@@ -60,7 +60,7 @@ public class TaskTest extends TestCase {
         Task t = new Task(0, rawText, DateTime.today(TimeZone.getDefault()));
         rawText = t.inFileFormat();
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
-        t.markComplete(completionDate);
+        t.markComplete(completionDate, originalDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
         assertFalse(t.isCompleted());
@@ -76,7 +76,7 @@ public class TaskTest extends TestCase {
         expectedTokens.add(new TEXT("Test"));
         assertEquals(expectedTokens, t.getTokens());
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
-        t.markComplete(completionDate);
+        t.markComplete(completionDate, originalDate);
         assertTrue(t.isCompleted());
         t.setPriority(Priority.B);
         t.markIncomplete();
@@ -91,7 +91,7 @@ public class TaskTest extends TestCase {
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
-        t.markComplete(completionDate);
+        t.markComplete(completionDate, originalDate);
         assertTrue(t.isCompleted());
         t.markIncomplete();
         assertFalse(t.isCompleted());

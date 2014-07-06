@@ -204,11 +204,14 @@ public class TaskCache {
         update(originalStrings, tasks);
     }
 
-    public void complete(List<Task> tasks) {
+    public void complete(List<Task> tasks, boolean originalDate) {
         ArrayList<String> originalStrings = new ArrayList<String>();
         for (Task t : tasks) {
             originalStrings.add(t.inFileFormat());
-            t.markComplete(DateTime.now(TimeZone.getDefault()));
+            Task extra = t.markComplete(DateTime.now(TimeZone.getDefault()), originalDate);
+            if (extra!=null) {
+                append(extra.inFileFormat());
+            }
         }
         update(originalStrings, tasks);
     }
