@@ -235,15 +235,15 @@ public class TaskCache {
         notifyChanged();
     }
 
-    public void defer(String selected, List<Task> tasksToDefer, int dateType, boolean original) {
+    public void defer(String selected, List<Task> tasksToDefer, int dateType) {
         ArrayList<String> originalTasks = Util.tasksToString(tasksToDefer);
         for (Task t: tasksToDefer) {
             switch (dateType) {
                 case Task.DUE_DATE:
-                    t.deferDueDate(selected, original);
+                    t.deferDueDate(selected, "");
                     break;
                 case Task.THRESHOLD_DATE:
-                    t.deferThresholdDate(selected, original);
+                    t.deferThresholdDate(selected, "");
                     break;
             }
         }
