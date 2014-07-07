@@ -1632,6 +1632,7 @@ public class Simpletask extends ThemedListActivity implements
             finishActionmode();
             m_adapter.setFilteredTasks();
             //m_drawerLayout.closeDrawer(Gravity.LEFT);
+            updateDrawers();
         }
     }
 
