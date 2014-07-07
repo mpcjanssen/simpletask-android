@@ -24,13 +24,12 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +38,6 @@ import java.util.TimeZone;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.Simpletask;
-import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -116,7 +113,6 @@ public class TaskCache {
     }
 
     public ArrayList<Priority> getPriorities() {
-        // TODO cache this after reloads?
         Set<Priority> res = new HashSet<Priority>();
         for (Task item : getTasks()) {
             res.add(item.getPriority());
@@ -169,19 +165,10 @@ public class TaskCache {
         return Util.prefixItems("+", getProjects(includeNone));
     }
 
-    public Task addAsTask(String toAdd) {
-        ArrayList<String> lines = new ArrayList<String>();
-        lines.add(toAdd);
-        mFileStore.append(mTodoName, lines);
-        Task t = new Task(0,toAdd);
-        mTasks.add(t);
-        notifyChanged();
-        return t;
-    }
-
     private void notifyChanged() {
         // We have changes in cache
         // Invalidate cached lists and tags
+        Log.v(TAG, "Tasks have changed, reload cache");
         mLists = null;
         mTags = null;
         // Update any visible activity
@@ -251,7 +238,7 @@ public class TaskCache {
     }
 
     public ArrayList<Task> getTasks(ActiveFilter filter, ArrayList<String> sorts) {
-        Collections.sort(mTasks, MultiComparator.create(sorts));
+        Collections.sort(mTasks,new MultiComparator(sorts));
         return filter.apply(mTasks);
     }
 

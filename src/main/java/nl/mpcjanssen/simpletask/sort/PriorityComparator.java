@@ -1,15 +1,14 @@
 package nl.mpcjanssen.simpletask.sort;
 
+import com.google.common.collect.Ordering;
+
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 
-public class PriorityComparator extends ReversableComparator {
-    public PriorityComparator(boolean reverse) {
-        super(reverse);
-    }
+public class PriorityComparator extends Ordering<Task> {
 
     @Override
-    public int unreversedCompare(Task a, Task b) {
+    public int compare(Task a, Task b) {
         Priority prioA = a.getPriority();
         Priority prioB = b.getPriority();
 
