@@ -990,7 +990,7 @@ public class Simpletask extends ThemedListActivity implements
 
         void setFilteredTasks() {
             ArrayList<Task> visibleTasks;
-            Log.v(TAG, "setFilteredTasks called");
+            Log.v(TAG, "setFilteredTasks called: " + getTaskBag());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
             visibleTasks = getTaskBag().getTasks(mFilter, sorts);
             visibleLines.clear();
