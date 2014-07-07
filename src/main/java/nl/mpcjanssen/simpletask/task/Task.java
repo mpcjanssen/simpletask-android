@@ -70,10 +70,7 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static Pattern SINGLE_DATE_PREFIX = Pattern
             .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
-    private final static Pattern COMPLETED_PATTERN = Pattern
-            .compile("^([Xx] )(.*)");
-    //private String text;
-
+    private final static String COMPLETED_PREFIX = "x ";
 
     private long id = 0;
     private ArrayList<Token> mTokens = new ArrayList<Token>();
@@ -322,7 +319,7 @@ public class Task implements Serializable, Comparable<Task> {
             if (!useOriginalDate) {
                 deferFromDate = completionDate;
             }
-            parse("x " + completionDate + " " + inFileFormat());
+            parse(COMPLETED_PREFIX + completionDate + " " + inFileFormat());
             if (getRecurrencePattern() != null) {
                 newTask = new Task(0,getTextWithoutCompletionInfo());
                 if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
@@ -554,7 +551,7 @@ public class Task implements Serializable, Comparable<Task> {
 
         Matcher m;
         String remaining = text;
-        if (remaining.startsWith("x ")) {
+        if (remaining.startsWith(COMPLETED_PREFIX)) {
             mTokens.add(new COMPLETED());
             mCompleted = true;
             remaining = text.substring(2);
