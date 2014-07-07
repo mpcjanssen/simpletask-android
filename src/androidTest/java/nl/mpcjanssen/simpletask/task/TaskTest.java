@@ -65,6 +65,15 @@ public class TaskTest extends TestCase {
         t.markIncomplete();
         assertFalse(t.isCompleted());
         assertEquals(rawText, t.inFileFormat());
+
+        t = new Task(0, "x 2000-01-01 2001-01-01 Test");
+        assertEquals("2000-01-01", t.getCompletionDate());
+        assertEquals("2001-01-01", t.getCreateDate());
+
+        t = new Task(0, "x 2000-01-01 (A) 2001-01-01 Test");
+        assertEquals("2000-01-01", t.getCompletionDate());
+        assertEquals("2001-01-01", t.getCreateDate());
+        assertEquals(Priority.A,t.getPriority());
     }
 
     public void testCompletionWithPriority1() {
@@ -146,7 +155,7 @@ public class TaskTest extends TestCase {
         assertEquals("1d", t2.getRecurrencePattern());
         String t3 = "(B) 2014-07-05 Test t:2014-07-05 rec:2d";
         Task t4 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,01,01), true);
-        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,01,01), false);
+        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
         assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:2d", t4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t5.inFileFormat());
     }

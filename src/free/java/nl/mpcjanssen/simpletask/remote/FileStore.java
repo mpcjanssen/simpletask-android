@@ -478,7 +478,7 @@ public class FileStore implements FileStoreInterface {
             Dialog d = createFileDialog();
             if(this.activity.isFinishing()) {
                 d.show();
-            } 
+            }
         }
 
         private void fireFileSelectedEvent(final DbxPath file) {
