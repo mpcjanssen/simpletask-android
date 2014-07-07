@@ -168,7 +168,11 @@ public class FileStore implements FileStoreInterface {
             return result;
         }
         try {
-            dbFile.update();
+            try {
+                dbFile.update();
+            } catch (DbxException e) {
+                Log.v(TAG, "Couldn't download latest" + e.toString());
+            }
             FileInputStream stream = dbFile.getReadStream();
             result.addAll(CharStreams.readLines(new InputStreamReader(stream)));
             stream.close();
