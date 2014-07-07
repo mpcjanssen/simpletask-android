@@ -2,17 +2,20 @@ package nl.mpcjanssen.simpletask.sort;
 
 import android.util.Log;
 
+import com.google.common.collect.Ordering;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
+import nl.mpcjanssen.simpletask.task.Task;
 
-public class MultiComparator<Task> implements Comparator<Task> {
-    private List<Comparator<Task>> comparators;
+public class MultiComparator implements Comparator<Task> {
+    private Ordering<Task> ordering;
 
-    static public MultiComparator create(ArrayList<String> sorts) {
-        List<Comparator<?>> comparators = new ArrayList<Comparator<?>>();
+    public MultiComparator (ArrayList<String> sorts) {
+        List<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
 
 
         for (String sort : sorts) {
@@ -29,42 +32,40 @@ public class MultiComparator<Task> implements Comparator<Task> {
                     reverse = true;
                 }
             }
+            Ordering<Task> comp;
             if (sortType.equals("file_order")) {
-                comparators.add(new FileOrderComparator(reverse));
+                comp = new FileOrderComparator();
             } else if (sortType.equals("by_context")) {
-                comparators.add(new ContextComparator(reverse));
+                comp = new ContextComparator();
             } else if (sortType.equals("by_project")) {
-                comparators.add(new ProjectComparator(reverse));
+                comp = new ProjectComparator();
             } else if (sortType.equals("alphabetical")) {
-                comparators.add(new AlphabeticalComparator(reverse));
+                comp = new AlphabeticalComparator();
             } else if (sortType.equals("by_prio")) {
-                comparators.add(new PriorityComparator(reverse));
+                comp = new PriorityComparator();
             } else if (sortType.equals("completed")) {
-                comparators.add(new CompletedComparator(reverse));
+                comp = new CompletedComparator();
             } else if (sortType.equals("by_creation_date")){
-                comparators.add(new CreationDateComparator(reverse));
+                comp = new CreationDateComparator();
             } else if (sortType.equals("in_future")){
-                comparators.add(new FutureComparator(reverse));
+                comp = new FutureComparator();
             } else if (sortType.equals("by_due_date")){
-                comparators.add(new DueDateComparator(reverse));
+                comp = new DueDateComparator();
             }else if (sortType.equals("by_threshold_date")){
-                comparators.add(new ThresholdDateComparator(reverse));
+                comp = new ThresholdDateComparator();
             } else {
                 Log.w("Simpletask", "Unknown sort: " + sort);
+                comp = new FileOrderComparator();
             }
+            if (reverse) {
+                comp = comp.reverse();
+            }
+            comparators.add(comp);
         }
-        return (new MultiComparator(comparators));
-    }
-
-    public MultiComparator(List<Comparator<Task>> comparators) {
-        this.comparators = comparators;
+        this.ordering = Ordering.compound(comparators);
     }
 
     public int compare(Task o1, Task o2) {
-        for (Comparator<Task> comparator : comparators) {
-            int comparison = comparator.compare(o1, o2);
-            if (comparison != 0) return comparison;
-        }
-        return 0;
+        return ordering.compare(o1,o2);
     }
 }

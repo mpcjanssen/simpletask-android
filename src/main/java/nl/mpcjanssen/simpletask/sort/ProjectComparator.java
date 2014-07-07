@@ -1,17 +1,16 @@
 package nl.mpcjanssen.simpletask.sort;
 
+import com.google.common.collect.Ordering;
+
 import java.util.Collections;
 import java.util.List;
 
 import nl.mpcjanssen.simpletask.task.Task;
 
-public class ProjectComparator extends ReversableComparator {
-    public ProjectComparator(boolean reverse) {
-        super(reverse);
-    }
+public class ProjectComparator extends Ordering<Task> {
 
     @Override
-    public int unreversedCompare(Task a, Task b) {
+    public int compare(Task a, Task b) {
         List<String> projectsA = a.getTags();
         List<String> projectsB = b.getTags();
 
