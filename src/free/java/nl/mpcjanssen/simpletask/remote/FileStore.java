@@ -80,6 +80,7 @@ public class FileStore implements FileStoreInterface {
                 return mDbxFs;
             } catch (IOException e) {
                 e.printStackTrace();
+                betaLog(e.getMessage());
                 throw new TodoException("Dropbox", e);
             }
         }
@@ -92,6 +93,22 @@ public class FileStore implements FileStoreInterface {
     @Override
     public boolean isAuthenticated() {
         return mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount();
+    }
+
+    private void betaLog(String message) {
+        DbxPath bl =  new DbxPath("/betalog/5.0.0.txt");
+        DbxFile f;
+        try {
+            if (getDbxFS().exists(bl)) {
+            f = getDbxFS().open(bl);
+        } else {
+            f = getDbxFS().create(bl);
+        }
+            f.appendString("\r\n"+message);
+            f.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -118,6 +135,7 @@ public class FileStore implements FileStoreInterface {
                 try {
                     openFile.update();
                 } catch (DbxException e) {
+                    betaLog(e.getMessage());
                     e.printStackTrace();
                 }
                 results =  syncGetLines(openFile);
@@ -144,9 +162,12 @@ public class FileStore implements FileStoreInterface {
         try {
             // Try intial sync to prevent creating new
             // todo files because first sync wasn't done yet
-            fs.awaitFirstSync();
+            if(!fs.hasSynced()) {
+                fs.awaitFirstSync();
+            }
         } catch (DbxException e) {
             Log.v(TAG, "Initial sync failed, are you connected?");
+            betaLog(e.getMessage());
         }
         try {
             DbxPath dbPath = new DbxPath(path);
@@ -157,6 +178,7 @@ public class FileStore implements FileStoreInterface {
             }
         } catch (DbxException e) {
             e.printStackTrace();
+            betaLog(e.getMessage());
         }
         return mDbxFile;
     }
@@ -171,6 +193,7 @@ public class FileStore implements FileStoreInterface {
             try {
                 dbFile.update();
             } catch (DbxException e) {
+                betaLog(e.getMessage());
                 Log.v(TAG, "Couldn't download latest" + e.toString());
             }
             FileInputStream stream = dbFile.getReadStream();
@@ -179,6 +202,7 @@ public class FileStore implements FileStoreInterface {
             return result;
         } catch (IOException e) {
             e.printStackTrace();
+            betaLog(e.getMessage());
         }
         return result;
 
@@ -222,6 +246,7 @@ public class FileStore implements FileStoreInterface {
                             }
                         } catch (DbxException e) {
                             e.printStackTrace();
+                            betaLog(e.getMessage());
                         }
                     }
                 };
@@ -243,6 +268,7 @@ public class FileStore implements FileStoreInterface {
                             }
                         } catch (DbxException e) {
                             e.printStackTrace();
+                            betaLog(e.getMessage());
                         }
                     }
                 };
@@ -296,6 +322,7 @@ public class FileStore implements FileStoreInterface {
                         openFile.appendString(data);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        betaLog(e.getMessage());
                     }
                     return null;
                 }
@@ -328,6 +355,7 @@ public class FileStore implements FileStoreInterface {
                         openFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
+                        betaLog(e.getMessage());
                         throw new TodoException("Dropbox", e);
                     }
                 }
@@ -352,6 +380,7 @@ public class FileStore implements FileStoreInterface {
                         dbFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
+                        betaLog(e.getMessage());
                         throw new TodoException("Dropbox", e);
                     }
                 }
@@ -391,6 +420,7 @@ public class FileStore implements FileStoreInterface {
                         srcFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
+                        betaLog(e.getMessage());
                         throw new TodoException("Dropbox", e);
                     }
                 }
@@ -462,6 +492,7 @@ public class FileStore implements FileStoreInterface {
                         } else fireFileSelectedEvent(chosenFile);
                     } catch (DbxException e) {
                         e.printStackTrace();
+                        betaLog(e.getMessage());
                     }
                 }
             });
@@ -508,6 +539,7 @@ public class FileStore implements FileStoreInterface {
                 }
             } catch (DbxException e) {
                 e.printStackTrace();
+                betaLog(e.getMessage());
             }
 
             Collections.sort(d);
