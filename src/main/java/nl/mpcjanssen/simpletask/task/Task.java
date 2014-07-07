@@ -566,12 +566,11 @@ public class Task implements Serializable, Comparable<Task> {
                 remaining = m.group(2);
                 mTokens.add(new COMPLETED_DATE(m.group(1)));
                 m = SINGLE_DATE_PATTERN.matcher(remaining);
-                // read optional completion date (this 'violates' the format spec)
-                // be liberal with date format errors
+                // read possible create date
                 if (m.matches()) {
-                    mCompletionDate = m.group(1);
+                    mCreateDate = m.group(1).trim();
                     remaining = m.group(2);
-                    mTokens.add(new COMPLETED_DATE(m.group(1)));
+                    mTokens.add(new CREATION_DATE(m.group(1)));
 
                 }
             }
