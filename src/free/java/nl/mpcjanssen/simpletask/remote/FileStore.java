@@ -440,6 +440,12 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
+    public void invalidateCache() {
+        mLines = null;
+        activePath = null;
+    }
+
+    @Override
     public int getType() {
         return Constants.STORE_DROPBOX;
     }

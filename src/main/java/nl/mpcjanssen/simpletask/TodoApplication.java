@@ -401,6 +401,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     @Override
                     public void fileSelected(String file) {
                         setTodoFile(file);
+                        mFileStore.invalidateCache();
                         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
                     }
                 });
