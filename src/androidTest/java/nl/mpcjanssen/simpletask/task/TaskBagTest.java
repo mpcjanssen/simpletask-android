@@ -124,5 +124,10 @@ public class TaskBagTest extends TestCase {
 
         }
 
+        @Override
+        public void invalidateCache() {
+
+        }
+
     }
 }

@@ -57,6 +57,13 @@ public class FileStore implements FileStoreInterface {
     public void setEol(String eol) {
         mEol = eol;
     }
+
+    @Override
+    public void invalidateCache() {
+        mLines = null;
+        activePath = null;
+    }
+
     @Override
     public List<String> get(final String path) {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
