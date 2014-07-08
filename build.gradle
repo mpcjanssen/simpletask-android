@@ -26,7 +26,7 @@ android {
 
     defaultConfig {
         versionName '5.0.0RC3'
-        versionCode 1506
+        versionCode 1507
 	    minSdkVersion 14
         targetSdkVersion 19
     }
