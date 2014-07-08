@@ -1631,8 +1631,7 @@ public class Simpletask extends ThemedListActivity implements
             setIntent(intent);
             finishActionmode();
             m_adapter.setFilteredTasks();
-            //m_drawerLayout.closeDrawer(Gravity.LEFT);
-            updateDrawers();
+            adapter.notifyDataSetChanged();
         }
     }
 
