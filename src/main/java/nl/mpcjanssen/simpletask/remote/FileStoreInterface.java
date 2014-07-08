@@ -25,6 +25,9 @@ public interface FileStoreInterface {
     int getType();
     void move(String sourcePath, String targetPath, ArrayList<String> strings);
     void setEol(String eol);
+
+    void invalidateCache();
+
     public interface FileSelectedListener {
         void fileSelected(String file);
     }
