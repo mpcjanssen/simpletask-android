@@ -30,11 +30,8 @@ import java.util.List;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
-import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 
 /**
@@ -154,7 +151,7 @@ public class FileStore implements FileStoreInterface {
     private synchronized DbxFile openDbFile(String path) {
         if (mDbxFile != null) {
             return mDbxFile;
-        };
+        }
         DbxFileSystem fs = getDbxFS();
         if (fs == null) {
             return null;
@@ -256,16 +253,12 @@ public class FileStore implements FileStoreInterface {
                 m_observer = new DbxFile.Listener() {
                     @Override
                     public void onFileChange(DbxFile dbxFile) {
-                        DbxFileStatus status = null;
+                        DbxFileStatus status;
                         try {
                             status = dbxFile.getSyncStatus();
                             Log.v(TAG, "Synchronizing path change: " + dbxFile.getPath().getName() + " latest: " + status.isLatest +
                                        status.bytesTransferred + "/" + status.bytesTotal);
-                            if (!status.isLatest) {
-                                mReloadFile = true;
-                            } else {
-                                mReloadFile = false;
-                            }
+                            mReloadFile = !status.isLatest;
                         } catch (DbxException e) {
                             e.printStackTrace();
                             betaLog(e.getMessage());
