@@ -112,6 +112,12 @@ public class Simpletask extends ThemedListActivity implements
         startActivity(i);
     }
 
+    @Override
+    public boolean onSearchRequested() {
+        MenuItem searchMenuItem = options_menu.findItem(R.id.search);
+        searchMenuItem.expandActionView();
+        return true;
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -947,8 +953,7 @@ public class Simpletask extends ThemedListActivity implements
         private CheckBox cbCompleted;
     }
 
-    public class TaskAdapter extends BaseAdapter implements ListAdapter,
-            Filterable {
+    public class TaskAdapter extends BaseAdapter implements ListAdapter {
         public class VisibleLine {
             private Task task = null;
             private String title = null;
@@ -1280,25 +1285,6 @@ public class Simpletask extends ThemedListActivity implements
         public boolean isEnabled(int position) {
             VisibleLine line = visibleLines.get(position);
             return !line.header;
-        }
-
-        @Override
-        public Filter getFilter() {
-            return new Filter() {
-                @Override
-                protected FilterResults performFiltering(
-                        CharSequence charSequence) {
-                    mFilter.setSearch(charSequence.toString());
-                    //Log.v(TAG, "performFiltering: " + charSequence.toString());
-                    return null;
-                }
-
-                @Override
-                protected void publishResults(CharSequence charSequence,
-                                              FilterResults filterResults) {
-                    setFilteredTasks();
-                }
-            };
         }
     }
 
