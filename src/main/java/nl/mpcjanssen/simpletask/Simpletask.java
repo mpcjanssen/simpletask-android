@@ -444,6 +444,20 @@ public class Simpletask extends ThemedListActivity implements
         // Do not iconify the widget;
         // expand it by default
         searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mFilter.setSearch(newText);
+                m_adapter.setFilteredTasks();
+                return true;
+            }
+        });
+
 
         this.options_menu = menu;
         return super.onCreateOptionsMenu(menu);
