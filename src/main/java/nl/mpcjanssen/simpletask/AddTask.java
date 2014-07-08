@@ -213,7 +213,7 @@ public class AddTask extends ThemedActivity {
     private void addBackgroundTask(String taskText) {
         m_app.getTaskCache().append(taskText);
         m_app.updateWidgets();
-        m_app.showToast(R.string.task_added);
+        Util.showToastShort(m_app, R.string.task_added);
     }
 
     @Override

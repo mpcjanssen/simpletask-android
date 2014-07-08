@@ -252,12 +252,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_taskCache;
     }
 
-
-
-    public void showToast(int resid) {
-        Util.showToastLong(this, resid);
-    }
-
     /**
      * Update user interface
      *
