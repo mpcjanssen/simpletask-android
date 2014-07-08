@@ -25,7 +25,7 @@ android {
     compileSdkVersion 19
 
     defaultConfig {
-        versionName '5.0.0RC2'
+        versionName '5.0.0RC3'
         versionCode 1506
 	    minSdkVersion 14
         targetSdkVersion 19

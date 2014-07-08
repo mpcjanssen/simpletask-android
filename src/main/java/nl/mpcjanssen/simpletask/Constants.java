@@ -43,7 +43,11 @@ public class Constants {
     // Public intents
     public final static String INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER";
     public final static String INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK";
+
+
+    // Intent extras
     public final static String EXTRA_BACKGROUND_TASK = "task";
+    public final static String EXTRA_HELP_PAGE = "page";
 
     // Android OS specific constants
     public static final String ANDROID_EVENT = "vnd.android.cursor.item/event";
@@ -51,4 +55,9 @@ public class Constants {
     // Supported backends
     public static final int STORE_DROPBOX = 0x0;
     public static final int STORE_SDCARD = 0x1;
+
+    // Help pages
+    public static final String HELP_INDEX = "index.md";
+    public static final String HELP_ADD_TASK = "addtask.md";
+
 }

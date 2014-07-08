@@ -58,6 +58,11 @@ public class HelpScreen extends Activity {
         super.onCreate(savedInstanceState);
         m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
+        String page = Constants.HELP_INDEX;
+        Intent i = getIntent();
+        if (i.hasExtra(Constants.EXTRA_HELP_PAGE)) {
+            page = i.getStringExtra(Constants.EXTRA_HELP_PAGE);
+        }
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.help);
@@ -87,7 +92,7 @@ public class HelpScreen extends Activity {
                     return false;
                 }  
             }});  
-        showMarkdownAsset(wvHelp,this,"index.md");
+        showMarkdownAsset(wvHelp,this,page);
     }
 
     @Override

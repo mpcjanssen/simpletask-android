@@ -67,7 +67,7 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
@@ -134,8 +134,17 @@ public class AddTask extends ThemedActivity {
             case R.id.menu_cancel_task:
                 finish();
                 return true;
+            case R.id.menu_help:
+                showHelp();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showHelp() {
+        Intent i = new Intent(this, HelpScreen.class);
+        i.putExtra(Constants.EXTRA_HELP_PAGE,Constants.HELP_ADD_TASK);
+        startActivity(i);
     }
 
 
