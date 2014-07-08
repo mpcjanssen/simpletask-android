@@ -84,6 +84,11 @@ public class FileStore implements FileStoreInterface {
 
     }
 
+    @Override
+    public void invalidateCache() {
+
+    }
+
     public static String getDefaultPath() {
         return null;
     }
