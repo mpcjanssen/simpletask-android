@@ -408,7 +408,6 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void invalidateCache() {
         mLines = null;
-        activePath = null;
     }
 
     @Override
