@@ -32,8 +32,8 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
@@ -81,7 +81,7 @@ public class Preferences extends ThemedActivity {
 				e.printStackTrace();
 			}
             m_app = (TodoApplication)getActivity().getApplication();
-            if (m_app.isCloudLess()) {
+            if (m_app.storeType() != Constants.STORE_DROPBOX) {
                 PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
                 getPreferenceScreen().removePreference(dropboxCategory);
             }

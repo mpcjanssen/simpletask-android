@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.token.Token;
 
 /**
  * Created by Mark Janssen on 22-7-13.
@@ -21,15 +21,13 @@ public class BugsTest extends TestCase {
 
     public void testActiveSortNullCrash() {
         ActiveFilter f = new ActiveFilter();
-        MultiComparator mc =  MultiComparator.create(f.getSort(null));
+        MultiComparator mc =  new MultiComparator(f.getSort(null));
         assertNotNull(mc);
     }
 
     public void testBug50() {
-        ActiveFilter f = new ActiveFilter();
         Task t = new Task(0,"2012-01-01 @list test");
-        f.setHideLists(true);
-        assertEquals("test",t.inScreenFormat(f));
+        assertEquals("test",t.showParts(Token.SHOW_ALL & ~Token.LIST & ~Token.CREATION_DATE).trim());
         
     }
 }
