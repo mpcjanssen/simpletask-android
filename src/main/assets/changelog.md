@@ -1,6 +1,21 @@
 ﻿Changelog
 =========
 
+5.0.1
+-----
+
+- Updated Changelog.
+- Removed context sensitive help.
+
+5.0.0
+-----
+
+- Performance improvements, performance is snappy with lists with hundreds of tasks.
+- Dropbox: switched to Dropbox Sync API. Changes on Dropbox are immediately reflected if you are connected.
+- Incremental text search.
+- After changing application theme, apply it without restart.
+- Updated German tranlations.
+
 4.2.5
 -----
 
