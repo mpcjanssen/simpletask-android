@@ -1,4 +1,6 @@
-git fast-export master | fossil import --incremental .repo
+del .repo
+fossil new --empty -A mpcjanssen .repo
+git fast-export master| fossil import --incremental .repo
 
-fossil push http://mpcjanssen@mpcjanssen.nl/fossil/simpletask
- -R .repo
+git fast-export sync-api| fossil import --incremental .repo
+

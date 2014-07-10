@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.11.+'
     }
 }
 
@@ -25,9 +25,9 @@ android {
     compileSdkVersion 19
 
     defaultConfig {
-        versionName '1.0'
-        versionCode 2000
-        packageName 'nl.mpcjanssen.simpletask.donate'
+        versionName '1.1'
+        versionCode 2001
+        applicationId 'nl.mpcjanssen.simpletask.donate'
     }
 
     signingConfigs {

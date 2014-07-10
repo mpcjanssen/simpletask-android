@@ -111,8 +111,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
-    <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.
-    By default the type of line breaks used in the loaded todo file will be kept.</string>
+    <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
     <string name="recur_from_original_date_pref_title">Recur task using original dates</string>
     <string name="recur_from_original_date_pref_summary">Increase the original dates in the task when creating the recurring task.
         Un-check this to set the new dates relative to today.</string>

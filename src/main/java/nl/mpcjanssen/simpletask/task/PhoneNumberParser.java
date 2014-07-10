@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 public class PhoneNumberParser {
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern
-            .compile("\\s[0\\\\+]?[0-9,#]{4,}\\s");
+            .compile("\\s[0\\\\+]?[0-9,#]{4,}\\w");
     private static final PhoneNumberParser INSTANCE = new PhoneNumberParser();
 
     private PhoneNumberParser() {

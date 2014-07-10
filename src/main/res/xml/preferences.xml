@@ -120,6 +120,7 @@
             android:summary="@string/back_saves_summary"
             android:title="@string/back_saves_pref_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
@@ -148,12 +149,6 @@
             android:key="@string/capitalize_tasks"
             android:title="@string/capitalize_tasks_pref_title"
 	 />
-	<CheckBoxPreference
-            android:defaultValue="true"
-            android:key="addtaskatendpref"
-	    android:title="Add task at end"
-            android:summary="Add new tasks at end of todo file. If unchecked add them at the beginning" /> 
-
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/show_txt_only"
@@ -163,18 +158,6 @@
     <PreferenceCategory
         android:title="@string/DROPBOX_settings_header"
         android:key="@string/dropbox_cat_key">
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/manual_sync_pref_key"
-            android:summary="@string/manual_sync_pref_summary"
-            android:title="@string/manual_sync_pref_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/resume_sync_pref_key"
-            android:summary="@string/resume_sync_pref_summary"
-            android:title="@string/resume_sync_pref_title" />
 
         <Preference
             android:key="logout_dropbox"

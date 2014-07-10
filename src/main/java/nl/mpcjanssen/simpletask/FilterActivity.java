@@ -1,7 +1,11 @@
 package nl.mpcjanssen.simpletask;
 
-import android.app.*;
+import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,11 +17,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
-import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.TaskBag;
-import nl.mpcjanssen.simpletask.util.Util;
 
 import java.util.ArrayList;
+
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.util.Util;
 
 public class FilterActivity extends ThemedActivity {
 
@@ -40,6 +45,7 @@ public class FilterActivity extends ThemedActivity {
     SharedPreferences prefs;
 
     private ActionBar actionbar;
+    private TaskCache m_taskBag;
 
     private int getLastActiveTab() {
         return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
@@ -81,13 +87,12 @@ public class FilterActivity extends ThemedActivity {
         Intent intent = getIntent();
         mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
-        TaskBag taskBag = ((TodoApplication)getApplication()).getTaskBag();
         if (intent.getAction()!=null) {
         	asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         }
         // Fill arguments for fragment
         arguments = new Bundle();        
-        arguments.putStringArrayList(FILTER_ITEMS, taskBag.getContexts(true));
+        arguments.putStringArrayList(FILTER_ITEMS, m_app.getTaskCache().getContexts(true));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
@@ -97,7 +102,7 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, taskBag.getProjects(true));
+        arguments.putStringArrayList(FILTER_ITEMS, m_app.getTaskCache().getProjects(true));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()
@@ -107,7 +112,7 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(taskBag.getPriorities()));
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTaskCache().getPriorities()));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
         arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
         actionbar.addTab(actionbar.newTab()

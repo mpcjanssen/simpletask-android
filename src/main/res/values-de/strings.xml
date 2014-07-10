@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="main_no_items">Keine Aufgaben vorhanden.</string>
     <string name="set_preferences">Einstellungen</string>
     <string name="preferences">Einstellungen</string>
-    <string name="archive">Speicherung</string>
+    <string name="archive">Archivierung</string>
     <string name="help">Hilfe</string>
    <string name="open_file">Öffne todo Datei</string>
     <string name="sync">Aktualisieren</string>
@@ -84,11 +84,11 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
 
     <!-- preferences -->
-    <string name="ARCHIVE_settings_header">Speicherung</string>
+    <string name="ARCHIVE_settings_header">Archivierung</string>
    <string name="ARCHIVE_settings_summary">Einstellungen für das Speichern erledigter Aufgaben in done.txt</string>
     <string name="auto_archive_pref_title">Auto Speicher</string>
-    <string name="auto_archive_pref_summary">Automatisches Speichern von Aufgaben in done.txt nach Erledigung.</string>
-    <string name="archive_now_pref_title">Jetzt Speichern</string>
+    <string name="auto_archive_pref_summary">Automatisches archivieren von Aufgaben in done.txt nach Erledigung.</string>
+    <string name="archive_now_pref_title">Jetzt Archivieren</string>
     <string name="archive_now_pref_summary">Verschiebe erledigte Aufgaben von todo.txt nach done.txt.</string>
     <string name="dropbox_logout_pref_title">Log out</string>
     <string name="dropbox_logout_pref_summary">Log out von Dropbox.</string>
@@ -110,8 +110,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="prepend_date_pref_title">Neue Aufgaben terminieren</string>
     <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
-    <string name="line_breaks_pref_summary">Windows-freundliche Umbrüche in Textdateien verwenden.
-    Standardeinstellung ist Beibehalten des Umbruchs der geladenen todo-Datei.</string>
+    <string name="line_breaks_pref_summary">Windows-freundliche Umbrüche in Textdateien verwenden.</string>
     <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Daten</string>
     <string name="recur_from_original_date_pref_summary">Erhöhe die Orginaldaten der Aufgabe, wenn die Aufgabe wiederholt wird.
         Uncheck hier um die neuen Daten relativ zu heute zu setzen.</string>
@@ -205,7 +204,7 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <!-- delete -->
     <string name="delete_task_title">Aufgabe(n) löschen</string>
-    <string name="archive_task_title">Aufgabe(n) speichern</string>
+    <string name="archive_task_title">Aufgabe(n) archivieren</string>
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
     <string name="logout_message">Bitte überprüfe ob alle Änderungen mit Dropbox synchronisiert sind oder ob du alle kompletten Aufgabenlisten geteilt hast, wenn du nicht mit Dropbox verbunden bist.\n
         Alle nicht synchronisierten Änderungen sind nach dem logout verloren.</string>

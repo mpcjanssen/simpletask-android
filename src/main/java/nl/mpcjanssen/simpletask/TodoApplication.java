@@ -1,24 +1,25 @@
 /**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
  *
  * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * Copyright (c) 2013- Mark Janssen
  *
  * LICENSE:
  *
- * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * Simpletas is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * Simpletask is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
+ * You should have received a copy of the GNU General Public License along with Sinpletask.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * @author Todo.txt contributors <todotxt@yahoogroups.com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * @copyright 2013- Mark Janssen
  */
 package nl.mpcjanssen.simpletask;
 
@@ -27,49 +28,37 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
-import android.content.*;
-import android.content.SharedPreferences.Editor;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.os.FileObserver;
-import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
-import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
 
-import nl.mpcjanssen.simpletask.remote.RemoteClientManager;
-import nl.mpcjanssen.simpletask.remote.RemoteConflictException;
-import nl.mpcjanssen.simpletask.task.LocalFileTaskRepository;
-import nl.mpcjanssen.simpletask.task.TaskBag;
-import nl.mpcjanssen.simpletask.util.DropboxFileDialog;
-import nl.mpcjanssen.simpletask.util.FileDialog;
-import nl.mpcjanssen.simpletask.util.Strings;
+import nl.mpcjanssen.simpletask.remote.FileStore;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.remote.DropboxRemoteClient;
 
 
 public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
-    public boolean m_pulling = false;
-    public boolean m_pushing = false;
-    private RemoteClientManager remoteClientManager;
-    private TaskBag taskBag;
     private LocalBroadcastManager localBroadcastManager;
+
+    private FileStoreInterface mFileStore;
+    private TaskCache m_taskCache;
     private BroadcastReceiver m_broadcastReceiver;
-    private Handler handler = new Handler();
-    private FileObserver m_observer;
-    private File local_todo;
-    private String doneName;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -85,222 +74,71 @@ public class TodoApplication extends Application implements SharedPreferences.On
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        if (isCloudLess()) {
-            local_todo = new File(getTodoFileName());
-        } else {
-            // Local storage for Dropbox is always the same
-            local_todo = new File(TodoApplication.getAppContext().getFilesDir(),"todo.txt");
-        }
-        initStorage(local_todo);
-
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.BROADCAST_SET_MANUAL);
-        intentFilter.addAction(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-        intentFilter.addAction(Constants.BROADCAST_START_SYNC_TO_REMOTE);
-        intentFilter.addAction(Constants.BROADCAST_START_SYNC_FROM_REMOTE);
-        intentFilter.addAction(Constants.BROADCAST_ASYNC_FAILED);
-        m_prefs.registerOnSharedPreferenceChangeListener(this);
-
-
-        if (null == m_broadcastReceiver) {
-            m_broadcastReceiver = new BroadcastReceiverExtension();
-            localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
-            Log.v(TAG,"Registered receiver: " + intentFilter);  
-        }
-
-        // Pull from dropbox every 5 minutes
-        if (!isCloudLess()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-      /* do what you need to do */
-                    if (!isManualMode()) {
-                        backgroundPullFromRemote();
-                    }
-      /* reschedule next */
-                    handler.postDelayed(this, 5 * 60 * 1000);
-                    Log.v(TAG, "Pulling from remote");
-                }
-            };
-            handler.postDelayed(runnable, 5 * 60 * 1000);
-        }
-    }
-
-    private void initStorage(File todoFile) {
-        if(isCloudLess()) {
-            local_todo = todoFile;
-        }
-        TaskBag.Preferences taskBagPreferences = new TaskBag.Preferences(
-                m_prefs);
-        LocalFileTaskRepository localTaskRepository = new LocalFileTaskRepository(this, local_todo, taskBagPreferences);
-        remoteClientManager = new RemoteClientManager(this, getPrefs());
-        if (isCloudLess()) {
-            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
-            Log.v(TAG, "Obs: " + localTaskRepository.getTodoTxtFile().getPath());
-            m_observer = new FileObserver(localTaskRepository.getTodoTxtFile().getParent(),
-                    FileObserver.ALL_EVENTS) {
-                @Override
-                public void onEvent(int event, String path) {
-                    String todoFileName = new File(TodoApplication.this.getTodoFileName()).getName();
-                    if (path!=null && path.equals(todoFileName) ) {
-                        if( event == FileObserver.CLOSE_WRITE ||
-                            event == FileObserver.MODIFY ||
-                            event == FileObserver.MOVED_TO) {
-                            Log.v(TAG, path + " modified reloading taskbag");
-                            taskBag.reload();
-                            updateUI();
-                        }
-                    }
-                }
-            };
-        } else {
-            this.taskBag = new TaskBag(taskBagPreferences, localTaskRepository);
-        }
-        this.startWatching();
-        taskBag.reload();
-        updateUI();
-    }
-
-    public void openCloudlessFile(Activity act) {
-
-        FileDialog fileDialog = new FileDialog(act,new File(getTodoFileName()).getAbsoluteFile().getParentFile(),showTxtOnly());
-        fileDialog.setSelectDirectoryOption(false);
-        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED);
+        m_broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void fileSelected(File file) {
-                setTodoFile(file);
-                initStorage(file);
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
+                    // File change reload task cache
+                    resetTaskCache();
+                } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+                    updateWidgets();
+                }
             }
-        });
-        fileDialog.createFileDialog();
+        };
+        localBroadcastManager.registerReceiver(m_broadcastReceiver,intentFilter);
+        prefsChangeListener(this);
     }
 
-    public void openDropboxFile(Activity act) {
-        DropboxRemoteClient client = (DropboxRemoteClient)remoteClientManager.getRemoteClient();
-        DropboxFileDialog fileDialog = new DropboxFileDialog(act,
-							     client.getApi(), 
-							     new File(getTodoFileName()).getAbsoluteFile().getParentFile(), 
-							     showTxtOnly());
-        fileDialog.addFileListener(new DropboxFileDialog.FileSelectedListener() {
-            @Override
-            public void fileSelected(File file) {
-                setTodoFile(file);
-                initStorage(file);
-                pullFromRemote(true);
-            }
-        });
-        fileDialog.createFileDialog();
+    public void prefsChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        m_prefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public LocalBroadcastManager getLocalBroadCastManager() {
+        return localBroadcastManager;
     }
 
     public void startWatching() {
-        if (m_observer!=null) {
-            m_observer.startWatching();
+        if (mFileStore!=null) {
+            mFileStore.startWatching(getTodoFileName());
+        }
+    }
+
+    public void deauthenticate() {
+        if (mFileStore!=null) {
+            mFileStore.deauthenticate();
+            mFileStore=null;
         }
     }
 
     public void stopWatching() {
-        if (m_observer!=null) {
-            m_observer.stopWatching();
+        if (hasPushSync()) {
+            return;
         }
+        if (mFileStore!=null) {
+            mFileStore.stopWatching(getTodoFileName());
+        }
+    }
+
+    private boolean hasPushSync() {
+        return true;
     }
 
     @Override
     public void onTerminate() {
-        localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
         Log.v(TAG, "Deregistered receiver");
         m_prefs.unregisterOnSharedPreferenceChangeListener(this);
+        if (m_broadcastReceiver!=null) {
+            localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
+        }
         super.onTerminate();
     }
 
-    /**
-     * If we previously tried to push and failed, then attempt to push again
-     * now. Otherwise, pull.
-     */
-    private void syncWithRemote(boolean force) {
-        if (isCloudLess()) {
-            return;
-        }
-        if (needToPush()) {
-            Log.d(TAG, "needToPush = true; pushing.");
-            pushToRemote(force, false);
-        } else {
-            Log.d(TAG, "needToPush = false; pulling.");
-            pullFromRemote(force);
-        }
-
-    }
 
     public String[] getDefaultSorts () {
         return getResources().getStringArray(R.array.sortKeys);
-    }
-
-    /**
-     * Check network status, then push.
-     */
-    private void pushToRemote(boolean force, boolean overwrite) {
-        if (isCloudLess()) {
-            return;
-        }
-        setNeedToPush(true);
-        if (!force && isManualMode()) {
-            Log.i(TAG, "Working offline, don't push now");
-        } else if (!m_pulling) {
-            Log.i(TAG, "Working online; should push if file revisions match");
-            backgroundPushToRemote(overwrite);
-        } else {
-            Log.d(TAG, "app is pulling right now. don't start push."); // TODO
-        }
-    }
-
-    /**
-     * Check network status, then pull.
-     */
-    private void pullFromRemote(boolean force) {
-        if (isCloudLess()) {
-            return;
-        }
-        if (!force && isManualMode()) {
-            Log.i(TAG, "Working offline, don't pull now");
-            return;
-        }
-
-        setNeedToPush(false);
-
-        if (!m_pushing) {
-            Log.i(TAG, "Working online; should pull file");
-            backgroundPullFromRemote();
-        } else {
-            Log.d(TAG, "app is pushing right now. don't start pull."); // TODO
-            // remove
-            // after
-            // AsyncTask
-            // bug
-            // fixed
-        }
-    }
-
-    public TaskBag getTaskBag() {
-        return taskBag;
-    }
-
-    public RemoteClientManager getRemoteClientManager() {
-        return remoteClientManager;
-    }
-    
-    public boolean isCloudLess() {
-        return BuildConfig.CLOUDLESS;
-    }
-
-    public boolean isManualMode() {
-        return m_prefs.getBoolean(getString(R.string.manual_sync_pref_key), false);
-    }
-
-    public boolean hasSyncOnResume() {
-        return m_prefs.getBoolean(getString(R.string.resume_sync_pref_key), false);
-    }
-
-    public boolean showTxtOnly() {
-        return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
     }
 
     public boolean showCompleteCheckbox() {
@@ -316,26 +154,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public String getTodoFileName() {
-        String default_path;
-        if (isCloudLess()) {
-            default_path = Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
-        } else {
-            default_path="/todo/todo.txt";
-        }
-        String path =  m_prefs.getString(getString(R.string.todo_file_key), null);
-        if (Strings.isEmptyOrNull(path)) {
-            path = default_path;
-            setTodoFile(new File(path));
-        }
-        return path;
+        return m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath());
     }
 
-    public void setTodoFile(File todo) {
-        try {
-            m_prefs.edit().putString(getString(R.string.todo_file_key), todo.getCanonicalPath()).commit();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-        }
+    public void setTodoFile(String todo) {
+            m_prefs.edit().putString(getString(R.string.todo_file_key), todo).commit();
     }
 
     public boolean isAutoArchive() {
@@ -344,6 +167,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public boolean isBackSaving() {
         return m_prefs.getBoolean(getString(R.string.back_key_saves_key), false);
+    }
+
+    public boolean hasPrependDate() {
+        return m_prefs.getBoolean(getString(R.string.prepend_date_pref_key), true);
     }
 
     public boolean hasShareTaskShowsEdit() {
@@ -387,6 +214,14 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
+    public String getEol() {
+        if( m_prefs.getBoolean(getString(R.string.line_breaks_pref_key),true)) {
+            return "\r\n";
+        } else {
+            return "\n";
+        }
+    }
+
     public boolean hasDonated() {
         try {
             getPackageManager().getInstallerPackageName("nl.mpcjanssen.simpletask.donate");
@@ -402,139 +237,19 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 .commit();
     }
 
-    public void setManualMode(boolean manual) {
-    	Editor edit = m_prefs.edit();
-        edit.putBoolean(getString(R.string.manual_sync_pref_key), manual);
-        edit.commit();
+    public void resetTaskCache() {
+        m_taskCache = null;
+        getTaskCache();
+        updateUI();
     }
 
-    public boolean needToPush() {
-        return m_prefs.getBoolean(Constants.PREF_NEED_TO_PUSH, false);
-    }
-
-    public void setNeedToPush(boolean needToPush) {
-        Editor editor = m_prefs.edit();
-        editor.putBoolean(Constants.PREF_NEED_TO_PUSH, needToPush);
-        editor.commit();
-    }
-
-    public void showToast(int resid) {
-        Util.showToastLong(this, resid);
-    }
-
-    public void showToast(String string) {
-        Util.showToastLong(this, string);
-    }
-
-    /**
-     * Do asynchronous push with gui changes. Do availability check first.
-     */
-    void backgroundPushToRemote(final boolean overwrite) {
-        if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
-            Intent i = new Intent();
-            i.setAction(Constants.BROADCAST_SYNC_START);
-            localBroadcastManager.sendBroadcast(i);
-            m_pushing = true;
-
-            new AsyncTask<Void, Void, Integer>() {
-                static final int SUCCESS = 0;
-                static final int CONFLICT = 1;
-                static final int ERROR = 2;
-
-                @Override
-                protected Integer doInBackground(Void... params) {
-                    try {
-                        Log.d(TAG, "start taskBag.pushToRemote");
-                        taskBag.pushToRemote(getRemoteClientManager(), true, overwrite);
-                    } catch (RemoteConflictException c) {
-                        Log.e(TAG, c.getMessage());
-                        return CONFLICT;
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                        return ERROR;
-                    }
-                    return SUCCESS;
-                }
-
-                @Override
-                protected void onPostExecute(Integer result) {
-                    Log.d(TAG, "post taskBag.pushToremote");
-                    Intent i = new Intent();
-                    i.setAction(Constants.BROADCAST_SYNC_DONE);
-                    localBroadcastManager.sendBroadcast(i);
-                    if (result == SUCCESS) {
-                        Log.d(TAG, "taskBag.pushToRemote done");
-                        m_pushing = false;
-                        setNeedToPush(false);
-                    } else if (result == CONFLICT) {
-                        // FIXME: need to know which file had conflict
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_CONFLICT));
-                    } else {
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_ASYNC_FAILED));
-                    }
-                    super.onPostExecute(result);
-                }
-
-            }.execute();
-
-        } else {
-            Log.e(TAG, "NOT AUTHENTICATED!");
-            showToast("NOT AUTHENTICATED!");
+    public synchronized TaskCache getTaskCache() {
+        if (m_taskCache==null) {
+            m_taskCache = new TaskCache(this,
+                    getFileStore(),
+                    getTodoFileName());
         }
-
-    }
-
-    /**
-     * Do an asynchronous pull from remote. Check network availability before
-     * calling this.
-     */
-    private void backgroundPullFromRemote() {
-        if (getRemoteClientManager().getRemoteClient().isAuthenticated()) {
-            Intent i = new Intent();
-            i.setAction(Constants.BROADCAST_SYNC_START);
-            localBroadcastManager.sendBroadcast(i);
-            m_pulling = true;
-            // Comment out next line to avoid resetting list position at top;
-            // should maintain position of last action
-            // updateUI();
-
-            new AsyncTask<Void, Void, Boolean>() {
-
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        Log.d(TAG, "start taskBag.pullFromRemote");
-                        taskBag.pullFromRemote(getRemoteClientManager(),true);
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                        return false;
-                    }
-                    return true;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    Log.d(TAG, "post taskBag.pullFromRemote");
-                    super.onPostExecute(result);
-                    if (result) {
-                        Log.d(TAG, "taskBag.pullFromRemote done");
-                        m_pulling = false;
-                        taskBag.reload();
-                        updateUI();
-                    } else {
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_ASYNC_FAILED));
-                    }
-                    super.onPostExecute(result);
-                    Intent i = new Intent();
-                    i.setAction(Constants.BROADCAST_SYNC_DONE);
-                    i.putExtra(Constants.INTENT_SYNC_DIRECTION,Constants.PULL);
-                    localBroadcastManager.sendBroadcast(i);
-                }
-
-            }.execute();
-        } else {
-            Log.e(TAG, "NOT AUTHENTICATED!");
-        }
+        return m_taskCache;
     }
 
     /**
@@ -544,9 +259,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * if it is visible (by broadcasting an intent). All widgets will be updated as well.
      * This method should be called whenever the TaskBag changes.
      */
-    private void updateUI() {
+    public void updateUI() {
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-        updateWidgets();
     }
 
     public void updateWidgets() {
@@ -615,6 +329,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 s.equals(getString(R.string.widget_background_transparency)) ||
                 s.equals(getString(R.string.widget_header_transparency))) {
             redrawWidgets();
+        } else if (s.equals(getString(R.string.line_breaks_pref_key))) {
+            if (mFileStore!=null) {
+                mFileStore.setEol(getEol());
+            }
         }
     }
 
@@ -629,35 +347,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    public String getDonePath() {
-        return getRemoteClientManager().getRemoteClient().getDonePath();
-    }
-
-    private final class BroadcastReceiverExtension extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.v(TAG, "Received intent: " + intent);
-            boolean force_sync = intent.getBooleanExtra(
-                    Constants.EXTRA_FORCE_SYNC, false);
-            boolean overwrite = intent.getBooleanExtra(
-                    Constants.EXTRA_OVERWRITE, false);
-            if (intent.getAction().endsWith(
-                    Constants.BROADCAST_START_SYNC_WITH_REMOTE)) {
-                syncWithRemote(force_sync);
-            } else if (intent.getAction().endsWith(
-                    Constants.BROADCAST_START_SYNC_TO_REMOTE)) {
-                pushToRemote(force_sync, overwrite);
-            } else if (intent.getAction().endsWith(
-                    Constants.BROADCAST_START_SYNC_FROM_REMOTE)) {
-                pullFromRemote(force_sync);
-            } else if (intent.getAction().endsWith(
-                    Constants.BROADCAST_ASYNC_FAILED)) {
-                showToast("Synchronizing Failed");
-                m_pulling = false;
-                m_pushing = false;
-                updateUI();
-            }
+    private FileStoreInterface getFileStore() {
+        if (mFileStore==null) {
+            mFileStore = new FileStore(this, getEol());
         }
+        return mFileStore;
     }
 
     public void showConfirmationDialog(Context cxt, int msgid,
@@ -676,5 +370,44 @@ public class TodoApplication extends Application implements SharedPreferences.On
         } else {
             oklistener.onClick(dialog , DialogInterface.BUTTON_POSITIVE);
         }
+    }
+
+    public boolean isAuthenticated() {
+        FileStoreInterface fs = getFileStore();
+        if (fs==null) {
+            return false;
+        }
+        return getFileStore().isAuthenticated();
+    }
+
+    public void startLogin(LoginScreen loginScreen, int i) {
+        getFileStore().startLogin(loginScreen,i);
+    }
+
+    public int storeType() {
+        return getFileStore().getType();
+    }
+
+    public void browseForNewFile(Activity act) {
+        FileStoreInterface fileStore = getFileStore();
+        if (fileStore == null) {
+            Util.showToastShort(act, "can't access filesystem");
+            return;
+        }
+        fileStore.browseForNewFile(
+                act,
+                getTodoFileName(),
+                new FileStoreInterface.FileSelectedListener() {
+                    @Override
+                    public void fileSelected(String file) {
+                        setTodoFile(file);
+                        mFileStore.invalidateCache();
+                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                    }
+                });
+    }
+
+    public String getDoneFileName() {
+        return new File(getTodoFileName()).getParent()+"/done.txt";
     }
 }

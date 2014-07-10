@@ -23,13 +23,23 @@
 package nl.mpcjanssen.simpletask.util;
 
 import android.util.Log;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
 
-import java.io.*;
+import com.google.common.base.Charsets;
+import com.google.common.base.Utf8;
+import com.google.common.io.Files;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * A utility class for performing Task level I/O
@@ -38,104 +48,23 @@ import java.util.List;
  */
 public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
-    private static boolean sWindowsLineBreaks;
 
-    public static ArrayList<String> loadTasksFromStream(InputStream is)
-            throws IOException {
-        ArrayList<String> items = new ArrayList<String>();
-        BufferedReader in = null;
+    public static ArrayList<String> loadFromFile(File file) {
+        ArrayList<String> result = new ArrayList<String>();
         try {
-            in = new BufferedReader(new InputStreamReader(is));
-            String line;
-            long counter = 0L;
-            while ((line = in.readLine()) != null) {
-                items.add(line);
-                counter++;
-            }
-        } finally {
-            Util.closeStream(in);
-            Util.closeStream(is);
+            result.addAll(Files.readLines(file, Charsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return items;
+        return result;
     }
 
-    private static String readLine(BufferedReader r) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        boolean eol = false;
-        int c;
-        while(!eol && (c = r.read()) >= 0) {
-            sb.append((char)c);
-            eol = (c == '\r' || c == '\n');
-
-            // check for \r\n
-            if (c == '\r') {
-                r.mark(1);
-                c = r.read();
-                if (c != '\n') {
-                    r.reset();
-                } else {
-                    sWindowsLineBreaks = true;
-                    sb.append((char)c);
-                }
-            }
-        }
-        return sb.length() == 0 ? null : sb.toString();
-    }
-
-    public static ArrayList<Task> loadTasksFromFile(File file, TaskBag.Preferences preferences)
-            throws IOException {
-        ArrayList<Task> items = new ArrayList<Task>();
-        BufferedReader in = null;
-        if (!file.exists()) {
-            Log.w(TAG, file.getAbsolutePath() + " does not exist!");
-        } else {
-            InputStream is = new FileInputStream(file);
-            try {
-                in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                String line;
-                long counter = 0L;
-                sWindowsLineBreaks = false;
-                while ((line = readLine(in)) != null) {
-                    line = line.trim();
-                    if (line.length() > 0) {
-                        items.add(new Task(counter, line));
-                    }
-                    counter++;
-                }
-            } finally {
-                Util.closeStream(in);
-                Util.closeStream(is);
-            }
-        }
-        preferences.setUseWindowsLineBreaksEnabled(sWindowsLineBreaks);
-        return items;
-    }
-
-
-    public static void writeToFile(List<Task> tasks, File file,
-                                   boolean useWindowsBreaks) {
-        writeToFile(tasks, file, false, useWindowsBreaks);
-    }
-
-    public static void writeToFile(List<Task> tasks, File file,
-                                   boolean append, boolean useWindowsBreaks) {
+    public static void writeToFile(String contents, File file, boolean append) {
         try {
             Util.createParentDirectory(file);
             Writer fw = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(file, append), "UTF-8"));
-                for (Task task : tasks) {
-                    if (task!=null) {
-                    String fileFormat = task.inFileFormat();
-                    fw.write(fileFormat);
-                    if (useWindowsBreaks) {
-                        // Log.v(TAG, "Using Windows line breaks");
-                        fw.write("\r\n");
-                    } else {
-                        // Log.v(TAG, "NOT using Windows line breaks");
-                        fw.write("\n");
-                    }
-                }
-            }
+            fw.write(contents);
             fw.close();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());

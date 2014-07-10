@@ -8,6 +8,7 @@
 
 package nl.mpcjanssen.simpletask;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -18,20 +19,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -62,6 +62,8 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,32 +71,28 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
-import nl.mpcjanssen.simpletask.remote.RemoteClient;
-import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.util.Util.OnMultiChoiceDialogListener;
 
 
-public class Simpletask extends ThemedListActivity implements AdapterView.OnItemLongClickListener {
+public class Simpletask extends ThemedListActivity implements
+        AdapterView.OnItemLongClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
-    private final static int REQUEST_FILTER = 1;
+
     private final static int REQUEST_PREFERENCES = 2;
-    private final static int DRAWER_CONTEXT = 1;
-    private final static int DRAWER_PROJECT = 2;
-    private static final int SYNC_CHOICE_DIALOG = 100;
-    private static final int SYNC_CONFLICT_DIALOG = 101;
+
     Menu options_menu;
     TodoApplication m_app;
     ActiveFilter mFilter;
@@ -114,6 +112,12 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         startActivity(i);
     }
 
+    @Override
+    public boolean onSearchRequested() {
+        MenuItem searchMenuItem = options_menu.findItem(R.id.search);
+        searchMenuItem.expandActionView();
+        return true;
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -128,6 +132,9 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         ArrayList<Task> checkedTasks = new ArrayList<Task>();
         SparseBooleanArray checkedItems = getListView()
                 .getCheckedItemPositions();
+        if (checkedItems==null) {
+            return checkedTasks;
+        }
         for (int i = 0; i < checkedItems.size(); i++) {
             if (checkedItems.valueAt(i)) {
                 Task t = getTaskAt(checkedItems.keyAt(i));
@@ -149,9 +156,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void selectAllTasks() {
-        int itemCount = getListView().getCount();
+        ListView lv = getListView();
+        int itemCount = lv.getCount();
         for(int i=0 ; i < itemCount ; i++){
-            getListView().setItemChecked(i, true);
+            lv.setItemChecked(i, true);
         }
     }
 
@@ -185,15 +193,16 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
+        m_app.prefsChangeListener(this);
+
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
-        intentFilter.addAction(Constants.BROADCAST_SYNC_CONFLICT);
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT);
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager = m_app.getLocalBroadCastManager();
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -205,20 +214,18 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
                     Log.v(TAG, "Logging out from Dropbox");
-                    m_app.getRemoteClientManager().getRemoteClient()
-                            .deauthenticate();
-                    m_app.setManualMode(false);
+                    m_app.deauthenticate();
                     Intent i = new Intent(context, LoginScreen.class);
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+                    int position = getListView().getFirstVisiblePosition();
+                    Log.v(TAG, "Updating UI because of broadcast");
                     handleIntent();
-                } else if (intent.getAction().endsWith(
-                        Constants.BROADCAST_SYNC_CONFLICT)) {
-                    handleSyncConflict();
-                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START) && !m_app.isCloudLess()) {
+                    getListView().setSelectionFromTop(position,0);
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
-                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE) && !m_app.isCloudLess()) {
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
                     setProgressBarIndeterminateVisibility(false);
                 }
             }
@@ -246,28 +253,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             }
         }
         setProgressBarIndeterminateVisibility(false);
-        getTaskBag().reload();
-        if (m_app.hasSyncOnResume()) {
-            syncClient(false);
-        }
-    }
-
-    private TaskBag getTaskBag() {
-        return m_app.getTaskBag();
     }
 
     private void handleIntent() {
-        if (!m_app.isCloudLess()) {
-            RemoteClient remoteClient = m_app.getRemoteClientManager()
-                    .getRemoteClient();
-            // Keep allowing use of the app in manual unauthenticated mode
-            // This will probably be removed in the future.
-            if (!remoteClient.isAuthenticated() && !m_app.isManualMode()) {
-                startLogin();
-                return;
-            }
+        if (!m_app.isAuthenticated()) {
+            startLogin();
+            return;
         }
-
         mFilter = new ActiveFilter();
 
         m_leftDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -275,13 +267,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
         m_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if (m_drawerLayout == null) {
-            // In tablet landscape mode
-            ViewGroup m_container = (ViewGroup) findViewById(R.id.tablet_drawer_layout);
-        } else {
-            // Not in tablet landscape mode
-            ViewGroup m_container = m_drawerLayout;
-        }
         // Set the list's click listener
         m_leftDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -309,8 +294,11 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
             // Set the drawer toggle as the DrawerListener
             m_drawerLayout.setDrawerListener(m_drawerToggle);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
+            ActionBar actionBar = getActionBar();
+            if (actionBar!=null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setHomeButtonEnabled(true);
+            }
             m_drawerToggle.syncState();
         }
 
@@ -332,7 +320,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             m_adapter = new TaskAdapter(this, R.layout.list_item,
                     getLayoutInflater(), getListView());
         }
-        m_adapter.setFilteredTasks(true);
+        m_adapter.setFilteredTasks();
 
         setListAdapter(this.m_adapter);
 
@@ -340,7 +328,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
-
         // If we were started with a selected task,
         // select it now and clear it from the intent
         String selectedTask = intent.getStringExtra(Constants.INTENT_SELECTED_TASK);
@@ -415,33 +402,35 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // just update all
+        if ("theme".equals(key) || "fontsize".equals(key)) {
+            this.recreate();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         ArrayList<String> selection = new ArrayList<String>();
         for (Task t : getCheckedTasks()) {
             selection.add("" + t.getId() + ":" + t.inFileFormat());
         }
         outState.putStringArrayList("selection", selection);
-        outState.putInt("position",getListView().getFirstVisiblePosition());
+        outState.putInt("position", getListView().getFirstVisiblePosition());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         handleIntent();
+        m_app.startWatching();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mFilter!=null) {
-            mFilter.saveInPrefs(TodoApplication.getPrefs());
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+        m_app.stopWatching();
         finishActionmode();
     }
 
@@ -461,11 +450,22 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         // Do not iconify the widget;
         // expand it by default
         searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mFilter.setSearch(newText);
+                m_adapter.setFilteredTasks();
+                return true;
+            }
+        });
+
 
         this.options_menu = menu;
-        if (m_app.isCloudLess()) {
-            menu.findItem(R.id.sync).setVisible(false);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -515,18 +515,14 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             public void onClick(DialogInterface dialog, final int which) {
 
                 dialog.dismiss();
-                for (Task task : tasks) {
-                    if (task != null) {
-                        task.setPriority(Priority.toPriority(prioArr[which]));
-                    }
+                List<Task> tasks = getCheckedTasks();
+                Priority prio = Priority.toPriority(prioArr[which]);
+                ArrayList<String> originalTasks = Util.tasksToString(tasks);
+                for (Task t : tasks) {
+                    t.setPriority(prio);
                 }
+                getTaskBag().update(originalTasks,tasks);
                 finishActionmode();
-                getTaskBag().store();
-                m_app.updateWidgets();
-                m_app.setNeedToPush(true);
-                // We have change the data, views should refresh
-                m_adapter.setFilteredTasks(false);
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         });
         builder.show();
@@ -534,49 +530,14 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     }
 
     private void completeTasks(List<Task> tasks) {
-        TaskBag taskBag = getTaskBag();
         for (Task t : tasks) {
-            if (t != null && !t.isCompleted()) {
-                if (t.getRecurrencePattern() != null) {
-                    Task newTask = taskBag.addAsTask(t.withoutCreateAndCompletionDate());
-                    boolean fromOriginalDate = m_app.hasRecurOriginalDates();
-                    if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
-                        newTask.deferDueDate(t.getRecurrencePattern(), fromOriginalDate);
-                    } else {
-                        if (newTask.getDueDate() != null) {
-                            newTask.deferDueDate(t.getRecurrencePattern(), fromOriginalDate);
-                        }
-                        if (newTask.getThresholdDate() != null) {
-                            newTask.deferThresholdDate(t.getRecurrencePattern(), fromOriginalDate);
-                        }
-                    }
-                }
-                t.markComplete(DateTime.today(TimeZone.getDefault()));
-            }
+
         }
-        taskBag.store();
-        if (m_app.isAutoArchive()) {
-            archiveTasks(null);
-        }
-        m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        m_adapter.setFilteredTasks(true);
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
+        getTaskBag().complete(tasks, m_app.hasRecurOriginalDates());
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
-        for (Task t : tasks) {
-            if (t != null && t.isCompleted()) {
-                t.markIncomplete();
-            }
-        }
-        getTaskBag().store();
-        m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        m_adapter.setFilteredTasks(true);
-        sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
+        getTaskBag().undoComplete(tasks);
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -592,7 +553,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            deferTasks(date, tasksToDefer, dateType);
+                            getTaskBag().defer(date.format(Constants.DATE_FORMAT), tasksToDefer, dateType);
 
                         }
                     },
@@ -603,100 +564,29 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
                     dialog.show();
                 } else {
-                    deferTasks(selected, tasksToDefer, dateType);
+                    getTaskBag().defer(selected, tasksToDefer, dateType);
                 }
             }
         });
         d.show();
     }
 
-    private void deferTasks(DateTime selected, List<Task> tasksToDefer, int type) {
-        for (Task t : tasksToDefer) {
-            if (t != null) {
-                if (type == Task.DUE_DATE) {
-                    t.setDueDate(selected);
-                } else {
-                    t.setThresholdDate(selected);
-                }
-            }
-        }
-        m_adapter.setFilteredTasks(false);
-        getTaskBag().store();
-        m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-    }
-
-    private void deferTasks(String selected, List<Task> tasksToDefer, int type) {
-        for (Task t : tasksToDefer) {
-            if (t != null) {
-                if (type == Task.DUE_DATE) {
-                    t.deferDueDate(selected, false);
-                } else {
-                    t.deferThresholdDate(selected, false);
-                }
-            }
-        }
-        m_adapter.setFilteredTasks(false);
-        getTaskBag().store();
-        m_app.updateWidgets();
-        m_app.setNeedToPush(true);
-        // We have change the data, views should refresh
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-    }
-
     private void deleteTasks(final List<Task> tasks) {
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                for (Task t : tasks) {
-                    if (t != null) {
-                        getTaskBag().delete(t);
-                    }
-                }
-                m_adapter.setFilteredTasks(false);
-                getTaskBag().store();
-                m_app.updateWidgets();
-                m_app.setNeedToPush(true);
-                updateDrawers();
+                m_app.getTaskCache().delete(tasks);
                 // We have change the data, views should refresh
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
             }
         }, R.string.delete_task_title);
     }
 
     private void archiveTasks(final List<Task> tasksToArchive) {
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    return getTaskBag().archive(tasksToArchive, m_app.getDonePath());
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    return false;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    m_adapter.setFilteredTasks(true);
-                    m_app.updateWidgets();
-                    m_app.setNeedToPush(true);
-                    updateDrawers();
-                    localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-                } else {
-                    Util.showToastLong(Simpletask.this,
-                            "Could not archive tasks");
-                }
-            }
-        }.execute();
+        getTaskBag().archive(m_app.getDoneFileName(), tasksToArchive);
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
         Log.v(TAG, "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.add_new:
@@ -713,9 +603,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             case R.id.share:
                 shareTodoList();
                 break;
-            case R.id.sync:
-                syncClient(false);
-                break;
             case R.id.help:
                 showHelp();
                 break;
@@ -728,16 +615,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 }, R.string.archive_task_title);
                 break;
             case R.id.open_file:
-                if (m_app.isCloudLess()) {
-                    m_app.openCloudlessFile(this);
-                } else {
-                    m_app.showConfirmationDialog(this, R.string.dropbox_open, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            m_app.openDropboxFile(Simpletask.this);
-                        }
-                    }, R.string.dropbox);
-                }
+                m_app.browseForNewFile(this);
                 break;
             default:
                 return super.onMenuItemSelected(featureId, item);
@@ -747,14 +625,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
     private void startAddTaskActivity(List<Task> tasks) {
         Log.v(TAG, "Starting addTask activity");
-        ArrayList<String> payload = new ArrayList<String>();
-        if (tasks != null) {
-            for (Task t : tasks) {
-                payload.add("" + t.getId() + ":" + t.inFileFormat());
-            }
-        }
+        getTaskBag().setTasksToUpdate(getCheckedTasks());
         Intent intent = new Intent(this, AddTask.class);
-        intent.putExtra(Constants.EXTRA_TASK, Util.join(payload, "\n"));
         mFilter.saveInIntent(intent);
         startActivity(intent);
     }
@@ -763,121 +635,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Intent settingsActivity = new Intent(getBaseContext(),
                 Preferences.class);
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES);
-    }
-
-    /**
-     * Called when we can't sync due to a merge conflict. Prompts the user to
-     * force an upload or download.
-     */
-    private void handleSyncConflict() {
-        m_app.m_pushing = false;
-        m_app.m_pulling = false;
-        showDialog(SYNC_CONFLICT_DIALOG);
-    }
-
-    /**
-     * Sync with remote client.
-     * <p/>
-     * <ul>
-     * <li>Will Pull in auto mode.
-     * <li>Will ask "push or pull" in manual mode.
-     * </ul>
-     *
-     * @param force true to force pull
-     */
-    private void syncClient(boolean force) {
-        if (isManualMode()) {
-            Log.v(TAG,
-                    "Manual mode, choice forced; prompt user to ask which way to sync");
-            showDialog(SYNC_CHOICE_DIALOG);
-        } else {
-            Log.i(TAG, "auto sync mode; should automatically sync; force = "
-                    + force);
-            Intent i = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-            if (force) {
-                i.putExtra(Constants.EXTRA_FORCE_SYNC, true);
-            }
-            localBroadcastManager.sendBroadcast(i);
-        }
-    }
-
-    private boolean isManualMode() {
-        return m_app.isManualMode();
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        final Dialog d;
-        if (id == SYNC_CHOICE_DIALOG) {
-            Log.v(TAG, "Time to show the sync choice dialog");
-            AlertDialog.Builder upDownChoice = new AlertDialog.Builder(this);
-            upDownChoice.setTitle(R.string.sync_dialog_title);
-            upDownChoice.setMessage(R.string.sync_dialog_msg);
-            upDownChoice.setPositiveButton(R.string.sync_dialog_upload,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_TO_REMOTE)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPushToRemote();
-                            showToast(getString(R.string.sync_upload_message));
-                            removeDialog(SYNC_CHOICE_DIALOG);
-                        }
-                    }
-            );
-            upDownChoice.setNegativeButton(R.string.sync_dialog_download,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_FROM_REMOTE)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPullFromRemote();
-                            showToast(getString(R.string.sync_download_message));
-                            removeDialog(SYNC_CHOICE_DIALOG);
-                        }
-                    }
-            );
-            return upDownChoice.show();
-        } else if (id == SYNC_CONFLICT_DIALOG) {
-            Log.v(TAG, "Time to show the sync conflict dialog");
-            AlertDialog.Builder upDownChoice = new AlertDialog.Builder(this);
-            upDownChoice.setTitle(R.string.sync_conflict_dialog_title);
-            upDownChoice.setMessage(R.string.sync_conflict_dialog_msg);
-            upDownChoice.setPositiveButton(R.string.sync_dialog_upload,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            Log.v(TAG, "User selected PUSH");
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_TO_REMOTE)
-                                    .putExtra(Constants.EXTRA_OVERWRITE, true)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPushToRemote();
-                            showToast(getString(R.string.sync_upload_message));
-                            removeDialog(SYNC_CONFLICT_DIALOG);
-                        }
-                    }
-            );
-            upDownChoice.setNegativeButton(R.string.sync_dialog_download,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            Log.v(TAG, "User selected PULL");
-                            localBroadcastManager.sendBroadcast(new Intent(
-                                    Constants.BROADCAST_START_SYNC_FROM_REMOTE)
-                                    .putExtra(Constants.EXTRA_FORCE_SYNC, true));
-                            // backgroundPullFromRemote();
-                            showToast(getString(R.string.sync_download_message));
-                            removeDialog(SYNC_CONFLICT_DIALOG);
-                        }
-                    }
-            );
-            return upDownChoice.show();
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -890,7 +647,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             options_menu.findItem(R.id.search).collapseActionView();
         }
         clearFilter();
-        m_adapter.setFilteredTasks(false);
+        m_adapter.setFilteredTasks();
     }
 
     public ArrayList<ActiveFilter> getSavedFilter() {
@@ -923,7 +680,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
+                        Editable text = input.getText();
+                        String value;
+                        if (text == null) {
+                            value = "";
+                        } else {
+                            value = text.toString();
+                        }
                         if (value.equals("")) {
                             Util.showToastShort(getApplicationContext(), R.string.filter_name_empty);
                         } else {
@@ -976,6 +739,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         Intent intent = new Intent();
         mFilter.clear();
         mFilter.saveInIntent(intent);
+        mFilter.saveInPrefs(TodoApplication.getPrefs());
         setIntent(intent);
         finishActionmode();
         updateDrawers();
@@ -1004,7 +768,11 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFilter = filters.get(position);
-                m_adapter.setFilteredTasks(false);
+                Intent intent = getIntent();
+                mFilter.saveInIntent(intent);
+                setIntent(intent);
+                mFilter.saveInPrefs(TodoApplication.getPrefs());
+                m_adapter.setFilteredTasks();
                 if (m_drawerLayout != null) {
                     m_drawerLayout.closeDrawer(Gravity.RIGHT);
                 }
@@ -1060,7 +828,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target);
 
         // Set shortcut icon
-        Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.icon);
+        Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_launcher);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, filter.getName());
         sendBroadcast(shortcut);
@@ -1073,10 +841,15 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         ids.remove(prefsName);
         saved_filters.edit().putStringSet("ids", ids).commit();
         SharedPreferences filter_prefs = getSharedPreferences(prefsName, MODE_PRIVATE);
+        ActiveFilter deleted_filter = new ActiveFilter();
+        deleted_filter.initFromPrefs(filter_prefs);
         filter_prefs.edit().clear().commit();
         File prefs_path = new File(this.getFilesDir(), "../shared_prefs");
         File prefs_xml = new File(prefs_path, prefsName + ".xml");
-        prefs_xml.delete();
+        final boolean deleted = prefs_xml.delete();
+        if (!deleted) {
+            Log.w(TAG, "Failed to delete saved filter: " + deleted_filter.getName());
+        }
         updateRightDrawer();
     }
 
@@ -1107,7 +880,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
+                        Editable text = input.getText();
+                        String value;
+                        if (text == null) {
+                            value = "";
+                        } else {
+                            value = text.toString();
+                        }
                         if (value.equals("")) {
                             Util.showToastShort(getApplicationContext(), R.string.filter_name_empty);
                         } else {
@@ -1130,7 +909,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
 
 
     private void updateLeftDrawer() {
-        TaskBag taskBag = getTaskBag();
+        TaskCache taskBag = getTaskBag();
         DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
                 taskBag.getDecoratedContexts(true), taskBag.getDecoratedProjects(true));
 
@@ -1155,19 +934,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         m_leftDrawerList.setItemChecked(drawerAdapter.getProjectsHeaderPosition(), mFilter.getProjectsNot());
     }
 
-    public void storeKeys(String accessTokenKey, String accessTokenSecret) {
-        Editor editor = m_app.getPrefs().edit();
-        editor.putString(Constants.PREF_ACCESSTOKEN_KEY, accessTokenKey);
-        editor.putString(Constants.PREF_ACCESSTOKEN_SECRET, accessTokenSecret);
-        editor.commit();
-    }
-
-    public void showToast(String string) {
-        Util.showToastLong(this, string);
-    }
-
-    public void showToast(int id) {
-        Util.showToastLong(this, getString(id));
+    private TaskCache getTaskBag() {
+        return m_app.getTaskCache();
     }
 
     public void startFilterActivity() {
@@ -1175,7 +943,6 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         mFilter.saveInIntent(i);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
-        finish();
     }
 
     private static class ViewHolder {
@@ -1186,8 +953,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         private CheckBox cbCompleted;
     }
 
-    public class TaskAdapter extends BaseAdapter implements ListAdapter,
-            Filterable {
+    public class TaskAdapter extends BaseAdapter implements ListAdapter {
         public class VisibleLine {
             private Task task = null;
             private String title = null;
@@ -1241,25 +1007,15 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             this.m_inflater = inflater;
         }
 
-        void setFilteredTasks(boolean reload) {
-            ArrayList<Task> visibleTasks = new ArrayList<Task>();
-            Log.v(TAG, "setFilteredTasks called, reload: " + reload);
-            if (reload) {
-                getTaskBag().reload();
-                // Update lists in side drawer
-                // Set the adapter for the list view
-                updateDrawers();
-            }
-
-            visibleTasks.clear();
-            visibleLines.clear();
-            visibleTasks.addAll(mFilter.apply(getTaskBag().getTasks()));
+        void setFilteredTasks() {
+            ArrayList<Task> visibleTasks;
+            Log.v(TAG, "setFilteredTasks called: " + getTaskBag());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
-            Collections.sort(visibleTasks, MultiComparator.create(sorts));
+            visibleTasks = getTaskBag().getTasks(mFilter, sorts);
+            visibleLines.clear();
+
             String header = "";
             String newHeader = "";
-            int index = 0;
-            int position = 0;
             int firstGroupSortIndex = 0;
 
             if (sorts.size() > 1 && sorts.get(0).contains("completed")
@@ -1307,8 +1063,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         */
         public int getPosition(Task task) {
             VisibleLine line = new VisibleLine(task);
-            int index = visibleLines.indexOf(line);
-            return index;
+            return visibleLines.indexOf(line);
         }
 
         @Override
@@ -1379,9 +1134,18 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     holder.cbCompleted.setVisibility(View.GONE);
                 }
                 if (task != null) {
+                    int tokensToShow = Token.SHOW_ALL;
+                    tokensToShow = tokensToShow & ~Token.CREATION_DATE;
+                    tokensToShow = tokensToShow & ~Token.COMPLETED;
+                    tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
+                    if (mFilter.getHideLists()) {
+                        tokensToShow = tokensToShow & ~ Token.LIST;
+                    }
+                    if (mFilter.getHideTags()) {
+                        tokensToShow = tokensToShow & ~ Token.TTAG;
+                    }
                     SpannableString ss = new SpannableString(
-                            task.inScreenFormat(mFilter));
-
+                            task.showParts(tokensToShow).trim());
                     ArrayList<String> colorizeStrings = new ArrayList<String>();
                     for (String context : task.getLists()) {
                         colorizeStrings.add("@" + context);
@@ -1522,34 +1286,40 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             VisibleLine line = visibleLines.get(position);
             return !line.header;
         }
-
-        @Override
-        public Filter getFilter() {
-            return new Filter() {
-                @Override
-                protected FilterResults performFiltering(
-                        CharSequence charSequence) {
-                    mFilter.setSearch(charSequence.toString());
-                    //Log.v(TAG, "performFiltering: " + charSequence.toString());
-                    return null;
-                }
-
-                @Override
-                protected void publishResults(CharSequence charSequence,
-                                              FilterResults filterResults) {
-                    setFilteredTasks(false);
-                }
-            };
-        }
     }
 
     class ActionBarListener implements AbsListView.MultiChoiceModeListener {
+        int numSelected;
+        Menu menu;
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position,
                                               long id, boolean checked) {
-            getListView().invalidateViews();
-            mode.invalidate();
+            if(checked) {
+                numSelected++;
+            } else {
+                numSelected--;
+            }
+            String title = "" + numSelected;
+            mode.setTitle(title);
+            if (numSelected==1) {
+                Task t = getTaskAt(position);
+                menu.removeGroup(Menu.CATEGORY_SECONDARY);
+                for (String s : t.getPhoneNumbers()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
+                            Menu.NONE, s);
+                }
+                for (String s : t.getMailAddresses()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s);
+                }
+                for (URL u : t.getLinks()) {
+                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
+                            u.toString());
+                }
+                menu.setGroupVisible(Menu.CATEGORY_SECONDARY, true);
+            } else {
+                menu.setGroupVisible(Menu.CATEGORY_SECONDARY, false);
+            }
         }
 
         @Override
@@ -1565,29 +1335,13 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            numSelected = 0;
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            List<Task> checkedTasks = getCheckedTasks();
-            int numSelected = checkedTasks.size();
-            String title = "" + numSelected;
-            mode.setTitle(title);
-            menu.removeGroup(Menu.CATEGORY_SECONDARY);
-            for (Task t : checkedTasks ) {
-                for (String s : t.getPhoneNumbers()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
-                            Menu.NONE, s);
-                }
-                for (String s : t.getMailAddresses()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s);
-                }
-                for (URL u : t.getLinks()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
-                            u.toString());
-                }
-            }
+            this.menu = menu;
             return true;
         }
 
@@ -1704,8 +1458,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
     private void updateLists(final List<Task> checkedTasks) {
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
-
-        TaskBag taskbag = getTaskBag();
+        final TaskCache taskbag = getTaskBag();
         contexts.addAll(taskbag.getContexts(false));
         for (Task t : checkedTasks) {
             selectedContexts.addAll(t.getLists());
@@ -1735,6 +1488,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> originalLines = new ArrayList<String>();
+                originalLines.addAll(Util.tasksToString(getCheckedTasks()));
                 ArrayList<String> items = new ArrayList<String>();
                 ArrayList<String> uncheckedItesm = new ArrayList<String>();
                 uncheckedItesm.addAll(Util.getCheckedItems(lv, false));
@@ -1754,12 +1509,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                m_adapter.setFilteredTasks(false);
-                getTaskBag().store();
-                m_app.updateWidgets();
-                m_app.setNeedToPush(true);
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
-                updateDrawers();
+                m_app.getTaskCache().update(
+                        originalLines,
+                        checkedTasks
+                        );
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1777,7 +1530,7 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
         final ArrayList<String> projects = new ArrayList<String>();
         Set<String> selectedProjects = new HashSet<String>();
 
-        TaskBag taskbag = getTaskBag();
+        final TaskCache taskbag = getTaskBag();
         projects.addAll(taskbag.getProjects(false));
         for (Task t : checkedTasks) {
             selectedProjects.addAll(t.getTags());
@@ -1806,6 +1559,8 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> originalLines = new ArrayList<String>();
+                originalLines.addAll(Util.tasksToString(checkedTasks));
                 ArrayList<String> uncheckedItems = new ArrayList<String>();
                 uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 items.addAll(Util.getCheckedItems(lv, true));
@@ -1824,12 +1579,10 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                     }
                 }
                 finishActionmode();
-                m_adapter.setFilteredTasks(false);
-                getTaskBag().store();
-                m_app.updateWidgets();
-                m_app.setNeedToPush(true);
-                updateDrawers();
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_TO_REMOTE));
+                m_app.getTaskCache().update(
+                        originalLines,
+                        checkedTasks
+                );
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1873,13 +1626,12 @@ public class Simpletask extends ThemedListActivity implements AdapterView.OnItem
                 mFilter.setProjects(filteredProjects);
             }
             Intent intent = getIntent();
-
             mFilter.saveInIntent(intent);
+            mFilter.saveInPrefs(TodoApplication.getPrefs());
             setIntent(intent);
-            adapter.notifyDataSetChanged();
             finishActionmode();
-            m_adapter.setFilteredTasks(false);
-            //m_drawerLayout.closeDrawer(Gravity.LEFT);
+            m_adapter.setFilteredTasks();
+            adapter.notifyDataSetChanged();
         }
     }
 

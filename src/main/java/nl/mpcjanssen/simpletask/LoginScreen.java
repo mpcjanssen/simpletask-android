@@ -28,11 +28,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.support.v4.content.LocalBroadcastManager;
-import nl.mpcjanssen.simpletask.remote.RemoteClient;
+
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 
 
 public class LoginScreen extends Activity {
@@ -72,11 +73,7 @@ public class LoginScreen extends Activity {
             }
         });
 
-
-
-        RemoteClient remoteClient = m_app.getRemoteClientManager()
-                .getRemoteClient();
-        if (remoteClient.isAuthenticated()) {
+        if (m_app.isAuthenticated()) {
             switchToTodolist();
         }
     }
@@ -94,12 +91,8 @@ public class LoginScreen extends Activity {
     }
 
     private void finishLogin() {
-        RemoteClient remoteClient = m_app.getRemoteClientManager()
-                .getRemoteClient();
-        remoteClient.finishLogin();
-        if (remoteClient.finishLogin() && remoteClient.isAuthenticated()) {
+        if (m_app.isAuthenticated()) {
             switchToTodolist();
-            localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_START_SYNC_FROM_REMOTE));
         }
     }
 
@@ -110,9 +103,7 @@ public class LoginScreen extends Activity {
     }
 
     void startLogin() {
-        final RemoteClient client = m_app.getRemoteClientManager()
-                .getRemoteClient();
-        client.startLogin();
+        m_app.startLogin(this, 0);
     }
 
 }

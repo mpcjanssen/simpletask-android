@@ -1,7 +1,8 @@
 /**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
+ * This file is part of Simpletask.
  *
  * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * Copyright (c) 2013- Mark Janssen
  *
  * LICENSE:
  *
@@ -16,17 +17,22 @@
  * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * @author Todo.txt contributors <todotxt@yahoogroups.com>
+ * @author Mark Janssen
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * @copyright 2013- Mark Janssen
  */
 package nl.mpcjanssen.simpletask;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
@@ -40,6 +46,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
@@ -60,9 +67,10 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskBag;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -70,15 +78,15 @@ public class AddTask extends ThemedActivity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private ArrayList<Task> m_backup = new ArrayList<Task>();
+    private List<Task> m_backup;
     private TodoApplication m_app;
-    private TaskBag taskBag;
 
     private String share_text;
-    private LocalBroadcastManager localBroadcastManager ; 
-
 
     private EditText textInputField;
+    private TaskCache m_taskBag;
+    private BroadcastReceiver m_broadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     public boolean hasWordWrap() {
         return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
@@ -126,8 +134,17 @@ public class AddTask extends ThemedActivity {
             case R.id.menu_cancel_task:
                 finish();
                 return true;
+            case R.id.menu_help:
+                showHelp();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showHelp() {
+        Intent i = new Intent(this, HelpScreen.class);
+        i.putExtra(Constants.EXTRA_HELP_PAGE,Constants.HELP_ADD_TASK);
+        startActivity(i);
     }
 
 
@@ -138,7 +155,12 @@ public class AddTask extends ThemedActivity {
         
         // strip line breaks
         textInputField = (EditText) findViewById(R.id.taskText);
-        String input = textInputField.getText().toString();
+        String input;
+                if (textInputField!=null) {
+                    input = textInputField.getText().toString();
+                } else {
+                    input = "";
+                }
 
         // Don't add empty tasks
         if (input.trim().equals("")) {
@@ -152,32 +174,39 @@ public class AddTask extends ThemedActivity {
             int numTasks = tasks.size();
             int numBackup = m_backup.size();
             Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
+            ArrayList<String> originalLines = new ArrayList<String>();
+            ArrayList<Task> updatedTasks = new ArrayList<Task>();
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                 taskBag.updateTask(m_backup.get(0), tasks.get(0));
-                 tasks.remove(0);
-                 m_backup.remove(0);
+                originalLines.add(m_backup.get(0).inFileFormat());
+                m_backup.get(0).init(tasks.get(0),null);
+                updatedTasks.add(m_backup.get(0));
+                tasks.remove(0);
+                m_backup.remove(0);
+            }
+            // Update change tasks
+            if (updatedTasks.size()>0) {
+                m_app.getTaskCache().update(originalLines, updatedTasks);
             }
         }
-        // Add any other tasks
-        for (String taskText : tasks) {
-            taskBag.addAsTask(taskText);
+        // Append new tasks
+        if (tasks.size()>0) {
+            if (m_app.hasPrependDate()) {
+                ArrayList<String> original = new ArrayList<String>();
+                original.addAll(tasks);
+                tasks.clear();
+                for (String task: original) {
+                    tasks.add(new Task(0,task, DateTime.today(TimeZone.getDefault())).inFileFormat());
+                }
+            }
+            m_app.getTaskCache().append(tasks);
         }
-
-        m_app.setNeedToPush(true);
-        m_app.updateWidgets();
-        if (m_app.isAutoArchive()) {
-            taskBag.archive(null, m_app.getDonePath());
-        }
-        Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-        Log.v(TAG, "Broadcast " + sync);
-        localBroadcastManager.sendBroadcast(sync);
         finish();
     }
 
     private void noteToSelf(Intent intent) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            // This was a voice note
+            Log.v(TAG,"Voice note added.");
         }
         addBackgroundTask(task);
     }
@@ -191,28 +220,46 @@ public class AddTask extends ThemedActivity {
     }
 
     private void addBackgroundTask(String taskText) {
-        for (String task : taskText.split("\r\n|\r|\n")) {
-            taskBag.addAsTask(task);
-        }
-        m_app.setNeedToPush(true);
+        m_app.getTaskCache().append(taskText);
         m_app.updateWidgets();
-        Intent sync = new Intent(Constants.BROADCAST_START_SYNC_WITH_REMOTE);
-        Log.v(TAG, "Broadcast " + sync);
-        localBroadcastManager.sendBroadcast(sync);
-        m_app.showToast(R.string.task_added);
+        Util.showToastShort(m_app, R.string.task_added);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate()");
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
-
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        Log.v(TAG, "onCreate()");
-        taskBag = m_app.getTaskBag();
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+        intentFilter.addAction(Constants.BROADCAST_SYNC_START);
+        intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
+
+        localBroadcastManager = m_app.getLocalBroadCastManager();
+
+        m_broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+                    // Nothing to do here
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
+                    setProgressBarIndeterminateVisibility(true);
+                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
+                    setProgressBarIndeterminateVisibility(false);
+                }
+            }
+        };
+        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
+        m_app.startWatching();
+
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         final Intent intent = getIntent();
         ActiveFilter mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
@@ -268,17 +315,11 @@ public class AddTask extends ThemedActivity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-
-        String sTasks = intent.getStringExtra(
-                Constants.EXTRA_TASK);
-        if (sTasks != null && !sTasks.equals("")) {
+        m_backup = m_app.getTaskCache().getTasksToUpdate();
+        if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<String>();
-            for (String txt : sTasks.split("\n",-1)) {
-                String[] parts = txt.split(":",2);
-                Task t = new Task(Integer.valueOf(parts[0]),"");
-                t.init(parts[1],null);
-                m_backup.add(t);
-                prefill.add(parts[1]);
+            for (Task t : m_backup) {
+                prefill.add(t.inFileFormat());
             }
             String sPrefill = Util.join(prefill,"\n");
             textInputField.setText(sPrefill);
@@ -414,11 +455,10 @@ public class AddTask extends ThemedActivity {
             }
         });
 
-        if (m_backup.size()>0) {
+        if (m_backup!=null && m_backup.size()>0) {
             textInputField.setSelection(textInputField.getText().length());
         }
     }
-
 
     private void insertDate(final int dateType) {
         Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
@@ -467,7 +507,7 @@ public class AddTask extends ThemedActivity {
 
     private void showTagMenu() {
         final Set<String> projects = new TreeSet<String>();
-        projects.addAll(taskBag.getProjects(false));
+        projects.addAll(m_app.getTaskCache().getProjects(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         projects.addAll(t.getTags());
@@ -534,7 +574,7 @@ public class AddTask extends ThemedActivity {
 
     private void showContextMenu() {
         final Set<String> contexts = new TreeSet<String>();
-        contexts.addAll(taskBag.getContexts(false));
+        contexts.addAll(m_app.getTaskCache().getContexts(false));
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         contexts.addAll(t.getLists());
@@ -697,9 +737,15 @@ public class AddTask extends ThemedActivity {
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
                 getString(R.string.shortcut_addtask_name));
         Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this,
-                R.drawable.icon);
+                R.drawable.ic_launcher);
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         setResult(RESULT_OK, intent);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
+        m_app.stopWatching();
     }
 }
