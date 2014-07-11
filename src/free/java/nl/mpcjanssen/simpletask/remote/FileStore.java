@@ -104,6 +104,8 @@ public class FileStore implements FileStoreInterface {
         if (activePath!=null && !activePath.equals(path) && mDbxFile!=null) {
             mDbxFile.close();
             mDbxFile = null;
+            stopWatching(activePath);
+            startWatching(path);
         }
         new AsyncTask<String, Void, ArrayList<String>>() {
             @Override
@@ -129,6 +131,7 @@ public class FileStore implements FileStoreInterface {
         }.execute(path);
         return new ArrayList<String>();
     }
+
 
     private synchronized DbxFile openDbFile(String path) {
         if (mDbxFile != null) {
@@ -260,10 +263,10 @@ public class FileStore implements FileStoreInterface {
             mDbxFs.removeSyncStatusListener(m_syncstatus);
             m_syncstatus = null;
         }
-        if (m_observer!=null) {
+        if (m_observer!=null && mDbxFile!=null) {
             mDbxFile.removeListener(m_observer);
-            m_observer = null;
         }
+        m_observer = null;
     }
 
     @Override
