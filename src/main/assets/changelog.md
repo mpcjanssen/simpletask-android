@@ -10,6 +10,7 @@
 5.0.0
 -----
 
+- New icons courtesy of Robert Chudy.
 - Performance improvements, performance is snappy with lists with hundreds of tasks.
 - Dropbox: switched to Dropbox Sync API. Changes on Dropbox are immediately reflected if you are connected.
 - Incremental text search.

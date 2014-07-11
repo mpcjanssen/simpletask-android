@@ -158,7 +158,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public void setTodoFile(String todo) {
-            m_prefs.edit().putString(getString(R.string.todo_file_key), todo).commit();
+        if (mFileStore != null) {
+            mFileStore.stopWatching(getTodoFileName());
+        }
+        m_prefs.edit().putString(getString(R.string.todo_file_key), todo).commit();
+        if (mFileStore != null) {
+            mFileStore.startWatching(todo);
+        }
     }
 
     public boolean isAutoArchive() {
@@ -381,7 +387,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public void startLogin(LoginScreen loginScreen, int i) {
-        getFileStore().startLogin(loginScreen,i);
+        getFileStore().startLogin(loginScreen, i);
     }
 
     public int storeType() {
