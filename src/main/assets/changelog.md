@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.0.2
+-----
+
+- Fix issue with monitoring of todo file after opening a different one.
+
 5.0.1
 -----
 
