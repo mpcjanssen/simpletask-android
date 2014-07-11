@@ -69,6 +69,12 @@ public class FileStore implements FileStoreInterface {
             return mLines;
         }
 
+        // Did we switch todo file?
+        if (!path.equals(activePath)) {
+            stopWatching(activePath);
+            startWatching(path);
+        }
+
         // Clear and reload cache
         mLines = null;
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
