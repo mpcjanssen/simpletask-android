@@ -227,10 +227,10 @@ public class TaskCache {
         for (Task t: tasksToDefer) {
             switch (dateType) {
                 case Task.DUE_DATE:
-                    t.deferDueDate(selected, "");
+                    t.deferDueDate(selected, Util.getTodayAsString());
                     break;
                 case Task.THRESHOLD_DATE:
-                    t.deferThresholdDate(selected, "");
+                    t.deferThresholdDate(selected, Util.getTodayAsString());
                     break;
             }
         }
