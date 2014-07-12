@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.0.3
+-----
+
+- Fix issue with deferral not counting from today (#106).
+
 5.0.2
 -----
 

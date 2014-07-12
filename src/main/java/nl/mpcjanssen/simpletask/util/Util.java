@@ -53,6 +53,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +62,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -74,6 +76,10 @@ public class Util {
     private static final int SOCKET_TIMEOUT = 120000;
 
     private Util() {
+    }
+
+    public static String getTodayAsString() {
+        return DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT);
     }
 
     public static HttpParams getTimeoutHttpParams() {
