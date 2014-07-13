@@ -1138,6 +1138,8 @@ public class Simpletask extends ThemedListActivity implements
                     tokensToShow = tokensToShow & ~Token.CREATION_DATE;
                     tokensToShow = tokensToShow & ~Token.COMPLETED;
                     tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
+                    tokensToShow = tokensToShow & ~Token.THRESHOLD_DATE;
+                    tokensToShow = tokensToShow & ~Token.DUE_DATE;
                     if (mFilter.getHideLists()) {
                         tokensToShow = tokensToShow & ~ Token.LIST;
                     }
