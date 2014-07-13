@@ -95,9 +95,17 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
         if (task != null) {
             int tokensToShow = Token.SHOW_ALL;
+            tokensToShow = tokensToShow & ~Token.CREATION_DATE;
             tokensToShow = tokensToShow & ~Token.COMPLETED;
             tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
-            SpannableString ss = new SpannableString(
+            tokensToShow = tokensToShow & ~Token.THRESHOLD_DATE;
+            tokensToShow = tokensToShow & ~Token.DUE_DATE;
+            if (mFilter.getHideLists()) {
+                tokensToShow = tokensToShow & ~ Token.LIST;
+            }
+            if (mFilter.getHideTags()) {
+                tokensToShow = tokensToShow & ~ Token.TTAG;
+            }SpannableString ss = new SpannableString(
                     task.showParts(tokensToShow).trim());
 
             if (TodoApplication.getPrefs().getString("widget_theme", "").equals("android.R.style.Theme_Holo")) {
