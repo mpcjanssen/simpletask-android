@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.0.4
+-----
+
+- Hide due and threshold dates in extended view (#109)"
+- Fix issue wit recurrence and due dates (#108).
+
 5.0.3
 -----
 

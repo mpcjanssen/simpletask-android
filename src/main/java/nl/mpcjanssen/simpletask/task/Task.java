@@ -139,6 +139,7 @@ public class Task implements Serializable, Comparable<Task> {
         mDuedate = dueDateString;
         Token newTok = new DUE_DATE(dueDateString);
         if (currentIdx < size-1) {
+            mTokens.add(currentIdx, new WHITE_SPACE(" "));
             mTokens.add(currentIdx, newTok);
         } else {
             mTokens.add(new WHITE_SPACE(" "));
