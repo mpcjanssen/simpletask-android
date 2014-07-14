@@ -174,16 +174,14 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void update(final String mTodoName, final List<String> original, final List<String> updated) {
             final File file = new File(mTodoName);
+            final ArrayList<String> lines = TaskIo.loadFromFile(file);
             updateStart(mTodoName);
             new AsyncTask<Void,Void,Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    ArrayList<String> lines = TaskIo.loadFromFile(file);
                     for (int i=0 ; i<original.size();i++) {
                         int index = lines.indexOf(original.get(i));
                         if (index!=-1) {
-                            mLines.remove(index);
-                            mLines.add(updated.get(i));
                             lines.remove(index);
                             lines.add(index,updated.get(i));
                         }
@@ -195,6 +193,7 @@ public class FileStore implements FileStoreInterface {
                 @Override
                 protected void onPostExecute(Void v) {
                     updateDone(mTodoName);
+                    mLines = lines;
                 }
             }.execute();
     }
