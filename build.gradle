@@ -21,14 +21,14 @@ android {
         mavenCentral()
     }
 
-    buildToolsVersion "19.1.0"
-    compileSdkVersion 19
+    buildToolsVersion "20.0.0"
+    compileSdkVersion 20
 
     defaultConfig {
         versionName '5.0.4'
         versionCode 1512
 	    minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 20
     }
 
     productFlavors {
@@ -48,7 +48,7 @@ android {
     dependencies {
         freeCompile fileTree(dir: 'libs', include: '*.jar')
         compile 'com.intellij:annotations:+@jar'
-        compile 'com.android.support:support-v4:19.1.0'
+        compile 'com.android.support:support-v4:20.0.0'
         compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
         compile 'com.darwinsys:hirondelle-date4j:1.5.1'
         compile 'com.google.guava:guava:17.0'
