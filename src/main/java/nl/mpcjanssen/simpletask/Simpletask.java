@@ -8,6 +8,7 @@
 
 package nl.mpcjanssen.simpletask;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -51,8 +52,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1014,7 +1013,7 @@ public class Simpletask extends ThemedListActivity implements
             visibleLines.clear();
 
             String header = "";
-            String newHeader = "";
+            String newHeader;
             int firstGroupSortIndex = 0;
 
             if (sorts.size() > 1 && sorts.get(0).contains("completed")
@@ -1297,10 +1296,6 @@ public class Simpletask extends ThemedListActivity implements
         public void onItemCheckedStateChanged(ActionMode mode, int position,
                                               long id, boolean checked) {
             Task t = getTaskAt(position);
-            if (t==null) {
-                // Header
-                return;
-            }
             if(checked) {
                 numSelected++;
             } else {
@@ -1473,7 +1468,7 @@ public class Simpletask extends ThemedListActivity implements
         }
 
 
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()])));
@@ -1545,7 +1540,7 @@ public class Simpletask extends ThemedListActivity implements
         }
 
 
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 projects.toArray(new String[projects.size()])));
