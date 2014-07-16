@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.0.7
+-----
+
+- More NPE checks in Dropbox backend code.
+
 5.0.6
 -----
 
