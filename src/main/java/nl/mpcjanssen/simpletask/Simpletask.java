@@ -964,14 +964,12 @@ public class Simpletask extends ThemedListActivity implements
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter {
         public class VisibleLine {
-            @Nullable
-            private Task task = null;
-            @Nullable
-            private String title = null;
+            @NotNull
+            private Task task;
             private boolean header = false;
 
             public VisibleLine(@NotNull String title) {
-                this.title = title;
+                this.task = new Task(0,title);
                 this.header = true;
             }
 
@@ -990,21 +988,16 @@ public class Simpletask extends ThemedListActivity implements
                     return false;
 
                 VisibleLine other = (VisibleLine) obj;
-                if (other.header != this.header)
-                    return false;
-                if (other.header) {
-                    return title.equals(other.title);
-                } else {
-                    return this.task.equals(other.task);
-                }
+                return other.header == this.header && this.task.equals(other.task);
             }
 
             @Override
             public int hashCode() {
                 final int prime = 31;
                 int result = 1;
-                result = prime * result + ((title == null) ? 0 : title.hashCode());
-                result = prime * result + ((task == null) ? 0 : task.hashCode());
+                int headerHash = header ? 1231 : 1237;
+                result = prime * result + headerHash;
+                result = prime * result + task.hashCode();
                 return result;
             }
         }
@@ -1119,7 +1112,7 @@ public class Simpletask extends ThemedListActivity implements
                 }
                 TextView t = (TextView) convertView
                         .findViewById(R.id.list_header_title);
-                t.setText(line.title);
+                t.setText(line.task.inFileFormat());
 
             } else {
                 final ViewHolder holder;
@@ -1147,85 +1140,83 @@ public class Simpletask extends ThemedListActivity implements
                 } else {
                     holder.cbCompleted.setVisibility(View.GONE);
                 }
-                if (task != null) {
-                    int tokensToShow = Token.SHOW_ALL;
-                    tokensToShow = tokensToShow & ~Token.CREATION_DATE;
-                    tokensToShow = tokensToShow & ~Token.COMPLETED;
-                    tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
-                    tokensToShow = tokensToShow & ~Token.THRESHOLD_DATE;
-                    tokensToShow = tokensToShow & ~Token.DUE_DATE;
-                    if (mFilter.getHideLists()) {
-                        tokensToShow = tokensToShow & ~ Token.LIST;
-                    }
-                    if (mFilter.getHideTags()) {
-                        tokensToShow = tokensToShow & ~ Token.TTAG;
-                    }
-                    SpannableString ss = new SpannableString(
-                            task.showParts(tokensToShow).trim());
-                    ArrayList<String> colorizeStrings = new ArrayList<String>();
-                    for (String context : task.getLists()) {
-                        colorizeStrings.add("@" + context);
-                    }
-                    Util.setColor(ss, Color.GRAY, colorizeStrings);
-                    colorizeStrings.clear();
-                    for (String project : task.getTags()) {
-                        colorizeStrings.add("+" + project);
-                    }
-                    Util.setColor(ss, Color.GRAY, colorizeStrings);
+                int tokensToShow = Token.SHOW_ALL;
+                tokensToShow = tokensToShow & ~Token.CREATION_DATE;
+                tokensToShow = tokensToShow & ~Token.COMPLETED;
+                tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
+                tokensToShow = tokensToShow & ~Token.THRESHOLD_DATE;
+                tokensToShow = tokensToShow & ~Token.DUE_DATE;
+                if (mFilter.getHideLists()) {
+                    tokensToShow = tokensToShow & ~Token.LIST;
+                }
+                if (mFilter.getHideTags()) {
+                    tokensToShow = tokensToShow & ~Token.TTAG;
+                }
+                SpannableString ss = new SpannableString(
+                        task.showParts(tokensToShow).trim());
+                ArrayList<String> colorizeStrings = new ArrayList<String>();
+                for (String context : task.getLists()) {
+                    colorizeStrings.add("@" + context);
+                }
+                Util.setColor(ss, Color.GRAY, colorizeStrings);
+                colorizeStrings.clear();
+                for (String project : task.getTags()) {
+                    colorizeStrings.add("+" + project);
+                }
+                Util.setColor(ss, Color.GRAY, colorizeStrings);
 
-                    Resources res = getResources();
-                    int prioColor;
-                    switch (task.getPriority()) {
-                        case A:
-                            prioColor = res.getColor(android.R.color.holo_red_dark);
-                            break;
-                        case B:
-                            prioColor = res.getColor(android.R.color.holo_orange_dark);
-                            break;
-                        case C:
-                            prioColor = res.getColor(android.R.color.holo_green_dark);
-                            break;
-                        case D:
-                            prioColor = res.getColor(android.R.color.holo_blue_dark);
-                            break;
-                        default:
-                            prioColor = res.getColor(android.R.color.darker_gray);
-                    }
-                    Util.setColor(ss, prioColor, task.getPriority()
-                            .inFileFormat());
-                    holder.tasktext.setText(ss);
-                    final ArrayList<Task> tasks = new ArrayList<Task>();
-                    tasks.add(task);
-                    if (task.isCompleted()) {
-                        // Log.v(TAG, "Striking through " + task.getText());
-                        holder.tasktext.setPaintFlags(holder.tasktext
-                                .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        holder.taskage.setPaintFlags(holder.taskage
-                                .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        holder.cbCompleted.setChecked(true);
-                        holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                undoCompleteTasks(tasks);
-                                finishActionmode();
-                            }
-                        });
-                    } else {
-                        holder.tasktext
-                                .setPaintFlags(holder.tasktext.getPaintFlags()
-                                        & ~Paint.STRIKE_THRU_TEXT_FLAG);
-                        holder.taskage
-                                .setPaintFlags(holder.taskage.getPaintFlags()
-                                        & ~Paint.STRIKE_THRU_TEXT_FLAG);
-                        holder.cbCompleted.setChecked(false);
-                        holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                completeTasks(tasks);
-                                finishActionmode();
-                            }
-                        });
-                    }
+                Resources res = getResources();
+                int prioColor;
+                switch (task.getPriority()) {
+                    case A:
+                        prioColor = res.getColor(android.R.color.holo_red_dark);
+                        break;
+                    case B:
+                        prioColor = res.getColor(android.R.color.holo_orange_dark);
+                        break;
+                    case C:
+                        prioColor = res.getColor(android.R.color.holo_green_dark);
+                        break;
+                    case D:
+                        prioColor = res.getColor(android.R.color.holo_blue_dark);
+                        break;
+                    default:
+                        prioColor = res.getColor(android.R.color.darker_gray);
+                }
+                Util.setColor(ss, prioColor, task.getPriority()
+                        .inFileFormat());
+                holder.tasktext.setText(ss);
+                final ArrayList<Task> tasks = new ArrayList<Task>();
+                tasks.add(task);
+                if (task.isCompleted()) {
+                    // Log.v(TAG, "Striking through " + task.getText());
+                    holder.tasktext.setPaintFlags(holder.tasktext
+                            .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    holder.taskage.setPaintFlags(holder.taskage
+                            .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    holder.cbCompleted.setChecked(true);
+                    holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            undoCompleteTasks(tasks);
+                            finishActionmode();
+                        }
+                    });
+                } else {
+                    holder.tasktext
+                            .setPaintFlags(holder.tasktext.getPaintFlags()
+                                    & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                    holder.taskage
+                            .setPaintFlags(holder.taskage.getPaintFlags()
+                                    & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                    holder.cbCompleted.setChecked(false);
+                    holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            completeTasks(tasks);
+                            finishActionmode();
+                        }
+                    });
 
 
                     String relAge = task.getRelativeAge();
