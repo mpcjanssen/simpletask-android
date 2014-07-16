@@ -530,10 +530,10 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private void completeTasks(List<Task> tasks) {
-        for (Task t : tasks) {
-
-        }
         getTaskBag().complete(tasks, m_app.hasRecurOriginalDates());
+        if (m_app.isAutoArchive()) {
+            archiveTasks(null);
+        }
     }
 
     private void undoCompleteTasks(List<Task> tasks) {
