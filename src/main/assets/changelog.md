@@ -4,7 +4,7 @@
 5.0.4
 -----
 
-- Hide due and threshold dates in extended view (#109)"
+- Hide due and threshold dates in extended view (#109).
 - Fix issue wit recurrence and due dates (#108).
 
 5.0.3
@@ -31,7 +31,7 @@
 - Dropbox: switched to Dropbox Sync API. Changes on Dropbox are immediately reflected if you are connected.
 - Incremental text search.
 - After changing application theme, apply it without restart.
-- Updated German tranlations.
+- Updated German translations.
 
 4.2.5
 -----
