@@ -18,10 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
 
 public class FilterActivity extends ThemedActivity {
@@ -45,7 +46,6 @@ public class FilterActivity extends ThemedActivity {
     SharedPreferences prefs;
 
     private ActionBar actionbar;
-    private TaskCache m_taskBag;
 
     private int getLastActiveTab() {
         return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
@@ -54,7 +54,7 @@ public class FilterActivity extends ThemedActivity {
     private void saveActiveTab(int i) {
         prefs.edit()
                 .putInt(getString(R.string.last_open_filter_tab), i)
-                .commit();
+                .apply();
     }
 
     @Override
@@ -83,7 +83,9 @@ public class FilterActivity extends ThemedActivity {
 
         Bundle arguments;
         actionbar = getActionBar();
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        if (actionbar!=null) {
+            actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        }
         Intent intent = getIntent();
         mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
@@ -158,7 +160,7 @@ public class FilterActivity extends ThemedActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter_action:
             	if (asWidgetConfigure) {
@@ -170,12 +172,6 @@ public class FilterActivity extends ThemedActivity {
         }
         return true;
     }
-
-    private void defaultSort() {
-		// Find the fragment
-    	FilterSortFragment fr = (FilterSortFragment)this.getFragmentManager().findFragmentByTag(SORT_TAB);
-		fr.defaultSort();
-	}
 
     private Intent createFilterIntent() {
         Intent target = new Intent(this, Simpletask.class);
@@ -288,7 +284,6 @@ public class FilterActivity extends ThemedActivity {
     private boolean getNot(String tag, boolean current) {
         FilterListFragment fr;
         fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);
-        boolean not;
         if (fr == null) {
             // fragment was never intialized
             return current;
@@ -370,15 +365,15 @@ public class FilterActivity extends ThemedActivity {
     }
 
 
-    private class MyTabsListener<T extends Fragment> implements ActionBar.TabListener {
+    private class MyTabsListener implements ActionBar.TabListener {
 
         private Fragment mFragment;
         private final Activity mActivity;
         private final String mTag;
         private final Bundle mArguments;
-        private Class<T> mClz;
+        private Class mClz;
 
-        public MyTabsListener(Activity activity, String tag, Class<T> clz, Bundle arguments) {
+        public MyTabsListener(Activity activity, String tag, Class clz, Bundle arguments) {
             mActivity = activity;
             mTag = tag;
             mArguments = arguments;

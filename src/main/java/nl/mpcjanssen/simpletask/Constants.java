@@ -26,9 +26,6 @@ public class Constants {
 
     public static final String DATE_FORMAT = "YYYY-MM-DD";
 
-    public static final String PREF_ACCESSTOKEN_KEY = "accesstokenkey";
-    public static final String PREF_ACCESSTOKEN_SECRET = "accesstokensecret";
-
     // Constants for creating shortcuts
     public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
 
