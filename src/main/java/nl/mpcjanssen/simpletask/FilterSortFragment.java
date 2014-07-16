@@ -33,7 +33,6 @@ public class FilterSortFragment extends Fragment {
     ArrayList<String> adapterList = new ArrayList<String>();
     int sortUpId;
     int sortDownId;
-    int dragHandleId;
 
     TodoApplication m_app;
 

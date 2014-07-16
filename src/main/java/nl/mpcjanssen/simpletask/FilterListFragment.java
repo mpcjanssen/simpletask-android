@@ -167,18 +167,4 @@ public class FilterListFragment extends Fragment {
             return false;
         }
     }
-
-    public void selectAll() {
-        int size = lv.getCount();
-        for (int i = 0; i < size; i++) {
-            lv.setItemChecked(i, true);
-        }
-    }
-
-    public void clearAll() {
-        int size = lv.getCount();
-        for (int i = 0; i < size; i++) {
-            lv.setItemChecked(i, false);
-        }
-    }
 }
