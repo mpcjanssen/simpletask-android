@@ -1,6 +1,14 @@
 ﻿Changelog
 =========
 
+5.0.5
+-----
+
+- Fix crash in widget if not logged in to Dropbox.
+- Fix occasional crash when updating tasks.
+- Observe auto-archive setting.
+- Fix task count with "Select all".
+
 5.0.4
 -----
 
