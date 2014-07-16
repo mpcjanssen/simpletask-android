@@ -145,7 +145,9 @@ public class FilterOtherFragment extends Fragment {
 
             if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                 return false;
-
+            if (actionbar==null) {
+                return false;
+            }
             int index = actionbar.getSelectedNavigationIndex();
             // right to left swipe
             if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE

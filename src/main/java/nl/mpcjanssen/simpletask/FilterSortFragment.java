@@ -217,15 +217,4 @@ public class FilterSortFragment extends Fragment {
             return keys[index];
         }
     }
-
-	public void defaultSort() {
-		adapterList.clear();
-		directions.clear();
-		for (String value : getResources().getStringArray(R.array.sort)) {
-			adapterList.add(value);
-			directions.add(ActiveFilter.NORMAL_SORT);
-		}
-		adapter.notifyDataSetChanged();
-		
-	}
 }
