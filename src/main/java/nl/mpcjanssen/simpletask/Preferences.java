@@ -35,6 +35,8 @@ import android.preference.PreferenceScreen;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
     final static String TAG = Preferences.class.getSimpleName();
@@ -61,7 +63,7 @@ public class Preferences extends ThemedActivity {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
 		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new TodoTxtPrefFragment())
+				.replace(android.R.id.content, prefFragment)
 				.commit();
 	}
 
@@ -120,7 +122,7 @@ public class Preferences extends ThemedActivity {
 
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-                Preference preference) {
+                @NotNull Preference preference) {
 			if (preference.getKey() == null) {
 				return false;
 			}
