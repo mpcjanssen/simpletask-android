@@ -48,8 +48,7 @@
     <ListView
         android:id="@+id/widgetlv"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
+        android:layout_height="fill_parent"
         android:background="#000000"
         android:divider="#444444"
         android:dividerHeight="1dp"

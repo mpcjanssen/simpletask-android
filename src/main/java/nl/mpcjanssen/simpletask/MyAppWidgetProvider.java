@@ -98,6 +98,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	public void onUpdate(@NotNull Context context, @NotNull AppWidgetManager appWidgetManager,
 			@NotNull int[] appWidgetIds) {
         for (int widgetId : appWidgetIds) {
+            Log.v(TAG, "onUpdate " + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 

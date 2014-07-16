@@ -250,13 +250,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     @NotNull
-    public synchronized TaskCache getTaskCache() {
-        if (m_taskCache==null) {
-            m_taskCache = new TaskCache(this,
+    public TaskCache getTaskCache() {
+        if (this.m_taskCache==null) {
+            this.m_taskCache = new TaskCache(this,
                     getFileStore(),
                     getTodoFileName());
         }
-        return m_taskCache;
+        return this.m_taskCache;
     }
 
     /**
@@ -267,7 +267,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
      * This method should be called whenever the TaskBag changes.
      */
     public void updateUI() {
+        Log.v(TAG, "XXX Updating UI");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+    }
+
+    public void fileUpdated() {
+        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
     }
 
     public void updateWidgets() {
@@ -281,6 +286,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private void redrawWidgets(){
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, MyAppWidgetProvider.class));
+        Log.v(TAG, "Redrawing widgets ");
         if (appWidgetIds.length > 0) {
             new MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
         }
@@ -331,6 +337,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NotNull String s) {
+        Log.v(TAG, "Preference " + s + " changed");
         if (s.equals(getString(R.string.widget_theme_pref_key)) ||
                 s.equals(getString(R.string.widget_extended_pref_key)) ||
                 s.equals(getString(R.string.widget_background_transparency)) ||

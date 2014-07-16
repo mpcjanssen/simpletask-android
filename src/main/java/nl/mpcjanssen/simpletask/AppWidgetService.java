@@ -28,9 +28,9 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 public class AppWidgetService extends RemoteViewsService {
 
-    @NotNull
+    
     @Override
-    public RemoteViewsFactory onGetViewFactory(@NotNull Intent intent) {
+    public RemoteViewsFactory onGetViewFactory( Intent intent) {
 	// TODO Auto-generated method stub
 	return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
     }
@@ -44,10 +44,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     private Context mContext;
     private TodoApplication application;
-    @NotNull
+    
     ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
-    public AppWidgetRemoteViewsFactory(TodoApplication application, @NotNull Intent intent) {
+    public AppWidgetRemoteViewsFactory(TodoApplication application,  Intent intent) {
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
         Log.v(TAG, "Creating view for widget: " + widgetId);
         mContext = TodoApplication.getAppContext();
@@ -58,8 +58,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         setFilteredTasks();
     }
 
-    @NotNull
-    private Intent createFilterIntent(@NotNull Task selectedTask) {
+    
+    private Intent createFilterIntent( Task selectedTask) {
         Intent target = new Intent();
         mFilter.saveInIntent(target);
         target.putExtra(Constants.INTENT_SELECTED_TASK, selectedTask.getId() + ":" + selectedTask.inFileFormat());
@@ -70,6 +70,14 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     void setFilteredTasks() {
         Log.v(TAG, "Widget: setFilteredTasks called");
         visibleTasks.clear();
+        if (application==null)  {
+            Log.v(TAG, "application object was null");
+            return;
+        }
+        if (application.getTaskCache()==null)  {
+            Log.v(TAG, "taskcache object was null");
+            return;
+        }
         ArrayList<Task> tasks = application.getTaskCache().getTasks();
         if (tasks==null) {
             return;
@@ -99,7 +107,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return null;
     }
 
-    @NotNull
     private RemoteViews getExtendedView(int position) {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
         Task task;
@@ -117,7 +124,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             }
             if (mFilter.getHideTags()) {
                 tokensToShow = tokensToShow & ~ Token.TTAG;
-            }SpannableString ss = new SpannableString(
+            }
+            SpannableString ss = new SpannableString(
                     task.showParts(tokensToShow).trim());
 
             if (TodoApplication.getPrefs().getString("widget_theme", "").equals("android.R.style.Theme_Holo")) {
