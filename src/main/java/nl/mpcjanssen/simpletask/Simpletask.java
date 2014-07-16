@@ -159,7 +159,13 @@ public class Simpletask extends ThemedListActivity implements
         ListView lv = getListView();
         int itemCount = lv.getCount();
         for(int i=0 ; i < itemCount ; i++){
-            lv.setItemChecked(i, true);
+            // Only check tasks that are not checked yet
+            // and skip headers
+            // This prevents double counting in the CAB title
+            Task t = getTaskAt(i);
+            if (t != null && !lv.isItemChecked(i)) {
+                lv.setItemChecked(i, true);
+            }
         }
     }
 
@@ -1290,15 +1296,22 @@ public class Simpletask extends ThemedListActivity implements
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position,
                                               long id, boolean checked) {
+            Task t = getTaskAt(position);
+            if (t==null) {
+                // Header
+                return;
+            }
             if(checked) {
                 numSelected++;
             } else {
                 numSelected--;
             }
+            if (numSelected==0) {
+                return;
+            }
             String title = "" + numSelected;
             mode.setTitle(title);
-            if (numSelected==1) {
-                Task t = getTaskAt(position);
+            if (numSelected==1 && t!=null) {
                 menu.removeGroup(Menu.CATEGORY_SECONDARY);
                 for (String s : t.getPhoneNumbers()) {
                     menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,

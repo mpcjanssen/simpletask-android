@@ -230,7 +230,7 @@ public class ActiveFilter {
             editor.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             editor.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
             editor.putString(SearchManager.QUERY, m_search);
-            editor.commit();
+            editor.apply();
         }
     }
 
