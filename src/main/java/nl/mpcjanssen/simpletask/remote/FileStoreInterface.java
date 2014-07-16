@@ -2,6 +2,8 @@ package nl.mpcjanssen.simpletask.remote;
 
 import android.app.Activity;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
+    @Nullable
     List<String> get(String path);
     void append(String path, List<String> lines);
     void startLogin(Activity caller, int i);

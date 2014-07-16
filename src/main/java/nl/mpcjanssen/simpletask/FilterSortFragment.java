@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.mobeta.android.dslv.DragSortListView;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +32,16 @@ public class FilterSortFragment extends Fragment {
     private ArrayList<String> originalItems;
     private DragSortListView lv;
     SortItemAdapter adapter;
+    @NotNull
     ArrayList<String> directions = new ArrayList<String>();
+    @NotNull
     ArrayList<String> adapterList = new ArrayList<String>();
     int sortUpId;
     int sortDownId;
 
     TodoApplication m_app;
 
+    @NotNull
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {
                 @Override
@@ -51,6 +57,7 @@ public class FilterSortFragment extends Fragment {
                 }
             };
 
+    @NotNull
     private DragSortListView.RemoveListener onRemove =
             new DragSortListView.RemoveListener() {
                 @Override
@@ -72,8 +79,8 @@ public class FilterSortFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
         if (originalItems == null) {
@@ -158,7 +165,7 @@ public class FilterSortFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(STATE_SELECTED, getSelectedItem());
     }
@@ -169,6 +176,7 @@ public class FilterSortFragment extends Fragment {
         super.onDestroyView();
     }
 
+    @NotNull
     public ArrayList<String> getSelectedItem() {
         ArrayList<String> multiSort = new ArrayList<String>();
         if (lv != null) {
@@ -183,7 +191,7 @@ public class FilterSortFragment extends Fragment {
 
     public class SortItemAdapter extends ArrayAdapter<String> {
 
-        public SortItemAdapter(Context context, int resource, int textViewResourceId, List<String> objects) {
+        public SortItemAdapter(@NotNull Context context, int resource, int textViewResourceId, List<String> objects) {
             super(context, resource, textViewResourceId, objects);
         }
 

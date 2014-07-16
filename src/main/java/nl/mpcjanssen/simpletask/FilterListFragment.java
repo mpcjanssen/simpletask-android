@@ -17,6 +17,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 
 public class FilterListFragment extends Fragment {
@@ -25,6 +28,7 @@ public class FilterListFragment extends Fragment {
     private ListView lv;
     private CheckBox cb;
     private GestureDetector gestureDetector;
+    @Nullable
     ActionBar actionbar;
     private ArrayList<String> selectedItems;
     private boolean not;
@@ -44,7 +48,7 @@ public class FilterListFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.v(TAG, "onSaveInstanceState() this:" + this);
         outState.putStringArrayList("selectedItems", getSelectedItems());
@@ -53,8 +57,8 @@ public class FilterListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
@@ -94,7 +98,7 @@ public class FilterListFragment extends Fragment {
                 new FilterGestureDetector());
         OnTouchListener gestureListener = new OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(@NotNull View v, @NotNull MotionEvent event) {
                 if (gestureDetector.onTouchEvent(event)) {
                     MotionEvent cancelEvent = MotionEvent.obtain(event);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
@@ -140,7 +144,7 @@ public class FilterListFragment extends Fragment {
         private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+        public boolean onFling(@NotNull MotionEvent e1, @NotNull MotionEvent e2, float velocityX,
                                float velocityY) {
 
             if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)

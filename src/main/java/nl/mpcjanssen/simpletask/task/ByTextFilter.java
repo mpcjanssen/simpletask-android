@@ -22,6 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 
 /**
@@ -30,11 +33,12 @@ import java.util.Locale;
  * @author Tim Barlotta
  */
 public class ByTextFilter implements TaskFilter {
+    @Nullable
     private String text;
     private boolean caseSensitive;
     private String[] parts;
 
-    public ByTextFilter(String text, boolean caseSensitive) {
+    public ByTextFilter(@Nullable String text, boolean caseSensitive) {
         if (text == null) {
             text = "";
         }
@@ -45,7 +49,7 @@ public class ByTextFilter implements TaskFilter {
     }
 
     @Override
-    public boolean apply(Task input) {
+    public boolean apply(@NotNull Task input) {
         String taskText = caseSensitive ? input.getText() : input.getText()
                 .toUpperCase(Locale.getDefault());
 
@@ -58,6 +62,7 @@ public class ByTextFilter implements TaskFilter {
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
+    @Nullable
     String getText() {
         return text;
     }

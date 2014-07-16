@@ -22,6 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,11 +43,13 @@ public class LinkParser {
     private LinkParser() {
     }
 
+    @NotNull
     public static LinkParser getInstance() {
         return INSTANCE;
     }
 
-    public List<URL> parse(String inputText) {
+    @NotNull
+    public List<URL> parse(@Nullable String inputText) {
         if (inputText == null) {
             return Collections.emptyList();
         }

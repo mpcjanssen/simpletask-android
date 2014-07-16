@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.jetbrains.annotations.NotNull;
 import org.markdown4j.Markdown4jProcessor;
 
 import java.io.BufferedReader;
@@ -29,11 +30,12 @@ public class HelpScreen extends Activity {
     final static String TAG = HelpScreen.class.getSimpleName();
     final static String BASE_URL = "file:///android_asset/"; 
 
+    @NotNull
     private Stack<String> history = new Stack<String>();
 
     private WebView wvHelp;
 
-    private void loadDesktop (WebView wv, String url) {
+    private void loadDesktop (@NotNull WebView wv, String url) {
         wv.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
         wv.loadUrl(url);
     }
@@ -70,7 +72,7 @@ public class HelpScreen extends Activity {
         wvHelp = (WebView)findViewById(R.id.help_view);
         wvHelp.setWebViewClient(new WebViewClient()  {  
             @Override  
-            public boolean shouldOverrideUrlLoading(WebView view, String url)  {  
+            public boolean shouldOverrideUrlLoading(@NotNull WebView view, @NotNull String url)  {
                 Log.v(TAG, "Loading url: " + url);
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
@@ -108,7 +110,8 @@ public class HelpScreen extends Activity {
         startActivity(browserIntent);
     }
 
-    public static String readAsset(AssetManager assets, String name) throws IOException  {
+    @NotNull
+    public static String readAsset(@NotNull AssetManager assets, String name) throws IOException  {
         StringBuilder buf=new StringBuilder();
         InputStream input =assets.open(name);
         BufferedReader in=
@@ -123,7 +126,7 @@ public class HelpScreen extends Activity {
         return buf.toString();
     }
 
-    public void showMarkdownAsset(WebView wv, Context ctxt,  String name) {
+    public void showMarkdownAsset(@NotNull WebView wv, @NotNull Context ctxt,  String name) {
         Log.v(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")"); 
         String html = "";
         try {
@@ -138,7 +141,7 @@ public class HelpScreen extends Activity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.menu_simpletask:

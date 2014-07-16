@@ -58,6 +58,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -118,7 +121,7 @@ public class AddTask extends ThemedActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
@@ -201,7 +204,7 @@ public class AddTask extends ThemedActivity {
         finish();
     }
 
-    private void noteToSelf(Intent intent) {
+    private void noteToSelf(@NotNull Intent intent) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             Log.v(TAG,"Voice note added.");
@@ -240,7 +243,7 @@ public class AddTask extends ThemedActivity {
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, @NotNull Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -355,7 +358,7 @@ public class AddTask extends ThemedActivity {
         textInputField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         textInputField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            public boolean onEditorAction(TextView textView, int actionId, @Nullable KeyEvent keyEvent) {
 
                 boolean hardwareEnterUp = keyEvent!=null &&
                         keyEvent.getAction() == KeyEvent.ACTION_UP &&
@@ -459,7 +462,7 @@ public class AddTask extends ThemedActivity {
     private void insertDate(final int dateType) {
         Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
             @Override
-            public void onClick(String selected) {
+            public void onClick(@NotNull String selected) {
                 if (selected.equals("pick")) {
                     /* Note on some Android versions the OnDateSetListener can fire twice
                      * https://code.google.com/p/android/issues/detail?id=34860
@@ -489,7 +492,7 @@ public class AddTask extends ThemedActivity {
         d.show();
     }
 
-    private void replaceDate(int dateType, String date) {
+    private void replaceDate(int dateType, @NotNull String date) {
            if (dateType==Task.DUE_DATE) {
                replaceDueDate(date);
            } else {
@@ -497,7 +500,7 @@ public class AddTask extends ThemedActivity {
            }
     }
 
-    private void insertDateAtSelection(int dateType, DateTime date) {
+    private void insertDateAtSelection(int dateType, @NotNull DateTime date) {
         replaceDate(dateType, date.format("YYYY-MM-DD"));
     }
 
@@ -611,7 +614,7 @@ public class AddTask extends ThemedActivity {
         dialog.show();
     }
 
-    public int getCurrentCursorLine(EditText editText) {
+    public int getCurrentCursorLine(@NotNull EditText editText) {
         int selectionStart = Selection.getSelectionStart(editText.getText());
         Layout layout = editText.getLayout();
 
@@ -622,7 +625,7 @@ public class AddTask extends ThemedActivity {
         return -1;
     }
 
-    private void replaceDueDate(CharSequence newDueDate) {
+    private void replaceDueDate(@NotNull CharSequence newDueDate) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
@@ -652,7 +655,7 @@ public class AddTask extends ThemedActivity {
         textInputField.setSelection(newStart, newEnd);
     }
 
-    private void replaceThresholdDate(CharSequence newThresholdDate) {
+    private void replaceThresholdDate(@NotNull CharSequence newThresholdDate) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
@@ -675,7 +678,7 @@ public class AddTask extends ThemedActivity {
         textInputField.setSelection(start, end);
     }
 
-    private void replacePriority(CharSequence newPrio) {
+    private void replacePriority(@NotNull CharSequence newPrio) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();

@@ -22,6 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +34,11 @@ import java.util.List;
  * @author Tim Barlotta
  */
 public class ByPriorityFilter implements TaskFilter {
+    @NotNull
     ArrayList<Priority> priorities = new ArrayList<Priority>();
     private boolean not;
 
-    public ByPriorityFilter(List<Priority> priorities, boolean not) {
+    public ByPriorityFilter(@Nullable List<Priority> priorities, boolean not) {
         if (priorities != null) {
             this.priorities.addAll(priorities);
         }
@@ -42,7 +46,7 @@ public class ByPriorityFilter implements TaskFilter {
     }
 
     @Override
-    public boolean apply(Task input) {
+    public boolean apply(@NotNull Task input) {
         if (not) {
             return !filter(input);
         } else {
@@ -50,7 +54,7 @@ public class ByPriorityFilter implements TaskFilter {
         }
     }
 
-    public boolean filter(Task input) {
+    public boolean filter(@NotNull Task input) {
         if (priorities.size() == 0) {
             return true;
         }
@@ -59,6 +63,7 @@ public class ByPriorityFilter implements TaskFilter {
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
+    @NotNull
     ArrayList<Priority> getPriorities() {
         return priorities;
     }

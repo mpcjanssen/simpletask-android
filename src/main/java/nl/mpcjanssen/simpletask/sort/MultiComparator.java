@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.google.common.collect.Ordering;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +16,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 public class MultiComparator implements Comparator<Task> {
     private Ordering<Task> ordering;
 
-    public MultiComparator (ArrayList<String> sorts) {
+    public MultiComparator (@NotNull ArrayList<String> sorts) {
         List<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
 
 

@@ -22,6 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +34,11 @@ import java.util.List;
  * @author Tim Barlotta
  */
 public class ByProjectFilter implements TaskFilter {
+    @NotNull
     private ArrayList<String> projects = new ArrayList<String>();
     boolean not;
 
-    public ByProjectFilter(List<String> projects, boolean not) {
+    public ByProjectFilter(@Nullable List<String> projects, boolean not) {
         if (projects != null) {
             this.projects.addAll(projects);
         }
@@ -43,7 +47,7 @@ public class ByProjectFilter implements TaskFilter {
 
 
     @Override
-    public boolean apply(Task input) {
+    public boolean apply(@NotNull Task input) {
         if (not) {
             return !filter(input);
         } else {
@@ -51,7 +55,7 @@ public class ByProjectFilter implements TaskFilter {
         }
     }
 
-    public boolean filter(Task input) {
+    public boolean filter(@NotNull Task input) {
         if (projects.size() == 0) {
             return true;
         }
@@ -66,6 +70,7 @@ public class ByProjectFilter implements TaskFilter {
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
+    @NotNull
     ArrayList<String> getProjects() {
         return projects;
     }

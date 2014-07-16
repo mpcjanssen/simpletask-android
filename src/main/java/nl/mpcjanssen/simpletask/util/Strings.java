@@ -22,6 +22,8 @@
  */
 package nl.mpcjanssen.simpletask.util;
 
+import org.jetbrains.annotations.Nullable;
+
 public final class Strings {
 	/**
 	 * Checks the passed in string to see if it is null or an blank string
@@ -30,7 +32,7 @@ public final class Strings {
 	 *            the string to check
 	 * @return true if null or ""
 	 */
-	public static boolean isEmptyOrNull(String s) {
+	public static boolean isEmptyOrNull(@Nullable String s) {
 		return s == null || s.length() == 0;
 	}
 }
