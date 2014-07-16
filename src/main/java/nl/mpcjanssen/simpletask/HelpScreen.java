@@ -3,8 +3,8 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -31,8 +31,6 @@ public class HelpScreen extends Activity {
 
     private Stack<String> history = new Stack<String>();
 
-    private TodoApplication m_app;
-    private BroadcastReceiver m_broadcastReceiver;
     private WebView wvHelp;
 
     private void loadDesktop (WebView wv, String url) {
@@ -56,7 +54,7 @@ public class HelpScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        m_app = (TodoApplication) getApplication();
+        TodoApplication m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
         String page = Constants.HELP_INDEX;
         Intent i = getIntent();
@@ -64,7 +62,10 @@ public class HelpScreen extends Activity {
             page = i.getStringExtra(Constants.EXTRA_HELP_PAGE);
         }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.help);
         wvHelp = (WebView)findViewById(R.id.help_view);
         wvHelp.setWebViewClient(new WebViewClient()  {  

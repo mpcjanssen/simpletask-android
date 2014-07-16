@@ -95,8 +95,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            int widgetId = appWidgetIds[i];
+        for (int widgetId : appWidgetIds) {
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
@@ -108,16 +107,15 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            int widgetId = appWidgetIds[i];
+        for (int widgetId : appWidgetIds) {
             Log.v(TAG, "cleaning up widget configuration id:" + widgetId);
             // At least clear contents of the preferences file
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
-            preferences.edit().clear().commit();
-            File prefs_path = new File (context.getFilesDir(), "../shared_prefs");
-            File prefs_xml = new File (prefs_path,  widgetId +".xml");
+            preferences.edit().clear().apply();
+            File prefs_path = new File(context.getFilesDir(), "../shared_prefs");
+            File prefs_xml = new File(prefs_path, widgetId + ".xml");
             // Remove the XML file
-            if(!prefs_xml.delete()) {
+            if (!prefs_xml.delete()) {
                 Log.w(TAG, "File not deleted: " + prefs_xml.toString());
             }
 
@@ -126,7 +124,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String name) {
-        //Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+        Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our
         // package, but it needs this because on the other side it's the widget host inflating
