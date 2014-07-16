@@ -19,6 +19,7 @@ import java.util.Collections;
 
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -62,9 +63,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 
     void setFilteredTasks() {
-        Log.v(TAG, "Widget: setFilteredTasks called: " + application.getTaskCache());
+        Log.v(TAG, "Widget: setFilteredTasks called");
         visibleTasks.clear();
-        for (Task t : mFilter.apply(application.getTaskCache().getTasks())) {
+        ArrayList<Task> tasks = application.getTaskCache().getTasks();
+        if (tasks==null) {
+            return;
+        }
+        for (Task t : mFilter.apply(tasks)) {
             if (t.isVisible()) {
                 visibleTasks.add(t);
             }

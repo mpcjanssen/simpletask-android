@@ -19,8 +19,8 @@ android {
     compileSdkVersion 20
 
     defaultConfig {
-        versionName '5.0.5'
-        versionCode 1513
+        versionName '5.0.6'
+        versionCode 1514
 	    minSdkVersion 14
         targetSdkVersion 20
     }
