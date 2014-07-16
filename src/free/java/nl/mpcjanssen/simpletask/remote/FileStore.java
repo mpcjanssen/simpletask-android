@@ -262,7 +262,10 @@ public class FileStore implements FileStoreInterface {
                         }
                     }
                 };
-                openDbFile(path).addListener(m_observer);
+                DbxFile openFile = openDbFile(path);
+                if (openFile!=null) {
+                    openFile.addListener(m_observer);
+                }
             }
         }
     }
@@ -310,7 +313,9 @@ public class FileStore implements FileStoreInterface {
                     Log.v(TAG, "Saving " + path + "in background thread");
                     try {
                         DbxFile openFile = openDbFile(path);
-                        openFile.appendString(data);
+                        if (openFile!=null) {
+                            openFile.appendString(data);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -319,6 +324,9 @@ public class FileStore implements FileStoreInterface {
 
                 @Override
                 public void onPostExecute (Void v) {
+                    if (mLines==null) {
+                        mLines = new ArrayList<String>();
+                    }
                     mLines.addAll(lines);
                 }
             }.execute(path, mEol + Util.join(lines, mEol).trim());
@@ -327,13 +335,17 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void update(final String filename, @NotNull final List<String> alOriginal, @NotNull final List<String> alUpdated) {
-        new AsyncTask<String,Void, Void>() {
+        new AsyncTask<String, Void, Void>() {
             @Nullable
             @Override
             protected Void doInBackground(String... params) {
                 if (isAuthenticated() && getDbxFS() != null) {
                     try {
                         DbxFile openFile = openDbFile(filename);
+                        if (openFile==null) {
+                            Log.w(TAG, "Failed to open: " + filename + " tasks not updated");
+                            return null;
+                        }
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(openFile));
                         for (int i=0 ; i<alOriginal.size();i++) {
@@ -365,6 +377,10 @@ public class FileStore implements FileStoreInterface {
                 if (isAuthenticated() && getDbxFS() != null) {
                     try {
                         DbxFile dbFile = openDbFile(mTodoName);
+                        if (dbFile==null) {
+                            Log.w(TAG, "Failed to open: " + mTodoName + " tasks not deleted");
+                            return null;
+                        }
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(dbFile));
                         contents.removeAll(stringsToDelete);
@@ -379,7 +395,9 @@ public class FileStore implements FileStoreInterface {
 
             @Override
             protected void onPostExecute(Void v) {
-                mLines.removeAll(stringsToDelete);
+                if (mLines!=null) {
+                    mLines.removeAll(stringsToDelete);
+                }
             }
         }.execute();
     }
@@ -406,6 +424,10 @@ public class FileStore implements FileStoreInterface {
                         destFile.appendString(mEol+Util.join(strings, mEol));
                         destFile.close();
                         DbxFile srcFile = openDbFile(sourcePath);
+                        if (srcFile==null) {
+                            Log.w(TAG, "Failed to open: " + sourcePath + " tasks not moved");
+                            return null;
+                        }
                         contents.addAll(syncGetLines(srcFile));
                         contents.removeAll(strings);
                         srcFile.writeString(Util.join(contents, mEol));
@@ -419,7 +441,9 @@ public class FileStore implements FileStoreInterface {
 
             @Override
             public void onPostExecute (Void v) {
-               mLines.removeAll(strings);
+               if (mLines!=null) {
+                   mLines.removeAll(strings);
+               }
             }
         }.execute();
     }
@@ -507,7 +531,7 @@ public class FileStore implements FileStoreInterface {
          */
         public void showDialog() {
             Dialog d = createFileDialog();
-            if(this.activity.isFinishing()) {
+            if(d!=null && !this.activity.isFinishing()) {
                 d.show();
             }
         }
