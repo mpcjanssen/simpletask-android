@@ -24,6 +24,7 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -69,7 +70,6 @@ import java.util.TreeSet;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -83,7 +83,6 @@ public class AddTask extends ThemedActivity {
     private String share_text;
 
     private EditText textInputField;
-    private TaskCache m_taskBag;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
 
@@ -242,9 +241,7 @@ public class AddTask extends ThemedActivity {
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                    // Nothing to do here
-                } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
+                if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
                     setProgressBarIndeterminateVisibility(false);
@@ -385,7 +382,7 @@ public class AddTask extends ThemedActivity {
                     if (hasCloneTags()) {
                         String precedingText = textInputField.getText().toString().substring(0, endOfLine);
                         int lineStart = precedingText.lastIndexOf('\n');
-                        String line = "";
+                        String line;
                         if (lineStart != -1) {
                             line = precedingText.substring(lineStart, endOfLine);
                         } else {
@@ -411,7 +408,7 @@ public class AddTask extends ThemedActivity {
         setCloneTags(m_app.isAddTagsCloneTags());
         setWordWrap(m_app.isWordWrap());
         
-        ((CheckBox) findViewById(R.id.cb_wrap)).setOnClickListener( new View.OnClickListener() {
+        findViewById(R.id.cb_wrap).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setWordWrap(hasWordWrap());
@@ -513,7 +510,7 @@ public class AddTask extends ThemedActivity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
@@ -579,7 +576,7 @@ public class AddTask extends ThemedActivity {
         contexts.addAll(t.getLists());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
@@ -593,9 +590,7 @@ public class AddTask extends ThemedActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> items = new ArrayList<String>();
-                ArrayList<String> uncheckedItems = new ArrayList<String>();
                 items.addAll(Util.getCheckedItems(lv, true));
-                uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 String newText = ed.getText().toString();
                 if (!newText.equals("")) {
                     items.add(ed.getText().toString());

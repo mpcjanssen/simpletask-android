@@ -114,6 +114,9 @@ public class FileStore implements FileStoreInterface {
                 activePath = path;
                 ArrayList<String> results;
                 DbxFile openFile = openDbFile(path);
+                if (openFile==null) {
+                    return null;
+                }
                 try {
                     openFile.update();
                 } catch (DbxException e) {

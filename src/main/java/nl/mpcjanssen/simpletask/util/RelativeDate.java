@@ -32,8 +32,8 @@ public class RelativeDate {
 	 * months, and years, you can add the other cases in by copying the logic
 	 * for hours, minutes, seconds.
 	 * 
-	 * @param now
-	 * @param when
+	 * @param now current date
+	 * @param when date to calculate difference to
 	 * @return String representing the relative date
 	 */
 
@@ -44,7 +44,6 @@ public class RelativeDate {
             int months = period/31;
             int weeks = period/7;
             int years = period/365;
-            int days = period;
 
             if (years == 1) {
                 return context.getString(R.string.dates_one_year_ago);
@@ -61,11 +60,11 @@ public class RelativeDate {
             } else if (weeks > 1) {
                 return context.getString(R.string.dates_weeks_ago, Math.abs(weeks));
             }
-            if (days == 1) {
+            if (period == 1) {
                 return context.getString(R.string.dates_one_day_ago);
-            } else if (days > 1) {
-                return context.getString(R.string.dates_days_ago, Math.abs(days));
-            } else if (days == 0) {
+            } else if (period > 1) {
+                return context.getString(R.string.dates_days_ago, Math.abs(period));
+            } else if (period == 0) {
                 return context.getString(R.string.dates_today);
             }
         }
@@ -76,7 +75,7 @@ public class RelativeDate {
 	 * This method returns a String representing the relative date by comparing
 	 * the Calendar being passed in to the date / time that it is right now.
 	 * 
-	 * @param when
+	 * @param when date to calculate difference to
 	 * @return String representing the relative date
 	 */
 
