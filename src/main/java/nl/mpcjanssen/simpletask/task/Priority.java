@@ -22,6 +22,9 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +70,7 @@ public enum Priority {
         return fileFormat;
     }
 
+    @NotNull
     private static Priority[] reverseValues() {
         Priority[] values = Priority.values();
         Priority[] reversed = new Priority[values.length];
@@ -77,7 +81,8 @@ public enum Priority {
         return reversed;
     }
 
-    public static List<Priority> range(Priority p1, Priority p2) {
+    @NotNull
+    public static List<Priority> range(@NotNull Priority p1, @NotNull Priority p2) {
         ArrayList<Priority> priorities = new ArrayList<Priority>();
         boolean add = false;
 
@@ -96,7 +101,8 @@ public enum Priority {
         return priorities;
     }
 
-    public static List<String> rangeInCode(Priority p1, Priority p2) {
+    @NotNull
+    public static List<String> rangeInCode(@NotNull Priority p1, @NotNull Priority p2) {
         List<Priority> priorities = Priority.range(p1, p2);
         List<String> result = new ArrayList<String>(priorities.size());
         for (Priority p : priorities) {
@@ -105,7 +111,8 @@ public enum Priority {
         return result;
     }
 
-    public static ArrayList<String> inCode(List<Priority> priorities) {
+    @NotNull
+    public static ArrayList<String> inCode(@NotNull List<Priority> priorities) {
         ArrayList<String> strings = new ArrayList<String>();
         for (Priority p : priorities) {
             strings.add(p.getCode());
@@ -113,7 +120,8 @@ public enum Priority {
         return strings;
     }
 
-    public static ArrayList<Priority> toPriority(List<String> codes) {
+    @NotNull
+    public static ArrayList<Priority> toPriority(@Nullable List<String> codes) {
         ArrayList<Priority> priorities = new ArrayList<Priority>();
         if (codes == null) {
             return new ArrayList<Priority>();
@@ -124,7 +132,8 @@ public enum Priority {
         return priorities;
     }
 
-    public static Priority toPriority(String s) {
+    @NotNull
+    public static Priority toPriority(@Nullable String s) {
         if (s == null) {
             return NONE;
         }

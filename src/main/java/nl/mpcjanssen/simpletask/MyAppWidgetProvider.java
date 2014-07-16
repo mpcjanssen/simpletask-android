@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 public class MyAppWidgetProvider extends AppWidgetProvider {
@@ -21,14 +23,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
 
-    public static void putFilterExtras (Intent target , SharedPreferences preferences,  int widgetId) {
+    public static void putFilterExtras (Intent target , @NotNull SharedPreferences preferences,  int widgetId) {
         Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter();
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
     }
 
-	public static RemoteViews updateView(int widgetId, Context context) {
+	public static RemoteViews updateView(int widgetId, @NotNull Context context) {
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
         RemoteViews view ;
         SharedPreferences appPreferences = TodoApplication.getPrefs();
@@ -93,8 +95,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	}
 	
 	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
-			int[] appWidgetIds) {
+	public void onUpdate(@NotNull Context context, @NotNull AppWidgetManager appWidgetManager,
+			@NotNull int[] appWidgetIds) {
         for (int widgetId : appWidgetIds) {
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
@@ -106,7 +108,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	}
 
     @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
+    public void onDeleted(@NotNull Context context, @NotNull int[] appWidgetIds) {
         for (int widgetId : appWidgetIds) {
             Log.v(TAG, "cleaning up widget configuration id:" + widgetId);
             // At least clear contents of the preferences file
@@ -123,7 +125,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     }
 
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String name) {
+    public static void updateAppWidget(@NotNull Context context, @NotNull AppWidgetManager appWidgetManager, int appWidgetId, String name) {
         Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our

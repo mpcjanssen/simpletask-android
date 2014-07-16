@@ -2,6 +2,8 @@ package nl.mpcjanssen.simpletask.sort;
 
 import com.google.common.collect.Ordering;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 public class ProjectComparator extends Ordering<Task> {
 
     @Override
-    public int compare(Task a, Task b) {
+    public int compare(@NotNull Task a, @NotNull Task b) {
         List<String> projectsA = a.getTags();
         List<String> projectsB = b.getTags();
 

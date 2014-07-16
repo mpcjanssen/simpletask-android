@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,7 @@ public class FilterActivity extends ThemedActivity {
     TodoApplication  m_app;
     SharedPreferences prefs;
 
+    @Nullable
     private ActionBar actionbar;
 
     private int getLastActiveTab() {
@@ -173,6 +175,7 @@ public class FilterActivity extends ThemedActivity {
         return true;
     }
 
+    @NotNull
     private Intent createFilterIntent() {
         Intent target = new Intent(this, Simpletask.class);
         target.setAction(Constants.INTENT_START_FILTER);
@@ -215,6 +218,7 @@ public class FilterActivity extends ThemedActivity {
         }
     }
 
+    @Nullable
     private ArrayList<String> getFragmentFilter(String tag) {
         FilterListFragment fr;
         fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);
@@ -226,6 +230,7 @@ public class FilterActivity extends ThemedActivity {
         }
     }
 
+    @Nullable
     private ArrayList<String> getSelectedSort() {
         FilterSortFragment fr;
         fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(SORT_TAB);
@@ -386,7 +391,7 @@ public class FilterActivity extends ThemedActivity {
         }
 
         @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        public void onTabSelected(Tab tab, @NotNull FragmentTransaction ft) {
             // Check to see if we already have a fragment for this tab, probably
             // from a previously saved state.
             mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
@@ -402,7 +407,7 @@ public class FilterActivity extends ThemedActivity {
         }
 
         @Override
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        public void onTabUnselected(Tab tab, @NotNull FragmentTransaction ft) {
             if (mFragment != null) {
                 // Detach the fragment, because another one is being attached
                 ft.detach(mFragment);

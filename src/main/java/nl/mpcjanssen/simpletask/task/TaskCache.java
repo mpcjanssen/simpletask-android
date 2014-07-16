@@ -24,8 +24,11 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,23 +59,29 @@ public class TaskCache {
     private final Context mCtx;
     private final String mTodoName;
     private final FileStoreInterface mFileStore;
+    @org.jetbrains.annotations.Nullable
     private ArrayList<Task> mTasks = null;
     private List<Task> mTasksToUpdate;
+    @org.jetbrains.annotations.Nullable
     private ArrayList<String> mLists = null;
+    @org.jetbrains.annotations.Nullable
     private ArrayList<String> mTags = null;
 
 
-    public TaskCache(Context context, FileStoreInterface fileStore, String todoName) {
+    public TaskCache(Context context, @NotNull FileStoreInterface fileStore, String todoName) {
         this.mCtx = context;
         this.mTodoName = todoName;
         this.mFileStore = fileStore;
         this.mTasks = loadTasksFromStore(todoName);
     }
 
-    public void archive(String targetPath, List<Task> selectedTasks) {
+    public void archive(String targetPath, @Nullable List<Task> selectedTasks) {
         ArrayList<Task> tasksToArchive = new ArrayList<Task>();
         if (selectedTasks==null) {
             selectedTasks = mTasks;
+        }
+        if (mTasks==null) {
+            return;
         }
         for (Task t: selectedTasks) {
             if (t.isCompleted()) {
@@ -87,7 +96,8 @@ public class TaskCache {
         mFileStore.move(mTodoName, targetPath, Util.tasksToString(tasksToArchive));
     }
 
-    private ArrayList<Task> loadTasksFromStore (String path) {
+    @NotNull
+    private ArrayList<Task> loadTasksFromStore (@NotNull String path) {
         ArrayList<Task> result = new ArrayList<Task>();
         int index = 0;
         for (String s : mFileStore.get(path)) {
@@ -100,9 +110,14 @@ public class TaskCache {
     }
 
     public int size() {
-        return getTasks().size();
+        if (mTasks==null) {
+            return 0;
+        } else {
+            return mTasks.size();
+        }
     }
 
+    @Nullable
     public ArrayList<Task> getTasks() {
         return mTasks;
     }
@@ -111,6 +126,7 @@ public class TaskCache {
         return mTasks.get(position);
     }
 
+    @NotNull
     public ArrayList<Priority> getPriorities() {
         Set<Priority> res = new HashSet<Priority>();
         for (Task item : getTasks()) {
@@ -121,6 +137,7 @@ public class TaskCache {
         return ret;
     }
 
+    @Nullable
     public ArrayList<String> getContexts(boolean includeNone) {
         if(mLists!=null) {
             return mLists;
@@ -138,6 +155,7 @@ public class TaskCache {
         return mLists;
     }
 
+    @org.jetbrains.annotations.Nullable
     public ArrayList<String> getProjects(boolean includeNone) {
         if(mTags!=null) {
             return mTags;
@@ -180,7 +198,7 @@ public class TaskCache {
         notifyChanged();
     }
 
-    public void undoComplete(List<Task> tasks) {
+    public void undoComplete(@NotNull List<Task> tasks) {
         ArrayList<String> originalStrings = new ArrayList<String>();
 
         for (Task t : tasks) {
@@ -190,7 +208,7 @@ public class TaskCache {
         update(originalStrings, tasks);
     }
 
-    public void complete(List<Task> tasks, boolean originalDate) {
+    public void complete(@NotNull List<Task> tasks, boolean originalDate) {
         ArrayList<String> originalStrings = new ArrayList<String>();
         for (Task t : tasks) {
             originalStrings.add(t.inFileFormat());
@@ -208,7 +226,7 @@ public class TaskCache {
         append(lines);
     }
 
-    public void append(ArrayList<String> lines) {
+    public void append(@NotNull ArrayList<String> lines) {
         mFileStore.append(mTodoName,lines);
         for (String line: lines ) {
             mTasks.add(new Task(0,line));
@@ -221,7 +239,7 @@ public class TaskCache {
         notifyChanged();
     }
 
-    public void defer(String selected, List<Task> tasksToDefer, int dateType) {
+    public void defer(@NotNull String selected, @NotNull List<Task> tasksToDefer, int dateType) {
         ArrayList<String> originalTasks = Util.tasksToString(tasksToDefer);
         for (Task t: tasksToDefer) {
             switch (dateType) {
@@ -236,7 +254,7 @@ public class TaskCache {
         update(originalTasks,tasksToDefer);
     }
 
-    public ArrayList<Task> getTasks(ActiveFilter filter, ArrayList<String> sorts) {
+    public ArrayList<Task> getTasks(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts) {
         Collections.sort(mTasks,new MultiComparator(sorts));
         return filter.apply(mTasks);
     }

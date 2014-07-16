@@ -27,6 +27,8 @@ import android.util.Log;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,7 +45,8 @@ import java.util.ArrayList;
 public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
 
-    public static ArrayList<String> loadFromFile(File file) {
+    @NotNull
+    public static ArrayList<String> loadFromFile(@NotNull File file) {
         ArrayList<String> result = new ArrayList<String>();
         try {
             result.addAll(Files.readLines(file, Charsets.UTF_8));
@@ -53,7 +56,7 @@ public class TaskIo {
         return result;
     }
 
-    public static void writeToFile(String contents, File file, boolean append) {
+    public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) {
         try {
             Util.createParentDirectory(file);
             Writer fw = new BufferedWriter(new OutputStreamWriter(

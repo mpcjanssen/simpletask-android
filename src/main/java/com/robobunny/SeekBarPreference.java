@@ -13,6 +13,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import nl.mpcjanssen.simpletask.R;
 
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
@@ -33,17 +35,17 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     private TextView mStatusText;
 
-    public SeekBarPreference(Context context, AttributeSet attrs) {
+    public SeekBarPreference(@NotNull Context context, @NotNull AttributeSet attrs) {
         super(context, attrs);
         initPreference(context, attrs);
     }
 
-    public SeekBarPreference(Context context, AttributeSet attrs, int defStyle) {
+    public SeekBarPreference(@NotNull Context context, @NotNull AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initPreference(context, attrs);
     }
 
-    private void initPreference(Context context, AttributeSet attrs) {
+    private void initPreference(Context context, @NotNull AttributeSet attrs) {
         setValuesFromXml(attrs);
         mSeekBar = new SeekBar(context, attrs);
         mSeekBar.setMax(mMaxValue - mMinValue);
@@ -52,7 +54,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         setWidgetLayoutResource(R.layout.seek_bar_preference);
     }
 
-    private void setValuesFromXml(AttributeSet attrs) {
+    private void setValuesFromXml(@NotNull AttributeSet attrs) {
         mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
         mMinValue = attrs.getAttributeIntValue(APPLICATIONNS, "min", 0);
 
@@ -71,7 +73,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     }
 
-    private String getAttributeStringValue(AttributeSet attrs, String namespace, String name, String defaultValue) {
+    private String getAttributeStringValue(@NotNull AttributeSet attrs, String namespace, String name, String defaultValue) {
         String value = attrs.getAttributeValue(namespace, name);
         if(value == null)
             value = defaultValue;
@@ -92,7 +94,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     @Override
-    public void onBindView(View view) {
+    public void onBindView(@NotNull View view) {
         super.onBindView(view);
 
         try {
@@ -128,7 +130,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
      * Update a SeekBarPreference view with our current state
      * @param view
      */
-    protected void updateView(View view) {
+    protected void updateView(@NotNull View view) {
 
         try {
             mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
@@ -152,7 +154,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressChanged(@NotNull SeekBar seekBar, int progress, boolean fromUser) {
         int newValue = progress + mMinValue;
 
         if(newValue > mMaxValue)
@@ -185,7 +187,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
 
     @Override
-    protected Object onGetDefaultValue(TypedArray ta, int index){
+    protected Object onGetDefaultValue(@NotNull TypedArray ta, int index){
 
         int defaultValue = ta.getInt(index, DEFAULT_VALUE);
         return defaultValue;
@@ -193,7 +195,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     @Override
-    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+    protected void onSetInitialValue(boolean restoreValue, @NotNull Object defaultValue) {
 
         if(restoreValue) {
             mCurrentValue = getPersistedInt(mCurrentValue);

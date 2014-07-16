@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -26,8 +29,9 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 public class AppWidgetService extends RemoteViewsService {
 
+    @NotNull
     @Override
-    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+    public RemoteViewsFactory onGetViewFactory(@NotNull Intent intent) {
 	// TODO Auto-generated method stub
 	return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
     }
@@ -41,9 +45,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     private Context mContext;
     private TodoApplication application;
+    @NotNull
     ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
-    public AppWidgetRemoteViewsFactory(TodoApplication application, Intent intent) {
+    public AppWidgetRemoteViewsFactory(TodoApplication application, @NotNull Intent intent) {
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
         Log.v(TAG, "Creating view for widget: " + widgetId);
         mContext = TodoApplication.getAppContext();
@@ -54,7 +59,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         setFilteredTasks();
     }
 
-    private Intent createFilterIntent(Task selectedTask) {
+    @NotNull
+    private Intent createFilterIntent(@NotNull Task selectedTask) {
         Intent target = new Intent();
         mFilter.saveInIntent(target);
         target.putExtra(Constants.INTENT_SELECTED_TASK, selectedTask.getId() + ":" + selectedTask.inFileFormat());
@@ -88,11 +94,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return arg0;
     }
 
+    @Nullable
     @Override
     public RemoteViews getLoadingView() {
         return null;
     }
 
+    @NotNull
     private RemoteViews getExtendedView(int position) {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
         Task task;

@@ -34,6 +34,9 @@ import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,15 +65,16 @@ public class Util {
         return DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT);
     }
 
-    public static void showToastShort(Context cxt, int resid) {
+    public static void showToastShort(@NotNull Context cxt, int resid) {
         Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showToastShort(Context cxt, String msg) {
+    public static void showToastShort(@NotNull Context cxt, String msg) {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static ArrayList<String> tasksToString(List<Task> tasks) {
+    @NotNull
+    public static ArrayList<String> tasksToString(@NotNull List<Task> tasks) {
         ArrayList<String> result = new ArrayList<String>();
         for (Task t: tasks) {
             result.add(t.inFileFormat());
@@ -82,7 +86,7 @@ public class Util {
         void onClick(String input);
     }
 
-    public static void createParentDirectory(File dest) throws TodoException {
+    public static void createParentDirectory(@Nullable File dest) throws TodoException {
         if (dest == null) {
             throw new TodoException("createParentDirectory: dest is null");
         }
@@ -99,7 +103,8 @@ public class Util {
         }
     }
 
-    public static String join(Collection<?> s, String delimiter) {
+    @NotNull
+    public static String join(@Nullable Collection<?> s, String delimiter) {
         StringBuilder builder = new StringBuilder();
         if (s==null) {
         	return "";
@@ -115,13 +120,13 @@ public class Util {
         return builder.toString();
     }
 
-    public static void setColor(SpannableString ss, int color, String s) {
+    public static void setColor(@NotNull SpannableString ss, int color, String s) {
         ArrayList<String> strList = new ArrayList<String>();
         strList.add(s);
         setColor(ss,color,strList);
     }
 
-    public static void setColor(SpannableString ss, int color ,  List<String> items) {
+    public static void setColor(@NotNull SpannableString ss, int color ,  @NotNull List<String> items) {
         String data = ss.toString();
         for (String item : items) {
             int i = data.indexOf(item);
@@ -133,14 +138,15 @@ public class Util {
         }
     }
 
-    public static void setColor(SpannableString ss, int color) {
+    public static void setColor(@NotNull SpannableString ss, int color) {
 
         ss.setSpan(new ForegroundColorSpan(color), 0,
                 ss.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public static DateTime addInterval(DateTime date, String interval) {
+    @Nullable
+    public static DateTime addInterval(@Nullable DateTime date, @NotNull String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
         Matcher m = p.matcher(interval.toLowerCase(Locale.getDefault()));
         int amount;
@@ -169,7 +175,8 @@ public class Util {
         return date;
     }
 
-    public static ArrayList<String> prefixItems(String prefix, ArrayList<String> items) {
+    @NotNull
+    public static ArrayList<String> prefixItems(String prefix, @NotNull ArrayList<String> items) {
         ArrayList<String> result = new ArrayList<String>();
         for (String item : items) {
             result.add(prefix + item);
@@ -177,7 +184,8 @@ public class Util {
         return result;
     }
 
-    public static ArrayList<String> getCheckedItems(ListView listView , boolean checked) {
+    @NotNull
+    public static ArrayList<String> getCheckedItems(@NotNull ListView listView , boolean checked) {
         SparseBooleanArray checks = listView.getCheckedItemPositions();
         ArrayList<String> items = new ArrayList<String>();
         for (int i = 0 ; i < checks.size() ; i++) {
@@ -191,7 +199,8 @@ public class Util {
         return items;
     }
 
-    public static AlertDialog createDeferDialog(final Activity act, int dateType, final boolean showNone,  final InputDialogListener listener) {
+    @NotNull
+    public static AlertDialog createDeferDialog(@NotNull final Activity act, int dateType, final boolean showNone,  @NotNull final InputDialogListener listener) {
         String[] keys = act.getResources().getStringArray(R.array.deferOptions);
         String today = "0d";
         String tomorrow = "1d";

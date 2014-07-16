@@ -1,5 +1,8 @@
 package nl.mpcjanssen.simpletask.task.token;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created Mark Janssen
  */
@@ -24,13 +27,14 @@ abstract public class Token {
         this.value = value;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return type + ":'" + value + "'";
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

@@ -42,6 +42,9 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 
 import nl.mpcjanssen.simpletask.remote.FileStore;
@@ -56,7 +59,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
 
+    @Nullable
     private FileStoreInterface mFileStore;
+    @Nullable
     private TaskCache m_taskCache;
     private BroadcastReceiver m_broadcastReceiver;
 
@@ -79,7 +84,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, @NotNull Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
                     // File change reload task cache
                     resetTaskCache();
@@ -194,7 +199,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 getResources().getBoolean(R.bool.is_landscape));
     }
 
-    public void setEditTextHint(EditText editText, int resid ) {
+    public void setEditTextHint(@NotNull EditText editText, int resid ) {
         if (m_prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
             editText.setHint(resid);
         }
@@ -214,6 +219,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
+    @NotNull
     public String getEol() {
         if( m_prefs.getBoolean(getString(R.string.line_breaks_pref_key),true)) {
             return "\r\n";
@@ -243,6 +249,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         updateUI();
     }
 
+    @NotNull
     public synchronized TaskCache getTaskCache() {
         if (m_taskCache==null) {
             m_taskCache = new TaskCache(this,
@@ -292,7 +299,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    public void setActionBarStyle(Window window) {
+    public void setActionBarStyle(@NotNull Window window) {
         if (getPrefs().getBoolean(getString(R.string.split_actionbar_key), true)) {
             window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
         }
@@ -323,7 +330,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NotNull String s) {
         if (s.equals(getString(R.string.widget_theme_pref_key)) ||
                 s.equals(getString(R.string.widget_extended_pref_key)) ||
                 s.equals(getString(R.string.widget_background_transparency)) ||
@@ -347,15 +354,16 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    private FileStoreInterface getFileStore() {
+    @NotNull
+    synchronized private FileStoreInterface getFileStore() {
         if (mFileStore==null) {
             mFileStore = new FileStore(this, getEol());
         }
         return mFileStore;
     }
 
-    public void showConfirmationDialog(Context cxt, int msgid,
-                                              DialogInterface.OnClickListener oklistener, int titleid) {
+    public void showConfirmationDialog(@NotNull Context cxt, int msgid,
+                                              @NotNull DialogInterface.OnClickListener oklistener, int titleid) {
         boolean show = getPrefs().getBoolean(getString(R.string.ui_show_confirmation_dialogs), true);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
@@ -374,7 +382,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public boolean isAuthenticated() {
         FileStoreInterface fs = getFileStore();
-        return fs != null && getFileStore().isAuthenticated();
+        return fs.isAuthenticated();
     }
 
     public void startLogin(LoginScreen loginScreen, int i) {
@@ -385,7 +393,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return getFileStore().getType();
     }
 
-    public void browseForNewFile(Activity act) {
+    public void browseForNewFile(@NotNull Activity act) {
         FileStoreInterface fileStore = getFileStore();
         if (fileStore == null) {
             Util.showToastShort(act, "can't access filesystem");
@@ -398,12 +406,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     @Override
                     public void fileSelected(String file) {
                         setTodoFile(file);
-                        mFileStore.invalidateCache();
+                        getFileStore().invalidateCache();
                         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
                     }
                 });
     }
 
+    @NotNull
     public String getDoneFileName() {
         return new File(getTodoFileName()).getParent()+"/done.txt";
     }

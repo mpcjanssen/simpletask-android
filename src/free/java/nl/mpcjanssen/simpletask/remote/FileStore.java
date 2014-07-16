@@ -20,6 +20,9 @@ import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxSyncStatus;
 import com.google.common.io.CharStreams;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,14 +44,19 @@ public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getName();
     private String mEol;
+    @Nullable
     private DbxFile.Listener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
     private DbxFileSystem mDbxFs;
+    @Nullable
     private DbxFileSystem.SyncStatusListener m_syncstatus;
+    @Nullable
     String activePath;
+    @Nullable
     private ArrayList<String> mLines;
     private boolean mReloadFile;
+    @Nullable
     DbxFile mDbxFile;
 
     public FileStore( Context ctx, String eol) {
@@ -67,6 +75,7 @@ public class FileStore implements FileStoreInterface {
         }
     }
 
+    @Nullable
     private DbxFileSystem getDbxFS () {
         if (mDbxFs!=null) {
             return mDbxFs;
@@ -82,6 +91,7 @@ public class FileStore implements FileStoreInterface {
         }
         return null;
     }
+    @NotNull
     static public String getDefaultPath() {
         return "/todo/todo.txt";
     }
@@ -91,6 +101,7 @@ public class FileStore implements FileStoreInterface {
         return mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount();
     }
 
+    @Nullable
     @Override
     public ArrayList<String> get(String path) {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
@@ -108,6 +119,7 @@ public class FileStore implements FileStoreInterface {
             startWatching(path);
         }
         new AsyncTask<String, Void, ArrayList<String>>() {
+            @Nullable
             @Override
             protected ArrayList<String> doInBackground(String... params) {
                 String path = params[0];
@@ -136,6 +148,7 @@ public class FileStore implements FileStoreInterface {
     }
 
 
+    @Nullable
     private synchronized DbxFile openDbFile(String path) {
         if (mDbxFile != null) {
             return mDbxFile;
@@ -167,7 +180,8 @@ public class FileStore implements FileStoreInterface {
         return mDbxFile;
     }
 
-    private synchronized ArrayList<String> syncGetLines(DbxFile dbFile) {
+    @NotNull
+    private synchronized ArrayList<String> syncGetLines(@Nullable DbxFile dbFile) {
         ArrayList<String> result = new ArrayList<String>();
         DbxFileSystem fs = getDbxFS();
         if (!isAuthenticated() || fs == null || dbFile == null) {
@@ -211,7 +225,7 @@ public class FileStore implements FileStoreInterface {
                 m_syncstatus = new DbxFileSystem.SyncStatusListener() {
 
                     @Override
-                    public void onSyncStatusChange(DbxFileSystem dbxFileSystem) {
+                    public void onSyncStatusChange(@NotNull DbxFileSystem dbxFileSystem) {
                         DbxSyncStatus status;
                         try {
                             status = dbxFileSystem.getSyncStatus();
@@ -236,7 +250,7 @@ public class FileStore implements FileStoreInterface {
             if (m_observer==null) {
                 m_observer = new DbxFile.Listener() {
                     @Override
-                    public void onFileChange(DbxFile dbxFile) {
+                    public void onFileChange(@NotNull DbxFile dbxFile) {
                         DbxFileStatus status;
                         try {
                             status = dbxFile.getSyncStatus();
@@ -288,6 +302,7 @@ public class FileStore implements FileStoreInterface {
     public void append(String path, final List<String> lines) {
         if (isAuthenticated() && getDbxFS() != null) {
             new AsyncTask<String, Void, Void>() {
+                @Nullable
                 @Override
                 protected Void doInBackground(String... params) {
                     String path = params[0];
@@ -311,8 +326,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(final String filename, final List<String> alOriginal, final List<String> alUpdated) {
+    public void update(final String filename, @NotNull final List<String> alOriginal, @NotNull final List<String> alUpdated) {
         new AsyncTask<String,Void, Void>() {
+            @Nullable
             @Override
             protected Void doInBackground(String... params) {
                 if (isAuthenticated() && getDbxFS() != null) {
@@ -343,6 +359,7 @@ public class FileStore implements FileStoreInterface {
     public void delete(final String mTodoName, final List<String> stringsToDelete) {
 
         new AsyncTask<String,Void, Void>() {
+            @Nullable
             @Override
             protected Void doInBackground(String... params) {
                 if (isAuthenticated() && getDbxFS() != null) {
@@ -371,6 +388,7 @@ public class FileStore implements FileStoreInterface {
     public void move(final String sourcePath, final String targetPath, final ArrayList<String> strings) {
 
         new AsyncTask<String,Void, Void>() {
+            @Nullable
             @Override
             protected Void doInBackground(String... params) {
                 DbxFileSystem fs  = getDbxFS();
@@ -426,6 +444,7 @@ public class FileStore implements FileStoreInterface {
         private String[] fileList;
         private DbxPath currentPath;
 
+        @NotNull
         private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
         private final Activity activity;
 
@@ -435,7 +454,7 @@ public class FileStore implements FileStoreInterface {
          * @param txtOnly   Show only txt files. Not used for Dropbox
          */
         @SuppressWarnings({"UnusedDeclaration"})
-        public FileDialog(Activity activity, DbxPath path, boolean txtOnly ) {
+        public FileDialog(Activity activity, @NotNull DbxPath path, boolean txtOnly ) {
             this.activity = activity;
             this.currentPath = path;
             loadFileList(path.getParent());
@@ -444,6 +463,7 @@ public class FileStore implements FileStoreInterface {
         /**
          * @return file dialog
          */
+        @Nullable
         public Dialog createFileDialog() {
             if (getDbxFS()==null) {
                 return null;
@@ -457,7 +477,7 @@ public class FileStore implements FileStoreInterface {
             builder.setTitle(title);
 
             builder.setItems(fileList, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(@NotNull DialogInterface dialog, int which) {
                     String fileChosen = fileList[which];
                     DbxPath chosenFile = getChosenFile(fileChosen);
                     try {
@@ -492,9 +512,9 @@ public class FileStore implements FileStoreInterface {
             }
         }
 
-        private void fireFileSelectedEvent(final DbxPath file) {
+        private void fireFileSelectedEvent(@NotNull final DbxPath file) {
             fileListenerList.fireEvent(new ListenerList.FireHandler<FileSelectedListener>() {
-                public void fireEvent(FileSelectedListener listener) {
+                public void fireEvent(@NotNull FileSelectedListener listener) {
                     listener.fileSelected(file.toString());
                 }
             });
@@ -523,7 +543,7 @@ public class FileStore implements FileStoreInterface {
             fileList = d.toArray(new String[d.size()]);
         }
 
-        private DbxPath getChosenFile(String fileChosen) {
+        private DbxPath getChosenFile(@NotNull String fileChosen) {
             if (fileChosen.equals(PARENT_DIR)) return currentPath.getParent();
             else return new DbxPath(currentPath, fileChosen);
         }

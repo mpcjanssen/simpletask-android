@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 
+import org.jetbrains.annotations.NotNull;
+
 // taken from v4 rev. 10 ResourceCursorAdapter.java
 
 /**
@@ -52,7 +54,7 @@ public abstract class ResourceDragSortCursorAdapter extends DragSortCursorAdapte
      *            define both the item views and the drop down views.
      */
     @Deprecated
-    public ResourceDragSortCursorAdapter(Context context, int layout, Cursor c) {
+    public ResourceDragSortCursorAdapter(@NotNull Context context, int layout, Cursor c) {
         super(context, c);
         mLayout = mDropDownLayout = layout;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -74,7 +76,7 @@ public abstract class ResourceDragSortCursorAdapter extends DragSortCursorAdapte
      *                    cursor whenever it changes so the most recent
      *                    data is always displayed.  Using true here is discouraged.
      */
-    public ResourceDragSortCursorAdapter(Context context, int layout, Cursor c, boolean autoRequery) {
+    public ResourceDragSortCursorAdapter(@NotNull Context context, int layout, Cursor c, boolean autoRequery) {
         super(context, c, autoRequery);
         mLayout = mDropDownLayout = layout;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -91,7 +93,7 @@ public abstract class ResourceDragSortCursorAdapter extends DragSortCursorAdapte
      * @param flags Flags used to determine the behavior of the adapter,
      * as per {@link CursorAdapter#CursorAdapter(Context, Cursor, int)}.
      */
-    public ResourceDragSortCursorAdapter(Context context, int layout, Cursor c, int flags) {
+    public ResourceDragSortCursorAdapter(@NotNull Context context, int layout, Cursor c, int flags) {
         super(context, c, flags);
         mLayout = mDropDownLayout = layout;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

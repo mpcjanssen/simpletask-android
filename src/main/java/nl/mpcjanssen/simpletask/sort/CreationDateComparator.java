@@ -2,6 +2,8 @@ package nl.mpcjanssen.simpletask.sort;
 
 import com.google.common.collect.Ordering;
 
+import org.jetbrains.annotations.NotNull;
+
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Strings;
@@ -9,7 +11,7 @@ import nl.mpcjanssen.simpletask.util.Strings;
 public class CreationDateComparator extends Ordering<Task> {
 
     @Override
-    public int compare(Task a, Task b) {
+    public int compare(@NotNull Task a, @NotNull Task b) {
         int result = 0;
         if (Strings.isEmptyOrNull(a.getCreateDate()) && Strings.isEmptyOrNull(b.getCreateDate())) {
             result = 0;

@@ -62,6 +62,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.URL;
@@ -98,6 +99,7 @@ public class Simpletask extends ThemedListActivity implements
     TaskAdapter m_adapter;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
+    @Nullable
     private ActionMode actionMode;
     // Drawer vars
     private ListView m_leftDrawerList;
@@ -127,6 +129,7 @@ public class Simpletask extends ThemedListActivity implements
         }
     }
 
+    @NotNull
     private List<Task> getCheckedTasks() {
         ArrayList<Task> checkedTasks = new ArrayList<Task>();
         SparseBooleanArray checkedItems = getListView()
@@ -146,6 +149,7 @@ public class Simpletask extends ThemedListActivity implements
         return checkedTasks;
     }
 
+    @NotNull
     private String selectedTasksAsString() {
         List<String> result = new ArrayList<String>();
         for (Task t : getCheckedTasks()) {
@@ -211,7 +215,7 @@ public class Simpletask extends ThemedListActivity implements
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, @NotNull Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_ACTION_ARCHIVE)) {
                     // archive
                     // refresh screen to remove completed tasks
@@ -357,7 +361,7 @@ public class Simpletask extends ThemedListActivity implements
         }
     }
 
-    private void setSelectedTask(int index, String selectedTask) {
+    private void setSelectedTask(int index, @NotNull String selectedTask) {
         Log.v(TAG, "Selected task: " + selectedTask);
         Task task = new Task(index, selectedTask);
         int position = m_adapter.getPosition(task);
@@ -439,7 +443,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NotNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
         if (m_app.isDarkActionbar()) {
             inflater.inflate(R.menu.main, menu);
@@ -486,6 +490,7 @@ public class Simpletask extends ThemedListActivity implements
         return true;
     }
 
+    @Nullable
     private Task getTaskAt(final int pos) {
         return m_adapter.getItem(pos);
     }
@@ -508,7 +513,7 @@ public class Simpletask extends ThemedListActivity implements
         startActivity(Intent.createChooser(shareIntent, "Share"));
     }
 
-    private void prioritizeTasks(final List<Task> tasks) {
+    private void prioritizeTasks(@NotNull final List<Task> tasks) {
         List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
         final String[] prioArr = strings.toArray(new String[strings.size()]);
 
@@ -516,7 +521,7 @@ public class Simpletask extends ThemedListActivity implements
         builder.setTitle(R.string.select_priority);
         builder.setSingleChoiceItems(prioArr, 0, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, final int which) {
+            public void onClick(@NotNull DialogInterface dialog, final int which) {
                 dialog.dismiss();
                 Priority prio = Priority.toPriority(prioArr[which]);
                 ArrayList<String> originalTasks = Util.tasksToString(tasks);
@@ -531,14 +536,14 @@ public class Simpletask extends ThemedListActivity implements
 
     }
 
-    private void completeTasks(List<Task> tasks) {
+    private void completeTasks(@NotNull List<Task> tasks) {
         getTaskBag().complete(tasks, m_app.hasRecurOriginalDates());
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
     }
 
-    private void undoCompleteTasks(List<Task> tasks) {
+    private void undoCompleteTasks(@NotNull List<Task> tasks) {
         getTaskBag().undoComplete(tasks);
     }
 
@@ -546,8 +551,12 @@ public class Simpletask extends ThemedListActivity implements
         final List<Task> tasksToDefer = tasks;
         Dialog d = Util.createDeferDialog(this, dateType, true, new Util.InputDialogListener() {
             @Override
-            public void onClick(String selected) {
-                if (selected != null && selected.equals("pick")) {
+            public void onClick(@Nullable String selected) {
+                if (selected==null) {
+                    Log.w(TAG, "Can't defer, selected is null. This should not happen");
+                    return;
+                }
+                if (selected.equals("pick")) {
                     final DateTime today = DateTime.today(TimeZone.getDefault());
                     DatePickerDialog dialog = new DatePickerDialog(Simpletask.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
@@ -652,6 +661,7 @@ public class Simpletask extends ThemedListActivity implements
         m_adapter.setFilteredTasks();
     }
 
+    @NotNull
     public ArrayList<ActiveFilter> getSavedFilter() {
         ArrayList<ActiveFilter> saved_filters = new ArrayList<ActiveFilter>();
         SharedPreferences saved_filter_ids = getSharedPreferences("filters", MODE_PRIVATE);
@@ -716,7 +726,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NotNull Intent intent) {
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             Intent currentIntent = getIntent();
@@ -753,7 +763,7 @@ public class Simpletask extends ThemedListActivity implements
         ArrayList<String> names = new ArrayList<String>();
         final ArrayList<ActiveFilter> filters = getSavedFilter();
         Collections.sort(filters, new Comparator<ActiveFilter>() {
-            public int compare(ActiveFilter f1, ActiveFilter f2) {
+            public int compare(@NotNull ActiveFilter f1, @NotNull ActiveFilter f2) {
                 return f1.getName().compareToIgnoreCase(f2.getName());
             }
         });
@@ -787,7 +797,7 @@ public class Simpletask extends ThemedListActivity implements
                 PopupMenu popupMenu = new PopupMenu(Simpletask.this, view);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem item) {
+                    public boolean onMenuItemClick(@NotNull MenuItem item) {
                         int menuid = item.getItemId();
                         switch (menuid) {
                             case R.id.menu_saved_filter_delete:
@@ -816,7 +826,7 @@ public class Simpletask extends ThemedListActivity implements
         });
     }
 
-    public void createFilterShortcut(ActiveFilter filter) {
+    public void createFilterShortcut(@NotNull ActiveFilter filter) {
         final Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
         Intent target = new Intent(Constants.INTENT_START_FILTER);
         filter.saveInIntent(target);
@@ -954,22 +964,24 @@ public class Simpletask extends ThemedListActivity implements
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter {
         public class VisibleLine {
+            @Nullable
             private Task task = null;
+            @Nullable
             private String title = null;
             private boolean header = false;
 
-            public VisibleLine(String title) {
+            public VisibleLine(@NotNull String title) {
                 this.title = title;
                 this.header = true;
             }
 
-            public VisibleLine(Task task) {
+            public VisibleLine(@NotNull Task task) {
                 this.task = task;
                 this.header = false;
             }
 
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(@Nullable Object obj) {
                 if (this == obj)
                     return true;
                 if (obj == null)
@@ -997,7 +1009,9 @@ public class Simpletask extends ThemedListActivity implements
             }
         }
 
+        @NotNull
         ArrayList<VisibleLine> visibleLines = new ArrayList<VisibleLine>();
+        @NotNull
         Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
         private LayoutInflater m_inflater;
 
@@ -1074,6 +1088,7 @@ public class Simpletask extends ThemedListActivity implements
             return visibleLines.size();
         }
 
+        @Nullable
         @Override
         public Task getItem(int position) {
             VisibleLine line = visibleLines.get(position);
@@ -1094,8 +1109,9 @@ public class Simpletask extends ThemedListActivity implements
             // Settings | File Templates.
         }
 
+        @Nullable
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, ViewGroup parent) {
             VisibleLine line = visibleLines.get(position);
             if (line.header) {
                 if (convertView == null) {
@@ -1293,7 +1309,7 @@ public class Simpletask extends ThemedListActivity implements
         Menu menu;
 
         @Override
-        public void onItemCheckedStateChanged(ActionMode mode, int position,
+        public void onItemCheckedStateChanged(@NotNull ActionMode mode, int position,
                                               long id, boolean checked) {
             Task t = getTaskAt(position);
             if(checked) {
@@ -1326,7 +1342,7 @@ public class Simpletask extends ThemedListActivity implements
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(ActionMode mode, @NotNull Menu menu) {
             MenuInflater inflater = getMenuInflater();
             if (m_app.isDarkActionbar()) {
                 inflater.inflate(R.menu.task_context, menu);
@@ -1349,7 +1365,7 @@ public class Simpletask extends ThemedListActivity implements
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(@NotNull ActionMode mode, @NotNull MenuItem item) {
             List<Task> checkedTasks = getCheckedTasks();
             int menuid = item.getItemId();
             Intent intent;
@@ -1458,7 +1474,7 @@ public class Simpletask extends ThemedListActivity implements
         }
     }
 
-    private void updateLists(final List<Task> checkedTasks) {
+    private void updateLists(@NotNull final List<Task> checkedTasks) {
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
         final TaskCache taskbag = getTaskBag();
@@ -1529,7 +1545,7 @@ public class Simpletask extends ThemedListActivity implements
         dialog.show();
     }
 
-    private void updateTags(final List<Task> checkedTasks) {
+    private void updateTags(@NotNull final List<Task> checkedTasks) {
         final ArrayList<String> projects = new ArrayList<String>();
         Set<String> selectedProjects = new HashSet<String>();
 

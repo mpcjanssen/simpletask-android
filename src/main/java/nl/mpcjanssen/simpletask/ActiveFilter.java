@@ -4,6 +4,9 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,11 +50,13 @@ public class ActiveFilter {
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
+    @NotNull
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
     private ArrayList<String> m_contexts = new ArrayList<String>();
     private ArrayList<String> m_projects = new ArrayList<String>();
     private ArrayList<String> m_sorts = new ArrayList<String>();
     private boolean m_projectsNot = false;
+    @Nullable
     private String m_search;
     private boolean m_priosNot = false;
     private boolean m_contextsNot = false;
@@ -76,7 +81,7 @@ public class ActiveFilter {
     public ActiveFilter() {
     }
 
-    public void initFromIntent(Intent intent) {
+    public void initFromIntent(@NotNull Intent intent) {
         String prios;
         String projects;
         String contexts;
@@ -118,7 +123,7 @@ public class ActiveFilter {
         }
     }
 
-    public void initFromPrefs(SharedPreferences prefs) {
+    public void initFromPrefs(@NotNull SharedPreferences prefs) {
         m_sorts = new ArrayList<String>();
         m_sorts.addAll(Arrays.asList(prefs.getString(INTENT_SORT_ORDER, "")
                 .split(INTENT_EXTRA_DELIMITERS)));
@@ -181,7 +186,7 @@ public class ActiveFilter {
         }
     }
 
-    public ArrayList<String> getSort(String[] defaultSort) {
+    public ArrayList<String> getSort(@Nullable String[] defaultSort) {
         if (m_sorts == null || m_sorts.size() == 0
                 || Strings.isEmptyOrNull(m_sorts.get(0))) {
             // Set a default sort
@@ -196,7 +201,7 @@ public class ActiveFilter {
         return m_sorts;
     }
 
-    public void saveInIntent(Intent target) {
+    public void saveInIntent(@Nullable Intent target) {
         if (target != null) {
             target.putExtra(INTENT_CONTEXTS_FILTER, Util.join(m_contexts, "\n"));
             target.putExtra(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
@@ -213,7 +218,7 @@ public class ActiveFilter {
         }
     }
 
-    public void saveInPrefs(SharedPreferences prefs) {
+    public void saveInPrefs(@Nullable SharedPreferences prefs) {
         if (prefs!=null) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(INTENT_TITLE, mName);
@@ -268,6 +273,7 @@ public class ActiveFilter {
         return m_projectsNot;
     }
 
+    @NotNull
     public ArrayList<Priority> getPriorities() {
         return m_prios;
     }
@@ -284,7 +290,8 @@ public class ActiveFilter {
         this.m_projects = projects;
     }
 
-    public ArrayList<Task> apply(ArrayList<Task> tasks) {
+    @NotNull
+    public ArrayList<Task> apply(@NotNull ArrayList<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
         for (Task t : tasks) {
@@ -357,6 +364,7 @@ public class ActiveFilter {
     }
 
     private class AndFilter {
+        @NotNull
         private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
 
         private AndFilter() {
@@ -376,7 +384,7 @@ public class ActiveFilter {
             }
         }
 
-        public void addFilter(TaskFilter filter) {
+        public void addFilter(@Nullable TaskFilter filter) {
             if (filter != null) {
                 filters.add(filter);
             }

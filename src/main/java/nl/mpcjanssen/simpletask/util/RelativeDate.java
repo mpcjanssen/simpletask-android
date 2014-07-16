@@ -7,6 +7,8 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
@@ -37,7 +39,7 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-    public static String computeRelativeDate(DateTime now, DateTime when) {
+    public static String computeRelativeDate(DateTime now, @NotNull DateTime when) {
         if (when.lteq(now)) {
             int period = when.numDaysFrom(now);
 
@@ -79,7 +81,7 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	public static String getRelativeDate(DateTime when) {
+	public static String getRelativeDate(@NotNull DateTime when) {
 
 		DateTime now = DateTime.today(TimeZone.getDefault());
 		return computeRelativeDate(now, when);

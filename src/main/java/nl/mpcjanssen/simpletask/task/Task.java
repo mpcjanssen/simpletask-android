@@ -26,6 +26,9 @@ import android.text.SpannableString;
 
 import com.google.common.base.Strings;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -81,33 +84,40 @@ public class Task implements Serializable, Comparable<Task> {
     private final static String COMPLETED_PREFIX = "x ";
 
     private long id = 0;
+    @NotNull
     private ArrayList<Token> mTokens = new ArrayList<Token>();
     private boolean mCompleted;
     private ArrayList<String> mLists;
     private ArrayList<String> mTags;
+    @Nullable
     private String mCompletionDate;
+    @Nullable
     private String mRelativeAge;
+    @Nullable
     private String mCreateDate;
+    @Nullable
     private Priority mPrio;
+    @Nullable
     private String mThresholdate;
+    @Nullable
     private String mDuedate;
     private boolean mIsHidden;
 
 
-    public Task(long id, String rawText, DateTime defaultPrependedDate) {
+    public Task(long id, @NotNull String rawText, DateTime defaultPrependedDate) {
         this.id = id;
         this.init(rawText, defaultPrependedDate);
     }
 
-    public Task(long id, String rawText) {
+    public Task(long id, @NotNull String rawText) {
         this(id, rawText, null);
     }
 
-    public void update(String rawText) {
+    public void update(@NotNull String rawText) {
         this.init(rawText, null);
     }
 
-    public void init(String rawText, DateTime defaultCreateDate) {
+    public void init(@NotNull String rawText, @Nullable DateTime defaultCreateDate) {
         parse(rawText);
         if (defaultCreateDate != null
             && getCreateDate() == null) {
@@ -115,15 +125,17 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
+    @NotNull
     public ArrayList<Token> getTokens() {
         return mTokens;
     }
 
+    @Nullable
     public DateTime getDueDate() {
         return stringToDateTime(mDuedate);
     }
 
-    public void setDueDate(DateTime dueDate) {
+    public void setDueDate(@NotNull DateTime dueDate) {
         setDueDate(dueDate.format(Constants.DATE_FORMAT));
     }
 
@@ -155,6 +167,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
+    @Nullable
     public DateTime stringToDateTime(String dateString) {
         DateTime date;
         if (DateTime.isParseable(dateString)) {
@@ -165,11 +178,12 @@ public class Task implements Serializable, Comparable<Task> {
         return date;
     }
 
+    @Nullable
     public DateTime getThresholdDate() {
         return stringToDateTime(mThresholdate);
     }
 
-    public void setThresholdDate(DateTime thresholdDate) {
+    public void setThresholdDate(@NotNull DateTime thresholdDate) {
         setThresholdDate(thresholdDate.format(Constants.DATE_FORMAT));
     }
 
@@ -205,7 +219,11 @@ public class Task implements Serializable, Comparable<Task> {
         return id;
     }
 
+    @NotNull
     public Priority getPriority() {
+        if (mPrio == null) {
+            return Priority.NONE;
+        }
         return mPrio;
     }
 
@@ -234,7 +252,7 @@ public class Task implements Serializable, Comparable<Task> {
         mRelativeAge = calculateRelativeAge(newCreateDate);
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(@NotNull Priority priority) {
         ArrayList<Token> temp = new ArrayList<Token>();
         if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED) {
             temp.add(mTokens.get(0));
@@ -261,6 +279,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
 
+    @Nullable
     public SpannableString getRelativeDueDate(int dueTodayColor, int overDueColor, boolean useColor) {
         DateTime dueDate = getDueDate();
         DateTime today = DateTime.today(TimeZone.getDefault());
@@ -278,6 +297,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
+    @Nullable
     public String getRelativeThresholdDate() {
         DateTime thresholdDate = getThresholdDate();
         if (thresholdDate!=null) {
@@ -295,6 +315,7 @@ public class Task implements Serializable, Comparable<Task> {
         return MailAddressParser.getInstance().parse(inFileFormat());
     }
 
+    @Nullable
     public String getRecurrencePattern() {
         Matcher matcher = RECURRENCE_PATTERN.matcher(inFileFormat());
         if (matcher.find()) {
@@ -308,6 +329,7 @@ public class Task implements Serializable, Comparable<Task> {
         return LinkParser.getInstance().parse(inFileFormat());
     }
 
+    @Nullable
     public String getCompletionDate() {
         return mCompletionDate;
     }
@@ -320,7 +342,8 @@ public class Task implements Serializable, Comparable<Task> {
         return !mIsHidden;
     }
 
-    public Task markComplete(DateTime date, boolean useOriginalDate) {
+    @Nullable
+    public Task markComplete(@NotNull DateTime date, boolean useOriginalDate) {
         Task newTask = null;
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
@@ -364,6 +387,7 @@ public class Task implements Serializable, Comparable<Task> {
         this.update("");
     }
 
+    @NotNull
     public String showParts(int flags) {
         StringBuilder sb = new StringBuilder();
         for (Token token: mTokens) {
@@ -385,12 +409,13 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
+    @NotNull
     public String inFileFormat() {
        return showParts(Token.SHOW_ALL);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -413,7 +438,7 @@ public class Task implements Serializable, Comparable<Task> {
         return result;
     }
 
-    public void initWithFilter(ActiveFilter mFilter) {
+    public void initWithFilter(@NotNull ActiveFilter mFilter) {
         if (!mFilter.getContextsNot() && mFilter.getContexts().size()==1) {
             addList(mFilter.getContexts().get(0));
         }
@@ -429,7 +454,7 @@ public class Task implements Serializable, Comparable<Task> {
      * @return comparison of the position of the tasks in the file
      */
     @Override
-    public int compareTo(Task another) {
+    public int compareTo(@NotNull Task another) {
         return ((Long) this.getId()).compareTo(another.getId());
     }
 
@@ -463,7 +488,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferThresholdDate(String deferString, String deferFromDate) {
+    public void deferThresholdDate(@NotNull String deferString, String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setThresholdDate(deferString);
             return;
@@ -485,7 +510,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferDueDate(String deferString, String deferFromDate) {
+    public void deferDueDate(@NotNull String deferString, String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setDueDate(deferString);
             return;
@@ -508,6 +533,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
 
+    @Nullable
     public String getThresholdDateString(String empty) {
         if (mThresholdate==null) {
             return empty;
@@ -516,7 +542,8 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public String getHeader(String sort, String empty) {
+    @NotNull
+    public String getHeader(@NotNull String sort, String empty) {
         if (sort.contains("by_context")) {
             if (mLists.size() > 0) {
                 return mLists.get(0);
@@ -537,6 +564,7 @@ public class Task implements Serializable, Comparable<Task> {
         return "";
     }
 
+    @NotNull
     public String getTextWithoutCompletionInfo() {
         int flags = Token.SHOW_ALL;
         flags = flags  & ~Token.COMPLETED;
@@ -545,7 +573,7 @@ public class Task implements Serializable, Comparable<Task> {
         return showParts(flags);
     }
 
-    private void parse(String text) {
+    private void parse(@NotNull String text) {
         mTokens.clear();
         mThresholdate = null;
         mDuedate = null;
@@ -660,18 +688,13 @@ public class Task implements Serializable, Comparable<Task> {
                 }
                 continue;
             }
-            if (!remaining.startsWith(" ")) {
-                String leading = "";
-                while (remaining.length()>0 && !remaining.startsWith(" ")) {
-                    leading = leading + remaining.substring(0,1);
-                    remaining = remaining.substring(1);
-                }
-                Token ws = new TEXT(leading);
-                mTokens.add(ws);
-                continue;
+            String leading = "";
+            while (remaining.length() > 0 && !remaining.startsWith(" ")) {
+                leading = leading + remaining.substring(0, 1);
+                remaining = remaining.substring(1);
             }
-
-
+            Token txt = new TEXT(leading);
+            mTokens.add(txt);
         }
         Collections.sort(mLists);
         Collections.sort(mTags);
@@ -696,14 +719,17 @@ public class Task implements Serializable, Comparable<Task> {
         return mTags;
     }
 
+    @Nullable
     public String getCreateDate() {
         return mCreateDate;
     }
 
+    @Nullable
     public String getRelativeAge() {
         return mRelativeAge;
     }
 
+    @NotNull
     public String getText() {
         StringBuilder sb = new StringBuilder();
         for (Token t : mTokens) {

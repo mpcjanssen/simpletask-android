@@ -2,12 +2,14 @@ package nl.mpcjanssen.simpletask.sort;
 
 import com.google.common.collect.Ordering;
 
+import org.jetbrains.annotations.NotNull;
+
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class ThresholdDateComparator extends Ordering<Task> {
 
     @Override
-    public int compare(Task a, Task b) {
+    public int compare(@NotNull Task a, @NotNull Task b) {
         int result;
         if (a.getThresholdDate() == null && b.getThresholdDate() == null) {
             result = 0;
