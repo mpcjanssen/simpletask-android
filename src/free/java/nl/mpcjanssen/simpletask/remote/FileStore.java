@@ -140,7 +140,9 @@ public class FileStore implements FileStoreInterface {
             @Override
             protected void onPostExecute(ArrayList<String> results) {
                 // Trigger update
-                notifyFileChanged();
+                if (results!=null) {
+                    notifyFileChanged();
+                }
                 mLines = results;
             }
         }.execute(path);
