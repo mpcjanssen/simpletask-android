@@ -23,7 +23,6 @@
 package nl.mpcjanssen.simpletask.task;
 
 import android.text.SpannableString;
-import android.util.Log;
 
 import com.google.common.base.Strings;
 
@@ -31,8 +30,6 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -41,7 +38,18 @@ import java.util.regex.Pattern;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.task.token.*;
+import nl.mpcjanssen.simpletask.task.token.COMPLETED;
+import nl.mpcjanssen.simpletask.task.token.COMPLETED_DATE;
+import nl.mpcjanssen.simpletask.task.token.CREATION_DATE;
+import nl.mpcjanssen.simpletask.task.token.DUE_DATE;
+import nl.mpcjanssen.simpletask.task.token.HIDDEN;
+import nl.mpcjanssen.simpletask.task.token.LIST;
+import nl.mpcjanssen.simpletask.task.token.PRIO;
+import nl.mpcjanssen.simpletask.task.token.TEXT;
+import nl.mpcjanssen.simpletask.task.token.THRESHOLD_DATE;
+import nl.mpcjanssen.simpletask.task.token.TTAG;
+import nl.mpcjanssen.simpletask.task.token.Token;
+import nl.mpcjanssen.simpletask.task.token.WHITE_SPACE;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Util;
 

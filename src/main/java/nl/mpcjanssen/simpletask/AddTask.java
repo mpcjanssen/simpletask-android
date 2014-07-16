@@ -67,7 +67,6 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;

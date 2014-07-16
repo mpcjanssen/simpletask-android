@@ -5,9 +5,6 @@ import android.app.Activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskCache;
-
 /**
  * Interface definition of the storage backend used.
  */

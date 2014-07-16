@@ -33,8 +33,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-
 
 public class LoginScreen extends Activity {
 
