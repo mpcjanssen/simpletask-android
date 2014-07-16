@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.0.6
+-----
+
+- More NPE fixes in widget code.
+
 5.0.5
 -----
 
