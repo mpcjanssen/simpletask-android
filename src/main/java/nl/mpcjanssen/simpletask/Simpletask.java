@@ -317,8 +317,7 @@ public class Simpletask extends ThemedListActivity implements
 
         // Initialize Adapter
         if (m_adapter == null) {
-            m_adapter = new TaskAdapter(this, R.layout.list_item,
-                    getLayoutInflater(), getListView());
+            m_adapter = new TaskAdapter(getLayoutInflater());
         }
         m_adapter.setFilteredTasks();
 
@@ -513,9 +512,7 @@ public class Simpletask extends ThemedListActivity implements
         builder.setSingleChoiceItems(prioArr, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, final int which) {
-
                 dialog.dismiss();
-                List<Task> tasks = getCheckedTasks();
                 Priority prio = Priority.toPriority(prioArr[which]);
                 ArrayList<String> originalTasks = Util.tasksToString(tasks);
                 for (Task t : tasks) {
@@ -625,7 +622,7 @@ public class Simpletask extends ThemedListActivity implements
 
     private void startAddTaskActivity(List<Task> tasks) {
         Log.v(TAG, "Starting addTask activity");
-        getTaskBag().setTasksToUpdate(getCheckedTasks());
+        getTaskBag().setTasksToUpdate(tasks);
         Intent intent = new Intent(this, AddTask.class);
         mFilter.saveInIntent(intent);
         startActivity(intent);
@@ -694,10 +691,7 @@ public class Simpletask extends ThemedListActivity implements
                             int newId = saved_filters.getInt("max_id", 1) + 1;
                             Set<String> filters = saved_filters.getStringSet("ids", new HashSet<String>());
                             filters.add("filter_" + newId);
-                            saved_filters.edit()
-                                    .putStringSet("ids", filters)
-                                    .putInt("max_id", newId)
-                                    .commit();
+                            saved_filters.edit().putStringSet("ids", filters).putInt("max_id", newId).apply();
                             SharedPreferences test_filter_prefs = getSharedPreferences("filter_" + newId, MODE_PRIVATE);
                             mFilter.setName(value);
                             mFilter.saveInPrefs(test_filter_prefs);
@@ -839,11 +833,11 @@ public class Simpletask extends ThemedListActivity implements
         HashSet<String> ids = new HashSet<String>();
         ids.addAll(saved_filters.getStringSet("ids", new HashSet<String>()));
         ids.remove(prefsName);
-        saved_filters.edit().putStringSet("ids", ids).commit();
+        saved_filters.edit().putStringSet("ids", ids).apply();
         SharedPreferences filter_prefs = getSharedPreferences(prefsName, MODE_PRIVATE);
         ActiveFilter deleted_filter = new ActiveFilter();
         deleted_filter.initFromPrefs(filter_prefs);
-        filter_prefs.edit().clear().commit();
+        filter_prefs.edit().clear().apply();
         File prefs_path = new File(this.getFilesDir(), "../shared_prefs");
         File prefs_xml = new File(prefs_path, prefsName + ".xml");
         final boolean deleted = prefs_xml.delete();
@@ -1002,8 +996,7 @@ public class Simpletask extends ThemedListActivity implements
         Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
         private LayoutInflater m_inflater;
 
-        public TaskAdapter(Context context, int textViewResourceId,
-                           LayoutInflater inflater, ListView view) {
+        public TaskAdapter(LayoutInflater inflater) {
             this.m_inflater = inflater;
         }
 
