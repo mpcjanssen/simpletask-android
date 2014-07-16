@@ -158,7 +158,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public void setTodoFile(String todo) {
-        m_prefs.edit().putString(getString(R.string.todo_file_key), todo).commit();
+        m_prefs.edit().putString(getString(R.string.todo_file_key), todo).apply();
     }
 
     public boolean isAutoArchive() {
@@ -207,7 +207,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void setAddTagsCloneTags(boolean bool) {
         m_prefs.edit()
                 .putBoolean(getString(R.string.clone_tags_key),bool)
-                .commit();
+                .apply();
     }
 
     public boolean isWordWrap() {
@@ -234,7 +234,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void setWordWrap(boolean bool) {
         m_prefs.edit()
                 .putBoolean(getString(R.string.word_wrap_key),bool)
-                .commit();
+                .apply();
     }
 
     public void resetTaskCache() {
@@ -374,10 +374,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public boolean isAuthenticated() {
         FileStoreInterface fs = getFileStore();
-        if (fs==null) {
-            return false;
-        }
-        return getFileStore().isAuthenticated();
+        return fs != null && getFileStore().isAuthenticated();
     }
 
     public void startLogin(LoginScreen loginScreen, int i) {

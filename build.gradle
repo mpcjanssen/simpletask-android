@@ -1,24 +1,18 @@
-
 buildscript {
     repositories {
         mavenCentral()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.1'
+        classpath 'com.android.tools.build:gradle:0.12.+'
     }
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-    }
-
-    repositories {
-        mavenCentral()
     }
 
     buildToolsVersion "20.0.0"
@@ -45,15 +39,6 @@ android {
         }
     }
 
-    dependencies {
-        freeCompile fileTree(dir: 'libs', include: '*.jar')
-        compile 'com.intellij:annotations:+@jar'
-        compile 'com.android.support:support-v4:20.0.0'
-        compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
-        compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-        compile 'com.google.guava:guava:17.0'
-    }
-
     signingConfigs {
         release {
             keyAlias = "mpcjanssen.nl"
@@ -66,6 +51,19 @@ android {
         }
     }
     check.dependsOn 'connectedAndroidTestUnitDebug'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    freeCompile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.intellij:annotations:+@jar'
+    compile 'com.android.support:support-v4:20.0.0'
+    compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
+    compile 'com.darwinsys:hirondelle-date4j:1.5.1'
+    compile 'com.google.guava:guava:17.0'
 }
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
