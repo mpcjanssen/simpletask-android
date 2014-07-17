@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+5.0.9
+-----
+
+- Don't update UI if loading the file from Dropbox failed. Fixes infinite loops and crashes when not authenticated.
+
+5.0.8
+-----
+
+- More NPE checks.
+
 5.0.7
 -----
 
