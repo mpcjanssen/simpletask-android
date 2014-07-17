@@ -104,6 +104,9 @@ public class FileStore implements FileStoreInterface {
     @Nullable
     @Override
     public ArrayList<String> get(String path) {
+        if (!isAuthenticated()) {
+            return new ArrayList<String>();
+        }
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
@@ -435,6 +438,10 @@ public class FileStore implements FileStoreInterface {
                         srcFile.writeString(Util.join(contents, mEol));
                     } catch (IOException e) {
                         e.printStackTrace();
+                        throw new TodoException("Dropbox", e);
+                    }  catch (DbxPath.InvalidPathException e) {
+                        e.printStackTrace();
+                        Log.w(TAG, "Invalid archive filename "  + targetPath);
                         throw new TodoException("Dropbox", e);
                     }
                 }

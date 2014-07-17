@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.1.0
+-----
+
+- Don't pass invalid filenames to Dropbox, should fix crash with archiving on Dropbox.
+- Don't try to update the widgets if we are not authenticated on Dropbox.
+
 5.0.9
 -----
 
