@@ -74,6 +74,9 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             Log.v(TAG, "application object was null");
             return;
         }
+        if (!application.isAuthenticated()) {
+            return;
+        }
         if (application.getTaskCache()==null)  {
             Log.v(TAG, "taskcache object was null");
             return;
