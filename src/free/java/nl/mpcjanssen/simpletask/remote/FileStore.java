@@ -101,12 +101,52 @@ public class FileStore implements FileStoreInterface {
         return mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount();
     }
 
+    private void initialSync(final DbxFileSystem fs) {
+        new AsyncTask<Void,Void,Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                Log.v(TAG, "Intial sync in background");
+                syncInProgress(true);
+                try {
+                    fs.syncNowAndWait();
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void v) {
+                Log.v(TAG, "Intial sync done");
+                notifyFileChanged();
+            }
+        }.execute();
+
+
+    }
+
     @Nullable
     @Override
     public ArrayList<String> get(String path) {
+        Log.v(TAG, "Getting contents of: " + path);
         if (!isAuthenticated()) {
+            Log.v(TAG, "Not authenticated");
             return new ArrayList<String>();
         }
+        DbxFileSystem fs = getDbxFS();
+        if (fs==null) {
+            return new ArrayList<String>();
+        }
+        try {
+            if (!fs.hasSynced()) {
+                initialSync(fs);
+                return new ArrayList<String>();
+            }
+        } catch (DbxException e) {
+            e.printStackTrace();
+            return new ArrayList<String>();
+        }
+
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
@@ -125,6 +165,7 @@ public class FileStore implements FileStoreInterface {
             @Nullable
             @Override
             protected ArrayList<String> doInBackground(String... params) {
+                syncInProgress(true);
                 String path = params[0];
                 activePath = path;
                 ArrayList<String> results;
@@ -144,6 +185,7 @@ public class FileStore implements FileStoreInterface {
             protected void onPostExecute(ArrayList<String> results) {
                 // Trigger update
                 if (results!=null) {
+                    syncInProgress(false);
                     notifyFileChanged();
                 }
                 mLines = results;
@@ -161,16 +203,6 @@ public class FileStore implements FileStoreInterface {
         DbxFileSystem fs = getDbxFS();
         if (fs == null) {
             return null;
-        }
-        try {
-            // Try intial sync to prevent creating new
-            // todo files because first sync wasn't done yet
-            if(!fs.hasSynced()) {
-                fs.awaitFirstSync();
-            }
-        } catch (DbxException e) {
-            Log.v(TAG, "Initial sync failed, are you connected?");
-            e.printStackTrace();
         }
         try {
             DbxPath dbPath = new DbxPath(path);
@@ -276,7 +308,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     private void notifyFileChanged() {
+        Log.v(TAG, "File changed: " + activePath);
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     @Override

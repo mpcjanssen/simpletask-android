@@ -105,25 +105,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return localBroadcastManager;
     }
 
-    public void startWatching() {
-        if (mFileStore!=null) {
-            mFileStore.startWatching(getTodoFileName());
-        }
-    }
 
     public void deauthenticate() {
         if (mFileStore!=null) {
             mFileStore.deauthenticate();
             mFileStore=null;
-        }
-    }
-
-    public void stopWatching() {
-        if (hasPushSync()) {
-            return;
-        }
-        if (mFileStore!=null) {
-            mFileStore.stopWatching(getTodoFileName());
         }
     }
 
@@ -250,7 +236,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public void resetTaskCache() {
         m_taskCache = null;
         getTaskCache();
-        updateUI();
     }
 
     @NotNull
@@ -261,18 +246,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     getTodoFileName());
         }
         return this.m_taskCache;
-    }
-
-    /**
-     * Update user interface
-     *
-     * Update the elements of the user interface. The listview with tasks will be updated
-     * if it is visible (by broadcasting an intent). All widgets will be updated as well.
-     * This method should be called whenever the TaskBag changes.
-     */
-    public void updateUI() {
-        Log.v(TAG, "XXX Updating UI");
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     public void fileUpdated() {

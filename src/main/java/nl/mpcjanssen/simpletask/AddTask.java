@@ -252,7 +252,6 @@ public class AddTask extends ThemedActivity {
             }
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
-        m_app.startWatching();
 
 
         ActionBar actionBar = getActionBar();
@@ -743,6 +742,5 @@ public class AddTask extends ThemedActivity {
     public void onDestroy() {
         super.onDestroy();
         localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
-        m_app.stopWatching();
     }
 }

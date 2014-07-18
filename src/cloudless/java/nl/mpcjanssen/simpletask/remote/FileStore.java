@@ -51,6 +51,7 @@ public class FileStore implements FileStoreInterface {
 
     private void notifyFileChanged() {
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     @Override
