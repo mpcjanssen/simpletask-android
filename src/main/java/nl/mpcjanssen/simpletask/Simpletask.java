@@ -199,7 +199,6 @@ public class Simpletask extends ThemedListActivity implements
         m_app.setActionBarStyle(getWindow());
         m_savedInstanceState = savedInstanceState;
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
         m_app.prefsChangeListener(this);
@@ -730,7 +729,6 @@ public class Simpletask extends ThemedListActivity implements
             Intent currentIntent = getIntent();
             currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY));
             setIntent(currentIntent);
-            handleIntent();
             options_menu.findItem(R.id.search).collapseActionView();
         } else if (intent.getExtras() != null) {
             // Only change intent if it actually contains a filter

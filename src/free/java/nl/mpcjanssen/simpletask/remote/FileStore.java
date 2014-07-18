@@ -58,11 +58,13 @@ public class FileStore implements FileStoreInterface {
     private boolean mReloadFile;
     @Nullable
     DbxFile mDbxFile;
+    private boolean m_isSyncing = true;
 
     public FileStore( Context ctx, String eol) {
         mCtx = ctx;
         mEol = eol;
         this.activePath = null;
+        syncInProgress(true);
         setDbxAcctMgr();
     }
 
@@ -102,12 +104,12 @@ public class FileStore implements FileStoreInterface {
     }
 
     private void initialSync(final DbxFileSystem fs) {
+        syncInProgress(true);
         new AsyncTask<Void,Void,Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
                 Log.v(TAG, "Intial sync in background");
-                syncInProgress(true);
                 try {
                     fs.syncNowAndWait();
                 } catch (DbxException e) {
@@ -127,7 +129,7 @@ public class FileStore implements FileStoreInterface {
 
     @Nullable
     @Override
-    public ArrayList<String> get(String path) {
+    public ArrayList<String> get(final String path) {
         Log.v(TAG, "Getting contents of: " + path);
         if (!isAuthenticated()) {
             Log.v(TAG, "Not authenticated");
@@ -146,7 +148,7 @@ public class FileStore implements FileStoreInterface {
             e.printStackTrace();
             return new ArrayList<String>();
         }
-
+        startWatching(path);
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
@@ -159,7 +161,6 @@ public class FileStore implements FileStoreInterface {
             mDbxFile.close();
             mDbxFile = null;
             stopWatching(activePath);
-            startWatching(path);
         }
         new AsyncTask<String, Void, ArrayList<String>>() {
             @Nullable
@@ -242,6 +243,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     private void syncInProgress(boolean inProgress) {
+        m_isSyncing = inProgress;
         LocalBroadcastManager bm = LocalBroadcastManager.getInstance(mCtx);
         if (inProgress) {
             bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
@@ -273,7 +275,6 @@ public class FileStore implements FileStoreInterface {
                                     mLines = null;
                                     get(path);
                                 }
-                                syncInProgress(false);
                             } else {
                                 syncInProgress(true);
                             }
@@ -301,6 +302,7 @@ public class FileStore implements FileStoreInterface {
                 };
                 DbxFile openFile = openDbFile(path);
                 if (openFile!=null) {
+                    Log.v(TAG, "Start watching: " + openFile.getPath().toString());
                     openFile.addListener(m_observer);
                 }
             }
@@ -494,6 +496,11 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void setEol(String eol) {
         mEol = eol;
+    }
+
+    @Override
+    public boolean isSyncing() {
+        return m_isSyncing;
     }
 
     @Override
