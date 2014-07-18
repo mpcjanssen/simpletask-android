@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+5.1.1
+-----
+
+- Possible fix for ANR when first syncing with Dropbox.
+- Fix issue with resetting filter when launching.
+- Improve Dropbox syncing feedback.
+
 5.1.0
 -----
 
