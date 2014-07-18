@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.1.2
+-----
+
+- Don't allow browsing for files if the initial Dropbix sync hasn't finished.
+
 5.1.1
 -----
 
