@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
@@ -550,6 +551,10 @@ public class FileStore implements FileStoreInterface {
             if (Strings.isEmptyOrNull(title)) {
                 title = "/";
             }
+            if (fileList==null) {
+                Toast.makeText(mCtx,"Awaiting first Dropbox Sync", Toast.LENGTH_LONG).show();
+                return null;
+            }
             builder.setTitle(title);
 
             builder.setItems(fileList, new DialogInterface.OnClickListener() {
@@ -568,7 +573,6 @@ public class FileStore implements FileStoreInterface {
                     }
                 }
             });
-
             dialog = builder.show();
             return dialog;
         }
@@ -601,12 +605,18 @@ public class FileStore implements FileStoreInterface {
             List<String> f = new ArrayList<String>();
             List<String> d = new ArrayList<String>();
             if (path != DbxPath.ROOT) d.add(PARENT_DIR);
+
             try {
-                for (DbxFileInfo fInfo : mDbxFs.listFolder(path)) {
-                    if (fInfo.isFolder) {
-                        d.add(fInfo.path.getName());
-                    } else {
-                        f.add (fInfo.path.getName());
+                if (!getDbxFS().hasSynced()) {
+                    fileList = null ;
+                    return;
+                } else {
+                    for (DbxFileInfo fInfo : mDbxFs.listFolder(path)) {
+                        if (fInfo.isFolder) {
+                            d.add(fInfo.path.getName());
+                        } else {
+                            f.add(fInfo.path.getName());
+                        }
                     }
                 }
             } catch (DbxException e) {
