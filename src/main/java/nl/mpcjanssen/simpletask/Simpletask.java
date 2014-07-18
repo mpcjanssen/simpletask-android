@@ -432,13 +432,11 @@ public class Simpletask extends ThemedListActivity implements
     protected void onResume() {
         super.onResume();
         handleIntent();
-        m_app.startWatching();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        m_app.stopWatching();
         finishActionmode();
     }
 
