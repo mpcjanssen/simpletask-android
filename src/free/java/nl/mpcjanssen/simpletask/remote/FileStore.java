@@ -111,7 +111,7 @@ public class FileStore implements FileStoreInterface {
             protected Void doInBackground(Void... params) {
                 Log.v(TAG, "Intial sync in background");
                 try {
-                    fs.syncNowAndWait();
+                    fs.awaitFirstSync();
                 } catch (DbxException e) {
                     e.printStackTrace();
                 }
@@ -274,6 +274,8 @@ public class FileStore implements FileStoreInterface {
                                 if (mReloadFile) {
                                     mLines = null;
                                     get(path);
+                                } else {
+                                    syncInProgress(false);
                                 }
                             } else {
                                 syncInProgress(true);
