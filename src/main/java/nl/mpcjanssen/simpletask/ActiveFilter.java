@@ -69,6 +69,11 @@ public class ActiveFilter {
         return mPrefName;
     }
 
+    @Override
+    public String toString() {
+        return Util.join(m_sorts,",");
+    }
+
     public void setPrefName(String mPrefName) {
         this.mPrefName = mPrefName;
     }

@@ -44,7 +44,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -265,6 +264,7 @@ public class Simpletask extends ThemedListActivity implements
 
     private void handleIntent() {
         if (!m_app.isAuthenticated()) {
+            Log.v(TAG, "handleIntent: not authenticated");
             startLogin();
             return;
         }
@@ -312,15 +312,15 @@ public class Simpletask extends ThemedListActivity implements
 
         // Show search or filter results
         Intent intent = getIntent();
-        if (intent.getExtras() != null) {
-            Log.v(TAG, "handleIntent launched with filter:" + intent.getExtras().keySet());
+        if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
             mFilter.initFromIntent(intent);
+            Log.v(TAG, "handleIntent: launched with filter" + mFilter);
+            Log.v(TAG, "handleIntent: saving filter in prefs");
+            mFilter.saveInPrefs(TodoApplication.getPrefs());
         } else {
             // Set previous filters and sort
             Log.v(TAG, "handleIntent: from m_prefs state");
             mFilter.initFromPrefs(TodoApplication.getPrefs());
-
-
         }
 
         // Initialize Adapter
