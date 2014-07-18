@@ -1,10 +1,16 @@
 ﻿Changelog
 =========
 
+5.1.3
+-----
+
+- Prevent tight loop if initial Dropbox sync fails.
+- Improve logging in case of initial Dropbox sync failure.
+
 5.1.2
 -----
 
-- Don't allow browsing for files if the initial Dropbix sync hasn't finished.
+- Don't allow browsing for files if the initial Dropbox sync hasn't finished.
 
 5.1.1
 -----

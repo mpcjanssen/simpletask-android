@@ -106,22 +106,28 @@ public class FileStore implements FileStoreInterface {
 
     private void initialSync(final DbxFileSystem fs) {
         syncInProgress(true);
-        new AsyncTask<Void,Void,Void>() {
+        new AsyncTask<Void,Void,Boolean>() {
 
             @Override
-            protected Void doInBackground(Void... params) {
-                Log.v(TAG, "Intial sync in background");
+            protected Boolean doInBackground(Void... params) {
+                Log.v(TAG, "Initial sync in background");
                 try {
                     fs.awaitFirstSync();
                 } catch (DbxException e) {
+                    Log.e(TAG,"First sync failed: " + e.getCause());
                     e.printStackTrace();
+                    return Boolean.FALSE;
                 }
-                return null;
+                return Boolean.TRUE;
             }
             @Override
-            protected void onPostExecute(Void v) {
-                Log.v(TAG, "Intial sync done");
-                notifyFileChanged();
+            protected void onPostExecute(Boolean success) {
+                Log.v(TAG, "Intial sync status" + success);
+                if (success) {
+                    notifyFileChanged();
+                } else {
+                    notifyFileChanged();
+                }
             }
         }.execute();
 
