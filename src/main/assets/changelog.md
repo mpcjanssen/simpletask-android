@@ -1,7 +1,7 @@
 ﻿Changelog
 =========
 
-5.1.3
+5.1.4
 -----
 
 - Prevent tight loop if initial Dropbox sync fails.

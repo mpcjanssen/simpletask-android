@@ -125,8 +125,6 @@ public class FileStore implements FileStoreInterface {
                 Log.v(TAG, "Intial sync status" + success);
                 if (success) {
                     notifyFileChanged();
-                } else {
-                    notifyFileChanged();
                 }
             }
         }.execute();
