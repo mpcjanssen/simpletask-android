@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import java.lang.Override;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,10 @@ public class FileStore implements FileStoreInterface {
 
     }
 
+    @Override
+    public boolean isSyncing() {
+        return false;
+    }
 
     @Override
     public boolean isAuthenticated() {
