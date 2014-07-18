@@ -152,6 +152,7 @@ public class FileStore implements FileStoreInterface {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;
         }
+        syncInProgress(true);
 
         // Clear and reload cache
         mLines = null;
@@ -274,9 +275,8 @@ public class FileStore implements FileStoreInterface {
                                 if (mReloadFile) {
                                     mLines = null;
                                     get(path);
-                                } else {
-                                    syncInProgress(false);
                                 }
+                                syncInProgress(false);
                             } else {
                                 syncInProgress(true);
                             }
