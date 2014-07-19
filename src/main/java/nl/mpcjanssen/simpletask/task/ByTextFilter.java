@@ -50,7 +50,7 @@ public class ByTextFilter implements TaskFilter {
 
     @Override
     public boolean apply(@NotNull Task input) {
-        String taskText = caseSensitive ? input.getText() : input.getText()
+        String taskText = caseSensitive ? input.inFileFormat() : input.inFileFormat()
                 .toUpperCase(Locale.getDefault());
 
         for (String part : parts) {
