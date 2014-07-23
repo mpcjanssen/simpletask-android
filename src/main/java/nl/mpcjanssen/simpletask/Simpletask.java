@@ -727,6 +727,21 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        if (m_drawerLayout!=null) {
+            if (m_drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                m_drawerLayout.closeDrawer(Gravity.LEFT);
+                return;
+            }
+            if (m_drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onNewIntent(@NotNull Intent intent) {
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
