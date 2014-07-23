@@ -514,9 +514,13 @@ public class Simpletask extends ThemedListActivity implements
         List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
         final String[] prioArr = strings.toArray(new String[strings.size()]);
 
+        int prioIdx = 0;
+        if (tasks.size()==1) {
+            prioIdx = strings.indexOf(tasks.get(0).getPriority().getCode());
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_priority);
-        builder.setSingleChoiceItems(prioArr, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(prioArr, prioIdx, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(@NotNull DialogInterface dialog, final int which) {
                 dialog.dismiss();
