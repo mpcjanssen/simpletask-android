@@ -4,6 +4,7 @@
 5.1.6
 -----
 
+- Back will close the left navigation drawer if it's open. Fixes #100.
 - Select current priority when changing a single task's priority.
 
 5.1.5
