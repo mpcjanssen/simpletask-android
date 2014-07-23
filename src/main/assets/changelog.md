@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.1.5
+-----
+
+- Consider complete task inFileFormat when text searching. Fixes #98.
+
 5.1.4
 -----
 
