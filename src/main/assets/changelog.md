@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.1.6
+-----
+
+- Select current priority when changing a single task's priority.
+
 5.1.5
 -----
 
