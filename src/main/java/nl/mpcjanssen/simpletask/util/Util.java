@@ -170,7 +170,7 @@ public class Util {
         } else if (type.equals("m")) {
             date = date.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
         } else if (type.equals("y")) {
-            date = date.plus(0, 0, amount, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
+            date = date.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
         }
         return date;
     }
