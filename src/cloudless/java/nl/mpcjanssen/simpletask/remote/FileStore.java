@@ -344,4 +344,9 @@ public class FileStore implements FileStoreInterface {
             else return new File(currentPath, fileChosen);
         }
     }
+
+    @Override
+    public boolean initialSyncDone() {
+        return true;
+    }
 }
