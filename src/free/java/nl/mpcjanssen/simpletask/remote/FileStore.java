@@ -638,4 +638,17 @@ public class FileStore implements FileStoreInterface {
             else return new DbxPath(currentPath, fileChosen);
         }
     }
+
+    @Override
+    public boolean initialSyncDone() {
+        if (mDbxFs!=null) {
+            try {
+                return mDbxFs.hasSynced();
+            } catch (DbxException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
 }
