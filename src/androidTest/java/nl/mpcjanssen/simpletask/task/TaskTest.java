@@ -164,6 +164,10 @@ public class TaskTest extends TestCase {
         Task dt5 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
         assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:2d", dt4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt5.inFileFormat());
+
+        String text = "Test due:2014-07-05 rec:1y";
+        Task task = new Task(0,text).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
     }
 
     public void testDue() {
