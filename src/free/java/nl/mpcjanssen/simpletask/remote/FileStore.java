@@ -377,7 +377,7 @@ public class FileStore implements FileStoreInterface {
                     }
                     mLines.addAll(lines);
                 }
-            }.execute(path, mEol + Util.join(lines, mEol).trim());
+            }.execute(path, Util.join(lines, mEol).trim() + mEol);
         }
     }
 
@@ -403,7 +403,7 @@ public class FileStore implements FileStoreInterface {
                                 contents.add(index,alUpdated.get(i));
                             }
                         }
-                        openFile.writeString(Util.join(contents, mEol));
+                        openFile.writeString(Util.join(contents, mEol)+mEol);
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
@@ -432,7 +432,7 @@ public class FileStore implements FileStoreInterface {
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(dbFile));
                         contents.removeAll(stringsToDelete);
-                        dbFile.writeString(Util.join(contents, mEol));
+                        dbFile.writeString(Util.join(contents, mEol)+mEol);
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
@@ -469,7 +469,7 @@ public class FileStore implements FileStoreInterface {
                             destFile = fs.create(dbPath);
                         }
                         ArrayList<String> contents = new ArrayList<String>();
-                        destFile.appendString(mEol+Util.join(strings, mEol));
+                        destFile.appendString(Util.join(strings, mEol)+mEol);
                         destFile.close();
                         DbxFile srcFile = openDbFile(sourcePath);
                         if (srcFile==null) {
@@ -478,7 +478,7 @@ public class FileStore implements FileStoreInterface {
                         }
                         contents.addAll(syncGetLines(srcFile));
                         contents.removeAll(strings);
-                        srcFile.writeString(Util.join(contents, mEol));
+                        srcFile.writeString(Util.join(contents, mEol)+mEol);
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw new TodoException("Dropbox", e);
