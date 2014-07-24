@@ -6,6 +6,8 @@
 
 - Back will close the left navigation drawer if it's open. Fixes #100.
 - Select current priority when changing a single task's priority.
+- Ensure todo file always ends with an EOL. Possible fix for #103.
+- Save incremental search and fix search submit. Fixes #104.
 
 5.1.5
 -----
