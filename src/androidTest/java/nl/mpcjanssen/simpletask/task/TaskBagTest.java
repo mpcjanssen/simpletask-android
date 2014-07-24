@@ -130,6 +130,11 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
+        public boolean initialSyncDone() {
+            return true;
+        }
+
+        @Override
         public void invalidateCache() {
 
         }

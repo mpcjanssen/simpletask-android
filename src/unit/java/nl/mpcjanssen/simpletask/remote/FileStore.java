@@ -94,6 +94,11 @@ public class FileStore implements FileStoreInterface {
 
     }
 
+    @Override
+    public boolean initialSyncDone() {
+        return true;
+    }
+
     public static String getDefaultPath() {
         return null;
     }
