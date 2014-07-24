@@ -257,6 +257,9 @@ public class ActiveFilter {
     public void setSearch(String search) {
         this.m_search = search;
     }
+    public String getSearch() {
+        return this.m_search;
+    }
 
     public ArrayList<String> getContexts() {
         return m_contexts;

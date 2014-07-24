@@ -31,6 +31,7 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -116,6 +117,7 @@ public class Simpletask extends ThemedListActivity implements
     public boolean onSearchRequested() {
         MenuItem searchMenuItem = options_menu.findItem(R.id.search);
         searchMenuItem.expandActionView();
+
         return true;
     }
 
@@ -440,7 +442,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(@NotNull Menu menu) {
+    public boolean onCreateOptionsMenu(@NotNull final Menu menu) {
         MenuInflater inflater = getMenuInflater();
         if (m_app.isDarkActionbar()) {
             inflater.inflate(R.menu.main, menu);
@@ -452,24 +454,32 @@ public class Simpletask extends ThemedListActivity implements
                 .getActionView();
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
-        // Do not iconify the widget;
-        // expand it by default
+
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            public boolean m_ignoreSearchChangeCallback;
+
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                // Stupid searchview code will call onQueryTextChange callback
+                // When the actionView collapse and the textview is reset
+                // ugly global hack around this
+                m_ignoreSearchChangeCallback = true;
+                menu.findItem(R.id.search).collapseActionView();
+                m_ignoreSearchChangeCallback = false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mFilter.setSearch(newText);
-                m_adapter.setFilteredTasks();
+                if (!m_ignoreSearchChangeCallback) {
+                    mFilter.setSearch(newText);
+                    mFilter.saveInPrefs(TodoApplication.getPrefs());
+                    m_adapter.setFilteredTasks();
+                }
                 return true;
             }
         });
-
-
         this.options_menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
@@ -655,9 +665,6 @@ public class Simpletask extends ThemedListActivity implements
     public void onClearClick(View v) {
         // Collapse the actionview if we are searching
         Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            options_menu.findItem(R.id.search).collapseActionView();
-        }
         clearFilter();
         m_adapter.setFilteredTasks();
     }
