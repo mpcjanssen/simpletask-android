@@ -13,6 +13,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -107,6 +108,7 @@ public class Simpletask extends ThemedListActivity implements
     private DrawerLayout m_drawerLayout;
     private ActionBarDrawerToggle m_drawerToggle;
     private Bundle m_savedInstanceState;
+    private ProgressDialog m_sync_dialog;
 
     private void showHelp() {
         Intent i = new Intent(this, HelpScreen.class);
@@ -270,6 +272,16 @@ public class Simpletask extends ThemedListActivity implements
             startLogin();
             return;
         }
+        if (!m_app.initialSyncDone()) {
+            m_sync_dialog = new ProgressDialog(this,m_app.getActiveTheme());
+            m_sync_dialog.setIndeterminate(true);
+            m_sync_dialog.setMessage("Initial Dropbox sync in progress, please wait....");
+            m_sync_dialog.setCancelable(false);
+            m_sync_dialog.show();
+        } else if (m_sync_dialog!=null) {
+            m_sync_dialog.cancel();
+        }
+
         mFilter = new ActiveFilter();
 
         m_leftDrawerList = (ListView) findViewById(R.id.left_drawer);

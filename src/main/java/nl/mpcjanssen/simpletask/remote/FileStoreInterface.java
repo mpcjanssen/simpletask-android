@@ -26,7 +26,7 @@ public interface FileStoreInterface {
     void move(String sourcePath, String targetPath, ArrayList<String> strings);
     void setEol(String eol);
     boolean isSyncing();
-
+    public boolean initialSyncDone();
     void invalidateCache();
 
     public interface FileSelectedListener {
