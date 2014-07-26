@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+5.1.7
+-----
+
+- Updated German translations.
+- Fix rec:1y recurrence. Fixes #108.
+- Better initial Dropbox sync feedback.
+
 5.1.6
 -----
 
