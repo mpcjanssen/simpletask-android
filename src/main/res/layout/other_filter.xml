@@ -32,4 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter_show_tags" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Javascript"/>
+    <EditText
+        android:id="@+id/txt_javascript"
+        android:layout_width="match_parent"
+        android:inputType="textMultiLine"
+        android:gravity="top|left"
+        android:layout_height="fill_parent" />
 </LinearLayout>
