@@ -199,4 +199,14 @@
             android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
         </Preference>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Experimental"
+        android:summary="Enable experimental features"
+        android:key="experimental">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/use_rhino"
+            android:summary="Enable the embedded Rhino Javascript interpreter for advanced task filtering."
+            android:title="Use Rhino" />
+    </PreferenceCategory>
 </PreferenceScreen>

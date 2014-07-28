@@ -61,6 +61,7 @@ public class FilterOtherFragment extends Fragment {
         Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
+        TodoApplication app  = (TodoApplication) getActivity().getApplication();
         actionbar = getActivity().getActionBar();
         Log.v(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
@@ -71,6 +72,9 @@ public class FilterOtherFragment extends Fragment {
         cbHideLists = (CheckBox) layout.findViewById(R.id.cb_show_lists);
         cbHideTags = (CheckBox) layout.findViewById(R.id.cb_show_tags);
         txtJavaScript = (EditText) layout.findViewById(R.id.txt_javascript);
+        if (app.useRhino()) {
+            txtJavaScript.setVisibility(View.VISIBLE);
+        }
 
         if (savedInstanceState != null) {
             cbHideCompleted.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));

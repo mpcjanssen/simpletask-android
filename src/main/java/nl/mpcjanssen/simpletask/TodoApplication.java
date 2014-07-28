@@ -217,6 +217,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
+    public boolean useRhino() {
+        return m_prefs.getBoolean(getString(R.string.use_rhino),false);
+    }
+
     @NotNull
     public String getEol() {
         if( m_prefs.getBoolean(getString(R.string.line_breaks_pref_key),true)) {

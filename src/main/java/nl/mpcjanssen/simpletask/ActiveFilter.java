@@ -324,12 +324,13 @@ public class ActiveFilter {
         // Disable JVM on the fly, we are on Dalvik/Art
         context.setOptimizationLevel(-1);
         ScriptableObject scope = context.initStandardObjects();
-        Script script;
+        Script script = null;
         if  (!Strings.isEmptyOrNull(m_javascript)) {
-            script = context.compileString(m_javascript, "javascript", 1, null);
-        } else {
-            script = null;
-
+            try {
+                script = context.compileString(m_javascript, "javascript", 1, null);
+            } catch (EvaluatorException e) {
+                Log.i(TAG, "Failed to compile javascript: " + e.getMessage());
+            }
         }
 
         try {
