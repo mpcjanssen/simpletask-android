@@ -3,9 +3,14 @@ package nl.mpcjanssen.simpletask;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.ScriptableObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +31,7 @@ import nl.mpcjanssen.simpletask.util.Util;
  * Active filter, has methods for serialization in several formats
  */
 public class ActiveFilter {
+    final static String TAG = ActiveFilter.class.getSimpleName();
     static public final String NORMAL_SORT = "+";
     static public final String REVERSED_SORT = "-";
     static public final String SORT_SEPARATOR = "!";
@@ -48,6 +54,8 @@ public class ActiveFilter {
     public final static String INTENT_HIDE_LISTS_FILTER = "HIDELISTS";
     public final static String INTENT_HIDE_TAGS_FILTER =  "HIDETAGS";
 
+    public final static String INTENT_JAVASCRIPT_FILTER =  "JAVASCRIPT";
+
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
     @NotNull
@@ -64,6 +72,7 @@ public class ActiveFilter {
     private boolean m_hideFuture = false;
     private boolean m_hideLists = false;
     private boolean m_hideTags = false;
+    private String m_javascript = null;
 
     public String getPrefName() {
         return mPrefName;
@@ -96,6 +105,9 @@ public class ActiveFilter {
         projects = intent.getStringExtra(INTENT_PROJECTS_FILTER);
         contexts = intent.getStringExtra(INTENT_CONTEXTS_FILTER);
         sorts = intent.getStringExtra(INTENT_SORT_ORDER);
+
+        m_javascript = intent.getStringExtra(INTENT_JAVASCRIPT_FILTER);
+
         m_priosNot = intent.getBooleanExtra(
                 INTENT_PRIORITIES_FILTER_NOT, false);
         m_projectsNot = intent.getBooleanExtra(
@@ -147,6 +159,7 @@ public class ActiveFilter {
         m_hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
         m_search = prefs.getString(SearchManager.QUERY, null);
+        m_javascript = prefs.getString(INTENT_JAVASCRIPT_FILTER, null);
     }
 
     public boolean hasFilter() {
@@ -219,6 +232,7 @@ public class ActiveFilter {
             target.putExtra(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
             target.putExtra(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             target.putExtra(INTENT_HIDE_TAGS_FILTER, m_hideTags);
+            target.putExtra(INTENT_JAVASCRIPT_FILTER, m_javascript);
             target.putExtra(SearchManager.QUERY, m_search);
         }
     }
@@ -239,6 +253,7 @@ public class ActiveFilter {
             editor.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
             editor.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             editor.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
+            editor.putString(INTENT_JAVASCRIPT_FILTER, m_javascript);
             editor.putString(SearchManager.QUERY, m_search);
             editor.apply();
         }
@@ -252,6 +267,7 @@ public class ActiveFilter {
         m_search = null;
         m_priosNot = false;
         m_contextsNot = false;
+        m_javascript = null;
     }
 
     public void setSearch(String search) {
@@ -302,16 +318,52 @@ public class ActiveFilter {
     public ArrayList<Task> apply(@NotNull ArrayList<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
-        for (Task t : tasks) {
-            if (t.isCompleted() && this.getHideCompleted()) {
-                continue;
+        Context context = Context.enter();
+        // Disable JVM on the fly, we are on Dalvik/Art
+        context.setOptimizationLevel(-1);
+        ScriptableObject scope = context.initStandardObjects();
+        ErrorReporter err = new ErrorReporter() {
+            @Override
+            public void warning(String s, String s2, int i, String s3, int i2) {
+
             }
-            if (t.inFuture() && this.getHideFuture()) {
-                continue;
+
+            @Override
+            public void error(String s, String s2, int i, String s3, int i2) {
+                Log.v(TAG, "Java script error " + s);
             }
-            if (filter.apply(t)) {
+
+            @Override
+            public EvaluatorException runtimeError(String s, String s2, int i, String s3, int i2) {
+                Log.v(TAG, "Java script error " + s);
+                return null;
+            }
+        };
+        context.setErrorReporter(err);
+        try {
+            for (Task t : tasks) {
+                if (t.isCompleted() && this.getHideCompleted()) {
+                    continue;
+                }
+                if (t.inFuture() && this.getHideFuture()) {
+                    continue;
+                }
+                if (!filter.apply(t)) {
+                    continue;
+                }
+
+
+                scope.defineProperty("task", t.inFileFormat(), ScriptableObject.CONST);
+                Object result = context.evaluateString(scope, m_javascript, "<CMD>", 1, null);
+                Log.v(TAG, context.toString(result));
+
                 matched.add(t);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.v(TAG, "Javascript execution failed ");
+        } finally {
+            Context.exit();
         }
         return matched;
     }
@@ -369,6 +421,14 @@ public class ActiveFilter {
 
     public void setHideTags(boolean hide) {
         this.m_hideTags = hide;
+    }
+
+    public String getJavascript() {
+        return this.m_javascript;
+    }
+
+    public void setJavascript(String script) {
+        this.m_javascript = script ;
     }
 
     private class AndFilter {

@@ -13,6 +13,7 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'LICENSE.txt'
     }
 
     buildToolsVersion "20.0.0"
@@ -64,6 +65,7 @@ dependencies {
     compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:17.0'
+    compile 'org.mozilla:rhino:1.7R4'
 }
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle

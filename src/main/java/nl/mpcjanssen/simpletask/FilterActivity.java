@@ -130,6 +130,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.getHideFuture());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, mFilter.getHideLists());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.getHideTags());
+        arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, mFilter.getJavascript());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.filter_show_prompt))
                 .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class, arguments))
@@ -211,6 +212,7 @@ public class FilterActivity extends ThemedActivity {
         mFilter.setHideFuture(getHideFuture());
         mFilter.setHideLists(getHideLists());
         mFilter.setHideTags(getHideTags());
+        mFilter.setJavascript(getJavascript());
 
         items = getSelectedSort();
         if (items!=null) {
@@ -283,6 +285,17 @@ public class FilterActivity extends ThemedActivity {
             return mFilter.getHideTags();
         } else {
             return fr.getHideTags();
+        }
+    }
+
+    private String getJavascript() {
+        FilterOtherFragment fr;
+        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            return mFilter.getJavascript();
+        } else {
+            return fr.getJavascript();
         }
     }
 
