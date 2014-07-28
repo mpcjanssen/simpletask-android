@@ -118,4 +118,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_empty_lists">show_empty_lists</string>
     <string name="show_txt_only">show_txt_only</string>
     <string name="ui_complete_checkbox">ui_complete_checkbox</string>
+    <string name="use_rhino">use_rhino</string>
 </resources>
