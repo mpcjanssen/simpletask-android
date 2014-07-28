@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.1.8
+-----
+
+- Finish files with EOL on Cloudless. Possible fix for #108
+
 5.1.7
 -----
 
