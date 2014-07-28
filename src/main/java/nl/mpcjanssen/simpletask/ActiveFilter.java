@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptableObject;
 
 import java.util.ArrayList;
@@ -323,24 +324,14 @@ public class ActiveFilter {
         // Disable JVM on the fly, we are on Dalvik/Art
         context.setOptimizationLevel(-1);
         ScriptableObject scope = context.initStandardObjects();
-        ErrorReporter err = new ErrorReporter() {
-            @Override
-            public void warning(String s, String s2, int i, String s3, int i2) {
+        Script script;
+        if  (!Strings.isEmptyOrNull(m_javascript)) {
+            script = context.compileString(m_javascript, "javascript", 1, null);
+        } else {
+            script = null;
 
-            }
+        }
 
-            @Override
-            public void error(String s, String s2, int i, String s3, int i2) {
-                Log.v(TAG, "Java script error " + s);
-            }
-
-            @Override
-            public EvaluatorException runtimeError(String s, String s2, int i, String s3, int i2) {
-                Log.v(TAG, "Java script error " + s);
-                return null;
-            }
-        };
-        context.setErrorReporter(err);
         try {
             for (Task t : tasks) {
                 if (t.isCompleted() && this.getHideCompleted()) {
@@ -352,7 +343,7 @@ public class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue;
                 }
-                if  (!Strings.isEmptyOrNull(m_javascript)) {
+                if  (script!=null) {
                     scope.defineProperty("task", t.inFileFormat(), 0);
                     if (t.getDueDate()!=null) {
                         scope.defineProperty("due", t.getDueDate().getMilliseconds(TimeZone.getDefault()), 0);
@@ -361,7 +352,7 @@ public class ActiveFilter {
                     }
                     scope.defineProperty("tags", Context.javaToJS(t.getTags(), scope), 0);
                     scope.defineProperty("lists", Context.javaToJS(t.getLists(),scope), 0);
-                    Object result = context.evaluateString(scope, m_javascript, "<CMD>", 1, null);
+                    Object result = script.exec(context, scope);
                     Log.v(TAG, "Javascript result: " + Context.toString(result));
                     if (context.toBoolean(result)) {
                         matched.add(t);
