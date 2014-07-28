@@ -109,7 +109,7 @@ public class FileStore implements FileStoreInterface {
 
             @Override
             protected Void doInBackground(Void... params) {
-                append(path, mEol + Util.join(lines, mEol));
+                append(path, Util.join(lines, mEol)+mEol);
                 return null;
             }
 
@@ -192,7 +192,7 @@ public class FileStore implements FileStoreInterface {
                             lines.add(index,updated.get(i));
                         }
                     }
-                    TaskIo.writeToFile(Util.join(lines, mEol), file, false);
+                    TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
                     return null;
                 }
 
@@ -225,7 +225,7 @@ public class FileStore implements FileStoreInterface {
                 File file = new File(mTodoName);
                 final List<String> lines = TaskIo.loadFromFile(file);
                 lines.removeAll(strings);
-                TaskIo.writeToFile(Util.join(lines, mEol), file, false);
+                TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
                 return null;
             }
 
