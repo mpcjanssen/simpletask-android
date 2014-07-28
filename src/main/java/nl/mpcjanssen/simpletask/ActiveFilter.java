@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.TimeZone;
 
 import nl.mpcjanssen.simpletask.task.ByContextFilter;
 import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
@@ -351,13 +352,23 @@ public class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue;
                 }
-
-
-                scope.defineProperty("task", t.inFileFormat(), ScriptableObject.CONST);
-                Object result = context.evaluateString(scope, m_javascript, "<CMD>", 1, null);
-                Log.v(TAG, context.toString(result));
-
-                matched.add(t);
+                if  (!Strings.isEmptyOrNull(m_javascript)) {
+                    scope.defineProperty("task", t.inFileFormat(), 0);
+                    if (t.getDueDate()!=null) {
+                        scope.defineProperty("due", t.getDueDate().getMilliseconds(TimeZone.getDefault()), 0);
+                    } else {
+                        scope.defineProperty("due", t.getDueDate(), 0);
+                    }
+                    scope.defineProperty("tags", Context.javaToJS(t.getTags(), scope), 0);
+                    scope.defineProperty("lists", Context.javaToJS(t.getLists(),scope), 0);
+                    Object result = context.evaluateString(scope, m_javascript, "<CMD>", 1, null);
+                    Log.v(TAG, "Javascript result: " + Context.toString(result));
+                    if (context.toBoolean(result)) {
+                        matched.add(t);
+                    }
+                } else {
+                    matched.add(t);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
