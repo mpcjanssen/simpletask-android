@@ -32,6 +32,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="save_task">Aufgabe speichern</string>
     <string name="update_task_failed">Aufgabe konnte nicht aktualisiert werden</string>
     <string name="sort">Sortieren</string>
+    <string name="script">Script</string>
     <string name="filter">Filter</string>
     <string name="main_no_items">Keine Aufgaben vorhanden.</string>
     <string name="set_preferences">Einstellungen</string>

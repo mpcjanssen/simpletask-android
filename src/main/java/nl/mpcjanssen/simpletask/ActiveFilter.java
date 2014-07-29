@@ -57,6 +57,7 @@ public class ActiveFilter {
     public final static String INTENT_HIDE_TAGS_FILTER =  "HIDETAGS";
 
     public final static String INTENT_JAVASCRIPT_FILTER =  "JAVASCRIPT";
+    public final static String INTENT_JAVASCRIPT_TEST_TASK_FILTER =  "JAVASCRIPT_TEST_TASK";
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
@@ -75,6 +76,7 @@ public class ActiveFilter {
     private boolean m_hideLists = false;
     private boolean m_hideTags = false;
     private String m_javascript = null;
+    private String m_javascript_test_task = null;
 
     public String getPrefName() {
         return mPrefName;
@@ -109,6 +111,7 @@ public class ActiveFilter {
         sorts = intent.getStringExtra(INTENT_SORT_ORDER);
 
         m_javascript = intent.getStringExtra(INTENT_JAVASCRIPT_FILTER);
+        m_javascript_test_task = intent.getStringExtra(INTENT_JAVASCRIPT_TEST_TASK_FILTER);
 
         m_priosNot = intent.getBooleanExtra(
                 INTENT_PRIORITIES_FILTER_NOT, false);
@@ -162,6 +165,7 @@ public class ActiveFilter {
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
         m_search = prefs.getString(SearchManager.QUERY, null);
         m_javascript = prefs.getString(INTENT_JAVASCRIPT_FILTER, null);
+        m_javascript_test_task = prefs.getString(INTENT_JAVASCRIPT_TEST_TASK_FILTER, null);
     }
 
     public boolean hasFilter() {
@@ -256,6 +260,7 @@ public class ActiveFilter {
             editor.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             editor.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
             editor.putString(INTENT_JAVASCRIPT_FILTER, m_javascript);
+            editor.putString(INTENT_JAVASCRIPT_TEST_TASK_FILTER, m_javascript_test_task);
             editor.putString(SearchManager.QUERY, m_search);
             editor.apply();
         }
@@ -270,6 +275,7 @@ public class ActiveFilter {
         m_priosNot = false;
         m_contextsNot = false;
         m_javascript = null;
+        m_javascript_test_task = null;
     }
 
     public void setSearch(String search) {
@@ -345,16 +351,8 @@ public class ActiveFilter {
                     continue;
                 }
                 if  (script!=null) {
-                    scope.defineProperty("task", t.inFileFormat(), 0);
-                    if (t.getDueDate()!=null) {
-                        scope.defineProperty("due", t.getDueDate().getMilliseconds(TimeZone.getDefault()), 0);
-                    } else {
-                        scope.defineProperty("due", t.getDueDate(), 0);
-                    }
-                    scope.defineProperty("tags", Context.javaToJS(t.getTags(), scope), 0);
-                    scope.defineProperty("lists", Context.javaToJS(t.getLists(),scope), 0);
+                    Util.fillScope(scope, t);
                     Object result = script.exec(context, scope);
-                    Log.v(TAG, "Javascript result: " + Context.toString(result));
                     if (context.toBoolean(result)) {
                         matched.add(t);
                     }
@@ -432,6 +430,14 @@ public class ActiveFilter {
 
     public void setJavascript(String script) {
         this.m_javascript = script ;
+    }
+
+    public String getJavascriptTestTask() {
+        return this.m_javascript_test_task;
+    }
+
+    public void setJavascriptTestTask(String task) {
+        this.m_javascript_test_task = task ;
     }
 
     private class AndFilter {

@@ -34,6 +34,7 @@ public class FilterActivity extends ThemedActivity {
     final static String PRIO_TAB = "prio";
     final static String OTHER_TAB = "other";
     final static String SORT_TAB = "sort";
+    final static String SCRIPT_TAB = "script";
 
     // Constants for saving state
     public static final String FILTER_ITEMS = "items";
@@ -130,7 +131,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.getHideFuture());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, mFilter.getHideLists());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.getHideTags());
-        arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, mFilter.getJavascript());
+
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.filter_show_prompt))
                 .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class, arguments))
@@ -144,6 +145,17 @@ public class FilterActivity extends ThemedActivity {
                 .setTag(SORT_TAB);
         arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort(m_app.getDefaultSorts()));
         actionbar.addTab(sortTab);
+
+        if (m_app.useRhino()) {
+            arguments = new Bundle();
+            Tab scriptTab = actionbar.newTab()
+                    .setText(getString(R.string.script))
+                    .setTabListener(new MyTabsListener(this, SCRIPT_TAB, FilterScriptFragment.class, arguments))
+                    .setTag(SCRIPT_TAB);
+            arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, mFilter.getJavascript());
+            arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER, mFilter.getJavascriptTestTask());
+            actionbar.addTab(scriptTab);
+        }
         int previousTab = getLastActiveTab();
         if (previousTab < actionbar.getTabCount()) {
             actionbar.setSelectedNavigationItem(previousTab);
@@ -213,6 +225,7 @@ public class FilterActivity extends ThemedActivity {
         mFilter.setHideLists(getHideLists());
         mFilter.setHideTags(getHideTags());
         mFilter.setJavascript(getJavascript());
+        mFilter.setJavascriptTestTask(getJavascriptTestTask());
 
         items = getSelectedSort();
         if (items!=null) {
@@ -289,13 +302,24 @@ public class FilterActivity extends ThemedActivity {
     }
 
     private String getJavascript() {
-        FilterOtherFragment fr;
-        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
+        FilterScriptFragment fr;
+        fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
         if (fr == null) {
             // fragment was never intialized
             return mFilter.getJavascript();
         } else {
             return fr.getJavascript();
+        }
+    }
+
+    private String getJavascriptTestTask() {
+        FilterScriptFragment fr;
+        fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            return mFilter.getJavascriptTestTask();
+        } else {
+            return fr.getTestTask();
         }
     }
 
