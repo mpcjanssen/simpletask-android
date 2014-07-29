@@ -35,14 +35,12 @@ public class FilterListFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         Log.v(TAG, "onDestroy() this:" + this);
     }
@@ -72,7 +70,6 @@ public class FilterListFragment extends Fragment {
             selectedItems = arguments.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS);
             not = arguments.getBoolean(FilterActivity.INITIAL_NOT);
         }
-
 
         Log.v(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.multi_filter,

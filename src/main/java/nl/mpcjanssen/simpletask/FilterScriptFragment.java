@@ -11,23 +11,32 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptableObject;
 
-public class FilterOtherFragment extends Fragment {
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.util.Util;
 
-    final static String TAG = FilterOtherFragment.class.getSimpleName();
-    private CheckBox cbHideCompleted;
-    private CheckBox cbHideFuture;
-    private CheckBox cbHideLists;
-    private CheckBox cbHideTags;
+public class FilterScriptFragment extends Fragment {
+
+    final static String TAG = FilterScriptFragment.class.getSimpleName();
+    private EditText txtJavaScript;
     private GestureDetector gestureDetector;
     @Nullable
     ActionBar actionbar;
+    private EditText txtTestTask;
+    private TextView tvResult;
+    private TextView tvBooleanResult;
+    private Button btnTest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,37 +56,57 @@ public class FilterOtherFragment extends Fragment {
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.v(TAG, "onSaveInstanceState() this:" + this);
-        outState.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, getHideCompleted());
-        outState.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, getHideFuture());
-        outState.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, getHideLists());
-        outState.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, getHideTags());
+        outState.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,getJavascript());
+        outState.putString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER,getTestTask());
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
+        Log.v(TAG, "onCreateView() this:" + this);
 
         Bundle arguments = getArguments();
         actionbar = getActivity().getActionBar();
-        Log.v(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
+        Log.v(TAG, "Fragment bundle:" + this);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.script_filter,
                 container, false);
 
-        cbHideCompleted = (CheckBox) layout.findViewById(R.id.cb_show_completed);
-        cbHideFuture = (CheckBox) layout.findViewById(R.id.cb_show_future);
-        cbHideLists = (CheckBox) layout.findViewById(R.id.cb_show_lists);
-        cbHideTags = (CheckBox) layout.findViewById(R.id.cb_show_tags);
+        txtJavaScript = (EditText) layout.findViewById(R.id.txt_javascript);
+        txtTestTask = (EditText) layout.findViewById(R.id.txt_testtask);
+        tvResult = (TextView) layout.findViewById(R.id.result);
+        tvBooleanResult = (TextView) layout.findViewById(R.id.booleanResult);
+        btnTest = (Button) layout.findViewById(R.id.btnTest);
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = Context.enter();
+                // Disable JVM on the fly, we are on Dalvik/Art
+                context.setOptimizationLevel(-1);
+                ScriptableObject scope = context.initStandardObjects();
+                try {
+                    Script script = context.compileString(getJavascript(), "javascript", 1, null);
+                    Task t = new Task(0, txtTestTask.getText().toString());
+                    Util.fillScope(scope, t);
+                    Object result = script.exec(context, scope);
+                    tvResult.setText(Context.toString(result));
+                    if (Context.toBoolean(result)) {
+                        tvBooleanResult.setText("true");
+                    } else {
+                        tvBooleanResult.setText("false");
+                    }
+                } catch (Exception e) {
+                    tvResult.setText(e.getMessage());
+                    tvBooleanResult.setText("error");
+                }
+
+            }
+        });
         if (savedInstanceState != null) {
-            cbHideCompleted.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
-            cbHideFuture.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
-            cbHideLists.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false));
-            cbHideTags.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
+            txtJavaScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,""));
+            txtTestTask.setText(savedInstanceState.getString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER,""));
         } else {
-            cbHideCompleted.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
-            cbHideFuture.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
-            cbHideLists.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false));
-            cbHideTags.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
+            txtJavaScript.setText(arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,""));
+            txtTestTask.setText(arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER,""));
         }
 
         gestureDetector = new GestureDetector(TodoApplication.getAppContext(),
@@ -99,38 +128,21 @@ public class FilterOtherFragment extends Fragment {
         return layout;
     }
 
-    public boolean getHideCompleted() {
+    public String getJavascript() {
         Bundle arguments = getArguments();
-        if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false);
+        if (txtJavaScript == null) {
+            return arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, "");
         } else {
-            return !cbHideCompleted.isChecked();
+            return txtJavaScript.getText().toString();
         }
     }
 
-    public boolean getHideFuture() {
+    public String getTestTask() {
         Bundle arguments = getArguments();
-        if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false);
+        if (txtTestTask == null) {
+            return arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER, "");
         } else {
-            return !cbHideFuture.isChecked();
-        }
-    }
-
-    public boolean getHideLists() {
-        Bundle arguments = getArguments();
-        if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false);
-        } else {
-            return !cbHideLists.isChecked();
-        }
-    }
-    public boolean getHideTags() {
-        Bundle arguments = getArguments();
-        if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false);
-        } else {
-            return !cbHideTags.isChecked();
+            return txtTestTask.getText().toString();
         }
     }
 

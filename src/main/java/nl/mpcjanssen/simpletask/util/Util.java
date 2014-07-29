@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mozilla.javascript.ScriptableObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -231,5 +232,16 @@ public class Util {
             }
         });
         return builder.create();
+    }
+
+    public static void fillScope(ScriptableObject scope, Task t) {
+        scope.defineProperty("task", t.inFileFormat(), 0);
+        if (t.getDueDate()!=null) {
+            scope.defineProperty("due", t.getDueDate().getMilliseconds(TimeZone.getDefault()), 0);
+        } else {
+            scope.defineProperty("due", t.getDueDate(), 0);
+        }
+        scope.defineProperty("tags", org.mozilla.javascript.Context.javaToJS(t.getTags(), scope), 0);
+        scope.defineProperty("lists", org.mozilla.javascript.Context.javaToJS(t.getLists(), scope), 0);
     }
 }
