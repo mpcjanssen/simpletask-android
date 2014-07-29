@@ -35,5 +35,6 @@ The following code will show only overdue tasks where tasks without a due date, 
 Notes
 -----
 
-* One run of the filter over all tasks, uses a single evaluation context, so any other global state is retained from task to task.
-* The script is run for every task when displaying it, so make sure it's fast. Doing to much work in the Javascript will make Simpletask crawl.
+* One run of the filter over all tasks uses a single evaluation context, so any other global state is retained from task to task.
+* The script is run for every task when displaying it, so make sure it's fast. Doing too much work in the script will make Simpletask crawl.
+* Any ANR reports where the script is set in the filter will have a high chance of being ignored. _With great power comes great responsibility_.
