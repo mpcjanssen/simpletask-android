@@ -26,4 +26,5 @@ Check the menu for more help sections or click below.
 - [Lists and Tags](./listsandtags.md) Why does Simpletask use lists and Tags instead of the Contexts and Projects from todo.txt?
 - [Defined intents](./intents.md) Intents that can be used for automating Simpletask
 - [Using Simpletask for 1MTD/MYN](./MYN.md)
+- [Filtering with Javascript](./javascript.md)
 

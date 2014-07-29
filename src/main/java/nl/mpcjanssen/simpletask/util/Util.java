@@ -241,6 +241,24 @@ public class Util {
         } else {
             scope.defineProperty("due", t.getDueDate(), 0);
         }
+        if (t.getThresholdDate()!=null) {
+            scope.defineProperty("threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault()), 0);
+        } else {
+            scope.defineProperty("threshold",t.getThresholdDate(), 0);
+        }
+        if (t.getCreateDate()!=null) {
+            scope.defineProperty("createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault()), 0);
+        } else {
+            scope.defineProperty("createdate",t.getCreateDate(), 0);
+        }
+        if (t.getCompletionDate()!=null) {
+            scope.defineProperty("completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault()), 0);
+        } else {
+            scope.defineProperty("completiondate",t.getCompletionDate(), 0);
+        }
+        scope.defineProperty("completed", t.isCompleted(), 0);
+        scope.defineProperty("priority", t.getPriority().getCode(),0);
+        scope.defineProperty("recurrence", t.getRecurrencePattern(), 0);
         scope.defineProperty("tags", org.mozilla.javascript.Context.javaToJS(t.getTags(), scope), 0);
         scope.defineProperty("lists", org.mozilla.javascript.Context.javaToJS(t.getLists(), scope), 0);
     }

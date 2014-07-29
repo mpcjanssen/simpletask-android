@@ -400,11 +400,17 @@ public class Simpletask extends ThemedListActivity implements
         } else {
             actionbar_clear.setVisibility(View.GONE);
         }
+        int count = m_adapter!=null ? m_adapter.getCountVisbleTasks() : 0;
+        int total = getTaskBag()!=null ? getTaskBag().size() : 0;
+
         filterText.setText(mFilter.getTitle(
+                count,
+                total,
                 getText(R.string.priority_prompt),
                 getText(R.string.project_prompt),
                 getText(R.string.context_prompt),
                 getText(R.string.search),
+                getText(R.string.script),
                 getText(R.string.title_filter_applied),
                 getText(R.string.no_filter)
         ));
@@ -1041,6 +1047,7 @@ public class Simpletask extends ThemedListActivity implements
         @NotNull
         Set<DataSetObserver> obs = new HashSet<DataSetObserver>();
         private LayoutInflater m_inflater;
+        private int countVisbleTasks;
 
         public TaskAdapter(LayoutInflater inflater) {
             this.m_inflater = inflater;
@@ -1048,6 +1055,7 @@ public class Simpletask extends ThemedListActivity implements
 
         void setFilteredTasks() {
             ArrayList<Task> visibleTasks;
+            countVisbleTasks = 0;
             Log.v(TAG, "setFilteredTasks called: " + getTaskBag());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
             visibleTasks = getTaskBag().getTasks(mFilter, sorts);
@@ -1083,6 +1091,7 @@ public class Simpletask extends ThemedListActivity implements
                     // enduring tasks should not be displayed
                     VisibleLine taskLine = new VisibleLine(t);
                     visibleLines.add(taskLine);
+                    countVisbleTasks++;
                 }
             }
             for (DataSetObserver ob : obs) {
@@ -1092,6 +1101,9 @@ public class Simpletask extends ThemedListActivity implements
 
         }
 
+        public int getCountVisbleTasks() {
+            return countVisbleTasks;
+        }
         @Override
         public void registerDataSetObserver(DataSetObserver observer) {
             obs.add(observer);

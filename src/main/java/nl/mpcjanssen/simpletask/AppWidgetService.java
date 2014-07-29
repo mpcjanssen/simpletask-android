@@ -31,8 +31,7 @@ public class AppWidgetService extends RemoteViewsService {
     
     @Override
     public RemoteViewsFactory onGetViewFactory( Intent intent) {
-	// TODO Auto-generated method stub
-	return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
+	    return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
     }
 
 }
@@ -263,7 +262,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     public void onCreate() {
         Log.v(TAG, "Widget: OnCreate called in ViewFactory");
         setFilteredTasks();
-
     }
 
     @Override
@@ -274,7 +272,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
     }
 }
 
