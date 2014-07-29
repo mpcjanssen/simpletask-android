@@ -32,9 +32,16 @@ The following code will show only overdue tasks where tasks without a due date, 
     }
     result;
 
+One run of the filter over all tasks uses a single evaluation context, so any other global state is retained from task to task. This allows some "interesting" things like showing the first hundred tasks:
+
+    
+    if (c === undefined) { 
+        var c = 0; 
+    } c++; 
+    c <= 100;
+
 Notes
 -----
 
-* One run of the filter over all tasks uses a single evaluation context, so any other global state is retained from task to task.
 * The script is run for every task when displaying it, so make sure it's fast. Doing too much work in the script will make Simpletask crawl.
 * Any ANR reports where the script is set in the filter will have a high chance of being ignored. _With great power comes great responsibility_.
