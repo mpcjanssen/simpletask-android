@@ -95,6 +95,7 @@ public class FilterScriptFragment extends Fragment {
                         tvBooleanResult.setText("false");
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     tvResult.setText(e.getMessage());
                     tvBooleanResult.setText("error");
                 }

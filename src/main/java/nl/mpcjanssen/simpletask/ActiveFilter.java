@@ -170,12 +170,13 @@ public class ActiveFilter {
 
     public boolean hasFilter() {
         return m_contexts.size() + m_projects.size() + m_prios.size() > 0
-                || !Strings.isEmptyOrNull(m_search);
+                || !Strings.isEmptyOrNull(m_search) || !Strings.isEmptyOrNull(m_javascript);
     }
 
-    public String getTitle (CharSequence prio, CharSequence tag, CharSequence list, CharSequence search, CharSequence filterApplied, CharSequence noFilter) {
+    public String getTitle (int visible, int total, CharSequence prio, CharSequence tag, CharSequence list, CharSequence search, CharSequence script, CharSequence filterApplied, CharSequence noFilter) {
         String filterTitle = "" + filterApplied ;
         if (hasFilter()) {
+            filterTitle = "(" + visible + "/" + total +  ") " + filterTitle;
             if (m_prios.size() > 0) {
                 filterTitle += " " + prio;
             }
@@ -187,8 +188,11 @@ public class ActiveFilter {
             if (m_contexts.size() > 0) {
                 filterTitle += list;
             }
-            if (m_search != null) {
+            if (!Strings.isEmptyOrNull(m_search)) {
                 filterTitle += search;
+            }
+            if (!Strings.isEmptyOrNull(m_javascript)) {
+                filterTitle += script;
             }
         } else {
                 filterTitle = "" + noFilter;
