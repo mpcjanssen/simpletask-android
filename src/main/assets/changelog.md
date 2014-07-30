@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+5.2.0
+-----
+
+- (Experimental) Included Javascript engine to allow advanced filtering. See [Javascript](./javascript.md) for usage.
+- Don't use `removeAll` in task stores. Fixes #112.
+- Return to filter activity when switching to another app and back instead of to the main screen.
+
 5.1.8
 -----
 
