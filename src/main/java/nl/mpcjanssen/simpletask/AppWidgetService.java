@@ -236,7 +236,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public RemoteViews getViewAt(int position) {
-        //Log.v(TAG,"GetViewAt:" + position);
+        
+        if (visibleTasks.size()<=position) {
+            // This should never happen but there was a crash reported
+            // so in that case at least don't crash
+            return null;
+        }
+
         RemoteViews rv;
         boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);
         if (extended_widget) {
