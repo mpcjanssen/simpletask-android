@@ -10,16 +10,16 @@ Defined variables
  
 To make the filtering easier, for every task a couple of global vars are defined. You can use these in your code.
 
-* `task`: The full task as string.
-* `createdate`: The created date of the task or `null` if not set.
 * `completed`: Boolean indicating if the task is completed.
 * `completiondate`: The completion date of the task or `null` if not set.
+* `createdate`: The created date of the task or `null` if not set.
 * `due`: The due date or `null` if not set.
-* `threshold`: The threshold date or `null` if not set.
+* `lists`: An array of strings with the lists of the task.
 * `priority`: The priority of the task as string.
 * `recurrence`: The recurrence pattern of the task as string or `null` if not set.
 * `tags`: An array of strings with the tags of the task.
-* `lists`: An array of strings with the lists of the task.
+* `task`: The full task as string.
+* `threshold`: The threshold date or `null` if not set.
 
 Example
 -------
