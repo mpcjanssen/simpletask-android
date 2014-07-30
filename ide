@@ -1,2 +1,7 @@
 #!/bin/bash
-vim -S lvimrc.vim
+if [ -n $DISPLAY ]
+then
+    gvim -S lvimrc.vim
+else
+    vim -S lvimrc.vim
+fi     
