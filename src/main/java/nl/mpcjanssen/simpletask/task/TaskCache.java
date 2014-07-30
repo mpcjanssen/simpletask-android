@@ -91,7 +91,9 @@ public class TaskCache {
         if (tasksToArchive.size()==0) {
             return;
         }
-        mTasks.removeAll(tasksToArchive);
+        for (Task t : tasksToArchive) {
+            mTasks.remove(t);
+        }
         notifyChanged();
         mFileStore.move(mTodoName, targetPath, Util.tasksToString(tasksToArchive));
     }
@@ -193,7 +195,9 @@ public class TaskCache {
     }
 
     public void delete(List<Task> tasks) {
-        mTasks.removeAll(tasks);
+        for (Task t : tasks) {
+            mTasks.remove(t);
+        }
         mFileStore.delete(mTodoName,Util.tasksToString(tasks));
         notifyChanged();
     }
