@@ -218,13 +218,17 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void delete(final String mTodoName, final List<String> strings) {
         updateStart(mTodoName);
-        mLines.removeAll(strings);
+        for (String item : strings) {
+            mLines.remove(item);
+        }
         new AsyncTask<Void,Void,Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 File file = new File(mTodoName);
                 final List<String> lines = TaskIo.loadFromFile(file);
-                lines.removeAll(strings);
+                for (String item : strings) {
+                    lines.remove(item);
+                }
                 TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
                 return null;
             }

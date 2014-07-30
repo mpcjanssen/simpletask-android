@@ -431,7 +431,10 @@ public class FileStore implements FileStoreInterface {
                         }
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(dbFile));
-                        contents.removeAll(stringsToDelete);
+                        // Only remove one occurrence of every line
+                        for (String item : stringsToDelete) {
+                            contents.remove(item);
+                        }
                         dbFile.writeString(Util.join(contents, mEol)+mEol);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -444,7 +447,9 @@ public class FileStore implements FileStoreInterface {
             @Override
             protected void onPostExecute(Void v) {
                 if (mLines!=null) {
-                    mLines.removeAll(stringsToDelete);
+                    for (String item : stringsToDelete) {
+                        mLines.remove(item);
+                    }
                 }
             }
         }.execute();
@@ -477,7 +482,9 @@ public class FileStore implements FileStoreInterface {
                             return null;
                         }
                         contents.addAll(syncGetLines(srcFile));
-                        contents.removeAll(strings);
+                        for (String item : strings) {
+                            contents.remove(item);
+                        }
                         srcFile.writeString(Util.join(contents, mEol)+mEol);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -494,7 +501,9 @@ public class FileStore implements FileStoreInterface {
             @Override
             public void onPostExecute (Void v) {
                if (mLines!=null) {
-                   mLines.removeAll(strings);
+                   for (String item : strings) {
+                       mLines.remove(item);
+                   }
                }
             }
         }.execute();

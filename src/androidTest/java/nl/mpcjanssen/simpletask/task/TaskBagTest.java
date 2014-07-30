@@ -30,6 +30,20 @@ public class TaskBagTest extends TestCase {
         assertEquals(0, tb.getContexts(false).size());
     }
 
+    public void testDeleteIdentical() {
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add("Test");
+        lines.add("Test");
+        TestFileStore testFileStore = new TestFileStore(lines);
+        TaskCache tb = new TaskCache(null, testFileStore, null);
+        assertEquals(2, tb.size());
+        assertEquals("Test", tb.getTaskAt(0).inFileFormat());
+        ArrayList<Task> tasksToDelete = new ArrayList<Task>();
+        tasksToDelete.add(new Task(0,"Test"));
+        tb.delete(tasksToDelete);
+        assertEquals(1, tb.size());
+    }
+
     public void testSimpleFilter() {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("Test");
