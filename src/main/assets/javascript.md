@@ -37,7 +37,8 @@ One run of the filter over all tasks uses a single evaluation context, so any ot
     
     if (c === undefined) { 
         var c = 0; 
-    } c++; 
+    } 
+    c++; 
     c <= 100;
 
 Notes
