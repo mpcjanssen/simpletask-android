@@ -171,12 +171,13 @@ public class AddTask extends ThemedActivity {
 
         ArrayList<String> tasks = new ArrayList<String>();
         tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
+        ArrayList<String> originalLines = new ArrayList<String>();
+        ArrayList<Task> updatedTasks = new ArrayList<Task>();
         if (m_backup != null && tasks.size()>0) {
             int numTasks = tasks.size();
             int numBackup = m_backup.size();
             Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
-            ArrayList<String> originalLines = new ArrayList<String>();
-            ArrayList<Task> updatedTasks = new ArrayList<Task>();
+
             for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
                 originalLines.add(m_backup.get(0).inFileFormat());
                 m_backup.get(0).init(tasks.get(0),null);
@@ -184,23 +185,20 @@ public class AddTask extends ThemedActivity {
                 tasks.remove(0);
                 m_backup.remove(0);
             }
-            // Update change tasks
-            if (updatedTasks.size()>0) {
-                m_app.getTaskCache().update(originalLines, updatedTasks);
-            }
         }
         // Append new tasks
+        ArrayList<Task> addedTasks = new ArrayList<Task>();
         if (tasks.size()>0) {
             if (m_app.hasPrependDate()) {
                 ArrayList<String> original = new ArrayList<String>();
                 original.addAll(tasks);
                 tasks.clear();
                 for (String task: original) {
-                    tasks.add(new Task(0,task, DateTime.today(TimeZone.getDefault())).inFileFormat());
+                    addedTasks.add(new Task(0,task, DateTime.today(TimeZone.getDefault())));
                 }
             }
-            m_app.getTaskCache().append(tasks);
         }
+        m_app.getTaskCache().modify(originalLines, updatedTasks, addedTasks, null);
         finish();
     }
 

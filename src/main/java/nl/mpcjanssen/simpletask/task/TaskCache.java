@@ -95,7 +95,8 @@ public class TaskCache {
             mTasks.remove(t);
         }
         notifyChanged();
-        mFileStore.move(mTodoName, targetPath, Util.tasksToString(tasksToArchive));
+        mFileStore.modify(mTodoName,null,null,null,Util.tasksToString(tasksToArchive));
+        mFileStore.append(targetPath, Util.tasksToString(tasksToArchive));
     }
 
     @NotNull
@@ -194,14 +195,6 @@ public class TaskCache {
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
-    public void delete(List<Task> tasks) {
-        for (Task t : tasks) {
-            mTasks.remove(t);
-        }
-        mFileStore.delete(mTodoName,Util.tasksToString(tasks));
-        notifyChanged();
-    }
-
     public void undoComplete(@NotNull List<Task> tasks) {
         ArrayList<String> originalStrings = new ArrayList<String>();
 
@@ -209,37 +202,49 @@ public class TaskCache {
             originalStrings.add(t.inFileFormat());
             t.markIncomplete();
         }
-        update(originalStrings, tasks);
+        modify(originalStrings, tasks,null,null);
     }
 
     public void complete(@NotNull List<Task> tasks, boolean originalDate) {
         ArrayList<String> originalStrings = new ArrayList<String>();
+        ArrayList<Task> recurredTasks = new ArrayList<Task>();
         for (Task t : tasks) {
             originalStrings.add(t.inFileFormat());
             Task extra = t.markComplete(DateTime.now(TimeZone.getDefault()), originalDate);
             if (extra!=null) {
-                append(extra.inFileFormat());
+                recurredTasks.add(extra);
             }
         }
-        update(originalStrings, tasks);
+        modify(originalStrings, tasks, recurredTasks,null);
     }
 
     public void append(String taskText) {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(taskText);
-        append(lines);
-    }
-
-    public void append(@NotNull ArrayList<String> lines) {
-        mFileStore.append(mTodoName,lines);
         for (String line: lines ) {
             mTasks.add(new Task(0,line));
         }
+        mFileStore.append(mTodoName,lines);
         notifyChanged();
     }
 
-    public void update(List<String> originalTasks, List<Task> updatedTasks) {
-        mFileStore.update(mTodoName,originalTasks,Util.tasksToString(updatedTasks));
+
+    public void modify(List<String> originalTasks, List<Task> updatedTasks, List<Task> addedTasks, List<Task> deletedTasks) {
+        // Updated tasks are already reflected in cache as they are passed by reference
+        if (addedTasks!=null) {
+            for (Task t : addedTasks) {
+                mTasks.add(t);
+            }
+        }
+        if (deletedTasks!=null) {
+            for (Task t : deletedTasks) {
+                mTasks.remove(t);
+            }
+        }
+        mFileStore.modify(mTodoName,originalTasks,
+                Util.tasksToString(updatedTasks),
+                Util.tasksToString(addedTasks),
+                Util.tasksToString(deletedTasks));
         notifyChanged();
     }
 
@@ -255,7 +260,7 @@ public class TaskCache {
                     break;
             }
         }
-        update(originalTasks,tasksToDefer);
+        modify(originalTasks,tasksToDefer,null,null);
     }
 
     public ArrayList<Task> getTasks(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts) {

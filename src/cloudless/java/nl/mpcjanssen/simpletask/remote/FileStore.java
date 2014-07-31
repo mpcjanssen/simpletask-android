@@ -130,8 +130,7 @@ public class FileStore implements FileStoreInterface {
 
     }
 
-    @Override
-    public void startWatching(final String path) {
+    private void startWatching(final String path) {
         Log.v(TAG,"Observer adding on: " + new File(path).getParentFile().getAbsolutePath());
         final String folder = new File(path).getParentFile().getAbsolutePath();
         final String filename = new File(path).getName();
@@ -148,15 +147,14 @@ public class FileStore implements FileStoreInterface {
                         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                         bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
                         mLines=null;
-                            }
+                    }
                 }
             }
         };
         m_observer.startWatching();
     }
 
-    @Override
-    public void stopWatching(String path) {
+    private void stopWatching(String path) {
         if (m_observer!=null) {
             Log.v(TAG,"Observer removing on: " + path);
             m_observer.stopWatching();
@@ -178,30 +176,51 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(final String mTodoName, final List<String> original, final List<String> updated) {
-            final File file = new File(mTodoName);
-            final ArrayList<String> lines = TaskIo.loadFromFile(file);
-            updateStart(mTodoName);
-            new AsyncTask<Void,Void,Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    for (int i=0 ; i<original.size();i++) {
-                        int index = lines.indexOf(original.get(i));
-                        if (index!=-1) {
-                            lines.remove(index);
-                            lines.add(index,updated.get(i));
-                        }
-                    }
-                    TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
-                    return null;
-                }
+    public void modify(final String mTodoName, final List<String> original,
+                       final List<String> updated,
+                       final List<String> added,
+                       final List<String> removed) {
+        final File file = new File(mTodoName);
+        final ArrayList<String> lines = TaskIo.loadFromFile(file);
+        updateStart(mTodoName);
+        final int numUpdated = original!=null ? updated.size() : 0;
+        int numAdded = added!=null ? added.size() : 0;
+        int numRemoved = removed!=null ? removed.size() : 0;
+        Log.v(TAG, "Modifying " + mTodoName
+                + " Updated: " + numUpdated
+                + ", added: " + numAdded
+                + ", removed: " + numRemoved);
 
-                @Override
-                protected void onPostExecute(Void v) {
-                    updateDone(mTodoName);
-                    mLines = lines;
+        new AsyncTask<Void,Void,Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                for (int i=0 ; i<numUpdated;i++) {
+                    int index = lines.indexOf(original.get(i));
+                    if (index!=-1) {
+                        lines.remove(index);
+                        lines.add(index,updated.get(i));
+                    }
                 }
-            }.execute();
+                if (added!=null) {
+                    for (String item : added) {
+                        mLines.add(item);
+                    }
+                }
+                if (removed!=null) {
+                    for (String item : removed) {
+                        mLines.remove(item);
+                    }
+                }
+                TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+                updateDone(mTodoName);
+                mLines = lines;
+            }
+        }.execute();
     }
 
 
@@ -216,39 +235,8 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void delete(final String mTodoName, final List<String> strings) {
-        updateStart(mTodoName);
-        for (String item : strings) {
-            mLines.remove(item);
-        }
-        new AsyncTask<Void,Void,Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                File file = new File(mTodoName);
-                final List<String> lines = TaskIo.loadFromFile(file);
-                for (String item : strings) {
-                    lines.remove(item);
-                }
-                TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void v) {
-                updateDone(mTodoName);
-            }
-        }.execute();
-    }
-
-    @Override
     public int getType() {
         return Constants.STORE_SDCARD;
-    }
-
-    @Override
-    public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
-        append(targetPath,strings);
-        delete(sourcePath,strings);
     }
 
     public static String getDefaultPath() {
