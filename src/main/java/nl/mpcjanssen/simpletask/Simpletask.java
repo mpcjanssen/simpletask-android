@@ -557,7 +557,7 @@ public class Simpletask extends ThemedListActivity implements
                 for (Task t : tasks) {
                     t.setPriority(prio);
                 }
-                getTaskBag().update(originalTasks,tasks);
+                getTaskBag().modify(originalTasks,tasks,null,null);
                 finishActionmode();
             }
         });
@@ -615,7 +615,7 @@ public class Simpletask extends ThemedListActivity implements
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                m_app.getTaskCache().delete(tasks);
+                m_app.getTaskCache().modify(null,null,null,tasks);
                 // We have change the data, views should refresh
             }
         }, R.string.delete_task_title);
@@ -1564,9 +1564,11 @@ public class Simpletask extends ThemedListActivity implements
                     }
                 }
                 finishActionmode();
-                m_app.getTaskCache().update(
+                m_app.getTaskCache().modify(
                         originalLines,
-                        checkedTasks
+                        checkedTasks,
+                        null,
+                        null
                         );
             }
         });
@@ -1634,9 +1636,11 @@ public class Simpletask extends ThemedListActivity implements
                     }
                 }
                 finishActionmode();
-                m_app.getTaskCache().update(
+                m_app.getTaskCache().modify(
                         originalLines,
-                        checkedTasks
+                        checkedTasks,
+                        null,
+                        null
                 );
             }
         });

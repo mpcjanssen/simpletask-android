@@ -74,8 +74,11 @@ public class Util {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }
 
-    @NotNull
+    @Nullable
     public static ArrayList<String> tasksToString(@NotNull List<Task> tasks) {
+        if (tasks==null) {
+            return null;
+        }
         ArrayList<String> result = new ArrayList<String>();
         for (Task t: tasks) {
             result.add(t.inFileFormat());
