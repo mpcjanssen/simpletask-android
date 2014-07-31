@@ -29,7 +29,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 public class FileStore implements FileStoreInterface {
 
-    private final String TAG = getClass().getName();
+    private final String TAG = getClass().getSimpleName();
     private final Context mCtx;
     private final LocalBroadcastManager bm;
     private String mEol;
