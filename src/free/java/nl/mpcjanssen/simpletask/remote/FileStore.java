@@ -405,11 +405,11 @@ public class FileStore implements FileStoreInterface {
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(openFile));
                         if (original!=null) {
-                            for (int i = 0; i < contents.size(); i++) {
-                                int index = contents.indexOf(contents.get(i));
+                            for (int i = 0; i < original.size(); i++) {
+                                int index = contents.indexOf(original.get(i));
                                 if (index != -1) {
                                     contents.remove(index);
-                                    contents.add(index, contents.get(i));
+                                    contents.add(index, updated.get(i));
                                 }
                             }
                         }
