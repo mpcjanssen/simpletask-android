@@ -263,8 +263,7 @@ public class FileStore implements FileStoreInterface {
         mDbxAcctMgr.startLink(caller, 0);
     }
 
-    @Override
-    public void startWatching(final String path) {
+    private void startWatching(final String path) {
         if (isAuthenticated() && getDbxFS() != null) {
             if (m_syncstatus==null) {
                 m_syncstatus = new DbxFileSystem.SyncStatusListener() {
@@ -322,8 +321,7 @@ public class FileStore implements FileStoreInterface {
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
-    @Override
-    public void stopWatching(String path) {
+    private void stopWatching(String path) {
         if (getDbxFS()==null) {
             return;
         }
@@ -382,25 +380,47 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(final String filename, @NotNull final List<String> alOriginal, @NotNull final List<String> alUpdated) {
+    public void modify(final String mTodoName, final List<String> original,
+                       final List<String> updated,
+                       final List<String> added,
+                       final List<String> removed) {
         new AsyncTask<String, Void, Void>() {
             @Nullable
             @Override
             protected Void doInBackground(String... params) {
                 if (isAuthenticated() && getDbxFS() != null) {
                     try {
-                        DbxFile openFile = openDbFile(filename);
+                        final int numUpdated = original!=null ? updated.size() : 0;
+                        int numAdded = added!=null ? added.size() : 0;
+                        int numRemoved = removed!=null ? removed.size() : 0;
+                        Log.v(TAG, "Modifying " + mTodoName
+                                + " Updated: " + numUpdated
+                                + ", added: " + numAdded
+                                + ", removed: " + numRemoved);
+                        DbxFile openFile = openDbFile(mTodoName);
                         if (openFile==null) {
-                            Log.w(TAG, "Failed to open: " + filename + " tasks not updated");
+                            Log.w(TAG, "Failed to open: " + mTodoName + " tasks not updated");
                             return null;
                         }
                         ArrayList<String> contents = new ArrayList<String>();
                         contents.addAll(syncGetLines(openFile));
-                        for (int i=0 ; i<alOriginal.size();i++) {
-                            int index = contents.indexOf(alOriginal.get(i));
-                            if (index!=-1) {
-                                contents.remove(index);
-                                contents.add(index,alUpdated.get(i));
+                        if (original!=null) {
+                            for (int i = 0; i < contents.size(); i++) {
+                                int index = contents.indexOf(contents.get(i));
+                                if (index != -1) {
+                                    contents.remove(index);
+                                    contents.add(index, contents.get(i));
+                                }
+                            }
+                        }
+                        if (added!=null) {
+                            for (String item : added) {
+                                contents.add(item);
+                            }
+                        }
+                        if (removed!=null) {
+                            for (String item : removed) {
+                                contents.remove(item);
                             }
                         }
                         openFile.writeString(Util.join(contents, mEol)+mEol);
@@ -410,101 +430,6 @@ public class FileStore implements FileStoreInterface {
                     }
                 }
                 return null;
-            }
-        }.execute();
-    }
-
-
-    @Override
-    public void delete(final String mTodoName, final List<String> stringsToDelete) {
-
-        new AsyncTask<String,Void, Void>() {
-            @Nullable
-            @Override
-            protected Void doInBackground(String... params) {
-                if (isAuthenticated() && getDbxFS() != null) {
-                    try {
-                        DbxFile dbFile = openDbFile(mTodoName);
-                        if (dbFile==null) {
-                            Log.w(TAG, "Failed to open: " + mTodoName + " tasks not deleted");
-                            return null;
-                        }
-                        ArrayList<String> contents = new ArrayList<String>();
-                        contents.addAll(syncGetLines(dbFile));
-                        // Only remove one occurrence of every line
-                        for (String item : stringsToDelete) {
-                            contents.remove(item);
-                        }
-                        dbFile.writeString(Util.join(contents, mEol)+mEol);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new TodoException("Dropbox", e);
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void v) {
-                if (mLines!=null) {
-                    for (String item : stringsToDelete) {
-                        mLines.remove(item);
-                    }
-                }
-            }
-        }.execute();
-    }
-
-    @Override
-    public void move(final String sourcePath, final String targetPath, final ArrayList<String> strings) {
-
-        new AsyncTask<String,Void, Void>() {
-            @Nullable
-            @Override
-            protected Void doInBackground(String... params) {
-                DbxFileSystem fs  = getDbxFS();
-                if (isAuthenticated() && getDbxFS() != null) {
-                    try {
-                        Log.v(TAG, "Moving lines from " + sourcePath + " to " + targetPath);
-                        DbxPath dbPath = new DbxPath(targetPath);
-                        DbxFile destFile;
-                        if (fs.exists(dbPath)) {
-                            destFile = fs.open(dbPath);
-                        } else {
-                            destFile = fs.create(dbPath);
-                        }
-                        ArrayList<String> contents = new ArrayList<String>();
-                        destFile.appendString(Util.join(strings, mEol)+mEol);
-                        destFile.close();
-                        DbxFile srcFile = openDbFile(sourcePath);
-                        if (srcFile==null) {
-                            Log.w(TAG, "Failed to open: " + sourcePath + " tasks not moved");
-                            return null;
-                        }
-                        contents.addAll(syncGetLines(srcFile));
-                        for (String item : strings) {
-                            contents.remove(item);
-                        }
-                        srcFile.writeString(Util.join(contents, mEol)+mEol);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new TodoException("Dropbox", e);
-                    }  catch (DbxPath.InvalidPathException e) {
-                        e.printStackTrace();
-                        Log.w(TAG, "Invalid archive filename "  + targetPath);
-                        throw new TodoException("Dropbox", e);
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public void onPostExecute (Void v) {
-               if (mLines!=null) {
-                   for (String item : strings) {
-                       mLines.remove(item);
-                   }
-               }
             }
         }.execute();
     }

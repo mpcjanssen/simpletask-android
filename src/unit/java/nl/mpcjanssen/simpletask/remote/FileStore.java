@@ -45,16 +45,6 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void startWatching(String path) {
-
-    }
-
-    @Override
-    public void stopWatching(String path) {
-
-    }
-
-    @Override
     public void deauthenticate() {
 
     }
@@ -65,24 +55,16 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void update(String mTodoName, List<String> original, List<String> updated) {
+    public void modify(String mTodoName, List<String> original, List<String> updated, List<String> added, List<String> removed) {
 
     }
 
-    @Override
-    public void delete(String mTodoName, List<String> strings) {
-
-    }
 
     @Override
     public int getType() {
         return 0;
     }
 
-    @Override
-    public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
-
-    }
 
     @Override
     public void setEol(String eol) {
