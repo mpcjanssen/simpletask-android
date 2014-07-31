@@ -40,7 +40,7 @@ public class TaskBagTest extends TestCase {
         assertEquals("Test", tb.getTaskAt(0).inFileFormat());
         ArrayList<Task> tasksToDelete = new ArrayList<Task>();
         tasksToDelete.add(new Task(0,"Test"));
-        tb.delete(tasksToDelete);
+        tb.modify(null,null,null,tasksToDelete);
         assertEquals(1, tb.size());
     }
 
@@ -91,16 +91,6 @@ public class TaskBagTest extends TestCase {
 
         }
 
-        @Override
-        public void startWatching(String path) {
-
-        }
-
-        @Override
-        public void stopWatching(String path) {
-
-        }
-
 
         @Override
         public void deauthenticate() {
@@ -114,12 +104,7 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
-        public void update(String mTodoName, List<String> original, List<String> updated) {
-
-        }
-
-        @Override
-        public void delete(String mTodoName, List<String> strings) {
+        public void modify(String mTodoName, List<String> original, List<String> updated, List<String> added, List<String> removed) {
 
         }
 
@@ -128,10 +113,6 @@ public class TaskBagTest extends TestCase {
             return 0;
         }
 
-        @Override
-        public void move(String sourcePath, String targetPath, ArrayList<String> strings) {
-
-        }
 
         @Override
         public void setEol(String eol) {
