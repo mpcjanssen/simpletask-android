@@ -375,7 +375,7 @@ public class FileStore implements FileStoreInterface {
                     }
                     mLines.addAll(lines);
                 }
-            }.execute(path, Util.join(lines, mEol).trim() + mEol);
+            }.execute(path, Util.join(lines, mEol) + mEol);
         }
     }
 

@@ -181,7 +181,7 @@ public class FileStore implements FileStoreInterface {
                        final List<String> added,
                        final List<String> removed) {
         final File file = new File(mTodoName);
-        final ArrayList<String> lines = TaskIo.loadFromFile(file);
+
         updateStart(mTodoName);
         final int numUpdated = original!=null ? updated.size() : 0;
         int numAdded = added!=null ? added.size() : 0;
@@ -191,9 +191,10 @@ public class FileStore implements FileStoreInterface {
                 + ", added: " + numAdded
                 + ", removed: " + numRemoved);
 
-        new AsyncTask<Void,Void,Void>() {
+        new AsyncTask<Void,Void,ArrayList<String>>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected ArrayList<String> doInBackground(Void... params) {
+                ArrayList<String> lines = TaskIo.loadFromFile(file);
                 for (int i=0 ; i<numUpdated;i++) {
                     int index = lines.indexOf(original.get(i));
                     if (index!=-1) {
@@ -203,20 +204,20 @@ public class FileStore implements FileStoreInterface {
                 }
                 if (added!=null) {
                     for (String item : added) {
-                        mLines.add(item);
+                        lines.add(item);
                     }
                 }
                 if (removed!=null) {
                     for (String item : removed) {
-                        mLines.remove(item);
+                        lines.remove(item);
                     }
                 }
                 TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
-                return null;
+                return lines;
             }
 
             @Override
-            protected void onPostExecute(Void v) {
+            protected void onPostExecute(ArrayList<String> lines) {
                 updateDone(mTodoName);
                 mLines = lines;
             }
