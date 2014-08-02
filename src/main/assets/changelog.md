@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.1
+-----
+
+- Prevent race conditions for possible fixes of #99 and #103.
+
 5.2.0
 -----
 
