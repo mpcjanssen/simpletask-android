@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.2
+-----
+
+- Updated Dropbox Sync API.
+
 5.2.1
 -----
 
