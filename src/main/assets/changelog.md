@@ -9,39 +9,38 @@
 5.2.1
 -----
 
-- Prevent race conditions for possible fixes of #99 and #103.
+- Prevent race conditions for possible fixes of [#99](https://github.com/mpcjanssen/simpletask-android/issues/99) and [#103](http://github.com/mpcjanssen/simpletask-android/issues/103).
 
 5.2.0
 -----
 
 - (Experimental) Included Javascript engine to allow advanced filtering. See [Javascript](./javascript.md) for usage.
-- Don't use `removeAll` in task stores. Fixes #112.
+- Don't use `removeAll` in task stores. Fixes [#112](https://github.com/mpcjanssen/simpletask-android/issues/112).
 - Return to filter activity when switching to another app and back instead of to the main screen.
 
 5.1.8
 -----
 
-- Finish files with EOL on Cloudless. Possible fix for #108
-
+- Finish files with EOL on Cloudless. Possible fix for [#103](https://github.com/mpcjanssen/simpletask-android/issues/103)
 5.1.7
 -----
 
 - Updated German translations.
-- Fix rec:1y recurrence. Fixes #108.
+- Fix rec:1y recurrence. Fixes [#108](https://github.com/mpcjanssen/simpletask-android/issues/108).
 - Better initial Dropbox sync feedback.
 
 5.1.6
 -----
 
-- Back will close the left navigation drawer if it's open. Fixes #100.
+- Back will close the left navigation drawer if it's open. Fixes [#100](https://github.com/mpcjanssen/simpletask-android/issues/100).
 - Select current priority when changing a single task's priority.
-- Ensure todo file always ends with an EOL. Possible fix for #103.
-- Save incremental search and fix search submit. Fixes #104.
+- Ensure todo file always ends with an EOL. Possible fix for [#103](https://github.com/mpcjanssen/simpletask-android/issues/103).
+- Save incremental search and fix search submit. Fixes [#104](https://github.com/mpcjanssen/simpletask-android/issues/104).
 
 5.1.5
 -----
 
-- Consider complete task inFileFormat when text searching. Fixes #98.
+- Consider complete task inFileFormat when text searching. Fixes [#98](https://github.com/mpcjanssen/simpletask-android/issues/98).
 
 5.1.4
 -----
