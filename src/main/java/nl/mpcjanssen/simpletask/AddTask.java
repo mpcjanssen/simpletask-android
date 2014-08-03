@@ -219,7 +219,9 @@ public class AddTask extends ThemedActivity {
     }
 
     private void addBackgroundTask(String taskText) {
-        m_app.getTaskCache().append(taskText);
+        ArrayList<Task> bgTask = new ArrayList<Task>();
+        bgTask.add(new Task(0,taskText));
+        m_app.getTaskCache().modify(null,null,bgTask,null);
         m_app.updateWidgets();
         Util.showToastShort(m_app, R.string.task_added);
     }
