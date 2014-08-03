@@ -96,7 +96,7 @@ public class TaskCache {
         }
         notifyChanged();
         mFileStore.modify(mTodoName,null,null,null,Util.tasksToString(tasksToArchive));
-        mFileStore.append(targetPath, Util.tasksToString(tasksToArchive));
+        mFileStore.archive(targetPath, Util.tasksToString(tasksToArchive));
     }
 
     @NotNull
@@ -217,17 +217,6 @@ public class TaskCache {
         }
         modify(originalStrings, tasks, recurredTasks,null);
     }
-
-    public void append(String taskText) {
-        ArrayList<String> lines = new ArrayList<String>();
-        lines.add(taskText);
-        for (String line: lines ) {
-            mTasks.add(new Task(0,line));
-        }
-        mFileStore.append(mTodoName,lines);
-        notifyChanged();
-    }
-
 
     public void modify(List<String> originalTasks, List<Task> updatedTasks, List<Task> addedTasks, List<Task> deletedTasks) {
         // Updated tasks are already reflected in cache as they are passed by reference

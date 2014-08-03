@@ -82,7 +82,7 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
-        public void append(String path, List<String> lines) {
+        public void archive(String path, List<String> lines) {
 
         }
 

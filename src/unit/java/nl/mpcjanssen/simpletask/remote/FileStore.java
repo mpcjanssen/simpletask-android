@@ -35,7 +35,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(String path, List<String> lines) {
+    public void archive(String path, List<String> lines) {
 
     }
 
