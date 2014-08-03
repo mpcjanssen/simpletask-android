@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.3
+-----
+
+- Use calendarview to select dates instead of spinners.
+
 5.2.2
 -----
 
