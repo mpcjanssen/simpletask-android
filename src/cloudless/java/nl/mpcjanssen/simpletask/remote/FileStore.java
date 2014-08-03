@@ -102,9 +102,8 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(final String path, final List<String> lines) {
+    public void archive(final String path, final List<String> lines) {
         updateStart(path);
-        mLines.addAll(lines);
         new AsyncTask<Void, Void, Void>() {
 
             @Override

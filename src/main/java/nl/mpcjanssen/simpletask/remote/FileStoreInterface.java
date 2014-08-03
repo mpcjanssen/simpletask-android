@@ -14,7 +14,7 @@ public interface FileStoreInterface {
     boolean isAuthenticated();
     @Nullable
     List<String> get(String path);
-    void append(String path, List<String> lines);
+    void archive(String path, List<String> lines);
     void startLogin(Activity caller, int i);
     void deauthenticate();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener);

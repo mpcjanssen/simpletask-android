@@ -348,7 +348,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void append(String path, final List<String> lines) {
+    public void archive(String path, final List<String> lines) {
         if (isAuthenticated() && getDbxFS() != null) {
             new AsyncTask<String, Void, Void>() {
                 @Nullable
@@ -366,14 +366,6 @@ public class FileStore implements FileStoreInterface {
                         e.printStackTrace();
                     }
                     return null;
-                }
-
-                @Override
-                public void onPostExecute (Void v) {
-                    if (mLines==null) {
-                        mLines = new ArrayList<String>();
-                    }
-                    mLines.addAll(lines);
                 }
             }.execute(path, Util.join(lines, mEol) + mEol);
         }
