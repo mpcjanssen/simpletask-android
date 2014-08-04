@@ -9,7 +9,37 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
+sourceSets {
+        unitTest {
+                java.srcDir file('src/test/java')
+                resources.srcDir file('src/test/resources')
+        }
+}
+
+dependencies {
+        unitTestCompile files("$project.buildDir/intermediates/classes/cloudless/debug")
+        unitTestCompile fileTree(dir: 'libskeep', include: '*.jar')
+        unitTestCompile 'com.darwinsys:hirondelle-date4j:1.5.1'
+        unitTestCompile 'com.google.guava:guava:17.0'
+        unitTestCompile 'com.google.android:android:4.+'
+        unitTestCompile 'junit:junit:4.11'
+        unitTestCompile 'org.easymock:easymock:3.2'
+}
+
+configurations {
+        unitTestCompile.extendsFrom runtime
+        unitTestRuntime.extendsFrom unitTestCompile
+}
+
+task unitTest(type:Test, dependsOn: assemble) {
+        description = "run unit tests"
+        testClassesDir = project.sourceSets.unitTest.output.classesDir
+        classpath = project.sourceSets.unitTest.runtimeClasspath + files("$project.buildDir/intermediates/classes/cloudless/debug")
+}
+
 android {
+
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -30,11 +60,6 @@ android {
         free {
             applicationId 'nl.mpcjanssen.todotxtholo'
         }
-        // Special flavor for testing as this is uninstalled after
-        // completion of the test run
-        unit {
-            applicationId 'nl.mpcjanssen.simpletask.test'
-        }
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
         }
@@ -51,7 +76,6 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    check.dependsOn 'connectedAndroidTestUnitDebug'
 }
 
 repositories {
@@ -67,6 +91,7 @@ dependencies {
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:17.0'
 }
+check.dependsOn unitTest
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&
