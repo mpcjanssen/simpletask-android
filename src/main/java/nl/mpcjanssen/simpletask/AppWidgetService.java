@@ -25,6 +25,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
+import nl.mpcjanssen.simpletask.util.DateStrings;
 
 public class AppWidgetService extends RemoteViewsService {
 
@@ -172,12 +173,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             rv.setTextViewText(R.id.tasktext, ss);
+            DateStrings ds = new DateStrings(application.getAppContext());
 
-            String relAge = task.getRelativeAge();
-            SpannableString relDue = task.getRelativeDueDate(res.getColor(android.R.color.holo_green_light),
+            String relAge = task.getRelativeAge(ds);
+            SpannableString relDue = task.getRelativeDueDate(ds, res.getColor(android.R.color.holo_green_light),
                     res.getColor(android.R.color.holo_red_light),
                     true);
-            String relThres = task.getRelativeThresholdDate();
+            String relThres = task.getRelativeThresholdDate(ds);
             boolean anyDateShown = false;
             if (!Strings.isEmptyOrNull(relAge)) {
                 rv.setTextViewText(R.id.taskage, relAge);
