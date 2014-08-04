@@ -82,6 +82,7 @@ import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.task.token.Token;
+import nl.mpcjanssen.simpletask.util.DateStrings;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -1265,12 +1266,12 @@ public class Simpletask extends ThemedListActivity implements
                         }
                     });
 
-
-                    String relAge = task.getRelativeAge();
-                    SpannableString relDue = task.getRelativeDueDate(res.getColor(android.R.color.holo_green_light),
+                    DateStrings ds = new DateStrings(m_app.getAppContext());
+                    String relAge = task.getRelativeAge(ds);
+                    SpannableString relDue = task.getRelativeDueDate(ds, res.getColor(android.R.color.holo_green_light),
                             res.getColor(android.R.color.holo_red_light),
                             m_app.hasColorDueDates());
-                    String relThres = task.getRelativeThresholdDate();
+                    String relThres = task.getRelativeThresholdDate(ds);
                     boolean anyDateShown = false;
                     if (!Strings.isEmptyOrNull(relAge)) {
                         holder.taskage.setText(relAge);

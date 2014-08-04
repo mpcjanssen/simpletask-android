@@ -188,11 +188,13 @@ public class TaskCache {
     private void notifyChanged() {
         // We have changes in cache
         // Invalidate cached lists and tags
-        Log.v(TAG, "Tasks have changed, reload cache");
         mLists = null;
         mTags = null;
         // Update any visible activity
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+        if (mCtx!=null) {
+            Log.v(TAG, "Tasks have changed, reload cache");
+            LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+        }
     }
 
     public void undoComplete(@NotNull List<Task> tasks) {

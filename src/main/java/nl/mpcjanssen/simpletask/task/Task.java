@@ -54,6 +54,7 @@ import nl.mpcjanssen.simpletask.task.token.TTAG;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.task.token.WHITE_SPACE;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
+import nl.mpcjanssen.simpletask.util.DateStrings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
@@ -91,8 +92,6 @@ public class Task implements Serializable, Comparable<Task> {
     private ArrayList<String> mTags;
     @Nullable
     private String mCompletionDate;
-    @Nullable
-    private String mRelativeAge;
     @Nullable
     private String mCreateDate;
     @Nullable
@@ -249,7 +248,6 @@ public class Task implements Serializable, Comparable<Task> {
         temp.addAll(mTokens);
         mTokens = temp;
         mCreateDate = newCreateDate;
-        mRelativeAge = calculateRelativeAge(newCreateDate);
     }
 
     public void setPriority(@NotNull Priority priority) {
@@ -280,11 +278,11 @@ public class Task implements Serializable, Comparable<Task> {
 
 
     @Nullable
-    public SpannableString getRelativeDueDate(int dueTodayColor, int overDueColor, boolean useColor) {
+    public SpannableString getRelativeDueDate(DateStrings ds, int dueTodayColor, int overDueColor, boolean useColor) {
         DateTime dueDate = getDueDate();
         DateTime today = DateTime.today(TimeZone.getDefault());
         if (dueDate!=null) {
-            String relativeDate = RelativeDate.getRelativeDate(dueDate);
+            String relativeDate = RelativeDate.getRelativeDate(ds, dueDate);
             SpannableString ss = new SpannableString("Due: " +  relativeDate);
             if (dueDate.isSameDayAs(today) && useColor) {
                 Util.setColor(ss, dueTodayColor);
@@ -298,10 +296,10 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     @Nullable
-    public String getRelativeThresholdDate() {
+    public String getRelativeThresholdDate(DateStrings ds) {
         DateTime thresholdDate = getThresholdDate();
         if (thresholdDate!=null) {
-            return "T: " + RelativeDate.getRelativeDate(thresholdDate);
+            return "T: " + RelativeDate.getRelativeDate(ds, thresholdDate);
         } else {
             return null;
         }
@@ -584,7 +582,6 @@ public class Task implements Serializable, Comparable<Task> {
         mIsHidden = false;
         mLists = new ArrayList<String>();
         mTags =  new ArrayList<String>();
-        mRelativeAge = null;
 
         Matcher m;
         String remaining = text;
@@ -625,7 +622,6 @@ public class Task implements Serializable, Comparable<Task> {
             mCreateDate = m.group(1).trim();
             remaining = m.group(2);
             mTokens.add(new CREATION_DATE(m.group(1)));
-            mRelativeAge = calculateRelativeAge(mCreateDate);
         }
 
         while (remaining.length()>0) {
@@ -700,13 +696,13 @@ public class Task implements Serializable, Comparable<Task> {
         Collections.sort(mTags);
     }
 
-    private String calculateRelativeAge(String date) {
+    private String calculateRelativeAge(DateStrings ds, String date) {
         String result;
         if (!DateTime.isParseable(date)) {
             result = date;
         } else {
             DateTime dt = new DateTime(date);
-            result = RelativeDate.getRelativeDate(dt);
+            result = RelativeDate.getRelativeDate(ds, dt);
         }
         return result;
     }
@@ -725,8 +721,11 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     @Nullable
-    public String getRelativeAge() {
-        return mRelativeAge;
+    public String getRelativeAge(DateStrings ds) {
+        if (mCreateDate!=null) {
+            return (calculateRelativeAge(ds, mCreateDate));
+        }
+        return null;
     }
 
     @NotNull

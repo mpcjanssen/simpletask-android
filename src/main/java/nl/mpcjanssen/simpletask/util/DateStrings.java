@@ -28,15 +28,15 @@ public class DateStrings {
     }
 
     public DateStrings () {
-        this.one_year_ago = "";
-        this.years_ago = "";
-        this.one_month_ago ="";
-        this.months_ago = "";
-        this.one_week_ago ="";
-        this.weeks_ago = "";
-        this.one_day_ago = "";
-        this.days_ago =  "";
-        this.today  = "";
+        this.one_year_ago = " year ago";
+        this.years_ago = " years ago";
+        this.one_month_ago =" month ago";
+        this.months_ago = " months ago";
+        this.one_week_ago =" week ago";
+        this.weeks_ago = " weeks ago";
+        this.one_day_ago = " day ago";
+        this.days_ago =  " days ago";
+        this.today  = "today";
     }
 
 }

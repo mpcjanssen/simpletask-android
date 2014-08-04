@@ -7,6 +7,7 @@ import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.token.*;
+import nl.mpcjanssen.simpletask.util.DateStrings;
 
 /**
  * Created with IntelliJ IDEA.
@@ -210,7 +211,7 @@ public class TaskTest extends TestCase {
 
     public void testInvalidCreateDate() {
         Task t1 = new Task(0, "2013-11-31 Test");
-        assertEquals("2013-11-31",t1.getRelativeAge());
+        assertEquals("2013-11-31",t1.getRelativeAge(new DateStrings()));
     }
 
     public void testInvalidCompleteDate() {
