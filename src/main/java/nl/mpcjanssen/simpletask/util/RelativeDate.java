@@ -12,15 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.TodoApplication;
 
 
 public class RelativeDate {
 
-	private static Context context = TodoApplication.getAppContext();
-	
-	
 	/**
 	 * This method computes the relative date according to the Calendar being
 	 * passed in and the number of years, months, days, etc. that differ. This
@@ -39,7 +34,7 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-    public static String computeRelativeDate(DateTime now, @NotNull DateTime when) {
+    public static String computeRelativeDate(DateStrings ds, DateTime now, @NotNull DateTime when) {
         if (when.lteq(now)) {
             int period = when.numDaysFrom(now);
 
@@ -48,26 +43,26 @@ public class RelativeDate {
             int years = period/365;
 
             if (years == 1) {
-                return context.getString(R.string.dates_one_year_ago);
+                return ds.one_year_ago;
             } else if (years > 1) {
-                return context.getString(R.string.dates_years_ago, Math.abs(years));
+                return ds.years_ago;
             }
             if (months == 1) {
-                return context.getString(R.string.dates_one_month_ago);
+                return ds.one_month_ago;
             } else if (months > 1) {
-                return context.getString(R.string.dates_months_ago, Math.abs(months));
+                return ds.months_ago;
             }
             if (weeks == 1) {
-                return context.getString(R.string.dates_one_week_ago);
+                return ds.one_week_ago;
             } else if (weeks > 1) {
-                return context.getString(R.string.dates_weeks_ago, Math.abs(weeks));
+                return ds.weeks_ago;
             }
             if (period == 1) {
-                return context.getString(R.string.dates_one_day_ago);
+                return ds.one_day_ago;
             } else if (period > 1) {
-                return context.getString(R.string.dates_days_ago, Math.abs(period));
+                return ds.days_ago;
             } else if (period == 0) {
-                return context.getString(R.string.dates_today);
+                return ds.today;
             }
         }
         return when.toString();
@@ -81,10 +76,9 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	public static String getRelativeDate(@NotNull DateTime when) {
-
+	public static String getRelativeDate(DateStrings ds, @NotNull DateTime when) {
 		DateTime now = DateTime.today(TimeZone.getDefault());
-		return computeRelativeDate(now, when);
+		return computeRelativeDate(ds, now, when);
 
 	}
 
