@@ -43,24 +43,24 @@ public class RelativeDate {
             int years = period/365;
 
             if (years == 1) {
-                return "" + years + ds.one_year_ago;
+                return "" + years + " " + ds.one_year_ago;
             } else if (years > 1) {
-                return "" + years + ds.years_ago;
+                return "" + years + " " + ds.years_ago;
             }
             if (months == 1) {
-                return "" + months + ds.one_month_ago;
+                return "" + months + " " + ds.one_month_ago;
             } else if (months > 1) {
-                return "" + months + ds.months_ago;
+                return "" + months + " " + ds.months_ago;
             }
             if (weeks == 1) {
-                return "" + weeks + ds.one_week_ago;
+                return "" + weeks + " " + ds.one_week_ago;
             } else if (weeks > 1) {
-                return "" + weeks + ds.weeks_ago;
+                return "" + weeks + " " + ds.weeks_ago;
             }
             if (period == 1) {
-                return "" + period + ds.one_day_ago;
+                return "" + period + " " + ds.one_day_ago;
             } else if (period > 1) {
-                return "" + period + ds.days_ago;
+                return "" + period + " " + ds.days_ago;
             } else if (period == 0) {
                 return ds.today;
             }

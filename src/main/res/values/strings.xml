@@ -274,19 +274,19 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="none">none</string>
     <!-- Relative Dates -->
-    <string name="dates_days_ago">%d days ago</string>
-    <string name="dates_one_day_ago">1 day ago</string>
-    <string name="dates_years_ago">%d years ago</string>
-    <string name="dates_one_year_ago">1 year ago</string>
-    <string name="dates_months_ago">%d months ago</string>
-    <string name="dates_one_month_ago">1 month ago</string>
-    <string name="dates_weeks_ago">%d weeks ago</string>
-    <string name="dates_one_week_ago">1 week ago</string>
+    <string name="dates_days_ago">days ago</string>
+    <string name="dates_one_day_ago">day ago</string>
+    <string name="dates_years_ago">years ago</string>
+    <string name="dates_one_year_ago">year ago</string>
+    <string name="dates_months_ago">months ago</string>
+    <string name="dates_one_month_ago">month ago</string>
+    <string name="dates_weeks_ago">weeks ago</string>
+    <string name="dates_one_week_ago">week ago</string>
 
 
-    <string name="dates_one_week">1 week</string>
-    <string name="dates_two_weeks">2 weeks</string>
-    <string name="dates_one_month">1 month</string>
+    <string name="dates_one_week"> week</string>
+    <string name="dates_two_weeks"> weeks</string>
+    <string name="dates_one_month"> month</string>
 
     <string name="dates_today">today</string>
     <string name="date_pick">pick date</string>

@@ -1266,7 +1266,7 @@ public class Simpletask extends ThemedListActivity implements
                         }
                     });
 
-                    DateStrings ds = new DateStrings(m_app.getAppContext());
+                    DateStrings ds = new DateStrings(Simpletask.this);
                     String relAge = task.getRelativeAge(ds);
                     SpannableString relDue = task.getRelativeDueDate(ds, res.getColor(android.R.color.holo_green_light),
                             res.getColor(android.R.color.holo_red_light),
