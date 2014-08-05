@@ -349,7 +349,8 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void archive(String path, final List<String> lines) {
-        if (isAuthenticated() && getDbxFS() != null) {
+        final DbxFileSystem fs = getDbxFS();
+        if (isAuthenticated() && fs != null) {
             new AsyncTask<String, Void, Void>() {
                 @Nullable
                 @Override
@@ -358,10 +359,15 @@ public class FileStore implements FileStoreInterface {
                     String data = params[1];
                     Log.v(TAG, "Saving " + path + "in background thread");
                     try {
-                        DbxFile openFile = openDbFile(path);
-                        if (openFile!=null) {
-                            openFile.appendString(data);
+                        DbxPath dbPath = new DbxPath(path);
+                        DbxFile openFile;
+                        if (fs.exists(dbPath)) {
+                            openFile = fs.open(dbPath);
+                        } else {
+                            openFile = fs.create(dbPath);
                         }
+                        openFile.appendString(data);
+                        openFile.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
