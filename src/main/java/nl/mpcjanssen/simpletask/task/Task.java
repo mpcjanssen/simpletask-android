@@ -22,6 +22,7 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
+import android.content.Context;
 import android.text.SpannableString;
 
 import com.google.common.base.Strings;
@@ -278,11 +279,11 @@ public class Task implements Serializable, Comparable<Task> {
 
 
     @Nullable
-    public SpannableString getRelativeDueDate(DateStrings ds, int dueTodayColor, int overDueColor, boolean useColor) {
+    public SpannableString getRelativeDueDate(Context ctx, int dueTodayColor, int overDueColor, boolean useColor) {
         DateTime dueDate = getDueDate();
         DateTime today = DateTime.today(TimeZone.getDefault());
         if (dueDate!=null) {
-            String relativeDate = RelativeDate.getRelativeDate(ds, dueDate);
+            String relativeDate = RelativeDate.getRelativeDate(ctx, dueDate);
             SpannableString ss = new SpannableString("Due: " +  relativeDate);
             if (dueDate.isSameDayAs(today) && useColor) {
                 Util.setColor(ss, dueTodayColor);
@@ -296,10 +297,10 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     @Nullable
-    public String getRelativeThresholdDate(DateStrings ds) {
+    public String getRelativeThresholdDate(Context ctx) {
         DateTime thresholdDate = getThresholdDate();
         if (thresholdDate!=null) {
-            return "T: " + RelativeDate.getRelativeDate(ds, thresholdDate);
+            return "T: " + RelativeDate.getRelativeDate(ctx, thresholdDate);
         } else {
             return null;
         }
@@ -696,13 +697,13 @@ public class Task implements Serializable, Comparable<Task> {
         Collections.sort(mTags);
     }
 
-    private String calculateRelativeAge(DateStrings ds, String date) {
+    private String calculateRelativeAge(Context ctx, String date) {
         String result;
         if (!DateTime.isParseable(date)) {
             result = date;
         } else {
             DateTime dt = new DateTime(date);
-            result = RelativeDate.getRelativeDate(ds, dt);
+            result = RelativeDate.getRelativeDate(ctx, dt);
         }
         return result;
     }
@@ -721,9 +722,9 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     @Nullable
-    public String getRelativeAge(DateStrings ds) {
+    public String getRelativeAge(Context ctx) {
         if (mCreateDate!=null) {
-            return (calculateRelativeAge(ds, mCreateDate));
+            return (calculateRelativeAge(ctx, mCreateDate));
         }
         return null;
     }

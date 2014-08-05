@@ -173,13 +173,12 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             rv.setTextViewText(R.id.tasktext, ss);
-            DateStrings ds = new DateStrings(application.getAppContext());
 
-            String relAge = task.getRelativeAge(ds);
-            SpannableString relDue = task.getRelativeDueDate(ds, res.getColor(android.R.color.holo_green_light),
+            String relAge = task.getRelativeAge(mContext);
+            SpannableString relDue = task.getRelativeDueDate(mContext, res.getColor(android.R.color.holo_green_light),
                     res.getColor(android.R.color.holo_red_light),
                     true);
-            String relThres = task.getRelativeThresholdDate(ds);
+            String relThres = task.getRelativeThresholdDate(mContext);
             boolean anyDateShown = false;
             if (!Strings.isEmptyOrNull(relAge)) {
                 rv.setTextViewText(R.id.taskage, relAge);

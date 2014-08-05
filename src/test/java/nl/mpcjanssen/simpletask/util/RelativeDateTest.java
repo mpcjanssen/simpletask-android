@@ -18,6 +18,6 @@ public class RelativeDateTest extends TestCase {
         // Bug f35cd1b
         DateTime now = new DateTime("2013-10-01");
         DateTime when = new DateTime("2013-09-30");
-        assertEquals("1 day ago", RelativeDate.computeRelativeDate(new DateStrings(), now,when));
+        assertEquals("1 day ago", RelativeDate.computeRelativeDate(null, now,when));
     }
 }
