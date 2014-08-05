@@ -5,7 +5,7 @@
 5.2.3
 -----
 
-- Fix add task bug if "Date new tasks" not selected. Fixes [#99](https://github.com/mpcjanssen/simpletask-android/issues/107).
+- Fix add task bug if "Date new tasks" not selected. Fixes [#107](https://github.com/mpcjanssen/simpletask-android/issues/107).
 - Use calendarview to select dates instead of spinners.
 
 5.2.2
