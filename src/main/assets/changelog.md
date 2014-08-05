@@ -1,6 +1,10 @@
 ﻿Changelog
 =========
 
+5.2.4
+------
+
+- Fix archiving on Dropbox.
 
 5.2.3
 -----
