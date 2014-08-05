@@ -189,12 +189,11 @@ public class AddTask extends ThemedActivity {
         // Append new tasks
         ArrayList<Task> addedTasks = new ArrayList<Task>();
         if (tasks.size()>0) {
-            if (m_app.hasPrependDate()) {
-                ArrayList<String> original = new ArrayList<String>();
-                original.addAll(tasks);
-                tasks.clear();
-                for (String task: original) {
+            for (String task: tasks) {
+                if (m_app.hasPrependDate()) {
                     addedTasks.add(new Task(0,task, DateTime.today(TimeZone.getDefault())));
+                } else {
+                    addedTasks.add(new Task(0,task,null));
                 }
             }
         }

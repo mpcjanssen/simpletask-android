@@ -34,13 +34,14 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-    public static String computeRelativeDate(DateStrings ds, DateTime now, @NotNull DateTime when) {
+    public static String computeRelativeDate(Context ctx, DateTime now, @NotNull DateTime when) {
         if (when.lteq(now)) {
             int period = when.numDaysFrom(now);
 
             int months = period/31;
             int weeks = period/7;
             int years = period/365;
+            DateStrings ds = new DateStrings(ctx,amount)
 
             if (years == 1) {
                 return "" + years + " " + ds.one_year_ago;
