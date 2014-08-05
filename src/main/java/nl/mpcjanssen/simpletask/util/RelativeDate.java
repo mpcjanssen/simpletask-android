@@ -20,7 +20,7 @@ public class RelativeDate {
 	 * This method computes the relative date according to the Calendar being
 	 * passed in and the number of years, months, days, etc. that differ. This
 	 * will compute both past and future relative dates. E.g., "one day ago" and
-	 * "one day from now".
+	 * "one day from now".amount 
 	 * <p>
 	 * <strong>NOTE:</strong> If the calendar date relative to "now" is older
 	 * than one day, we display the actual date in its default format as
@@ -41,27 +41,27 @@ public class RelativeDate {
             int months = period/31;
             int weeks = period/7;
             int years = period/365;
-            DateStrings ds = new DateStrings(ctx,amount)
+            DateStrings ds = new DateStrings(ctx,period);
 
             if (years == 1) {
-                return "" + years + " " + ds.one_year_ago;
+                return ds.one_year_ago;
             } else if (years > 1) {
-                return "" + years + " " + ds.years_ago;
+                return ds.years_ago;
             }
             if (months == 1) {
-                return "" + months + " " + ds.one_month_ago;
+                return ds.one_month_ago;
             } else if (months > 1) {
-                return "" + months + " " + ds.months_ago;
+                return ds.months_ago;
             }
             if (weeks == 1) {
-                return "" + weeks + " " + ds.one_week_ago;
+                return ds.one_week_ago;
             } else if (weeks > 1) {
-                return "" + weeks + " " + ds.weeks_ago;
+                return ds.weeks_ago;
             }
             if (period == 1) {
-                return "" + period + " " + ds.one_day_ago;
+                return ds.one_day_ago;
             } else if (period > 1) {
-                return "" + period + " " + ds.days_ago;
+                return ds.days_ago;
             } else if (period == 0) {
                 return ds.today;
             }
@@ -77,9 +77,9 @@ public class RelativeDate {
 	 * @return String representing the relative date
 	 */
 
-	public static String getRelativeDate(DateStrings ds, @NotNull DateTime when) {
+	public static String getRelativeDate(Context context, @NotNull DateTime when) {
 		DateTime now = DateTime.today(TimeZone.getDefault());
-		return computeRelativeDate(ds, now, when);
+		return computeRelativeDate(context, now, when);
 
 	}
 

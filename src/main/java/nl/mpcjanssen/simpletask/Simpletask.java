@@ -1266,12 +1266,13 @@ public class Simpletask extends ThemedListActivity implements
                         }
                     });
 
-                    DateStrings ds = new DateStrings(Simpletask.this);
-                    String relAge = task.getRelativeAge(ds);
-                    SpannableString relDue = task.getRelativeDueDate(ds, res.getColor(android.R.color.holo_green_light),
+                    Context mContext = m_app.getAppContext();
+                    
+                    String relAge = task.getRelativeAge(mContext);
+                    SpannableString relDue = task.getRelativeDueDate(mContext, res.getColor(android.R.color.holo_green_light),
                             res.getColor(android.R.color.holo_red_light),
                             m_app.hasColorDueDates());
-                    String relThres = task.getRelativeThresholdDate(ds);
+                    String relThres = task.getRelativeThresholdDate(mContext);
                     boolean anyDateShown = false;
                     if (!Strings.isEmptyOrNull(relAge)) {
                         holder.taskage.setText(relAge);
