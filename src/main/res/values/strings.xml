@@ -175,6 +175,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_confirmation_dialogs_summary">Show a confirmation dialog before executing undoable actions or actions that can lead to data loss.
         Disable this setting if you find this annoying. You have been warned though.</string>
 
+    <string name="show_calendarview_title">Use calendar for date entry</string>
+
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
     <string name="visit_website_title">Help</string>

@@ -144,6 +144,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.ui_complete_checkbox), true);
     }
 
+    public boolean showCalendar() {
+        return m_prefs.getBoolean(getString(R.string.ui_show_calendarview), false);
+    }
+
     public boolean showHidden() {
         return m_prefs.getBoolean(getString(R.string.show_hidden), false);
     }

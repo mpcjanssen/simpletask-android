@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.5
+-----
+
+- Make use of calendar for setting dates a setting (default off).
+
 5.2.4
 ------
 

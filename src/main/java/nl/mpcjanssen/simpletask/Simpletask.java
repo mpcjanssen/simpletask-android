@@ -602,9 +602,10 @@ public class Simpletask extends ThemedListActivity implements
                             today.getMonth()-1,
                             today.getDay()
                     );
+                    boolean showCalendar = m_app.showCalendar();
 
-                    dialog.getDatePicker().setCalendarViewShown(true);
-                    dialog.getDatePicker().setSpinnersShown(false);
+                    dialog.getDatePicker().setCalendarViewShown(showCalendar);
+                    dialog.getDatePicker().setSpinnersShown(!showCalendar);
                     dialog.show();
                 } else {
                     getTaskBag().defer(selected, tasksToDefer, dateType);
