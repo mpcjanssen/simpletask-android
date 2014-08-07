@@ -7,6 +7,7 @@
 - Make use of calendar for setting dates a setting (default off).
 - Fix file order sorting for newly added tasks. Fixes [#117](https://github.com/mpcjanssen/simpletask-android/issues/117).
 - Make filterbar better suited for small devices.
+- Use a ContentProvider for sharing tasks. Fixes [#118](https://github.com/mpcjanssen/simpletask-android/issues/118).
 
 5.2.4
 ------

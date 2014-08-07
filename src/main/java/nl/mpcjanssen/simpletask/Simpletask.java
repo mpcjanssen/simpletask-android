@@ -66,6 +66,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -518,20 +519,37 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private void shareTodoList() {
-        String text = "";
+        StringBuilder text = new StringBuilder();
         for (int i = 0; i < m_adapter.getCount(); i++) {
             Task task = m_adapter.getItem(i);
             if (task != null) {
-                text = text + (task.inFileFormat()) + "\n";
+                text.append(task.inFileFormat() + "\n");
             }
         }
+        shareText(text.toString());
+    }
 
+    private void shareText(String text) {
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 "Simpletask list");
-        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
 
+        // If text is small enough also SEND it directly
+        if (text.length()<10000) {
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,text);
+        }
+
+        // Create a cache file to pass in EXTRA_STREAM
+        try {
+            Util.createCachedFile(this,
+                            Constants.SHARE_FILE_NAME, text);
+            Uri fileUri  = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
+                        + Constants.SHARE_FILE_NAME);
+            shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri );
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to create file for sharing");
+        }
         startActivity(Intent.createChooser(shareIntent, "Share"));
     }
 
@@ -1436,12 +1454,7 @@ public class Simpletask extends ThemedListActivity implements
                     return true;
                 case R.id.share:
                     String shareText = selectedTasksAsString();
-                    intent = new Intent(android.content.Intent.ACTION_SEND)
-                            .setType("text/plain")
-                            .putExtra(android.content.Intent.EXTRA_SUBJECT,
-                                    getString(R.string.share_title))
-                            .putExtra(android.content.Intent.EXTRA_TEXT, shareText);
-                    startActivity(Intent.createChooser(intent, "Share"));
+                    shareText(shareText);
                     break;
                 case R.id.calendar:
                     String calendarTitle = getString(R.string.calendar_title);

@@ -20,8 +20,7 @@ You should have received a copy of the GNU General Public License along with Sim
 -->
 <!-- suppress ALL -->
 <!-- package name and version codes are overwritten by Gradle -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="nl.mpcjanssen.simpletask" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
@@ -41,6 +40,11 @@ You should have received a copy of the GNU General Public License along with Sim
             android:enabled="true"
             android:exported="false"
             android:label="Dropbox Sync" />
+        <provider 
+            android:name="nl.mpcjanssen.simpletask.CachedFileProvider" 
+            android:authorities="nl.mpcjanssen.todotxtholo.provider">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
     </application>
 
 </manifest>

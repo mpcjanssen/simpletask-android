@@ -22,10 +22,13 @@
  */
 package nl.mpcjanssen.simpletask.util;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -33,12 +36,15 @@ import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mozilla.javascript.ScriptableObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -264,5 +270,22 @@ public class Util {
         scope.defineProperty("recurrence", t.getRecurrencePattern(), 0);
         scope.defineProperty("tags", org.mozilla.javascript.Context.javaToJS(t.getTags(), scope), 0);
         scope.defineProperty("lists", org.mozilla.javascript.Context.javaToJS(t.getLists(), scope), 0);
+    }
+
+    public static void createCachedFile(Context context, String fileName,
+            String content) throws IOException {
+ 
+        File cacheFile = new File(context.getCacheDir() + File.separator
+                + fileName);
+        cacheFile.createNewFile();
+ 
+        FileOutputStream fos = new FileOutputStream(cacheFile);
+        OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF8");
+        PrintWriter pw = new PrintWriter(osw);
+ 
+        pw.println(content);
+ 
+        pw.flush();
+        pw.close();
     }
 }
