@@ -255,10 +255,6 @@ public class Simpletask extends ThemedListActivity implements
 
         // Replace drawables if the theme is dark
         if (m_app.isDarkTheme()) {
-            ImageView actionBarIcon = (ImageView) findViewById(R.id.actionbar_icon);
-            if (actionBarIcon != null) {
-                actionBarIcon.setImageResource(R.drawable.labels);
-            }
             ImageView actionBarClear = (ImageView) findViewById(R.id.actionbar_clear);
             if (actionBarClear != null) {
                 actionBarClear.setImageResource(R.drawable.cancel);
@@ -394,12 +390,12 @@ public class Simpletask extends ThemedListActivity implements
         int top = (v == null) ? 0 : v.getTop();
         lv.setSelectionFromTop(index, top);
 
-        final ImageButton actionbar_clear = (ImageButton) findViewById(R.id.actionbar_clear);
+        final LinearLayout actionbar = (LinearLayout) findViewById(R.id.actionbar);
         final TextView filterText = (TextView) findViewById(R.id.filter_text);
         if (mFilter.hasFilter()) {
-            actionbar_clear.setVisibility(View.VISIBLE);
+            actionbar.setVisibility(View.VISIBLE);
         } else {
-            actionbar_clear.setVisibility(View.GONE);
+            actionbar.setVisibility(View.GONE);
         }
         int count = m_adapter!=null ? m_adapter.getCountVisbleTasks() : 0;
         int total = getTaskBag()!=null ? getTaskBag().size() : 0;
