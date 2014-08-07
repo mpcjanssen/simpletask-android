@@ -5,6 +5,7 @@
 -----
 
 - Make use of calendar for setting dates a setting (default off).
+- Fix file order sorting for newly added tasks. Fixes [#117](https://github.com/mpcjanssen/simpletask-android/issues/117).
 
 5.2.4
 ------
