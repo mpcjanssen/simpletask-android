@@ -66,13 +66,16 @@ public class TaskCache {
     private ArrayList<String> mLists = null;
     @org.jetbrains.annotations.Nullable
     private ArrayList<String> mTags = null;
-
+    private long mMaxId = 0;
 
     public TaskCache(Context context, @NotNull FileStoreInterface fileStore, String todoName) {
         this.mCtx = context;
         this.mTodoName = todoName;
         this.mFileStore = fileStore;
         this.mTasks = loadTasksFromStore(todoName);
+        if (mTasks!=null && mTasks.size()>0) {
+            this.mMaxId = mTasks.get(mTasks.size()-1).getId();
+        }
     }
 
     public void archive(String targetPath, @Nullable List<Task> selectedTasks) {
@@ -224,6 +227,9 @@ public class TaskCache {
         // Updated tasks are already reflected in cache as they are passed by reference
         if (addedTasks!=null) {
             for (Task t : addedTasks) {
+                // Update ID of task so file order sorting works properly (#119)
+                mMaxId++;
+                t.setId(mMaxId);
                 mTasks.add(t);
             }
         }

@@ -219,6 +219,10 @@ public class Task implements Serializable, Comparable<Task> {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @NotNull
     public Priority getPriority() {
         if (mPrio == null) {
