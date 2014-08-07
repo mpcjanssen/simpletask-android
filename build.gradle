@@ -37,6 +37,12 @@ task unitTest(type:Test, dependsOn: assemble) {
         classpath = project.sourceSets.unitTest.runtimeClasspath + files("$project.buildDir/intermediates/classes/cloudless/debug")
 }
 
+task serve(type:Copy, dependsOn: assembleRelease) {
+    from 'build/outputs/apk/'
+    into servePath + '/master'
+    include '**/*release.apk'
+}
+
 android {
 
 
@@ -50,8 +56,8 @@ android {
     compileSdkVersion 20
 
     defaultConfig {
-        versionName '5.2.4'
-        versionCode 1531
+        versionName '5.2.5'
+        versionCode 1532
 	    minSdkVersion 14
         targetSdkVersion 20
     }
@@ -92,6 +98,7 @@ dependencies {
     compile 'com.google.guava:guava:17.0'
 }
 check.dependsOn unitTest
+build.dependsOn serve
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&
