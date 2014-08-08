@@ -57,7 +57,7 @@ android {
 
     defaultConfig {
         versionName '5.2.5'
-        versionCode 1532
+        versionCode 1533
 	    minSdkVersion 14
         targetSdkVersion 20
     }
