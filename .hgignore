@@ -1,0 +1,14 @@
+syntax: glob
+dropbox.xml
+build/
+local.properties
+.gradle/
+tags
+.repo
+.fslckout
+_FOSSIL_
+\#*
+*~
+*.pyc
+.idea/
+*.iml
