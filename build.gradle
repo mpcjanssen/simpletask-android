@@ -38,10 +38,12 @@ task unitTest(type:Test, dependsOn: assemble) {
 }
 
 task buildInfo {
-    def cmd = "git rev-parse --short HEAD"
-    def proc = cmd.execute()
-    ext.revision = proc.text.trim()
-    ext.timestamp = (int)(new Date().getTime()/1000)
+    def revcmd = "git rev-parse --short HEAD"
+    def revproc = revcmd.execute()
+    ext.revision = revproc.text.trim()
+    def datecmd = "git log -1 --date=short --pretty=format:%cd"
+    def dateproc = datecmd.execute()
+    ext.date = dateproc.text.trim()
 }
 
 task checkCleanGit {
@@ -56,7 +58,7 @@ task checkCleanGit {
 
 task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
     from 'build/outputs/apk/'
-    into deployPath + '/master/' + buildInfo.ext.revision
+    into deployPath + '/master/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
     include '**/*release.apk'
 }
 
