@@ -56,8 +56,8 @@ task checkCleanGit {
 
 task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
     from 'build/outputs/apk/'
-    into deployPath + '/master/'
-    include '**/*' + buildInfo.ext.revision  + '*release.apk'
+    into deployPath + '/master/' + buildInfo.ext.revision
+    include '**/*release.apk'
 }
 
 android {
@@ -79,8 +79,6 @@ android {
         targetSdkVersion 20
         buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
     }
-
-    project.ext.set("archivesBaseName", "simpletask-" + buildInfo.ext.revision);
 
     productFlavors {
         free {
