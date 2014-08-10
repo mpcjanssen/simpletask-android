@@ -54,9 +54,9 @@ task checkCleanGit {
     }
 }
 
-task serve(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
+task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
     from 'build/outputs/apk/'
-    into servePath + '/master/'
+    into deployPath + '/master/'
     include '**/*' + buildInfo.ext.revision  + '*release.apk'
 }
 

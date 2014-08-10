@@ -1,0 +1,8 @@
+org.gradle.daemon=false
+storeFile = /path/to/google/key/file
+deployPath = /path/to/put/apks/for/deploy/task
+
+# put the storefile passwords in ~/.gradle/gradle.properties
+# ensure this is not version controlled
+# storePassword = password_of_store
+# keyPassword = password_of_key
