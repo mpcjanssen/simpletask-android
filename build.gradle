@@ -37,9 +37,26 @@ task unitTest(type:Test, dependsOn: assemble) {
         classpath = project.sourceSets.unitTest.runtimeClasspath + files("$project.buildDir/intermediates/classes/cloudless/debug")
 }
 
-task serve(type:Copy, dependsOn: assembleRelease) {
+task buildInfo {
+    def cmd = "git rev-parse --short HEAD"
+    def proc = cmd.execute()
+    ext.revision = proc.text.trim()
+    ext.timestamp = (int)(new Date().getTime()/1000)
+}
+
+task checkCleanGit {
+    def cmd = "git diff-files"
+    def proc = cmd.execute()
+    ext.status = proc.text.trim()
+    doLast {
+       if (!(ext.status == ""))
+          throw new GradleException("Git not clean, commit changes before running serve:\n" + ext.status)
+    }
+}
+
+task serve(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
     from 'build/outputs/apk/'
-    into servePath + '/master'
+    into servePath + '/master/'
     include '**/*release.apk'
 }
 
@@ -60,7 +77,10 @@ android {
         versionCode 1533
 	    minSdkVersion 14
         targetSdkVersion 20
+        buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
     }
+
+    project.ext.set("archivesBaseName", "simpletask-" + buildInfo.ext.revision);
 
     productFlavors {
         free {
@@ -98,7 +118,7 @@ dependencies {
     compile 'com.google.guava:guava:17.0'
 }
 check.dependsOn unitTest
-build.dependsOn serve
+preBuild.dependsOn buildInfo
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&

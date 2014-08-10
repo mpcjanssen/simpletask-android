@@ -78,7 +78,7 @@ public class Preferences extends ThemedActivity {
 			try {
 				packageInfo = getActivity().getPackageManager().getPackageInfo(
 						getActivity().getPackageName(), 0);
-				versionPref.setSummary("v" + packageInfo.versionName);
+				versionPref.setSummary("v" + packageInfo.versionName + " (" + BuildConfig.GIT_REV + ")");
 			} catch (NameNotFoundException e) {
 				e.printStackTrace();
 			}
