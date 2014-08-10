@@ -57,7 +57,7 @@ task checkCleanGit {
 task serve(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
     from 'build/outputs/apk/'
     into servePath + '/master/'
-    include '**/*release.apk'
+    include '**/*' + buildInfo.ext.revision  + '*release.apk'
 }
 
 android {
