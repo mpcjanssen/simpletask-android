@@ -217,6 +217,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
         Task task = visibleTasks.get(position);
         int tokensToShow = Token.SHOW_ALL;
+        tokensToShow = tokensToShow & ~Token.CREATION_DATE;
         tokensToShow = tokensToShow & ~Token.COMPLETED;
         tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
         SpannableString ss = new SpannableString(

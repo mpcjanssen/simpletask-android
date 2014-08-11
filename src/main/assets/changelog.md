@@ -5,6 +5,8 @@
 -----
 
 - Include VCS revision in version number.
+- Documented `h:1` extension in help.
+- Don't show create date in simple widget. Fixes [#123](https://github.com/mpcjanssen/simpletask-android/issues/123).
 
 5.2.5
 -----
