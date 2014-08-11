@@ -27,7 +27,7 @@ public class TaskBagTest extends TestCase {
         TaskCache tb = new TaskCache(null, testFileStore, null);
         assertEquals(2, tb.size());
         assertEquals("Test", tb.getTaskAt(0).inFileFormat());
-        assertEquals(0, tb.getContexts(false).size());
+        assertEquals(0, tb.getContexts().size());
     }
 
     public void testDeleteIdentical() {

@@ -42,7 +42,6 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -70,7 +69,9 @@ public class TaskCache {
     private ArrayList<String> mTags = null;
     private long mMaxId = 0;
 
-    public TaskCache(Context context, @NotNull FileStoreInterface fileStore, String todoName) {
+    public TaskCache(   Context context,
+                        @NotNull FileStoreInterface fileStore,
+                        String todoName) {
         this.mCtx = context;
         this.mTodoName = todoName;
         this.mFileStore = fileStore;
@@ -146,7 +147,7 @@ public class TaskCache {
     }
 
     @Nullable
-    public ArrayList<String> getContexts(boolean includeNone) {
+    public ArrayList<String> getContexts() {
         if(mLists!=null) {
             return mLists;
         }
@@ -155,15 +156,12 @@ public class TaskCache {
             res.addAll(item.getLists());
         }
         mLists = new ArrayList<String>();
-        mLists.addAll(new AlphabeticalStringComparator().sortedCopy(res));
-        if (includeNone) {
-            mLists.add(0, "-");
-        }
+        mLists.addAll(res);
         return mLists;
     }
 
     @org.jetbrains.annotations.Nullable
-    public ArrayList<String> getProjects(boolean includeNone) {
+    public ArrayList<String> getProjects() {
         if(mTags!=null) {
             return mTags;
         }
@@ -172,21 +170,16 @@ public class TaskCache {
             res.addAll(item.getTags());
         }
         mTags = new ArrayList<String>();
-        mTags.addAll(res);
-        Collections.sort(mTags);
-        if (includeNone) {
-            mTags.add(0, "-");
-        }
         return mTags;
     }
 
 
-    public ArrayList<String> getDecoratedContexts(boolean includeNone) {
-        return Util.prefixItems("@", getContexts(includeNone));
+    public ArrayList<String> getDecoratedContexts() {
+        return Util.prefixItems("@", getContexts());
     }
 
-    public ArrayList<String> getDecoratedProjects(boolean includeNone) {
-        return Util.prefixItems("+", getProjects(includeNone));
+    public ArrayList<String> getDecoratedProjects() {
+        return Util.prefixItems("+", getProjects());
     }
 
     private void notifyChanged() {
