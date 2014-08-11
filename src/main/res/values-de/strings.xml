@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License along with Tod
 <!--suppress ALL -->
 <resources>
     <string name="invalid_context">Ungültiger Listenname</string>
-    <string name="invalid_project">Ungültiger Tagname</string>
+    <string name="invalid_project">Ungültiger Kategoriename</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">Aufgabe hinzugefügt</string>
     <string name="add_task_failed">Aufgabe kann nicht hinzugfügt werden</string>
@@ -45,18 +45,18 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="search">Suchen</string>
     <string name="add">Hinzufügen</string>
     <string name="task">Aufgabe</string>
-    <string name="addtask">Aufgabe hinzufügen</string>
-    <string name="updatetask">Update</string>
+    <string name="addtask">Aufgabe(n) hinzufügen</string>
+    <string name="updatetask">Aufgabe(n) ändern</string>
     <string name="viewtask">Aufgabe zeigen</string>
     <string name="cleartask">Aufgabe löschen</string>
     <string name="done">Fertig</string>
     <string name="select_all">Alle markieren</string>
     <string name="priority">Priorisieren</string>
     <string name="select_priority">Priorität auswählen</string>
-    <string name="add_list_or_tag">Listen und Tags hinzufügen</string>
-    <string name="update_lists">Listen aktualisieren</string>
-    <string name="update_tags">Tags aktualisieren</string>
-    <string name="remove_list_or_tag">Listen und Tags entfernen</string>
+    <string name="add_list_or_tag">Listen und Kategorien hinzufügen</string>
+    <string name="update_lists">Listen modifizieren</string>
+    <string name="update_tags">Tags modifizieren</string>
+    <string name="remove_list_or_tag">Listen und Kategorien entfernen</string>
     <string name="update">Aktualisieren</string>
     <string name="delete">Löschen</string>
     <string name="defer_due">Fälligkeitsdatum setzen</string>
@@ -77,11 +77,11 @@ You should have received a copy of the GNU General Public License along with Tod
         entspricht jede Zeile einer separaten Aufgabe.\n
         <b>Priorität</b>\n
         Beginne die Zeile mit (.), wie (A)\n
-        <b>Tags</b>
+        <b>Kategorien</b>
         Beginne mit einem + Zeichen, wie +Küche\n
         <b>Listen</b>
         Beginne mit einem @ Zeichen, wie @zuhause\n
-        Eine Aufgabe kann eine beliebige Anzahl Tags beinhalten und zu  beliebig vielen Listen gehören.
+        Eine Aufgabe kann eine beliebige Anzahl Kategorien beinhalten und zu beliebig vielen Listen gehören.
     </string>
 
     <!-- preferences -->
@@ -223,7 +223,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_help">Ziehen und Ablegen um die Reihenfolge zu ändern, Einträge antippem um die Sortierrichtung zu ändern.</string>
     <string name="alphabetical">Alphabetisch</string>
     <string name="by_prio">Nach Priorität</string>
-    <string name="by_project">Nach Tag</string>
+    <string name="by_project">Nach Kategorie</string>
     <string name="by_context">Nach Liste</string>
     <string name="file_order">Wie in der Datei (unsortiert)</string>
     <string name="completed">Erledigt</string>
@@ -243,8 +243,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="create_widget">Widget erstellen</string>
     <string name="filter_show_completed">Zeige erledigte Aufgaben</string>
     <string name="filter_show_future">Zeige Aufgaben mit Anfangsdatum in der Zukunft</string>
-    <string name="filter_show_lists">Zeige Listen in den Aufgaben</string>
-    <string name="filter_show_tags">Zeige Tags in den Aufgaben</string>
+    <string name="filter_show_lists">Zeige Listen der Aufgaben</string>
+    <string name="filter_show_tags">Zeige Kategorien der Aufgaben</string>
 
     <string name="filter_show_completed_short">Erledigt</string>
     <string name="filter_show_future_short">Zukünftig</string>
@@ -257,12 +257,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="add_task_help_btn">Hilfe</string>
     <string name="priority_prompt">Priorität</string>
     <string name="priority_short_prompt">Prio</string>
-    <string name="project_prompt">Tag</string>
+    <string name="project_prompt">Kategorie</string>
     <string name="context_prompt">Liste</string>
 
     <string name="priority_format">(prio)</string>
-    <string name="context_format">\@list</string>
-    <string name="project_format">+tag</string>
+    <string name="context_format">\@Liste</string>
+    <string name="project_format">+Kat.</string>
 
     <string name="separator">Separator</string>
 
@@ -295,7 +295,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="title_activity_filter">Filter</string>
     <string name="selected">ausgewählt</string>
     <string name="no_context">Inbox</string>
-    <string name="no_project">Kein Tag</string>
+    <string name="no_project">Keine Kategorie</string>
     <string name="no_creation_date">Kein Erstellungstatum</string>
     <string name="no_threshold_date">Kein Zeitlimit</string>
     <string name="no_header">None</string>
@@ -308,9 +308,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_added">Aufgabe zu Simpletask hinzugefügt</string>
     <string name="default_sort">Standardsortierung</string>
     <string name="pull_to_refresh_refreshing_label">Synchronisiere mit Dropbox…</string>
-    <string name="not_tagged">Aufgaben nicht auf der Liste oder getaggt</string>
+    <string name="not_tagged">Aufgaben ohne Liste oder Kategorie</string>
     <string name="new_list_name">Neue Liste erstellen</string>
-    <string name="new_tag_name">Neuen Tag erstellen</string>
+    <string name="new_tag_name">Neue Kategorie erstellen</string>
     <string name="no_filter">Kein Filter</string>
     <string name="dropbox">Dropbox</string>
 
