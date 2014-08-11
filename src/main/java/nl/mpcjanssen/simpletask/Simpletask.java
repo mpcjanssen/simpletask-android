@@ -977,8 +977,9 @@ public class Simpletask extends ThemedListActivity implements
 
     private void updateLeftDrawer() {
         TaskCache taskBag = getTaskBag();
-        DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
-                taskBag.getDecoratedContexts(true), taskBag.getDecoratedProjects(true));
+        ArrayList<String> decoratedContexts = Util.sortWithNone(taskBag.getDecoratedContexts(), m_app.sortCaseSensitive(), true);
+        ArrayList<String> decoratedProjects = Util.sortWithNone(taskBag.getDecoratedProjects(), m_app.sortCaseSensitive(), true);
+        DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(), decoratedContexts, decoratedProjects);
 
         m_leftDrawerList.setAdapter(drawerAdapter);
         m_leftDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -1528,7 +1529,7 @@ public class Simpletask extends ThemedListActivity implements
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
         final TaskCache taskbag = getTaskBag();
-        contexts.addAll(taskbag.getContexts(false));
+        contexts.addAll(Util.sortWithNone(taskbag.getContexts(), m_app.sortCaseSensitive(), false));
         for (Task t : checkedTasks) {
             selectedContexts.addAll(t.getLists());
         }
@@ -1600,9 +1601,8 @@ public class Simpletask extends ThemedListActivity implements
     private void updateTags(@NotNull final List<Task> checkedTasks) {
         final ArrayList<String> projects = new ArrayList<String>();
         Set<String> selectedProjects = new HashSet<String>();
-
         final TaskCache taskbag = getTaskBag();
-        projects.addAll(taskbag.getProjects(false));
+        projects.addAll(Util.sortWithNone(taskbag.getProjects(), m_app.sortCaseSensitive(), false));
         for (Task t : checkedTasks) {
             selectedProjects.addAll(t.getTags());
         }

@@ -8,6 +8,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.token.Token;
 
 public class AlphabeticalComparator extends Ordering<Task> {
+
     @Override
     public int compare(@Nullable Task a, @Nullable Task b) {
         if (a==null) {

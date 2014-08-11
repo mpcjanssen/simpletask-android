@@ -177,6 +177,9 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="show_calendarview_title">Use calendar for date entry</string>
 
+    <string name="sort_case_sensitive_title">Sort case-sensitive</string>
+    <string name="sort_case_sensitive_summary">Observe case when sorting lists, tags and saved filters.</string>
+
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
     <string name="visit_website_title">Help</string>
