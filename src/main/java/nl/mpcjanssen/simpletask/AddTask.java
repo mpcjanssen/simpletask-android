@@ -503,11 +503,12 @@ public class AddTask extends ThemedActivity {
     }
 
     private void showTagMenu() {
-        final Set<String> projects = new TreeSet<String>();
-        projects.addAll(m_app.getTaskCache().getProjects(false));
+        Set<String> items = new TreeSet<String>();
+        items.addAll(m_app.getTaskCache().getProjects());
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
-        projects.addAll(t.getTags());
+        items.addAll(t.getTags());
+        final ArrayList<String> projects = Util.sortWithNone(items, m_app.sortCaseSensitive(),false);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -570,11 +571,12 @@ public class AddTask extends ThemedActivity {
 
 
     private void showContextMenu() {
-        final Set<String> contexts = new TreeSet<String>();
-        contexts.addAll(m_app.getTaskCache().getContexts(false));
+        Set<String> items = new TreeSet<String>();
+        items.addAll(m_app.getTaskCache().getContexts());
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
-        contexts.addAll(t.getLists());
+        items.addAll(t.getLists());
+        final ArrayList<String> contexts = Util.sortWithNone(items, m_app.sortCaseSensitive(),false);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
