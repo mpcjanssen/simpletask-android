@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.6
+-----
+
+- Include VCS revision in version number.
+
 5.2.5
 -----
 
