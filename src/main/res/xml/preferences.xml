@@ -110,6 +110,11 @@
             android:defaultValue="false"
             android:key="@string/ui_show_calendarview"
             android:title="@string/show_calendarview_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/ui_sort_case_sensitive"
+            android:title="@string/sort_case_sensitive_title"
+            android:summary="@string/sort_case_sensitive_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">

@@ -97,7 +97,8 @@ public class FilterActivity extends ThemedActivity {
         }
         // Fill arguments for fragment
         arguments = new Bundle();        
-        arguments.putStringArrayList(FILTER_ITEMS, m_app.getTaskCache().getContexts(true));
+        arguments.putStringArrayList(FILTER_ITEMS, 
+                Util.sortWithNone(m_app.getTaskCache().getContexts(), m_app.sortCaseSensitive(), false));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
@@ -107,7 +108,8 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, m_app.getTaskCache().getProjects(true));
+        arguments.putStringArrayList(FILTER_ITEMS, 
+                Util.sortWithNone(m_app.getTaskCache().getProjects(), m_app.sortCaseSensitive(), false));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()

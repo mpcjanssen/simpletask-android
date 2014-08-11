@@ -52,6 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,6 +60,7 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
+import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class Util {
@@ -287,5 +289,20 @@ public class Util {
  
         pw.flush();
         pw.close();
+    }
+
+    public static ArrayList<String> sortWithNone(List<String> items, boolean caseSensitive, boolean includeNone) {
+        ArrayList<String> result = new ArrayList<String>();
+        result.addAll(new AlphabeticalStringComparator(caseSensitive).sortedCopy(items));
+        if (includeNone) {
+            result.add(0,"-");
+        }
+        return result;
+    }
+
+    public static ArrayList<String> sortWithNone(Set<String> items, boolean caseSensitive, boolean includeNone) {
+        ArrayList temp = new ArrayList<String>();
+        temp.addAll(items);
+        return sortWithNone(temp, caseSensitive, includeNone);
     }
 }
