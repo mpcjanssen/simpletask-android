@@ -38,9 +38,11 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -153,8 +155,7 @@ public class TaskCache {
             res.addAll(item.getLists());
         }
         mLists = new ArrayList<String>();
-        mLists.addAll(res);
-        Collections.sort(mLists);
+        mLists.addAll(new AlphabeticalStringComparator().sortedCopy(res));
         if (includeNone) {
             mLists.add(0, "-");
         }
