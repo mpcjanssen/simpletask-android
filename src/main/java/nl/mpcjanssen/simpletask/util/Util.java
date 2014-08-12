@@ -291,18 +291,18 @@ public class Util {
         pw.close();
     }
 
-    public static ArrayList<String> sortWithNone(List<String> items, boolean caseSensitive, boolean includeNone) {
+    public static ArrayList<String> sortWithPrefix(List<String> items, boolean caseSensitive, String prefix) {
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(new AlphabeticalStringComparator(caseSensitive).sortedCopy(items));
-        if (includeNone) {
-            result.add(0,"-");
+        if (prefix !=null ) {
+            result.add(0,prefix);
         }
         return result;
     }
 
-    public static ArrayList<String> sortWithNone(Set<String> items, boolean caseSensitive, boolean includeNone) {
+    public static ArrayList<String> sortWithPrefix(Set<String> items, boolean caseSensitive, String prefix) {
         ArrayList temp = new ArrayList<String>();
         temp.addAll(items);
-        return sortWithNone(temp, caseSensitive, includeNone);
+        return sortWithPrefix(temp, caseSensitive, prefix);
     }
 }
