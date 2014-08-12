@@ -977,8 +977,8 @@ public class Simpletask extends ThemedListActivity implements
 
     private void updateLeftDrawer() {
         TaskCache taskBag = getTaskBag();
-        ArrayList<String> decoratedContexts = Util.sortWithNone(taskBag.getDecoratedContexts(), m_app.sortCaseSensitive(), true);
-        ArrayList<String> decoratedProjects = Util.sortWithNone(taskBag.getDecoratedProjects(), m_app.sortCaseSensitive(), true);
+        ArrayList<String> decoratedContexts = Util.sortWithPrefix(taskBag.getDecoratedContexts(), m_app.sortCaseSensitive(), "@-");
+        ArrayList<String> decoratedProjects = Util.sortWithPrefix(taskBag.getDecoratedProjects(), m_app.sortCaseSensitive(), "+-");
         DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(), decoratedContexts, decoratedProjects);
 
         m_leftDrawerList.setAdapter(drawerAdapter);
@@ -1529,7 +1529,7 @@ public class Simpletask extends ThemedListActivity implements
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
         final TaskCache taskbag = getTaskBag();
-        contexts.addAll(Util.sortWithNone(taskbag.getContexts(), m_app.sortCaseSensitive(), false));
+        contexts.addAll(Util.sortWithPrefix(taskbag.getContexts(), m_app.sortCaseSensitive(), null));
         for (Task t : checkedTasks) {
             selectedContexts.addAll(t.getLists());
         }
@@ -1602,7 +1602,7 @@ public class Simpletask extends ThemedListActivity implements
         final ArrayList<String> projects = new ArrayList<String>();
         Set<String> selectedProjects = new HashSet<String>();
         final TaskCache taskbag = getTaskBag();
-        projects.addAll(Util.sortWithNone(taskbag.getProjects(), m_app.sortCaseSensitive(), false));
+        projects.addAll(Util.sortWithPrefix(taskbag.getProjects(), m_app.sortCaseSensitive(), null));
         for (Task t : checkedTasks) {
             selectedProjects.addAll(t.getTags());
         }

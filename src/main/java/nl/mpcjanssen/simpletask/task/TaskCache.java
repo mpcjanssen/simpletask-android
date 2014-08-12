@@ -170,6 +170,7 @@ public class TaskCache {
             res.addAll(item.getTags());
         }
         mTags = new ArrayList<String>();
+        mTags.addAll(res);
         return mTags;
     }
 
