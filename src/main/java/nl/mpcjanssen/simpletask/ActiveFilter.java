@@ -177,23 +177,25 @@ public class ActiveFilter {
         String filterTitle = "" + filterApplied ;
         if (hasFilter()) {
             filterTitle = "(" + visible + "/" + total +  ") " + filterTitle;
+            ArrayList<String> activeParts = new ArrayList<String>();
             if (m_prios.size() > 0) {
-                filterTitle += " " + prio;
+                activeParts.add(prio.toString());
             }
 
             if (m_projects.size() > 0) {
-                filterTitle += tag;
+                activeParts.add(tag.toString());
             }
 
             if (m_contexts.size() > 0) {
-                filterTitle += list;
+                activeParts.add(list.toString());
             }
             if (!Strings.isEmptyOrNull(m_search)) {
-                filterTitle += search;
+                activeParts.add(search.toString());
             }
             if (!Strings.isEmptyOrNull(m_javascript)) {
-                filterTitle += script;
+                activeParts.add(script.toString());
             }
+            filterTitle = filterTitle + " " + Util.join(activeParts, ",");
         } else {
                 filterTitle = "" + noFilter;
         }
