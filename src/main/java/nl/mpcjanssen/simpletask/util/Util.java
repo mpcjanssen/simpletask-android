@@ -301,7 +301,7 @@ public class Util {
     }
 
     public static ArrayList<String> sortWithPrefix(Set<String> items, boolean caseSensitive, String prefix) {
-        ArrayList temp = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<String>();
         temp.addAll(items);
         return sortWithPrefix(temp, caseSensitive, prefix);
     }
