@@ -1282,7 +1282,7 @@ public class Simpletask extends ThemedListActivity implements
                         }
                     });
 
-                    Context mContext = m_app.getAppContext();
+                    Context mContext = TodoApplication.getAppContext();
                     
                     String relAge = task.getRelativeAge(mContext);
                     SpannableString relDue = task.getRelativeDueDate(mContext, res.getColor(android.R.color.holo_green_light),
