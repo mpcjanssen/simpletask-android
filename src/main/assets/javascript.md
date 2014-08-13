@@ -99,7 +99,7 @@ What next?
 
 This explanation should be enough to get you started. If you want to use the full power of this feature in Javascript it will help to:
 
-* Learn Javascript: Most tutorials focus on learning Javascript in the browser which is less than helpful for us. To get a good introduction in Javascript the language you could try part 1 of [this book](http://eloquentjavascript.net/).
+* Learn Javascript: Most tutorials focus on learning Javascript in the browser which is less than helpful for us. To get a good introduction to Javascript the language you could try part 1 of [this book](http://eloquentjavascript.net/).
 * Play around and share your scripts: If you have questions or want to share your script, you can do that at the [Simpletask Google+ community](https://plus.google.com/u/0/communities/103696467805364479108?cfem=1).
 
 
