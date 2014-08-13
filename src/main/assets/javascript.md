@@ -86,7 +86,7 @@ If you script contains an error, the error will be shown in the results field. A
 How are the task contents used for filtering?
 ---------------------------------------------
 
-Of course the examples above where not very useful for filtering because they are constant values. If we want to create a result based on the task contents we will need to use these contents in some way. To get access from the contents in the script, Simpletask defines some global variables you can use. One of these is the `task` variable which contains the full text of the task. Lets try an example with this. In the script field type:
+Of course the examples above were not very useful for filtering because they are constant values. If we want to create a result based on the task contents we will need to use these contents in some way. To get access to the task contents in the script, Simpletask defines some global variables you can use. One of these is the `task` variable which contains the full text of the task. Lets try an example with this. In the script field type:
 
     task.search("simple")!=-1;
 
