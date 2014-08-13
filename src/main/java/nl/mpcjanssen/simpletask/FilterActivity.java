@@ -103,7 +103,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.context_prompt))
-                .setTabListener(new MyTabsListener(this, CONTEXT_TAB, FilterListFragment.class, arguments))
+                .setTabListener(new MyTabsListener(this, CONTEXT_TAB, FilterListFragment.class.getName(), arguments))
                 .setTag(CONTEXT_TAB));
 
         // Fill arguments for fragment
@@ -114,7 +114,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.project_prompt))
-                .setTabListener(new MyTabsListener(this, PROJECT_TAB, FilterListFragment.class, arguments))
+                .setTabListener(new MyTabsListener(this, PROJECT_TAB, FilterListFragment.class.getName(), arguments))
                 .setTag(PROJECT_TAB));
 
         // Fill arguments for fragment
@@ -124,7 +124,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.priority_short_prompt))
-                .setTabListener(new MyTabsListener(this, PRIO_TAB, FilterListFragment.class, arguments))
+                .setTabListener(new MyTabsListener(this, PRIO_TAB, FilterListFragment.class.getName(), arguments))
                 .setTag(PRIO_TAB));
 
         // Fill arguments for fragment
@@ -136,14 +136,14 @@ public class FilterActivity extends ThemedActivity {
 
         actionbar.addTab(actionbar.newTab()
                 .setText(getString(R.string.filter_show_prompt))
-                .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class, arguments))
+                .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class.getName(), arguments))
                 .setTag(OTHER_TAB));
 
         // Fill arguments for fragment
         arguments = new Bundle();
         Tab sortTab = actionbar.newTab()
                 .setText(getString(R.string.sort))
-                .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class, arguments))
+                .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class.getName(), arguments))
                 .setTag(SORT_TAB);
         arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort(m_app.getDefaultSorts()));
         actionbar.addTab(sortTab);
@@ -152,7 +152,7 @@ public class FilterActivity extends ThemedActivity {
             arguments = new Bundle();
             Tab scriptTab = actionbar.newTab()
                     .setText(getString(R.string.script))
-                    .setTabListener(new MyTabsListener(this, SCRIPT_TAB, FilterScriptFragment.class, arguments))
+                    .setTabListener(new MyTabsListener(this, SCRIPT_TAB, FilterScriptFragment.class.getName(), arguments))
                     .setTag(SCRIPT_TAB);
             arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, mFilter.getJavascript());
             arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER, mFilter.getJavascriptTestTask());
@@ -415,13 +415,13 @@ public class FilterActivity extends ThemedActivity {
         private final Activity mActivity;
         private final String mTag;
         private final Bundle mArguments;
-        private Class mClz;
+        private String mClzName;
 
-        public MyTabsListener(Activity activity, String tag, Class clz, Bundle arguments) {
+        public MyTabsListener(Activity activity, String tag, String clzName, Bundle arguments) {
             mActivity = activity;
             mTag = tag;
             mArguments = arguments;
-            mClz = clz;
+            mClzName = clzName;
         }
 
         @Override
@@ -436,8 +436,8 @@ public class FilterActivity extends ThemedActivity {
             mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
-                Log.v(TAG,"Created new fragment: " + mClz.getName());
-                mFragment = Fragment.instantiate(mActivity, mClz.getName(), mArguments);
+                Log.v(TAG,"Created new fragment: " + mClzName);
+                mFragment = Fragment.instantiate(mActivity, mClzName, mArguments);
                 ft.add(android.R.id.content, mFragment, mTag);
             } else {
                 // If it exists, simply attach it in order to show it

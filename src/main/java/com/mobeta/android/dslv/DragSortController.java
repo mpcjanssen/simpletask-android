@@ -238,6 +238,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public boolean onTouch(View v, @NotNull MotionEvent ev) {
         if (!mDslv.isDragEnabled() || mDslv.listViewIntercepted()) {
             return false;
@@ -262,6 +263,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
                         mDslv.stopDragWithVelocity(true, 0);
                     }
                 }
+                // Fallthrough is intended
             case MotionEvent.ACTION_CANCEL:
                 mIsRemoving = false;
                 mDragging = false;
@@ -340,7 +342,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
             final int rawX = (int) ev.getRawX();
             final int rawY = (int) ev.getRawY();
 
-            View dragBox = id == 0 ? item : (View) item.findViewById(id);
+            View dragBox = id == 0 ? item : item.findViewById(id);
             if (dragBox != null) {
                 dragBox.getLocationOnScreen(mTempLoc);
 

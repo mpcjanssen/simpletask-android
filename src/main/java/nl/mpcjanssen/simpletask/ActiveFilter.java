@@ -359,7 +359,7 @@ public class ActiveFilter {
                 if  (script!=null) {
                     Util.fillScope(scope, t);
                     Object result = script.exec(context, scope);
-                    if (context.toBoolean(result)) {
+                    if (Context.toBoolean(result)) {
                         matched.add(t);
                     }
                 } else {
