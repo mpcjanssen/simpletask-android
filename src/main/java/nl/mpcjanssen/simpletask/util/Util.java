@@ -278,6 +278,7 @@ public class Util {
         Token tempToken = new Token(0,"") {
         };
         scope.defineProperty("Token", org.mozilla.javascript.Context.javaToJS(tempToken, scope), 0);
+        scope.defineProperty("taskObj", org.mozilla.javascript.Context.javaToJS(t, scope), 0);
     }
 
     public static void createCachedFile(Context context, String fileName,
