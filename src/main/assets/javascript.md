@@ -6,7 +6,7 @@ Explanation for programmers
 
 Simpletask provides (experimental) advanced filtering of tasks using Javascript. To use Javascript you will need to enable it from the settings.
 
-After enabling Javascript, the filter activity will show an additional SCRIPT tab. For every task, a piece of Javascript is executed. Depending on the boolean value of the last expression, the task is visible (in case of `true`) or filtered out (in case of `false`). To help with writing the script you can test the script on an example task and the raw result and the result interpreted as boolean are shown.
+After enabling Javascript, the filter activity will show an additional SCRIPT tab. For every task, a piece of Javascript is executed. Depending on the boolean value of the last statement, the task is visible (in case of `true`) or filtered out (in case of `false`). To help with writing the script you can test the script on an example task and the raw result and the result interpreted as boolean are shown.
 
 Defined variables
 -----------------
@@ -63,9 +63,9 @@ You now see 2 text fields you can edit (Script and Test task) and two text views
 
 How does Simpletask use the script to filter tasks? As mentioned above it:
 
-> Depending on the boolean value of the last expression, the task is visible (in case of `true`) or filtered out (in case of `false`). 
+> Depending on the boolean value of the last statement, the task is visible (in case of `true`) or filtered out (in case of `false`). 
 
-What does this mean?  In Javascript, every line of code is an expression (this is a simplification, but it's close enough). Every expression also has a value. For example in the script field add:
+What does this mean?  In Javascript, every line of code is an statement (this is a simplification, but it's close enough). Every statement also has a value. For example in the script field add:
 
     1+1;
 
