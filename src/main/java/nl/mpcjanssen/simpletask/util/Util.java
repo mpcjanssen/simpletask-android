@@ -62,6 +62,7 @@ import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.token.Token;
 
 public class Util {
 
@@ -272,6 +273,11 @@ public class Util {
         scope.defineProperty("recurrence", t.getRecurrencePattern(), 0);
         scope.defineProperty("tags", org.mozilla.javascript.Context.javaToJS(t.getTags(), scope), 0);
         scope.defineProperty("lists", org.mozilla.javascript.Context.javaToJS(t.getLists(), scope), 0);
+        scope.defineProperty("tokens", org.mozilla.javascript.Context.javaToJS(t.getTokens(), scope), 0);
+        // Variable for static fields from Token class
+        Token tempToken = new Token(0,"") {
+        };
+        scope.defineProperty("Token", org.mozilla.javascript.Context.javaToJS(tempToken, scope), 0);
     }
 
     public static void createCachedFile(Context context, String fileName,
