@@ -37,6 +37,8 @@ task unitTest(type:Test, dependsOn: assemble) {
         classpath = project.sourceSets.unitTest.runtimeClasspath + files("$project.buildDir/intermediates/classes/cloudless/debug")
 }
 
+// Generate some build info. Used for the revision in the application settings and for generating the deployed file names.
+ 
 task buildInfo {
     def revcmd = "git rev-parse --short HEAD"
     def revproc = revcmd.execute()
@@ -45,6 +47,11 @@ task buildInfo {
     def dateproc = datecmd.execute()
     ext.date = dateproc.text.trim()
 }
+
+// Check if all changes are commited to Git. If not throw an exception.
+// This is called before deploying apk's. It will ensure that the Git revision numbers in the apk names
+// and in the app settings are accurate. If there were uncommited changes, the result would be different from
+// a clean checkout.
 
 task checkCleanGit {
     def cmd = "git diff-files"
@@ -64,16 +71,10 @@ task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
     rename 'simpletask-android-cloudless-release.apk',  'simpletask-cloudless-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
 }
 
-// Call gradle with -Plintdeprecated to pass this
-if (hasProperty("lintdeprecation")) { 
+// Call gradle with -Plint to enable all warnings.
+if (hasProperty("lint")) { 
    tasks.withType(Compile) { 
-      options.compilerArgs << "-Xlint:deprecation" 
-   } 
-}
-
-if (hasProperty("lintunchecked")) { 
-   tasks.withType(Compile) { 
-      options.compilerArgs << "-Xlint:unchecked" 
+      options.compilerArgs << "-Xlint:all" 
    } 
 }
 
