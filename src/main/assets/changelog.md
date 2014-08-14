@@ -8,6 +8,8 @@
 - Documented `h:1` extension in help.
 - Don't show create date in simple widget. Fixes [#123](https://github.com/mpcjanssen/simpletask-android/issues/123).
 - Better filter description. Fixes [#120](https://github.com/mpcjanssen/simpletask-android/issues/120).
+- Expanded Javascript filtering documentation.
+- Expose task parser information to Javascript.
 
 
 5.2.5
