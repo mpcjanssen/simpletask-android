@@ -1,0 +1,2 @@
+#!/bin/bash
+jdb -attach localhost:8700 -sourcepath ./src/main/java
