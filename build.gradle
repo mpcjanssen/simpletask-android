@@ -62,9 +62,20 @@ task checkCleanGit {
     }
 }
 
+def checkDeployPath() {
+    if (hasProperty("deployPath"))
+        return deployPath
+    else
+        return null
+}
+
 task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
+    doFirst {
+        if (checkDeployPath()==null)
+            throw new GradleException("deployPath not defined, please define it in gradle.properties")
+    }
     from 'build/outputs/apk/'
-    into deployPath + '/master/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
+    into checkDeployPath() + '/master/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
     include '**/*release.apk'
     rename 'simpletask-android-free-release.apk',  'simpletask-free-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
     rename 'simpletask-android-cloudless-release.apk',  'simpletask-cloudless-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
@@ -76,6 +87,7 @@ if (hasProperty("lint")) {
       options.compilerArgs << "-Xlint:all" 
    } 
 }
+
 
 android {
 
