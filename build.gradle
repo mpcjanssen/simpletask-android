@@ -143,6 +143,7 @@ dependencies {
     compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:17.0'
+    compile 'rhino:js:1.7R2'
 }
 check.dependsOn unitTest
 preBuild.dependsOn buildInfo
