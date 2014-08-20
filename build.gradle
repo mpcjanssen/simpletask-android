@@ -46,6 +46,9 @@ task buildInfo {
     def datecmd = "git log -1 --date=short --pretty=format:%cd"
     def dateproc = datecmd.execute()
     ext.date = dateproc.text.trim()
+    def branchcmd = 'git rev-parse --abbrev-ref HEAD'
+    def branchproc = branchcmd.execute()
+    ext.branch = branchproc.text.trim()
 }
 
 // Check if all changes are commited to Git. If not throw an exception.
@@ -76,7 +79,7 @@ task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
             throw new GradleException("deployPath not defined, please define it in gradle.properties")
     }
     from 'build/outputs/apk/'
-    into checkDeployPath() + '/master/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
+    into checkDeployPath() + '/' + buildInfo.ext.branch + '/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
     include '*release.apk'
     rename 'simpletask-android-free-release.apk',  'simpletask-free-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
     rename 'simpletask-android-cloudless-release.apk',  'simpletask-cloudless-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
