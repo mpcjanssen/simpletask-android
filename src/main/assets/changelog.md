@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+5.2.9
+-----
+
+- Add `-` to tag and list filters. Fixes [#135](https://github.com/mpcjanssen/simpletask-android/issues/135).
+
+5.2.7-8
+-------
+
+- Build dependencies updates for FDroid.
+
 5.2.6
 -----
 
