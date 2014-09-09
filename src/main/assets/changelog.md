@@ -5,6 +5,7 @@
 -----
 
 - Add `-` to tag and list filters. Fixes [#135](https://github.com/mpcjanssen/simpletask-android/issues/135).
+- Share text directly if possible. Fixes [#134](https://github.com/mpcjanssen/simpletask-android/issues/134).
 
 5.2.7-8
 -------
