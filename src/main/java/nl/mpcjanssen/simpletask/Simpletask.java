@@ -535,20 +535,21 @@ public class Simpletask extends ThemedListActivity implements
         shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 "Simpletask list");
 
-        // If text is small enough also SEND it directly
-        if (text.length()<10000) {
+        // If text is small enough SEND it directly
+        if (text.length()<50000) {
             shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,text);
-        }
+        } else {
 
-        // Create a cache file to pass in EXTRA_STREAM
-        try {
-            Util.createCachedFile(this,
+            // Create a cache file to pass in EXTRA_STREAM
+            try {
+                Util.createCachedFile(this,
                             Constants.SHARE_FILE_NAME, text);
-            Uri fileUri  = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
+                Uri fileUri  = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
                         + Constants.SHARE_FILE_NAME);
-            shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri );
-        } catch (Exception e) {
-            Log.w(TAG, "Failed to create file for sharing");
+                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri );
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to create file for sharing");
+            }
         }
         startActivity(Intent.createChooser(shareIntent, "Share"));
     }
