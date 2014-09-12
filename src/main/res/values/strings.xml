@@ -106,9 +106,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
-    <string name="use_prio_pref_title">Enable priorities</string>
-    <string name="use_prio_pref_summary">GTD does not promote using of priorities, but you can use it if needed.
-    </string>
+    <string name="keep_prio_header">Prio in completed tasks</string>
+    <string name="keep_prio_summary">Keep priorities in completed tasks. disable this to restore the todo.txt app behavior which removes the priority when completing a task.</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>

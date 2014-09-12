@@ -205,7 +205,9 @@ public class TaskCache {
         modify(originalStrings, tasks,null,null);
     }
 
-    public void complete(@NotNull List<Task> tasks, boolean originalDate) {
+    public void complete(@NotNull List<Task> tasks,
+            boolean originalDate,
+            boolean keepPrio) {
         ArrayList<String> originalStrings = new ArrayList<String>();
         ArrayList<Task> recurredTasks = new ArrayList<Task>();
         for (Task t : tasks) {
@@ -213,6 +215,9 @@ public class TaskCache {
             Task extra = t.markComplete(DateTime.now(TimeZone.getDefault()), originalDate);
             if (extra!=null) {
                 recurredTasks.add(extra);
+            }
+            if (!keepPrio) {
+                t.setPriority(Priority.NONE);
             }
         }
         modify(originalStrings, tasks, recurredTasks,null);

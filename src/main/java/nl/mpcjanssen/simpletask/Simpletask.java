@@ -585,7 +585,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private void completeTasks(@NotNull List<Task> tasks) {
-        getTaskBag().complete(tasks, m_app.hasRecurOriginalDates());
+        getTaskBag().complete(tasks, m_app.hasRecurOriginalDates(), m_app.hasKeepPrio());
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }

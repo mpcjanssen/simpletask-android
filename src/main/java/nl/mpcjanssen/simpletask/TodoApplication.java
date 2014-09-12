@@ -180,6 +180,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.prepend_date_pref_key), true);
     }
 
+    public boolean hasKeepPrio() {
+        return m_prefs.getBoolean(getString(R.string.keep_prio), true);
+    }
+
     public boolean hasShareTaskShowsEdit() {
         return m_prefs.getBoolean(getString(R.string.share_task_show_edit), false);
     }
