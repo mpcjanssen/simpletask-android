@@ -105,9 +105,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_title">Zeige erledigte zuletzt</string>
     <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste
     </string>
-    <string name="use_prio_pref_title">Prioritäten aktivieren</string>
-    <string name="use_prio_pref_summary">GTD schlägt nicht den Gebrauch von Prioritäten vor, aber sie können dennoch verwendet werden falls benötigt.
-    </string>
+    <string name="keep_prio_header">Priorität in abgeschlossenen Aufgaben</string>
+    <string name="keep_prio_summary">
+    Behalten Prioritäten in abgeschlossenen Aufgaben. Deaktiviere dies um die todo.txt App Verhalten wiederherzustellen.</string>
     <string name="prepend_date_pref_title">Zeitstempel für neue Aufgaben</string>
     <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
