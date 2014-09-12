@@ -489,6 +489,9 @@ public class Simpletask extends ThemedListActivity implements
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!m_ignoreSearchChangeCallback) {
+                    if (mFilter == null) {
+                        mFilter = new ActiveFilter();
+                    }
                     mFilter.setSearch(newText);
                     mFilter.saveInPrefs(TodoApplication.getPrefs());
                     m_adapter.setFilteredTasks();
