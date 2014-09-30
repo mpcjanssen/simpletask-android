@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+5.2.10
+------
+
+- Fix a rare NPE in text search.
+- Add a setting to remove the prio of completed tasks. Fixes [#137](https://github.com/mpcjanssen/simpletask-android/issues/137).
+
+
 5.2.9
 -----
 
