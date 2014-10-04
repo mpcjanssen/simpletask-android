@@ -508,7 +508,7 @@ public class AddTask extends ThemedActivity {
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         items.addAll(t.getTags());
-        final ArrayList<String> projects = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),"+-");
+        final ArrayList<String> projects = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),null);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -576,7 +576,7 @@ public class AddTask extends ThemedActivity {
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         items.addAll(t.getLists());
-        final ArrayList<String> contexts = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),"@-");
+        final ArrayList<String> contexts = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
