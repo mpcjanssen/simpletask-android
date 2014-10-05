@@ -1285,48 +1285,33 @@ public class Simpletask extends ThemedListActivity implements
                             finishActionmode();
                         }
                     });
+                }
 
-                    Context mContext = TodoApplication.getAppContext();
-                    
-                    String relAge = task.getRelativeAge(mContext);
-                    SpannableString relDue = task.getRelativeDueDate(mContext, res.getColor(android.R.color.holo_green_light),
-                            res.getColor(android.R.color.holo_red_light),
-                            m_app.hasColorDueDates());
-                    String relThres = task.getRelativeThresholdDate(mContext);
-                    boolean anyDateShown = false;
-                    if (!Strings.isEmptyOrNull(relAge)) {
-                        holder.taskage.setText(relAge);
-                        anyDateShown = true;
-                    } else {
-                        holder.taskage.setText("");
-                    }
-                    if (relDue != null) {
-                        anyDateShown = true;
-                        holder.taskdue.setText(relDue);
-                    } else {
-                        holder.taskdue.setText("");
-                    }
-                    if (!Strings.isEmptyOrNull(relThres)) {
-                        anyDateShown = true;
-                        holder.taskthreshold.setText(relThres);
-                    } else {
-                        holder.taskthreshold.setText("");
-                    }
-                    LinearLayout datesBar = (LinearLayout) convertView
-                            .findViewById(R.id.datebar);
-                    if (!anyDateShown || task.isCompleted()) {
-                        datesBar.setVisibility(View.GONE);
-                        holder.tasktext.setPadding(
-                                holder.tasktext.getPaddingLeft(),
-                                holder.tasktext.getPaddingTop(),
-                                holder.tasktext.getPaddingRight(), 4);
-                    } else {
-                        datesBar.setVisibility(View.VISIBLE);
-                        holder.tasktext.setPadding(
-                                holder.tasktext.getPaddingLeft(),
-                                holder.tasktext.getPaddingTop(),
-                                holder.tasktext.getPaddingRight(), 0);
-                    }
+                Context mContext = TodoApplication.getAppContext();
+
+                String relAge = task.getRelativeAge(mContext);
+                SpannableString relDue = task.getRelativeDueDate(mContext, res.getColor(android.R.color.holo_green_light),
+                        res.getColor(android.R.color.holo_red_light),
+                        m_app.hasColorDueDates());
+                String relThres = task.getRelativeThresholdDate(mContext);
+                boolean anyDateShown = false;
+                if (!Strings.isEmptyOrNull(relAge)) {
+                    holder.taskage.setText(relAge);
+                    anyDateShown = true;
+                } else {
+                    holder.taskage.setText("");
+                }
+                if (relDue != null) {
+                    anyDateShown = true;
+                    holder.taskdue.setText(relDue);
+                } else {
+                    holder.taskdue.setText("");
+                }
+                if (!Strings.isEmptyOrNull(relThres)) {
+                    anyDateShown = true;
+                    holder.taskthreshold.setText(relThres);
+                } else {
+                    holder.taskthreshold.setText("");
                 }
             }
             return convertView;
