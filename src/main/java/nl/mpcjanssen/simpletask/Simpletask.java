@@ -1294,30 +1294,26 @@ public class Simpletask extends ThemedListActivity implements
                         res.getColor(android.R.color.holo_red_light),
                         m_app.hasColorDueDates());
                 String relThres = task.getRelativeThresholdDate(mContext);
-                boolean anyDateShown = false;
                 if (!Strings.isEmptyOrNull(relAge)) {
                     holder.taskage.setText(relAge);
-                    anyDateShown = true;
+                    holder.taskage.setVisibility(View.VISIBLE);
                 } else {
                     holder.taskage.setText("");
+                    holder.taskage.setVisibility(View.GONE);
                 }
                 if (relDue != null) {
-                    anyDateShown = true;
                     holder.taskdue.setText(relDue);
+                    holder.taskdue.setVisibility(View.VISIBLE);
                 } else {
                     holder.taskdue.setText("");
+                    holder.taskdue.setVisibility(View.GONE);
                 }
                 if (!Strings.isEmptyOrNull(relThres)) {
-                    anyDateShown = true;
                     holder.taskthreshold.setText(relThres);
+                    holder.taskthreshold.setVisibility(View.VISIBLE);
                 } else {
                     holder.taskthreshold.setText("");
-                }
-                LinearLayout datesBar = (LinearLayout) convertView.findViewById(R.id.datebar);
-                if (!anyDateShown) {
-                    datesBar.setVisibility(View.GONE);
-                } else {
-                    datesBar.setVisibility(View.VISIBLE);
+                    holder.taskthreshold.setVisibility(View.GONE);
                 }
             }
             return convertView;
