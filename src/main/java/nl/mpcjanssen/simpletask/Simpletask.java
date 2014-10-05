@@ -1313,6 +1313,12 @@ public class Simpletask extends ThemedListActivity implements
                 } else {
                     holder.taskthreshold.setText("");
                 }
+                LinearLayout datesBar = (LinearLayout) convertView.findViewById(R.id.datebar);
+                if (!anyDateShown) {
+                    datesBar.setVisibility(View.GONE);
+                } else {
+                    datesBar.setVisibility(View.VISIBLE);
+                }
             }
             return convertView;
         }
