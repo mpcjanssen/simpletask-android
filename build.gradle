@@ -106,8 +106,8 @@ android {
     compileSdkVersion 20
 
     defaultConfig {
-        versionName '5.2.10'
-        versionCode 1538
+        versionName '5.2.11'
+        versionCode 1539
 	    minSdkVersion 14
         targetSdkVersion 20
         buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
