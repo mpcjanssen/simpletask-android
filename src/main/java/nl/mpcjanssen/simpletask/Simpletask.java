@@ -494,7 +494,9 @@ public class Simpletask extends ThemedListActivity implements
                     }
                     mFilter.setSearch(newText);
                     mFilter.saveInPrefs(TodoApplication.getPrefs());
-                    m_adapter.setFilteredTasks();
+                    if (m_adapter!=null) {
+                        m_adapter.setFilteredTasks();
+                    }
                 }
                 return true;
             }

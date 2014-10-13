@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.11
+------
+
+- Fix another NPE in the text search code.
+
 5.2.10
 ------
 
