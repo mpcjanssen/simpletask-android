@@ -156,6 +156,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.show_empty_lists), true);
     }
 
+    public boolean showTxtOnly() {
+        return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
+    }
+
     public String getTodoFileName() {
         return m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath());
     }
@@ -417,7 +421,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
                         getFileStore().invalidateCache();
                         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
                     }
-                });
+                },
+		showTxtOnly());
     }
 
     @NotNull

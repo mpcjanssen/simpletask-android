@@ -341,7 +341,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
+    public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
         FileDialog dialog = new FileDialog(act, new DbxPath(path), true);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
