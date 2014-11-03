@@ -168,8 +168,8 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void browseForNewFile(Activity act, String path,  FileSelectedListener listener) {
-        FileDialog dialog = new FileDialog(act, new File(path).getParentFile(), true);
+    public void browseForNewFile(Activity act, String path,  FileSelectedListener listener, boolean showTxt) {
+        FileDialog dialog = new FileDialog(act, new File(path).getParentFile(), showTxt);
         dialog.addFileListener(listener);
         dialog.createFileDialog();
     }
