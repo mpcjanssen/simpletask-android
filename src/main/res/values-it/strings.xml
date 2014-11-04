@@ -64,6 +64,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="insert_threshold">Inserisci data limite</string>
     <string name="share">Condividi</string>
     <string name="unComplete">Annulla Completa</string>
+    <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
     <string name="clear_filter">Pulisci Filtro</string>
 
@@ -89,9 +90,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_summary">Archivia automaticamente i tasks in done.txt al completamento.</string>
     <string name="archive_now_pref_title">Archivia ora</string>
     <string name="archive_now_pref_summary">Muovi i task completati da todo.txt a done.txt.</string>
+    <string name="dropbox_logout_pref_title">Log out</string>
     <string name="dropbox_logout_pref_summary">Log out da Dropbox.</string>
     <string name="TODOTXTPATH_title">Posizione File</string>
     <string name="TODOTXTPATH_summary">La cartellaa Dropbox dove todo.txt è memorizzato.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Impostazioni per la sicronizzazione di Dropbox.</string>
 
     <string name="todotxt_ui_settings_header">Interfaccia Utente</string>
@@ -177,9 +181,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="about_settings_summary">Informazioni Applicazione</string>
     <string name="visit_website_title">Aiuto</string>
     <string name="visit_website_summary">Visit il sito web di Simpletask</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
 
     <string name="visit_tracker_title">Richiedi una funzione o segnala un errore</string>
     <string name="visit_tracker_summary">Richiedi una nuova funzione o un miglioramento o segnala un problema.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Sincronizzazione manuale</string>
@@ -253,7 +259,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="priority_prompt">Priorità</string>
     <string name="project_prompt">Etichetta</string>
     <string name="context_prompt">Lista</string>
-
+    
+    <string name="priority_format">(prio)</string>
     <string name="context_format">\@lista</string>
     <string name="project_format">+etichetta</string>
 
@@ -308,5 +315,6 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="donate_title">Dona</string>
     <string name="donate_summary">Dona se ti piace simpletask. NOTE: La donazione è volontaria, simpletask sarà sempre libero.  </string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Ordine inverso</string>
 </resources>
