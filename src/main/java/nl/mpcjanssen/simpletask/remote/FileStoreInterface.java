@@ -17,7 +17,7 @@ public interface FileStoreInterface {
     void archive(String path, List<String> lines);
     void startLogin(Activity caller, int i);
     void deauthenticate();
-    void browseForNewFile(Activity act, String path, FileSelectedListener listener);
+    void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
     void modify(String mTodoName, List<String> original,
                 List<String> updated,
                 List<String> added,

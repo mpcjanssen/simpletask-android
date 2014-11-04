@@ -99,7 +99,7 @@ public class TaskBagTest extends TestCase {
 
 
         @Override
-        public void browseForNewFile(Activity act, String path, FileSelectedListener listener) {
+        public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
 
         }
 
