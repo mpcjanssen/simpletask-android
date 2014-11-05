@@ -32,6 +32,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="save_task">Salva task</string>
     <string name="update_task_failed">Non posso aggiornare il task</string>
     <string name="sort">Ordina</string>
+    <string name="script">Script</string>
     <string name="filter">Filtro</string>
     <string name="main_no_items">Nessun tasks da mostrare.</string>
     <string name="set_preferences">Impostazioni</string>
@@ -49,7 +50,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="viewtask">Vedi Task</string>
     <string name="cleartask">Pulisci Task</string>
     <string name="done">Completa</string>
-    <string name="priority">Dare Priorità</string>
+    <string name="priority">Dare priorità</string>
     <string name="select_priority">Seleziona priorità</string>
     <string name="select_all">Seleziona tutto</string>
     <string name="add_list_or_tag">Aggiungi Liste e Etichette</string>
@@ -64,6 +65,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="insert_threshold">Inserisci data limite</string>
     <string name="share">Condividi</string>
     <string name="unComplete">Annulla Completa</string>
+    <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
     <string name="clear_filter">Pulisci Filtro</string>
 
@@ -72,7 +74,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_name_empty">Nessun nome fornnito, non aggiungo filtro</string>
     <string name="widget_name_empty">Nessun nome fornito per il widget, non aggiungo widget</string>
     <string name="add_task_help">Aggiungi o aggiorna un task alla lista dei task. Quando si aggiunge
-	un task, ogni riga è un task separato, per velocizzare l'inserimento.\n
+	un task, ogni riga è un task separato, per velocizzare l\'inserimento.\n
         <b>Priorità</b>\n
         Inzia la riga con (.), esempio (A)\n
         <b>Etichette</b>
@@ -89,9 +91,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_summary">Archivia automaticamente i tasks in done.txt al completamento.</string>
     <string name="archive_now_pref_title">Archivia ora</string>
     <string name="archive_now_pref_summary">Muovi i task completati da todo.txt a done.txt.</string>
+    <string name="dropbox_logout_pref_title">Log out</string>
     <string name="dropbox_logout_pref_summary">Log out da Dropbox.</string>
     <string name="TODOTXTPATH_title">Posizione File</string>
-    <string name="TODOTXTPATH_summary">La cartellaa Dropbox dove todo.txt è memorizzato.</string>
+    <string name="TODOTXTPATH_summary">La cartella Dropbox dove todo.txt è memorizzato.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Impostazioni per la sicronizzazione di Dropbox.</string>
 
     <string name="todotxt_ui_settings_header">Interfaccia Utente</string>
@@ -100,86 +105,88 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_title">Mostra completati alla fine</string>
     <string name="sort_complete_last_pref_summary">Mostra sempre i task completati alla fine della lista
     </string>
-    <string name="keep_prio_header">Priorità nei task completati</string>
-    <string name="keep_prio_summary">Mantieni le priorità nei task completati. Deseleziona per ripristinare il comportamento originale di todo.txt che rimuove la priorità quando un task e completato.</string>
-    <string name="prepend_date_pref_title">Aggiungi data ai nuovi task</string>
-    <string name="prepend_date_pref_summary">Aggiunge automaticamente la data di creazione ai nuovi task.</string>
+    <string name="keep_prio_header">Priorità nei Task complet.</string>
+    <string name="keep_prio_summary">Mantieni le priorità nei Task completati. Deseleziona per ripristinare il comportamento originale di todo.txt che rimuove la priorità quando un Task e completato.</string>
+    <string name="prepend_date_pref_title">Agg. data ai nuovi Task</string>
+    <string name="prepend_date_pref_summary">Aggiunge automaticamente la data di creazione ai nuovi Task.</string>
     <string name="line_breaks_pref_title">Fine riga stile Windows</string>
     <string name="line_breaks_pref_summary">Usa il formato di a capo Windows nel file di testo.</string>
-    <string name="recur_from_original_date_pref_title">Task riccorrenti usano la data originale</string>
-    <string name="recur_from_original_date_pref_summary">Incrementa la data originale nel task quando si creano task ricorrenti.
+    <string name="recur_from_original_date_pref_title">Date Task ricorrenti</string>
+    <string name="recur_from_original_date_pref_summary">Se selezionato incrementa la data originale nel Task quando si creano Task ricorrenti.
         Deseleziona per impostare le nuove date relative ad oggi.</string>
-    <string name="swipe_complete_pref_title">Striscia per comletare</string>
-    <string name="swipe_complete_pref_summary">Striscia su un task per completarlo.</string>
+    <string name="swipe_complete_pref_title">Striscia per completare</string>
+    <string name="swipe_complete_pref_summary">Striscia sul Task per completarlo.</string>
     <string name="manual_sync_pref_title">Sincronizzazione manuale</string>
     <string name="manual_sync_pref_summary">Non caricare automaticamente ogni cambiamento su Dropbox.</string>
-    <string name="resume_sync_pref_title">Sincronizza all'avvio</string>
-    <string name="resume_sync_pref_summary">Sincronizza con dropbox all'apertura della app.</string>
+    <string name="resume_sync_pref_title">Sincronizza all\'avvio</string>
+    <string name="resume_sync_pref_summary">Sincronizza con Dropbox all\'apertura della app.</string>
     <string name="font_size_delta_pref_title">Cambia dimensione carattere</string>
     <string name="font_size_delta_pref_summary">Cambia la dimensione del carattere in unità di sp.
         Usa valori negativi per ridurre la dimensione del carattere</string>
-    <string name="theme_pref_title">Tema dell'Applicazione</string>
-    <string name="theme_pref_summary">Cambia il tema usato dall'applicazione</string>
+    <string name="theme_pref_title">Tema dell\'Applicazione</string>
+    <string name="theme_pref_summary">Cambia il tema usato dall\'applicazione</string>
 
-    <string name="share_task_show_edit_pref_title">Modifica task condivisi</string>
-    <string name="share_task_show_edit_summary">Permette di modificare i task condivisi prima di salvare.
-        Deseleziona per salvare i task condivisi senza intervento.</string>
+    <string name="share_task_show_edit_pref_title">Modifica Task condivisi</string>
+    <string name="share_task_show_edit_summary">Permette di modificare i Task condivisi prima di salvare.
+        Deseleziona per salvare i Task condivisi senza intervento.</string>
 
-    <string name="capitalize_tasks_pref_title">Capitalizza i nuovi task</string>
+    <string name="capitalize_tasks_pref_title">Capitalizza i nuovi Task</string>
     <string name="back_saves_pref_title">Bottone indietro</string>
     <string name="back_saves_summary">Salva i todo inseriti, o applica il filtro quando si preme il bottone indietro.</string>
 
     <string name="show_txt_only_pref_title">Mostra solo i file .txt</string>
-    <string name="show_txt_only_summary">Mostra solo i file .txt nel dialogo di seleczione file.</string>
+    <string name="show_txt_only_summary">Mostra solo i file .txt nel dialogo di selezione file.</string>
 
-    <string name="drawer_fixed_landscape_title">Apri i casseti in orizzontale</string>
+    <string name="drawer_fixed_landscape_title">Apri cass. in orizz.</string>
     <string name="drawer_fixed_landscape_summary">Apri sempre i cassetti in modalità orizzontale.</string>
 
 
     <string name="widget_theme_pref_title">Tema del Widget</string>
-    <string name="widget_theme_pref_summary">Cambia il tema usato per il widget</string>
+    <string name="widget_theme_pref_summary">Cambia il tema usato per il Widget</string>
 
-    <string name="widget_header_transparency_title">Trasparenza dell'intestazione del Widget</string>
-    <string name="widget_background_transparency_title">Trasparenze dello sfondo del Widget</string>
+    <string name="widget_header_transparency_title">Trasp. intest. Widget</string>
+    <string name="widget_background_transparency_title">Trasp. sfondo Widget</string>
 
     <string name="widget_extended_pref_title">Widget Esteso</string>
-    <string name="widget_extended_pref_summary">Mostra i task nel widget con date separate.</string>
+    <string name="widget_extended_pref_summary">Mostra i Task nel widget con date separate.</string>
 
     <string name="color_due_pref_title">Colori delle Date scadenza</string>
     <string name="color_due_pref_summary">Colora le date di scadenza secondo siano in scadenza oggi, nel futuro o già scadute.</string>
 
-    <string name="show_hidden_title">Mostra i task nascosti</string>
-    <string name="show_hidden_summary">Mostra i task nascosti (h:1) in modo da modificarli. Dopo la modifica deseleziona questa scelta.</string>
+    <string name="show_hidden_title">Mostra Task nascosti</string>
+    <string name="show_hidden_summary">Mostra i Task nascosti (h:1) in modo da modificarli. Dopo la modifica deseleziona questa scelta.</string>
 
     <string name="show_empty_lists_title">Mostra Intestazioni vuote</string>
-    <string name="show_empty_lists_summary">Mostra l'intestazione anche se il tutti i suoi task sono vuoti.</string>
+    <string name="show_empty_lists_summary">Mostra l\'intestazione anche se il tutti i suoi Task sono vuoti.</string>
 
-    <string name="split_actionbar_pref_title">Usa una action bar divisa</string>
+    <string name="split_actionbar_pref_title">Usa action bar divisa</string>
     <string name="split_actionbar_pref_summary">Usa una action bar divisa in modo che i bottoni dei menu siano in basso sullo schermo.
-         Deseleziona per disposizioni alternative dello schermo nella lista todo. </string>
+         Deseleziona per ottenere maggiore spazio nella schermata della lista todo. </string>
 
     <string name="show_edittext_hints_title">Mostra suggerimenti</string>
     <string name="show_edittext_hints_summary">Mostra i suggerimenti nelle caselle di testo.</string>
 
-    <string name="show_complete_checkbox_title">Mostra checkbox completato</string>
-    <string name="show_complete_checkbox_summary">Mostra la checkbox davanti ai task per completarli o meno.</string>
+    <string name="show_complete_checkbox_title">Checkbox per completati</string>
+    <string name="show_complete_checkbox_summary">Mostra una checkbox davanti ai Task per permettere di selezionarne o meno il completamento.</string>
 
-    <string name="show_confirmation_dialogs_title">Mostra dialoghi di conferma</string>
+    <string name="show_confirmation_dialogs_title">Conferma azioni</string>
     <string name="show_confirmation_dialogs_summary">Mostra un dialogo di conferma prima di eseguire azioni non annullabili o che possono causare perdite di dati.
         Deselezionare a proprio rischio e pericolo se si trovano i dialoghi noiosi.</string>
 
-    <string name="show_calendarview_title">Usa il calendario per l'inserimento delle date.</string>
+    <string name="show_calendarview_title">Inserim. date con calendario.</string>
 
-    <string name="sort_case_sensitive_title">Ordine sensibile al maiuscolo</string>
+    <string name="sort_case_sensitive_title">Ordine sens. al maiuscolo</string>
     <string name="sort_case_sensitive_summary">Rispetta il maiuscolo quando si ordinano liste, etichette e filtri salvati.</string>
 
     <string name="about_settings_header">A proposito</string>
     <string name="about_settings_summary">Informazioni Applicazione</string>
     <string name="visit_website_title">Aiuto</string>
-    <string name="visit_website_summary">Visit il sito web di Simpletask</string>
+    <string name="visit_website_summary">Visita il sito web di Simpletask</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
 
     <string name="visit_tracker_title">Richiedi una funzione o segnala un errore</string>
     <string name="visit_tracker_summary">Richiedi una nuova funzione o un miglioramento o segnala un problema.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Sincronizzazione manuale</string>
@@ -194,6 +201,7 @@ You should have received a copy of the GNU General Public License along with Tod
         Si vogliono caricare le modifiche locali, a scaricare la versione su Dropbox?
     </string>
     <!-- login -->
+    <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Login in Dropbox</string>
     <string name="login_cloudless">Se non si possiede un account Dropbox oppure non si vuole usare Dropbox,
         è possibile scaricare Simpletask Cloudless dal the Play Store.
@@ -202,7 +210,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- delete -->
     <string name="delete_task_title">Cancella Task</string>
     <string name="archive_task_title">Archivia Task</string>
-    <string name="delete_task_message">Non si può annullare l'operazione, sei sicuro?</string>
+    <string name="delete_task_message">Non si può annullare l\'operazione, sei sicuro?</string>
     <string name="logout_message">Tutte le modifiche non sincronizzate con Dropbox o non salvate localmente
         saranno perse dopo il logout.</string>
      <string name="dropbox_open">Tutte le modifiche non sincronizzate con Dropbox o non salvate localmente
@@ -215,7 +223,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="word_wrap">A capo automatico</string>
     <string name="search_hint">Ricerca in todo.txt</string>
     <!-- sort -->
-    <string name="sort_help">Drag and drop per cambiare l'ordinamento. Clicca sull'elenco per cambiare la direzione dell'ordinamento.</string>
+    <string name="sort_help">Drag and drop per cambiare l\'ordinamento. Clicca sull\'elenco per cambiare la direzione dell\'ordinamento.</string>
     <string name="file_order">Ordine del File (non ordinato)</string>
     <string name="alphabetical">Alfabetico</string>
     <string name="by_prio">Secondo la Priorità</string>
@@ -236,10 +244,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="rename_filter_message">Inserisci un nuovo nome per il filtro:</string>
     <string name="update_filter">Aggiorna</string>
     <string name="create_widget">Crea widget</string>
-    <string name="filter_show_completed">Mostra task completati</string>
-    <string name="filter_show_future">Mostra task con data limite nel futuro</string>
-    <string name="filter_show_lists">Mostra liste nei task</string>
-    <string name="filter_show_tags">Mostra etichette nei task</string>
+    <string name="filter_show_completed">Mostra Task completati</string>
+    <string name="filter_show_future">Mostra Task con data limite nel futuro</string>
+    <string name="filter_show_lists">Mostra Liste nei Task</string>
+    <string name="filter_show_tags">Mostra etichette nei Task</string>
 
     <string name="filter_show_completed_short">Completato</string>
     <string name="filter_show_future_short">Futuri</string>
@@ -251,11 +259,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="title_filter_applied">Filtrati per:</string>
     <string name="add_task_help_btn">Aiuto</string>
     <string name="priority_prompt">Priorità</string>
+    <string name="priority_short_prompt">Prio</string>
     <string name="project_prompt">Etichetta</string>
     <string name="context_prompt">Lista</string>
-
+    
+    <string name="priority_format">(prio)</string>
     <string name="context_format">\@lista</string>
-    <string name="project_format">+etichetta</string>
+    <string name="project_format">+etic.</string>
 
     <string name="separator">Separatore</string>
 
@@ -287,13 +297,16 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="title_activity_filter">Filtro</string>
     <string name="selected">selezionato</string>
+    <string name="no_context">Inbox</string>
     <string name="no_project">Nessuna Etichetta</string>
     <string name="no_creation_date">Nessuna data di creazione</string>
     <string name="no_threshold_date">Nessuna data limite</string>
     <string name="no_header">Nessuna</string>
+    <string name="no_prio">-</string>
     <string name="add_to_calendar">Aggiungi promemoria</string>
     <string name="calendar_title">Promemoria Simpletask</string>
-    <string name="version_copied">Info  Versione copiata su clipboard</string>
+    <string name="share_title">Simpletask task</string>
+    <string name="version_copied">Info Versione copiata su clipboard</string>
 
     <string name="task_added">Task aggiunto a Simpletask</string>
     <string name="default_sort">Ordine di default</string>
@@ -302,11 +315,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="new_list_name">Inserisci nuova lista</string>
     <string name="new_tag_name">Inserisci nuova etichetta</string>
     <string name="no_filter">Nessun filter</string>
+    <string name="dropbox">Dropbox</string>
 
     <string name="save_filter">Salva il filtro attuale</string>
     <string name="save_filter_message">Insersci un nome per il filtro attuale da mostrare nel cassetto dei filtri salvati</string>
 
     <string name="donate_title">Dona</string>
-    <string name="donate_summary">Dona se ti piace simpletask. NOTE: La donazione è volontaria, simpletask sarà sempre libero.  </string>
+    <string name="donate_summary">Dona se apprezzi Simpletask. NOTE: La donazione è volontaria, Simpletask sarà sempre libero.  </string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Ordine inverso</string>
 </resources>
