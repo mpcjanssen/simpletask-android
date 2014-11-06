@@ -985,7 +985,11 @@ public class Simpletask extends ThemedListActivity implements
         TaskCache taskBag = getTaskBag();
         ArrayList<String> decoratedContexts = Util.sortWithPrefix(taskBag.getDecoratedContexts(), m_app.sortCaseSensitive(), "@-");
         ArrayList<String> decoratedProjects = Util.sortWithPrefix(taskBag.getDecoratedProjects(), m_app.sortCaseSensitive(), "+-");
-        DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(), decoratedContexts, decoratedProjects);
+        DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
+							getString(R.string.context_prompt),
+							decoratedContexts,
+							getString(R.string.project_prompt),
+							decoratedProjects);
 
         m_leftDrawerList.setAdapter(drawerAdapter);
         m_leftDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
