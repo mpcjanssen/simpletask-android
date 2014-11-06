@@ -73,10 +73,11 @@ def checkDeployPath() {
         return null
 }
 
-task deploy(type:Copy, dependsOn: [assembleRelease,buildInfo,checkCleanGit]) {
+task deploy(type:Copy, dependsOn: [clean, assembleRelease,buildInfo,checkCleanGit]) {
     doFirst {
         if (checkDeployPath()==null)
             throw new GradleException("deployPath not defined, please define it in gradle.properties")
+	tasks.clean.execute()
     }
     from 'build/outputs/apk/'
     into checkDeployPath() + '/' + buildInfo.ext.branch + '/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
@@ -149,6 +150,8 @@ dependencies {
     compile 'com.google.guava:guava:17.0'
     compile 'org.mozilla:rhino:1.7R4'
 }
+
+deploy.mustRunAfter clean
 check.dependsOn unitTest
 preBuild.dependsOn buildInfo
 
