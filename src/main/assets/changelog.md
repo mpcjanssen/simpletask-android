@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.12
+------
+
+- Added Italian translation (thanks to Carlos D.)
+	
 5.2.11
 ------
 
