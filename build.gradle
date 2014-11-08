@@ -73,17 +73,16 @@ def checkDeployPath() {
         return null
 }
 
-task deploy(type:Copy, dependsOn: [clean, assembleRelease,buildInfo,checkCleanGit]) {
-    doFirst {
-        if (checkDeployPath()==null)
-            throw new GradleException("deployPath not defined, please define it in gradle.properties")
-	tasks.clean.execute()
-    }
-    from 'build/outputs/apk/'
-    into checkDeployPath() + '/' + buildInfo.ext.branch + '/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
-    include '*release.apk'
-    rename 'simpletask-android-free-release.apk',  'simpletask-free-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
-    rename 'simpletask-android-cloudless-release.apk',  'simpletask-cloudless-' + buildInfo.ext.date + "-" + buildInfo.ext.revision + '.apk' 
+task deploy(type:Sync, dependsOn: [clean,build]) {
+  doFirst {
+    if (checkDeployPath()==null)
+      throw new GradleException("deployPath not defined, please define it in gradle.properties")
+      tasks.clean.execute()
+  }
+  into checkDeployPath() + '/' + buildInfo.ext.branch + '/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
+  from 'build/outputs/apk/'
+  include '*release.apk'
+  outputs.upToDateWhen { false }
 }
 
 // Call gradle with -Plint to enable all warnings.
