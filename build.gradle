@@ -103,13 +103,13 @@ android {
     }
 
     buildToolsVersion "20.0.0"
-    compileSdkVersion 20
+    compileSdkVersion 21
 
     defaultConfig {
-        versionName '5.2.11'
-        versionCode 1539
+        versionName '5.2.12'
+        versionCode 1540
 	    minSdkVersion 14
-        targetSdkVersion 20
+        targetSdkVersion 21
         buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
     }
 
