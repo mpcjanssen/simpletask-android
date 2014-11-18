@@ -7,6 +7,7 @@
 - Added Italian translation (thanks to Carlo D.)
 - Fix link to issue tracker.
 - Observe .txt only setting for Cloudless build.  Fixes [#154](https://github.com/mpcjanssen/simpletask-android/issues/154).
+- Updated Dropbox API to 3.1.1. Possible fix for Lollipop issues [#163](https://github.com/mpcjanssen/simpletask-android/issues/163).
 	
 5.2.11
 ------
