@@ -5,6 +5,8 @@
 ------
 
 - Added Italian translation (thanks to Carlo D.)
+- Fix link to issue tracker.
+- Observe .txt only setting for Cloudless build.  Fixes [#154](https://github.com/mpcjanssen/simpletask-android/issues/154).
 	
 5.2.11
 ------
