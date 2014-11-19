@@ -17,7 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.jetbrains.annotations.NotNull;
-import org.markdown4j.Markdown4jProcessor;
+import com.github.rjeschke.txtmark.Processor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -130,7 +130,7 @@ public class HelpScreen extends Activity {
         Log.v(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")"); 
         String html = "";
         try {
-            html = new Markdown4jProcessor().process(readAsset(ctxt.getAssets(), name));
+            html = Processor.process(readAsset(ctxt.getAssets(), name));
             html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + html + "</body></html>";
         } catch (IOException e) {
             Log.e(TAG,""+e);
@@ -158,6 +158,9 @@ public class HelpScreen extends Activity {
                 return true;
             case R.id.menu_intents:
                 showMarkdownAsset(wvHelp, this, "intents.md");
+                return true;
+            case R.id.menu_ui:
+                showMarkdownAsset(wvHelp, this, "ui.md");
                 return true;
             case R.id.menu_donate:
                 loadDesktop(wvHelp, "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
