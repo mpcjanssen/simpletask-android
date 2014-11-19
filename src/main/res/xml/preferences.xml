@@ -43,8 +43,8 @@
             android:entries="@array/fontsize"
             android:entryValues="@array/fontsize_values"
             android:key="fontsize"
-            android:summary="Change the font size in the application"
-            android:title="Font size" />
+            android:summary="@string/font_size_delta_pref_summary"
+            android:title="@string/font_size_delta_pref_title" />
         <ListPreference
             android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
             android:entries="@array/themes"
@@ -177,7 +177,7 @@
             android:summary="@string/dropbox_logout_pref_summary"
             android:title="@string/dropbox_logout_pref_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/archive_now_pref_title">
+    <PreferenceCategory android:title="@string/ARCHIVE_settings_header">
         <CheckBoxPreference
             android:key="@string/auto_archive_pref_key"
             android:summary="@string/auto_archive_pref_summary"
@@ -196,7 +196,7 @@
             android:title="@string/app_label" />
 
         <Preference
-            android:title="Donate"
+            android:title="@string/donate_title"
             android:key="donate"
             android:summary="Donate via Play Store">
         <intent
@@ -204,7 +204,7 @@
             android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
         </Preference>
         <Preference
-            android:title="Donate"
+            android:title="@string/donate_title"
             android:key="donated"
             android:summary="Thanks for your donation">
         <intent
