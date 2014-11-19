@@ -23,7 +23,6 @@ dependencies {
         unitTestCompile 'com.google.guava:guava:17.0'
         unitTestCompile 'com.google.android:android:4.+'
         unitTestCompile 'junit:junit:4.11'
-        unitTestCompile 'org.mozilla:rhino:1.7R4'
 }
 
 configurations {
@@ -147,7 +146,6 @@ dependencies {
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:17.0'
-    compile 'org.mozilla:rhino:1.7R4'
 }
 
 deploy.mustRunAfter clean
