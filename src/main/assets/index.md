@@ -23,6 +23,7 @@ If you want to log an issue or feature request for [Simpletask](https://github.c
 
 Check the menu for more help sections or click below.
 
+- [User Interface](./ui.md) Help on the user interface.
 - [Changelog](./changelog.md)
 - [Lists and Tags](./listsandtags.md) Why does Simpletask use lists and Tags instead of the Contexts and Projects from todo.txt?
 - [Defined intents](./intents.md) Intents that can be used for automating Simpletask
