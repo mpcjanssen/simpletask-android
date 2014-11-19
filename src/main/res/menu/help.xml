@@ -8,6 +8,11 @@
         android:showAsAction="never"
         android:title="Overview"/>
     <item
+        android:id="@+id/menu_ui"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="User Interface"/>
+    <item
         android:id="@+id/menu_changelog"
         android:orderInCategory="100"
         android:showAsAction="never"
