@@ -14,7 +14,7 @@ Simpletask supports the following todo.txt extensions:
 -   Start/threshold date as `t:YYYY-MM-DD`
 -   Recurrence with `rec:[0-9]+[dwmy]` as described [here](https://github.com/bram85/todo.txt-tools/wiki/Recurrence) but with a twist.
     - By default Simpletask will use the dates in that task to create the recurring task not the date of completion as descibed in the link. This behaviour can be configured from the settings.
-    - The format is described by a regular expression, so in words the syntax is `rec:` followd by 1 or more numbers (the `+`) followed by one of `d`ay, `w`eek, `m`onth or `y`ear. For example rec:12d sets up a 12 day recurring task.
+    - The format is described by a regular expression, so in words the syntax is `rec:` followed by 1 or more numbers (the `+`) followed by one of `d`ay, `w`eek, `m`onth or `y`ear. For example `rec:12d` sets up a 12 day recurring task.
 - Hidden tasks with `h:1`, this allows dummy tasks with predefined lists and tags so that lists and tags will be available even if the last task with the tag/list is removed from `todo.txt`. These tasks will not be shown by default. You can temporarily display them from the Settings.
 
 Support
