@@ -127,6 +127,8 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
+        <activity android:name="nl.mpcjanssen.simpletask.SendLogActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
         <receiver android:name="nl.mpcjanssen.simpletask.MyAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
