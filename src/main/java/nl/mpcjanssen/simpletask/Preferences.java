@@ -107,7 +107,7 @@ public class Preferences extends ThemedActivity {
         private void sendLog() {
             StringBuilder log=new StringBuilder();
             try {
-                Process process = Runtime.getRuntime().exec("logcat -d");
+                Process process = Runtime.getRuntime().exec("logcat -d -v long");
                 BufferedReader bufferedReader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));
 
