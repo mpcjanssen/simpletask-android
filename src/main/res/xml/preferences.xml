@@ -222,9 +222,9 @@
             android:summary="Enable the embedded Rhino Javascript interpreter for advanced task filtering."
             android:title="Use Rhino" />
         <Preference
-            android:title="Send log"
+            android:title="Share log"
             android:key="send_log"
-            android:summary="Send log via email to developer">
+            android:summary="Share the application log for debugging purposes.">
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
