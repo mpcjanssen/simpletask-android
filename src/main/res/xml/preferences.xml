@@ -223,9 +223,8 @@
             android:title="Use Rhino" />
         <Preference
             android:title="Send log"
-            android:key="sendlog"
+            android:key="send_log"
             android:summary="Send log via email to developer">
-            <intent android:action="nl.mpcjanssen.simpletask.SendLogActivity"/>
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
