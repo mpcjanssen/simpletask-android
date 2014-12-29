@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -35,7 +36,13 @@ import android.preference.PreferenceScreen;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
 import org.jetbrains.annotations.NotNull;
+
+import nl.mpcjanssen.simpletask.util.Util;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
@@ -97,6 +104,38 @@ public class Preferences extends ThemedActivity {
             aboutCategory.removePreference(toHide);
         }
 
+        private void sendLog() {
+            StringBuilder log=new StringBuilder();
+            try {
+                Process process = Runtime.getRuntime().exec("logcat -d");
+                BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()));
+
+                String line = "";
+                while ((line = bufferedReader.readLine()) != null) {
+                    log.append(line);
+                }
+            } 
+            catch (IOException e) {
+                log.append(e.toString());
+            }
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                    "Simpletask Logcat");
+                // Create a cache file to pass in EXTRA_STREAM
+                try {
+                    Util.createCachedFile(this.getActivity(),
+                            "logcat.txt", log.toString());
+                    Uri fileUri  = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
+                            + "logcat.txt");
+                    shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri );
+                } catch (Exception e) {
+                    Log.w(TAG, "Failed to create file for sharing");
+                }
+            startActivity(Intent.createChooser(shareIntent, "Share log"));
+        }
+
         @Override
         public void onResume() {
             super.onResume();
@@ -150,8 +189,7 @@ public class Preferences extends ThemedActivity {
                 }, R.string.dropbox_logout_pref_title);
 
 			} else if (preference.getKey().equals("send_log")) {
-                Log.v("PREFERENCES", "Sending application logcat");
-                startActivity(new Intent(this.getActivity(),SendLogActivity.class));
+                sendLog();
             } 
 			return false;
 		}

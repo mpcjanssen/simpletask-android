@@ -146,7 +146,6 @@ dependencies {
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:17.0'
-    compile 'org.l6n:sendlog-library:2.0.1'
 }
 
 deploy.mustRunAfter clean
