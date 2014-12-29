@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.13
+------
+
+- Add option to send logs directly from the app. Fixes [#174](https://github.com/mpcjanssen/simpletask-android/issues/174).
+
 5.2.12
 ------
 
