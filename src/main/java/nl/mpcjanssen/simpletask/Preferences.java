@@ -149,7 +149,10 @@ public class Preferences extends ThemedActivity {
                     }
                 }, R.string.dropbox_logout_pref_title);
 
-			} 
+			} else if (preference.getKey().equals("send_log")) {
+                Log.v("PREFERENCES", "Sending application logcat");
+                startActivity(new Intent(this.getActivity(),SendLogActivity.class));
+            } 
 			return false;
 		}
 	}
