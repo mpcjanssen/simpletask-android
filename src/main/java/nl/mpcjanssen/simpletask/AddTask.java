@@ -481,6 +481,10 @@ public class AddTask extends ThemedActivity {
                             today.getMonth()-1,
                             today.getDay());
 
+                    boolean showCalendar = m_app.showCalendar();
+
+                    dialog.getDatePicker().setCalendarViewShown(showCalendar);
+                    dialog.getDatePicker().setSpinnersShown(!showCalendar);
                     dialog.show();
                 } else {
                     insertDateAtSelection(dateType, Util.addInterval(DateTime.today(TimeZone.getDefault()), selected));

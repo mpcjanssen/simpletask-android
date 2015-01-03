@@ -5,6 +5,7 @@
 ------
 
 - Add option to send logs directly from the app. Fixes [#174](https://github.com/mpcjanssen/simpletask-android/issues/174).
+- Respect calendar setting when changing dates in AddTask activity. Fixes [#145](https://github.com/mpcjanssen/simpletask-android/issues/145).
 
 5.2.12
 ------
