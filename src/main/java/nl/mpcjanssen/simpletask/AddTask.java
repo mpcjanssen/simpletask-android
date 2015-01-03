@@ -663,6 +663,8 @@ public class AddTask extends ThemedActivity {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
+        int length = textInputField.getText().length();
+        int sizeDelta;
         ArrayList<String> lines = new ArrayList<String>();
         Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
 
@@ -679,6 +681,11 @@ public class AddTask extends ThemedActivity {
             textInputField.setText(Util.join(lines, "\n"));
         }
         // restore selection
+        int newLength = textInputField.getText().length();
+        sizeDelta = newLength - length;
+        int newStart = Math.max(0, start + sizeDelta);
+        int newEnd = Math.min(end + sizeDelta, newLength);
+        newEnd = Math.max(newStart, newEnd);
         textInputField.setSelection(start, end);
     }
 
