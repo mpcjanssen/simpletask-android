@@ -192,8 +192,6 @@ public class Simpletask extends ThemedListActivity implements
         if (m_drawerToggle != null && m_drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
-
         return super.onOptionsItemSelected(item);
     }
 
