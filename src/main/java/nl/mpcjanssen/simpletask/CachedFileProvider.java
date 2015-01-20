@@ -16,7 +16,7 @@ public class CachedFileProvider extends ContentProvider {
     private static final String CLASS_NAME = "CachedFileProvider";
  
     // The authority is the symbolic name for the provider class
-    public static final String AUTHORITY = BuildConfig.PACKAGE_NAME + ".provider";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
  
     // UriMatcher used to match against incoming requests
     private UriMatcher uriMatcher;
