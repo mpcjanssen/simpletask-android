@@ -34,7 +34,6 @@ public class AppWidgetService extends RemoteViewsService {
     public RemoteViewsFactory onGetViewFactory( Intent intent) {
 	    return new AppWidgetRemoteViewsFactory((TodoApplication)getApplication(), intent);
     }
-
 }
 
 class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -69,7 +68,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     void setFilteredTasks() {
         Log.v(TAG, "Widget: setFilteredTasks called");
-        visibleTasks.clear();
+        visibleTasks = new ArrayList<Task>();
         if (application==null)  {
             Log.v(TAG, "application object was null");
             return;
