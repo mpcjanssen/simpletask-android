@@ -1616,7 +1616,7 @@ public class Simpletask extends ThemedListActivity implements
         }
 
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        m_app.setEditTextHint(ed, R.string.new_list_name);
+        m_app.setEditTextHint(ed, R.string.new_tag_name);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view);
