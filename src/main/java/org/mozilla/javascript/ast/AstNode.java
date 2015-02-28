@@ -6,6 +6,8 @@
 
 package org.mozilla.javascript.ast;
 
+import android.util.SparseArray;
+
 import org.mozilla.javascript.Kit;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
@@ -67,8 +69,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     protected int length = 1;
     protected AstNode parent;
 
-    private static Map<Integer,String> operatorNames =
-            new HashMap<Integer,String>();
+    private static SparseArray<String> operatorNames =
+            new SparseArray<String>();
 
     static {
         operatorNames.put(Token.IN, "in");
