@@ -27,7 +27,8 @@ public interface FileStoreInterface {
     boolean isSyncing();
     public boolean initialSyncDone();
     void invalidateCache();
-
+    void sync();
+    boolean supportsSync();
     public interface FileSelectedListener {
         void fileSelected(String file);
     }

@@ -463,6 +463,11 @@ public class Simpletask extends ThemedListActivity implements
         } else {
             inflater.inflate(R.menu.main_light, menu);
         }
+
+        if (!m_app.fileStoreCanSync()) {
+            MenuItem mItem = menu.findItem(R.id.sync);
+            mItem.setVisible(false);
+        }
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search)
                 .getActionView();
@@ -667,6 +672,9 @@ public class Simpletask extends ThemedListActivity implements
                 break;
             case R.id.help:
                 showHelp();
+                break;
+            case R.id.sync:
+                m_app.sync();
                 break;
             case R.id.archive:
                 m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
