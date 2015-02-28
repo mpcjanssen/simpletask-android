@@ -20,7 +20,7 @@ dependencies {
         unitTestCompile files("$project.buildDir/intermediates/classes/cloudless/debug")
         unitTestCompile fileTree(dir: 'libskeep', include: '*.jar')
         unitTestCompile 'com.darwinsys:hirondelle-date4j:1.5.1'
-        unitTestCompile 'com.google.guava:guava:17.0'
+        unitTestCompile 'com.google.guava:guava:18.0'
         unitTestCompile 'com.google.android:android:4.+'
         unitTestCompile 'junit:junit:4.11'
 }
@@ -142,10 +142,10 @@ dependencies {
     freeCompile fileTree(dir: 'libs', include: '*.jar')
     compile fileTree(dir: 'libskeep', include: '*.jar')
     compile 'com.intellij:annotations:+@jar'
-    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:support-v4:21.0.3'
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-    compile 'com.google.guava:guava:17.0'
+    compile 'com.google.guava:guava:18.0'
 }
 
 deploy.mustRunAfter clean

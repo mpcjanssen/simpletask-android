@@ -690,7 +690,7 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
             type == ScriptRuntime.DoubleClass || type == Double.TYPE) {
             return valueClass == ScriptRuntime.DoubleClass
                 ? value
-                : new Double(toDouble(value));
+                : Double.valueOf(toDouble(value));
         }
 
         if (type == ScriptRuntime.FloatClass || type == Float.TYPE) {

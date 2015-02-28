@@ -87,6 +87,15 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
+        public boolean supportsSync() {
+            return false;
+        }
+
+        @Override
+        public void sync () {
+        }
+
+        @Override
         public void startLogin(Activity caller, int i) {
 
         }
