@@ -36,6 +36,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -113,11 +114,33 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
+    public boolean fileStoreCanSync() {
+        if (mFileStore!=null) {
+            return mFileStore.supportsSync();
+        } else {
+            return false;
+        }
+    }
+
     public boolean isSynching() {
         if (mFileStore==null) {
             return true;
         } else {
             return mFileStore.isSyncing();
+        }
+    }
+
+    public void sync() {
+        if (mFileStore!=null) {
+            new AsyncTask<FileStoreInterface, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(FileStoreInterface... params) {
+                    FileStoreInterface fs = params[0];
+                    fs.sync();
+                    return null;
+                }
+            }.execute(mFileStore);
         }
     }
     

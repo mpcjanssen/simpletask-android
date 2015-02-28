@@ -70,6 +70,16 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
+    public void sync() {
+        
+    }
+
+    @Override
+    public boolean supportsSync() {
+        return false;
+    }
+
+    @Override
     public List<String> get(final String path) {
         if (activePath != null && activePath.equals(path) && mLines!=null) {
             return mLines;

@@ -448,6 +448,23 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
+    public void sync() {
+        DbxFileSystem fs = getDbxFS();
+        if (fs!=null) {
+            try {
+                fs.syncNowAndWait();
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public boolean supportsSync() {
+        return true;
+    }
+
+    @Override
     public int getType() {
         return Constants.STORE_DROPBOX;
     }

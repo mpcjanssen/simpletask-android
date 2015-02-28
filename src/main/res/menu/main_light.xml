@@ -66,4 +66,9 @@ You should have received a copy of the GNU General Public License along with Tod
         android:showAsAction="never"
         android:orderInCategory="1"
         android:id="@+id/help" />
+    <item
+        android:title="@string/sync"
+        android:showAsAction="never"
+        android:orderInCategory="1"
+        android:id="@+id/sync" />
 </menu>
