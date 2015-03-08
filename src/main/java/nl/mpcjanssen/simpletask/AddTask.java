@@ -220,12 +220,14 @@ public class AddTask extends ThemedActivity {
         super.onBackPressed();
     }
 
-    private void addBackgroundTask(String taskText) {
+    private void addBackgroundTask(String sharedText) {
         ArrayList<Task> bgTask = new ArrayList<Task>();
-        if (m_app.hasPrependDate()) {
-            bgTask.add(new Task(0,taskText, DateTime.today(TimeZone.getDefault())));
-        } else {
-            bgTask.add(new Task(0,taskText));
+        for (String taskText : sharedText.split("\n|\r\n")) {
+            if (m_app.hasPrependDate()) {   
+                bgTask.add(new Task(0,taskText, DateTime.today(TimeZone.getDefault())));
+            } else {
+                bgTask.add(new Task(0,taskText));
+            }
         }
         m_app.getTaskCache().modify(null,null,bgTask,null);
         m_app.updateWidgets();
