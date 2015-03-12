@@ -29,6 +29,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -102,6 +103,9 @@ public class Preferences extends ThemedActivity {
                 toHide = findPreference("donated");
             }
             aboutCategory.removePreference(toHide);
+
+            MultiSelectListPreference calendarList = (MultiSelectListPreference) findPreference(getString(R.string.calendar_sync));
+            m_app.getCalendarSync().fillPrefCalendarList(calendarList);
         }
 
         private void sendLog() {

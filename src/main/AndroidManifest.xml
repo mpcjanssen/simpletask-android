@@ -24,6 +24,8 @@ You should have received a copy of the GNU General Public License along with Sim
     package="nl.mpcjanssen.simpletask" >
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <supports-screens
             android:anyDensity="true"
