@@ -1381,7 +1381,7 @@ public class Simpletask extends ThemedListActivity implements
             }
             String title = "" + numSelected;
             mode.setTitle(title);
-            if (numSelected==1 && t!=null) {
+            if (numSelected==1 && t!=null && menu!=null) {
                 menu.removeGroup(Menu.CATEGORY_SECONDARY);
                 for (String s : t.getPhoneNumbers()) {
                     menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
@@ -1395,7 +1395,7 @@ public class Simpletask extends ThemedListActivity implements
                             u.toString());
                 }
                 menu.setGroupVisible(Menu.CATEGORY_SECONDARY, true);
-            } else {
+            } else if (menu!=null) {
                 menu.setGroupVisible(Menu.CATEGORY_SECONDARY, false);
             }
         }
