@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+5.2.14
+------
+
+- Fix an issue with multiline shared texts being treated as a single task.
+- Add menu item `Refresh` to force manual sync with Dropbox.
+- Use proper string resource in new tag dialog. Fixes [#179](https://github.com/mpcjanssen/simpletask-android/issues/179).
+- Fix possible NPE reported via Developer Console.
+- Prepend date to "Note to self" messages if auto date is active.
+- Don't set selection outside of text range. Fixes [#148](https://github.com/mpcjanssen/simpletask-android/issues/148).
+- Observe Back saves setting when using up icon. Fixes [#185](https://github.com/mpcjanssen/simpletask-android/issues/185).
+
 5.2.13
 ------
 
