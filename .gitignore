@@ -1,5 +1,6 @@
 dropbox.xml
 build/
+google-key
 local.properties
 gradle.properties
 .gradle/
