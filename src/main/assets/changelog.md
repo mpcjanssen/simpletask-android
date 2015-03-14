@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.15
+------
+
+- Only update menu if it is actually initialized. Should fix crash on 5.1.
+
 5.2.14
 ------
 
