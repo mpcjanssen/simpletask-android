@@ -138,6 +138,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Show txt files only</string>
     <string name="show_txt_only_summary">Only show .txt files in the file selection dialog.</string>
 
+    <string name="calendar_sync_pref_title">Calendar reminders</string>
+    <string name="calendar_sync_summary">Select calendars in which reminders will automatically be created for due and threshold dates.</string>
+    <string name="calendar_reminder_days_title">Calendar reminders margin</string>
+    <string name="calendar_reminder_days_summary">Number of days prior to the due or threshold date.</string>
+
     <string name="drawer_fixed_landscape_title">Open landscape drawers</string>
     <string name="drawer_fixed_landscape_summary">Always open the drawers in landscape mode.</string>
 

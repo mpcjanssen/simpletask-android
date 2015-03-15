@@ -117,6 +117,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_hidden">show_hidden</string>
     <string name="show_empty_lists">show_empty_lists</string>
     <string name="show_txt_only">show_txt_only</string>
+    <string name="calendar_sync">calendar_sync</string>
+    <string name="calendar_reminder_days">calendar_reminder_days</string>
     <string name="ui_complete_checkbox">ui_complete_checkbox</string>
     <string name="ui_show_calendarview">ui_show_calendarview</string>
     <string name="ui_sort_case_sensitive">ui_sort_case_sensitive</string>
