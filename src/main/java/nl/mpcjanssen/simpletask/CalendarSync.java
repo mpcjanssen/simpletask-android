@@ -28,77 +28,93 @@ package nl.mpcjanssen.simpletask;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
-import android.preference.MultiSelectListPreference;
+import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.text.format.Time;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskCache;
+
 
 public class CalendarSync {
     private static final String TAG = CalendarSync.class.getSimpleName();
     private static final String PACKAGE = TodoApplication.getAppContext().getPackageName();
-    private static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final String PREFIX_DUE = "Task due: ";
-    private static final String PREFIX_THRESHOLD = "Task threshold: ";
-    private static final String EVT_DESCRIPTION = "Generated automatically by Simpletask";
 
-    private ContentResolver m_cr;
-    private List<Long> m_calendars;
-    private Set<Long> m_evtset;
-    private int m_margin_minutes = 1440;
+    private static final String ACCOUNT_NAME = "Simpletask Calendar";
+    private static final String ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL;
+    private static final String CAL_NAME = "simpletask_reminders";
+    private static final int CAL_COLOR = Color.BLUE;     // Chosen arbitrarily...
 
-    private boolean calendarValid(String id, String name) {
-        Uri uri = Calendars.CONTENT_URI.buildUpon().appendPath(id).build();
-        final String[] projection = {Calendars._ID, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME};
-        final String selection = Calendars.NAME+" = ?";
-        Cursor cursor = m_cr.query(uri, projection, selection, new String[]{name}, null);
-        boolean ret = cursor.getCount() == 1;
-        cursor.close();
-        return ret;
-    }
+    private static final int SYNC_DELAY_MS = 1000;
 
-    private void loadEvtSet(long calID) {
-        m_evtset.clear();
-
-        final String[] projection = {Events._ID, Events.CALENDAR_ID, Events.CUSTOM_APP_PACKAGE};
-        final String selection = Events.CALENDAR_ID+" = ? AND "+Events.CUSTOM_APP_PACKAGE+" = ?";
-        Cursor cursor = m_cr.query(Events.CONTENT_URI, projection, selection,
-                new String[]{Long.toString(calID), PACKAGE}, null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                m_evtset.add(cursor.getLong(0));
-            }
-            cursor.close();
+    private class SyncRunnable implements Runnable {
+        @Override
+        public void run() {
+            CalendarSync.this.sync();
         }
     }
 
-    private long findEvt(long calID, DateTime date, String title) {
-        final String[] projection = {Events._ID, Events.CALENDAR_ID, Events.CUSTOM_APP_PACKAGE,
-                Events.DTSTART, Events.TITLE};
-        final String selection = Events.CALENDAR_ID+" = ? AND "+Events.CUSTOM_APP_PACKAGE+" = ? AND "
-                +Events.DTSTART+" = ? AND "+Events.TITLE+" = ?";
-        Cursor cursor = m_cr.query(Events.CONTENT_URI, projection, selection,
-                new String[]{Long.toString(calID), PACKAGE, String.valueOf(date.getMilliseconds(UTC)), title}, null);
+    private TodoApplication m_app;
+    private SyncRunnable m_sync_runnable;
 
+    private ContentResolver m_cr;
+    private boolean m_enabled = false;
+    private Uri m_cal_uri;
+    private int m_margin_minutes = 1440;
+    private ScheduledThreadPoolExecutor m_stpe;
+
+    private static Uri buildCalUri() {
+        return Calendars.CONTENT_URI.buildUpon()
+            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
+            .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build();
+    }
+
+    private long getCalID() {
+        final String[] projection = {Calendars._ID, Calendars.NAME};
+        final String selection = Calendars.NAME+" = ?";
+        Cursor cursor = m_cr.query(m_cal_uri, projection, selection, new String[]{CAL_NAME}, null);
         if (cursor == null) return -1;
-        if (cursor.getCount() != 1) return -1;
+        if (cursor.getCount() == 0) return -1;
         cursor.moveToFirst();
         long ret = cursor.getLong(0);
         cursor.close();
         return ret;
+    }
+
+    private boolean addCalendar() {
+        final ContentValues cv = new ContentValues();
+        cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);
+        cv.put(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE);
+        cv.put(Calendars.NAME, CAL_NAME);
+        cv.put(Calendars.CALENDAR_DISPLAY_NAME, m_app.getString(R.string.calendar_disp_name));
+        cv.put(Calendars.CALENDAR_COLOR, CAL_COLOR);
+        cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
+        cv.put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME);
+        cv.put(Calendars.VISIBLE, 1);
+        cv.put(Calendars.SYNC_EVENTS, 1);
+
+        Uri calUri = m_cr.insert(m_cal_uri, cv);
+        if (calUri == null) return false;
+        else if (getCalID() == -1) return false;    // This might happen eg. because of CM's privacy guard
+        return true;
+    }
+
+    private void removeCalendar() {
+        String selection = Calendars.NAME+" = ?";
+        int ret = m_cr.delete(m_cal_uri, selection, new String[]{CAL_NAME});
+        Log.v(TAG, "Calendar removed: "+ret);
     }
 
     private void insertEvt(long calID, DateTime date, String title) {
@@ -111,8 +127,10 @@ public class CalendarSync {
         values.put(Events.DTSTART, millis);
         values.put(Events.DTEND, millis);
         values.put(Events.ALL_DAY, true);
-        values.put(Events.DESCRIPTION, EVT_DESCRIPTION);
-        values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+        values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
+        values.put(Events.EVENT_TIMEZONE, Time.TIMEZONE_UTC);  // Doc: If allDay is set to 1, eventTimezone must be TIMEZONE_UTC
+        values.put(Events.STATUS, Events.STATUS_CONFIRMED);
+        values.put(Events.HAS_ATTENDEE_DATA, true);      // If this is not set, Calendar app is confused about Event.STATUS
         values.put(Events.CUSTOM_APP_PACKAGE, PACKAGE);
         // TODO: CUSTOM_APP_URI ?
         Uri uri = m_cr.insert(Events.CONTENT_URI, values);
@@ -122,103 +140,85 @@ public class CalendarSync {
         values.clear();
         values.put(Reminders.EVENT_ID, evtID);
         values.put(Reminders.MINUTES, m_margin_minutes);
-        values.put(Reminders.METHOD, Reminders.METHOD_DEFAULT);
+        values.put(Reminders.METHOD, Reminders.METHOD_ALERT);
         m_cr.insert(Reminders.CONTENT_URI, values);
     }
 
-    private void syncCal(long calID, final List<Task> tasks) {
+    private void insertEvts(long calID, final List<Task> tasks) {
         for (Task task: tasks) {
             if (task.isCompleted()) continue;
 
             // Check due date:
             DateTime dt = task.getDueDate();
             if (dt != null) {
-                String title = PREFIX_DUE+task.getText();
-                long id = findEvt(calID, dt, title);
-                if (id >= 0) {
-                    m_evtset.remove(id);  // Don't delete this event
-                } else {
-                    insertEvt(calID, dt, title);
-                }
+                String title = m_app.getString(R.string.calendar_sync_prefix_due)+' '+task.getText();
+                insertEvt(calID, dt, title);
             }
 
             // Check threshold date:
             dt = task.getThresholdDate();
             if (dt != null) {
-                String title = PREFIX_THRESHOLD+task.getText();
-                long id = findEvt(calID, dt, title);
-                if (id >= 0) {
-                    m_evtset.remove(id);  // Don't delete this event
-                } else {
-                    insertEvt(calID, dt, title);
-                }
+                String title = m_app.getString(R.string.calendar_sync_prefix_thre)+' '+task.getText();
+                insertEvt(calID, dt, title);
             }
         }
     }
 
-    private void purgeEvts() {
-        final String selection = Events._ID+" = ?";
-        for (Long id: m_evtset) {
-            m_cr.delete(Events.CONTENT_URI, selection, new String[]{id.toString()});
-        }
+    private void purgeEvts(long calID) {
+        final String selection = Events.CALENDAR_ID+" = ?";
+        m_cr.delete(Events.CONTENT_URI, selection, new String[]{String.valueOf(calID)});
     }
 
+    private void sync() {
+        if (!m_enabled) return;
 
-    public CalendarSync(Set<String> calendars) {
-        m_cr = TodoApplication.getAppContext().getContentResolver();
-        m_calendars = new ArrayList<>();
-        m_evtset = new HashSet<>();
-        setSyncCalendars(calendars);
-    }
+        final List<Task> tasks = m_app.getTaskCache().getTasks();
+        m_margin_minutes = m_app.getRemindersMarginDays() * 1440;
 
-    public void sync(TaskCache taskCache, int marginDays) {
-        final List<Task> tasks = taskCache.getTasks();
-        m_margin_minutes = marginDays * 1440;
-
-        for (Long calID: m_calendars) {
-            loadEvtSet(calID);
-            syncCal(calID, tasks);
-            purgeEvts();
-        }
-    }
-
-    public void fillPrefCalendarList(MultiSelectListPreference pref) {
-        List<String> entryValues = new ArrayList<>();
-        List<String> entries = new ArrayList<>();
-
-        final String[] projection = {Calendars._ID, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME};
-        Cursor cursor = m_cr.query(Calendars.CONTENT_URI, projection, null, null, null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                // In an attempt to distinguish a calendar uniquely, both its ID and name is used:
-                String value = cursor.getString(0) + ":" + cursor.getString(1);
-                entryValues.add(value);
-                entries.add(cursor.getString(2));
-            }
+        long calID = getCalID();
+        if (calID == -1) {
+            Log.e(TAG, "sync(): No calendar!");
+            return;
         }
 
-        pref.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
-        pref.setEntries(entries.toArray(new CharSequence[entries.size()]));
+        Log.v(TAG, "Syncing due & threshold calendar reminders...");
+        purgeEvts(calID);
+        insertEvts(calID, tasks);
     }
 
-    public void setSyncCalendars(Set<String> calendars) {
-        m_calendars.clear();
 
-        // Custom events are supported only since JellyBean:
-        if (!API16) return;
+    public CalendarSync(TodoApplication app, boolean enabled) {
+        m_app = app;
+        m_sync_runnable = new SyncRunnable();
+        m_cr = app.getContentResolver();
+        m_cal_uri = buildCalUri();
+        m_stpe = new ScheduledThreadPoolExecutor(1);
+        setEnabled(enabled);
+    }
 
-        for (String calendar: calendars) {
-            String[] split = calendar.split(":", 2);
-            if (calendarValid(split[0], split[1])) {
-                try {
-                    m_calendars.add(Long.parseLong(split[0]));
-                } catch (NumberFormatException e) {
-                    // Calendar ID not added
-                }
+    public void syncLater() {
+        if (!m_enabled) return;
+
+        m_stpe.getQueue().clear();
+        m_stpe.schedule(m_sync_runnable, SYNC_DELAY_MS, TimeUnit.MILLISECONDS);
+    }
+
+    public boolean isEnabled() {
+        return m_enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        m_enabled = enabled;
+        long calID = getCalID();
+        if (m_enabled && calID == -1) {
+            if (addCalendar()) {
+                Log.v(TAG, "Added calendar");
             } else {
-                Log.w(TAG, "Calendar not valid, id: "+split[0]);
+                m_enabled = false;
+                Log.e(TAG, "Could not add calendar");
             }
+        } else if (!m_enabled && calID != -1) {
+            removeCalendar();
         }
     }
 }

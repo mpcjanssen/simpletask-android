@@ -99,6 +99,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_key">widget_theme</string>
     <string name="widget_extended_pref_key">widget_extended</string>
     <string name="dropbox_cat_key">dropbox_category</string>
+    <string name="behavior_cat_key">behavior_category</string>
     <string name="clone_tags_key">clone_tags</string>
     <string name="word_wrap_key">word_wrap</string>
     <string name="color_due_date_key">color_due_date</string>

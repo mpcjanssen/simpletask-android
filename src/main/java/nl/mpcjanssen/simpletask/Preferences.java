@@ -104,8 +104,13 @@ public class Preferences extends ThemedActivity {
             }
             aboutCategory.removePreference(toHide);
 
-            MultiSelectListPreference calendarList = (MultiSelectListPreference) findPreference(getString(R.string.calendar_sync));
-            m_app.getCalendarSync().fillPrefCalendarList(calendarList);
+            if (!TodoApplication.API16) {
+                Preference calSyncPref = findPreference(getString(R.string.calendar_sync));
+                Preference calSyncDaysPref = findPreference(getString(R.string.calendar_reminder_days));
+                PreferenceCategory behaviorCategory = (PreferenceCategory) findPreference(getString(R.string.behavior_cat_key));
+                behaviorCategory.removePreference(calSyncPref);
+                behaviorCategory.removePreference(calSyncDaysPref);
+            }
         }
 
         private void sendLog() {

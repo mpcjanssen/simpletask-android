@@ -117,7 +117,10 @@
             android:summary="@string/sort_case_sensitive_summary"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/todotxt_behavior_settings_header">
+    <PreferenceCategory
+        android:title="@string/todotxt_behavior_settings_header"
+        android:key="@string/behavior_cat_key">
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prepend_date_pref_key"
@@ -168,7 +171,7 @@
 	        android:summary="@string/show_txt_only_summary"
             android:title="@string/show_txt_only_pref_title" />
 
-        <MultiSelectListPreference
+        <CheckBoxPreference
             android:key="@string/calendar_sync"
             android:summary="@string/calendar_sync_summary"
             android:title="@string/calendar_sync_pref_title" />
