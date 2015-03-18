@@ -47,8 +47,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Set;
 
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -69,6 +67,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private CalendarSync m_calSync;
     private BroadcastReceiver m_broadcastReceiver;
 
+    public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
+
     public static Context getAppContext() {
         return m_appContext;
     }
@@ -82,7 +82,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
-        m_calSync = new CalendarSync(getSyncCalendars());
+        m_calSync = new CalendarSync(this, isCalendarSync());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
@@ -94,7 +94,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     // File change reload task cache
                     resetTaskCache();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                    m_calSync.sync(getTaskCache(), getRemindersMarginDays());
+                    m_calSync.syncLater();
                     updateWidgets();
                 }
             }
@@ -188,16 +188,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
     }
 
-    public Set<String> getSyncCalendars() {
-        return m_prefs.getStringSet(getString(R.string.calendar_sync), Collections.<String>emptySet());
+    public boolean isCalendarSync() {
+        return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync), false);
     }
 
     public int getRemindersMarginDays() {
         return m_prefs.getInt(getString(R.string.calendar_reminder_days), 1);
-    }
-
-    public void setSyncCalendars(Set<String> calendars) {
-        m_prefs.edit().putStringSet(getString(R.string.calendar_sync), calendars);
     }
 
     public String getTodoFileName() {
@@ -316,11 +312,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return this.m_taskCache;
     }
 
-    @NotNull
-    public CalendarSync getCalendarSync() {
-        return m_calSync;
-    }
-
     public void fileUpdated() {
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
     }
@@ -398,7 +389,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 mFileStore.setEol(getEol());
             }
         } else if (s.equals(getString(R.string.calendar_sync))) {
-            m_calSync.setSyncCalendars(getSyncCalendars());
+            boolean enabled = isCalendarSync();
+            m_calSync.setEnabled(enabled);
+            if (enabled) {
+                m_calSync.syncLater();
+            }
+        } else if (s.equals(getString(R.string.calendar_reminder_days))) {
+            m_calSync.syncLater();
         }
     }
 
