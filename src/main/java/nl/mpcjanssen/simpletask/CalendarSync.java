@@ -71,6 +71,7 @@ public class CalendarSync {
     private ContentResolver m_cr;
     private boolean m_enabled = false;
     private Uri m_cal_uri;
+
     private int m_margin_minutes = 1440;
     private ScheduledThreadPoolExecutor m_stpe;
 
@@ -173,7 +174,7 @@ public class CalendarSync {
         if (!m_enabled) return;
 
         final List<Task> tasks = m_app.getTaskCache().getTasks();
-        m_margin_minutes = m_app.getRemindersMarginDays() * 1440;
+        setRemindersMarginDays(m_app.getRemindersMarginDays());
 
         long calID = getCalID();
         if (calID == -1) {
@@ -220,5 +221,9 @@ public class CalendarSync {
         } else if (!m_enabled && calID != -1) {
             removeCalendar();
         }
+    }
+
+    public void setRemindersMarginDays(int days) {
+        m_margin_minutes = days * 1440 - 720;    // -720 to make the reminder go off during the day
     }
 }
