@@ -137,6 +137,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Mostra solo i file .txt</string>
     <string name="show_txt_only_summary">Mostra solo i file .txt nel dialogo di selezione file.</string>
 
+    <!--TODO: translate-->
+    <string name="calendar_sync_screen_title">Calendar reminders</string>
+    <string name="calendar_sync_screen_summary">Automatically create calendar reminders for due and/or threshold dates.</string>
+    <string name="calendar_sync_dues_title">Due dates</string>
+    <string name="calendar_sync_thresholds_title">Threshold dates</string>
+    <string name="calendar_reminder_days_title">Reminders margin</string>
+    <string name="calendar_reminder_days_summary">How many days before the due/threshold date should the reminder be set.</string>
+
     <string name="drawer_fixed_landscape_title">Mostra cass. in orizz.</string>
     <string name="drawer_fixed_landscape_summary">Mostra i cassetti aperti quando in modalità orizzontale.</string>
 
@@ -324,4 +332,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="donate_summary">Dona se apprezzi Simpletask. NOTA: La donazione è volontaria, Simpletask sarà sempre libero.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Inverti ordine</string>
+
+    <!-- Calendar sync -->
+    <!--TODO: translate-->
+    <string name="calendar_disp_name">Simpletask Reminders</string>
+    <string name="calendar_sync_prefix_due">Task due:</string>
+    <string name="calendar_sync_prefix_thre">Task threshold:</string>
+    <string name="calendar_sync_evt_desc">Generated automatically by Simpletask</string>
 </resources>
