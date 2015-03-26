@@ -134,13 +134,13 @@ public class CalendarSync {
         else Log.w(TAG, "Unexpected return value while removing calendar: "+ret);
     }
 
-    private void insertEvt(long calID, DateTime date, String title) {
+    private void insertEvt(long calID, DateTime date, String titlePrefix, String title) {
         ContentValues values = new ContentValues();
         long millis = date.getMilliseconds(UTC);
 
         // Event:
         values.put(Events.CALENDAR_ID, calID);
-        values.put(Events.TITLE, title);
+        values.put(Events.TITLE, titlePrefix+' '+title);
         values.put(Events.DTSTART, millis);
         values.put(Events.DTEND, millis);
         values.put(Events.ALL_DAY, true);
@@ -149,7 +149,7 @@ public class CalendarSync {
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
         values.put(Events.HAS_ATTENDEE_DATA, true);      // If this is not set, Calendar app is confused about Event.STATUS
         values.put(Events.CUSTOM_APP_PACKAGE, PACKAGE);
-        // TODO: CUSTOM_APP_URI ?
+        values.put(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString());
         Uri uri = m_cr.insert(Events.CONTENT_URI, values);
 
         // Reminder:
@@ -166,22 +166,23 @@ public class CalendarSync {
             if (task.isCompleted()) continue;
 
             DateTime dt;
+            String text = null;
 
             // Check due date:
             if ((m_sync_type & SYNC_TYPE_DUES) != 0) {
                 dt = task.getDueDate();
+                text = task.getText();
                 if (dt != null) {
-                    String title = m_app.getString(R.string.calendar_sync_prefix_due) + ' ' + task.getText();
-                    insertEvt(calID, dt, title);
+                    insertEvt(calID, dt, m_app.getString(R.string.calendar_sync_prefix_due), text);
                 }
             }
 
             // Check threshold date:
             if ((m_sync_type & SYNC_TYPE_THRESHOLDS) != 0) {
                 dt = task.getThresholdDate();
+                if (text == null) text = task.getText();
                 if (dt != null) {
-                    String title = m_app.getString(R.string.calendar_sync_prefix_thre) + ' ' + task.getText();
-                    insertEvt(calID, dt, title);
+                    insertEvt(calID, dt, m_app.getString(R.string.calendar_sync_prefix_thre), text);
                 }
             }
         }
