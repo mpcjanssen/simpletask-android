@@ -53,7 +53,7 @@ public class CalendarSync {
 
     private static final String ACCOUNT_NAME = "Simpletask Calendar";
     private static final String ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL;
-    private static final String CAL_NAME = "simpletask_reminders";
+    private static final String CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI";
     private static final int CAL_COLOR = Color.BLUE;     // Chosen arbitrarily...
 
     private static final int SYNC_DELAY_MS = 1000;
@@ -69,7 +69,8 @@ public class CalendarSync {
     private SyncRunnable m_sync_runnable;
 
     private ContentResolver m_cr;
-    private boolean m_enabled = false;
+
+    private int m_sync_type;
     private Uri m_cal_uri;
 
     private int m_margin_minutes = 1440;
@@ -85,7 +86,8 @@ public class CalendarSync {
     private long getCalID() {
         final String[] projection = {Calendars._ID, Calendars.NAME};
         final String selection = Calendars.NAME+" = ?";
-        Cursor cursor = m_cr.query(m_cal_uri, projection, selection, new String[]{CAL_NAME}, null);
+        final String[] args = {CAL_NAME};
+        Cursor cursor = m_cr.query(m_cal_uri, projection, selection, args, null);
         if (cursor == null) return -1;
         if (cursor.getCount() == 0) return -1;
         cursor.moveToFirst();
@@ -94,7 +96,13 @@ public class CalendarSync {
         return ret;
     }
 
-    private boolean addCalendar() {
+    private void addCalendar(boolean checkCalExists) {
+        if (checkCalExists && (getCalID() != -1)) {
+            Log.e(TAG, "Could not add calendar: There already is one with the same name");
+            m_sync_type = 0;
+            return;
+        }
+
         final ContentValues cv = new ContentValues();
         cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);
         cv.put(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE);
@@ -107,15 +115,26 @@ public class CalendarSync {
         cv.put(Calendars.SYNC_EVENTS, 1);
 
         Uri calUri = m_cr.insert(m_cal_uri, cv);
-        if (calUri == null) return false;
-        else if (getCalID() == -1) return false;    // This might happen eg. because of CM's privacy guard
-        return true;
+        boolean added = true;
+        if (calUri == null) added = false;
+        else if (getCalID() == -1) added = false;    // This might happen eg. because of CM's privacy guard
+
+        if (added) {
+            Log.v(TAG, "Calendar added");
+        }
+        else {
+            Log.e(TAG, "Could not add calendar");
+            m_sync_type = 0;
+        }
     }
 
     private void removeCalendar() {
-        String selection = Calendars.NAME+" = ?";
-        int ret = m_cr.delete(m_cal_uri, selection, new String[]{CAL_NAME});
-        Log.v(TAG, "Calendar removed: "+ret);
+        if (m_sync_type == 0) return;
+        final String selection = Calendars.NAME+" = ?";
+        final String[] args = {CAL_NAME};
+        int ret = m_cr.delete(m_cal_uri, selection, args);
+        if (ret == 1) Log.v(TAG, "Calendar removed");
+        else Log.w(TAG, "Unexpected return value while removing calendar: "+ret);
     }
 
     private void insertEvt(long calID, DateTime date, String title) {
@@ -149,29 +168,37 @@ public class CalendarSync {
         for (Task task: tasks) {
             if (task.isCompleted()) continue;
 
+            DateTime dt;
+
             // Check due date:
-            DateTime dt = task.getDueDate();
-            if (dt != null) {
-                String title = m_app.getString(R.string.calendar_sync_prefix_due)+' '+task.getText();
-                insertEvt(calID, dt, title);
+            if ((m_sync_type & SYNC_TYPE_DUES) != 0) {
+                dt = task.getDueDate();
+                if (dt != null) {
+                    String title = m_app.getString(R.string.calendar_sync_prefix_due) + ' ' + task.getText();
+                    insertEvt(calID, dt, title);
+                }
             }
 
             // Check threshold date:
-            dt = task.getThresholdDate();
-            if (dt != null) {
-                String title = m_app.getString(R.string.calendar_sync_prefix_thre)+' '+task.getText();
-                insertEvt(calID, dt, title);
+            if ((m_sync_type & SYNC_TYPE_THRESHOLDS) != 0) {
+                dt = task.getThresholdDate();
+                if (dt != null) {
+                    String title = m_app.getString(R.string.calendar_sync_prefix_thre) + ' ' + task.getText();
+                    insertEvt(calID, dt, title);
+                }
             }
         }
     }
 
     private void purgeEvts(long calID) {
         final String selection = Events.CALENDAR_ID+" = ?";
-        m_cr.delete(Events.CONTENT_URI, selection, new String[]{String.valueOf(calID)});
+        final String args[] = {""};
+        args[0] = String.valueOf(calID);
+        m_cr.delete(Events.CONTENT_URI, selection, args);
     }
 
     private void sync() {
-        if (!m_enabled) return;
+        if (m_sync_type == 0) return;
 
         final List<Task> tasks = m_app.getTaskCache().getTasks();
         setRemindersMarginDays(m_app.getRemindersMarginDays());
@@ -182,45 +209,57 @@ public class CalendarSync {
             return;
         }
 
-        Log.v(TAG, "Syncing due & threshold calendar reminders...");
+        Log.v(TAG, "Syncing due/threshold calendar reminders...");
         purgeEvts(calID);
         insertEvts(calID, tasks);
     }
 
+    private void setSyncType(int syncType, boolean checkCalExists) {
+        if (syncType == m_sync_type) return;
+        int old_sync_type = m_sync_type;
+        m_sync_type = syncType;
 
-    public CalendarSync(TodoApplication app, boolean enabled) {
+        if ((old_sync_type == 0) && (m_sync_type > 0)) {
+            addCalendar(checkCalExists);
+        }
+        else if ((old_sync_type > 0) && (m_sync_type == 0)) {
+            removeCalendar();
+        }
+
+        if (m_sync_type > 0) syncLater();
+    }
+
+
+
+    public static final int SYNC_TYPE_DUES = 1, SYNC_TYPE_THRESHOLDS = 2;
+
+    public CalendarSync(TodoApplication app, boolean syncDues, boolean syncThresholds) {
         m_app = app;
         m_sync_runnable = new SyncRunnable();
         m_cr = app.getContentResolver();
         m_cal_uri = buildCalUri();
         m_stpe = new ScheduledThreadPoolExecutor(1);
-        setEnabled(enabled);
+        int syncType = 0;
+        if (syncDues) syncType |= SYNC_TYPE_DUES;
+        if (syncThresholds) syncType |= SYNC_TYPE_THRESHOLDS;
+        setSyncType(syncType, false);
     }
 
     public void syncLater() {
-        if (!m_enabled) return;
+        if (m_sync_type == 0) return;
 
         m_stpe.getQueue().clear();
         m_stpe.schedule(m_sync_runnable, SYNC_DELAY_MS, TimeUnit.MILLISECONDS);
     }
 
-    public boolean isEnabled() {
-        return m_enabled;
+    public void setSyncDues(boolean bool) {
+        int syncType = bool ? m_sync_type | SYNC_TYPE_DUES : m_sync_type & ~SYNC_TYPE_DUES;
+        setSyncType(syncType, true);
     }
 
-    public void setEnabled(boolean enabled) {
-        m_enabled = enabled;
-        long calID = getCalID();
-        if (m_enabled && calID == -1) {
-            if (addCalendar()) {
-                Log.v(TAG, "Added calendar");
-            } else {
-                m_enabled = false;
-                Log.e(TAG, "Could not add calendar");
-            }
-        } else if (!m_enabled && calID != -1) {
-            removeCalendar();
-        }
+    public void setSyncThresholds(boolean bool) {
+        int syncType = bool ? m_sync_type | SYNC_TYPE_THRESHOLDS : m_sync_type & ~SYNC_TYPE_THRESHOLDS;
+        setSyncType(syncType, true);
     }
 
     public void setRemindersMarginDays(int days) {

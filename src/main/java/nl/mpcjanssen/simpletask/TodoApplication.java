@@ -82,7 +82,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
-        m_calSync = new CalendarSync(this, isCalendarSync());
+        m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
@@ -188,8 +188,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
     }
 
-    public boolean isCalendarSync() {
-        return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync), false);
+    public boolean isSyncDues() {
+        return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_dues), false);
+    }
+
+    public boolean isSyncThresholds() {
+        return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false);
     }
 
     public int getRemindersMarginDays() {
@@ -388,12 +392,10 @@ public class TodoApplication extends Application implements SharedPreferences.On
             if (mFileStore!=null) {
                 mFileStore.setEol(getEol());
             }
-        } else if (s.equals(getString(R.string.calendar_sync))) {
-            boolean enabled = isCalendarSync();
-            m_calSync.setEnabled(enabled);
-            if (enabled) {
-                m_calSync.syncLater();
-            }
+        } else if (s.equals(getString(R.string.calendar_sync_dues))) {
+            m_calSync.setSyncDues(isSyncDues());
+        } else if (s.equals(getString(R.string.calendar_sync_thresholds))) {
+            m_calSync.setSyncThresholds(isSyncThresholds());
         } else if (s.equals(getString(R.string.calendar_reminder_days))) {
             m_calSync.syncLater();
         }
