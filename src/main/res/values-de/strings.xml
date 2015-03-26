@@ -138,6 +138,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
 
+    <!--TODO: translate-->
+    <string name="calendar_sync_screen_title">Calendar reminders</string>
+    <string name="calendar_sync_screen_summary">Automatically create calendar reminders for due and/or threshold dates.</string>
+    <string name="calendar_sync_dues_title">Due dates</string>
+    <string name="calendar_sync_thresholds_title">Threshold dates</string>
+    <string name="calendar_reminder_days_title">Reminders margin</string>
+    <string name="calendar_reminder_days_summary">How many days before the due/threshold date should the reminder be set.</string>
+
     <string name="drawer_fixed_landscape_title">Öffne im Querformat</string>
     <string name="drawer_fixed_landscape_summary">Immer im Querformat öffnen.</string>
 
@@ -325,6 +333,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="donate_summary">Spende wenn Dir Simpletask gefällt. Hinweis: Spenden ist freiwillig, Simpletask wird immer kostenlos verfügbar sein. </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Umgekehrte Sortierung</string>
+
+    <!-- Calendar sync -->
+    <!--TODO: translate-->
+    <string name="calendar_disp_name">Simpletask Reminders</string>
+    <string name="calendar_sync_prefix_due">Task due:</string>
+    <string name="calendar_sync_prefix_thre">Task threshold:</string>
+    <string name="calendar_sync_evt_desc">Generated automatically by Simpletask</string>
 </resources>
 
 
