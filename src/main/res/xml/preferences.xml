@@ -170,7 +170,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/show_txt_only"
-	        android:summary="@string/show_txt_only_summary"
+            android:summary="@string/show_txt_only_summary"
             android:title="@string/show_txt_only_pref_title" />
         <PreferenceScreen
             android:key="@string/calendar_sync_screen"
