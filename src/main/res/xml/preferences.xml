@@ -5,6 +5,7 @@
 	file (http://todotxt.com).
 
 	Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+	Copyright (c) 2015 Vojtech Kral
 
 	LICENSE:
 
@@ -27,6 +28,7 @@
 	@author Todo.txt contributors <todotxt@yahoogroups.com>
 	@license http://www.gnu.org/licenses/gpl.html
 	@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+	@copyright 2015 Vojtech Kral
 --><!-- suppress ALL -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
