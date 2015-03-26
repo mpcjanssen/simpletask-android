@@ -105,11 +105,9 @@ public class Preferences extends ThemedActivity {
             aboutCategory.removePreference(toHide);
 
             if (!TodoApplication.API16) {
-                Preference calSyncPref = findPreference(getString(R.string.calendar_sync));
-                Preference calSyncDaysPref = findPreference(getString(R.string.calendar_reminder_days));
+                Preference calSyncPref = findPreference(getString(R.string.calendar_sync_screen));
                 PreferenceCategory behaviorCategory = (PreferenceCategory) findPreference(getString(R.string.behavior_cat_key));
                 behaviorCategory.removePreference(calSyncPref);
-                behaviorCategory.removePreference(calSyncDaysPref);
             }
         }
 
