@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License along with Sim
 @license http://www.gnu.org/licenses/gpl.html
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 @copyright 2012-2013  Mark Janssen
+@copyright 2015 Vojtech Kral
 -->
 <!-- package name and version codes are overwritten by Gradle -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"

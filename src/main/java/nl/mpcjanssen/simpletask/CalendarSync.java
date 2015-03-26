@@ -1,8 +1,6 @@
-// TODO: is file header ok?
 /**
  *
- * Copyright (c) 2009-2015 Todo.txt contributors (http://todotxt.com)
- * Copyright (c) 2013- Mark Janssen
+ * Copyright (c) 2015 Vojtech Kral
  *
  * LICENSE:
  *
@@ -19,8 +17,7 @@
  *
  * @author Todo.txt contributors <todotxt@yahoogroups.com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2015 Todo.txt contributors (http://todotxt.com)
- * @copyright 2013- Mark Janssen
+ * @copyright 2015 Vojtech Kral
  */
 
 package nl.mpcjanssen.simpletask;
