@@ -50,6 +50,10 @@ public class CalendarSync {
 
     private static final String ACCOUNT_NAME = "Simpletask Calendar";
     private static final String ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL;
+    private static final Uri CAL_URI = Calendars.CONTENT_URI.buildUpon()
+            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
+            .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build();
     private static final String CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI";
     private static final int CAL_COLOR = Color.BLUE;     // Chosen arbitrarily...
 
@@ -64,27 +68,16 @@ public class CalendarSync {
 
     private TodoApplication m_app;
     private SyncRunnable m_sync_runnable;
-
     private ContentResolver m_cr;
-
     private int m_sync_type;
-    private Uri m_cal_uri;
-
     private int m_margin_minutes = 1440;
     private ScheduledThreadPoolExecutor m_stpe;
-
-    private static Uri buildCalUri() {
-        return Calendars.CONTENT_URI.buildUpon()
-            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-            .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
-            .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build();
-    }
 
     private long getCalID() {
         final String[] projection = {Calendars._ID, Calendars.NAME};
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
-        Cursor cursor = m_cr.query(m_cal_uri, projection, selection, args, null);
+        Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);
         if (cursor == null) return -1;
         if (cursor.getCount() == 0) return -1;
         cursor.moveToFirst();
@@ -111,7 +104,7 @@ public class CalendarSync {
         cv.put(Calendars.VISIBLE, 1);
         cv.put(Calendars.SYNC_EVENTS, 1);
 
-        Uri calUri = m_cr.insert(m_cal_uri, cv);
+        Uri calUri = m_cr.insert(CAL_URI, cv);
         boolean added = true;
         if (calUri == null) added = false;
         else if (getCalID() == -1) added = false;    // This might happen eg. because of CM's privacy guard
@@ -126,10 +119,9 @@ public class CalendarSync {
     }
 
     private void removeCalendar() {
-        if (m_sync_type == 0) return;
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
-        int ret = m_cr.delete(m_cal_uri, selection, args);
+        int ret = m_cr.delete(CAL_URI, selection, args);
         if (ret == 1) Log.v(TAG, "Calendar removed");
         else Log.w(TAG, "Unexpected return value while removing calendar: "+ret);
     }
@@ -171,8 +163,8 @@ public class CalendarSync {
             // Check due date:
             if ((m_sync_type & SYNC_TYPE_DUES) != 0) {
                 dt = task.getDueDate();
-                text = task.getText();
                 if (dt != null) {
+                    text = task.getText();
                     insertEvt(calID, dt, m_app.getString(R.string.calendar_sync_prefix_due), text);
                 }
             }
@@ -180,8 +172,8 @@ public class CalendarSync {
             // Check threshold date:
             if ((m_sync_type & SYNC_TYPE_THRESHOLDS) != 0) {
                 dt = task.getThresholdDate();
-                if (text == null) text = task.getText();
                 if (dt != null) {
+                    if (text == null) text = task.getText();
                     insertEvt(calID, dt, m_app.getString(R.string.calendar_sync_prefix_thre), text);
                 }
             }
@@ -235,7 +227,6 @@ public class CalendarSync {
         m_app = app;
         m_sync_runnable = new SyncRunnable();
         m_cr = app.getContentResolver();
-        m_cal_uri = buildCalUri();
         m_stpe = new ScheduledThreadPoolExecutor(1);
         int syncType = 0;
         if (syncDues) syncType |= SYNC_TYPE_DUES;
