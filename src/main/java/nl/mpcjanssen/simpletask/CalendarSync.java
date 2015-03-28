@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with Sinpletask.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * @author Todo.txt contributors <todotxt@yahoogroups.com>
+ * @author Vojtech Kral
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2015 Vojtech Kral
  */
