@@ -101,14 +101,14 @@ android {
         exclude 'LICENSE.txt'
     }
 
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+    compileSdkVersion 22
 
     defaultConfig {
         versionName '5.2.15'
         versionCode 1543
 	    minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
         buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
     }
 
@@ -142,7 +142,7 @@ dependencies {
     freeCompile fileTree(dir: 'libs', include: '*.jar')
     compile fileTree(dir: 'libskeep', include: '*.jar')
     compile 'com.intellij:annotations:12.0'
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:22.0.0'
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:18.0'
