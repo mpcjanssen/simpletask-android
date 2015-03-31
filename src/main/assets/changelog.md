@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.16
+------
+
+- Use atomic file in Cloudless build. Fixes[#205] (https://github.com/mpcjanssen/simpletask-android/issues/205).
+
 5.2.15
 ------
 
