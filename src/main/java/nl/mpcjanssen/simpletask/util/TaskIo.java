@@ -28,6 +28,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 import org.jetbrains.annotations.NotNull;
+import android.support.v4.util.AtomicFile;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A utility class for performing Task level I/O
@@ -49,7 +51,8 @@ public class TaskIo {
     public static ArrayList<String> loadFromFile(@NotNull File file) {
         ArrayList<String> result = new ArrayList<String>();
         try {
-            result.addAll(Files.readLines(file, Charsets.UTF_8));
+            AtomicFile atom = new AtomicFile(file);
+            result.addAll(Arrays.asList(new String(atom.readFully(), "UTF-8").split("\n|\r|\n\r")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,10 +62,13 @@ public class TaskIo {
     public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) {
         try {
             Util.createParentDirectory(file);
+            AtomicFile atom = new AtomicFile(file);
+            FileOutputStream str = atom.startWrite();
             Writer fw = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(file, append), "UTF-8"));
+                    str, "UTF-8"));
             fw.write(contents);
             fw.close();
+            atom.finishWrite(str);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
