@@ -105,8 +105,8 @@ android {
     compileSdkVersion 22
 
     defaultConfig {
-        versionName '5.2.15'
-        versionCode 1543
+        versionName '5.2.16'
+        versionCode 1544
 	    minSdkVersion 14
         targetSdkVersion 22
         buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
