@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.2.17
+------
+
+- Don't use atomic files for reading, silly dev.
+
 5.2.16
 ------
 
