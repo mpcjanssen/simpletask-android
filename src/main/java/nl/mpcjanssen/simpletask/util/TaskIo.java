@@ -51,8 +51,7 @@ public class TaskIo {
     public static ArrayList<String> loadFromFile(@NotNull File file) {
         ArrayList<String> result = new ArrayList<String>();
         try {
-            AtomicFile atom = new AtomicFile(file);
-            result.addAll(Arrays.asList(new String(atom.readFully(), "UTF-8").split("\n|\r|\n\r")));
+            result.addAll(Files.readLines(file, Charsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
