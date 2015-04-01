@@ -61,12 +61,19 @@ public class TaskIo {
     public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) {
         try {
             Util.createParentDirectory(file);
-            AtomicFile atom = new AtomicFile(file);
-            FileOutputStream str = atom.startWrite();
+	    FileOutputStream str;
+	    AtomicFile atom = new AtomicFile(file);
+	    if (append) {
+		     str = new FileOutputStream(file, append) ;
+	    } else {
+
+		    str = atom.startWrite();
+	    }
             Writer fw = new BufferedWriter(new OutputStreamWriter(
                     str, "UTF-8"));
             fw.write(contents);
             fw.close();
+	    str.close();
             atom.finishWrite(str);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
