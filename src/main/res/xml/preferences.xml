@@ -172,26 +172,6 @@
             android:key="@string/show_txt_only"
             android:summary="@string/show_txt_only_summary"
             android:title="@string/show_txt_only_pref_title" />
-        <PreferenceScreen
-            android:key="@string/calendar_sync_screen"
-            android:summary="@string/calendar_sync_screen_summary"
-            android:title="@string/calendar_sync_screen_title">
-            <CheckBoxPreference
-                android:key="@string/calendar_sync_dues"
-                android:title="@string/calendar_sync_dues_title" />
-            <CheckBoxPreference
-                android:key="@string/calendar_sync_thresholds"
-                android:title="@string/calendar_sync_thresholds_title" />
-            <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-                android:key="@string/calendar_reminder_days"
-                android:title="@string/calendar_reminder_days_title"
-                android:summary="@string/calendar_reminder_days_summary"
-                android:defaultValue="1"
-                android:max="7"
-                robobunny:min="1"
-                robobunny:unitsLeft=""
-                robobunny:unitsRight="" />
-        </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/DROPBOX_settings_header"
@@ -241,11 +221,31 @@
         android:title="Experimental"
         android:summary="Enable experimental features"
         android:key="experimental">
+        <PreferenceScreen
+            android:key="@string/calendar_sync_screen"
+            android:summary="@string/calendar_sync_screen_summary"
+            android:title="@string/calendar_sync_screen_title">
+            <CheckBoxPreference
+                android:key="@string/calendar_sync_dues"
+                android:title="@string/calendar_sync_dues_title" />
+            <CheckBoxPreference
+                android:key="@string/calendar_sync_thresholds"
+                android:title="@string/calendar_sync_thresholds_title" />
+            <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+                android:key="@string/calendar_reminder_days"
+                android:title="@string/calendar_reminder_days_title"
+                android:summary="@string/calendar_reminder_days_summary"
+                android:defaultValue="1"
+                android:max="7"
+                robobunny:min="1"
+                robobunny:unitsLeft=""
+                robobunny:unitsRight="" />
+        </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/use_rhino"
-            android:summary="Enable the embedded Rhino Javascript interpreter for advanced task filtering."
-            android:title="Use Rhino" />
+            android:summary="Enable the embedded Lua compiler for advanced task filtering."
+            android:title="Use Lua" />
         <Preference
             android:title="Share log"
             android:key="send_log"
