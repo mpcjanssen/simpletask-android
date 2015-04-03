@@ -88,9 +88,8 @@ public class CalendarSync {
 
     private void addCalendar(boolean checkCalExists) {
         if (checkCalExists && (getCalID() != -1)) {
-            Log.e(TAG, "Could not add calendar: There already is one with the same name");
-            m_sync_type = 0;
-            return;
+            Log.w(TAG, "Calendar already exists, overwriting...");
+            m_app.showToast(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
         }
 
         final ContentValues cv = new ContentValues();

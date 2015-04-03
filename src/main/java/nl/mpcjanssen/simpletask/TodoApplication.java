@@ -44,6 +44,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -438,6 +439,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         } else {
             oklistener.onClick(dialog , DialogInterface.BUTTON_POSITIVE);
         }
+    }
+
+    public void showToast(@NotNull Context ctx, int msgid) {
+        Toast toast = Toast.makeText(ctx, msgid, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public boolean isAuthenticated() {
