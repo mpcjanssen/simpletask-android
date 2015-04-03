@@ -154,8 +154,8 @@ public class FilterActivity extends ThemedActivity {
                     .setText(getString(R.string.script))
                     .setTabListener(new MyTabsListener(this, SCRIPT_TAB, FilterScriptFragment.class.getName(), arguments))
                     .setTag(SCRIPT_TAB);
-            arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, mFilter.getJavascript());
-            arguments.putString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER, mFilter.getJavascriptTestTask());
+            arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.getScript());
+            arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.getScriptTestTask());
             actionbar.addTab(scriptTab);
         }
         int previousTab = getLastActiveTab();
@@ -226,8 +226,8 @@ public class FilterActivity extends ThemedActivity {
         mFilter.setHideFuture(getHideFuture());
         mFilter.setHideLists(getHideLists());
         mFilter.setHideTags(getHideTags());
-        mFilter.setJavascript(getJavascript());
-        mFilter.setJavascriptTestTask(getJavascriptTestTask());
+        mFilter.setScript(getScript());
+        mFilter.setScriptTestTask(getScriptTestTask());
 
         items = getSelectedSort();
         if (items!=null) {
@@ -303,23 +303,23 @@ public class FilterActivity extends ThemedActivity {
         }
     }
 
-    private String getJavascript() {
+    private String getScript() {
         FilterScriptFragment fr;
         fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
         if (fr == null) {
             // fragment was never intialized
-            return mFilter.getJavascript();
+            return mFilter.getScript();
         } else {
-            return fr.getJavascript();
+            return fr.getScript();
         }
     }
 
-    private String getJavascriptTestTask() {
+    private String getScriptTestTask() {
         FilterScriptFragment fr;
         fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
         if (fr == null) {
             // fragment was never intialized
-            return mFilter.getJavascriptTestTask();
+            return mFilter.getScriptTestTask();
         } else {
             return fr.getTestTask();
         }

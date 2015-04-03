@@ -34,7 +34,7 @@ import java.io.IOException;
 public class FilterScriptFragment extends Fragment {
 
     final static String TAG = FilterScriptFragment.class.getSimpleName();
-    private EditText txtJavaScript;
+    private EditText txtScript;
     private GestureDetector gestureDetector;
     @Nullable
     ActionBar actionbar;
@@ -61,8 +61,8 @@ public class FilterScriptFragment extends Fragment {
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.v(TAG, "onSaveInstanceState() this:" + this);
-        outState.putString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,getJavascript());
-        outState.putString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER,getTestTask());
+        outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER,getScript());
+        outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,getTestTask());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FilterScriptFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.script_filter,
                 container, false);
 
-        txtJavaScript = (EditText) layout.findViewById(R.id.txt_javascript);
+        txtScript = (EditText) layout.findViewById(R.id.txt_script);
         txtTestTask = (EditText) layout.findViewById(R.id.txt_testtask);
         tvResult = (TextView) layout.findViewById(R.id.result);
         tvBooleanResult = (TextView) layout.findViewById(R.id.booleanResult);
@@ -86,7 +86,7 @@ public class FilterScriptFragment extends Fragment {
             public void onClick(View v) {
                 Task t = new Task(0, getTestTask());
                 try {
-                    String script = getJavascript();
+                    String script = getScript();
                     InputStream input = new ByteArrayInputStream(script.getBytes());
                     Prototype prototype = LuaC.instance.compile(input, "script");
                     Globals globals = JsePlatform.standardGlobals();
@@ -113,11 +113,11 @@ public class FilterScriptFragment extends Fragment {
 
         });
         if (savedInstanceState != null) {
-            txtJavaScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,""));
-            txtTestTask.setText(savedInstanceState.getString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER,""));
+            txtScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_FILTER,""));
+            txtTestTask.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,""));
         } else {
-            txtJavaScript.setText(arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,""));
-            txtTestTask.setText(arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER,""));
+            txtScript.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER,""));
+            txtTestTask.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,""));
         }
 
         gestureDetector = new GestureDetector(TodoApplication.getAppContext(),
@@ -139,19 +139,19 @@ public class FilterScriptFragment extends Fragment {
         return layout;
     }
 
-    public String getJavascript() {
+    public String getScript() {
         Bundle arguments = getArguments();
-        if (txtJavaScript == null) {
-            return arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER, "");
+        if (txtScript == null) {
+            return arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER, "");
         } else {
-            return txtJavaScript.getText().toString();
+            return txtScript.getText().toString();
         }
     }
 
     public String getTestTask() {
         Bundle arguments = getArguments();
         if (txtTestTask == null) {
-            return arguments.getString(ActiveFilter.INTENT_JAVASCRIPT_TEST_TASK_FILTER, "");
+            return arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, "");
         } else {
             return txtTestTask.getText().toString();
         }

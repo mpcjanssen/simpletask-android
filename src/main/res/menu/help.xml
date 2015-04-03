@@ -23,10 +23,10 @@
         android:showAsAction="never"
         android:title="Intents"/>
     <item
-        android:id="@+id/menu_javascript"
+        android:id="@+id/menu_script"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Javascript"/>
+        android:title="Scripting"/>
     <item
         android:id="@+id/menu_myn"
         android:orderInCategory="100"
