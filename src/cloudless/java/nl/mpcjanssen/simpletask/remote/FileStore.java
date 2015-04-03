@@ -193,9 +193,9 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void browseForNewFile(Activity act, String path,  FileSelectedListener listener, boolean showTxt) {
-        FileDialog dialog = new FileDialog(act, new File(path).getParentFile(), showTxt);
+        FileDialog dialog = new FileDialog(act, path, showTxt);
         dialog.addFileListener(listener);
-        dialog.createFileDialog();
+        dialog.createFileDialog(act,this);
     }
 
     @Override
@@ -278,11 +278,12 @@ public class FileStore implements FileStoreInterface {
 
         /**
          * @param activity
-         * @param path
+         * @param pathName
          */
-        public FileDialog(Activity activity, File path, boolean txtOnly) {
+        public FileDialog(Activity activity, String pathName, boolean txtOnly) {
             this.activity = activity;
             this.txtOnly=txtOnly;
+            File path = new File(pathName);
             if (!path.exists() || !path.isDirectory()) path = Environment.getExternalStorageDirectory();
             loadFileList(path);
         }
@@ -290,7 +291,7 @@ public class FileStore implements FileStoreInterface {
         /**
          * @return file dialog
          */
-        public Dialog createFileDialog() {
+        public Dialog createFileDialog(Context ctx, FileStoreInterface fs) {
             Dialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
@@ -322,7 +323,7 @@ public class FileStore implements FileStoreInterface {
          * Show file dialog
          */
         public void showDialog() {
-            createFileDialog().show();
+            createFileDialog(null,null).show();
         }
 
         private void fireFileSelectedEvent(final File file) {

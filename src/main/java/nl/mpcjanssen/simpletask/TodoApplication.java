@@ -462,7 +462,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
         fileStore.browseForNewFile(
                 act,
-                getTodoFileName(),
+                new File(getTodoFileName()).getParent(),
                 new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {

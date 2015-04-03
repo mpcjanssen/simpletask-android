@@ -200,7 +200,7 @@ public class FilterActivity extends ThemedActivity {
 
     private void openScript() {
         final Context act = this;
-        FileStore.FileDialog dialog = new FileStore.FileDialog(this, new File(m_app.getTodoFileName()).getParentFile(), false);
+        FileStore.FileDialog dialog = new FileStore.FileDialog(this, new File(m_app.getTodoFileName()).getParent(), false);
         dialog.addFileListener(new FileStoreInterface.FileSelectedListener() {
 
             @Override
@@ -209,7 +209,7 @@ public class FilterActivity extends ThemedActivity {
                 setScript(m_app.getFileStore().readFile(file));
             }
         });
-        dialog.createFileDialog();
+        dialog.createFileDialog(this,m_app.getFileStore());
     }
 
     @NotNull
