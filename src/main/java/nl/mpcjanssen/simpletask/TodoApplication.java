@@ -271,7 +271,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
-    public boolean useRhino() {
+    public boolean useScript() {
         return m_prefs.getBoolean(getString(R.string.use_rhino),false);
     }
 
@@ -415,7 +415,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     @NotNull
-    synchronized private FileStoreInterface getFileStore() {
+    public FileStoreInterface getFileStore() {
         if (mFileStore==null) {
             mFileStore = new FileStore(this, getEol());
         }

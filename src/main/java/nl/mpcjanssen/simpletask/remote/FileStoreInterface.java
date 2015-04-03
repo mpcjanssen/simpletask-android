@@ -28,6 +28,7 @@ public interface FileStoreInterface {
     public boolean initialSyncDone();
     void invalidateCache();
     void sync();
+    String readFile(String file);
     boolean supportsSync();
     public interface FileSelectedListener {
         void fileSelected(String file);

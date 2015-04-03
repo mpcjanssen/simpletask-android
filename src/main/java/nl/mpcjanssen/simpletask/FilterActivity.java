@@ -21,8 +21,11 @@ import android.widget.EditText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import nl.mpcjanssen.simpletask.remote.FileStore;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -49,6 +52,7 @@ public class FilterActivity extends ThemedActivity {
 
     @Nullable
     private ActionBar actionbar;
+    private Menu m_menu;
 
     private int getLastActiveTab() {
         return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
@@ -148,7 +152,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort(m_app.getDefaultSorts()));
         actionbar.addTab(sortTab);
 
-        if (m_app.useRhino()) {
+        if (m_app.useScript()) {
             arguments = new Bundle();
             Tab scriptTab = actionbar.newTab()
                     .setText(getString(R.string.script))
@@ -173,6 +177,7 @@ public class FilterActivity extends ThemedActivity {
         } else {
             inflater.inflate(R.menu.filter_light, menu);
         }
+        m_menu = menu;
         return true;
     }
 
@@ -186,8 +191,25 @@ public class FilterActivity extends ThemedActivity {
             		applyFilter();
             	}
                 break;
+            case R.id.menu_filter_load_script:
+                openScript();
+                break;
         }
         return true;
+    }
+
+    private void openScript() {
+        final Context act = this;
+        FileStore.FileDialog dialog = new FileStore.FileDialog(this, new File(m_app.getTodoFileName()).getParentFile(), false);
+        dialog.addFileListener(new FileStoreInterface.FileSelectedListener() {
+
+            @Override
+            public void fileSelected(String file) {
+                // Util.showToastShort(act ,"Selected file " + file);
+                setScript(m_app.getFileStore().readFile(file));
+            }
+        });
+        dialog.createFileDialog();
     }
 
     @NotNull
@@ -311,6 +333,17 @@ public class FilterActivity extends ThemedActivity {
             return mFilter.getScript();
         } else {
             return fr.getScript();
+        }
+    }
+
+    private void setScript(String script) {
+        FilterScriptFragment fr;
+        fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
+        if (fr == null) {
+            // fragment was never intialized
+            Util.showToastShort(this, "Script tab not visible??");
+        } else {
+            fr.setScript(script);
         }
     }
 
@@ -442,6 +475,14 @@ public class FilterActivity extends ThemedActivity {
             } else {
                 // If it exists, simply attach it in order to show it
                 ft.attach(mFragment);
+            }
+            if (m_menu!=null) {
+                MenuItem loadScript = m_menu.findItem(R.id.menu_filter_load_script);
+                if (mTag == SCRIPT_TAB) {
+                    loadScript.setVisible(true);
+                } else {
+                    loadScript.setVisible(false);
+                }
             }
         }
 

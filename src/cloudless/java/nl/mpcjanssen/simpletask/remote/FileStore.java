@@ -12,8 +12,12 @@ import android.os.FileObserver;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,6 +76,16 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void sync() {
         
+    }
+
+    @Override
+    public String readFile(String file) {
+        try {
+            return Files.toString(new File(file), Charsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Override
@@ -253,7 +267,7 @@ public class FileStore implements FileStoreInterface {
         return Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
     }
 
-    private class FileDialog {
+    public static class FileDialog {
         private static final String PARENT_DIR = "..";
         private String[] fileList;
         private File currentPath;

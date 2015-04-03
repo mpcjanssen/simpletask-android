@@ -8,4 +8,9 @@
             android:showAsAction="always"
             android:icon="@drawable/ic_action_navigation_accept"
             android:title="@string/filter"/>
+    <item
+            android:id="@+id/menu_filter_load_script"
+            android:orderInCategory="200"
+            android:showAsAction="never"
+            android:title="Script from file"/>
 </menu>
