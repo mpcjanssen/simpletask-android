@@ -1,4 +1,5 @@
 -dontoptimize
 -dontobfuscate
 -dontpreverify
--keep class org.mozilla.javascript.** { *; }
+-dontwarn javax.**
+-dontwarn org.apache.**
