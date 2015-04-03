@@ -23,6 +23,7 @@ dependencies {
         unitTestCompile 'com.google.guava:guava:18.0'
         unitTestCompile 'com.google.android:android:4.+'
         unitTestCompile 'junit:junit:4.11'
+        unitTestCompile 'org.luaj:luaj-jse:3.0'
 }
 
 configurations {

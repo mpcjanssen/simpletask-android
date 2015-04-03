@@ -56,8 +56,8 @@ public class ActiveFilter {
     public final static String INTENT_HIDE_LISTS_FILTER = "HIDELISTS";
     public final static String INTENT_HIDE_TAGS_FILTER =  "HIDETAGS";
 
-    public final static String INTENT_JAVASCRIPT_FILTER =  "JAVASCRIPT";
-    public final static String INTENT_JAVASCRIPT_TEST_TASK_FILTER =  "JAVASCRIPT_TEST_TASK";
+    public final static String INTENT_JAVASCRIPT_FILTER =  "LUASCRIPT";
+    public final static String INTENT_JAVASCRIPT_TEST_TASK_FILTER =  "LUASCRIPT_TEST_TASK";
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 

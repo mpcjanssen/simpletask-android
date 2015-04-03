@@ -247,61 +247,44 @@ public class Util {
         return builder.create();
     }
 
-//    private static void setGlobalString(Interp interp, String name, String value) throws TclException {
-//        interp.setVar(name, TclString.newInstance(value), TCL.GLOBAL_ONLY);
-//    }
-//
- //   private static void setGlobalInteger(Interp interp, String name, long value) throws TclException {
-//        interp.setVar(name, TclInteger.newInstance( new Long(value).intValue()), TCL.GLOBAL_ONLY);
-//    }
-
-//    private static void setGlobalBoolean(Interp interp, String name, boolean value) throws TclException {
-//        interp.setVar(name, TclBoolean.newInstance(value), TCL.GLOBAL_ONLY);
-//    }
-
- //   private static void setGlobalList(Interp interp, String name, List items) throws TclException {
-//        TclObject list = TclList.newInstance();
-//        for (Object item : items) {
-//            TclList.append(interp, list, TclString.newInstance(item.toString()));
-//        }
-//        interp.setVar(name, list, TCL.GLOBAL_ONLY);
-//    }
 
     public static void initGlobals(Globals globals, Task t) {
         globals.set("task", t.inFileFormat());
 
-//        setGlobalString(interp, "task", t.inFileFormat());
+        if (t.getDueDate()!=null) {
+            globals.set( "due", t.getDueDate().getMilliseconds(TimeZone.getDefault()));
+        }
 
-//        if (t.getDueDate()!=null) {
-//            setGlobalInteger(interp, "due", t.getDueDate().getMilliseconds(TimeZone.getDefault()));
-//        } else {
-//            setGlobalString(interp, "due", "");
-//        }
-//
-//        if (t.getThresholdDate()!=null) {
-//            setGlobalInteger(interp,"threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault()));
-//        } else {
-//            setGlobalString(interp,"threshold", "");
-//        }
+        if (t.getThresholdDate()!=null) {
+            globals.set("threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault()));
+        }
 
-//        if (t.getCreateDate()!=null) {
-//            setGlobalInteger(interp,"createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault()));
-//        } else {
-//            setGlobalString(interp,"createdate", "");
-//        }
+        if (t.getCreateDate()!=null) {
+            globals.set("createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault()));
+        }
 
-//        if (t.getCompletionDate()!=null) {
-//            setGlobalInteger(interp,"completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault()));
-//        } else {
-//            setGlobalString(interp,"completiondate", "");
- //       }
+        if (t.getCompletionDate()!=null) {
+            globals.set("completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault()));
+        }
 
- //       setGlobalBoolean(interp, "completed", t.isCompleted());
- //       setGlobalString(interp, "priority", t.getPriority().getCode());
+        globals.set( "completed", LuaBoolean.valueOf(t.isCompleted()));
+        globals.set( "priority", t.getPriority().getCode());
 
-  //      setGlobalList(interp,"tags",t.getTags());
- //       setGlobalList(interp,"lists",t.getLists());
- //       setGlobalList(interp,"tokens",t.getTokens());
+        globals.set("tags",javaListToLuaTable(t.getTags()));
+        globals.set("lists",javaListToLuaTable(t.getLists()));
+    }
+
+    private static LuaValue javaListToLuaTable(List<String>javaList) {
+        int size = javaList.size();
+        if (size==0) return LuaValue.NIL;
+        LuaString[] luaArray = new LuaString[javaList.size()];
+        int i = 0;
+        for (String item : javaList) {
+            luaArray[i] = LuaString.valueOf(item);
+            i++;
+        }
+        return LuaTable.listOf(luaArray);
+    
     }
 
     public static void createCachedFile(Context context, String fileName,
