@@ -44,6 +44,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -439,7 +440,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
             oklistener.onClick(dialog , DialogInterface.BUTTON_POSITIVE);
         }
     }
-
+    
     public boolean isAuthenticated() {
         FileStoreInterface fs = getFileStore();
         return fs.isAuthenticated();
