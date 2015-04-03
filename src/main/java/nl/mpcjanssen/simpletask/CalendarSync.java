@@ -91,6 +91,7 @@ public class CalendarSync {
         if (checkCalExists && (getCalID() != -1)) {
             Log.w(TAG, "Calendar already exists, overwriting...");
             Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+            return;
         }
 
         final ContentValues cv = new ContentValues();
