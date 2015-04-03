@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+5.2.19
+------
+
+- Added calendar sync. Many thanks to Vojtech Kral for implenenting this.
+- Switched to Lua for scripting. It's less verbose to write and performs better.
+
+5.2.18
+------
+
+- Fix archive, it should append.
+
 5.2.17
 ------
 
