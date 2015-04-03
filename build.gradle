@@ -107,7 +107,7 @@ android {
 
     defaultConfig {
         versionName '5.3.0'
-        versionCode 1546
+        versionCode 1547
 	    minSdkVersion 14
         targetSdkVersion 22
         buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
