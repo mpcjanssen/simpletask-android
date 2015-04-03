@@ -7,28 +7,28 @@ import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ErrorReporter;
-import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.ScriptableObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.TimeZone;
 
-import nl.mpcjanssen.simpletask.task.ByContextFilter;
 import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
 import nl.mpcjanssen.simpletask.task.ByProjectFilter;
 import nl.mpcjanssen.simpletask.task.ByTextFilter;
+import nl.mpcjanssen.simpletask.task.ByContextFilter;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskFilter;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-
+import org.luaj.vm2.*;
+import org.luaj.vm2.compiler.*;
+import org.luaj.vm2.lib.jse.*;
 /**
  * Active filter, has methods for serialization in several formats
  */
@@ -332,45 +332,38 @@ public class ActiveFilter {
     public ArrayList<Task> apply(@NotNull ArrayList<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
-        Context context = Context.enter();
-        // Disable JVM on the fly, we are on Dalvik/Art
-        context.setOptimizationLevel(-1);
-        ScriptableObject scope = context.initStandardObjects();
-        Script script = null;
-        if  (!Strings.isEmptyOrNull(m_javascript)) {
-            try {
-                script = context.compileString(m_javascript, "javascript", 1, null);
-            } catch (EvaluatorException e) {
-                Log.i(TAG, "Failed to compile javascript: " + e.getMessage());
-            }
-        }
+        // Interp interp = new Interp();
 
-        try {
-            for (Task t : tasks) {
-                if (t.isCompleted() && this.getHideCompleted()) {
-                    continue;
-                }
-                if (t.inFuture() && this.getHideFuture()) {
-                    continue;
-                }
-                if (!filter.apply(t)) {
-                    continue;
-                }
-                if  (script!=null) {
-                    Util.fillScope(scope, t);
-                    Object result = script.exec(context, scope);
-                    if (Context.toBoolean(result)) {
-                        matched.add(t);
+        for (Task t : tasks) {
+            if (t.isCompleted() && this.getHideCompleted()) {
+                continue;
+            }
+            if (t.inFuture() && this.getHideFuture()) {
+                continue;
+            }
+            if (!filter.apply(t)) {
+                continue;
+            }
+            if  (m_javascript!=null) {
+                try {
+                    String script = getJavascript();
+                    InputStream input = new ByteArrayInputStream(script.getBytes());
+                    Prototype prototype = LuaC.instance.compile(input, "script");
+                    Globals globals = JsePlatform.standardGlobals();
+
+                    Util.initGlobals(globals,t);
+                    LuaClosure closure = new LuaClosure(prototype, globals);
+                    LuaValue result = closure.call(); 
+                    if (!result.toboolean()) {
+                        continue;
                     }
-                } else {
-                    matched.add(t);
+                } catch (LuaError e) {
+                    Log.v(TAG, "Lua execution failed " + e.getMessage());
+                } catch (IOException e) {
+                    Log.v(TAG, "Execution failed " + e.getMessage());
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.v(TAG, "Javascript execution failed ");
-        } finally {
-            Context.exit();
+            matched.add(t);
         }
         return matched;
     }

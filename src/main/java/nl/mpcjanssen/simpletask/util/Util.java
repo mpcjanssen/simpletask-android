@@ -38,7 +38,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mozilla.javascript.ScriptableObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,6 +62,8 @@ import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.token.Token;
+
+import org.luaj.vm2.*;
 
 public class Util {
 
@@ -246,54 +247,76 @@ public class Util {
         return builder.create();
     }
 
-    public static void fillScope(ScriptableObject scope, Task t) {
-        scope.defineProperty("task", t.inFileFormat(), 0);
-        if (t.getDueDate()!=null) {
-            scope.defineProperty("due", t.getDueDate().getMilliseconds(TimeZone.getDefault()), 0);
-        } else {
-            scope.defineProperty("due", t.getDueDate(), 0);
-        }
-        if (t.getThresholdDate()!=null) {
-            scope.defineProperty("threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault()), 0);
-        } else {
-            scope.defineProperty("threshold",t.getThresholdDate(), 0);
-        }
-        if (t.getCreateDate()!=null) {
-            scope.defineProperty("createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault()), 0);
-        } else {
-            scope.defineProperty("createdate",t.getCreateDate(), 0);
-        }
-        if (t.getCompletionDate()!=null) {
-            scope.defineProperty("completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault()), 0);
-        } else {
-            scope.defineProperty("completiondate",t.getCompletionDate(), 0);
-        }
-        scope.defineProperty("completed", t.isCompleted(), 0);
-        scope.defineProperty("priority", t.getPriority().getCode(),0);
-        scope.defineProperty("recurrence", t.getRecurrencePattern(), 0);
-        scope.defineProperty("tags", org.mozilla.javascript.Context.javaToJS(t.getTags(), scope), 0);
-        scope.defineProperty("lists", org.mozilla.javascript.Context.javaToJS(t.getLists(), scope), 0);
-        scope.defineProperty("tokens", org.mozilla.javascript.Context.javaToJS(t.getTokens(), scope), 0);
-        // Variable for static fields from Token class
-        Token tempToken = new Token(0,"") {
-        };
-        scope.defineProperty("Token", org.mozilla.javascript.Context.javaToJS(tempToken, scope), 0);
-        scope.defineProperty("taskObj", org.mozilla.javascript.Context.javaToJS(t, scope), 0);
+//    private static void setGlobalString(Interp interp, String name, String value) throws TclException {
+//        interp.setVar(name, TclString.newInstance(value), TCL.GLOBAL_ONLY);
+//    }
+//
+ //   private static void setGlobalInteger(Interp interp, String name, long value) throws TclException {
+//        interp.setVar(name, TclInteger.newInstance( new Long(value).intValue()), TCL.GLOBAL_ONLY);
+//    }
+
+//    private static void setGlobalBoolean(Interp interp, String name, boolean value) throws TclException {
+//        interp.setVar(name, TclBoolean.newInstance(value), TCL.GLOBAL_ONLY);
+//    }
+
+ //   private static void setGlobalList(Interp interp, String name, List items) throws TclException {
+//        TclObject list = TclList.newInstance();
+//        for (Object item : items) {
+//            TclList.append(interp, list, TclString.newInstance(item.toString()));
+//        }
+//        interp.setVar(name, list, TCL.GLOBAL_ONLY);
+//    }
+
+    public static void initGlobals(Globals globals, Task t) {
+        globals.set("task", t.inFileFormat());
+
+//        setGlobalString(interp, "task", t.inFileFormat());
+
+//        if (t.getDueDate()!=null) {
+//            setGlobalInteger(interp, "due", t.getDueDate().getMilliseconds(TimeZone.getDefault()));
+//        } else {
+//            setGlobalString(interp, "due", "");
+//        }
+//
+//        if (t.getThresholdDate()!=null) {
+//            setGlobalInteger(interp,"threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault()));
+//        } else {
+//            setGlobalString(interp,"threshold", "");
+//        }
+
+//        if (t.getCreateDate()!=null) {
+//            setGlobalInteger(interp,"createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault()));
+//        } else {
+//            setGlobalString(interp,"createdate", "");
+//        }
+
+//        if (t.getCompletionDate()!=null) {
+//            setGlobalInteger(interp,"completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault()));
+//        } else {
+//            setGlobalString(interp,"completiondate", "");
+ //       }
+
+ //       setGlobalBoolean(interp, "completed", t.isCompleted());
+ //       setGlobalString(interp, "priority", t.getPriority().getCode());
+
+  //      setGlobalList(interp,"tags",t.getTags());
+ //       setGlobalList(interp,"lists",t.getLists());
+ //       setGlobalList(interp,"tokens",t.getTokens());
     }
 
     public static void createCachedFile(Context context, String fileName,
             String content) throws IOException {
- 
+
         File cacheFile = new File(context.getCacheDir() + File.separator
                 + fileName);
         cacheFile.createNewFile();
- 
+
         FileOutputStream fos = new FileOutputStream(cacheFile);
         OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF8");
         PrintWriter pw = new PrintWriter(osw);
- 
+
         pw.println(content);
- 
+
         pw.flush();
         pw.close();
     }
