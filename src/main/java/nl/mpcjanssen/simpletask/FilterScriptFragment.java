@@ -19,12 +19,17 @@ import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.ScriptableObject;
 
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
+
+import org.luaj.vm2.*;
+import org.luaj.vm2.compiler.*;
+import org.luaj.vm2.lib.jse.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.IOException;
 
 public class FilterScriptFragment extends Fragment {
 
@@ -79,28 +84,33 @@ public class FilterScriptFragment extends Fragment {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = Context.enter();
-                // Disable JVM on the fly, we are on Dalvik/Art
-                context.setOptimizationLevel(-1);
-                ScriptableObject scope = context.initStandardObjects();
+                Task t = new Task(0, getTestTask());
                 try {
-                    Script script = context.compileString(getJavascript(), "javascript", 1, null);
-                    Task t = new Task(0, txtTestTask.getText().toString());
-                    Util.fillScope(scope, t);
-                    Object result = script.exec(context, scope);
-                    tvResult.setText(Context.toString(result));
-                    if (Context.toBoolean(result)) {
+                    String script = getJavascript();
+                    InputStream input = new ByteArrayInputStream(script.getBytes());
+                    Prototype prototype = LuaC.instance.compile(input, "script");
+                    Globals globals = JsePlatform.standardGlobals();
+                    
+                    Util.initGlobals(globals,t);
+                    LuaClosure closure = new LuaClosure(prototype, globals);
+                    LuaValue result = closure.call(); 
+
+                    tvResult.setText(result.toString());
+                   
+                    if (result.toboolean() ) {
                         tvBooleanResult.setText("true");
                     } else {
                         tvBooleanResult.setText("false");
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    tvResult.setText(e.getMessage());
+                } catch (LuaError e) {
+                    Log.v(TAG, "Lua execution failed " + e.getMessage());
                     tvBooleanResult.setText("error");
+                    tvResult.setText(e.getMessage());
+                } catch (IOException e) {
+                    Log.v(TAG, "Execution failed " + e.getMessage());
                 }
-
             }
+
         });
         if (savedInstanceState != null) {
             txtJavaScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_JAVASCRIPT_FILTER,""));
