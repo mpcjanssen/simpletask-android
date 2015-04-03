@@ -252,19 +252,30 @@ public class Util {
         globals.set("task", t.inFileFormat());
 
         if (t.getDueDate()!=null) {
-            globals.set( "due", t.getDueDate().getMilliseconds(TimeZone.getDefault()));
+            globals.set( "due", t.getDueDate().getMilliseconds(TimeZone.getDefault())/1000);
+        } else {
+            globals.set("due",LuaValue.NIL);
         }
+
 
         if (t.getThresholdDate()!=null) {
-            globals.set("threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault()));
+            globals.set("threshold", t.getThresholdDate().getMilliseconds(TimeZone.getDefault())/1000);
+        } else {
+            globals.set("threshold",LuaValue.NIL);
         }
+
 
         if (t.getCreateDate()!=null) {
-            globals.set("createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault()));
+            globals.set("createdate", new DateTime(t.getCreateDate()).getMilliseconds(TimeZone.getDefault())/1000);
+        } else {
+            globals.set("createdate",LuaValue.NIL);
         }
 
+
         if (t.getCompletionDate()!=null) {
-            globals.set("completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault()));
+            globals.set("completiondate", new DateTime(t.getCompletionDate()).getMilliseconds(TimeZone.getDefault())/1000);
+        } else {
+            globals.set("completiondate",LuaValue.NIL);
         }
 
         globals.set( "completed", LuaBoolean.valueOf(t.isCompleted()));

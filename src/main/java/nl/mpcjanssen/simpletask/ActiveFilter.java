@@ -56,8 +56,8 @@ public class ActiveFilter {
     public final static String INTENT_HIDE_LISTS_FILTER = "HIDELISTS";
     public final static String INTENT_HIDE_TAGS_FILTER =  "HIDETAGS";
 
-    public final static String INTENT_JAVASCRIPT_FILTER =  "LUASCRIPT";
-    public final static String INTENT_JAVASCRIPT_TEST_TASK_FILTER =  "LUASCRIPT_TEST_TASK";
+    public final static String INTENT_SCRIPT_FILTER =  "LUASCRIPT";
+    public final static String INTENT_SCRIPT_TEST_TASK_FILTER =  "LUASCRIPT_TEST_TASK";
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
 
@@ -75,8 +75,8 @@ public class ActiveFilter {
     private boolean m_hideFuture = false;
     private boolean m_hideLists = false;
     private boolean m_hideTags = false;
-    private String m_javascript = null;
-    private String m_javascript_test_task = null;
+    private String m_script = null;
+    private String m_script_test_task = null;
 
     public String getPrefName() {
         return mPrefName;
@@ -110,8 +110,8 @@ public class ActiveFilter {
         contexts = intent.getStringExtra(INTENT_CONTEXTS_FILTER);
         sorts = intent.getStringExtra(INTENT_SORT_ORDER);
 
-        m_javascript = intent.getStringExtra(INTENT_JAVASCRIPT_FILTER);
-        m_javascript_test_task = intent.getStringExtra(INTENT_JAVASCRIPT_TEST_TASK_FILTER);
+        m_script = intent.getStringExtra(INTENT_SCRIPT_FILTER);
+        m_script_test_task = intent.getStringExtra(INTENT_SCRIPT_TEST_TASK_FILTER);
 
         m_priosNot = intent.getBooleanExtra(
                 INTENT_PRIORITIES_FILTER_NOT, false);
@@ -164,13 +164,13 @@ public class ActiveFilter {
         m_hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
         m_search = prefs.getString(SearchManager.QUERY, null);
-        m_javascript = prefs.getString(INTENT_JAVASCRIPT_FILTER, null);
-        m_javascript_test_task = prefs.getString(INTENT_JAVASCRIPT_TEST_TASK_FILTER, null);
+        m_script = prefs.getString(INTENT_SCRIPT_FILTER, null);
+        m_script_test_task = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null);
     }
 
     public boolean hasFilter() {
         return m_contexts.size() + m_projects.size() + m_prios.size() > 0
-                || !Strings.isEmptyOrNull(m_search) || !Strings.isEmptyOrNull(m_javascript);
+                || !Strings.isEmptyOrNull(m_search) || !Strings.isEmptyOrNull(m_script);
     }
 
     public String getTitle (int visible, int total, CharSequence prio, CharSequence tag, CharSequence list, CharSequence search, CharSequence script, CharSequence filterApplied, CharSequence noFilter) {
@@ -192,7 +192,7 @@ public class ActiveFilter {
             if (!Strings.isEmptyOrNull(m_search)) {
                 activeParts.add(search.toString());
             }
-            if (!Strings.isEmptyOrNull(m_javascript)) {
+            if (!Strings.isEmptyOrNull(m_script)) {
                 activeParts.add(script.toString());
             }
             filterTitle = filterTitle + " " + Util.join(activeParts, ",");
@@ -244,7 +244,7 @@ public class ActiveFilter {
             target.putExtra(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
             target.putExtra(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             target.putExtra(INTENT_HIDE_TAGS_FILTER, m_hideTags);
-            target.putExtra(INTENT_JAVASCRIPT_FILTER, m_javascript);
+            target.putExtra(INTENT_SCRIPT_FILTER, m_script);
             target.putExtra(SearchManager.QUERY, m_search);
         }
     }
@@ -265,8 +265,8 @@ public class ActiveFilter {
             editor.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
             editor.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             editor.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
-            editor.putString(INTENT_JAVASCRIPT_FILTER, m_javascript);
-            editor.putString(INTENT_JAVASCRIPT_TEST_TASK_FILTER, m_javascript_test_task);
+            editor.putString(INTENT_SCRIPT_FILTER, m_script);
+            editor.putString(INTENT_SCRIPT_TEST_TASK_FILTER, m_script_test_task);
             editor.putString(SearchManager.QUERY, m_search);
             editor.apply();
         }
@@ -280,8 +280,8 @@ public class ActiveFilter {
         m_search = null;
         m_priosNot = false;
         m_contextsNot = false;
-        m_javascript = null;
-        m_javascript_test_task = null;
+        m_script = null;
+        m_script_test_task = null;
     }
 
     public void setSearch(String search) {
@@ -334,7 +334,7 @@ public class ActiveFilter {
         ArrayList<Task> matched = new ArrayList<Task>();
 
         try {
-            String script = getJavascript();
+            String script = getScript();
             if (script == null) script = "";
             InputStream input = new ByteArrayInputStream(script.getBytes());
             Prototype prototype = LuaC.instance.compile(input, "script");
@@ -350,7 +350,7 @@ public class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue;
                 }
-                if  (m_javascript!=null) {
+                if  (m_script!=null) {
                     Util.initGlobals(globals,t);
                     LuaClosure closure = new LuaClosure(prototype, globals);
                     LuaValue result = closure.call(); 
@@ -423,20 +423,20 @@ public class ActiveFilter {
         this.m_hideTags = hide;
     }
 
-    public String getJavascript() {
-        return this.m_javascript;
+    public String getScript() {
+        return this.m_script;
     }
 
-    public void setJavascript(String script) {
-        this.m_javascript = script ;
+    public void setScript(String script) {
+        this.m_script = script ;
     }
 
-    public String getJavascriptTestTask() {
-        return this.m_javascript_test_task;
+    public String getScriptTestTask() {
+        return this.m_script_test_task;
     }
 
-    public void setJavascriptTestTask(String task) {
-        this.m_javascript_test_task = task ;
+    public void setScriptTestTask(String task) {
+        this.m_script_test_task = task ;
     }
 
     private class AndFilter {

@@ -153,8 +153,8 @@ public class HelpScreen extends Activity {
             case R.id.menu_myn:
                 showMarkdownAsset(wvHelp, this, "MYN.md");
                 return true;
-            case R.id.menu_javascript:
-                showMarkdownAsset(wvHelp, this, "javascript.md");
+            case R.id.menu_script:
+                showMarkdownAsset(wvHelp, this, "script.md");
                 return true;
             case R.id.menu_intents:
                 showMarkdownAsset(wvHelp, this, "intents.md");
