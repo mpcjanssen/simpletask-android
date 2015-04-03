@@ -24,6 +24,7 @@ import com.google.common.io.CharStreams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,6 +50,11 @@ public class FileStore implements FileStoreInterface {
     private DbxFile.Listener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
+
+    public DbxFileSystem getmDbxFs() {
+        return mDbxFs;
+    }
+
     private DbxFileSystem mDbxFs;
     @Nullable
     private DbxFileSystem.SyncStatusListener m_syncstatus;
@@ -342,9 +348,9 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
-        FileDialog dialog = new FileDialog(act, new DbxPath(path), true);
+        FileDialog dialog = new FileDialog(act, path , true);
         dialog.addFileListener(listener);
-        dialog.createFileDialog();
+        dialog.createFileDialog(mCtx, this);
     }
 
     @Override
@@ -460,6 +466,23 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
+    public String readFile(String file) {
+        if (file==null) {
+            return null;
+        }
+        try {
+            DbxFile openFile = mDbxFs.open(new DbxPath(file));
+            openFile.update();
+            return openFile.readString();
+        } catch (DbxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    @Override
     public boolean supportsSync() {
         return true;
     }
@@ -469,7 +492,7 @@ public class FileStore implements FileStoreInterface {
         return Constants.STORE_DROPBOX;
     }
 
-    private class FileDialog {
+    public static class FileDialog {
         private static final String PARENT_DIR = "..";
         private String[] fileList;
         private DbxPath currentPath;
@@ -483,19 +506,18 @@ public class FileStore implements FileStoreInterface {
          * @param path      File path to start the dialog at
          * @param txtOnly   Show only txt files. Not used for Dropbox
          */
-        @SuppressWarnings({"UnusedDeclaration"})
-        public FileDialog(Activity activity, @NotNull DbxPath path, boolean txtOnly ) {
+        public FileDialog(Activity activity, @NotNull String path, boolean txtOnly ) {
             this.activity = activity;
-            this.currentPath = path;
-            loadFileList(path.getParent());
+            this.currentPath = new DbxPath(path);
         }
 
         /**
          * @return file dialog
          */
         @Nullable
-        public Dialog createFileDialog() {
-            if (getDbxFS()==null) {
+        public Dialog createFileDialog(final Context ctx, final FileStoreInterface fileStore) {
+            final DbxFileSystem fs = ((FileStore)fileStore).getDbxFS();
+            if (fs==null) {
                 return null;
             }
             Dialog dialog;
@@ -504,8 +526,9 @@ public class FileStore implements FileStoreInterface {
             if (Strings.isEmptyOrNull(title)) {
                 title = "/";
             }
+            loadFileList(fs,currentPath);
             if (fileList==null) {
-                Toast.makeText(mCtx,"Awaiting first Dropbox Sync", Toast.LENGTH_LONG).show();
+                Toast.makeText(ctx,"Awaiting first Dropbox Sync", Toast.LENGTH_LONG).show();
                 return null;
             }
             builder.setTitle(title);
@@ -515,11 +538,11 @@ public class FileStore implements FileStoreInterface {
                     String fileChosen = fileList[which];
                     DbxPath chosenFile = getChosenFile(fileChosen);
                     try {
-                        if (mDbxFs.getFileInfo(chosenFile).isFolder) {
-                            loadFileList(chosenFile);
+                        if (fs.getFileInfo(chosenFile).isFolder) {
+                            loadFileList(fs, chosenFile);
                             dialog.cancel();
                             dialog.dismiss();
-                            showDialog();
+                            showDialog(ctx,fileStore);
                         } else fireFileSelectedEvent(chosenFile);
                     } catch (DbxException e) {
                         e.printStackTrace();
@@ -538,8 +561,8 @@ public class FileStore implements FileStoreInterface {
         /**
          * Show file dialog
          */
-        public void showDialog() {
-            Dialog d = createFileDialog();
+        public void showDialog(Context ctx, FileStoreInterface fs) {
+            Dialog d = createFileDialog(ctx, fs);
             if(d!=null && !this.activity.isFinishing()) {
                 d.show();
             }
@@ -553,18 +576,18 @@ public class FileStore implements FileStoreInterface {
             });
         }
 
-        private void loadFileList(DbxPath path) {
+        private void loadFileList(DbxFileSystem fs, DbxPath path) {
             this.currentPath = path;
             List<String> f = new ArrayList<String>();
             List<String> d = new ArrayList<String>();
             if (path != DbxPath.ROOT) d.add(PARENT_DIR);
 
             try {
-                if (!getDbxFS().hasSynced()) {
+                if (!fs.hasSynced()) {
                     fileList = null ;
                     return;
                 } else {
-                    for (DbxFileInfo fInfo : mDbxFs.listFolder(path)) {
+                    for (DbxFileInfo fInfo : fs.listFolder(path)) {
                         if (fInfo.isFolder) {
                             d.add(fInfo.path.getName());
                         } else {
