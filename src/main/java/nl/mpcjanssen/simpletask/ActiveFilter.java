@@ -338,7 +338,7 @@ public class ActiveFilter {
             if (script == null) script = "";
             InputStream input = new ByteArrayInputStream(script.getBytes());
             Prototype prototype = LuaC.instance.compile(input, "script");
-            Util.initGlobals(globals,t);
+            Globals globals = JsePlatform.standardGlobals();
 
             for (Task t : tasks) {
                 if (t.isCompleted() && this.getHideCompleted()) {
@@ -350,9 +350,8 @@ public class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue;
                 }
-
                 if  (m_javascript!=null) {
-                    Globals globals = JsePlatform.standardGlobals();
+                    Util.initGlobals(globals,t);
                     LuaClosure closure = new LuaClosure(prototype, globals);
                     LuaValue result = closure.call(); 
                     if (!result.toboolean()) {
