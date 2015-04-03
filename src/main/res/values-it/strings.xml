@@ -339,5 +339,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_prefix_due">Task due:</string>
     <string name="calendar_sync_prefix_thre">Task threshold:</string>
     <string name="calendar_sync_evt_desc">Generated automatically by Simpletask</string>
-    <string name="calendar_exists_warning">Warning: Calendar with the same name already eixsts, overwriting...</string>
+    <string name="calendar_exists_warning">Warning: Calendar with the same name already exists, overwriting...</string>
 </resources>
