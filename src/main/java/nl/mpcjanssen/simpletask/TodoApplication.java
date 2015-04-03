@@ -441,11 +441,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    public void showToast(@NotNull Context ctx, int msgid) {
-        Toast toast = Toast.makeText(ctx, msgid, Toast.LENGTH_LONG);
-        toast.show();
-    }
-
     public boolean isAuthenticated() {
         FileStoreInterface fs = getFileStore();
         return fs.isAuthenticated();
