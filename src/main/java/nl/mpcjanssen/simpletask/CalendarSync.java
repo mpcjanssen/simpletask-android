@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.util.Util;
 
 
 public class CalendarSync {
@@ -89,7 +90,8 @@ public class CalendarSync {
     private void addCalendar(boolean checkCalExists) {
         if (checkCalExists && (getCalID() != -1)) {
             Log.w(TAG, "Calendar already exists, overwriting...");
-            m_app.showToast(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+            Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+            return;
         }
 
         final ContentValues cv = new ContentValues();
