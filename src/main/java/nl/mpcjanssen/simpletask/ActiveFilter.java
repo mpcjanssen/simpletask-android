@@ -332,38 +332,39 @@ public class ActiveFilter {
     public ArrayList<Task> apply(@NotNull ArrayList<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
-        // Interp interp = new Interp();
 
-        for (Task t : tasks) {
-            if (t.isCompleted() && this.getHideCompleted()) {
-                continue;
-            }
-            if (t.inFuture() && this.getHideFuture()) {
-                continue;
-            }
-            if (!filter.apply(t)) {
-                continue;
-            }
-            if  (m_javascript!=null) {
-                try {
-                    String script = getJavascript();
-                    InputStream input = new ByteArrayInputStream(script.getBytes());
-                    Prototype prototype = LuaC.instance.compile(input, "script");
+        try {
+            String script = getJavascript();
+            if (script == null) script = "";
+            InputStream input = new ByteArrayInputStream(script.getBytes());
+            Prototype prototype = LuaC.instance.compile(input, "script");
+            Util.initGlobals(globals,t);
+
+            for (Task t : tasks) {
+                if (t.isCompleted() && this.getHideCompleted()) {
+                    continue;
+                }
+                if (t.inFuture() && this.getHideFuture()) {
+                    continue;
+                }
+                if (!filter.apply(t)) {
+                    continue;
+                }
+
+                if  (m_javascript!=null) {
                     Globals globals = JsePlatform.standardGlobals();
-
-                    Util.initGlobals(globals,t);
                     LuaClosure closure = new LuaClosure(prototype, globals);
                     LuaValue result = closure.call(); 
                     if (!result.toboolean()) {
                         continue;
                     }
-                } catch (LuaError e) {
-                    Log.v(TAG, "Lua execution failed " + e.getMessage());
-                } catch (IOException e) {
-                    Log.v(TAG, "Execution failed " + e.getMessage());
                 }
+                matched.add(t);
             }
-            matched.add(t);
+        } catch (LuaError e) {
+            Log.v(TAG, "Lua execution failed " + e.getMessage());
+        } catch (IOException e) {
+            Log.v(TAG, "Execution failed " + e.getMessage());
         }
         return matched;
     }
