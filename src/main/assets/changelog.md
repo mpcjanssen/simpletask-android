@@ -1,11 +1,11 @@
 ﻿Changelog
 =========
 
-5.2.19
-------
+5.3.0
+-----
 
 - Added calendar sync. Many thanks to Vojtech Kral for implenenting this.
-- Switched to Lua for scripting. It's less verbose to write and performs better.
+- Switched to Lua for scripting. It's less verbose to write and performs better. Plus it works without having to keep a copy of the source in the simpletask repository.
 
 5.2.18
 ------
