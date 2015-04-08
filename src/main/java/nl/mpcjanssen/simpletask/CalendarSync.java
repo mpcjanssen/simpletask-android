@@ -31,7 +31,6 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
-import android.text.format.Time;
 import android.util.Log;
 
 import java.util.List;
@@ -87,10 +86,12 @@ public class CalendarSync {
         return ret;
     }
 
-    private void addCalendar(boolean checkCalExists) {
-        if (checkCalExists && (getCalID() != -1)) {
-            Log.w(TAG, "Calendar already exists, overwriting...");
-            Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+    private void addCalendar(boolean warnCalExists) {
+        if (getCalID() != -1) {
+            if (warnCalExists) {
+                Log.w(TAG, "Calendar already exists, overwriting...");
+                Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+            }
             return;
         }
 
@@ -100,7 +101,7 @@ public class CalendarSync {
         cv.put(Calendars.NAME, CAL_NAME);
         cv.put(Calendars.CALENDAR_DISPLAY_NAME, m_app.getString(R.string.calendar_disp_name));
         cv.put(Calendars.CALENDAR_COLOR, CAL_COLOR);
-        cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
+        cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
         cv.put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME);
         cv.put(Calendars.VISIBLE, 1);
         cv.put(Calendars.SYNC_EVENTS, 1);
@@ -136,9 +137,9 @@ public class CalendarSync {
         values.put(Events.TITLE, titlePrefix+' '+title);
         values.put(Events.DTSTART, millis);
         values.put(Events.DTEND, millis);
-        values.put(Events.ALL_DAY, true);
+        values.put(Events.ALL_DAY, 1);
         values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
-        values.put(Events.EVENT_TIMEZONE, Time.TIMEZONE_UTC);  // Doc: If allDay is set to 1, eventTimezone must be TIMEZONE_UTC
+        values.put(Events.EVENT_TIMEZONE, UTC.getID());  // Doc: If allDay is set to 1, eventTimezone must be UTC
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
         values.put(Events.HAS_ATTENDEE_DATA, true);      // If this is not set, Calendar app is confused about Event.STATUS
         values.put(Events.CUSTOM_APP_PACKAGE, PACKAGE);
@@ -205,13 +206,13 @@ public class CalendarSync {
         insertEvts(calID, tasks);
     }
 
-    private void setSyncType(int syncType, boolean checkCalExists) {
+    private void setSyncType(int syncType, boolean warnCalExists) {
         if (syncType == m_sync_type) return;
         int old_sync_type = m_sync_type;
         m_sync_type = syncType;
 
         if ((old_sync_type == 0) && (m_sync_type > 0)) {
-            addCalendar(checkCalExists);
+            addCalendar(warnCalExists);
         }
         else if ((old_sync_type > 0) && (m_sync_type == 0)) {
             removeCalendar();
