@@ -86,10 +86,12 @@ public class CalendarSync {
         return ret;
     }
 
-    private void addCalendar(boolean checkCalExists) {
-        if (checkCalExists && (getCalID() != -1)) {
-            Log.w(TAG, "Calendar already exists, overwriting...");
-            Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+    private void addCalendar(boolean warnCalExists) {
+        if (getCalID() != -1) {
+            if (warnCalExists) {
+                Log.w(TAG, "Calendar already exists, overwriting...");
+                Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
+            }
             return;
         }
 
@@ -204,13 +206,13 @@ public class CalendarSync {
         insertEvts(calID, tasks);
     }
 
-    private void setSyncType(int syncType, boolean checkCalExists) {
+    private void setSyncType(int syncType, boolean warnCalExists) {
         if (syncType == m_sync_type) return;
         int old_sync_type = m_sync_type;
         m_sync_type = syncType;
 
         if ((old_sync_type == 0) && (m_sync_type > 0)) {
-            addCalendar(checkCalExists);
+            addCalendar(warnCalExists);
         }
         else if ((old_sync_type > 0) && (m_sync_type == 0)) {
             removeCalendar();
