@@ -101,7 +101,7 @@ public class CalendarSync {
         cv.put(Calendars.NAME, CAL_NAME);
         cv.put(Calendars.CALENDAR_DISPLAY_NAME, m_app.getString(R.string.calendar_disp_name));
         cv.put(Calendars.CALENDAR_COLOR, CAL_COLOR);
-        cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
+        cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
         cv.put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME);
         cv.put(Calendars.VISIBLE, 1);
         cv.put(Calendars.SYNC_EVENTS, 1);
