@@ -31,7 +31,6 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
-import android.text.format.Time;
 import android.util.Log;
 
 import java.util.List;
@@ -138,7 +137,7 @@ public class CalendarSync {
         values.put(Events.DTEND, millis);
         values.put(Events.ALL_DAY, 1);
         values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
-        values.put(Events.EVENT_TIMEZONE, Time.TIMEZONE_UTC);  // Doc: If allDay is set to 1, eventTimezone must be TIMEZONE_UTC
+        values.put(Events.EVENT_TIMEZONE, UTC.getID());  // Doc: If allDay is set to 1, eventTimezone must be UTC
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
         values.put(Events.HAS_ATTENDEE_DATA, true);      // If this is not set, Calendar app is confused about Event.STATUS
         values.put(Events.CUSTOM_APP_PACKAGE, PACKAGE);
