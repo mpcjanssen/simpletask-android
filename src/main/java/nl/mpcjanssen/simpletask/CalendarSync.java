@@ -136,7 +136,7 @@ public class CalendarSync {
         values.put(Events.TITLE, titlePrefix+' '+title);
         values.put(Events.DTSTART, millis);
         values.put(Events.DTEND, millis);
-        values.put(Events.ALL_DAY, true);
+        values.put(Events.ALL_DAY, 1);
         values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
         values.put(Events.EVENT_TIMEZONE, Time.TIMEZONE_UTC);  // Doc: If allDay is set to 1, eventTimezone must be TIMEZONE_UTC
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
