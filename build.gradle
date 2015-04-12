@@ -3,39 +3,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 
 apply plugin: 'com.android.application'
-
-sourceSets {
-        unitTest {
-                java.srcDir file('src/test/java')
-                resources.srcDir file('src/test/resources')
-        }
-}
-
-dependencies {
-        unitTestCompile files("$project.buildDir/intermediates/classes/cloudless/debug")
-        unitTestCompile fileTree(dir: 'libskeep', include: '*.jar')
-        unitTestCompile 'com.darwinsys:hirondelle-date4j:1.5.1'
-        unitTestCompile 'com.google.guava:guava:18.0'
-        unitTestCompile 'com.google.android:android:4.+'
-        unitTestCompile 'junit:junit:4.11'
-        unitTestCompile 'org.luaj:luaj-jse:3.0'
-}
-
-configurations {
-        unitTestCompile.extendsFrom runtime
-        unitTestRuntime.extendsFrom unitTestCompile
-}
-
-task unitTest(type:Test, dependsOn: assemble) {
-        description = "run unit tests"
-        testClassesDir = project.sourceSets.unitTest.output.classesDir
-        classpath = project.sourceSets.unitTest.runtimeClasspath + files("$project.buildDir/intermediates/classes/cloudless/debug")
-}
 
 // Generate some build info. Used for the revision in the application settings and for generating the deployed file names.
  
@@ -147,10 +119,10 @@ dependencies {
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:18.0'
     compile 'org.luaj:luaj-jse:3.0'
+    testCompile 'junit:junit:4.12'
 }
 
 deploy.mustRunAfter clean
-check.dependsOn unitTest
 preBuild.dependsOn buildInfo
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
