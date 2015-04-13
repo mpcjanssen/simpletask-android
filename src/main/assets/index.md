@@ -20,7 +20,7 @@ Simpletask supports the following todo.txt extensions:
 Support
 -------
 
-[![Join the chat at https://gitter.im/mpcjanssen/simpletask-android](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mpcjanssen/simpletask-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/mpcjanssen/simpletask-android](./images/gitter.svg)](https://gitter.im/mpcjanssen/simpletask-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 If you want to log an issue or feature request for [Simpletask](https://github.com/mpcjanssen/simpletask-android/) you can go to [the tracker](https://github.com/mpcjanssen/simpletask-android/issues). If you find Simpletask useful, you can buy the donate app (see Settings) or donate via [Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) me some beers.
 
