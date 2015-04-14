@@ -45,16 +45,16 @@ def checkDeployPath() {
         return null
 }
 
-task deploy(type:Sync, dependsOn: [clean,build]) {
+// copy generated apks to path. Include can't use wildcards because the are determined at configuration time.
+task deploy(type:Copy , dependsOn: ['checkCleanGit']) {
   doFirst {
     if (checkDeployPath()==null)
       throw new GradleException("deployPath not defined, please define it in gradle.properties")
-      tasks.clean.execute()
   }
   into checkDeployPath() + '/' + buildInfo.ext.branch + '/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
   from 'build/outputs/apk/'
-  include '*release.apk'
-  outputs.upToDateWhen { false }
+  include 'simpletask-android-cloudless-release.apk'
+  include 'simpletask-android-free-release.apk'
 }
 
 // Call gradle with -Plint to enable all warnings.
