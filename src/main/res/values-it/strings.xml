@@ -144,6 +144,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_thresholds_title">Threshold dates</string>
     <string name="calendar_reminder_days_title">Reminders margin</string>
     <string name="calendar_reminder_days_summary">How many days before the due/threshold date should the reminder be set.</string>
+    <string name="calendar_reminder_time_title">Reminders time</string>
+    <string name="calendar_reminder_time_summary">At what time of day should the reminder be set.</string>
 
     <string name="drawer_fixed_landscape_title">Mostra cass. in orizz.</string>
     <string name="drawer_fixed_landscape_summary">Mostra i cassetti aperti quando in modalità orizzontale.</string>
