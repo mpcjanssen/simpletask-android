@@ -246,6 +246,11 @@
             android:key="@string/use_rhino"
             android:summary="Enable the embedded Lua compiler for advanced task filtering."
             android:title="Use Lua" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="back_clears_filter"
+            android:summary="@string/back_clears_filter"
+            android:title="Back clears filter" />
         <Preference
             android:title="Share log"
             android:key="send_log"

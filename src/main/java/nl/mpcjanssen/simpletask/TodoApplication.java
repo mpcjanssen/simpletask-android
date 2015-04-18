@@ -276,6 +276,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.use_rhino),false);
     }
 
+    public boolean backClearsFilter() {
+        return m_prefs.getBoolean(getString(R.string.back_clears_filter),false);
+    }
     public boolean sortCaseSensitive() {
         return m_prefs.getBoolean(getString(R.string.ui_sort_case_sensitive),true);
     }
