@@ -237,9 +237,14 @@
                 android:summary="@string/calendar_reminder_days_summary"
                 android:defaultValue="1"
                 android:max="7"
-                robobunny:min="1"
+                robobunny:min="0"
                 robobunny:unitsLeft=""
                 robobunny:unitsRight="" />
+            <nl.mpcjanssen.simpletask.TimePreference
+                android:key="@string/calendar_reminder_time"
+                android:title="@string/calendar_reminder_time_title"
+                android:summary="@string/calendar_reminder_time_summary"
+                android:defaultValue="720" />
         </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="false"

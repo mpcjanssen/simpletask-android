@@ -199,8 +199,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false);
     }
 
-    public int getRemindersMarginDays() {
+    public int getReminderDays() {
         return m_prefs.getInt(getString(R.string.calendar_reminder_days), 1);
+    }
+
+    public int getReminderTime() {
+        return m_prefs.getInt(getString(R.string.calendar_reminder_time), 720);
     }
 
     public String getTodoFileName() {
@@ -402,7 +406,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
             m_calSync.setSyncDues(isSyncDues());
         } else if (s.equals(getString(R.string.calendar_sync_thresholds))) {
             m_calSync.setSyncThresholds(isSyncThresholds());
-        } else if (s.equals(getString(R.string.calendar_reminder_days))) {
+        } else if (s.equals(getString(R.string.calendar_reminder_days)) ||
+                   s.equals(getString(R.string.calendar_reminder_time))) {
             m_calSync.syncLater();
         }
     }
