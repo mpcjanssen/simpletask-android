@@ -33,6 +33,7 @@ import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -55,7 +56,8 @@ public class CalendarSync {
             .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
             .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build();
     private static final String CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI";
-    private static final int CAL_COLOR = Color.BLUE;     // Chosen arbitrarily...
+    private static final int CAL_COLOR = Color.BLUE;       // Chosen arbitrarily...
+    private static final int EVT_DURATION = 5*60*60*1000;  // ie. 5 hours
 
     private static final int SYNC_DELAY_MS = 1000;
 
@@ -70,7 +72,8 @@ public class CalendarSync {
     private SyncRunnable m_sync_runnable;
     private ContentResolver m_cr;
     private int m_sync_type;
-    private int m_margin_minutes = 1440;
+    private int m_rem_margin = 1440;
+    private DateTime m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0);
     private ScheduledThreadPoolExecutor m_stpe;
 
     private long getCalID() {
@@ -130,16 +133,19 @@ public class CalendarSync {
 
     private void insertEvt(long calID, DateTime date, String titlePrefix, String title) {
         ContentValues values = new ContentValues();
-        long millis = date.getMilliseconds(UTC);
+
+        long dtstart = (new DateTime(date.getYear(), date.getMonth(), date.getDay(), m_rem_time.getHour(),
+                m_rem_time.getMinute(), m_rem_time.getSecond(), m_rem_time.getNanoseconds()))
+                .getMilliseconds(Calendar.getInstance().getTimeZone());
 
         // Event:
         values.put(Events.CALENDAR_ID, calID);
         values.put(Events.TITLE, titlePrefix+' '+title);
-        values.put(Events.DTSTART, millis);
-        values.put(Events.DTEND, millis);
-        values.put(Events.ALL_DAY, 1);
+        values.put(Events.DTSTART, dtstart);
+        values.put(Events.DTEND, dtstart + EVT_DURATION);
+        values.put(Events.ALL_DAY, 0);
         values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
-        values.put(Events.EVENT_TIMEZONE, UTC.getID());  // Doc: If allDay is set to 1, eventTimezone must be UTC
+        values.put(Events.EVENT_TIMEZONE, UTC.getID());
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
         values.put(Events.HAS_ATTENDEE_DATA, true);      // If this is not set, Calendar app is confused about Event.STATUS
         values.put(Events.CUSTOM_APP_PACKAGE, PACKAGE);
@@ -150,7 +156,7 @@ public class CalendarSync {
         long evtID = Long.parseLong(uri.getLastPathSegment());
         values.clear();
         values.put(Reminders.EVENT_ID, evtID);
-        values.put(Reminders.MINUTES, m_margin_minutes);
+        values.put(Reminders.MINUTES, m_rem_margin);
         values.put(Reminders.METHOD, Reminders.METHOD_ALERT);
         m_cr.insert(Reminders.CONTENT_URI, values);
     }
@@ -193,7 +199,8 @@ public class CalendarSync {
         if (m_sync_type == 0) return;
 
         final List<Task> tasks = m_app.getTaskCache().getTasks();
-        setRemindersMarginDays(m_app.getRemindersMarginDays());
+        setReminderDays(m_app.getReminderDays());
+        setReminderTime(m_app.getReminderTime());
 
         long calID = getCalID();
         if (calID == -1) {
@@ -253,7 +260,11 @@ public class CalendarSync {
         setSyncType(syncType, true);
     }
 
-    public void setRemindersMarginDays(int days) {
-        m_margin_minutes = days * 1440 - 720;    // -720 to make the reminder go off during the day
+    public void setReminderDays(int days) {
+        m_rem_margin = days * 1440;
+    }
+
+    public void setReminderTime(int time) {
+        m_rem_time = DateTime.forTimeOnly(time / 60, time % 60, 0, 0);
     }
 }
