@@ -796,11 +796,11 @@ public class Simpletask extends ThemedListActivity implements
                 return;
             }
         }
-	if (mFilter!=null && mFilter.hasFilter()) {
-		clearFilter();
-		onNewIntent(getIntent());
-		return;
-	}
+        if (m_app.backClearsFilter() && mFilter!=null && mFilter.hasFilter()) {
+            clearFilter();
+            onNewIntent(getIntent());
+            return;
+        }
 	
         super.onBackPressed();
     }
