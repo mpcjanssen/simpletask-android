@@ -27,6 +27,7 @@ import android.util.Log;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
+import com.google.common.io.LineProcessor;
 import org.jetbrains.annotations.NotNull;
 import android.support.v4.util.AtomicFile;
 
@@ -48,10 +49,8 @@ public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
 
     @NotNull
-    public static ArrayList<String> loadFromFile(@NotNull File file) throws IOException {
-        ArrayList<String> result = new ArrayList<String>();
-        result.addAll(Files.readLines(file, Charsets.UTF_8));
-        return result;
+    public static void loadFromFile(@NotNull File file, LineProcessor<String> lineProc) throws IOException {
+        Files.readLines(file, Charsets.UTF_8, lineProc);
     }
 
     public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) {
