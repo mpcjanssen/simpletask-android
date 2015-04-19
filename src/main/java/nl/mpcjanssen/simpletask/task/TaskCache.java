@@ -58,10 +58,8 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class TaskCache {
     final static String TAG = TaskCache.class.getSimpleName();
     private final Context mCtx;
-    private final String mTodoName;
-    private final FileStoreInterface mFileStore;
     @org.jetbrains.annotations.Nullable
-    private ArrayList<Task> mTasks = null;
+    private ArrayList<Task> mTasks = new ArrayList<Task>();
     private List<Task> mTasksToUpdate;
     @org.jetbrains.annotations.Nullable
     private ArrayList<String> mLists = null;
@@ -69,16 +67,19 @@ public class TaskCache {
     private ArrayList<String> mTags = null;
     private long mMaxId = 0;
 
-    public TaskCache(   Context context,
-                        @NotNull FileStoreInterface fileStore,
-                        String todoName) {
+    public TaskCache(   Context context ) {
         this.mCtx = context;
-        this.mTodoName = todoName;
-        this.mFileStore = fileStore;
-        this.mTasks = loadTasksFromStore(todoName);
-        if (mTasks!=null && mTasks.size()>0) {
-            this.mMaxId = mTasks.get(mTasks.size()-1).getId();
-        }
+
+    }
+
+    public void clear() {
+        mTags = null;
+        mLists = null;
+        mTasks.clear();
+    }
+
+    public void add (Task t) {
+        mTasks.add(t);
     }
 
     public void archive(String targetPath, @Nullable List<Task> selectedTasks) {
@@ -101,22 +102,8 @@ public class TaskCache {
             mTasks.remove(t);
         }
         notifyChanged();
-        mFileStore.modify(mTodoName,null,null,null,Util.tasksToString(tasksToArchive));
-        mFileStore.archive(targetPath, Util.tasksToString(tasksToArchive));
     }
 
-    @NotNull
-    private ArrayList<Task> loadTasksFromStore (@NotNull String path) {
-        ArrayList<Task> result = new ArrayList<Task>();
-        int index = 0;
-        for (String s : mFileStore.get(path)) {
-            if (!"".equals(s.trim())) {
-                result.add(new Task(index, s));
-            }
-            index ++;
-        }
-        return result;
-    }
 
     public int size() {
         if (mTasks==null) {
@@ -184,14 +171,12 @@ public class TaskCache {
     }
 
     private void notifyChanged() {
-        // We have changes in cache
-        // Invalidate cached lists and tags
-        mLists = null;
-        mTags = null;
+
         // Update any visible activity
         if (mCtx!=null) {
             Log.v(TAG, "Tasks have changed, reload cache");
             LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+            LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_TASKCACHE_CHANGED));
         }
     }
 
@@ -238,10 +223,6 @@ public class TaskCache {
                 mTasks.remove(t);
             }
         }
-        mFileStore.modify(mTodoName,originalTasks,
-                Util.tasksToString(updatedTasks),
-                Util.tasksToString(addedTasks),
-                Util.tasksToString(deletedTasks));
         notifyChanged();
     }
 

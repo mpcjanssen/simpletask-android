@@ -324,7 +324,6 @@ public class FileStore implements FileStoreInterface {
     private void notifyFileChanged() {
         Log.v(TAG, "File changed: " + activePath);
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     private void stopWatching(String path) {

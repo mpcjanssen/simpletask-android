@@ -646,7 +646,7 @@ public class Simpletask extends ThemedListActivity implements
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                m_app.getTaskCache().modify(null,null,null,tasks);
+                m_app.getTaskCache(null).modify(null,null,null,tasks);
                 // We have change the data, views should refresh
             }
         }, R.string.delete_task_title);
@@ -1033,7 +1033,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private TaskCache getTaskBag() {
-        return m_app.getTaskCache();
+        return m_app.getTaskCache(null);
     }
 
     public void startFilterActivity() {
@@ -1596,7 +1596,7 @@ public class Simpletask extends ThemedListActivity implements
                     }
                 }
                 finishActionmode();
-                m_app.getTaskCache().modify(
+                m_app.getTaskCache(null).modify(
                         originalLines,
                         checkedTasks,
                         null,
@@ -1667,7 +1667,7 @@ public class Simpletask extends ThemedListActivity implements
                     }
                 }
                 finishActionmode();
-                m_app.getTaskCache().modify(
+                m_app.getTaskCache(null).modify(
                         originalLines,
                         checkedTasks,
                         null,
