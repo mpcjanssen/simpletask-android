@@ -54,9 +54,8 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void loadTasksFromFile(final String path, final TaskCache taskCache) {
-        taskCache.startLoading();
-        // Clear and reload cache
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        taskCache.startLoading();
         new AsyncTask<String, Void, Void> () {
             @Override
             protected Void doInBackground(String... params) {
@@ -82,6 +81,7 @@ public class FileStore implements FileStoreInterface {
             }
             @Override
             protected void onPostExecute(Void v) {
+                startWatching(path);
                 taskCache.endLoading();
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
