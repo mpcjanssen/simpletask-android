@@ -48,13 +48,9 @@ public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
 
     @NotNull
-    public static ArrayList<String> loadFromFile(@NotNull File file) {
+    public static ArrayList<String> loadFromFile(@NotNull File file) throws IOException {
         ArrayList<String> result = new ArrayList<String>();
-        try {
-            result.addAll(Files.readLines(file, Charsets.UTF_8));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        result.addAll(Files.readLines(file, Charsets.UTF_8));
         return result;
     }
 

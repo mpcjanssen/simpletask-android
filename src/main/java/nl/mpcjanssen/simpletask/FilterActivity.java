@@ -102,7 +102,7 @@ public class FilterActivity extends ThemedActivity {
         // Fill arguments for fragment
         arguments = new Bundle();        
         arguments.putStringArrayList(FILTER_ITEMS, 
-                Util.sortWithPrefix(m_app.getTaskCache().getContexts(), m_app.sortCaseSensitive(), "-"));
+                Util.sortWithPrefix(m_app.getTaskCache(this).getContexts(), m_app.sortCaseSensitive(), "-"));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
         actionbar.addTab(actionbar.newTab()
@@ -113,7 +113,7 @@ public class FilterActivity extends ThemedActivity {
         // Fill arguments for fragment
         arguments = new Bundle();
         arguments.putStringArrayList(FILTER_ITEMS, 
-                Util.sortWithPrefix(m_app.getTaskCache().getProjects(), m_app.sortCaseSensitive(), "-"));
+                Util.sortWithPrefix(m_app.getTaskCache(this).getProjects(), m_app.sortCaseSensitive(), "-"));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
         actionbar.addTab(actionbar.newTab()
@@ -123,7 +123,7 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTaskCache().getPriorities()));
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTaskCache(this).getPriorities()));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
         arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
         actionbar.addTab(actionbar.newTab()
