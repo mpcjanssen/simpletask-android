@@ -36,6 +36,7 @@ import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.google.common.base.Joiner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,20 +119,25 @@ public class Util {
     }
 
     @NotNull
-    public static String join(@Nullable Collection<?> s, String delimiter) {
+    public static String joinTasks(@Nullable Collection<Task> s, String delimiter) {
         StringBuilder builder = new StringBuilder();
         if (s==null) {
-        	return "";
+            return "";
         }
-        Iterator<?> iter = s.iterator();
+        Iterator<Task> iter = s.iterator();
         while (iter.hasNext()) {
-            builder.append(iter.next());
+            builder.append(iter.next().inFileFormat());
             if (!iter.hasNext()) {
                 break;
             }
             builder.append(delimiter);
         }
         return builder.toString();
+    }
+
+    @NotNull
+    public static String join(@Nullable Collection<String> s, String delimiter) {
+        return Joiner.on(delimiter).join(s);
     }
 
     public static void setColor(@NotNull SpannableString ss, int color, String s) {

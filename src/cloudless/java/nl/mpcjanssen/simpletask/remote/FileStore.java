@@ -65,7 +65,7 @@ public class FileStore implements FileStoreInterface {
                     TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
                         @Override
                         public boolean processLine(String s) throws IOException {
-                            taskCache.load(new Task(-1,s));
+                            taskCache.load(new Task(-1, s));
                             return true;
                         }
 
@@ -181,7 +181,11 @@ public class FileStore implements FileStoreInterface {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
+                try {
+                    TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 startWatching(path);
                 return null;
@@ -190,12 +194,17 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void appendTaskToFile(final String path, final ArrayList<Task> tasks) {
+    public void appendTaskToFile(final String path, final List<Task> tasks) {
+        final int size = tasks.size();
         new AsyncTask<Void, Void, Void>() {
-            final  ArrayList<String> output = Util.tasksToString(tasks);
             @Override
             protected Void doInBackground(Void... params) {
-                TaskIo.writeToFile(Util.join(tasks, mEol), new File(path), true);
+                try {
+                    Log.v(TAG, "Appending " + size + " tasks to "+ path);
+                    TaskIo.writeToFile(Util.joinTasks(tasks, mEol), new File(path), true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 return null;
             }
