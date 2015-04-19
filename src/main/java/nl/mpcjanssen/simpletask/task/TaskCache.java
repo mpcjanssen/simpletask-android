@@ -79,6 +79,9 @@ public class TaskCache {
     }
 
     public void add (Task t) {
+        if (t.getId()==-1) {
+            t.setId(size());
+        }
         mTasks.add(t);
     }
 

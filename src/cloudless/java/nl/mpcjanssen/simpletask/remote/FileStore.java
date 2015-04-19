@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
@@ -56,24 +57,31 @@ public class FileStore implements FileStoreInterface {
         taskCache.clear();
         // Clear and reload cache
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        new AsyncTask<String, Void, ArrayList<String>>() {
+        new AsyncTask<String, Void, Void> () {
             @Override
-            protected ArrayList<String> doInBackground(String... params) {
+            protected Void doInBackground(String... params) {
                 try {
-                    return TaskIo.loadFromFile(new File(path));
+                    final int i = 0;
+                    TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+                        @Override
+                        public boolean processLine(String s) throws IOException {
+                            taskCache.add(new Task(-1,s));
+                            return true;
+                        }
+
+                        @Override
+                        public String getResult() {
+                            return null;
+                        }
+
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return new ArrayList<String>();
                 }
+                return null;
             }
             @Override
-            protected void onPostExecute(ArrayList<String> results) {
-                // Trigger update
-                int i = 0;
-                for (String s: results) {
-                    taskCache.add(new Task(i,s));
-                    i++;
-                }
+            protected void onPostExecute(Void v) {
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
             }
@@ -191,16 +199,6 @@ public class FileStore implements FileStoreInterface {
                 return null;
             }
         }.execute();
-    }
-
-    private void updateStart(String path) {
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        stopWatching(path);
-    }
-
-    private void updateDone(String path) {
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-        startWatching(path);
     }
 
     @Override
