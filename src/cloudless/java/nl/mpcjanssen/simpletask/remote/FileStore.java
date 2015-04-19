@@ -54,7 +54,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void loadTasksFromFile(final String path, final TaskCache taskCache) {
-        taskCache.clear();
+        taskCache.startLoading();
         // Clear and reload cache
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         new AsyncTask<String, Void, Void> () {
@@ -65,7 +65,7 @@ public class FileStore implements FileStoreInterface {
                     TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
                         @Override
                         public boolean processLine(String s) throws IOException {
-                            taskCache.add(new Task(-1,s));
+                            taskCache.load(new Task(-1,s));
                             return true;
                         }
 
@@ -82,6 +82,7 @@ public class FileStore implements FileStoreInterface {
             }
             @Override
             protected void onPostExecute(Void v) {
+                taskCache.endLoading();
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
             }

@@ -60,6 +60,7 @@ public class TaskCache {
     private final Context mCtx;
     @org.jetbrains.annotations.Nullable
     private ArrayList<Task> mTasks = new ArrayList<Task>();
+    private ArrayList<Task> mTasksLoading;
     private List<Task> mTasksToUpdate;
     @org.jetbrains.annotations.Nullable
     private ArrayList<String> mLists = null;
@@ -72,17 +73,21 @@ public class TaskCache {
 
     }
 
-    public void clear() {
-        mTags = null;
-        mLists = null;
-        mTasks.clear();
+    public void startLoading () {
+        mTasksLoading = new ArrayList<Task>();
     }
 
-    public void add (Task t) {
+    public void load (Task t) {
         if (t.getId()==-1) {
             t.setId(size());
         }
-        mTasks.add(t);
+        mTasksLoading.add(t);
+    }
+
+    public void endLoading () {
+        mTags = null;
+        mLists = null;
+        mTasks = mTasksLoading;
     }
 
     public void archive(String targetPath, @Nullable List<Task> selectedTasks) {
