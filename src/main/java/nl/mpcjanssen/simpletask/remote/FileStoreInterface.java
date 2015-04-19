@@ -20,7 +20,7 @@ public interface FileStoreInterface {
     void deauthenticate();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
     void saveTasksToFile(String path, TaskCache taskCache);
-    void appendTaskToFile(String path, ArrayList<Task> tasks);
+    void appendTaskToFile(String path, List<Task> tasks) throws IOException;;
     int getType();
     void setEol(String eol);
     boolean isSyncing();

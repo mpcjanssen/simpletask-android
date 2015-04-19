@@ -90,29 +90,6 @@ public class TaskCache {
         mTasks = mTasksLoading;
     }
 
-    public void archive(String targetPath, @Nullable List<Task> selectedTasks) {
-        ArrayList<Task> tasksToArchive = new ArrayList<Task>();
-        if (selectedTasks==null) {
-            selectedTasks = mTasks;
-        }
-        if (mTasks==null) {
-            return;
-        }
-        for (Task t: selectedTasks) {
-            if (t.isCompleted()) {
-                tasksToArchive.add(t);
-            }
-        }
-        if (tasksToArchive.size()==0) {
-            return;
-        }
-        for (Task t : tasksToArchive) {
-            mTasks.remove(t);
-        }
-        notifyChanged();
-    }
-
-
     public int size() {
         if (mTasks==null) {
             return 0;
