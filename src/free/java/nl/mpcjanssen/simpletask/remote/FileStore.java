@@ -214,12 +214,22 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void saveTasksToFile(String path, TaskCache taskCache) {
-
+        try {
+            DbxFile outFile = openDbFile(path);
+            outFile.writeString(Util.joinTasks(taskCache.getTasks(), mEol));
+            outFile.close();
+        } catch (DbxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
-
+        DbxFile outFile = openDbFile(path);
+        outFile.appendString(Util.joinTasks(tasks, mEol));
+        outFile.close();
     }
 
 
@@ -241,15 +251,25 @@ public class FileStore implements FileStoreInterface {
     @Override
     public String readFile(String file) {
         if (file==null) {
-            return null;
+            return "";
         }
         try {
             DbxFile openFile = mDbxFs.open(new DbxPath(file));
+            int times = 0;
+            while (!openFile.getSyncStatus().isLatest && times < 30) {
+                Log.v(TAG, "Sleeping for 1000ms, sync states latest?: " + openFile.getSyncStatus().isLatest);
+                Thread.sleep(1000);
+                times++;
+            }
             openFile.update();
-            return openFile.readString();
+            String result =  openFile.readString();
+            openFile.close();
+            return result;
         } catch (DbxException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return "";
