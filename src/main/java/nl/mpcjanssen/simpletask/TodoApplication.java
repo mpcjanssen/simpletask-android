@@ -44,6 +44,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -198,8 +199,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false);
     }
 
-    public int getRemindersMarginDays() {
+    public int getReminderDays() {
         return m_prefs.getInt(getString(R.string.calendar_reminder_days), 1);
+    }
+
+    public int getReminderTime() {
+        return m_prefs.getInt(getString(R.string.calendar_reminder_time), 720);
     }
 
     public String getTodoFileName() {
@@ -271,10 +276,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
-    public boolean useRhino() {
+    public boolean useScript() {
         return m_prefs.getBoolean(getString(R.string.use_rhino),false);
     }
 
+    public boolean backClearsFilter() {
+        return m_prefs.getBoolean(getString(R.string.back_clears_filter),false);
+    }
     public boolean sortCaseSensitive() {
         return m_prefs.getBoolean(getString(R.string.ui_sort_case_sensitive),true);
     }
@@ -398,7 +406,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
             m_calSync.setSyncDues(isSyncDues());
         } else if (s.equals(getString(R.string.calendar_sync_thresholds))) {
             m_calSync.setSyncThresholds(isSyncThresholds());
-        } else if (s.equals(getString(R.string.calendar_reminder_days))) {
+        } else if (s.equals(getString(R.string.calendar_reminder_days)) ||
+                   s.equals(getString(R.string.calendar_reminder_time))) {
             m_calSync.syncLater();
         }
     }
@@ -415,7 +424,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     @NotNull
-    synchronized private FileStoreInterface getFileStore() {
+    public FileStoreInterface getFileStore() {
         if (mFileStore==null) {
             mFileStore = new FileStore(this, getEol());
         }
@@ -461,7 +470,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
         fileStore.browseForNewFile(
                 act,
-                getTodoFileName(),
+                new File(getTodoFileName()).getParent(),
                 new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {
