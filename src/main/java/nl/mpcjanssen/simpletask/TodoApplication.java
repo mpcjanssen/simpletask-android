@@ -86,6 +86,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+        getTaskCache(null);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
