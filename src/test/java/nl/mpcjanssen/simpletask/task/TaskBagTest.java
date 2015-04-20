@@ -92,6 +92,11 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
+        public String readFile(String path) {
+            return "";
+        }
+
+        @Override
         public void sync () {
         }
 

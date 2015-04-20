@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+5.3.1
+-----
+
+- Allow loading of lua scripts from file. This is only tested for Cloudless.
+- Don't create multiple calendars for reminders.
+- Updates in German translation courtesy from twckr.
+- Added a link in help to gitter chat at http://gitter.im/mpcjanssen/simpletask-android.
+- Customisable reminder time for due dates and threshold dates.
+- Add a setting to clear the filter when pressing the back button.
+
 5.3.0
 -----
 

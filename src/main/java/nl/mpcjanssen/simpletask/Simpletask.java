@@ -718,7 +718,6 @@ public class Simpletask extends ThemedListActivity implements
         // Collapse the actionview if we are searching
         Intent intent = getIntent();
         clearFilter();
-        m_adapter.setFilteredTasks();
     }
 
     @NotNull
@@ -797,6 +796,12 @@ public class Simpletask extends ThemedListActivity implements
                 return;
             }
         }
+        if (m_app.backClearsFilter() && mFilter!=null && mFilter.hasFilter()) {
+            clearFilter();
+            onNewIntent(getIntent());
+            return;
+        }
+	
         super.onBackPressed();
     }
 
@@ -830,6 +835,7 @@ public class Simpletask extends ThemedListActivity implements
         setIntent(intent);
         finishActionmode();
         updateDrawers();
+        m_adapter.setFilteredTasks();
     }
 
     private void updateDrawers() {

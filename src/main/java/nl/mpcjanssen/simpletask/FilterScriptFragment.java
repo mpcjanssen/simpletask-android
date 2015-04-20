@@ -157,6 +157,12 @@ public class FilterScriptFragment extends Fragment {
         }
     }
 
+    public void setScript(String script) {
+        if (txtScript!=null) {
+            txtScript.setText(script);
+        }
+    }
+
     class FilterGestureDetector extends SimpleOnGestureListener {
         private static final int SWIPE_MIN_DISTANCE = 120;
         private static final int SWIPE_MAX_OFF_PATH = 250;
