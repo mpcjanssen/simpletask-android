@@ -41,9 +41,8 @@ abstract public class Token {
         Token token = (Token) o;
 
         if (!(type == token.type)) return false;
-        if (!value.equals(token.value)) return false;
+        return value.equals(token.value);
 
-        return true;
     }
 
 

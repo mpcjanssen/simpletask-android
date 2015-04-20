@@ -122,7 +122,7 @@ public class Preferences extends ThemedActivity {
 
                 String line = "";
                 while ((line = bufferedReader.readLine()) != null) {
-                    log.append(line+"\n");
+                    log.append(line).append("\n");
                 }
             } 
             catch (IOException e) {

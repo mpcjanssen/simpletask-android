@@ -8,5 +8,5 @@ package nl.mpcjanssen.simpletask.task;
  * To change this template use File | Settings | File Templates.
  */
 public interface TaskFilter {
-    public boolean apply(Task t);
+    boolean apply(Task t);
 }
