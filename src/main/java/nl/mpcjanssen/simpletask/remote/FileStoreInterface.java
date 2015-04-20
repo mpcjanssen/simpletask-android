@@ -20,15 +20,16 @@ public interface FileStoreInterface {
     void deauthenticate();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
     void saveTasksToFile(String path, TaskCache taskCache);
-    void appendTaskToFile(String path, List<Task> tasks) throws IOException;;
+    void appendTaskToFile(String path, List<Task> tasks) throws IOException;
+
     int getType();
     void setEol(String eol);
     boolean isSyncing();
-    public boolean initialSyncDone();
+    boolean initialSyncDone();
     void sync();
     String readFile(String file);
     boolean supportsSync();
-    public interface FileSelectedListener {
+    interface FileSelectedListener {
         void fileSelected(String file);
     }
 }

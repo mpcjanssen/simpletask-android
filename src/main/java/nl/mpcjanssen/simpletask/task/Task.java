@@ -682,11 +682,7 @@ public class Task implements Serializable, Comparable<Task> {
                 remaining = m.group(2);
                 Token tok = new HIDDEN(match);
                 mTokens.add(tok);
-                if (match.equals("1")) {
-                    mIsHidden = true;
-                } else {
-                    mIsHidden = false;
-                }
+                mIsHidden = match.equals("1");
                 continue;
             }
             String leading = "";

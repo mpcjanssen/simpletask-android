@@ -536,7 +536,7 @@ public class Simpletask extends ThemedListActivity implements
         for (int i = 0; i < m_adapter.getCount(); i++) {
             Task task = m_adapter.getItem(i);
             if (task != null) {
-                text.append(task.inFileFormat() + "\n");
+                text.append(task.inFileFormat()).append("\n");
             }
         }
         shareText(text.toString());
