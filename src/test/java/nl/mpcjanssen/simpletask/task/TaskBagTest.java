@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,12 @@ public class TaskBagTest extends TestCase {
         lines.add("Test");
         lines.add("Test2");
         TestFileStore testFileStore = new TestFileStore(lines);
-        TaskCache tb = new TaskCache(null, testFileStore, null);
+        TaskCache tb = new TaskCache(null);
+        try {
+            testFileStore.loadTasksFromFile(null,tb);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         assertEquals(2, tb.size());
         assertEquals("Test", tb.getTaskAt(0).inFileFormat());
         assertEquals(0, tb.getContexts().size());
@@ -35,7 +41,12 @@ public class TaskBagTest extends TestCase {
         lines.add("Test");
         lines.add("Test");
         TestFileStore testFileStore = new TestFileStore(lines);
-        TaskCache tb = new TaskCache(null, testFileStore, null);
+        TaskCache tb = new TaskCache(null);
+        try {
+            testFileStore.loadTasksFromFile(null,tb);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         assertEquals(2, tb.size());
         assertEquals("Test", tb.getTaskAt(0).inFileFormat());
         ArrayList<Task> tasksToDelete = new ArrayList<Task>();
@@ -49,7 +60,12 @@ public class TaskBagTest extends TestCase {
         lines.add("Test");
         lines.add("Test2 @Match");
         TestFileStore testFileStore = new TestFileStore(lines);
-        TaskCache tb = new TaskCache(null, testFileStore, null);
+        TaskCache tb = new TaskCache(null);
+        try {
+            testFileStore.loadTasksFromFile(null,tb);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         ActiveFilter filter = new ActiveFilter();
         ArrayList<String> contexts = new ArrayList<String>();
         contexts.add("NoMatch");
@@ -77,14 +93,17 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
-        public ArrayList<String> get(String path) {
-            return mContents;
+        public void loadTasksFromFile(String path, TaskCache taskCache) throws IOException {
+            taskCache.startLoading();
+            int i =0;
+            for (String line : mContents) {
+                taskCache.load(new Task(i,line));
+            }
+            taskCache.endLoading();
+
         }
 
-        @Override
-        public void archive(String path, List<String> lines) {
 
-        }
 
         @Override
         public boolean supportsSync() {
@@ -118,11 +137,15 @@ public class TaskBagTest extends TestCase {
         }
 
         @Override
-        public void modify(String mTodoName, List<String> original, List<String> updated, List<String> added, List<String> removed) {
+        public void saveTasksToFile(String path, TaskCache taskCache) {
 
         }
 
         @Override
+        public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
+
+        }
+
         public int getType() {
             return 0;
         }
@@ -143,10 +166,6 @@ public class TaskBagTest extends TestCase {
             return true;
         }
 
-        @Override
-        public void invalidateCache() {
-
-        }
 
     }
 }
