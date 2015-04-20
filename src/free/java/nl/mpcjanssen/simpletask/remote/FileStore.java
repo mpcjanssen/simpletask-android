@@ -106,8 +106,6 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void loadTasksFromFile(final String path, final TaskCache taskCache) throws IOException {
-
-
         new AsyncTask<String, Void, Void> () {
             @Override
             protected Void doInBackground(String... params) {
@@ -185,7 +183,19 @@ public class FileStore implements FileStoreInterface {
             mPathListener = new DbxFileSystem.PathListener() {
                 @Override
                 public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
-                    LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                    try {
+                        DbxFile changedFile = dbxFileSystem.open(dbxPath);
+                        DbxFileStatus changedFileStatus = changedFile.getNewerStatus();
+                        changedFile.close();
+                        if (changedFileStatus==null) {
+                            Log.v(TAG, "File changed " + dbxPath.getName() + " but newerStatus == null, not refreshing");
+                        } else {
+                            Log.v(TAG, "File changed " + dbxPath.getName() + " synced: " + changedFileStatus.isCached);
+                            LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                        }
+                    } catch (DbxException e) {
+                        e.printStackTrace();
+                    }
                 }
             };
             mDbxFs.addPathListener(mPathListener, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
@@ -256,7 +266,9 @@ public class FileStore implements FileStoreInterface {
         try {
             DbxFile openFile = mDbxFs.open(new DbxPath(file));
             int times = 0;
-            while (!openFile.getSyncStatus().isLatest && times < 30) {
+            while ( openFile.getSyncStatus()!=null &&
+                    !openFile.getSyncStatus().isLatest &&
+                    times < 30) {
                 Log.v(TAG, "Sleeping for 1000ms, sync states latest?: " + openFile.getSyncStatus().isLatest);
                 Thread.sleep(1000);
                 times++;
