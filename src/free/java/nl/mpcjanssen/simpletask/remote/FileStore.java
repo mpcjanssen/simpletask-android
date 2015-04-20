@@ -106,6 +106,9 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void loadTasksFromFile(final String path, final TaskCache taskCache) throws IOException {
+        if (!isAuthenticated()) {
+            return;
+        }
         new AsyncTask<String, Void, Void> () {
             @Override
             protected Void doInBackground(String... params) {
