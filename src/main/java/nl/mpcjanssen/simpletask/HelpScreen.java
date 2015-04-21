@@ -31,7 +31,7 @@ public class HelpScreen extends Activity {
     final static String BASE_URL = "file:///android_asset/"; 
 
     @NotNull
-    private Stack<String> history = new Stack<String>();
+    private Stack<String> history = new Stack<>();
 
     private WebView wvHelp;
 
