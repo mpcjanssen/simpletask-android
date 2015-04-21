@@ -29,21 +29,18 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-
+import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
-import nl.mpcjanssen.simpletask.util.Util;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
@@ -118,7 +115,7 @@ public class Preferences extends ThemedActivity {
                 BufferedReader bufferedReader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));
 
-                String line = "";
+                String line ;
                 while ((line = bufferedReader.readLine()) != null) {
                     log.append(line).append("\n");
                 }
