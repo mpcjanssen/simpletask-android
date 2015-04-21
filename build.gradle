@@ -9,19 +9,6 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
-// Generate some build info. Used for the revision in the application settings and for generating the deployed file names.
- 
-task buildInfo {
-    def revcmd = "git rev-parse --short HEAD"
-    def revproc = revcmd.execute()
-    ext.revision = revproc.text.trim()
-    def datecmd = "git log -1 --date=short --pretty=format:%cd"
-    def dateproc = datecmd.execute()
-    ext.date = dateproc.text.trim()
-    def branchcmd = 'git rev-parse --abbrev-ref HEAD'
-    def branchproc = branchcmd.execute()
-    ext.branch = branchproc.text.trim()
-}
 // Call gradle with -Plint to enable all warnings.
 if (hasProperty("lint")) { 
    tasks.withType(Compile) { 
@@ -29,10 +16,7 @@ if (hasProperty("lint")) {
    } 
 }
 
-
 android {
-
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -47,7 +31,6 @@ android {
         versionCode 1548
 	    minSdkVersion 14
         targetSdkVersion 22
-        buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
     }
 
     productFlavors {
@@ -86,8 +69,6 @@ dependencies {
     compile 'org.luaj:luaj-jse:3.0'
     testCompile 'junit:junit:4.12'
 }
-
-preBuild.dependsOn buildInfo
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&
