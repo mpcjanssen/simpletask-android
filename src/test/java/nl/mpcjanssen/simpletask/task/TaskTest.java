@@ -81,7 +81,7 @@ public class TaskTest extends TestCase {
         String rawText = "(A) Test";
         Task t = new Task(0, rawText);
         assertEquals(Priority.A, t.getPriority());
-        ArrayList<Token> expectedTokens = new ArrayList<Token>();
+        ArrayList<Token> expectedTokens = new ArrayList<>();
         expectedTokens.add(new PRIO("(A) "));
         expectedTokens.add(new TEXT("Test"));
         assertEquals(expectedTokens, t.getTokens());
@@ -127,7 +127,7 @@ public class TaskTest extends TestCase {
 
     public void testCompletedPriority() {
         Task t = new Task(0,"x 1111-11-11 (A) Test");
-        ArrayList<Token> expectedTokens = new ArrayList<Token>();
+        ArrayList<Token> expectedTokens = new ArrayList<>();
         expectedTokens.add(new COMPLETED());
         expectedTokens.add(new COMPLETED_DATE("1111-11-11 "));
         expectedTokens.add(new PRIO("(A) "));
