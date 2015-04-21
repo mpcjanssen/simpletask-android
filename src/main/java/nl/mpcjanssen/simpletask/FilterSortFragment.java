@@ -33,9 +33,9 @@ public class FilterSortFragment extends Fragment {
     private DragSortListView lv;
     SortItemAdapter adapter;
     @NotNull
-    ArrayList<String> directions = new ArrayList<String>();
+    ArrayList<String> directions = new ArrayList<>();
     @NotNull
-    ArrayList<String> adapterList = new ArrayList<String>();
+    ArrayList<String> adapterList = new ArrayList<>();
     int sortUpId;
     int sortDownId;
 
@@ -173,7 +173,7 @@ public class FilterSortFragment extends Fragment {
 
     @NotNull
     public ArrayList<String> getSelectedItem() {
-        ArrayList<String> multiSort = new ArrayList<String>();
+        ArrayList<String> multiSort = new ArrayList<>();
         if (lv != null) {
             for (int i = 0 ; i< adapter.getCount() ; i++) {
                multiSort.add(directions.get(i) + ActiveFilter.SORT_SEPARATOR + adapter.getSortType(i));
