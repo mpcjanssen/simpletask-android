@@ -40,11 +40,10 @@ abstract public class Token {
 
         Token token = (Token) o;
 
-        if (!(type == token.type)) return false;
+        if (type != token.type) return false;
         return value.equals(token.value);
 
     }
-
 
     @Override
     public int hashCode() {

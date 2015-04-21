@@ -74,11 +74,6 @@ public class FilterSortFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 

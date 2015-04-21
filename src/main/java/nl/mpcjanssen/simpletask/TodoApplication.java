@@ -30,13 +30,7 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -44,18 +38,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.Toast;
-
+import nl.mpcjanssen.simpletask.remote.FileStore;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-
-import nl.mpcjanssen.simpletask.remote.FileStore;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskCache;
-import nl.mpcjanssen.simpletask.util.Util;
 
 
 public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -151,10 +142,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 }
             }.execute(mFileStore);
         }
-    }
-    
-    private boolean hasPushSync() {
-        return true;
     }
 
     @Override

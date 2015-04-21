@@ -155,19 +155,19 @@ public class TaskTest extends TestCase {
         assertEquals(null, t1.getRecurrencePattern());
         assertEquals("1d", t2.getRecurrencePattern());
         String t3 = "(B) 2014-07-05 Test t:2014-07-05 rec:2d";
-        Task t4 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,01,01), true);
-        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        Task t4 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,1,1), true);
+        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:2d", t4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t5.inFileFormat());
 
         String dt3 = "(B) 2014-07-05 Test due:2014-07-05 rec:2d";
-        Task dt4 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000,01,01), true);
-        Task dt5 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        Task dt4 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000,1,1), true);
+        Task dt5 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:2d", dt4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt5.inFileFormat());
 
         String text = "Test due:2014-07-05 rec:1y";
-        Task task = new Task(0,text).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        Task task = new Task(0,text).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
     }
 
