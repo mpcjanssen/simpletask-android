@@ -95,11 +95,6 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean isSyncing() {
-        return false;
-    }
-
-    @Override
     public void setEol(String eol) {
         mEol = eol;
     }

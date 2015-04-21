@@ -20,152 +20,61 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 
 public class TaskBagTest extends TestCase {
 
+    private TaskCache tc;
+
+    public void initTaskCache(TaskCache tc, ArrayList<String> lines) {
+        tc.startLoading();
+        int i = 0;
+        for (String line : lines) {
+            tc.load(new Task(i, line));
+            i++;
+        }
+        tc.endLoading();
+    }
+
+    @Override
+    protected void setUp() {
+        tc = new TaskCache(null);
+    }
     public void testInit() {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("Test");
         lines.add("Test2");
-        TestFileStore testFileStore = new TestFileStore(lines);
-        TaskCache tb = new TaskCache(null);
-        try {
-            testFileStore.loadTasksFromFile(null,tb);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertEquals(2, tb.size());
-        assertEquals("Test", tb.getTaskAt(0).inFileFormat());
-        assertEquals(0, tb.getContexts().size());
+        initTaskCache(tc,lines);
+        
+        assertEquals(2, tc.size());
+        assertEquals("Test", tc.getTaskAt(0).inFileFormat());
+        assertEquals(0, tc.getContexts().size());
     }
 
     public void testDeleteIdentical() {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("Test");
         lines.add("Test");
-        TestFileStore testFileStore = new TestFileStore(lines);
-        TaskCache tb = new TaskCache(null);
-        try {
-            testFileStore.loadTasksFromFile(null,tb);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertEquals(2, tb.size());
-        assertEquals("Test", tb.getTaskAt(0).inFileFormat());
+        initTaskCache(tc,lines);
+        assertEquals(2, tc.size());
+        assertEquals("Test", tc.getTaskAt(0).inFileFormat());
         ArrayList<Task> tasksToDelete = new ArrayList<Task>();
         tasksToDelete.add(new Task(0,"Test"));
-        tb.modify(null,null,null,tasksToDelete);
-        assertEquals(1, tb.size());
+        tc.modify(null,null,null,tasksToDelete);
+        assertEquals(1, tc.size());
     }
 
     public void testSimpleFilter() {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("Test");
         lines.add("Test2 @Match");
-        TestFileStore testFileStore = new TestFileStore(lines);
-        TaskCache tb = new TaskCache(null);
-        try {
-            testFileStore.loadTasksFromFile(null,tb);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initTaskCache(tc,lines);
         ActiveFilter filter = new ActiveFilter();
         ArrayList<String> contexts = new ArrayList<String>();
         contexts.add("NoMatch");
         filter.setContexts(contexts);
-        ArrayList<Task> visibleTasks = filter.apply(tb.getTasks());
+        ArrayList<Task> visibleTasks = filter.apply(tc.getTasks());
         assertEquals(0, visibleTasks.size());
         contexts.clear();
         contexts.add("Match");
         filter.setContexts(contexts);
-        visibleTasks = filter.apply(tb.getTasks());
+        visibleTasks = filter.apply(tc.getTasks());
         assertEquals(1, visibleTasks.size());
-    }
-
-    class TestFileStore implements FileStoreInterface {
-
-        private ArrayList<String> mContents;
-
-        public TestFileStore(ArrayList<String> contents) {
-            mContents = contents;
-        }
-
-        @Override
-        public boolean isAuthenticated() {
-            return false;
-        }
-
-        @Override
-        public void loadTasksFromFile(String path, TaskCache taskCache) throws IOException {
-            taskCache.startLoading();
-            int i =0;
-            for (String line : mContents) {
-                taskCache.load(new Task(i,line));
-            }
-            taskCache.endLoading();
-
-        }
-
-
-
-        @Override
-        public boolean supportsSync() {
-            return false;
-        }
-
-        @Override
-        public String readFile(String path) {
-            return "";
-        }
-
-        @Override
-        public void sync () {
-        }
-
-        @Override
-        public void startLogin(Activity caller, int i) {
-
-        }
-
-
-        @Override
-        public void deauthenticate() {
-
-        }
-
-
-        @Override
-        public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
-
-        }
-
-        @Override
-        public void saveTasksToFile(String path, TaskCache taskCache) {
-
-        }
-
-        @Override
-        public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
-
-        }
-
-        public int getType() {
-            return 0;
-        }
-
-
-        @Override
-        public void setEol(String eol) {
-
-        }
-
-        @Override
-        public boolean isSyncing() {
-            return false;
-        }
-
-        @Override
-        public boolean initialSyncDone() {
-            return true;
-        }
-
-
     }
 }
