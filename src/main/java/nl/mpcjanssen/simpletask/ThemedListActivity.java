@@ -12,7 +12,6 @@ abstract class ThemedListActivity extends ListActivity {
         setTheme(app.getActiveTheme());
         setTheme(app.getActiveFont());
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setProgressBarIndeterminateVisibility(app.isSynching());
         super.onCreate(savedInstanceState);
     }
 }

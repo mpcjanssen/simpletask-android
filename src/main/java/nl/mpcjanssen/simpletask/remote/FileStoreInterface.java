@@ -24,7 +24,6 @@ public interface FileStoreInterface {
 
     int getType();
     void setEol(String eol);
-    boolean isSyncing();
     boolean initialSyncDone();
     void sync();
     String readFile(String file);
