@@ -4,14 +4,14 @@ import android.app.Activity;
 
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TaskCache;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Interface definition of the storage backend used.
+ *
+ * Uses events to communicate with the application. Currently supported are SYNC_START, SYNC_DONE and FILE_CHANGED.
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
