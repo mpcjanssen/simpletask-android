@@ -24,9 +24,13 @@ package nl.mpcjanssen.simpletask.task;
 
 import android.content.Context;
 import android.text.SpannableString;
-
 import com.google.common.base.Strings;
-
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.ActiveFilter;
+import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.task.token.*;
+import nl.mpcjanssen.simpletask.util.RelativeDate;
+import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,25 +42,6 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.task.token.COMPLETED;
-import nl.mpcjanssen.simpletask.task.token.COMPLETED_DATE;
-import nl.mpcjanssen.simpletask.task.token.CREATION_DATE;
-import nl.mpcjanssen.simpletask.task.token.DUE_DATE;
-import nl.mpcjanssen.simpletask.task.token.HIDDEN;
-import nl.mpcjanssen.simpletask.task.token.LIST;
-import nl.mpcjanssen.simpletask.task.token.PRIO;
-import nl.mpcjanssen.simpletask.task.token.TEXT;
-import nl.mpcjanssen.simpletask.task.token.THRESHOLD_DATE;
-import nl.mpcjanssen.simpletask.task.token.TTAG;
-import nl.mpcjanssen.simpletask.task.token.Token;
-import nl.mpcjanssen.simpletask.task.token.WHITE_SPACE;
-import nl.mpcjanssen.simpletask.util.RelativeDate;
-import nl.mpcjanssen.simpletask.util.DateStrings;
-import nl.mpcjanssen.simpletask.util.Util;
 
 
 @SuppressWarnings("serial")
@@ -76,18 +61,16 @@ public class Task implements Serializable, Comparable<Task> {
     private static final Pattern THRESHOLD_PATTERN = Pattern
             .compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)");
     private static final Pattern RECURRENCE_PATTERN = Pattern
-            .compile("(^||\\s)[Rr][Ee][Cc]:(\\d{1,}[dDwWmMyY])");
+            .compile("(^||\\s)[Rr][Ee][Cc]:(\\d+[dDwWmMyY])");
     private final static Pattern PRIORITY_PATTERN = Pattern
             .compile("^(\\(([A-Z])\\) )(.*)");
     private final static Pattern SINGLE_DATE_PATTERN = Pattern
-            .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
-    private final static Pattern SINGLE_DATE_PREFIX = Pattern
             .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static String COMPLETED_PREFIX = "x ";
 
     private long id = 0;
     @NotNull
-    private ArrayList<Token> mTokens = new ArrayList<Token>();
+    private ArrayList<Token> mTokens = new ArrayList<>();
     private boolean mCompleted;
     private ArrayList<String> mLists;
     private ArrayList<String> mTags;
@@ -232,7 +215,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setCreateDate(String newCreateDate) {
-        ArrayList<Token> temp = new ArrayList<Token>();
+        ArrayList<Token> temp = new ArrayList<>();
         if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED) {
             temp.add(mTokens.get(0));
             mTokens.remove(0);
@@ -256,7 +239,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public void setPriority(@NotNull Priority priority) {
-        ArrayList<Token> temp = new ArrayList<Token>();
+        ArrayList<Token> temp = new ArrayList<>();
         if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED) {
             temp.add(mTokens.get(0));
             mTokens.remove(0);
@@ -426,9 +409,7 @@ public class Task implements Serializable, Comparable<Task> {
         if (((Object) this).getClass() != obj.getClass())
             return false;
         Task other = (Task) obj;
-        if (id != other.id)
-            return false;
-        return (this.inFileFormat().equals(other.inFileFormat()));
+        return id == other.id && (this.inFileFormat().equals(other.inFileFormat()));
     }
 
     @Override
@@ -536,7 +517,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
 
-    @Nullable
+    @NotNull
     public String getThresholdDateString(String empty) {
         if (mThresholdate==null) {
             return empty;
@@ -585,8 +566,8 @@ public class Task implements Serializable, Comparable<Task> {
         mCompletionDate = null;
         mCreateDate = null;
         mIsHidden = false;
-        mLists = new ArrayList<String>();
-        mTags =  new ArrayList<String>();
+        mLists = new ArrayList<>();
+        mTags =  new ArrayList<>();
 
         Matcher m;
         String remaining = text;
