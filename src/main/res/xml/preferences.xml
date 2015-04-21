@@ -198,7 +198,7 @@
         android:key="about">
         <Preference
             android:key="app_version"
-            android:title="@string/app_label" />
+            android:summary="@string/click_to_copy" />
 
         <Preference
             android:title="Donate"
