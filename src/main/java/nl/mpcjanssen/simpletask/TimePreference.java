@@ -29,19 +29,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
 import android.text.format.DateFormat;
+import org.jetbrains.annotations.NotNull;
 
 
 public class TimePreference extends DialogPreference {
     private int m_minutes = 0;
     private TimePicker m_picker = null;
-
-    public TimePreference(Context ctx) {
-        this(ctx, null);
-    }
-
-    public TimePreference(Context ctx, AttributeSet attrs) {
-        this(ctx, attrs, android.R.attr.dialogPreferenceStyle);
-    }
 
     public TimePreference(Context ctx, AttributeSet attrs, int defStyle) {
         super(ctx, attrs, defStyle);
@@ -58,7 +51,7 @@ public class TimePreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(View v) {
+    protected void onBindDialogView(@NotNull View v) {
         super.onBindDialogView(v);
         m_picker.setCurrentHour(m_minutes / 60);
         m_picker.setCurrentMinute(m_minutes % 60);
