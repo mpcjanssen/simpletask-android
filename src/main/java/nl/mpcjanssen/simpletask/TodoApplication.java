@@ -41,7 +41,6 @@ import android.widget.EditText;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
-import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,11 +122,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public boolean fileStoreCanSync() {
-        if (mFileStore!=null) {
-            return mFileStore.supportsSync();
-        } else {
-            return false;
-        }
+        return mFileStore != null && mFileStore.supportsSync();
     }
 
     public void sync() {
@@ -350,14 +345,15 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public int getActiveTheme() {
         String theme =  getPrefs().getString(getString(R.string.theme_pref_key), "");
-        if (theme.equals("android.R.style.Theme_Holo")) {
-            return android.R.style.Theme_Holo;
-        } else if (theme.equals("android.R.style.Theme_Holo_Light_DarkActionBar")) {
-            return android.R.style.Theme_Holo_Light_DarkActionBar;
-        } else if (theme.equals("android.R.style.Theme_Holo_Light")) {
-            return android.R.style.Theme_Holo_Light;
-        } else  {
-            return android.R.style.Theme_Holo_Light_DarkActionBar;
+        switch (theme) {
+            case "android.R.style.Theme_Holo":
+                return android.R.style.Theme_Holo;
+            case "android.R.style.Theme_Holo_Light_DarkActionBar":
+                return android.R.style.Theme_Holo_Light_DarkActionBar;
+            case "android.R.style.Theme_Holo_Light":
+                return android.R.style.Theme_Holo_Light;
+            default:
+                return android.R.style.Theme_Holo_Light_DarkActionBar;
         }
     }
 
@@ -415,12 +411,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public int getActiveFont() {
         String fontsize =  getPrefs().getString("fontsize", "medium");
-        if (fontsize.equals("small")) {
-            return R.style.FontSizeSmall;
-        } else if (fontsize.equals("large")) {
-            return R.style.FontSizeLarge;
-        } else {
-            return R.style.FontSizeMedium;
+        switch (fontsize) {
+            case "small":
+                return R.style.FontSizeSmall;
+            case "large":
+                return R.style.FontSizeLarge;
+            default:
+                return R.style.FontSizeMedium;
         }
     }
 
@@ -465,10 +462,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public void browseForNewFile(@NotNull final Activity act) {
         FileStoreInterface fileStore = getFileStore();
-        if (fileStore == null) {
-            Util.showToastShort(act, "can't access filesystem");
-            return;
-        }
         fileStore.browseForNewFile(
                 act,
                 new File(getTodoFileName()).getParent(),
@@ -489,10 +482,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public boolean initialSyncDone() {
-        if (mFileStore==null) {
-            return false;
-        } else {
-            return mFileStore.initialSyncDone();
-        }
+        return mFileStore != null && mFileStore.initialSyncDone();
     }
 }
