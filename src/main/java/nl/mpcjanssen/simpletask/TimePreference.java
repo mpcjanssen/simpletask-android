@@ -36,6 +36,15 @@ public class TimePreference extends DialogPreference {
     private int m_minutes = 0;
     private TimePicker m_picker = null;
 
+    @SuppressWarnings("unused")
+    public TimePreference(Context ctx) {
+        this(ctx, null);
+    }
+
+    public TimePreference(Context ctx, AttributeSet attrs) {
+        this(ctx, attrs, android.R.attr.dialogPreferenceStyle);
+    }
+
     public TimePreference(Context ctx, AttributeSet attrs, int defStyle) {
         super(ctx, attrs, defStyle);
 
