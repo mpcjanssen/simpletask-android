@@ -24,9 +24,7 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -88,7 +86,7 @@ public class Preferences extends ThemedActivity {
 			try {
 				packageInfo = getActivity().getPackageManager().getPackageInfo(
 						getActivity().getPackageName(), 0);
-				versionPref.setSummary(BuildConfig.FLAVOR + "v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")");
+				versionPref.setTitle("Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")");
 			} catch (NameNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -171,35 +169,48 @@ public class Preferences extends ThemedActivity {
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
                 @NotNull Preference preference) {
-			if (preference.getKey() == null) {
-				return false;
-			}
-			if (preference.getKey().equals("archive_now")) {
-				Log.v("PREFERENCES",
-						"Archiving completed items from preferences");
-                m_app.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ((Preferences) getActivity()).broadcastIntentAndClose(
-                                Constants.BROADCAST_ACTION_ARCHIVE,
-                                Preferences.RESULT_ARCHIVE);
-                    }
-                }, R.string.archive_task_title);
 
-			} else if (preference.getKey().equals("logout_dropbox")) {
-				Log.v("PREFERENCES", "Logging out from Dropbox");
-                m_app.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ((Preferences) getActivity()).broadcastIntentAndClose(
-                                Constants.BROADCAST_ACTION_LOGOUT,
-                                Preferences.RESULT_LOGOUT);
-                    }
-                }, R.string.dropbox_logout_pref_title);
+            String key = preference.getKey();
+            if (key == null) {
+                return false;
+            }
+            switch (key) {
+                case "archive_now":
+                    Log.v("PREFERENCES",
+                            "Archiving completed items from preferences");
+                    m_app.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ((Preferences) getActivity()).broadcastIntentAndClose(
+                                    Constants.BROADCAST_ACTION_ARCHIVE,
+                                    Preferences.RESULT_ARCHIVE);
+                        }
+                    }, R.string.archive_task_title);
+                    break;
+                case "logout_dropbox":
+                    Log.v("PREFERENCES", "Logging out from Dropbox");
+                    m_app.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ((Preferences) getActivity()).broadcastIntentAndClose(
+                                    Constants.BROADCAST_ACTION_LOGOUT,
+                                    Preferences.RESULT_LOGOUT);
+                        }
+                    }, R.string.dropbox_logout_pref_title);
 
-			} else if (preference.getKey().equals("send_log")) {
-                sendLog();
-            } 
+                    break;
+                case "send_log":
+                    sendLog();
+                    break;
+                case "app_version":
+                    ClipboardManager clipboard = (ClipboardManager)
+                            m_app.getSystemService(Context.CLIPBOARD_SERVICE);
+                    Preference versionPref = findPreference("app_version");
+                    ClipData clip = ClipData.newPlainText(getString(R.string.version_copied),versionPref.getTitle());
+                    clipboard.setPrimaryClip(clip);
+                    Util.showToastShort(getActivity(),R.string.version_copied);
+                    break;
+            }
 			return false;
 		}
 	}
