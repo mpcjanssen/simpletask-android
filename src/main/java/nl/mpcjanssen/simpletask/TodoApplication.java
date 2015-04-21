@@ -139,14 +139,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    public boolean isSynching() {
-        if (mFileStore==null) {
-            return true;
-        } else {
-            return mFileStore.isSyncing();
-        }
-    }
-
     public void sync() {
         if (mFileStore!=null) {
             new AsyncTask<FileStoreInterface, Void, Void>() {

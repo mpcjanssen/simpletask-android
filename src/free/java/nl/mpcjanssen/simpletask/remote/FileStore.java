@@ -59,8 +59,6 @@ public class FileStore implements FileStoreInterface {
     @Nullable
     private DbxFileSystem.SyncStatusListener m_syncstatus;
 
-
-    private boolean m_isSyncing = true;
     private DbxFileSystem.PathListener mPathListener;
 
     public FileStore( Context ctx, String eol) {
@@ -116,6 +114,9 @@ public class FileStore implements FileStoreInterface {
                 try {
                     LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
                     final DbxFileSystem fs = getDbxFS();
+                    if (fs==null) {
+                        return null;
+                    }
                     fs.syncNowAndWait();
                     DbxFile openFile = openDbFile(path);
                     if (openFile == null) {
@@ -125,10 +126,14 @@ public class FileStore implements FileStoreInterface {
                     Log.v(TAG, "Opening file " + path + " sync states latest?: " + openFile.getSyncStatus().isLatest);
                     int times = 0;
                     try {
-                        while (!openFile.getSyncStatus().isLatest && times < 30) {
-                            Log.v(TAG, "Sleeping for 1000ms, sync states latest?: " + openFile.getSyncStatus().isLatest);
-                            Thread.sleep(1000);
-                            times++;
+                        if (!openFile.getSyncStatus().isLatest) {
+                            while (openFile.getNewerStatus().pending!= DbxFileStatus.PendingOperation.NONE && times < 30) {
+                                long total = openFile.getNewerStatus().bytesTotal;
+                                long transferred = openFile.getNewerStatus().bytesTransferred;
+                                Log.v(TAG, "Downloading: " + openFile.getPath().getName() + " " + transferred +"/" + total );
+                                Thread.sleep(1000);
+                                times++;
+                            }
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -155,7 +160,7 @@ public class FileStore implements FileStoreInterface {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+                LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 return null;
             }
         }.execute(path);
@@ -228,14 +233,18 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void saveTasksToFile(String path, TaskCache taskCache) {
         try {
+            LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+            stopWatching(path);
             DbxFile outFile = openDbFile(path);
             outFile.writeString(Util.joinTasks(taskCache.getTasks(), mEol));
             outFile.close();
+            startWatching(path);
         } catch (DbxException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
     }
 
     @Override
@@ -249,11 +258,6 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void setEol(String eol) {
         mEol = eol;
-    }
-
-    @Override
-    public boolean isSyncing() {
-        return m_isSyncing;
     }
 
     @Override
