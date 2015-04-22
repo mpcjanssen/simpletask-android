@@ -1,24 +1,22 @@
 /**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
- *
- * Copyright (c) 2009-2013 Todo.txt contributors (http://todotxt.com)
- *
  * LICENSE:
  *
- * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * Simpletask is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * Simpletask Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
+ * You should have received a copy of the GNU General Public License along with Simpletask.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * @author Todo.txt contributors <todotxt@yahoogroups.com>
+ * @author Mark Janssen
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2013 Todo.txt contributors (http://todotxt.com)
+ * @copyright 2013- Mark Janssen
  */
 
 package nl.mpcjanssen.simpletask.task;
@@ -52,7 +50,7 @@ public class PhoneNumberParser {
         }
 
         Matcher m = PHONE_NUMBER_PATTERN.matcher(inputText);
-        List<String> matches = new ArrayList<String>();
+        List<String> matches = new ArrayList<>();
         while (m.find()) {
             matches.add(m.group().trim());
         }
