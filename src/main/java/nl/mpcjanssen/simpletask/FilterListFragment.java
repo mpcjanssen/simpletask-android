@@ -80,7 +80,7 @@ public class FilterListFragment extends Fragment {
         lv = (ListView) layout.findViewById(R.id.listview);
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-        lv.setAdapter(new ArrayAdapter<String>(getActivity(),
+        lv.setAdapter(new ArrayAdapter<>(getActivity(),
                 R.layout.simple_list_item_multiple_choice, items));
 
         for (int i = 0; i < items.size(); i++) {
@@ -121,7 +121,7 @@ public class FilterListFragment extends Fragment {
 
     public ArrayList<String> getSelectedItems() {
 
-        ArrayList<String> arr = new ArrayList<String>();
+        ArrayList<String> arr = new ArrayList<>();
         if (lv == null) {
             // Tab was not displayed so no selections were changed
             return selectedItems;
@@ -146,7 +146,9 @@ public class FilterListFragment extends Fragment {
 
             if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                 return false;
-
+            if (actionbar==null) {
+                return false;
+            }
             int index = actionbar.getSelectedNavigationIndex();
             // right to left swipe
             if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
