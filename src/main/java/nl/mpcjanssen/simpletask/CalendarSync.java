@@ -134,9 +134,10 @@ public class CalendarSync {
     private void insertEvt(long calID, DateTime date, String titlePrefix, String title) {
         ContentValues values = new ContentValues();
 
-        long dtstart = (new DateTime(date.getYear(), date.getMonth(), date.getDay(), m_rem_time.getHour(),
-                m_rem_time.getMinute(), m_rem_time.getSecond(), m_rem_time.getNanoseconds()))
-                .getMilliseconds(Calendar.getInstance().getTimeZone());
+        DateTime startDate = new DateTime(date.getYear(), date.getMonth(), date.getDay(), m_rem_time.getHour(),
+                m_rem_time.getMinute(), m_rem_time.getSecond(), m_rem_time.getNanoseconds());
+        TimeZone localZone = Calendar.getInstance().getTimeZone();
+        long dtstart = startDate.getMilliseconds(localZone);
 
         // Event:
         values.put(Events.CALENDAR_ID, calID);
@@ -153,12 +154,18 @@ public class CalendarSync {
         Uri uri = m_cr.insert(Events.CONTENT_URI, values);
 
         // Reminder:
-        long evtID = Long.parseLong(uri.getLastPathSegment());
-        values.clear();
-        values.put(Reminders.EVENT_ID, evtID);
-        values.put(Reminders.MINUTES, m_rem_margin);
-        values.put(Reminders.METHOD, Reminders.METHOD_ALERT);
-        m_cr.insert(Reminders.CONTENT_URI, values);
+        // Only create reminder if it's in the future, otherwise it would go off immediately
+        DateTime remDate = startDate.minus(0, 0, 0, m_rem_margin / 60, m_rem_margin % 60 + 1, 0, 0, DateTime.DayOverflow.Spillover);
+        // NOTE: DateTime.minus() only accepts values lower than 10000, hence the division.
+        //       Also, +1 to minutes because of a corner case of modifying tasks the minute a reminder went off
+        if (remDate.isInTheFuture(localZone)) {
+            long evtID = Long.parseLong(uri.getLastPathSegment());
+            values.clear();
+            values.put(Reminders.EVENT_ID, evtID);
+            values.put(Reminders.MINUTES, m_rem_margin);
+            values.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+            m_cr.insert(Reminders.CONTENT_URI, values);
+        }
     }
 
     private void insertEvts(long calID, final List<Task> tasks) {
