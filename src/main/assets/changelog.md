@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.3.2
+-----
+
+- Don't remind for tasks in the past when enabling calendar sync. Fixes [#222] (https://github.com/mpcjanssen/simpletask-android/issues/222). 
+- Prevent NPE while handling `Load from script` filter menu item.
+
 5.3.1
 -----
 
