@@ -478,7 +478,8 @@ public class FilterActivity extends ThemedActivity {
             }
             if (m_menu!=null) {
                 MenuItem loadScript = m_menu.findItem(R.id.menu_filter_load_script);
-                if (mTag == SCRIPT_TAB && loadScript!=null) {
+                if (loadScript==null) return;
+                if (mTag == SCRIPT_TAB) {
                     loadScript.setVisible(true);
                 } else {
                     loadScript.setVisible(false);
