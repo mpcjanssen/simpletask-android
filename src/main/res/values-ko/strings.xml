@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">잘못된 목록 이름</string>
+    <string name="invalid_project">잘못된 태그 이름</string>
+    <string name="app_label">심플태스크</string>
+    <string name="added_task">추가된 일정</string>
+    <string name="add_task_failed">일정을 추가할 수 없음</string>
+    <string name="save_task">일정 저장</string>
+    <string name="update_task_failed">일정을 업데이트 할 수 없음</string>
+    <string name="sort">정렬</string>
+    <string name="script">스크립트</string>
+    <string name="filter">필터</string>
+    <string name="main_no_items">표시할 일정 없음.</string>
+    <string name="set_preferences">설정</string>
+    <string name="preferences">설정</string>
+    <string name="archive">기록</string>
+    <string name="help">도움말</string>
+    <string name="open_file">일정 파일 열기</string>
+    <string name="sync">새로 고침</string>
+    <string name="changelist">목록 선택</string>
+    <string name="search">검색</string>
+    <string name="add">추가</string>
+    <string name="task">일정</string>
+    <string name="addtask">일정 추가</string>
+    <string name="updatetask">업데이트</string>
+    <string name="viewtask">일정 보기</string>
+    <string name="cleartask">일정 비우기</string>
+    <string name="done">완료</string>
+    <string name="priority">우선 순위</string>
+    <string name="select_priority">우선 순위 선택</string>
+    <string name="select_all">모두 선택</string>
+    <string name="add_list_or_tag">목록과 태그 추가</string>
+    <string name="update_lists">목록 업데이트</string>
+    <string name="update_tags">태그 업데이트</string>
+    <string name="remove_list_or_tag">목록과 태그 제거</string>
+    <string name="update">업데이트</string>
+    <string name="delete">삭제</string>
+    <string name="defer_due">일정 마감 날짜 설정</string>
+    <string name="defer_threshold">일정 시작 날짜 설정</string>
+    <string name="insert_due">일정 마감 날짜 입력</string>
+    <string name="insert_threshold">일정 시작 날짜 입력</string>
+    <string name="share">공유</string>
+    <string name="unComplete">완료된 일정 되돌리기</string>
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="clear_filter">필터 비우기</string>
+    <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
+
+    <string name="filter_name_empty">이름이 정해지지 않았으므로 필터를 추가할 수 없음</string>
+    <string name="widget_name_empty">위젯 이름이 정해지지 않았으므로 위젯을 추가할 수 없음</string>
+    <string name="add_task_help">일정을 일정 목록에 추가하거나 업데이트. 일정을 추가할 때,
+        빠른 추가를 위해 각각의 줄은 별도의 일정으로 취급.\n
+        <b>우선 순위</b>\n
+        각각의 줄을 (.) 로 시작, 예를 들면 (A)\n
+        <b>태그</b>
+        각각의 줄을 + 부호로 시작, 예를 들면 +주방\n
+        <b>목록</b>
+        각각의 줄을 @ 부호로 시작, 예를 들면 @집\n
+        일정은 여러개의 목록에 오르거나 아무 숫자의 태그를 포함할 수 있음.
+    </string>
+
+    <!-- preferences -->
+    <string name="ARCHIVE_settings_header">기록</string>
+    <string name="ARCHIVE_settings_summary">완료된 일정을 done.txt에 기록하도록 설정</string>
+    <string name="auto_archive_pref_title">자동 기록</string>
+    <string name="auto_archive_pref_summary">일정이 완료되면 자동적으로 done.txt에 기록</string>
+    <string name="archive_now_pref_title">지금 기록하기</string>
+    <string name="archive_now_pref_summary">완료된 일정을 todo.txt에서 done.txt로 이동</string>
+    <string name="dropbox_logout_pref_title">로그아웃</string>
+    <string name="dropbox_logout_pref_summary">Dropbox에서 로그아웃</string>
+    <string name="TODOTXTPATH_title">파일 위치</string>
+    <string name="TODOTXTPATH_summary">todo.txt 파일을 저장할 Dropbox 위치</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Dropbox 동기화 설정</string>
+
+    <string name="todotxt_ui_settings_header">사용자 환경</string>
+    <string name="todotxt_behavior_settings_header">동작</string>
+    <string name="todotxt_settings_summary">앱 전반 설정</string>
+    <string name="sort_complete_last_pref_title">마지막으로 완료된 항목 보기</string>
+    <string name="sort_complete_last_pref_summary">완료된 일정을 항상 목록 맨 마지막에 표시
+    </string>
+    <string name="keep_prio_header">완료된 일정 우선순위</string>
+    <string name="keep_prio_summary">완료된 일정의 우선순위를 유지함. 이 설정을 해제하면 일정이 완료될 때마다 우선순위를 제거하게 됩니다.</string>
+    <string name="prepend_date_pref_title">새로운 일정에 날짜 추가</string>
+    <string name="prepend_date_pref_summary">새로 추가되는 일정에 자동으로 추가된 날짜를 입력함</string>
+    <string name="line_breaks_pref_title">윈도우즈 방식 줄바꿈</string>
+    <string name="line_breaks_pref_summary">윈도우즈에 적합한 방식으로 텍스트를 줄바꿈함</string>
+    <string name="recur_from_original_date_pref_title">원래 날짜를 이용해 일정 반복</string>
+    <string name="recur_from_original_date_pref_summary">반복 일정을 만들 때 일정에 있는 원래 날짜를 증가시킴.
+        오늘 날짜에 비례해 새로운 날짜를 설정하려면 이 체크박스를 해제하세요.</string>
+    <string name="swipe_complete_pref_title">밀어서 완료</string>
+    <string name="swipe_complete_pref_summary">일정을 밀어서 완료 처리</string>
+    <string name="manual_sync_pref_title">수동 동기화</string>
+    <string name="manual_sync_pref_summary">모든 변경사항을 Dropbox에 자동으로 업로드하지 않음</string>
+    <string name="resume_sync_pref_title">동기화 재개</string>
+    <string name="resume_sync_pref_summary">앱을 실행시킬 때 Dropbox 동기화</string>
+    <string name="font_size_delta_pref_title">글자 크기 변경</string>
+    <string name="font_size_delta_pref_summary">sp 단위로 글자 크기 변경.
+        마이너스 숫자를 입력해 크기를 감소시킵니다.</string>
+    <string name="theme_pref_title">앱 테마</string>
+    <string name="theme_pref_summary">앱에 사용할 테마를 변경</string>
+
+    <string name="share_task_show_edit_pref_title">공유 일정 편집</string>
+    <string name="share_task_show_edit_summary">공유 일정을 저장하기 전에 편집할 수 있도록 함.
+        간섭 없이 공유 일정을 저장하려면 이 설정을 해제하세요.</string>
+
+    <string name="capitalize_tasks_pref_title">새로운 일정 대문자화</string>
+    <string name="back_saves_pref_title">뒤로 가기 버튼</string>
+    <string name="back_saves_summary">뒤로 가기 버튼을 누를 때 이전까지 입력한 일정을 저장하거나 필터를 적용</string>
+
+    <string name="show_txt_only_pref_title">텍스트 파일만 표시</string>
+    <string name="show_txt_only_summary">파일 선택 창에서 .txt 파일만 표시</string>
+
+    <string name="calendar_sync_screen_title">달력 알림</string>
+    <string name="calendar_sync_screen_summary">일정 완료 혹은 마감 날짜에 맞춰 자동으로 달력 알림을 추가</string>
+    <string name="calendar_sync_dues_title">일정 마감 날짜</string>
+    <string name="calendar_sync_thresholds_title">일정 시작 날짜</string>
+    <string name="calendar_reminder_days_title">알림 여유</string>
+    <string name="calendar_reminder_days_summary">일정 마감/시작 날짜보다 몇일 먼저에 알림을 추가할 것인지 설정</string>
+    <string name="calendar_reminder_time_title">알림 시간</string>
+    <string name="calendar_reminder_time_summary">몇시 혹은 몇일에 알림을 추가할 것인지 설정</string>
+
+    <string name="drawer_fixed_landscape_title">가로 화면 서랍 열기</string>
+    <string name="drawer_fixed_landscape_summary">항상 가로 화면에서 서랍 열기</string>
+
+
+    <string name="widget_theme_pref_title">위젯 테마</string>
+    <string name="widget_theme_pref_summary">위젯에 사용할 테마 변경</string>
+
+    <string name="widget_header_transparency_title">위젯 헤더 투명도</string>
+    <string name="widget_background_transparency_title">위젯 배경 투명도</string>
+
+    <string name="widget_extended_pref_title">확장된 위젯</string>
+    <string name="widget_extended_pref_summary">별도의 날짜 줄이 추가된 위젯에 일정을 표시</string>
+
+    <string name="color_due_pref_title">일정 마감일 색칠</string>
+    <string name="color_due_pref_summary">일정 마감일 이전, 당일, 이후에 따라 일정 마감일에 색깔을 추가</string>
+
+    <string name="show_hidden_title">숨겨진 일정 표시</string>
+    <string name="show_hidden_summary">숨겨진 (h:1) 일정을 편집할 수 있도록 표시. 편집 후에는 이 설정을 다시 해제하세요.</string>
+
+    <string name="show_empty_lists_title">빈 헤더 표시</string>
+    <string name="show_empty_lists_summary">헤더에 속한 모든 일정이 숨겨져 있어도 헤더를 표시함</string>
+
+    <string name="split_actionbar_pref_title">분리된 액션 바 사용</string>
+    <string name="split_actionbar_pref_summary">메뉴 버튼이 바닥에 위치하도록 분리된 액션 바 사용. 일정 목록을 넓게 보려면 이 설정을 해제하세요.</string>
+
+    <string name="show_edittext_hints_title">힌트 표시</string>
+    <string name="show_edittext_hints_summary">일정 편집 방법의 예시를 표시. 거슬리면 이 설정을 해제하세요.</string>
+
+    <string name="show_complete_checkbox_title">완료 체크박스 표시</string>
+    <string name="show_complete_checkbox_summary">일정을 완료 혹은 되돌릴 수 있는 체크박스들을 일정 앞에 표시</string>
+
+    <string name="show_confirmation_dialogs_title">확인 상자 표시</string>
+    <string name="show_confirmation_dialogs_summary">되돌릴 수 없는 작업을 하거나 작업 내용을 잃을 수 있는 경우 확인 상자 표시. 거슬리면 이 설정을 해제하세요. 충분히 안내했습니다.</string>
+
+    <string name="show_calendarview_title">날짜 입력시 달력 사용</string>
+
+    <string name="sort_case_sensitive_title">대소문자 구별해서 정렬</string>
+    <string name="sort_case_sensitive_summary">목록, 태그, 저장된 필터에 대소문자를 구별함</string>
+
+    <string name="about_settings_header">심플태스크에 대해서</string>
+    <string name="about_settings_summary">앱 정보</string>
+    <string name="visit_website_title">도움말</string>
+    <string name="visit_website_summary">웹사이트 방문</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+
+    <string name="visit_tracker_title">기능을 요청하거나 버그 보고</string>
+    <string name="visit_tracker_summary">새로운 기능이나 개선 사항을 요청하거나 버그를 보고함</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+
+    <!-- sync dialog -->
+    <string name="sync_dialog_title">수동 동기화</string>
+    <string name="sync_dialog_msg">todo.txt 파일을 업로드하거나 다운로드할까요?</string>
+    <string name="sync_dialog_upload">Dropbox에 업로드</string>
+    <string name="sync_dialog_download">기기에 저장</string>
+    <string name="sync_upload_message">todo.txt 업로드중…</string>
+    <string name="sync_download_message">todo.txt 다운로드중…</string>
+    <!-- sync conflict dialog -->
+    <string name="sync_conflict_dialog_title">파일 충돌</string>
+    <string name="sync_conflict_dialog_msg">이런! Dropbox에 새 버전의 todo.txt 파일이 있습니다.\n기기의 변경 사항을 업로드할까요, 아니면 Dropbox 버전의 파일을 다운로드할까요?
+    </string>
+    <!-- login -->
+    <string name="first_title_word">심플태스크</string>
+    <string name="login_screen_button">Dropbox에 로그인</string>
+    <string name="login_cloudless">Dropbox 계정이 없거나 일정 목록을 저장할 때 Dropbox를 사용하고 싶지 않다면, Play Store에서 Simpletask Cloudless를 사용하세요. \nhttp://goo.gl/X1C55P
+    </string>
+    <!-- delete -->
+    <string name="delete_task_title">일정 삭제</string>
+    <string name="archive_task_title">일정 기록</string>
+    <string name="delete_task_message">취소할 수 없습니다. 계속 하시겠습니까?</string>
+    <string name="logout_message">Dropbox에 접속되어 있지 않다면, 공유된 완료 일정 목록이나 변경 사항을 이미 Dropbox와 동기화를 했는지 확인하세요.\n
+        로그아웃 이후에는 동기화되지 않은 모든 변경사항을 잃게 됩니다.</string>
+    <string name="dropbox_open">Dropbox에 접속되어 있지 않다면, 공유된 완료 일정 목록이나 변경 사항을 이미 Dropbox와 동기화를 했는지 확인하세요.\n
+        다른 파일을 열게 되면 동기화되지 않은 모든 변경사항을 잃게 됩니다.</string>
+    <string name="delete_task_confirm">삭제</string>
+    <!-- search -->
+
+    <string name="clone_tags">다음 항목 미리 채우기</string>
+    <string name="word_wrap">Word Wrap</string>
+    <string name="search_hint">todo.txt 찾기</string>
+    <!-- sort -->
+    <string name="sort_help">항목을 끌어다 놓아서 순서를 변경합니다. 항목을 선택해 정렬 방향을 변경합니다.</string>
+    <string name="file_order">파일 순서 (정렬되지 않음)</string>
+    <string name="alphabetical">알파벳 순서대로</string>
+    <string name="by_prio">우선순위 순서대로</string>
+    <string name="by_project">태그 순서대로</string>
+    <string name="by_context">목록 순서대로</string>
+    <string name="completed">완료된 일정</string>
+    <string name="by_creation_date">만든 날짜 순서대로</string>
+    <string name="in_future">예정된 일정 시작일</string>
+    <string name="by_due_date">일정 마감일 순서대로</string>
+    <string name="by_threshold_date">일정 시작일 순서대로</string>
+
+    <!-- filter -->
+    <string name="filter_select_all">모두 선택</string>
+    <string name="filter_clear_all">필터 비우기</string>
+    <string name="filter_invert">필터 뒤집기</string>
+    <string name="add_filter_shortcut">홈스크린으로</string>
+    <string name="rename_filter">이름 바꾸기</string>
+    <string name="rename_filter_message">저장된 필터의 새 이름을 입력하세요</string>
+    <string name="update_filter">업데이트</string>
+    <string name="create_widget">위젯 만들기</string>
+    <string name="filter_show_completed">완료된 일정 표시</string>
+    <string name="filter_show_future">예정된 시작일이 있는 일정 표시</string>
+    <string name="filter_show_lists">일정 목록 표시</string>
+    <string name="filter_show_tags">일정 태그 표시</string>
+
+    <string name="filter_show_completed_short">완료됨</string>
+    <string name="filter_show_future_short">예정</string>
+    <string name="filter_show_prompt">표시</string>
+    <string name="filter_saved_prompt">저장된 필터</string>
+
+
+    <!-- title bar changes -->
+    <string name="title_filter_applied">필터링됨:</string>
+    <string name="add_task_help_btn">도움말</string>
+    <string name="priority_prompt">우선순위</string>
+    <string name="priority_short_prompt">우선순위</string>
+    <string name="project_prompt">태그</string>
+    <string name="context_prompt">목록</string>
+
+    <string name="priority_format">(우선순위)</string>
+    <string name="context_format">\@목록</string>
+    <string name="project_format">+t태그</string>
+
+    <string name="separator">구분선</string>
+
+    <!-- launcher shortcut -->
+    <string name="shortcut_addtask_name">일정 추가</string>
+    <!-- share -->
+    <string name="share_addtask_name">심플태스크에 추가</string>
+
+    <string name="none">none</string>
+    <!-- Relative Dates -->
+    <string name="dates_days_ago">%d 일 전에</string>
+    <string name="dates_one_day_ago">1 일 전에</string>
+    <string name="dates_years_ago">%d 년 전에</string>
+    <string name="dates_one_year_ago">1 년 전에</string>
+    <string name="dates_months_ago">%d 달 전에</string>
+    <string name="dates_one_month_ago">1 달 전에</string>
+    <string name="dates_weeks_ago">%d 주 전에</string>
+    <string name="dates_one_week_ago">1 주 전에</string>
+
+
+    <string name="dates_one_week">1 주</string>
+    <string name="dates_two_weeks">2 주</string>
+    <string name="dates_one_month">1 달</string>
+
+    <string name="dates_today">오늘</string>
+    <string name="date_pick">날짜 선택</string>
+    <string name="dates_tomorrow">내일</string>
+
+
+    <string name="title_activity_filter">필터</string>
+    <string name="selected">선택됨</string>
+    <string name="no_context">수신함</string>
+    <string name="no_project">태그 없음</string>
+    <string name="no_creation_date">추가한 날짜 없음</string>
+    <string name="no_threshold_date">시작일 없음</string>
+    <string name="no_header">없음</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">알림 추가</string>
+    <string name="calendar_title">심플태스크 알림</string>
+    <string name="share_title">심플태스크 일정</string>
+    <string name="version_copied">Version info copied to clipboard</string>
+
+    <string name="task_added">심플태스크에 일정 추가됨</string>
+    <string name="default_sort">기본 정렬</string>
+    <string name="pull_to_refresh_refreshing_label">Dropbox 동기화중…</string>
+    <string name="not_tagged">목록에 일정이 없거나 태그 없음</string>
+    <string name="new_list_name">새 목록 입력</string>
+    <string name="new_tag_name">새 태그 입력</string>
+    <string name="no_filter">필터 없음</string>
+    <string name="dropbox">Dropbox</string>
+
+
+    <string name="save_filter">현재 필터 저장</string>
+    <string name="save_filter_message">저장된 필터 서랍에 표시될 현재 필터의 새 이름 입력</string>
+
+    <string name="donate_title">Donate</string>
+    <string name="donate_summary">심플태스크가 마음에 들면 기부하세요. 기부는 자율입니다.</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">정렬 역순</string>
+
+    <!-- Calendar sync -->
+    <string name="calendar_disp_name">심플태스크 알림</string>
+    <string name="calendar_sync_prefix_due">일정 마감일:</string>
+    <string name="calendar_sync_prefix_thre">일정 시작일:</string>
+    <string name="calendar_sync_evt_desc">심플태스크가 자동 생성함</string>
+    <string name="calendar_exists_warning">경고: 같은 이름의 달력이 이미 존재함, 덮어쓰는중...</string>
+
+    <string name="click_to_copy">클립보드에 복사하려면 선택</string>
+</resources>
