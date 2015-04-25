@@ -35,6 +35,9 @@ public class TimePreference extends DialogPreference {
     private int m_minutes = 0;
     private TimePicker m_picker = null;
 
+    // Constructor is used from preferences.xml
+    @SuppressWarnings("unused")
+
     public TimePreference(Context ctx) {
         this(ctx, null);
     }
