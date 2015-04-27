@@ -64,7 +64,11 @@ public class CalendarSync {
     private class SyncRunnable implements Runnable {
         @Override
         public void run() {
-            CalendarSync.this.sync();
+            try {
+                CalendarSync.this.sync();
+            } catch (Exception e) {
+                Log.e(TAG, "STPE exception", e);
+            }
         }
     }
 
@@ -131,6 +135,7 @@ public class CalendarSync {
         else Log.w(TAG, "Unexpected return value while removing calendar: "+ret);
     }
 
+    @SuppressWarnings("NewApi")
     private void insertEvt(long calID, DateTime date, String titlePrefix, String title) {
         ContentValues values = new ContentValues();
 
