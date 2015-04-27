@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+5.3.4
+-----
+
+- Several calendar sync fixes.
+- Added Korean translation. Courtesy halcyonera from Github.
+
+5.3.3
+-----
+
+- Prevent NPE while handling `Load from script` filter menu item.
+
 5.3.2
 -----
 
