@@ -27,8 +27,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -36,34 +34,21 @@ import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import android.widget.Toast;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.google.common.base.Joiner;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.token.Token;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.*;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
 
@@ -86,10 +71,7 @@ public class Util {
 
     @Nullable
     public static ArrayList<String> tasksToString(@NotNull List<Task> tasks) {
-        if (tasks==null) {
-            return null;
-        }
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for (Task t: tasks) {
             result.add(t.inFileFormat());
         }
@@ -118,14 +100,14 @@ public class Util {
     }
 
     @NotNull
-    public static String join(@Nullable Collection<?> s, String delimiter) {
+    public static String joinTasks(@Nullable Collection<Task> s, String delimiter) {
         StringBuilder builder = new StringBuilder();
         if (s==null) {
-        	return "";
+            return "";
         }
-        Iterator<?> iter = s.iterator();
+        Iterator<Task> iter = s.iterator();
         while (iter.hasNext()) {
-            builder.append(iter.next());
+            builder.append(iter.next().inFileFormat());
             if (!iter.hasNext()) {
                 break;
             }
@@ -134,8 +116,16 @@ public class Util {
         return builder.toString();
     }
 
+    @NotNull
+    public static String join(@Nullable Collection<String> s, String delimiter) {
+        if (s==null) {
+            return "";
+        }
+        return Joiner.on(delimiter).join(s);
+    }
+
     public static void setColor(@NotNull SpannableString ss, int color, String s) {
-        ArrayList<String> strList = new ArrayList<String>();
+        ArrayList<String> strList = new ArrayList<>();
         strList.add(s);
         setColor(ss,color,strList);
     }
@@ -177,21 +167,29 @@ public class Util {
         } else {
             return null;
         }
-        if (type.equals("d")) {
-            date = date.plusDays(amount);
-        } else if (type.equals("w")) {
-            date = date.plusDays(7 * amount);
-        } else if (type.equals("m")) {
-            date = date.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
-        } else if (type.equals("y")) {
-            date = date.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
+        switch(type) {
+            case "d":
+                date = date.plusDays(amount);
+                break;
+            case "w":
+                date = date.plusDays(7 * amount);
+                break;
+            case "m":
+                date = date.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
+                break;
+            case "y":
+                date = date.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay);
+                break;
+            default:
+                // Dont add anything
+                break;
         }
         return date;
     }
 
     @NotNull
     public static ArrayList<String> prefixItems(String prefix, @NotNull ArrayList<String> items) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for (String item : items) {
             result.add(prefix + item);
         }
@@ -201,7 +199,7 @@ public class Util {
     @NotNull
     public static ArrayList<String> getCheckedItems(@NotNull ListView listView , boolean checked) {
         SparseBooleanArray checks = listView.getCheckedItemPositions();
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         for (int i = 0 ; i < checks.size() ; i++) {
             String item = (String)listView.getAdapter().getItem(checks.keyAt(i));
             if (checks.valueAt(i) && checked) {
@@ -303,20 +301,18 @@ public class Util {
 
         File cacheFile = new File(context.getCacheDir() + File.separator
                 + fileName);
-        cacheFile.createNewFile();
-
-        FileOutputStream fos = new FileOutputStream(cacheFile);
-        OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF8");
-        PrintWriter pw = new PrintWriter(osw);
-
-        pw.println(content);
-
-        pw.flush();
-        pw.close();
+        if (cacheFile.createNewFile()) {
+            FileOutputStream fos = new FileOutputStream(cacheFile);
+            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF8");
+            PrintWriter pw = new PrintWriter(osw);
+            pw.println(content);
+            pw.flush();
+            pw.close();
+        }
     }
 
     public static ArrayList<String> sortWithPrefix(List<String> items, boolean caseSensitive, String prefix) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         result.addAll(new AlphabeticalStringComparator(caseSensitive).sortedCopy(items));
         if (prefix !=null ) {
             result.add(0,prefix);
@@ -325,7 +321,7 @@ public class Util {
     }
 
     public static ArrayList<String> sortWithPrefix(Set<String> items, boolean caseSensitive, String prefix) {
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<>();
         temp.addAll(items);
         return sortWithPrefix(temp, caseSensitive, prefix);
     }

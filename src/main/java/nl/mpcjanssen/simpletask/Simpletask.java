@@ -68,6 +68,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -501,7 +502,7 @@ public class Simpletask extends ThemedListActivity implements
                     }
                     mFilter.setSearch(newText);
                     mFilter.saveInPrefs(TodoApplication.getPrefs());
-                    if (m_adapter!=null) {
+                    if (m_adapter != null) {
                         m_adapter.setFilteredTasks();
                     }
                 }
@@ -535,7 +536,7 @@ public class Simpletask extends ThemedListActivity implements
         for (int i = 0; i < m_adapter.getCount(); i++) {
             Task task = m_adapter.getItem(i);
             if (task != null) {
-                text.append(task.inFileFormat() + "\n");
+                text.append(task.inFileFormat()).append("\n");
             }
         }
         shareText(text.toString());
@@ -646,14 +647,36 @@ public class Simpletask extends ThemedListActivity implements
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                m_app.getTaskCache().modify(null,null,null,tasks);
+                m_app.getTaskCache(null).modify(null, null, null, tasks);
                 // We have change the data, views should refresh
             }
         }, R.string.delete_task_title);
     }
 
-    private void archiveTasks(final List<Task> tasksToArchive) {
-        getTaskBag().archive(m_app.getDoneFileName(), tasksToArchive);
+    private void archiveTasks(List<Task> tasksToArchive) {
+        if (m_app.getTodoFileName().equals(m_app.getDoneFileName())) {
+            Util.showToastShort(this, "You have the done.txt file opened.");
+            return;
+        }
+
+        ArrayList<Task> tasksToDelete = new ArrayList<Task>();
+        if (tasksToArchive==null) {
+            tasksToArchive = getTaskBag().getTasks();
+        }
+        for (Task t: tasksToArchive) {
+            if (t.isCompleted()) {
+                tasksToDelete.add(t);
+            }
+        }
+
+        try {
+            m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(),tasksToDelete);
+            getTaskBag().modify(null,null,null, tasksToDelete);
+        } catch (IOException e) {
+            Util.showToastShort(this,"Archive failed");
+            e.printStackTrace();
+
+        }
     }
 
     @Override
@@ -718,7 +741,6 @@ public class Simpletask extends ThemedListActivity implements
         // Collapse the actionview if we are searching
         Intent intent = getIntent();
         clearFilter();
-        m_adapter.setFilteredTasks();
     }
 
     @NotNull
@@ -797,6 +819,12 @@ public class Simpletask extends ThemedListActivity implements
                 return;
             }
         }
+        if (m_app.backClearsFilter() && mFilter!=null && mFilter.hasFilter()) {
+            clearFilter();
+            onNewIntent(getIntent());
+            return;
+        }
+	
         super.onBackPressed();
     }
 
@@ -830,6 +858,7 @@ public class Simpletask extends ThemedListActivity implements
         setIntent(intent);
         finishActionmode();
         updateDrawers();
+        m_adapter.setFilteredTasks();
     }
 
     private void updateDrawers() {
@@ -1027,7 +1056,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private TaskCache getTaskBag() {
-        return m_app.getTaskCache();
+        return m_app.getTaskCache(null);
     }
 
     public void startFilterActivity() {
@@ -1590,7 +1619,7 @@ public class Simpletask extends ThemedListActivity implements
                     }
                 }
                 finishActionmode();
-                m_app.getTaskCache().modify(
+                m_app.getTaskCache(null).modify(
                         originalLines,
                         checkedTasks,
                         null,
@@ -1661,7 +1690,7 @@ public class Simpletask extends ThemedListActivity implements
                     }
                 }
                 finishActionmode();
-                m_app.getTaskCache().modify(
+                m_app.getTaskCache(null).modify(
                         originalLines,
                         checkedTasks,
                         null,

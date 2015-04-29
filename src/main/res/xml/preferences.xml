@@ -198,7 +198,7 @@
         android:key="about">
         <Preference
             android:key="app_version"
-            android:title="@string/app_label" />
+            android:summary="@string/click_to_copy" />
 
         <Preference
             android:title="Donate"
@@ -237,15 +237,25 @@
                 android:summary="@string/calendar_reminder_days_summary"
                 android:defaultValue="1"
                 android:max="7"
-                robobunny:min="1"
+                robobunny:min="0"
                 robobunny:unitsLeft=""
                 robobunny:unitsRight="" />
+            <nl.mpcjanssen.simpletask.TimePreference
+                android:key="@string/calendar_reminder_time"
+                android:title="@string/calendar_reminder_time_title"
+                android:summary="@string/calendar_reminder_time_summary"
+                android:defaultValue="720" />
         </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/use_rhino"
             android:summary="Enable the embedded Lua compiler for advanced task filtering."
             android:title="Use Lua" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+	    android:key="@string/back_clears_filter"
+            android:summary="If enabled, the first press of the back button clears the active filter and only the second press exits the app."
+            android:title="Back clears filter" />
         <Preference
             android:title="Share log"
             android:key="send_log"

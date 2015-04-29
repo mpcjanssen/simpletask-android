@@ -2449,7 +2449,7 @@ public class DragSortListView extends ListView {
          *
          * @return The View you wish to display as the floating View.
          */
-        public View onCreateFloatView(int position);
+        View onCreateFloatView(int position);
 
         /**
          * Called whenever the floating View is dragged. Float View
@@ -2466,7 +2466,7 @@ public class DragSortListView extends ListView {
          * top-left).
          * @param pendingScroll 
          */
-        public void onDragFloatView(View floatView, Point location, Point touch);
+        void onDragFloatView(View floatView, Point location, Point touch);
 
         /**
          * Called when the float View is dropped; lets you perform
@@ -2476,7 +2476,7 @@ public class DragSortListView extends ListView {
          * @param floatView The floating View passed to
          * {@link #onCreateFloatView(int)}.
          */
-        public void onDestroyFloatView(View floatView);
+        void onDestroyFloatView(View floatView);
     }
 
     public void setFloatViewManager(FloatViewManager manager) {
@@ -2536,7 +2536,7 @@ public class DragSortListView extends ListView {
     }
 
     public interface DragListener {
-        public void drag(int from, int to);
+        void drag(int from, int to);
     }
 
     /**
@@ -2549,7 +2549,7 @@ public class DragSortListView extends ListView {
      *
      */
     public interface DropListener {
-        public void drop(int from, int to);
+        void drop(int from, int to);
     }
 
     /**
@@ -2561,7 +2561,7 @@ public class DragSortListView extends ListView {
      *
      */
     public interface RemoveListener {
-        public void remove(int which);
+        void remove(int which);
     }
 
     public interface DragSortListener extends DropListener, DragListener, RemoveListener {

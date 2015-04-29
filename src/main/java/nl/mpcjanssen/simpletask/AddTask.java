@@ -200,7 +200,7 @@ public class AddTask extends ThemedActivity {
                 }
             }
         }
-        m_app.getTaskCache().modify(originalLines, updatedTasks, addedTasks, null);
+        m_app.getTaskCache(this).modify(originalLines, updatedTasks, addedTasks, null);
         finish();
     }
 
@@ -229,7 +229,7 @@ public class AddTask extends ThemedActivity {
                 bgTask.add(new Task(0,taskText));
             }
         }
-        m_app.getTaskCache().modify(null,null,bgTask,null);
+        m_app.getTaskCache(null).modify(null,null,bgTask,null);
         m_app.updateWidgets();
         Util.showToastShort(m_app, R.string.task_added);
     }
@@ -321,7 +321,7 @@ public class AddTask extends ThemedActivity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        m_backup = m_app.getTaskCache().getTasksToUpdate();
+        m_backup = m_app.getTaskCache(this).getTasksToUpdate();
         if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<String>();
             for (Task t : m_backup) {
@@ -517,7 +517,7 @@ public class AddTask extends ThemedActivity {
 
     private void showTagMenu() {
         Set<String> items = new TreeSet<String>();
-        items.addAll(m_app.getTaskCache().getProjects());
+        items.addAll(m_app.getTaskCache(null).getProjects());
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         items.addAll(t.getTags());
@@ -585,7 +585,7 @@ public class AddTask extends ThemedActivity {
 
     private void showContextMenu() {
         Set<String> items = new TreeSet<String>();
-        items.addAll(m_app.getTaskCache().getContexts());
+        items.addAll(m_app.getTaskCache(this).getContexts());
         // Also display contexts in tasks being added
         Task t = new Task(0,textInputField.getText().toString());
         items.addAll(t.getLists());

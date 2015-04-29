@@ -37,15 +37,10 @@ abstract public class Token {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Token token = (Token) o;
+        return type == token.type && value.equals(token.value);
 
-        if (!(type == token.type)) return false;
-        if (!value.equals(token.value)) return false;
-
-        return true;
     }
-
 
     @Override
     public int hashCode() {

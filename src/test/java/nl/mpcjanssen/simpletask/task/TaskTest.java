@@ -81,7 +81,7 @@ public class TaskTest extends TestCase {
         String rawText = "(A) Test";
         Task t = new Task(0, rawText);
         assertEquals(Priority.A, t.getPriority());
-        ArrayList<Token> expectedTokens = new ArrayList<Token>();
+        ArrayList<Token> expectedTokens = new ArrayList<>();
         expectedTokens.add(new PRIO("(A) "));
         expectedTokens.add(new TEXT("Test"));
         assertEquals(expectedTokens, t.getTokens());
@@ -127,7 +127,7 @@ public class TaskTest extends TestCase {
 
     public void testCompletedPriority() {
         Task t = new Task(0,"x 1111-11-11 (A) Test");
-        ArrayList<Token> expectedTokens = new ArrayList<Token>();
+        ArrayList<Token> expectedTokens = new ArrayList<>();
         expectedTokens.add(new COMPLETED());
         expectedTokens.add(new COMPLETED_DATE("1111-11-11 "));
         expectedTokens.add(new PRIO("(A) "));
@@ -155,19 +155,19 @@ public class TaskTest extends TestCase {
         assertEquals(null, t1.getRecurrencePattern());
         assertEquals("1d", t2.getRecurrencePattern());
         String t3 = "(B) 2014-07-05 Test t:2014-07-05 rec:2d";
-        Task t4 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,01,01), true);
-        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        Task t4 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,1,1), true);
+        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:2d", t4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t5.inFileFormat());
 
         String dt3 = "(B) 2014-07-05 Test due:2014-07-05 rec:2d";
-        Task dt4 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000,01,01), true);
-        Task dt5 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        Task dt4 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000,1,1), true);
+        Task dt5 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:2d", dt4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt5.inFileFormat());
 
         String text = "Test due:2014-07-05 rec:1y";
-        Task task = new Task(0,text).markComplete(DateTime.forDateOnly(2000, 01, 01), false);
+        Task task = new Task(0,text).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
     }
 
