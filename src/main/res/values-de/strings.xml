@@ -3,6 +3,7 @@
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
 Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+Copyright (c) 2015 Vojtech Kral
 
 LICENSE:
 
@@ -21,6 +22,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @license http://www.gnu.org/licenses/gpl.html
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 @copyright 2013 Mark Janssen
+@copyright 2015 Vojtech Kral
 -->
 <!--suppress ALL -->
 <resources>
@@ -91,7 +93,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_summary">Automatisches Archivieren von Aufgaben in done.txt nach Erledigung.</string>
     <string name="archive_now_pref_title">Jetzt archivieren</string>
     <string name="archive_now_pref_summary">Verschiebe erledigte Aufgaben von todo.txt nach done.txt.</string>
-    <string name="dropbox_logout_pref_title">Log out</string>
+    <string name="dropbox_logout_pref_title">Ausloggen</string>
     <string name="dropbox_logout_pref_summary">Aus Dropbox ausloggen.</string>
     <string name="TODOTXTPATH_title">Datei Speicherort</string>
     <string name="TODOTXTPATH_summary">Der Dropbox Ordner in dem todo.txt gespeichert ist.</string>
@@ -144,9 +146,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_thresholds_title">Anfangsdaten</string>
     <string name="calendar_reminder_days_title">Vorlaufzeit</string>
     <string name="calendar_reminder_days_summary">Wie viele Tage vor dem Fälligkeits- bzw. Anfangsdatum  soll die Erinnerung eingetragen werden?</string>
-    <!--TODO: translate-->
-    <string name="calendar_reminder_time_title">Reminders time</string>
-    <string name="calendar_reminder_time_summary">At what time of day should the reminder be set.</string>
+    <string name="calendar_reminder_time_title">Zeitpunkt der Erinnerungen</string>
+    <string name="calendar_reminder_time_summary">Zu welcher Tageszeit sollen die Kalendererinnerungen jeweils eingetragen werden?</string>
 
     <string name="drawer_fixed_landscape_title">Öffne im Querformat</string>
     <string name="drawer_fixed_landscape_summary">Immer im Querformat öffnen.</string>
@@ -172,7 +173,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="split_actionbar_pref_title">Verwende geteilte Aktionsleiste</string>
     <string name="split_actionbar_pref_summary">Verwende eine geteile Aktionsleiste damit die Schaltflächen am unteren Ende des Bildschirms sind.
-        Für mehr Bilschimfläche deaktiviere diese Option.</string>
+        Für mehr Bilschirmfläche deaktiviere diese Option.</string>
 
     <string name="show_edittext_hints_title">Zeige Hinweise</string>
     <string name="show_edittext_hints_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
@@ -186,8 +187,8 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="show_calendarview_title">Kalender für Eingabe</string>
 
-    <string name="sort_case_sensitive_title">Sort case-sensitive</string>
-    <string name="sort_case_sensitive_summary">Observe case when sorting lists, tags and saved filters.</string>
+    <string name="sort_case_sensitive_title">Sortiereinstellungen</string>
+    <string name="sort_case_sensitive_summary">Groß- und Kleinschreibung beachten beim Sortieren von Listen, Kategorien und Filtern.</string>
 
     <string name="about_settings_header">Über</string>
     <string name="about_settings_summary">Anwendungsinformationen</string>
@@ -277,7 +278,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="context_format">\@Liste</string>
     <string name="project_format">+Kat.</string>
 
-    <string name="separator">Separator</string>
+    <string name="separator">Trennzeichen</string>
 
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Aufgabe hinzufügen</string>
@@ -307,11 +308,11 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="title_activity_filter">Filter</string>
     <string name="selected">ausgewählt</string>
-    <string name="no_context">Inbox</string>
+    <string name="no_context">Eingang</string>
     <string name="no_project">Keine Kategorie</string>
     <string name="no_creation_date">Kein Erstellungstatum</string>
     <string name="no_threshold_date">Kein Zeitlimit</string>
-    <string name="no_header">None</string>
+    <string name="no_header">Kein</string>
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Erinnerung hinzufügen</string>
     <string name="calendar_title">Simpletask Erinnerung</string>
@@ -343,5 +344,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_evt_desc">Automatisch erstellt von Simpletask</string>
     <string name="calendar_exists_warning">Warnung: ein Kalender identischen Namens existiert bereits. Überschreibe...</string>
 
- <string name="click_to_copy">Click to copy to clipboard.</string>
+ <string name="click_to_copy">Tippen, um in die Zwischenablage zu kopieren.</string>
 </resources>
