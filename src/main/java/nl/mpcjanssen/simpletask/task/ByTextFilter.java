@@ -30,11 +30,9 @@ import java.util.Locale;
 /**
  * A filter that matches Tasks containing the specified text
  *
- * @author Tim Barlotta
+ * @author Mark Janssen
  */
 public class ByTextFilter implements TaskFilter {
-    @Nullable
-    private String text;
     private boolean caseSensitive;
     private String[] parts;
 
@@ -42,32 +40,21 @@ public class ByTextFilter implements TaskFilter {
         if (text == null) {
             text = "";
         }
-        this.text = caseSensitive ? text : text.toUpperCase(Locale.getDefault());
+        text = caseSensitive ? text : text.toUpperCase(Locale.getDefault());
         this.caseSensitive = caseSensitive;
 
-        this.parts = this.text.split("\\s");
+        this.parts = text.split("\\s");
     }
 
     @Override
     public boolean apply(@NotNull Task input) {
         String taskText = caseSensitive ? input.inFileFormat() : input.inFileFormat()
                 .toUpperCase(Locale.getDefault());
-
         for (String part : parts) {
             if ((part.length() > 0) && !taskText.contains(part))
                 return (false);
         }
 
         return true;
-    }
-
-    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    @Nullable
-    String getText() {
-        return text;
-    }
-
-    boolean isCaseSensitive() {
-        return caseSensitive;
     }
 }

@@ -3,87 +3,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.1'
     }
 }
 
 apply plugin: 'com.android.application'
-
-sourceSets {
-        unitTest {
-                java.srcDir file('src/test/java')
-                resources.srcDir file('src/test/resources')
-        }
-}
-
-dependencies {
-        unitTestCompile files("$project.buildDir/intermediates/classes/cloudless/debug")
-        unitTestCompile fileTree(dir: 'libskeep', include: '*.jar')
-        unitTestCompile 'com.darwinsys:hirondelle-date4j:1.5.1'
-        unitTestCompile 'com.google.guava:guava:18.0'
-        unitTestCompile 'com.google.android:android:4.+'
-        unitTestCompile 'junit:junit:4.11'
-        unitTestCompile 'org.luaj:luaj-jse:3.0'
-}
-
-configurations {
-        unitTestCompile.extendsFrom runtime
-        unitTestRuntime.extendsFrom unitTestCompile
-}
-
-task unitTest(type:Test, dependsOn: assemble) {
-        description = "run unit tests"
-        testClassesDir = project.sourceSets.unitTest.output.classesDir
-        classpath = project.sourceSets.unitTest.runtimeClasspath + files("$project.buildDir/intermediates/classes/cloudless/debug")
-}
-
-// Generate some build info. Used for the revision in the application settings and for generating the deployed file names.
- 
-task buildInfo {
-    def revcmd = "git rev-parse --short HEAD"
-    def revproc = revcmd.execute()
-    ext.revision = revproc.text.trim()
-    def datecmd = "git log -1 --date=short --pretty=format:%cd"
-    def dateproc = datecmd.execute()
-    ext.date = dateproc.text.trim()
-    def branchcmd = 'git rev-parse --abbrev-ref HEAD'
-    def branchproc = branchcmd.execute()
-    ext.branch = branchproc.text.trim()
-}
-
-// Check if all changes are commited to Git. If not throw an exception.
-// This is called before deploying apk's. It will ensure that the Git revision numbers in the apk names
-// and in the app settings are accurate. If there were uncommited changes, the result would be different from
-// a clean checkout.
-
-task checkCleanGit {
-    def cmd = "git diff-files"
-    def proc = cmd.execute()
-    ext.status = proc.text.trim()
-    doLast {
-       if (!(ext.status == ""))
-          throw new GradleException("Git not clean, commit changes before running serve:\n" + ext.status)
-    }
-}
-
-def checkDeployPath() {
-    if (hasProperty("deployPath"))
-        return deployPath
-    else
-        return null
-}
-
-task deploy(type:Sync, dependsOn: [clean,build]) {
-  doFirst {
-    if (checkDeployPath()==null)
-      throw new GradleException("deployPath not defined, please define it in gradle.properties")
-      tasks.clean.execute()
-  }
-  into checkDeployPath() + '/' + buildInfo.ext.branch + '/' + buildInfo.ext.date + "-" + buildInfo.ext.revision
-  from 'build/outputs/apk/'
-  include '*release.apk'
-  outputs.upToDateWhen { false }
-}
 
 // Call gradle with -Plint to enable all warnings.
 if (hasProperty("lint")) { 
@@ -92,10 +16,7 @@ if (hasProperty("lint")) {
    } 
 }
 
-
 android {
-
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -106,11 +27,10 @@ android {
     compileSdkVersion 22
 
     defaultConfig {
-        versionName '5.3.0'
-        versionCode 1547
+        versionName '5.3.3'
+        versionCode 1550
 	    minSdkVersion 14
         targetSdkVersion 22
-        buildConfigField "String", "GIT_REV", "\"" + buildInfo.ext.revision + "\""
     }
 
     productFlavors {
@@ -147,11 +67,8 @@ dependencies {
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:18.0'
     compile 'org.luaj:luaj-jse:3.0'
+    testCompile 'junit:junit:4.12'
 }
-
-deploy.mustRunAfter clean
-check.dependsOn unitTest
-preBuild.dependsOn buildInfo
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&

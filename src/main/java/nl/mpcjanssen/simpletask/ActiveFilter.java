@@ -237,7 +237,7 @@ public class ActiveFilter {
             target.putExtra(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
             target.putExtra(INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
             target.putExtra(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-            target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(m_prios, "\n"));
+            target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(Priority.inCode(m_prios), "\n"));
             target.putExtra(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
             target.putExtra(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
             target.putExtra(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);

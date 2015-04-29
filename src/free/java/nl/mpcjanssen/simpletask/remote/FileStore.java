@@ -21,13 +21,15 @@ import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxSyncStatus;
 import com.google.common.io.CharStreams;
 
+import com.google.common.io.LineProcessor;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.util.TaskIo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,28 +52,18 @@ public class FileStore implements FileStoreInterface {
     private DbxFile.Listener m_observer;
     private DbxAccountManager mDbxAcctMgr;
     private Context mCtx;
+    DbxFile mWatchedFile;
 
-    public DbxFileSystem getmDbxFs() {
-        return mDbxFs;
-    }
 
     private DbxFileSystem mDbxFs;
     @Nullable
     private DbxFileSystem.SyncStatusListener m_syncstatus;
-    @Nullable
-    String activePath;
-    @Nullable
-    private ArrayList<String> mLines;
-    private boolean mReloadFile;
-    @Nullable
-    DbxFile mDbxFile;
-    private boolean m_isSyncing = true;
+
+    private DbxFileSystem.PathListener mPathListener;
 
     public FileStore( Context ctx, String eol) {
         mCtx = ctx;
         mEol = eol;
-        this.activePath = null;
-        syncInProgress(true);
         setDbxAcctMgr();
     }
 
@@ -110,157 +102,82 @@ public class FileStore implements FileStoreInterface {
         return mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount();
     }
 
-    private void initialSync(final DbxFileSystem fs) {
-        syncInProgress(true);
-        new AsyncTask<Void,Void,Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Log.v(TAG, "Initial sync in background");
-                try {
-                    fs.awaitFirstSync();
-                } catch (DbxException e) {
-                    Log.e(TAG,"First sync failed: " + e.getCause());
-                    e.printStackTrace();
-                    return Boolean.FALSE;
-                }
-                return Boolean.TRUE;
-            }
-            @Override
-            protected void onPostExecute(Boolean success) {
-                Log.v(TAG, "Intial sync status" + success);
-                if (success) {
-                    notifyFileChanged();
-                }
-            }
-        }.execute();
-
-
-    }
-
-    @Nullable
     @Override
-    public ArrayList<String> get(final String path) {
-        Log.v(TAG, "Getting contents of: " + path);
+    public void loadTasksFromFile(final String path, final TaskCache taskCache) throws IOException {
         if (!isAuthenticated()) {
-            Log.v(TAG, "Not authenticated");
-            return new ArrayList<String>();
+            return;
         }
-        DbxFileSystem fs = getDbxFS();
-        if (fs==null) {
-            return new ArrayList<String>();
-        }
-        try {
-            if (!fs.hasSynced()) {
-                initialSync(fs);
-                return new ArrayList<String>();
-            }
-        } catch (DbxException e) {
-            e.printStackTrace();
-            return new ArrayList<String>();
-        }
-        startWatching(path);
-        if (activePath != null && activePath.equals(path) && mLines!=null) {
-            return mLines;
-        }
-        syncInProgress(true);
-
-        // Clear and reload cache
-        mLines = null;
-
-        // Did we switch todo file?
-        if (activePath!=null && !activePath.equals(path) && mDbxFile!=null) {
-            mDbxFile.close();
-            mDbxFile = null;
-            stopWatching(activePath);
-        }
-        new AsyncTask<String, Void, ArrayList<String>>() {
-            @Nullable
+        new AsyncTask<String, Void, Void> () {
             @Override
-            protected ArrayList<String> doInBackground(String... params) {
-                syncInProgress(true);
-                String path = params[0];
-                activePath = path;
-                ArrayList<String> results;
-                DbxFile openFile = openDbFile(path);
-                if (openFile==null) {
-                    return null;
-                }
+            protected Void doInBackground(String... params) {
+                Log.v(TAG, "Loading file in background");
                 try {
+                    LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                    final DbxFileSystem fs = getDbxFS();
+                    if (fs==null) {
+                        return null;
+                    }
+                    fs.syncNowAndWait();
+                    DbxFile openFile = openDbFile(path);
+                    if (openFile == null) {
+                        return null;
+                    }
+
+                    Log.v(TAG, "Opening file " + path + " sync states latest?: " + openFile.getSyncStatus().isLatest);
+                    int times = 0;
+                    try {
+                        if (!openFile.getSyncStatus().isLatest) {
+                            while (openFile.getNewerStatus().pending!= DbxFileStatus.PendingOperation.NONE && times < 30) {
+                                long total = openFile.getNewerStatus().bytesTotal;
+                                long transferred = openFile.getNewerStatus().bytesTransferred;
+                                Log.v(TAG, "Downloading: " + openFile.getPath().getName() + " " + transferred +"/" + total );
+                                Thread.sleep(1000);
+                                times++;
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     openFile.update();
-                } catch (DbxException e) {
+                    FileInputStream stream = openFile.getReadStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+                    taskCache.startLoading();
+                    int i = 0;
+                    String line;
+                    while ((line =  reader.readLine())!=null) {
+                        taskCache.load(new Task(i, line));
+                        i++;
+                    }
+                    openFile.close();
+                    taskCache.endLoading();
+                    startWatching(path);
+                    LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                    LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+                } catch ( DbxException e ) {
+                    Log.e(TAG, "Load from file failed: " + e.getCause());
+                    e.printStackTrace();
+
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                results =  syncGetLines(openFile);
-                return results;
-            }
-            @Override
-            protected void onPostExecute(ArrayList<String> results) {
-                // Trigger update
-                if (results!=null) {
-                    syncInProgress(false);
-                    notifyFileChanged();
-                }
-                mLines = results;
+                LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                return null;
             }
         }.execute(path);
-        return new ArrayList<String>();
+
     }
 
-
     @Nullable
-    private synchronized DbxFile openDbFile(String path) {
-        if (mDbxFile != null) {
-            return mDbxFile;
-        }
+    private DbxFile openDbFile(String path) throws DbxException {
         DbxFileSystem fs = getDbxFS();
         if (fs == null) {
             return null;
         }
-        try {
-            DbxPath dbPath = new DbxPath(path);
-            if (fs.exists(dbPath)) {
-                mDbxFile = fs.open(dbPath);
-            } else {
-                mDbxFile = fs.create(dbPath);
-            }
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
-        return mDbxFile;
-    }
-
-    @NotNull
-    private synchronized ArrayList<String> syncGetLines(@Nullable DbxFile dbFile) {
-        ArrayList<String> result = new ArrayList<String>();
-        DbxFileSystem fs = getDbxFS();
-        if (!isAuthenticated() || fs == null || dbFile == null) {
-            return result;
-        }
-        try {
-            try {
-                dbFile.update();
-            } catch (DbxException e) {
-                Log.v(TAG, "Couldn't download latest" + e.toString());
-            }
-            FileInputStream stream = dbFile.getReadStream();
-            result.addAll(CharStreams.readLines(new InputStreamReader(stream)));
-            stream.close();
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-
-    }
-
-    private void syncInProgress(boolean inProgress) {
-        m_isSyncing = inProgress;
-        LocalBroadcastManager bm = LocalBroadcastManager.getInstance(mCtx);
-        if (inProgress) {
-            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        DbxPath dbPath = new DbxPath(path);
+        if (fs.exists(dbPath)) {
+            return fs.open(dbPath);
         } else {
-            bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+            return fs.create(dbPath);
         }
     }
 
@@ -271,74 +188,34 @@ public class FileStore implements FileStoreInterface {
 
     private void startWatching(final String path) {
         if (isAuthenticated() && getDbxFS() != null) {
-            if (m_syncstatus==null) {
-                m_syncstatus = new DbxFileSystem.SyncStatusListener() {
-
-                    @Override
-                    public void onSyncStatusChange(@NotNull DbxFileSystem dbxFileSystem) {
-                        DbxSyncStatus status;
-                        try {
-                            status = dbxFileSystem.getSyncStatus();
-                            Log.v(TAG, "Synchronizing: v " + status.download + " ^ " + status.upload);
-                            if (!status.anyInProgress() || status.anyFailure() != null) {
-                                Log.v(TAG, "Synchronizing done");
-                                if (mReloadFile) {
-                                    mLines = null;
-                                    get(path);
-                                }
-                                syncInProgress(false);
-                            } else {
-                                syncInProgress(true);
-                            }
-                        } catch (DbxException e) {
-                            e.printStackTrace();
+            mPathListener = new DbxFileSystem.PathListener() {
+                @Override
+                public void onPathChange(DbxFileSystem dbxFileSystem, DbxPath dbxPath, Mode mode) {
+                    try {
+                        DbxFile changedFile = dbxFileSystem.open(dbxPath);
+                        DbxFileStatus changedFileStatus = changedFile.getNewerStatus();
+                        changedFile.close();
+                        if (changedFileStatus==null) {
+                            Log.v(TAG, "File changed " + dbxPath.getName() + " but newerStatus == null, not refreshing");
+                        } else {
+                            Log.v(TAG, "File changed " + dbxPath.getName() + " synced: " + changedFileStatus.isCached);
+                            LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
                         }
+                    } catch (DbxException e) {
+                        e.printStackTrace();
                     }
-                };
-                mDbxFs.addSyncStatusListener(m_syncstatus);
-            }
-            if (m_observer==null) {
-                m_observer = new DbxFile.Listener() {
-                    @Override
-                    public void onFileChange(@NotNull DbxFile dbxFile) {
-                        DbxFileStatus status;
-                        try {
-                            status = dbxFile.getSyncStatus();
-                            Log.v(TAG, "Synchronizing path change: " + dbxFile.getPath().getName() + " latest: " + status.isLatest +
-                                       status.bytesTransferred + "/" + status.bytesTotal);
-                            mReloadFile = !status.isLatest;
-                        } catch (DbxException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                DbxFile openFile = openDbFile(path);
-                if (openFile!=null) {
-                    Log.v(TAG, "Start watching: " + openFile.getPath().toString());
-                    openFile.addListener(m_observer);
                 }
-            }
+            };
+            mDbxFs.addPathListener(mPathListener, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
         }
-    }
-
-    private void notifyFileChanged() {
-        Log.v(TAG, "File changed: " + activePath);
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     private void stopWatching(String path) {
-        if (getDbxFS()==null) {
+
+        if (getDbxFS()==null || mPathListener == null) {
             return;
         }
-        if (m_syncstatus!=null) {
-            mDbxFs.removeSyncStatusListener(m_syncstatus);
-            m_syncstatus = null;
-        }
-        if (m_observer!=null && mDbxFile!=null) {
-            mDbxFile.removeListener(m_observer);
-        }
-        m_observer = null;
+        mDbxFs.removePathListener(mPathListener,new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
     }
 
     @Override
@@ -354,89 +231,29 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void archive(String path, final List<String> lines) {
-        final DbxFileSystem fs = getDbxFS();
-        if (isAuthenticated() && fs != null) {
-            new AsyncTask<String, Void, Void>() {
-                @Nullable
-                @Override
-                protected Void doInBackground(String... params) {
-                    String path = params[0];
-                    String data = params[1];
-                    Log.v(TAG, "Saving " + path + "in background thread");
-                    try {
-                        DbxPath dbPath = new DbxPath(path);
-                        DbxFile openFile;
-                        if (fs.exists(dbPath)) {
-                            openFile = fs.open(dbPath);
-                        } else {
-                            openFile = fs.create(dbPath);
-                        }
-                        openFile.appendString(data);
-                        openFile.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            }.execute(path, Util.join(lines, mEol) + mEol);
+    public void saveTasksToFile(String path, TaskCache taskCache) {
+        try {
+            LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+            stopWatching(path);
+            DbxFile outFile = openDbFile(path);
+            outFile.writeString(Util.joinTasks(taskCache.getTasks(), mEol));
+            outFile.close();
+            startWatching(path);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
     }
 
     @Override
-    public void modify(final String mTodoName, final List<String> original,
-                       final List<String> updated,
-                       final List<String> added,
-                       final List<String> removed) {
-        new AsyncTask<String, Void, Void>() {
-            @Nullable
-            @Override
-            protected Void doInBackground(String... params) {
-                if (isAuthenticated() && getDbxFS() != null) {
-                    try {
-                        final int numUpdated = original!=null ? updated.size() : 0;
-                        int numAdded = added!=null ? added.size() : 0;
-                        int numRemoved = removed!=null ? removed.size() : 0;
-                        Log.v(TAG, "Modifying " + mTodoName
-                                + " Updated: " + numUpdated
-                                + ", added: " + numAdded
-                                + ", removed: " + numRemoved);
-                        DbxFile openFile = openDbFile(mTodoName);
-                        if (openFile==null) {
-                            Log.w(TAG, "Failed to open: " + mTodoName + " tasks not updated");
-                            return null;
-                        }
-                        ArrayList<String> contents = new ArrayList<String>();
-                        contents.addAll(syncGetLines(openFile));
-                        if (original!=null) {
-                            for (int i = 0; i < original.size(); i++) {
-                                int index = contents.indexOf(original.get(i));
-                                if (index != -1) {
-                                    contents.remove(index);
-                                    contents.add(index, updated.get(i));
-                                }
-                            }
-                        }
-                        if (added!=null) {
-                            for (String item : added) {
-                                contents.add(item);
-                            }
-                        }
-                        if (removed!=null) {
-                            for (String item : removed) {
-                                contents.remove(item);
-                            }
-                        }
-                        openFile.writeString(Util.join(contents, mEol)+mEol);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new TodoException("Dropbox", e);
-                    }
-                }
-                return null;
-            }
-        }.execute();
+    public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
+        DbxFile outFile = openDbFile(path);
+        outFile.appendString(Util.joinTasks(tasks, mEol));
+        outFile.close();
     }
+
 
     @Override
     public void setEol(String eol) {
@@ -444,39 +261,34 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean isSyncing() {
-        return m_isSyncing;
-    }
-
-    @Override
-    public void invalidateCache() {
-        mLines = null;
-    }
-
-    @Override
     public void sync() {
-        DbxFileSystem fs = getDbxFS();
-        if (fs!=null) {
-            try {
-                fs.syncNowAndWait();
-            } catch (DbxException e) {
-                e.printStackTrace();
-            }
-        }
+        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
     }
 
     @Override
     public String readFile(String file) {
         if (file==null) {
-            return null;
+            return "";
         }
         try {
             DbxFile openFile = mDbxFs.open(new DbxPath(file));
+            int times = 0;
+            while ( openFile.getSyncStatus()!=null &&
+                    !openFile.getSyncStatus().isLatest &&
+                    times < 30) {
+                Log.v(TAG, "Sleeping for 1000ms, sync states latest?: " + openFile.getSyncStatus().isLatest);
+                Thread.sleep(1000);
+                times++;
+            }
             openFile.update();
-            return openFile.readString();
+            String result =  openFile.readString();
+            openFile.close();
+            return result;
         } catch (DbxException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return "";

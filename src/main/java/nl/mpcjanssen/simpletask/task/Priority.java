@@ -46,8 +46,8 @@ public enum Priority {
     private final String detailFormat;
     private final String fileFormat;
 
-    private Priority(String code, String listFormat, String detailFormat,
-                     String fileFormat) {
+    Priority(String code, String listFormat, String detailFormat,
+             String fileFormat) {
         this.code = code;
         this.listFormat = listFormat;
         this.detailFormat = detailFormat;

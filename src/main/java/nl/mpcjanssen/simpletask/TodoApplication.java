@@ -30,13 +30,7 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -44,17 +38,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.Toast;
-
+import nl.mpcjanssen.simpletask.remote.FileStore;
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-
-import nl.mpcjanssen.simpletask.remote.FileStore;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskCache;
-import nl.mpcjanssen.simpletask.util.Util;
+import java.io.IOException;
 
 
 public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -85,24 +76,32 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+        getTaskCache(null);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED);
+        intentFilter.addAction(Constants.BROADCAST_TASKCACHE_CHANGED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, @NotNull Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
                     // File change reload task cache
-                    resetTaskCache();
+                    try {
+                        getFileStore().loadTasksFromFile(getTodoFileName(),getTaskCache(null));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (intent.getAction().equals(Constants.BROADCAST_TASKCACHE_CHANGED)) {
+                    getFileStore().saveTasksToFile(getTodoFileName(),getTaskCache(null));
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     m_calSync.syncLater();
                     updateWidgets();
                 }
             }
         };
-        localBroadcastManager.registerReceiver(m_broadcastReceiver,intentFilter);
+        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
     }
 
@@ -123,19 +122,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public boolean fileStoreCanSync() {
-        if (mFileStore!=null) {
-            return mFileStore.supportsSync();
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isSynching() {
-        if (mFileStore==null) {
-            return true;
-        } else {
-            return mFileStore.isSyncing();
-        }
+        return mFileStore != null && mFileStore.supportsSync();
     }
 
     public void sync() {
@@ -150,10 +137,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 }
             }.execute(mFileStore);
         }
-    }
-    
-    private boolean hasPushSync() {
-        return true;
     }
 
     @Override
@@ -199,8 +182,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false);
     }
 
-    public int getRemindersMarginDays() {
+    public int getReminderDays() {
         return m_prefs.getInt(getString(R.string.calendar_reminder_days), 1);
+    }
+
+    public int getReminderTime() {
+        return m_prefs.getInt(getString(R.string.calendar_reminder_time), 720);
     }
 
     public String getTodoFileName() {
@@ -276,6 +263,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.use_rhino),false);
     }
 
+    public boolean backClearsFilter() {
+        return m_prefs.getBoolean(getString(R.string.back_clears_filter),false);
+    }
     public boolean sortCaseSensitive() {
         return m_prefs.getBoolean(getString(R.string.ui_sort_case_sensitive),true);
     }
@@ -300,21 +290,34 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public void setWordWrap(boolean bool) {
         m_prefs.edit()
-                .putBoolean(getString(R.string.word_wrap_key),bool)
+                .putBoolean(getString(R.string.word_wrap_key), bool)
                 .apply();
     }
 
-    public void resetTaskCache() {
-        m_taskCache = null;
-        getTaskCache();
-    }
-
     @NotNull
-    public TaskCache getTaskCache() {
-        if (this.m_taskCache==null) {
-            this.m_taskCache = new TaskCache(this,
-                    getFileStore(),
-                    getTodoFileName());
+    public TaskCache getTaskCache(final Activity act) {
+        if (this.m_taskCache!=null) {
+            return m_taskCache;
+        }
+
+        this.m_taskCache = new TaskCache(this);
+        final FileStoreInterface store = getFileStore();
+        try {
+            store.loadTasksFromFile(getTodoFileName(),m_taskCache);
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (act!=null) {
+                store.browseForNewFile(act, getTodoFileName(), new FileStoreInterface.FileSelectedListener() {
+                    @Override
+                    public void fileSelected(String file) {
+                        setTodoFile(file);
+                        getTaskCache(act);
+                    }
+                }, showTxtOnly());
+            } else {
+                m_taskCache = new TaskCache(this);
+            }
+
         }
         return this.m_taskCache;
     }
@@ -342,14 +345,15 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     public int getActiveTheme() {
         String theme =  getPrefs().getString(getString(R.string.theme_pref_key), "");
-        if (theme.equals("android.R.style.Theme_Holo")) {
-            return android.R.style.Theme_Holo;
-        } else if (theme.equals("android.R.style.Theme_Holo_Light_DarkActionBar")) {
-            return android.R.style.Theme_Holo_Light_DarkActionBar;
-        } else if (theme.equals("android.R.style.Theme_Holo_Light")) {
-            return android.R.style.Theme_Holo_Light;
-        } else  {
-            return android.R.style.Theme_Holo_Light_DarkActionBar;
+        switch (theme) {
+            case "android.R.style.Theme_Holo":
+                return android.R.style.Theme_Holo;
+            case "android.R.style.Theme_Holo_Light_DarkActionBar":
+                return android.R.style.Theme_Holo_Light_DarkActionBar;
+            case "android.R.style.Theme_Holo_Light":
+                return android.R.style.Theme_Holo_Light;
+            default:
+                return android.R.style.Theme_Holo_Light_DarkActionBar;
         }
     }
 
@@ -399,19 +403,21 @@ public class TodoApplication extends Application implements SharedPreferences.On
             m_calSync.setSyncDues(isSyncDues());
         } else if (s.equals(getString(R.string.calendar_sync_thresholds))) {
             m_calSync.setSyncThresholds(isSyncThresholds());
-        } else if (s.equals(getString(R.string.calendar_reminder_days))) {
+        } else if (s.equals(getString(R.string.calendar_reminder_days)) ||
+                   s.equals(getString(R.string.calendar_reminder_time))) {
             m_calSync.syncLater();
         }
     }
 
     public int getActiveFont() {
         String fontsize =  getPrefs().getString("fontsize", "medium");
-        if (fontsize.equals("small")) {
-            return R.style.FontSizeSmall;
-        } else if (fontsize.equals("large")) {
-            return R.style.FontSizeLarge;
-        } else {
-            return R.style.FontSizeMedium;
+        switch (fontsize) {
+            case "small":
+                return R.style.FontSizeSmall;
+            case "large":
+                return R.style.FontSizeLarge;
+            default:
+                return R.style.FontSizeMedium;
         }
     }
 
@@ -454,12 +460,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return getFileStore().getType();
     }
 
-    public void browseForNewFile(@NotNull Activity act) {
+    public void browseForNewFile(@NotNull final Activity act) {
         FileStoreInterface fileStore = getFileStore();
-        if (fileStore == null) {
-            Util.showToastShort(act, "can't access filesystem");
-            return;
-        }
         fileStore.browseForNewFile(
                 act,
                 new File(getTodoFileName()).getParent(),
@@ -467,8 +469,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     @Override
                     public void fileSelected(String file) {
                         setTodoFile(file);
-                        getFileStore().invalidateCache();
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                        m_taskCache = null;
+                        getTaskCache(act);
                     }
                 },
 		showTxtOnly());
@@ -480,10 +482,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public boolean initialSyncDone() {
-        if (mFileStore==null) {
-            return false;
-        } else {
-            return mFileStore.initialSyncDone();
-        }
+        return mFileStore != null && mFileStore.initialSyncDone();
     }
 }

@@ -7,7 +7,7 @@ import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.token.Token;
 
 /**
- * Created by Mark Janssen on 22-7-13.
+ * Tests to guard against bug regressions.
  */
 public class BugsTest extends TestCase {
 
@@ -27,7 +27,7 @@ public class BugsTest extends TestCase {
 
     public void testBug50() {
         Task t = new Task(0,"2012-01-01 @list test");
-        assertEquals("test",t.showParts(Token.SHOW_ALL & ~Token.LIST & ~Token.CREATION_DATE).trim());
+        assertEquals("test",t.showParts(~Token.LIST & ~Token.CREATION_DATE).trim());
         
     }
 }

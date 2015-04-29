@@ -20,13 +20,14 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.Override;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.TodoApplication;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -38,8 +39,6 @@ public class FileStore implements FileStoreInterface {
     private final LocalBroadcastManager bm;
     private String mEol;
     private FileObserver m_observer;
-    private String activePath;
-    private ArrayList<String> mLines;
 
     public FileStore(Context ctx, String eol) {
         mCtx = ctx;
@@ -53,24 +52,51 @@ public class FileStore implements FileStoreInterface {
         return true;
     }
 
+    @Override
+    public void loadTasksFromFile(final String path, final TaskCache taskCache) {
+        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        taskCache.startLoading();
+        new AsyncTask<String, Void, Void> () {
+            @Override
+            protected Void doInBackground(String... params) {
+                try {
+                    final int i = 0;
+                    TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+                        @Override
+                        public boolean processLine(String s) throws IOException {
+                            taskCache.load(new Task(-1, s));
+                            return true;
+                        }
+
+                        @Override
+                        public String getResult() {
+                            return null;
+                        }
+
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void v) {
+                startWatching(path);
+                taskCache.endLoading();
+                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+            }
+        }.execute(path);
+    }
+
     private void notifyFileChanged() {
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     @Override
-    public boolean isSyncing() {
-        return false;
-    }
-
-    @Override
     public void setEol(String eol) {
         mEol = eol;
-    }
-
-    @Override
-    public void invalidateCache() {
-        mLines = null;
     }
 
     @Override
@@ -94,61 +120,6 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public List<String> get(final String path) {
-        if (activePath != null && activePath.equals(path) && mLines!=null) {
-            return mLines;
-        }
-
-        // Did we switch todo file?
-        if (!path.equals(activePath)) {
-            stopWatching(activePath);
-            startWatching(path);
-        }
-
-        // Clear and reload cache
-        mLines = null;
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        new AsyncTask<String, Void, ArrayList<String>>() {
-            @Override
-            protected ArrayList<String> doInBackground(String... params) {
-                return TaskIo.loadFromFile(new File(path));
-            }
-            @Override
-            protected void onPostExecute(ArrayList<String> results) {
-                // Trigger update
-                activePath = path;
-                mLines = results;
-                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                notifyFileChanged();
-            }
-        }.execute(path);
-        return new ArrayList<String>();
-    }
-
-    @Override
-    public void archive(final String path, final List<String> lines) {
-        updateStart(path);
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                append(path, Util.join(lines, mEol)+mEol);
-                return null;
-            }
-
-            @Override
-            public void onPostExecute(Void v) {
-                updateDone(path);
-            }
-        }.execute();
-    }
-
-
-    private void append(String path, String data) {
-        TaskIo.writeToFile(data,new File(path),true);
-    }
-
-    @Override
     public void startLogin(Activity caller, int i) {
 
     }
@@ -169,7 +140,6 @@ public class FileStore implements FileStoreInterface {
                         Log.v(TAG, "Observer " + path + " modified....sync done");
                         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                         bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
-                        mLines=null;
                     }
                 }
             }
@@ -199,63 +169,41 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void modify(final String mTodoName, final List<String> original,
-                       final List<String> updated,
-                       final List<String> added,
-                       final List<String> removed) {
-        final File file = new File(mTodoName);
-
-        updateStart(mTodoName);
-        final int numUpdated = original!=null ? updated.size() : 0;
-        int numAdded = added!=null ? added.size() : 0;
-        int numRemoved = removed!=null ? removed.size() : 0;
-        Log.v(TAG, "Modifying " + mTodoName
-                + " Updated: " + numUpdated
-                + ", added: " + numAdded
-                + ", removed: " + numRemoved);
-
-        new AsyncTask<Void,Void,ArrayList<String>>() {
+    public void saveTasksToFile(final String path, TaskCache taskCache) {
+        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        stopWatching(path);
+       final  ArrayList<String> output = Util.tasksToString(taskCache.getTasks());
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            protected ArrayList<String> doInBackground(Void... params) {
-                ArrayList<String> lines = TaskIo.loadFromFile(file);
-                for (int i=0 ; i<numUpdated;i++) {
-                    int index = lines.indexOf(original.get(i));
-                    if (index!=-1) {
-                        lines.remove(index);
-                        lines.add(index,updated.get(i));
-                    }
+            protected Void doInBackground(Void... params) {
+                try {
+                    TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                if (added!=null) {
-                    for (String item : added) {
-                        lines.add(item);
-                    }
-                }
-                if (removed!=null) {
-                    for (String item : removed) {
-                        lines.remove(item);
-                    }
-                }
-                TaskIo.writeToFile(Util.join(lines, mEol)+mEol, file, false);
-                return lines;
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<String> lines) {
-                updateDone(mTodoName);
-                mLines = lines;
+                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                startWatching(path);
+                return null;
             }
         }.execute();
     }
 
-
-    private void updateStart(String path) {
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        stopWatching(path);
-    }
-
-    private void updateDone(String path) {
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-        startWatching(path);
+    @Override
+    public void appendTaskToFile(final String path, final List<Task> tasks) {
+        final int size = tasks.size();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Log.v(TAG, "Appending " + size + " tasks to "+ path);
+                    TaskIo.writeToFile(Util.joinTasks(tasks, mEol), new File(path), true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                return null;
+            }
+        }.execute();
     }
 
     @Override

@@ -13,3 +13,5 @@ _FOSSIL_
 *.pyc
 .idea/
 *.iml
+apk/
+Thumbs.db
