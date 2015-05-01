@@ -311,7 +311,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public List<URL> getLinks() {
+    public List<String> getLinks() {
         return LinkParser.getInstance().parse(inFileFormat());
     }
 
