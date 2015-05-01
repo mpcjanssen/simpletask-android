@@ -90,9 +90,8 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
-public class Simpletask extends ThemedListActivity implements
-        AdapterView.OnItemLongClickListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class Simpletask extends ThemedActivity implements
+                SharedPreferences.OnSharedPreferenceChangeListener, AdapterView.OnItemClickListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
 
@@ -166,6 +165,10 @@ public class Simpletask extends ThemedListActivity implements
             result.add(t.inFileFormat());
         }
         return Util.join(result, "\n");
+    }
+
+    private ListView getListView() {
+        return (ListView)this.findViewById(R.id.list);
     }
 
     private void selectAllTasks() {
@@ -247,7 +250,6 @@ public class Simpletask extends ThemedListActivity implements
             }
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
-
 
         // Set the proper theme
         setTheme(m_app.getActiveTheme());
@@ -344,12 +346,14 @@ public class Simpletask extends ThemedListActivity implements
         }
         m_adapter.setFilteredTasks();
 
-        setListAdapter(this.m_adapter);
+        getListView().setAdapter(this.m_adapter);
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new ActionBarListener());
+        lv.setClickable(true);
+        lv.setOnItemClickListener(this);
         // If we were started with a selected task,
         // select it now and clear it from the intent
         String selectedTask = intent.getStringExtra(Constants.INTENT_SELECTED_TASK);
@@ -511,19 +515,6 @@ public class Simpletask extends ThemedListActivity implements
         });
         this.options_menu = menu;
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        onItemLongClick(l, v, position, id);
-    }
-
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        ListView l = (ListView) parent;
-        l.setItemChecked(position, !l.isItemChecked(position));
-        return true;
     }
 
     @Nullable
@@ -824,8 +815,9 @@ public class Simpletask extends ThemedListActivity implements
             onNewIntent(getIntent());
             return;
         }
-	
-        super.onBackPressed();
+        if (!m_app.switchPreviousTodoFile()) {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -1065,6 +1057,35 @@ public class Simpletask extends ThemedListActivity implements
         startActivity(i);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Task t = getTaskAt(position);
+        final String[] links = t.getLinks().toArray(new String[0]);
+        if (links.length==0) {
+            getListView().setItemChecked(position, !getListView().isItemChecked(position));
+        } else {
+            AlertDialog.Builder build = new AlertDialog.Builder(this);
+            build.setItems(links, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String url = links[which];
+                    Log.v(TAG, "url: " + url);
+                    if (url.startsWith("todo://")) {
+                        File todoFolder = m_app.getTodoFile().getParentFile();
+                        File newName = new File(todoFolder, url.substring(7));
+                        m_app.switchTodoFile(newName);
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(intent);
+                    }
+                }
+            });
+            build.create().show();
+        }
+        return;
+    }
+
+
     private static class ViewHolder {
         private TextView tasktext;
         private TextView taskage;
@@ -1125,6 +1146,7 @@ public class Simpletask extends ThemedListActivity implements
         }
 
         void setFilteredTasks() {
+            setTitle(m_app.getTodoFileName().replaceAll("([^/])[^/]*/","$1/"));
             ArrayList<Task> visibleTasks;
             countVisbleTasks = 0;
             Log.v(TAG, "setFilteredTasks called: " + getTaskBag());
@@ -1418,23 +1440,6 @@ public class Simpletask extends ThemedListActivity implements
             }
             String title = "" + numSelected;
             mode.setTitle(title);
-            if (numSelected==1 && t!=null && menu!=null) {
-                menu.removeGroup(Menu.CATEGORY_SECONDARY);
-                for (String s : t.getPhoneNumbers()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.phone_number,
-                            Menu.NONE, s);
-                }
-                for (String s : t.getMailAddresses()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.mail, Menu.NONE, s);
-                }
-                for (URL u : t.getLinks()) {
-                    menu.add(Menu.CATEGORY_SECONDARY, R.id.url, Menu.NONE,
-                            u.toString());
-                }
-                menu.setGroupVisible(Menu.CATEGORY_SECONDARY, true);
-            } else if (menu!=null) {
-                menu.setGroupVisible(Menu.CATEGORY_SECONDARY, false);
-            }
         }
 
         @Override
@@ -1521,35 +1526,6 @@ public class Simpletask extends ThemedListActivity implements
                             calDate.getTimeInMillis() + 60 * 60 * 1000);
                     startActivity(intent);
                     break;
-                case R.id.url:
-                    String url = item.getTitle().toString();
-                    Log.v(TAG, "url: " + url);
-                    if (url.startsWith("todo://")) {
-                        File newName = new File(m_app.getTodoFile(), url.substring(7)); 
-                        m_app.setTodoFile(newName.getPath());
-                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
-                    } else {
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item  
-                                    .getTitle().toString()));
-                        startActivity(intent);
-                    }
-                    break;
-                case R.id.mail:
-                    Log.v(TAG, "mail: " + item.getTitle().toString());
-                    intent = new Intent(Intent.ACTION_SEND, Uri.parse(item
-                            .getTitle().toString()));
-                    intent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                            new String[]{item.getTitle().toString()});
-                    intent.setType("text/plain");
-                    startActivity(intent);
-                    break;
-                case R.id.phone_number:
-                    Log.v(TAG, "phone_number");
-                    String encodedNumber = Uri.encode(item.getTitle().toString());
-                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-                            + encodedNumber));
-                    startActivity(intent);
-                    break;
                 case R.id.update_lists:
                     updateLists(checkedTasks);
                     return true;
@@ -1593,8 +1569,6 @@ public class Simpletask extends ThemedListActivity implements
                 lv.setItemChecked(position, true);
             }
         }
-        lv.setLongClickable(true);
-        lv.setOnItemLongClickListener(this);
 
         final EditText ed = (EditText) view.findViewById(R.id.editText);
         m_app.setEditTextHint(ed, R.string.new_list_name);

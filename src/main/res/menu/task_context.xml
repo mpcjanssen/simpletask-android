@@ -90,16 +90,4 @@ You should have received a copy of the GNU General Public License along with Tod
         android:id="@+id/archive"
         android:showAsAction="never"
         />
-    <item
-        android:id="@+id/url"
-        android:showAsAction="never"
-        android:visible="false" />
-    <item
-        android:id="@+id/mail"
-        android:showAsAction="never"
-        android:visible="false" />
-    <item
-        android:id="@+id/phone_number"
-        android:showAsAction="never"
-        android:visible="false" />
 </menu>

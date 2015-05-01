@@ -46,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -53,6 +54,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
+    private ArrayList<File> todoTrail = new ArrayList<File>();
 
     @Nullable
     private FileStoreInterface mFileStore;
@@ -409,6 +411,30 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
+    private void loadTodoFile(File newTodo) {
+        setTodoFile(newTodo.getPath());
+        m_taskCache = null;
+        getTaskCache(null);
+    }
+
+    public void switchTodoFile(File newTodo) {
+        todoTrail.add(getTodoFile());
+        loadTodoFile(newTodo);
+
+    }
+
+    public boolean switchPreviousTodoFile() {
+        int size = todoTrail.size();
+        if (todoTrail.size()==0) {
+            return false;
+        } else {
+            File newTodo = todoTrail.get(size - 1);
+            todoTrail.remove(size - 1);
+            loadTodoFile(newTodo);
+            return true;
+        }
+    }
+
     public int getActiveFont() {
         String fontsize =  getPrefs().getString("fontsize", "medium");
         switch (fontsize) {
@@ -468,9 +494,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {
-                        setTodoFile(file);
-                        m_taskCache = null;
-                        getTaskCache(act);
+                        switchTodoFile(new File(file));
                     }
                 },
 		showTxtOnly());
