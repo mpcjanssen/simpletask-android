@@ -1522,10 +1522,17 @@ public class Simpletask extends ThemedListActivity implements
                     startActivity(intent);
                     break;
                 case R.id.url:
-                    Log.v(TAG, "url: " + item.getTitle().toString());
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
-                            .getTitle().toString()));
-                    startActivity(intent);
+                    String url = item.getTitle().toString();
+                    Log.v(TAG, "url: " + url);
+                    if (url.startsWith("todo://")) {
+                        File newName = new File(m_app.getTodoFile(), url.substring(7)); 
+                        m_app.setTodoFile(newName.getPath());
+                        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                    } else {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item  
+                                    .getTitle().toString()));
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.mail:
                     Log.v(TAG, "mail: " + item.getTitle().toString());
