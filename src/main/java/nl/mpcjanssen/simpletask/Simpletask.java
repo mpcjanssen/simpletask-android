@@ -96,6 +96,10 @@ public class Simpletask extends ThemedActivity implements
     final static String TAG = Simpletask.class.getSimpleName();
 
     private final static int REQUEST_PREFERENCES = 2;
+    
+    private final static String ACTION_LINK = "link";
+    private final static String ACTION_PHONE = "phone";
+    private final static String ACTION_MAIL = "mail";
 
     public final static Uri URI_BASE = Uri.fromParts("simpletask", "", null);
     public final static Uri URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search");
@@ -1060,23 +1064,59 @@ public class Simpletask extends ThemedActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Task t = getTaskAt(position);
-        final String[] links = t.getLinks().toArray(new String[0]);
-        if (links.length==0) {
+        final ArrayList <String> actions = new ArrayList<>();
+        final ArrayList <String> links = new ArrayList<>();
+
+        for (String link : t.getLinks()) {
+            actions.add(ACTION_LINK);
+            links.add(link);
+        }
+
+        for (String number : t.getPhoneNumbers()) {
+            actions.add(ACTION_PHONE);
+            links.add(number);
+        }
+
+        for (String mail : t.getMailAddresses()) {
+            actions.add(ACTION_MAIL);
+            links.add(mail);
+        }
+
+        final String[] linksArray = links.toArray(new String[0]);
+        if (linksArray.length==0) {
             getListView().setItemChecked(position, !getListView().isItemChecked(position));
         } else {
             AlertDialog.Builder build = new AlertDialog.Builder(this);
-            build.setItems(links, new DialogInterface.OnClickListener() {
+            build.setItems(linksArray, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    String url = links[which];
-                    Log.v(TAG, "url: " + url);
-                    if (url.startsWith("todo://")) {
-                        File todoFolder = m_app.getTodoFile().getParentFile();
-                        File newName = new File(todoFolder, url.substring(7));
-                        m_app.switchTodoFile(newName);
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        startActivity(intent);
+                    Intent intent;
+                    String url = links.get(which);
+                    Log.v(TAG, "" + actions.get(which) + ": " + url);
+                    switch (actions.get(which)) {
+                        case ACTION_LINK:
+                            if (url.startsWith("todo://")) {
+                                File todoFolder = m_app.getTodoFile().getParentFile();
+                                File newName = new File(todoFolder, url.substring(7));
+                                m_app.switchTodoFile(newName);
+                            } else {
+                                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                startActivity(intent);
+                            }
+                            break;
+                        case ACTION_PHONE:
+                            String encodedNumber = Uri.encode(url);
+                            intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+                                        + encodedNumber));
+                            startActivity(intent);
+                            break;
+                        case ACTION_MAIL:
+                            intent = new Intent(Intent.ACTION_SEND, Uri.parse(url));
+                            intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                                    new String[]{url});
+                            intent.setType("text/plain");
+                            startActivity(intent);
+
                     }
                 }
             });
