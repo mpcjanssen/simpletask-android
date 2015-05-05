@@ -95,9 +95,8 @@
     <string name="manual_sync_pref_summary">모든 변경사항을 Dropbox에 자동으로 업로드하지 않음</string>
     <string name="resume_sync_pref_title">동기화 재개</string>
     <string name="resume_sync_pref_summary">앱을 실행시킬 때 Dropbox 동기화</string>
-    <string name="font_size_delta_pref_title">글자 크기 변경</string>
-    <string name="font_size_delta_pref_summary">sp 단위로 글자 크기 변경.
-        마이너스 숫자를 입력해 크기를 감소시킵니다.</string>
+    <string name="font_size_delta_pref_title">글자 크기</string>
+    <string name="font_size_delta_pref_summary">앱에서 사용할 글자 크기를 변경함.</string>
     <string name="theme_pref_title">앱 테마</string>
     <string name="theme_pref_summary">앱에 사용할 테마를 변경</string>
 
