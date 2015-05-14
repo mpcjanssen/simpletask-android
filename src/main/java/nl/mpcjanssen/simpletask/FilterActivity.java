@@ -82,7 +82,7 @@ public class FilterActivity extends ThemedActivity {
     public void onCreate(Bundle savedInstanceState) {    	
     	Log.v(TAG, "Called with intent: " + getIntent().toString());
         m_app = (TodoApplication) getApplication();
-        prefs = getPreferences(MODE_PRIVATE);
+        prefs = TodoApplication.getPrefs();
         m_app.setActionBarStyle(getWindow());
         super.onCreate(savedInstanceState);
 
@@ -94,10 +94,17 @@ public class FilterActivity extends ThemedActivity {
             actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         }
         Intent intent = getIntent();
-        mFilter = new ActiveFilter();
-        mFilter.initFromIntent(intent);
+
         if (intent.getAction()!=null) {
-        	asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+            asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+        }
+
+        mFilter = new ActiveFilter();
+
+        if (asWidgetConfigure) {
+            mFilter.initFromPrefs(prefs);
+        } else {
+            mFilter.initFromIntent(intent);
         }
         // Fill arguments for fragment
         arguments = new Bundle();        
