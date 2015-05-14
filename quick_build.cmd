@@ -1,0 +1,1 @@
+gradlew build -x lint -x lintVitalFreeRelease -x lintVitalCloudlessRelease
