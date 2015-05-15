@@ -22,18 +22,15 @@
  */
 package nl.mpcjanssen.simpletask.util;
 
-import android.util.Log;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 import com.google.common.io.LineProcessor;
 import org.jetbrains.annotations.NotNull;
-import android.support.v4.util.AtomicFile;
+
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 /**
  * A utility class for performing Task level I/O
@@ -50,20 +47,13 @@ public class TaskIo {
 
     public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) throws IOException {
         Util.createParentDirectory(file);
-        FileOutputStream str;
-        AtomicFile atom = new AtomicFile(file);
-        if (append) {
-            str = new FileOutputStream(file, append);
-        } else {
+        FileOutputStream str = new FileOutputStream(file, append);
 
-            str = atom.startWrite();
-        }
         Writer fw = new BufferedWriter(new OutputStreamWriter(
                 str, "UTF-8"));
         fw.write(contents);
         fw.close();
         str.close();
-        atom.finishWrite(str);
     }
 }
 
