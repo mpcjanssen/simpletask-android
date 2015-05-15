@@ -193,7 +193,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public String getTodoFileName() {
-        return m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath());
+        String name =  m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath());
+        File todoFile = new File(name);
+        try {
+            return todoFile.getCanonicalPath();
+        } catch (IOException e) {
+            return FileStore.getDefaultPath();
+        }
     }
 
     public File getTodoFile() {
