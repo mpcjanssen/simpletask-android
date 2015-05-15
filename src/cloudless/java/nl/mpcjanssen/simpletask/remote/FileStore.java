@@ -180,6 +180,7 @@ public class FileStore implements FileStoreInterface {
                     TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
                 }
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 startWatching(path);
@@ -194,12 +195,14 @@ public class FileStore implements FileStoreInterface {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                Log.v(TAG, "Appending " + size + " tasks to "+ path);
                 try {
-                    Log.v(TAG, "Appending " + size + " tasks to "+ path);
                     TaskIo.writeToFile(Util.joinTasks(tasks, mEol), new File(path), true);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
                 }
+
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 return null;
             }

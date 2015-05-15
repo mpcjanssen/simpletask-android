@@ -65,6 +65,10 @@ public class Util {
         Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showToastLong(@NotNull Context cxt, int resid) {
+        Toast.makeText(cxt, resid, Toast.LENGTH_LONG).show();
+    }
+
     public static void showToastShort(@NotNull Context cxt, String msg) {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
     }

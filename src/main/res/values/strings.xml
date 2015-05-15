@@ -70,6 +70,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear_filter">Clear filter</string>
+    <string name="write_failed">Failed writing the file. Your changes were NOT saved. Note that Android above KitKat doesn\'t support writing to external SD Cards</string>
+
 
     <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag @Troy\nReview +Simpletask settings to remove this text @Phone</string>
 
