@@ -11,6 +11,13 @@ import nl.mpcjanssen.simpletask.task.Task;
 
 public class ContextComparator extends Ordering<Task> {
 
+    private final AlphabeticalStringComparator mStringComparator;
+
+    public ContextComparator (boolean caseSensitive) {
+        super();
+        this.mStringComparator = new AlphabeticalStringComparator(caseSensitive);
+    }
+
     @Override
     public int compare(@NotNull Task a, @NotNull Task b) {
         List<String> contextsA = a.getLists();
@@ -25,7 +32,7 @@ public class ContextComparator extends Ordering<Task> {
         } else {
             Collections.sort(contextsA);
             Collections.sort(contextsB);
-            return contextsA.get(0).compareToIgnoreCase(contextsB.get(0));
+            return mStringComparator.compare(contextsA.get(0),contextsB.get(0));
         }
     }
 }
