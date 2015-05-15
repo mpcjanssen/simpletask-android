@@ -875,7 +875,7 @@ public class Simpletask extends ThemedActivity implements
         }
         m_rightDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, names));
         m_rightDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-        m_leftDrawerList.setLongClickable(true);
+        m_rightDrawerList.setLongClickable(true);
         m_rightDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
