@@ -29,9 +29,9 @@ Example
 
 The following code will show only overdue tasks where tasks without a due date, will never be overdue.
 
-    if (due~=nil) {
+    if due~=nil then
          return os.time() > due;
-    }
+    end
     --- tasks with no due date are not overdue.
     return false;
 
