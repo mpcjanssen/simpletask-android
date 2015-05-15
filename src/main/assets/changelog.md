@@ -1,6 +1,18 @@
 ﻿Changelog
 =========
 
+5.4.0
+-----
+
+- Add support for todo://... to link to different todo files.
+- Show todo file path in the titlebar.
+- Updated back button behavior to switch to previous file if next file was openend via todo://... link.
+- When creating a widget pre-fill it with the current active application filter.
+- Observe case sensitive sorting setting in all sorts, parial fix for [#239](https://github.com/mpcjanssen/simpletask-android/issues/229).
+- Added Korean translation. (courtesy halcyonera)
+- Updated German translation. (courtesy twickr)
+- Fixed some issues with calendar reminder sync. (courtesy vojtechkral)
+
 5.3.2
 -----
 
