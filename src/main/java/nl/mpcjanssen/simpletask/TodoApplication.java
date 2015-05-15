@@ -41,6 +41,7 @@ import android.widget.EditText;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,6 +85,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED);
+        intentFilter.addAction(Constants.BROADCAST_FILE_WRITE_FAILED);
         intentFilter.addAction(Constants.BROADCAST_TASKCACHE_CHANGED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -96,10 +98,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
                         e.printStackTrace();
                     }
                 } else if (intent.getAction().equals(Constants.BROADCAST_TASKCACHE_CHANGED)) {
-                    getFileStore().saveTasksToFile(getTodoFileName(),getTaskCache(null));
+                    getFileStore().saveTasksToFile(getTodoFileName(), getTaskCache(null));
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     m_calSync.syncLater();
                     updateWidgets();
+                } else if (intent.getAction().equals(Constants.BROADCAST_FILE_WRITE_FAILED)) {
+                    Util.showToastLong(getApplicationContext(), R.string.write_failed);
                 }
             }
         };
@@ -311,7 +315,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         this.m_taskCache = new TaskCache(this);
         final FileStoreInterface store = getFileStore();
         try {
-            store.loadTasksFromFile(getTodoFileName(),m_taskCache);
+            store.loadTasksFromFile(getTodoFileName(), m_taskCache);
         } catch (IOException e) {
             e.printStackTrace();
             if (act!=null) {
