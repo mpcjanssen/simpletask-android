@@ -1191,7 +1191,7 @@ public class Simpletask extends ThemedActivity implements
             countVisbleTasks = 0;
             Log.v(TAG, "setFilteredTasks called: " + getTaskBag());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
-            visibleTasks = getTaskBag().getTasks(mFilter, sorts);
+            visibleTasks = getTaskBag().getTasks(mFilter, sorts, m_app.sortCaseSensitive());
             visibleLines.clear();
 
             String header = "";

@@ -16,7 +16,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 public class MultiComparator implements Comparator<Task> {
     private Ordering<Task> ordering;
 
-    public MultiComparator (@NotNull ArrayList<String> sorts) {
+    public MultiComparator (@NotNull ArrayList<String> sorts, boolean caseSensitve) {
         List<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
 
 
@@ -38,11 +38,11 @@ public class MultiComparator implements Comparator<Task> {
             if (sortType.equals("file_order")) {
                 comp = new FileOrderComparator();
             } else if (sortType.equals("by_context")) {
-                comp = new ContextComparator();
+                comp = new ContextComparator(caseSensitve);
             } else if (sortType.equals("by_project")) {
-                comp = new ProjectComparator();
+                comp = new ProjectComparator(caseSensitve);
             } else if (sortType.equals("alphabetical")) {
-                comp = new AlphabeticalComparator();
+                comp = new AlphabeticalComparator(caseSensitve);
             } else if (sortType.equals("by_prio")) {
                 comp = new PriorityComparator();
             } else if (sortType.equals("completed")) {

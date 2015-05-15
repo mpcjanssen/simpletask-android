@@ -9,6 +9,13 @@ import nl.mpcjanssen.simpletask.task.token.Token;
 
 public class AlphabeticalComparator extends Ordering<Task> {
 
+    private final AlphabeticalStringComparator mStringComparator;
+
+    public AlphabeticalComparator (boolean caseSensitive) {
+        super();
+        this.mStringComparator = new AlphabeticalStringComparator(caseSensitive);
+    }
+
     @Override
     public int compare(@Nullable Task a, @Nullable Task b) {
         if (a==null) {
@@ -17,6 +24,6 @@ public class AlphabeticalComparator extends Ordering<Task> {
         if (b==null) {
             b = new Task(0,"");
         }
-        return a.showParts(Token.TEXT).compareToIgnoreCase(b.showParts(Token.TEXT));
+        return mStringComparator.compare(a.showParts(Token.TEXT),b.showParts(Token.TEXT));
     }
 }

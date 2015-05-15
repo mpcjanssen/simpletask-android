@@ -226,8 +226,8 @@ public class TaskCache {
         modify(originalTasks,tasksToDefer,null,null);
     }
 
-    public ArrayList<Task> getTasks(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts) {
-        Collections.sort(mTasks,new MultiComparator(sorts));
+    public ArrayList<Task> getTasks(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts, boolean caseSensitive) {
+        Collections.sort(mTasks,new MultiComparator(sorts, caseSensitive));
         return filter.apply(mTasks);
     }
 

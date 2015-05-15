@@ -89,7 +89,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 visibleTasks.add(t);
             }
         }
-        MultiComparator comp = new MultiComparator(mFilter.getSort(application.getDefaultSorts()));
+        MultiComparator comp = new MultiComparator(mFilter.getSort(application.getDefaultSorts()), application.sortCaseSensitive());
         Collections.sort(visibleTasks, comp);
     }
 
