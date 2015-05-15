@@ -37,7 +37,7 @@ import nl.mpcjanssen.simpletask.TodoException;
 
 public class LinkParser {
     private static final Pattern LINK_PATTERN = Pattern
-            .compile("(http|https|todo)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
+            .compile("(http|https|todo)://[\\w\\-_./]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
     private static final LinkParser INSTANCE = new LinkParser();
 
     private LinkParser() {
