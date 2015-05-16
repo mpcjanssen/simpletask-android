@@ -203,7 +203,7 @@
         <Preference
             android:title="@string/donate_title"
             android:key="donate"
-            android:summary="Donate via Play Store">
+            android:summary="@string/donate_summary">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
@@ -211,7 +211,7 @@
         <Preference
             android:title="@string/donate_title"
             android:key="donated"
-            android:summary="Thanks for your donation">
+            android:summary="@string/donated_summary">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
