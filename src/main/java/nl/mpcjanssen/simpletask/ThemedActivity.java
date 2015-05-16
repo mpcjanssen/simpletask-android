@@ -6,7 +6,7 @@ import android.os.Bundle;
 abstract class ThemedActivity extends Activity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         TodoApplication app = (TodoApplication) getApplication();
         setTheme(app.getActiveTheme());
         setTheme(app.getActiveFont());

@@ -95,6 +95,7 @@ public class Simpletask extends ThemedActivity implements
 
     final static String TAG = Simpletask.class.getSimpleName();
 
+    private final static int REQUEST_SHARE_PARTS = 1;
     private final static int REQUEST_PREFERENCES = 2;
     
     private final static String ACTION_LINK = "link";
@@ -103,6 +104,16 @@ public class Simpletask extends ThemedActivity implements
 
     public final static Uri URI_BASE = Uri.fromParts("simpletask", "", null);
     public final static Uri URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search");
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_SHARE_PARTS:
+                shareTodoList(resultCode);
+                break;
+        }
+    }
 
     Menu options_menu;
     TodoApplication m_app;
@@ -526,12 +537,12 @@ public class Simpletask extends ThemedActivity implements
         return m_adapter.getItem(pos);
     }
 
-    private void shareTodoList() {
+    private void shareTodoList(int format) {
         StringBuilder text = new StringBuilder();
         for (int i = 0; i < m_adapter.getCount(); i++) {
             Task task = m_adapter.getItem(i);
             if (task != null) {
-                text.append(task.inFileFormat()).append("\n");
+                text.append(task.showParts(format)).append("\n");
             }
         }
         shareText(text.toString());
@@ -690,7 +701,7 @@ public class Simpletask extends ThemedActivity implements
                 startFilterActivity();
                 break;
             case R.id.share:
-                shareTodoList();
+                startActivityForResult(new Intent(getBaseContext(), TaskDisplayActivity.class), REQUEST_SHARE_PARTS);
                 break;
             case R.id.help:
                 showHelp();
