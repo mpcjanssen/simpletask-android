@@ -3,6 +3,8 @@ package nl.mpcjanssen.simpletask.task.token;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 /**
  * Created Mark Janssen
  */
