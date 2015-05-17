@@ -10,12 +10,7 @@
 package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
+import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -105,16 +100,6 @@ public class Simpletask extends ThemedActivity implements
     public final static Uri URI_BASE = Uri.fromParts("simpletask", "", null);
     public final static Uri URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search");
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_SHARE_PARTS:
-                shareTodoList(resultCode);
-                break;
-        }
-    }
-
     Menu options_menu;
     TodoApplication m_app;
     ActiveFilter mFilter;
@@ -130,6 +115,19 @@ public class Simpletask extends ThemedActivity implements
     private ActionBarDrawerToggle m_drawerToggle;
     private Bundle m_savedInstanceState;
     private ProgressDialog m_sync_dialog;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_SHARE_PARTS:
+                if (resultCode!= Activity.RESULT_CANCELED) {
+                    int flags = resultCode - Activity.RESULT_FIRST_USER;
+                    shareTodoList(flags);
+                }
+                break;
+        }
+    }
 
     private void showHelp() {
         Intent i = new Intent(this, HelpScreen.class);
