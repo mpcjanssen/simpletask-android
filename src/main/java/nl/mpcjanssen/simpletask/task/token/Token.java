@@ -20,7 +20,7 @@ abstract public class Token {
     public static final int THRESHOLD_DATE = 0x1 << 8;
     public static final int DUE_DATE = 0x1 << 9;
     public static final int HIDDEN = 0x1 << 10;
-    public static final int SHOW_ALL = ~0x0;
+    public static final int SHOW_ALL = WHITE_SPACE + LIST + TTAG + COMPLETED + COMPLETED_DATE + CREATION_DATE + TEXT + PRIO + THRESHOLD_DATE + DUE_DATE + HIDDEN;
     public int type;
     public String value;
 

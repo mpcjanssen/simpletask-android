@@ -30,9 +30,8 @@ public class TaskDisplayActivity extends ThemedActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_filter_action) {
-            setResult(Token.SHOW_ALL);
+            setResult(Activity.RESULT_FIRST_USER + Token.SHOW_ALL);
             finish();
             return true;
         }
