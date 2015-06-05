@@ -33,6 +33,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -364,9 +365,20 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 return android.R.style.Theme_Holo_Light_DarkActionBar;
             case "android.R.style.Theme_Holo_Light":
                 return android.R.style.Theme_Holo_Light;
-            default:
-                return android.R.style.Theme_Holo_Light_DarkActionBar;
         }
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if ( currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+            switch (theme) {
+                case "android.R.style.Theme_Material":
+                    return android.R.style.Theme_Material;
+                case "android.R.style.Theme_Material_Light_DarkActionBar":
+                    return android.R.style.Theme_Material_Light_DarkActionBar;
+                case "android.R.style.Theme_Material_Light":
+                    return android.R.style.Theme_Material_Light;
+            }
+
+        }
+        return android.R.style.Theme_Holo_Light_DarkActionBar;
     }
 
     public void setActionBarStyle(@NotNull Window window) {
