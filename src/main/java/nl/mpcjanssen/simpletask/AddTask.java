@@ -147,7 +147,7 @@ public class AddTask extends ThemedActivity {
 
     private void showHelp() {
         Intent i = new Intent(this, HelpScreen.class);
-        i.putExtra(Constants.EXTRA_HELP_PAGE,Constants.HELP_ADD_TASK);
+        i.putExtra(Constants.EXTRA_HELP_PAGE,getText(R.string.help_add_task));
         startActivity(i);
     }
 

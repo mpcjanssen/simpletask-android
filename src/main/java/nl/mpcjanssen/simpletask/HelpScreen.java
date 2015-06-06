@@ -58,7 +58,7 @@ public class HelpScreen extends Activity {
         super.onCreate(savedInstanceState);
         TodoApplication m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
-        String page = Constants.HELP_INDEX;
+        String page = getText(R.string.help_index).toString();
         Intent i = getIntent();
         if (i.hasExtra(Constants.EXTRA_HELP_PAGE)) {
             page = i.getStringExtra(Constants.EXTRA_HELP_PAGE);
@@ -136,7 +136,7 @@ public class HelpScreen extends Activity {
             Log.e(TAG,""+e);
         }
         history.push(name);
-        wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8","file:///android_asset/index.md");
+        wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8","file:///android_asset/index" + getText(R.string.help_translation) + ".md");
     }
 
 
@@ -145,22 +145,22 @@ public class HelpScreen extends Activity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.menu_simpletask:
-                showMarkdownAsset(wvHelp,this,"index.md");
+                showMarkdownAsset(wvHelp,this,"index" + getText(R.string.help_translation) + ".md");
                 return true;
             case R.id.menu_changelog:
                 showMarkdownAsset(wvHelp, this, "changelog.md");
                 return true;
             case R.id.menu_myn:
-                showMarkdownAsset(wvHelp, this, "MYN.md");
+                showMarkdownAsset(wvHelp, this, "MYN" + getText(R.string.help_translation) + ".md");
                 return true;
             case R.id.menu_script:
-                showMarkdownAsset(wvHelp, this, "script.md");
+                showMarkdownAsset(wvHelp, this, "script" + getText(R.string.help_translation) + ".md");
                 return true;
             case R.id.menu_intents:
-                showMarkdownAsset(wvHelp, this, "intents.md");
+                showMarkdownAsset(wvHelp, this, "intents" + getText(R.string.help_translation) + ".md");
                 return true;
             case R.id.menu_ui:
-                showMarkdownAsset(wvHelp, this, "ui.md");
+                showMarkdownAsset(wvHelp, this, "ui" + getText(R.string.help_translation) + ".md");
                 return true;
             case R.id.menu_donate:
                 loadDesktop(wvHelp, "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");

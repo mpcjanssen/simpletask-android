@@ -226,5 +226,8 @@ Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo d
 
 <string name="hello_world">Hola mundo!</string>
 <string name="action_settings">Ajustes</string>
+<string name="help_translation">.es</string>
+    <string name="help_index">index.es.md</string>
+    <string name="help_add_task">addtask.es.md</string>
         </resources>
 
