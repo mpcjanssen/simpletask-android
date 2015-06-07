@@ -276,6 +276,11 @@ public class TodoApplication extends Application implements SharedPreferences.On
         return m_prefs.getBoolean(getString(R.string.use_rhino),false);
     }
 
+    public boolean showTodoPath() {
+        return m_prefs.getBoolean(getString(R.string.show_todo_path),true);
+    }
+
+
     public boolean backClearsFilter() {
         return m_prefs.getBoolean(getString(R.string.back_clears_filter),false);
     }
@@ -300,6 +305,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
             return false;
         }
     }
+
+
 
     public void setWordWrap(boolean bool) {
         m_prefs.edit()
