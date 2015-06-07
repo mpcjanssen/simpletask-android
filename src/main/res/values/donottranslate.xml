@@ -94,6 +94,12 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>large</item>
     </string-array>
 
+
+    <!-- Unlocalized Help names -->
+    <string name="help_add_task">addtask</string>
+
+
+
     <!-- Preference keys -->
     <string name="sort_complete_last_pref_key">todotxtsortcompletelast</string>
     <string name="auto_archive_pref_key">todotxtautoarchive</string>
@@ -139,3 +145,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="back_clears_filter">back_clears_filter</string>
     <string name="keep_prio">todotxt_completion</string>
 </resources>
+
+

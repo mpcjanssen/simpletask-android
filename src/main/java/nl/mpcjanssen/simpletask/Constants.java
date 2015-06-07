@@ -58,7 +58,7 @@ public class Constants {
     public static final int STORE_SDCARD = 0x1;
 
     // Help pages
-    public static final String HELP_INDEX = "index.md";
-    public static final String HELP_ADD_TASK = "addtask.md";
+    public static final String HELP_INDEX = "index.en.md";
+    public static final String HELP_ADD_TASK = "addtask.en.md";
 
 }
