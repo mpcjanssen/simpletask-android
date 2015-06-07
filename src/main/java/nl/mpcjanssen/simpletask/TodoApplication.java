@@ -25,10 +25,7 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Application;
-import android.app.Dialog;
+import android.app.*;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
@@ -66,6 +63,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     private BroadcastReceiver m_broadcastReceiver;
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
+    private int m_Theme = -1;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -363,8 +361,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         }
     }
 
-    public int getActiveTheme() {
-        String theme =  getPrefs().getString(getString(R.string.theme_pref_key), "");
+    private int themeStringToId (String theme) {
         switch (theme) {
             case "android.R.style.Theme_Holo":
                 return android.R.style.Theme_Holo;
@@ -386,6 +383,19 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
         }
         return android.R.style.Theme_Holo_Light_DarkActionBar;
+
+    }
+
+    public void reloadTheme() {
+        m_Theme = -1;
+    }
+    public int getActiveTheme() {
+        if (m_Theme != -1 ) {
+            return m_Theme;
+        }
+        m_Theme = themeStringToId(getPrefs().getString(getString(R.string.theme_pref_key), ""));
+        return m_Theme;
+
     }
 
     public void setActionBarStyle(@NotNull Window window) {
@@ -397,10 +407,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public boolean isDarkTheme() {
         switch (getActiveTheme()) {
             case android.R.style.Theme_Holo:
+            case android.R.style.Theme_Material:
                 return true;
-            case android.R.style.Theme_Holo_Light_DarkActionBar:
-            case android.R.style.Theme_Holo_Light:
-                return false;
             default:
                 return false;
         }
@@ -410,9 +418,9 @@ public class TodoApplication extends Application implements SharedPreferences.On
         switch (getActiveTheme()) {
             case android.R.style.Theme_Holo:
             case android.R.style.Theme_Holo_Light_DarkActionBar:
+            case android.R.style.Theme_Material:
+            case android.R.style.Theme_Material_Light_DarkActionBar:
                 return true;
-            case android.R.style.Theme_Holo_Light:
-                return false;
             default:
                 return false;
         }

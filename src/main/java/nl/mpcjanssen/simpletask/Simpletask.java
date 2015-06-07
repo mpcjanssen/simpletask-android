@@ -86,7 +86,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 
 public class Simpletask extends ThemedActivity implements
-                SharedPreferences.OnSharedPreferenceChangeListener, AdapterView.OnItemClickListener {
+                AdapterView.OnItemClickListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
 
@@ -126,8 +126,20 @@ public class Simpletask extends ThemedActivity implements
                     shareTodoList(flags);
                 }
                 break;
+            case REQUEST_PREFERENCES:
+                if (resultCode==Preferences.RESULT_RECREATE_ACTIVITY) {
+                    Intent i = new Intent(getApplicationContext(), Simpletask.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    finish();
+                    m_app.reloadTheme();
+                    m_app.startActivity(i);
+                }
+                break;
         }
     }
+
+
 
     private void showHelp() {
         Intent i = new Intent(this, HelpScreen.class);
@@ -222,11 +234,9 @@ public class Simpletask extends ThemedActivity implements
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         m_savedInstanceState = savedInstanceState;
-
         super.onCreate(savedInstanceState);
 
-        m_app.prefsChangeListener(this);
-
+        super.onCreate(savedInstanceState);
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT);
@@ -444,14 +454,6 @@ public class Simpletask extends ThemedActivity implements
     protected void onDestroy() {
         super.onDestroy();
         localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // just update all
-        if ("theme".equals(key) || "fontsize".equals(key)) {
-            this.recreate();
-        }
     }
 
     @Override
