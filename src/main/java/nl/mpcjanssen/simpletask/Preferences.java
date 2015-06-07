@@ -24,10 +24,15 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -41,12 +46,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
     final static String TAG = Preferences.class.getSimpleName();
 	public static final int RESULT_LOGOUT = RESULT_FIRST_USER + 1;
 	public static final int RESULT_ARCHIVE = RESULT_FIRST_USER + 2;
+    public static final int RESULT_RECREATE_ACTIVITY = RESULT_FIRST_USER + 3;
     private LocalBroadcastManager localBroadcastManager;
 
 	private void broadcastIntentAndClose(String intent, int result) {
@@ -74,20 +84,20 @@ public class Preferences extends ThemedActivity {
 
 	public static class TodoTxtPrefFragment extends PreferenceFragment implements
     SharedPreferences.OnSharedPreferenceChangeListener {
-		@Override
-		public void onCreate(final Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.preferences);
-			PackageInfo packageInfo;
-			final Preference versionPref = findPreference("app_version");
-			try {
-				packageInfo = getActivity().getPackageManager().getPackageInfo(
-						getActivity().getPackageName(), 0);
-				versionPref.setTitle("Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")");
-			} catch (NameNotFoundException e) {
-				e.printStackTrace();
-			}
-            m_app = (TodoApplication)getActivity().getApplication();
+        @Override
+        public void onCreate(final Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences);
+            PackageInfo packageInfo;
+            final Preference versionPref = findPreference("app_version");
+            try {
+                packageInfo = getActivity().getPackageManager().getPackageInfo(
+                        getActivity().getPackageName(), 0);
+                versionPref.setTitle("Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")");
+            } catch (NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            m_app = (TodoApplication) getActivity().getApplication();
             if (m_app.storeType() != Constants.STORE_DROPBOX) {
                 PreferenceCategory dropboxCategory = (PreferenceCategory) findPreference(getString(R.string.dropbox_cat_key));
                 getPreferenceScreen().removePreference(dropboxCategory);
@@ -109,34 +119,33 @@ public class Preferences extends ThemedActivity {
         }
 
         private void sendLog() {
-            StringBuilder log=new StringBuilder();
+            StringBuilder log = new StringBuilder();
             try {
                 Process process = Runtime.getRuntime().exec("logcat -d -v long");
                 BufferedReader bufferedReader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));
 
-                String line ;
+                String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     log.append(line).append("\n");
                 }
-            } 
-            catch (IOException e) {
+            } catch (IOException e) {
                 log.append(e.toString());
             }
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                     "Simpletask Logcat");
-                // Create a cache file to pass in EXTRA_STREAM
-                try {
-                    Util.createCachedFile(this.getActivity(),
-                            "logcat.txt", log.toString());
-                    Uri fileUri  = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
-                            + "logcat.txt");
-                    shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri );
-                } catch (Exception e) {
-                    Log.w(TAG, "Failed to create file for sharing");
-                }
+            // Create a cache file to pass in EXTRA_STREAM
+            try {
+                Util.createCachedFile(this.getActivity(),
+                        "logcat.txt", log.toString());
+                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
+                        + "logcat.txt");
+                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri);
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to create file for sharing");
+            }
             startActivity(Intent.createChooser(shareIntent, "Share log"));
         }
 
@@ -156,10 +165,10 @@ public class Preferences extends ThemedActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            // just update all
+            // require restart with UI changes
             if ("theme".equals(key) || "fontsize".equals(key)) {
-                ThemedActivity act = (ThemedActivity)getActivity();
-                act.recreate();
+                getActivity().setResult(RESULT_RECREATE_ACTIVITY);
+                getActivity().finish();
             }
         }
 
