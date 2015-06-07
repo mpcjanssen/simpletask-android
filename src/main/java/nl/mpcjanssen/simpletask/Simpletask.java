@@ -1195,7 +1195,11 @@ public class Simpletask extends ThemedActivity implements
         }
 
         void setFilteredTasks() {
-            setTitle(m_app.getTodoFileName().replaceAll("([^/])[^/]*/","$1/"));
+            if(m_app.showTodoPath()) {
+                setTitle(m_app.getTodoFileName().replaceAll("([^/])[^/]*/", "$1/"));
+            } else {
+                setTitle(R.string.app_label);
+            }
             ArrayList<Task> visibleTasks;
             countVisbleTasks = 0;
             Log.v(TAG, "setFilteredTasks called: " + getTaskBag());

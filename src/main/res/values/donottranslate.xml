@@ -142,6 +142,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_show_calendarview">ui_show_calendarview</string>
     <string name="ui_sort_case_sensitive">ui_sort_case_sensitive</string>
     <string name="use_rhino">use_rhino</string>
+    <string name="show_todo_path">show_todo_path</string>
     <string name="back_clears_filter">back_clears_filter</string>
     <string name="keep_prio">todotxt_completion</string>
 </resources>
