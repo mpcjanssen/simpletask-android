@@ -356,7 +356,10 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="help_translation"></string>
-    <string name="help_index"></string>
-    <string name="help_add_task"></string>
+
+    <!-- Default Help localisation -->
+    <string name="help_locale">en</string>
+
+
+
 </resources>
