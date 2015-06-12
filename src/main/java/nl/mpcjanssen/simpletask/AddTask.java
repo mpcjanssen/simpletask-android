@@ -34,6 +34,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
@@ -58,9 +59,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -207,7 +214,7 @@ public class AddTask extends ThemedActivity {
     private void noteToSelf(@NotNull Intent intent) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            Log.v(TAG,"Voice note added.");
+            Log.v(TAG, "Voice note added.");
         }
         addBackgroundTask(task);
     }
@@ -278,7 +285,20 @@ public class AddTask extends ThemedActivity {
             return;
         } else if (Intent.ACTION_SEND.equals(action)) {
             Log.d(TAG, "Share");
-            if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+            if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+                Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
+                try {
+                    File sharedFile = new File(uri.getPath());
+                    share_text =  Files.toString(sharedFile, Charsets.UTF_8);
+                } catch (FileNotFoundException e) {
+                    share_text  = "";
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    share_text  = "";
+                    e.printStackTrace();
+                }
+
+            } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
                 share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
             } else {
                 share_text = "";
