@@ -364,6 +364,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- Default Help localisation -->
     <string name="help_locale">en</string>
 
+    <string name="task_action">Action</string>
+
 
 
 </resources>

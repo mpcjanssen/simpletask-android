@@ -1098,6 +1098,7 @@ public class Simpletask extends ThemedActivity implements
             getListView().setItemChecked(position, !getListView().isItemChecked(position));
         } else {
             AlertDialog.Builder build = new AlertDialog.Builder(this);
+            build.setTitle(R.string.task_action);
             build.setItems(linksArray, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
