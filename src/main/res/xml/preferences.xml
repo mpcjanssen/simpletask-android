@@ -109,7 +109,7 @@
             android:summary="@string/show_confirmation_dialogs_summary"
             android:title="@string/show_confirmation_dialogs_title" />
         <CheckBoxPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="@string/show_todo_path"
                 android:summary="@string/show_todo_path_summary"
                 android:title="@string/show_todo_path_title" />

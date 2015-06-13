@@ -275,7 +275,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     public boolean showTodoPath() {
-        return m_prefs.getBoolean(getString(R.string.show_todo_path),true);
+        return m_prefs.getBoolean(getString(R.string.show_todo_path),false);
     }
 
 
