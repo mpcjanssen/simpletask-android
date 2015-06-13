@@ -5,13 +5,19 @@
 -----
 
 - Add support for todo://... to link to different todo files.
-- Show todo file path in the titlebar.
+- Show todo file path in the titlebar (enable in settings).
 - Updated back button behavior to switch to previous file if next file was openend via todo://... link.
 - When creating a widget pre-fill it with the current active application filter.
-- Observe case sensitive sorting setting in all sorts, parial fix for [#239](https://github.com/mpcjanssen/simpletask-android/issues/229).
+- Observe case sensitive sorting setting in all sorts, partial fix for [#239](https://github.com/mpcjanssen/simpletask-android/issues/229).
+- Added Spanish translation of help. (courtesy Martin Laclaustra)
 - Added Korean translation. (courtesy halcyonera)
 - Updated German translation. (courtesy twickr)
 - Fixed some issues with calendar reminder sync. (courtesy vojtechkral)
+- Support for receiving stream sharing (for example a text file shared from Dropbox).
+- Added Material theme for Lollipop devices.
+- Fixed issue with appending to done.txt not adding a new line in the beginning.
+- Observe split action bar setting in all activities.
+- Notes with an action (email, phone-number or link) will trigger a popup when clicked instead of adding a menu item. This makes launching actions easier. Long click always selects.
 
 5.3.2
 -----
