@@ -341,6 +341,9 @@ public class ActiveFilter {
             Globals globals = JsePlatform.standardGlobals();
 
             for (Task t : tasks) {
+                if ("".equals(t.inFileFormat().trim())) {
+                    continue;
+                }
                 if (t.isCompleted() && this.getHideCompleted()) {
                     continue;
                 }
