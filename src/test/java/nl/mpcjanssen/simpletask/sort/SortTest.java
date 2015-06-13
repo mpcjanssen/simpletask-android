@@ -15,7 +15,7 @@ public class SortTest extends TestCase {
         tasks.add(t1);
         tasks.add(t2);
         assertSame(t1, tasks.get(0));
-        Collections.sort(tasks, new AlphabeticalComparator());
+        Collections.sort(tasks, new AlphabeticalComparator(true));
         assertSame(t2, tasks.get(0));
     }
 
@@ -26,7 +26,7 @@ public class SortTest extends TestCase {
         tasks.add(t1);
         tasks.add(t2);
         assertSame(t1, tasks.get(0));
-        Collections.sort(tasks, new AlphabeticalComparator());
+        Collections.sort(tasks, new AlphabeticalComparator(true));
         assertSame(t2, tasks.get(0));
     }
 }
