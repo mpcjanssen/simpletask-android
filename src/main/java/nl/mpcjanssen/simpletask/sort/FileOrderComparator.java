@@ -10,7 +10,9 @@ public class FileOrderComparator extends Ordering<Task> {
 
     @Override
     public int compare(@NotNull Task a, @NotNull Task b) {
-        if (a.getId() < b.getId()) {
+        if (a.getId() == b.getId()) {
+            return 0;
+        } else  if (a.getId() < b.getId()) {
             return -1;
         } else {
             return 1;
