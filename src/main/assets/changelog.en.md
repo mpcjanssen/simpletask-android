@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.4.1
+-----
+
+- Don't display empty lines in todo.txt as empty tasks.
+
 5.4.0
 -----
 
