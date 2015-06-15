@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.4.2
+-----
+
+- Possible fix for crash with sorting.
+
 5.4.1
 -----
 
