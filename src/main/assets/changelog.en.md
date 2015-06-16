@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.4.3
+-----
+
+- Don't save the sorted todo.txt. Save in original order.
+
 5.4.2
 -----
 
