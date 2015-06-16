@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.common.collect.Ordering;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -227,8 +228,9 @@ public class TaskCache {
     }
 
     public ArrayList<Task> getTasks(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts, boolean caseSensitive) {
-        Collections.sort(mTasks,new MultiComparator(sorts, caseSensitive));
-        return filter.apply(mTasks);
+
+        List<Task> orderedTasks = Ordering.from(new MultiComparator(sorts, caseSensitive)).sortedCopy(mTasks);
+        return filter.apply(orderedTasks);
     }
 
     public List<Task> getTasksToUpdate() {
