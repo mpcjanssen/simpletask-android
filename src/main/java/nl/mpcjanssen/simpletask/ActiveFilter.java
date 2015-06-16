@@ -11,11 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.TimeZone;
+import java.util.*;
 
 import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
 import nl.mpcjanssen.simpletask.task.ByProjectFilter;
@@ -329,7 +325,7 @@ public class ActiveFilter {
     }
 
     @NotNull
-    public ArrayList<Task> apply(@NotNull ArrayList<Task> tasks) {
+    public ArrayList<Task> apply(@NotNull List<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
 
