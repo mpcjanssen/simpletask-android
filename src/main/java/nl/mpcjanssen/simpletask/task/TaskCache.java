@@ -58,7 +58,6 @@ public class TaskCache {
     private ArrayList<String> mLists = null;
     @org.jetbrains.annotations.Nullable
     private ArrayList<String> mTags = null;
-    private long mMaxId = 0;
 
     public TaskCache(   Context context ) {
         this.mCtx = context;
@@ -190,8 +189,7 @@ public class TaskCache {
         if (addedTasks!=null) {
             for (Task t : addedTasks) {
                 // Update ID of task so file order sorting works properly (#119)
-                mMaxId++;
-                t.setId(mMaxId);
+                t.setId(mTasks.size());
                 mTasks.add(t);
             }
         }
