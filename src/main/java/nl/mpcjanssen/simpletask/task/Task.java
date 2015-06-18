@@ -702,6 +702,10 @@ public class Task implements Serializable, Comparable<Task> {
 
     @Nullable
     public String getCreateDate() {
+        // Handle invalid date as empty
+        if (!DateTime.isParseable(mCreateDate)) {
+            return null;
+        }
         return mCreateDate;
     }
 
