@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.4.5
+-----
+
+- Don't crash when sorting on create date and the file has an invalid create date.
+
 5.4.4
 -----
 
