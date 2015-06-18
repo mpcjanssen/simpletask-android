@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+5.4.4
+-----
+
+- Fix broken File Order sort [#248](https://github.com/mpcjanssen/simpletask-android/issues/248).
+- Fix possible NPE while handling threshold dates.
+
+
 5.4.3
 -----
 
