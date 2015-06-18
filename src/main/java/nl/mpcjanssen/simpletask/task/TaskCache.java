@@ -52,7 +52,7 @@ public class TaskCache {
     private final Context mCtx;
     @org.jetbrains.annotations.Nullable
     private ArrayList<Task> mTasks = new ArrayList<Task>();
-    private ArrayList<Task> mTasksLoading;
+    private ArrayList<Task> mTasksLoading = new ArrayList<Task>();
     private List<Task> mTasksToUpdate;
     @org.jetbrains.annotations.Nullable
     private ArrayList<String> mLists = null;
