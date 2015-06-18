@@ -27,24 +27,15 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
 import com.google.common.collect.Ordering;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
-
 import hirondelle.date4j.DateTime;
-
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 
 /**
@@ -80,7 +71,7 @@ public class TaskCache {
 
     public void load (Task t) {
         if (t.getId()==-1) {
-            t.setId(size());
+            t.setId(mTasksLoading.size());
         }
         mTasksLoading.add(t);
     }
