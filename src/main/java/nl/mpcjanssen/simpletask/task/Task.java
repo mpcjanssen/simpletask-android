@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -151,7 +150,7 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     @Nullable
-    public DateTime stringToDateTime(String dateString) {
+    public DateTime stringToDateTime(@NotNull String dateString) {
         DateTime date;
         if (DateTime.isParseable(dateString)) {
             date = new DateTime(dateString);
@@ -163,7 +162,11 @@ public class Task implements Serializable, Comparable<Task> {
 
     @Nullable
     public DateTime getThresholdDate() {
-        return stringToDateTime(mThresholdate);
+        if (mThresholdate == null) {
+            return null;
+        } else {
+            return stringToDateTime(mThresholdate);
+        }
     }
 
     public void setThresholdDate(@NotNull DateTime thresholdDate) {
@@ -386,12 +389,12 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     public boolean inFuture() {
-        if (this.getThresholdDate() == null) {
+        DateTime tDate = this.getThresholdDate();
+        if (tDate == null) {
             return false;
         } else {
-            DateTime thresholdDate = this.getThresholdDate();
             DateTime now = DateTime.today(TimeZone.getDefault());
-            return thresholdDate.gt(now);
+            return tDate.gt(now);
         }
     }
 
@@ -472,7 +475,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferThresholdDate(@NotNull String deferString, String deferFromDate) {
+    public void deferThresholdDate(@NotNull String deferString, @NotNull String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setThresholdDate(deferString);
             return;
@@ -494,7 +497,7 @@ public class Task implements Serializable, Comparable<Task> {
         }
     }
 
-    public void deferDueDate(@NotNull String deferString, String deferFromDate) {
+    public void deferDueDate(@NotNull String deferString, @NotNull String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setDueDate(deferString);
             return;
@@ -678,7 +681,7 @@ public class Task implements Serializable, Comparable<Task> {
         Collections.sort(mTags);
     }
 
-    private String calculateRelativeAge(Context ctx, String date) {
+    private String calculateRelativeAge(Context ctx, @NotNull String date) {
         String result;
         if (!DateTime.isParseable(date)) {
             result = date;

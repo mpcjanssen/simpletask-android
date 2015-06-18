@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.task;
 
+import hirondelle.date4j.DateTime;
 import junit.framework.TestCase;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
@@ -29,5 +30,11 @@ public class BugsTest extends TestCase {
         Task t = new Task(0,"2012-01-01 @list test");
         assertEquals("test",t.showParts(~Token.LIST & ~Token.CREATION_DATE).trim());
         
+    }
+
+    public void testBugAnr() {
+        Task t = new Task(0,"2012-01-01 @list test");
+        DateTime.isParseable(null);
+        assertEquals(null, t.stringToDateTime(null));
     }
 }
