@@ -1,4 +1,4 @@
 README
 ======
 
-See [here](./src/main/assets/index.md)
+See [here](./src/main/assets/index.en.md)
