@@ -1,6 +1,6 @@
 Simpletask
 ==========
-(See in [English](./index.md). Ver en [Inglés](./index.md).
+(See in [English](./index.en.md)). Ver en [Inglés](./index.en.md).
 
 [Simpletask](https://github.com/mpcjanssen/simpletask-android) está basado en el brillante [todo.txt](http://todotxt.com) (ParaHacer.txt) de [Gina Trapani](http://ginatrapani.org/). El objetivo de la aplicación es proporcionar una herramienta para utilizar GTD (Get Things Done, "Organízate con eficacia" sin proporcionar una cantidad agobiante de opciones. Pese a que Simpletask puede ser personalizado con una cantidad considerable de Ajustes, los predeterminados tendrían que ser adecuados y no requerir ningún cambio.
 
