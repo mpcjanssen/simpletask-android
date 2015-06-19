@@ -416,6 +416,9 @@ public class Simpletask extends ThemedActivity implements
 
     private void updateFilterBar() {
         ListView lv = getListView();
+        if (lv==null) {
+            return;
+        }
         int index = lv.getFirstVisiblePosition();
         View v = lv.getChildAt(0);
         int top = (v == null) ? 0 : v.getTop();
