@@ -58,6 +58,7 @@ public class TaskCache {
     private ArrayList<String> mLists = null;
     @org.jetbrains.annotations.Nullable
     private ArrayList<String> mTags = null;
+    private boolean mIsLoading;
 
     public TaskCache(   Context context ) {
         this.mCtx = context;
@@ -65,6 +66,7 @@ public class TaskCache {
     }
 
     public void startLoading () {
+        mIsLoading = true;
         mTasksLoading = new ArrayList<Task>();
     }
 
@@ -78,6 +80,7 @@ public class TaskCache {
     public void endLoading () {
         mTags = null;
         mLists = null;
+        mIsLoading = false;
         mTasks = mTasksLoading;
     }
 
@@ -181,11 +184,21 @@ public class TaskCache {
                 t.setPriority(Priority.NONE);
             }
         }
-        modify(originalStrings, tasks, recurredTasks,null);
+        modify(originalStrings, tasks, recurredTasks, null);
     }
 
     public void modify(List<String> originalTasks, List<Task> updatedTasks, List<Task> addedTasks, List<Task> deletedTasks) {
         // Updated tasks are already reflected in cache as they are passed by reference
+
+
+        // Don't blow away the tasks if I am modifying during load.
+        while (mIsLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         if (addedTasks!=null) {
             for (Task t : addedTasks) {
                 // Update ID of task so file order sorting works properly (#119)
