@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.4.6
+-----
+
+- Fix file sort for newly created task, should really fix [#248](https://github.com/mpcjanssen/simpletask-android/issues/248).
+
 5.4.5
 -----
 
