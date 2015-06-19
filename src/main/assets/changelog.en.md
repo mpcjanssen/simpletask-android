@@ -4,6 +4,7 @@
 5.4.6
 -----
 
+- Fix NPE reported through play in updateFilterBar().
 - Don't write to todo file if it is still loading. Fixes [#251](https://github.com/mpcjanssen/simpletask-android/issues/251).
 - Fix file sort for newly created task, should really fix [#248](https://github.com/mpcjanssen/simpletask-android/issues/248).
 
