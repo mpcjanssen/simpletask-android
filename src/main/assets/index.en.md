@@ -1,10 +1,10 @@
 Simpletask
 ==========
-(See in [Spanish](./index.es.md). Ver en [Español](./index.es.md).
+(See in [Spanish](./index.es.md)). Ver en [Español](./index.es.md).
 
 [Simpletask](https://github.com/mpcjanssen/simpletask-android) is based on the brilliant [todo.txt](http://todotxt.com) by [Gina Trapani](http://ginatrapani.org/). The goal of the application is to provide a tool to do GTD without providing an overwhelming amount of options. Even though Simpletask can be customised by a fairly large amount of settings, the defaults should be sane and require no change.
 
-[Simpletask](http://mpcjanssen.nl/doc/simpletask/) can be used as a very simple todo list manager or as a more complex action manager for GTD or [Manage Your Now](./MYN.md).
+[Simpletask](https://github.com/mpcjanssen/simpletask-android) can be used as a very simple todo list manager or as a more complex action manager for GTD or [Manage Your Now](./MYN.en.md).
 
 Extensions
 ----------
@@ -27,10 +27,10 @@ If you want to log an issue or feature request for [Simpletask](https://github.c
 
 Check the menu for more help sections or click below.
 
-- [User Interface](./ui.md) Help on the user interface.
-- [Changelog](./changelog.md)
-- [Lists and Tags](./listsandtags.md) Why does Simpletask use lists and Tags instead of the Contexts and Projects from todo.txt?
-- [Defined intents](./intents.md) Intents that can be used for automating Simpletask
-- [Using Simpletask for 1MTD/MYN](./MYN.md)
-- [Filtering with Lua](./script.md)
+- [User Interface](./ui.en.md) Help on the user interface.
+- [Changelog](./changelog.en.md)
+- [Lists and Tags](./listsandtags.en.md) Why does Simpletask use lists and Tags instead of the Contexts and Projects from todo.txt?
+- [Defined intents](./intents.en.md) Intents that can be used for automating Simpletask
+- [Using Simpletask for 1MTD/MYN](./MYN.en.md)
+- [Filtering with Lua](./script.en.md)
 
