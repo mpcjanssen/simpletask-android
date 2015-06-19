@@ -10,36 +10,25 @@ import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxFile;
-import com.dropbox.sync.android.DbxFileInfo;
-import com.dropbox.sync.android.DbxFileStatus;
-import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxSyncStatus;
-import com.google.common.io.CharStreams;
-
-import com.google.common.io.LineProcessor;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskCache;
-import nl.mpcjanssen.simpletask.util.TaskIo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.dropbox.sync.android.*;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TaskCache;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * FileStore implementation backed by Dropbox
@@ -113,6 +102,7 @@ public class FileStore implements FileStoreInterface {
                 Log.v(TAG, "Loading file in background");
                 try {
                     LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                    taskCache.startLoading();
                     final DbxFileSystem fs = getDbxFS();
                     if (fs==null) {
                         return null;
@@ -141,7 +131,6 @@ public class FileStore implements FileStoreInterface {
                     openFile.update();
                     FileInputStream stream = openFile.getReadStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-                    taskCache.startLoading();
                     int i = 0;
                     String line;
                     while ((line =  reader.readLine())!=null) {
