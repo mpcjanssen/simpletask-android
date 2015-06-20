@@ -85,7 +85,7 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 
-public class Simpletask extends ThemedActivity implements
+public class Simpletask extends ThemedListActivity implements
                 AdapterView.OnItemClickListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
@@ -190,10 +190,6 @@ public class Simpletask extends ThemedActivity implements
             result.add(t.inFileFormat());
         }
         return Util.join(result, "\n");
-    }
-
-    private ListView getListView() {
-        return (ListView)this.findViewById(R.id.list);
     }
 
     private void selectAllTasks() {
