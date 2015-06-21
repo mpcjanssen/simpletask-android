@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.4.7
+-----
+
+- Fix issue with crash in landscape mode if `landscape drawers` is enabled.
+
+
 5.4.6
 -----
 
