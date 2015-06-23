@@ -92,7 +92,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void loadTasksFromFile(final String path, final TaskCache taskCache) throws IOException {
+    public void loadTasksFromFile(final String path, final TaskCache taskCache, final @Nullable BackupInterface backup) throws IOException {
         if (!isAuthenticated()) {
             return;
         }
@@ -133,9 +133,14 @@ public class FileStore implements FileStoreInterface {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
                     int i = 0;
                     String line;
+                    ArrayList<String> lines = new ArrayList<String>();
                     while ((line =  reader.readLine())!=null) {
+                        lines.add(line);
                         taskCache.load(new Task(i, line));
                         i++;
+                    }
+                    if (backup!=null) {
+                        backup.backup(path, Util.join(lines, "\n"));
                     }
                     openFile.close();
                     taskCache.endLoading();
@@ -220,12 +225,15 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(String path, TaskCache taskCache) {
+    public void saveTasksToFile(String path, TaskCache taskCache, @Nullable  final BackupInterface backup) {
         try {
             LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
             stopWatching(path);
             DbxFile outFile = openDbFile(path);
             outFile.writeString(Util.joinTasks(taskCache.getTasks(), mEol));
+            if (backup!=null) {
+                backup.backup(path, Util.joinTasks(taskCache.getTasks(), "\n"));
+            }
             outFile.close();
             startWatching(path);
         } catch (DbxException e) {

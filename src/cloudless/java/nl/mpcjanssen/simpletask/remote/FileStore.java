@@ -176,16 +176,17 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(final String path, TaskCache taskCache, BackupInterface backup) {
+    public void saveTasksToFile(final String path, TaskCache taskCache, final BackupInterface backup) {
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         stopWatching(path);
         final  ArrayList<String> output = Util.tasksToString(taskCache.getTasks());
-        if (backup!=null) {
-            backup.backup(path, Util.join(output,"\n"));
-        }
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                if (backup!=null) {
+                    backup.backup(path, Util.join(output,"\n"));
+                }
                 try {
                     TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
                 } catch (IOException e) {
