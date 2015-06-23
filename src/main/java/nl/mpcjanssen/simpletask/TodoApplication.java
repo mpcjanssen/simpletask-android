@@ -565,6 +565,7 @@ public class TodoApplication extends Application implements
         values.put(BackupDbHelper.FILE_NAME, name);
         values.put(BackupDbHelper.FILE_DATE, DateTime.now(TimeZone.getDefault()).format("YYYY-MM-DD hh:mm:ss"));
         db.replace(BackupDbHelper.TABLE_NAME,null,values);
+        db.execSQL(BackupDbHelper.SQL_KEEP_LAST_10);
         db.close();
         backupDbHelper.close();
     }
