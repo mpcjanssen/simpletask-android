@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.io.*;
+import java.util.List;
 
 
 /**
@@ -41,8 +42,8 @@ public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
 
     @NotNull
-    public static void loadFromFile(@NotNull File file, LineProcessor<String> lineProc) throws IOException {
-        Files.readLines(file, Charsets.UTF_8, lineProc);
+    public static String loadFromFile(@NotNull File file, LineProcessor<String> lineProc) throws IOException {
+        return Files.readLines(file, Charsets.UTF_8, lineProc);
     }
 
     public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) throws IOException {
