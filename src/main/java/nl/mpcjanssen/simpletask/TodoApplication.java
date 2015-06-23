@@ -29,13 +29,18 @@ import android.app.*;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TaskCache;
@@ -46,9 +51,11 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 
-public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class TodoApplication extends Application implements
+        SharedPreferences.OnSharedPreferenceChangeListener, BackupInterface {
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
@@ -92,12 +99,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
                     // File change reload task cache
                     try {
-                        getFileStore().loadTasksFromFile(getTodoFileName(),getTaskCache(null));
+                        getFileStore().loadTasksFromFile(getTodoFileName(),getTaskCache(null),TodoApplication.this);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (intent.getAction().equals(Constants.BROADCAST_TASKCACHE_CHANGED)) {
-                    getFileStore().saveTasksToFile(getTodoFileName(), getTaskCache(null));
+                    getFileStore().saveTasksToFile(getTodoFileName(), getTaskCache(null), TodoApplication.this);
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     m_calSync.syncLater();
                     updateWidgets();
@@ -321,7 +328,7 @@ public class TodoApplication extends Application implements SharedPreferences.On
         this.m_taskCache = new TaskCache(this);
         final FileStoreInterface store = getFileStore();
         try {
-            store.loadTasksFromFile(getTodoFileName(), m_taskCache);
+            store.loadTasksFromFile(getTodoFileName(), m_taskCache, this);
         } catch (IOException e) {
             e.printStackTrace();
             if (act!=null) {
@@ -545,4 +552,21 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public boolean initialSyncDone() {
         return mFileStore != null && mFileStore.initialSyncDone();
     }
+
+    @Override
+    public void backup(String name, String contents) {
+        BackupDbHelper backupDbHelper = new BackupDbHelper(getAppContext());
+
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = backupDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(BackupDbHelper.FILE_ID, contents);
+        values.put(BackupDbHelper.FILE_NAME, name);
+        values.put(BackupDbHelper.FILE_DATE, DateTime.now(TimeZone.getDefault()).format("YYYY-MM-DD hh:mm:ss"));
+        db.replace(BackupDbHelper.TABLE_NAME,null,values);
+        db.close();
+        backupDbHelper.close();
+    }
+
 }

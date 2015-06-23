@@ -53,7 +53,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void loadTasksFromFile(final String path, final TaskCache taskCache) {
+    public void loadTasksFromFile(final String path, final TaskCache taskCache, final BackupInterface backup) {
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         taskCache.startLoading();
         new AsyncTask<String, Void, Void> () {
@@ -61,19 +61,26 @@ public class FileStore implements FileStoreInterface {
             protected Void doInBackground(String... params) {
                 try {
                     final int i = 0;
-                    TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+
+
+                    String readFile = TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+                        ArrayList<String> completeFile = new ArrayList<>();
                         @Override
                         public boolean processLine(String s) throws IOException {
+                            completeFile.add(s);
                             taskCache.load(new Task(-1, s));
                             return true;
                         }
 
                         @Override
                         public String getResult() {
-                            return null;
+                            return Util.join(completeFile,"\n");
                         }
 
                     });
+                    if (backup!=null) {
+                        backup.backup(path,readFile);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -169,10 +176,13 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(final String path, TaskCache taskCache) {
+    public void saveTasksToFile(final String path, TaskCache taskCache, BackupInterface backup) {
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         stopWatching(path);
-       final  ArrayList<String> output = Util.tasksToString(taskCache.getTasks());
+        final  ArrayList<String> output = Util.tasksToString(taskCache.getTasks());
+        if (backup!=null) {
+            backup.backup(path, Util.join(output,"\n"));
+        }
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
