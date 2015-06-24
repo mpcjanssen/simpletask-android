@@ -556,6 +556,10 @@ public class TodoApplication extends Application implements
     @Override
     public void backup(String name, String contents) {
         BackupDbHelper backupDbHelper = new BackupDbHelper(getAppContext());
+        DateTime now = DateTime.now(TimeZone.getDefault());
+        DateTime keepAfter = now.minusDays(2);
+        String strNow = now.format("YYYY-MM-DD hh:mm:ss");
+        String[] whereArgs  =  {keepAfter.format("YYYY-MM-DD hh:mm:ss")};
 
 
         // Gets the data repository in write mode
@@ -563,9 +567,9 @@ public class TodoApplication extends Application implements
         ContentValues values = new ContentValues();
         values.put(BackupDbHelper.FILE_ID, contents);
         values.put(BackupDbHelper.FILE_NAME, name);
-        values.put(BackupDbHelper.FILE_DATE, DateTime.now(TimeZone.getDefault()).format("YYYY-MM-DD hh:mm:ss"));
+        values.put(BackupDbHelper.FILE_DATE, strNow);
         db.replace(BackupDbHelper.TABLE_NAME,null,values);
-        db.execSQL(BackupDbHelper.SQL_KEEP_LAST_10);
+        db.delete(BackupDbHelper.TABLE_NAME, BackupDbHelper.WHERE_AFTER_DATE, whereArgs );
         db.close();
         backupDbHelper.close();
     }

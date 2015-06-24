@@ -19,12 +19,7 @@ public class BackupDbHelper extends SQLiteOpenHelper {
                     FILE_NAME + TEXT_TYPE + COMMA_SEP +
                     FILE_DATE + TEXT_TYPE+ " )";
 
-    static final String SQL_KEEP_LAST_10 =
-            "DELETE FROM " + TABLE_NAME +
-            " WHERE ROWID NOT IN (" +
-            " SELECT ROWID FROM " + TABLE_NAME +
-            " ORDER BY "  + FILE_DATE + "  DESC " +
-            " LIMIT 10)";
+    static final String WHERE_AFTER_DATE =  FILE_DATE + " < ? ";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
