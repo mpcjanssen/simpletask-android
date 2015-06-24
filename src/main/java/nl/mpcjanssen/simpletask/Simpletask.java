@@ -599,11 +599,23 @@ public class Simpletask extends ThemedListActivity implements
 
     }
 
+    private void completeTasks(@NotNull Task task) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(task);
+        completeTasks(tasks);
+    }
+
     private void completeTasks(@NotNull List<Task> tasks) {
         getTaskBag().complete(tasks, m_app.hasRecurOriginalDates(), m_app.hasKeepPrio());
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
+    }
+
+    private void undoCompleteTasks(@NotNull Task task) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(task);
+        undoCompleteTasks(tasks);
     }
 
     private void undoCompleteTasks(@NotNull List<Task> tasks) {
@@ -1149,10 +1161,11 @@ public class Simpletask extends ThemedListActivity implements
         public class VisibleLine {
             @NotNull
             private Task task;
+            private String title = "";
             private boolean header = false;
 
             public VisibleLine(@NotNull String title) {
-                this.task = new Task(0,title);
+                this.title = title;
                 this.header = true;
             }
 
@@ -1306,7 +1319,7 @@ public class Simpletask extends ThemedListActivity implements
                 }
                 TextView t = (TextView) convertView
                         .findViewById(R.id.list_header_title);
-                t.setText(line.task.inFileFormat());
+                t.setText(line.title);
 
             } else {
                 final ViewHolder holder;
@@ -1327,8 +1340,7 @@ public class Simpletask extends ThemedListActivity implements
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
-                Task task;
-                task = line.task;
+                final Task task = line.task;
                 if (m_app.showCompleteCheckbox()) {
                     holder.cbCompleted.setVisibility(View.VISIBLE);
                 } else {
@@ -1380,8 +1392,7 @@ public class Simpletask extends ThemedListActivity implements
                 Util.setColor(ss, prioColor, task.getPriority()
                         .inFileFormat());
                 holder.tasktext.setText(ss);
-                final ArrayList<Task> tasks = new ArrayList<Task>();
-                tasks.add(task);
+
                 if (task.isCompleted()) {
                     // Log.v(TAG, "Striking through " + task.getText());
                     holder.tasktext.setPaintFlags(holder.tasktext
@@ -1392,7 +1403,7 @@ public class Simpletask extends ThemedListActivity implements
                     holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            undoCompleteTasks(tasks);
+                            undoCompleteTasks(task);
                             finishActionmode();
                         }
                     });
@@ -1407,7 +1418,7 @@ public class Simpletask extends ThemedListActivity implements
                     holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            completeTasks(tasks);
+                            completeTasks(task);
                             finishActionmode();
                         }
                     });
