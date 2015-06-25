@@ -24,7 +24,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     final static int FROM_WIDGETS_START = 1;
 
     public static void putFilterExtras (Intent target , @NotNull SharedPreferences preferences,  int widgetId) {
-        Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
+        // Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter();
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);

@@ -66,7 +66,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 
     void setFilteredTasks() {
-        Log.v(TAG, "Widget: setFilteredTasks called");
+        // Log.v(TAG, "Widget: setFilteredTasks called");
         visibleTasks = new ArrayList<Task>();
         if (application==null)  {
             Log.v(TAG, "application object was null");
@@ -268,13 +268,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate() {
-        Log.v(TAG, "Widget: OnCreate called in ViewFactory");
+        // Log.v(TAG, "Widget: OnCreate called in ViewFactory");
         setFilteredTasks();
     }
 
     @Override
     public void onDataSetChanged() {
-        Log.v(TAG, "Widget: Data set changed, refresh");
+        // Log.v(TAG, "Widget: Data set changed, refresh");
         setFilteredTasks();
     }
 
