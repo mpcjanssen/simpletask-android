@@ -213,9 +213,9 @@ public class TodoList {
         return mTasks;
     }
 
-    public ArrayList<Task> getTasks(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts, boolean caseSensitive) {
-        List<Task> orderedTasks = Ordering.from(new MultiComparator(sorts, caseSensitive)).sortedCopy(mTasks);
-        return filter.apply(orderedTasks);
+    public List<Task> getSortedTasksCopy(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts, boolean caseSensitive) {
+        List<Task> filteredTasks = filter.apply(mTasks);
+        return Ordering.from(new MultiComparator(sorts, caseSensitive, filteredTasks)).sortedCopy(filteredTasks);
     }
 
     public void selectTask(Task t) {

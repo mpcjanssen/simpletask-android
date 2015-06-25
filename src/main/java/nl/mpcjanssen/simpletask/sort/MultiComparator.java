@@ -7,6 +7,7 @@ import com.google.common.collect.Ordering;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 public class MultiComparator implements Comparator<Task> {
     private Ordering<? super Task> ordering;
 
-    public MultiComparator (@NotNull ArrayList<String> sorts, boolean caseSensitve) {
+    public MultiComparator (@NotNull ArrayList<String> sorts, boolean caseSensitve, List<Task> taskList) {
         List<Comparator<? super Task>> comparators = new ArrayList<>();
 
 
@@ -36,7 +37,13 @@ public class MultiComparator implements Comparator<Task> {
             }
             Ordering<? super Task> comp;
             if (sortType.equals("file_order")) {
-                comp = Ordering.allEqual();
+                // In case of revers file order sort, we can just reverse
+                // based on the object order
+                if (reverse) {
+                    comparators.add(Ordering.explicit(taskList).reverse());
+                }
+                // No need to continue sorting after unsorted
+                break;
             } else if (sortType.equals("by_context")) {
                 comp = new ContextComparator(caseSensitve);
             } else if (sortType.equals("by_project")) {
