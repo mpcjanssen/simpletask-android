@@ -14,18 +14,17 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import nl.mpcjanssen.simpletask.util.DateStrings;
 
 public class AppWidgetService extends RemoteViewsService {
 
@@ -58,10 +57,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     }
 
     
-    private Intent createFilterIntent( Task selectedTask) {
+    private Intent createSelectedIntent( int selectedTaskPosition) {
         Intent target = new Intent();
+        target.putExtra(Constants.INTENT_SELECTED_TASK_POSITION, selectedTaskPosition);
         mFilter.saveInIntent(target);
-        target.putExtra(Constants.INTENT_SELECTED_TASK, selectedTask.getId() + ":" + selectedTask.inFileFormat());
         return target;
     }
 
@@ -76,11 +75,11 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         if (!application.isAuthenticated()) {
             return;
         }
-        if (application.getTaskCache(null)==null)  {
+        if (application.getTodoList(null)==null)  {
             Log.v(TAG, "taskcache object was null");
             return;
         }
-        ArrayList<Task> tasks = application.getTaskCache(null).getTasks();
+        List<Task> tasks = application.getTodoList(null).getTasks();
         if (tasks==null) {
             return;
         }
@@ -109,10 +108,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return null;
     }
 
-    private RemoteViews getExtendedView(int position) {
+    private RemoteViews getExtendedView(int taskIndex, Task task) {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
-        Task task;
-        task = visibleTasks.get(position);
 
         if (task != null) {
             int tokensToShow = Token.SHOW_ALL;
@@ -207,14 +204,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 //        4, 4, 4, 0);
             }
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createFilterIntent(visibleTasks.get(position)));
+        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(taskIndex));
         return rv;
     }
 
-    private RemoteViews getSimpleView(int position) {
+    private RemoteViews getSimpleView(int taskIndex, Task task) {
         RemoteViews rv;
         rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
-        Task task = visibleTasks.get(position);
         int tokensToShow = Token.SHOW_ALL;
         tokensToShow = tokensToShow & ~Token.CREATION_DATE;
         tokensToShow = tokensToShow & ~Token.COMPLETED;
@@ -230,7 +226,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         } else {
             rv.setTextColor(R.id.widget_item_text, application.getResources().getColor(android.R.color.black));
         }
-        rv.setOnClickFillInIntent(R.id.widget_item_text, createFilterIntent(visibleTasks.get(position)));
+
+        rv.setOnClickFillInIntent(R.id.widget_item_text, createSelectedIntent(taskIndex));
         return rv;
     }
 
@@ -244,12 +241,16 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             return null;
         }
 
+        // find index in the todolist of the clicked task
+        Task task = visibleTasks.get(position);
+        int taskIndex = application.getTodoList(null).getTasks().indexOf(task);
+
         RemoteViews rv;
         boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);
         if (extended_widget) {
-            rv = getExtendedView(position);
+            rv = getExtendedView(taskIndex,task);
         } else {
-            rv = getSimpleView(position);
+            rv = getSimpleView(taskIndex,task);
         }
         return rv;
     }

@@ -61,13 +61,13 @@ import android.widget.TextView;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -87,7 +87,6 @@ public class AddTask extends ThemedActivity {
 
     private final static String TAG = AddTask.class.getSimpleName();
 
-    private List<Task> m_backup;
     private TodoApplication m_app;
 
     private String share_text;
@@ -179,35 +178,21 @@ public class AddTask extends ThemedActivity {
              return;
         }
 
-        ArrayList<String> tasks = new ArrayList<String>();
-        tasks.addAll(Arrays.asList(input.split("\\r\\n|\\r|\\n")));
-        ArrayList<String> originalLines = new ArrayList<String>();
-        ArrayList<Task> updatedTasks = new ArrayList<Task>();
-        if (m_backup != null && tasks.size()>0) {
-            int numTasks = tasks.size();
-            int numBackup = m_backup.size();
-            Log.v("...","tasks " + tasks.size() + "  backup " + m_backup.size());
+        // Update the TodoList with changes
+        TodoList todoList = m_app.getTodoList(this);
 
-            for (int i = 0 ; i < numTasks && i < numBackup  ; i++) {
-                originalLines.add(m_backup.get(0).inFileFormat());
-                m_backup.get(0).init(tasks.get(0),null);
-                updatedTasks.add(m_backup.get(0));
-                tasks.remove(0);
-                m_backup.remove(0);
-            }
+        // Add all lines
+        for (String line : Arrays.asList(input.split("\\r\\n|\\r|\\n"))) {
+            todoList.add(new Task(line));
         }
-        // Append new tasks
-        ArrayList<Task> addedTasks = new ArrayList<Task>();
-        if (tasks.size()>0) {
-            for (String task: tasks) {
-                if (m_app.hasPrependDate()) {
-                    addedTasks.add(new Task(0,task, DateTime.today(TimeZone.getDefault())));
-                } else {
-                    addedTasks.add(new Task(0,task,null));
-                }
-            }
+
+        // Delete tasks that where selected for update
+        for (Task t: todoList.getSelectedTasks()) {
+            todoList.remove(t);
         }
-        m_app.getTaskCache(this).modify(originalLines, updatedTasks, addedTasks, null);
+
+        // Save
+        todoList.notifyChanged();
         finish();
     }
 
@@ -228,16 +213,20 @@ public class AddTask extends ThemedActivity {
     }
 
     private void addBackgroundTask(String sharedText) {
-        ArrayList<Task> bgTask = new ArrayList<Task>();
+        TodoList todoList = m_app.getTodoList(null);
+        if (todoList == null) {
+            Util.showToastShort(m_app, R.string.add_task_failed);
+            return;
+        }
         for (String taskText : sharedText.split("\n|\r\n")) {
-            if (m_app.hasPrependDate()) {   
-                bgTask.add(new Task(0,taskText, DateTime.today(TimeZone.getDefault())));
+
+            if (m_app.hasPrependDate()) {
+                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
             } else {
-                bgTask.add(new Task(0,taskText));
+                todoList.add(new Task(taskText));
             }
         }
-        m_app.getTaskCache(null).modify(null,null,bgTask,null);
-        m_app.updateWidgets();
+        todoList.notifyChanged();
         Util.showToastShort(m_app, R.string.task_added);
     }
 
@@ -341,7 +330,7 @@ public class AddTask extends ThemedActivity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        m_backup = m_app.getTaskCache(this).getTasksToUpdate();
+        List<Task> m_backup = m_app.getTodoList(this).getSelectedTasks();
         if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<String>();
             for (Task t : m_backup) {
@@ -352,7 +341,7 @@ public class AddTask extends ThemedActivity {
             setTitle(R.string.updatetask);
         } else {
             if (textInputField.getText().length() == 0) {
-                iniTask = new Task(1, "");
+                iniTask = new Task("");
                 iniTask.initWithFilter(mFilter);
             }
 
@@ -418,7 +407,7 @@ public class AddTask extends ThemedActivity {
                         } else {
                             line = precedingText;
                         }
-                        Task t = new Task(0, line);
+                        Task t = new Task(line);
                         LinkedHashSet<String> tags = new LinkedHashSet<String>();
                         for (String ctx : t.getLists()) {
                             tags.add("@" + ctx);
@@ -537,9 +526,9 @@ public class AddTask extends ThemedActivity {
 
     private void showTagMenu() {
         Set<String> items = new TreeSet<String>();
-        items.addAll(m_app.getTaskCache(null).getProjects());
+        items.addAll(m_app.getTodoList(null).getProjects());
         // Also display contexts in tasks being added
-        Task t = new Task(0,textInputField.getText().toString());
+        Task t = new Task(textInputField.getText().toString());
         items.addAll(t.getTags());
         final ArrayList<String> projects = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),null);
 
@@ -605,9 +594,9 @@ public class AddTask extends ThemedActivity {
 
     private void showContextMenu() {
         Set<String> items = new TreeSet<String>();
-        items.addAll(m_app.getTaskCache(this).getContexts());
+        items.addAll(m_app.getTodoList(this).getContexts());
         // Also display contexts in tasks being added
-        Task t = new Task(0,textInputField.getText().toString());
+        Task t = new Task(textInputField.getText().toString());
         items.addAll(t.getLists());
         final ArrayList<String> contexts = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),null);
 
@@ -674,7 +663,7 @@ public class AddTask extends ThemedActivity {
             currentLine = lines.size() - 1;
         }
         if (currentLine != -1) {
-            Task t = new Task(0, lines.get(currentLine));
+            Task t = new Task(lines.get(currentLine));
             t.setDueDate(newDueDate.toString());
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
@@ -704,7 +693,7 @@ public class AddTask extends ThemedActivity {
             currentLine = lines.size() - 1;
         }
         if (currentLine != -1) {
-            Task t = new Task(0, lines.get(currentLine));
+            Task t = new Task(lines.get(currentLine));
             t.setThresholdDate(newThresholdDate.toString());
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
@@ -735,7 +724,7 @@ public class AddTask extends ThemedActivity {
             currentLine = lines.size() - 1;
         }
         if (currentLine != -1) {
-            Task t = new Task(0, lines.get(currentLine));
+            Task t = new Task(lines.get(currentLine));
             Log.v(TAG,"Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString()); 
             t.setPriority(Priority.toPriority(newPrio.toString()));
             lines.set(currentLine, t.inFileFormat());

@@ -14,10 +14,10 @@ import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class MultiComparator implements Comparator<Task> {
-    private Ordering<Task> ordering;
+    private Ordering<? super Task> ordering;
 
     public MultiComparator (@NotNull ArrayList<String> sorts, boolean caseSensitve) {
-        List<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
+        List<Comparator<? super Task>> comparators = new ArrayList<>();
 
 
         for (String sort : sorts) {
@@ -34,9 +34,9 @@ public class MultiComparator implements Comparator<Task> {
                     reverse = true;
                 }
             }
-            Ordering<Task> comp;
+            Ordering<? super Task> comp;
             if (sortType.equals("file_order")) {
-                comp = new FileOrderComparator();
+                comp = Ordering.allEqual();
             } else if (sortType.equals("by_context")) {
                 comp = new ContextComparator(caseSensitve);
             } else if (sortType.equals("by_project")) {
@@ -57,7 +57,7 @@ public class MultiComparator implements Comparator<Task> {
                 comp = new ThresholdDateComparator();
             } else {
                 Log.w("Simpletask", "Unknown sort: " + sort);
-                comp = new FileOrderComparator();
+                comp = Ordering.allEqual();
             }
             if (reverse) {
                 comp = comp.reverse();

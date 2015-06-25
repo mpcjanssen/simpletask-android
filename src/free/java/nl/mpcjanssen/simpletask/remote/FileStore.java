@@ -15,7 +15,7 @@ import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -92,7 +92,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void loadTasksFromFile(final String path, final TaskCache taskCache) throws IOException {
+    public void loadTasksFromFile(final String path, final TodoList todoList) throws IOException {
         if (!isAuthenticated()) {
             return;
         }
@@ -102,7 +102,7 @@ public class FileStore implements FileStoreInterface {
                 Log.v(TAG, "Loading file in background");
                 try {
                     LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-                    taskCache.startLoading();
+                    todoList.startLoading();
                     final DbxFileSystem fs = getDbxFS();
                     if (fs==null) {
                         return null;
@@ -134,11 +134,11 @@ public class FileStore implements FileStoreInterface {
                     int i = 0;
                     String line;
                     while ((line =  reader.readLine())!=null) {
-                        taskCache.load(new Task(i, line));
+                        todoList.load(new Task(i, line));
                         i++;
                     }
                     openFile.close();
-                    taskCache.endLoading();
+                    todoList.endLoading();
                     startWatching(path);
                     LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                     LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
@@ -220,12 +220,12 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(String path, TaskCache taskCache) {
+    public void saveTasksToFile(String path, TodoList todoList) {
         try {
             LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
             stopWatching(path);
             DbxFile outFile = openDbFile(path);
-            outFile.writeString(Util.joinTasks(taskCache.getTasks(), mEol));
+            outFile.writeString(Util.joinTasks(todoList.getTasks(), mEol));
             outFile.close();
             startWatching(path);
         } catch (DbxException e) {

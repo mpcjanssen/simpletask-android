@@ -27,7 +27,7 @@ import java.util.Locale;
 import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -53,45 +53,30 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void loadTasksFromFile(final String path, final TaskCache taskCache) {
+    public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged) {
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        taskCache.startLoading();
-        new AsyncTask<String, Void, Void> () {
-            @Override
-            protected Void doInBackground(String... params) {
-                try {
-                    final int i = 0;
-                    TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
-                        @Override
-                        public boolean processLine(String s) throws IOException {
-                            taskCache.load(new Task(-1, s));
-                            return true;
-                        }
-
-                        @Override
-                        public String getResult() {
-                            return null;
-                        }
-
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
+        final TodoList todoList = new TodoList(mCtx, todoListChanged);
+        try {
+            TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+                int i = 0;
+                @Override
+                public boolean processLine(String s) throws IOException {
+                    todoList.add(new Task(s));
+                    return true;
                 }
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void v) {
-                startWatching(path);
-                taskCache.endLoading();
-                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-            }
-        }.execute(path);
-    }
 
-    private void notifyFileChanged() {
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+                @Override
+                public String getResult() {
+                    return null;
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+        todoListChanged.todoListChanged();
+        return todoList;
     }
 
     @Override
@@ -169,10 +154,10 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(final String path, TaskCache taskCache) {
+    public void saveTasksToFile(final String path, TodoList todoList) {
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         stopWatching(path);
-       final  ArrayList<String> output = Util.tasksToString(taskCache.getTasks());
+       final  ArrayList<String> output = Util.tasksToString(todoList);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {

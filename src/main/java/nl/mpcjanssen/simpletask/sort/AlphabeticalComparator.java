@@ -19,10 +19,10 @@ public class AlphabeticalComparator extends Ordering<Task> {
     @Override
     public int compare(@Nullable Task a, @Nullable Task b) {
         if (a==null) {
-            a = new Task(0,"");
+            a = new Task("");
         }
         if (b==null) {
-            b = new Task(0,"");
+            b = new Task("");
         }
         return mStringComparator.compare(a.showParts(Token.TEXT),b.showParts(Token.TEXT));
     }

@@ -210,7 +210,7 @@ public class CalendarSync {
     private void sync() {
         if (m_sync_type == 0) return;
 
-        final List<Task> tasks = m_app.getTaskCache(null).getTasks();
+        final List<Task> tasks = m_app.getTodoList(null).getTasks();
         setReminderDays(m_app.getReminderDays());
         setReminderTime(m_app.getReminderTime());
 
