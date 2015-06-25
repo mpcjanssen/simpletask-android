@@ -33,14 +33,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.ActionMode;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -109,8 +102,7 @@ public class Simpletask extends ThemedListActivity implements
     private DrawerLayout m_drawerLayout;
     private ActionBarDrawerToggle m_drawerToggle;
     private Bundle m_savedInstanceState;
-    private ProgressDialog m_sync_dialog;
-    private ProgressDialog m_loading_dialog;
+    private Dialog mOverlayDialog;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -218,8 +210,6 @@ public class Simpletask extends ThemedListActivity implements
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
-        intentFilter.addAction(Constants.BROADCAST_LOADING_START);
-        intentFilter.addAction(Constants.BROADCAST_LOADING_DONE);
 
         localBroadcastManager = m_app.getLocalBroadCastManager();
 
@@ -243,13 +233,9 @@ public class Simpletask extends ThemedListActivity implements
                     handleIntent();
                     getListView().setSelectionFromTop(position,0);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
-                    setProgressBarIndeterminateVisibility(true);
+                    readOnlyProgress(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
-                    setProgressBarIndeterminateVisibility(false);
-                }  else if (intent.getAction().equals(Constants.BROADCAST_LOADING_START)) {
-                    loadingInBackground(m_app.getTodoFileName(),true);
-                } else if (intent.getAction().equals(Constants.BROADCAST_LOADING_DONE)) {
-                    loadingInBackground(m_app.getTodoFileName(),false);
+                    readOnlyProgress(false);
                 }
             }
         };
@@ -270,21 +256,18 @@ public class Simpletask extends ThemedListActivity implements
                 actionBarClear.setImageResource(R.drawable.cancel);
             }
         }
-        setProgressBarIndeterminateVisibility(false);
     }
 
-    private void loadingInBackground(String path, boolean progress) {
-        if (progress) {
-            m_loading_dialog = new ProgressDialog(this, m_app.getActiveTheme());
-            m_loading_dialog.setIndeterminate(true);
-            m_loading_dialog.setMessage("Loading file: " + path);
-            m_loading_dialog.setCancelable(false);
-            m_loading_dialog.show();
-        } else if (m_loading_dialog!=null){
-            m_loading_dialog.cancel();
-
+    private void readOnlyProgress(boolean readOnly) {
+        if (readOnly && mOverlayDialog == null) {
+            mOverlayDialog = new Dialog(this, android.R.style.Theme_Holo_Panel); //display an invisible overlay dialog to prevent user interaction and pressing back
+            mOverlayDialog.setContentView(R.layout.loading);
+            mOverlayDialog.setCancelable(false);
+            mOverlayDialog.show();
+        } else if (mOverlayDialog!=null) {
+            mOverlayDialog.dismiss();
+            mOverlayDialog = null;
         }
-
     }
 
     private void handleIntent() {
@@ -293,15 +276,8 @@ public class Simpletask extends ThemedListActivity implements
             startLogin();
             return;
         }
-        if (!m_app.initialSyncDone()) {
-            m_sync_dialog = new ProgressDialog(this,m_app.getActiveTheme());
-            m_sync_dialog.setIndeterminate(true);
-            m_sync_dialog.setMessage("Initial Dropbox sync in progress, please wait....");
-            m_sync_dialog.setCancelable(false);
-            m_sync_dialog.show();
-        } else if (m_sync_dialog!=null) {
-            m_sync_dialog.cancel();
-        }
+        readOnlyProgress (!m_app.initialSyncDone());
+
 
         mFilter = new ActiveFilter();
 

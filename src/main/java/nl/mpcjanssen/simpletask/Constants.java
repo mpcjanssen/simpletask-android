@@ -35,8 +35,6 @@ public class Constants {
     public final static String BROADCAST_FILE_WRITE_FAILED = "FILE_WRITE_FAILED";
     public final static String BROADCAST_SYNC_START = "SYNC_START";
     public final static String BROADCAST_SYNC_DONE = "SYNC_DONE";
-    public final static String BROADCAST_LOADING_START = "LOADING_START";
-    public final static String BROADCAST_LOADING_DONE = "LOADING_DONE";
 
     // Sharing constants
     public final static String SHARE_FILE_NAME = "simpletask.txt";
