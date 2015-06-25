@@ -110,6 +110,7 @@ public class Simpletask extends ThemedListActivity implements
     private ActionBarDrawerToggle m_drawerToggle;
     private Bundle m_savedInstanceState;
     private ProgressDialog m_sync_dialog;
+    private ProgressDialog m_loading_dialog;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,6 +218,8 @@ public class Simpletask extends ThemedListActivity implements
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
+        intentFilter.addAction(Constants.BROADCAST_LOADING_START);
+        intentFilter.addAction(Constants.BROADCAST_LOADING_DONE);
 
         localBroadcastManager = m_app.getLocalBroadCastManager();
 
@@ -243,6 +246,10 @@ public class Simpletask extends ThemedListActivity implements
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
                     setProgressBarIndeterminateVisibility(false);
+                }  else if (intent.getAction().equals(Constants.BROADCAST_LOADING_START)) {
+                    loadingInBackground(m_app.getTodoFileName(),true);
+                } else if (intent.getAction().equals(Constants.BROADCAST_LOADING_DONE)) {
+                    loadingInBackground(m_app.getTodoFileName(),false);
                 }
             }
         };
@@ -264,6 +271,20 @@ public class Simpletask extends ThemedListActivity implements
             }
         }
         setProgressBarIndeterminateVisibility(false);
+    }
+
+    private void loadingInBackground(String path, boolean progress) {
+        if (progress) {
+            m_loading_dialog = new ProgressDialog(this, m_app.getActiveTheme());
+            m_loading_dialog.setIndeterminate(true);
+            m_loading_dialog.setMessage("Loading file: " + path);
+            m_loading_dialog.setCancelable(false);
+            m_loading_dialog.show();
+        } else if (m_loading_dialog!=null){
+            m_loading_dialog.cancel();
+
+        }
+
     }
 
     private void handleIntent() {
@@ -565,11 +586,11 @@ public class Simpletask extends ThemedListActivity implements
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
-        getTodoList().notifyChanged();
     }
 
     private void undoCompleteTasks(@NotNull List<Task> tasks) {
         getTodoList().undoComplete(tasks);
+        getTodoList().notifyChanged();
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -1348,6 +1369,7 @@ public class Simpletask extends ThemedListActivity implements
                         @Override
                         public void onClick(View v) {
                             undoCompleteTasks(tasks);
+                            getTodoList().notifyChanged();
                             finishActionmode();
                         }
                     });
@@ -1363,6 +1385,7 @@ public class Simpletask extends ThemedListActivity implements
                         @Override
                         public void onClick(View v) {
                             completeTasks(tasks);
+                            getTodoList().notifyChanged();
                             finishActionmode();
                         }
                     });

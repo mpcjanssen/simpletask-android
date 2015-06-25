@@ -38,6 +38,7 @@ import android.view.Window;
 import android.widget.EditText;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
+import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
 
 
 public class TodoApplication extends Application implements
-        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged {
+        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener {
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
@@ -65,7 +66,6 @@ public class TodoApplication extends Application implements
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
-    private TodoList mTodoList;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -83,22 +83,11 @@ public class TodoApplication extends Application implements
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
-        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED);
         intentFilter.addAction(Constants.BROADCAST_FILE_WRITE_FAILED);
-        intentFilter.addAction(Constants.BROADCAST_TASKCACHE_CHANGED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, @NotNull Intent intent) {
-                if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
-                    // File change reload task cache
-                    try {
-                        mTodoList  = getFileStore().loadTasksFromFile(getTodoFileName(),TodoApplication.this);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (intent.getAction().equals(Constants.BROADCAST_TASKCACHE_CHANGED)) {
-                    getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null));
-                } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
+            if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     m_calSync.syncLater();
                     redrawWidgets();
                     updateWidgets();
@@ -315,36 +304,49 @@ public class TodoApplication extends Application implements
                 .apply();
     }
 
-    @NotNull
+    @Nullable
     public TodoList getTodoList(final Activity act) {
-        if (this.m_todoList !=null) {
+        if (m_todoList==null) {
+            loadTodoList();
+            return new TodoList(this);
+        } else {
             return m_todoList;
         }
+    }
 
+    public void loadTodoList () {
         final FileStoreInterface store = getFileStore();
-        try {
-            this.m_todoList = store.loadTasksFromFile(getTodoFileName(), this);
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (act!=null) {
-                store.browseForNewFile(act, getTodoFileName(), new FileStoreInterface.FileSelectedListener() {
-                    @Override
-                    public void fileSelected(String file) {
-                        setTodoFile(file);
-                        getTodoList(act);
+
+        new AsyncTask<Void, Void, TodoList>() {
+            @Override
+            protected TodoList doInBackground(Void... params) {
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+                TodoList newTodoList = null;
+                try {
+                    newTodoList = getFileStore().loadTasksFromFile(getTodoFileName(),TodoApplication.this);
+                } catch (IOException e) {
+                    newTodoList = new TodoList(TodoApplication.this);
+                    e.printStackTrace();
+                    for (String line : e.getMessage().split("\n")) {
+                        newTodoList.add(new Task(line));
                     }
-                }, showTxtOnly());
-            } else {
-                this.m_todoList = new TodoList(this, this);
+                }
+                return newTodoList;
             }
 
-        }
-        return this.m_todoList;
+            @Override
+            protected void onPostExecute(TodoList newTodoList) {
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
+                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+                m_todoList = newTodoList;
+            }
+        }.execute();
     }
 
-    public void fileUpdated() {
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+    public void fileChanged() {
+        loadTodoList();
     }
+
 
     public void updateWidgets() {
         AppWidgetManager mgr = AppWidgetManager.getInstance(getApplicationContext());
@@ -453,7 +455,8 @@ public class TodoApplication extends Application implements
     private void loadTodoFile(File newTodo) {
         setTodoFile(newTodo.getPath());
         m_todoList = null;
-        getTodoList(null);
+        m_todoList = getTodoList(null);
+        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
     }
 
     public void switchTodoFile(File newTodo) {
@@ -477,7 +480,7 @@ public class TodoApplication extends Application implements
     public void todoListChanged() {
         Log.v(TAG, "Tasks have changed, update UI and save todo file");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_TASKCACHE_CHANGED));
+        getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null));
     }
 
     public int getActiveFont() {
@@ -495,7 +498,7 @@ public class TodoApplication extends Application implements
     @NotNull
     public FileStoreInterface getFileStore() {
         if (mFileStore==null) {
-            mFileStore = new FileStore(this, getEol());
+            mFileStore = new FileStore(this, this, getEol());
         }
         return mFileStore;
     }

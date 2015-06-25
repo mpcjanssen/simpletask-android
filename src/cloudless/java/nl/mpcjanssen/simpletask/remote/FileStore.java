@@ -35,14 +35,14 @@ import nl.mpcjanssen.simpletask.util.Util;
 public class FileStore implements FileStoreInterface {
 
     private final String TAG = getClass().getSimpleName();
-    private final Context mCtx;
     private final LocalBroadcastManager bm;
+    private final FileChangeListener m_fileChangedListener;
     private String mEol;
     private FileObserver m_observer;
 
-    public FileStore(Context ctx, String eol) {
-        mCtx = ctx;
+    public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
         mEol = eol;
+        m_fileChangedListener = fileChangedListener;
         m_observer = null;
         this.bm = LocalBroadcastManager.getInstance(ctx);
     }
@@ -54,8 +54,9 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged) {
+        Log.v(TAG,"Loading tasks from file: " + path);
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        final TodoList todoList = new TodoList(mCtx, todoListChanged);
+        final TodoList todoList = new TodoList(todoListChanged);
         try {
             TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
                 int i = 0;
@@ -75,7 +76,6 @@ public class FileStore implements FileStoreInterface {
             e.printStackTrace();
         }
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-        todoListChanged.todoListChanged();
         return todoList;
     }
 
@@ -91,6 +91,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public String readFile(String file) {
+        Log.v(TAG,"Reading file: " + file);
         try {
             return Files.toString(new File(file), Charsets.UTF_8);
         } catch (IOException e) {
@@ -121,10 +122,12 @@ public class FileStore implements FileStoreInterface {
                     if (event == FileObserver.CLOSE_WRITE ||
                             event == FileObserver.MODIFY ||
                             event == FileObserver.MOVED_TO) {
-                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-                        Log.v(TAG, "Observer " + path + " modified....sync done");
-                        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                        bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_CHANGED));
+                        Log.v(TAG, "File changed in background reloading " + eventPath);
+                        if (m_fileChangedListener!=null) {
+                            m_fileChangedListener.fileChanged();
+                        }
+
+
                     }
                 }
             }
@@ -155,6 +158,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void saveTasksToFile(final String path, TodoList todoList) {
+        Log.v(TAG,"Saving tasks to file: " + path);
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         stopWatching(path);
        final  ArrayList<String> output = Util.tasksToString(todoList);
@@ -176,6 +180,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void appendTaskToFile(final String path, final List<Task> tasks) {
+        Log.v(TAG,"Appending tasks to file: " + path);
         final int size = tasks.size();
         new AsyncTask<Void, Void, Void>() {
             @Override

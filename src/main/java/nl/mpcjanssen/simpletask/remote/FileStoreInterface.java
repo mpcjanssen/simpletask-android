@@ -31,4 +31,7 @@ public interface FileStoreInterface {
     interface FileSelectedListener {
         void fileSelected(String file);
     }
+    public interface FileChangeListener {
+        void fileChanged();
+    }
 }
