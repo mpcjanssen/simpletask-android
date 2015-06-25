@@ -1169,11 +1169,11 @@ public class Simpletask extends ThemedListActivity implements
             } else {
                 setTitle(R.string.app_label);
             }
-            ArrayList<Task> visibleTasks;
+            List<Task> visibleTasks;
             countVisbleTasks = 0;
             Log.v(TAG, "setFilteredTasks called: " + getTodoList());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
-            visibleTasks = getTodoList().getTasks(mFilter, sorts, m_app.sortCaseSensitive());
+            visibleTasks = getTodoList().getSortedTasksCopy(mFilter, sorts, m_app.sortCaseSensitive());
             visibleLines.clear();
 
             String header = "";
