@@ -58,18 +58,18 @@ public class FileStore implements FileStoreInterface {
         setDbxAcctMgr();
     }
 
-    private void setDbxAcctMgr () {
-        if (mDbxAcctMgr==null) {
+    private void setDbxAcctMgr() {
+        if (mDbxAcctMgr == null) {
             String app_secret = mCtx.getString(R.string.dropbox_consumer_secret);
             String app_key = mCtx.getString(R.string.dropbox_consumer_key);
-            app_key = app_key.replaceFirst("^db-","");
+            app_key = app_key.replaceFirst("^db-", "");
             mDbxAcctMgr = DbxAccountManager.getInstance(mCtx, app_key, app_secret);
         }
     }
 
     @Nullable
-    private DbxFileSystem getDbxFS () {
-        if (mDbxFs!=null) {
+    private DbxFileSystem getDbxFS() {
+        if (mDbxFs != null) {
             return mDbxFs;
         }
         if (isAuthenticated()) {
@@ -83,6 +83,7 @@ public class FileStore implements FileStoreInterface {
         }
         return null;
     }
+
     @NotNull
     static public String getDefaultPath() {
         return "/todo/todo.txt";
@@ -94,15 +95,14 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public TodoList loadTasksFromFile(String path, TodoList.TodoListChanged todoListChanged) throws IOException {
+    public TodoList loadTasksFromFile(String path, TodoList.TodoListChanged todoListChanged, final @Nullable BackupInterface backup) throws IOException {
+
         if (!isAuthenticated()) {
             TodoList result = new TodoList(null);
             result.add(new Task("Not authenticated with dropbox"));
             return result;
         }
         final TodoList todoList = new TodoList(todoListChanged);
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-
         try {
 
             final DbxFileSystem fs = getDbxFS();
@@ -117,28 +117,32 @@ public class FileStore implements FileStoreInterface {
 
             Log.v(TAG, "Opening file " + path + " sync states latest?: " + openFile.getSyncStatus().isLatest);
             int times = 0;
-            try {
-                if (!openFile.getSyncStatus().isLatest) {
-                    while (openFile.getNewerStatus().pending != DbxFileStatus.PendingOperation.NONE && times < 30) {
-                        long total = openFile.getNewerStatus().bytesTotal;
-                        long transferred = openFile.getNewerStatus().bytesTransferred;
-                        Log.v(TAG, "Downloading: " + openFile.getPath().getName() + " " + transferred + "/" + total);
+
+            if (!openFile.getSyncStatus().isLatest) {
+                while (openFile.getNewerStatus().pending != DbxFileStatus.PendingOperation.NONE && times < 30) {
+                    long total = openFile.getNewerStatus().bytesTotal;
+                    long transferred = openFile.getNewerStatus().bytesTransferred;
+                    Log.v(TAG, "Downloading: " + openFile.getPath().getName() + " " + transferred + "/" + total);
+                    try {
                         Thread.sleep(1000);
-                        times++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    times++;
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+
             openFile.update();
             FileInputStream stream = openFile.getReadStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-            int i = 0;
             String line;
+            ArrayList<String> readFile = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 todoList.add(new Task(line));
-                i++;
+                readFile.add(line);
             }
+            backup.backup(path, Util.join(readFile, "\n"));
+
             openFile.close();
             startWatching(path);
 
@@ -150,9 +154,9 @@ public class FileStore implements FileStoreInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
         return todoList;
     }
+
 
     @Nullable
     private DbxFile openDbFile(String path) throws DbxException {
@@ -202,7 +206,7 @@ public class FileStore implements FileStoreInterface {
         if (getDbxFS()==null || mPathListener == null) {
             return;
         }
-        mDbxFs.removePathListener(mPathListener,new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
+        mDbxFs.removePathListener(mPathListener, new DbxPath(path), DbxFileSystem.PathListener.Mode.PATH_ONLY);
     }
 
     @Override
@@ -218,12 +222,17 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(String path, TodoList todoList) {
+    public void saveTasksToFile(String path, TodoList todoList , @Nullable  final BackupInterface backup) {
+
         try {
             LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
             stopWatching(path);
             DbxFile outFile = openDbFile(path);
             outFile.writeString(Util.joinTasks(todoList.getTasks(), mEol));
+
+            if (backup!=null) {
+                backup.backup(path, Util.joinTasks(todoList.getTasks(), "\n"));
+            }
             outFile.close();
             startWatching(path);
         } catch (DbxException e) {

@@ -29,13 +29,18 @@ import android.app.*;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -47,10 +52,13 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 
 public class TodoApplication extends Application implements
-        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener {
+
+        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
+
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
@@ -66,6 +74,7 @@ public class TodoApplication extends Application implements
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
+    private AsyncTask<Void, Void, TodoList> m_loadingTask;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -315,15 +324,18 @@ public class TodoApplication extends Application implements
     }
 
     public void loadTodoList () {
+        if (m_loadingTask!=null && m_loadingTask.getStatus() == AsyncTask.Status.RUNNING) {
+            Log.v(TAG, "Todolist is already loading, waiting");
+            return;
+        }
+        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         final FileStoreInterface store = getFileStore();
-
-        new AsyncTask<Void, Void, TodoList>() {
+        m_loadingTask = new AsyncTask<Void, Void, TodoList>() {
             @Override
             protected TodoList doInBackground(Void... params) {
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
                 TodoList newTodoList = null;
                 try {
-                    newTodoList = getFileStore().loadTasksFromFile(getTodoFileName(),TodoApplication.this);
+                    newTodoList = store.loadTasksFromFile(getTodoFileName(),TodoApplication.this, TodoApplication.this);
                 } catch (IOException e) {
                     newTodoList = new TodoList(TodoApplication.this);
                     e.printStackTrace();
@@ -336,9 +348,9 @@ public class TodoApplication extends Application implements
 
             @Override
             protected void onPostExecute(TodoList newTodoList) {
+                m_todoList = newTodoList;
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-                m_todoList = newTodoList;
             }
         }.execute();
     }
@@ -480,7 +492,7 @@ public class TodoApplication extends Application implements
     public void todoListChanged() {
         Log.v(TAG, "Tasks have changed, update UI and save todo file");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-        getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null));
+        getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), this);
     }
 
     public int getActiveFont() {
@@ -555,6 +567,28 @@ public class TodoApplication extends Application implements
 
     public boolean initialSyncDone() {
         return mFileStore != null && mFileStore.initialSyncDone();
+    }
+
+
+    @Override
+    public void backup(String name, String contents) {
+        BackupDbHelper backupDbHelper = new BackupDbHelper(getAppContext());
+        DateTime now = DateTime.now(TimeZone.getDefault());
+        DateTime keepAfter = now.minusDays(2);
+        String strNow = now.format("YYYY-MM-DD hh:mm:ss");
+        String[] whereArgs  =  {keepAfter.format("YYYY-MM-DD hh:mm:ss")};
+
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = backupDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(BackupDbHelper.FILE_ID, contents);
+        values.put(BackupDbHelper.FILE_NAME, name);
+        values.put(BackupDbHelper.FILE_DATE, strNow);
+        db.replace(BackupDbHelper.TABLE_NAME,null,values);
+        db.delete(BackupDbHelper.TABLE_NAME, BackupDbHelper.WHERE_AFTER_DATE, whereArgs );
+        db.close();
+        backupDbHelper.close();
     }
 
 }
