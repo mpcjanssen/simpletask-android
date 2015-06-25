@@ -46,7 +46,6 @@ import java.util.*;
  */
 public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
-    private final Context mCtx;
     @org.jetbrains.annotations.Nullable
     private ArrayList<Task> mTasks = new ArrayList<Task>();
     private List<Task> mSelectedTask;
@@ -57,8 +56,7 @@ public class TodoList {
     private TodoListChanged mTodoListChanged;
 
 
-    public TodoList(Context context, TodoListChanged todoListChanged) {
-        this.mCtx = context;
+    public TodoList(TodoListChanged todoListChanged) {
         this.mTodoListChanged = todoListChanged;
     }
 
