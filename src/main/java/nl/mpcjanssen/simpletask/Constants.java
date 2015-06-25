@@ -27,7 +27,7 @@ public class Constants {
     public static final String DATE_FORMAT = "YYYY-MM-DD";
 
     // Constants for creating shortcuts
-    public final static String INTENT_SELECTED_TASK = "SELECTED_TASK";
+    public final static String INTENT_SELECTED_TASK_POSITION = "SELECTED_TASK_POSITION";
 
     public final static String BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE";
     public final static String BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT";

@@ -38,7 +38,7 @@ import android.view.Window;
 import android.widget.EditText;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.TaskCache;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +48,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class TodoApplication extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class TodoApplication extends Application implements
+        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged {
     private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
@@ -58,12 +59,13 @@ public class TodoApplication extends Application implements SharedPreferences.On
     @Nullable
     private FileStoreInterface mFileStore;
     @Nullable
-    private TaskCache m_taskCache;
+    private TodoList m_todoList;
     private CalendarSync m_calSync;
     private BroadcastReceiver m_broadcastReceiver;
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
+    private TodoList mTodoList;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -78,8 +80,6 @@ public class TodoApplication extends Application implements SharedPreferences.On
         super.onCreate();
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
-        getTaskCache(null);
-        m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
@@ -92,14 +92,15 @@ public class TodoApplication extends Application implements SharedPreferences.On
                 if (intent.getAction().equals(Constants.BROADCAST_FILE_CHANGED)) {
                     // File change reload task cache
                     try {
-                        getFileStore().loadTasksFromFile(getTodoFileName(),getTaskCache(null));
+                        mTodoList  = getFileStore().loadTasksFromFile(getTodoFileName(),TodoApplication.this);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (intent.getAction().equals(Constants.BROADCAST_TASKCACHE_CHANGED)) {
-                    getFileStore().saveTasksToFile(getTodoFileName(), getTaskCache(null));
+                    getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null));
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     m_calSync.syncLater();
+                    redrawWidgets();
                     updateWidgets();
                 } else if (intent.getAction().equals(Constants.BROADCAST_FILE_WRITE_FAILED)) {
                     Util.showToastLong(getApplicationContext(), R.string.write_failed);
@@ -108,6 +109,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
+        getTodoList(null);
+        m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
     }
 
     public void prefsChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
@@ -313,15 +316,14 @@ public class TodoApplication extends Application implements SharedPreferences.On
     }
 
     @NotNull
-    public TaskCache getTaskCache(final Activity act) {
-        if (this.m_taskCache!=null) {
-            return m_taskCache;
+    public TodoList getTodoList(final Activity act) {
+        if (this.m_todoList !=null) {
+            return m_todoList;
         }
 
-        this.m_taskCache = new TaskCache(this);
         final FileStoreInterface store = getFileStore();
         try {
-            store.loadTasksFromFile(getTodoFileName(), m_taskCache);
+            this.m_todoList = store.loadTasksFromFile(getTodoFileName(), this);
         } catch (IOException e) {
             e.printStackTrace();
             if (act!=null) {
@@ -329,15 +331,15 @@ public class TodoApplication extends Application implements SharedPreferences.On
                     @Override
                     public void fileSelected(String file) {
                         setTodoFile(file);
-                        getTaskCache(act);
+                        getTodoList(act);
                     }
                 }, showTxtOnly());
             } else {
-                m_taskCache = new TaskCache(this);
+                this.m_todoList = new TodoList(this, this);
             }
 
         }
-        return this.m_taskCache;
+        return this.m_todoList;
     }
 
     public void fileUpdated() {
@@ -450,8 +452,8 @@ public class TodoApplication extends Application implements SharedPreferences.On
 
     private void loadTodoFile(File newTodo) {
         setTodoFile(newTodo.getPath());
-        m_taskCache = null;
-        getTaskCache(null);
+        m_todoList = null;
+        getTodoList(null);
     }
 
     public void switchTodoFile(File newTodo) {
@@ -470,6 +472,12 @@ public class TodoApplication extends Application implements SharedPreferences.On
             loadTodoFile(newTodo);
             return true;
         }
+    }
+
+    public void todoListChanged() {
+        Log.v(TAG, "Tasks have changed, update UI and save todo file");
+        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
+        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_TASKCACHE_CHANGED));
     }
 
     public int getActiveFont() {
@@ -545,4 +553,5 @@ public class TodoApplication extends Application implements SharedPreferences.On
     public boolean initialSyncDone() {
         return mFileStore != null && mFileStore.initialSyncDone();
     }
+
 }

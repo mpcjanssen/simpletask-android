@@ -1,15 +1,10 @@
 package nl.mpcjanssen.simpletask.task;
 
-import android.app.Activity;
-
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,9 +15,9 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 
 public class TaskBagTest extends TestCase {
 
-    private TaskCache tc;
+    private TodoList tc;
 
-    public void initTaskCache(TaskCache tc, ArrayList<String> lines) {
+    public void initTaskCache(TodoList tc, ArrayList<String> lines) {
         tc.startLoading();
         int i = 0;
         for (String line : lines) {
@@ -34,7 +29,7 @@ public class TaskBagTest extends TestCase {
 
     @Override
     protected void setUp() {
-        tc = new TaskCache(null);
+        tc = new TodoList(null);
     }
     public void testInit() {
         ArrayList<String> lines = new ArrayList<String>();

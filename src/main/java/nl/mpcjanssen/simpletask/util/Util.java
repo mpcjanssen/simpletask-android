@@ -41,6 +41,7 @@ import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.*;
@@ -74,10 +75,10 @@ public class Util {
     }
 
     @Nullable
-    public static ArrayList<String> tasksToString(@NotNull List<Task> tasks) {
+    public static ArrayList<String> tasksToString(@NotNull TodoList todoList) {
         ArrayList<String> result = new ArrayList<>();
-        for (Task t: tasks) {
-            result.add(t.inFileFormat());
+        for (int i = 0 ; i < todoList.size() ; i++) {
+            result.add(todoList.get(i).inFileFormat());
         }
         return result;
     }

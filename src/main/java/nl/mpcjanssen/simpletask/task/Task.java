@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
-public class Task implements Serializable, Comparable<Task> {
+public class Task implements Serializable {
     public static String TAG = Task.class.getName();
     public final static int DUE_DATE = 0;
     public final static int THRESHOLD_DATE = 1;
@@ -67,7 +67,6 @@ public class Task implements Serializable, Comparable<Task> {
             .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static String COMPLETED_PREFIX = "x ";
 
-    private long id = 0;
     @NotNull
     private ArrayList<Token> mTokens = new ArrayList<>();
     private boolean mCompleted;
@@ -86,13 +85,12 @@ public class Task implements Serializable, Comparable<Task> {
     private boolean mIsHidden;
 
 
-    public Task(long id, @NotNull String rawText, DateTime defaultPrependedDate) {
-        this.id = id;
+    public Task(@NotNull String rawText, DateTime defaultPrependedDate) {
         this.init(rawText, defaultPrependedDate);
     }
 
-    public Task(long id, @NotNull String rawText) {
-        this(id, rawText, null);
+    public Task(@NotNull String rawText) {
+        this(rawText, null);
     }
 
     public void update(@NotNull String rawText) {
@@ -199,14 +197,6 @@ public class Task implements Serializable, Comparable<Task> {
             mTokens.add(new WHITE_SPACE(" "));
             mTokens.add(newTok);
         }
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @NotNull
@@ -342,7 +332,7 @@ public class Task implements Serializable, Comparable<Task> {
             }
             parse(COMPLETED_PREFIX + completionDate + " " + inFileFormat());
             if (getRecurrencePattern() != null) {
-                newTask = new Task(0,getTextWithoutCompletionInfo());
+                newTask = new Task(getTextWithoutCompletionInfo());
                 if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
                     newTask.deferDueDate(getRecurrencePattern(), deferFromDate);
                 } else {
@@ -404,23 +394,10 @@ public class Task implements Serializable, Comparable<Task> {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (((Object) this).getClass() != obj.getClass())
-            return false;
-        Task other = (Task) obj;
-        return id == other.id && (this.inFileFormat().equals(other.inFileFormat()));
-    }
-
-    @Override
     public int hashCode() {
 
         final int prime = 31;
         int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
         result = prime * result +  inFileFormat().hashCode();
         return result;
     }
@@ -438,11 +415,12 @@ public class Task implements Serializable, Comparable<Task> {
 
     /**
      * @param another Task to compare this task to
-     * @return comparison of the position of the tasks in the file
+     * @return only returns true if this Task is actually the same object
+     * this makes it possible to distinguish tasks with the same text representation
      */
     @Override
-    public int compareTo(@NotNull Task another) {
-        return ((Long) this.getId()).compareTo(another.getId());
+    public boolean equals (Object another) {
+        return (this==another);
     }
 
     public void append(String string) {

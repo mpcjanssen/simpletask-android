@@ -84,7 +84,7 @@ public class FilterScriptFragment extends Fragment {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Task t = new Task(0, getTestTask());
+                Task t = new Task(getTestTask());
                 try {
                     String script = getScript();
                     InputStream input = new ByteArrayInputStream(script.getBytes());
