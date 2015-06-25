@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.remote;
 
 import android.app.Activity;
 
+import android.support.annotation.Nullable;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 
@@ -15,11 +16,11 @@ import java.util.List;
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
-    TodoList loadTasksFromFile(String path, TodoList.TodoListChanged todoListChanged)  throws IOException;
+    TodoList loadTasksFromFile(String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup)  throws IOException;
     void startLogin(Activity caller, int i);
     void deauthenticate();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
-    void saveTasksToFile(String path, TodoList todoList);
+    void saveTasksToFile(String path, TodoList todoList, @Nullable BackupInterface backup);
     void appendTaskToFile(String path, List<Task> tasks) throws IOException;
 
     int getType();

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.FileObserver;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -53,29 +54,32 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged) {
-        Log.v(TAG,"Loading tasks from file: " + path);
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+    public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup) {
+        Log.v(TAG, "Loading tasks from file: " + path);
         final TodoList todoList = new TodoList(todoListChanged);
         try {
-            TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
-                int i = 0;
+            String readFile = TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+                ArrayList<String> completeFile = new ArrayList<>();
+
                 @Override
                 public boolean processLine(String s) throws IOException {
+                    completeFile.add(s);
                     todoList.add(new Task(s));
                     return true;
                 }
 
                 @Override
                 public String getResult() {
-                    return null;
+                    return Util.join(completeFile, "\n");
                 }
 
             });
+            if (backup != null) {
+                backup.backup(path, readFile);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
         return todoList;
     }
 
@@ -153,11 +157,12 @@ public class FileStore implements FileStoreInterface {
     public void browseForNewFile(Activity act, String path,  FileSelectedListener listener, boolean showTxt) {
         FileDialog dialog = new FileDialog(act, path, showTxt);
         dialog.addFileListener(listener);
-        dialog.createFileDialog(act,this);
+        dialog.createFileDialog(act, this);
     }
 
     @Override
-    public void saveTasksToFile(final String path, TodoList todoList) {
+
+    public void saveTasksToFile(final String path, TodoList todoList, final BackupInterface backup) {
         Log.v(TAG,"Saving tasks to file: " + path);
         bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         stopWatching(path);
@@ -165,6 +170,9 @@ public class FileStore implements FileStoreInterface {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                if (backup!=null) {
+                    backup.backup(path, Util.join(output,"\n"));
+                }
                 try {
                     TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
                 } catch (IOException e) {
