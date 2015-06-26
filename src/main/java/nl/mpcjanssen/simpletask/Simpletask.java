@@ -22,6 +22,7 @@ import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -211,6 +212,7 @@ public class Simpletask extends ThemedListActivity implements
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
 
+
         localBroadcastManager = m_app.getLocalBroadCastManager();
 
         m_broadcastReceiver = new BroadcastReceiver() {
@@ -260,8 +262,10 @@ public class Simpletask extends ThemedListActivity implements
 
     private void readOnlyProgress(boolean readOnly) {
         if (readOnly && mOverlayDialog == null) {
-            mOverlayDialog = new Dialog(this, android.R.style.Theme_Holo_Panel); //display an invisible overlay dialog to prevent user interaction and pressing back
+            mOverlayDialog = new Dialog(this);
+            mOverlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             mOverlayDialog.setContentView(R.layout.loading);
+            mOverlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             mOverlayDialog.setCancelable(false);
             mOverlayDialog.show();
         } else if (mOverlayDialog!=null) {
@@ -276,8 +280,7 @@ public class Simpletask extends ThemedListActivity implements
             startLogin();
             return;
         }
-        readOnlyProgress (!m_app.initialSyncDone());
-
+        readOnlyProgress (!m_app.initialSyncDone() || m_app.isLoading());
 
         mFilter = new ActiveFilter();
 
@@ -1086,7 +1089,7 @@ public class Simpletask extends ThemedListActivity implements
                             if (url.startsWith("todo://")) {
                                 File todoFolder = m_app.getTodoFile().getParentFile();
                                 File newName = new File(todoFolder, url.substring(7));
-                                m_app.switchTodoFile(newName);
+                                m_app.switchTodoFile(newName.getAbsolutePath());
                             } else {
                                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                                 startActivity(intent);

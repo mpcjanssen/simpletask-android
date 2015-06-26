@@ -63,7 +63,7 @@ public class TodoApplication extends Application implements
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
-    private ArrayList<File> todoTrail = new ArrayList<File>();
+    private ArrayList<String> todoTrail = new ArrayList<>();
 
     @Nullable
     private FileStoreInterface mFileStore;
@@ -75,6 +75,7 @@ public class TodoApplication extends Application implements
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
     private AsyncTask<Void, Void, TodoList> m_loadingTask;
+    private boolean mIsLoading = false;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -306,6 +307,10 @@ public class TodoApplication extends Application implements
     }
 
 
+    public boolean isLoading() {
+        return mIsLoading;
+    }
+
 
     public void setWordWrap(boolean bool) {
         m_prefs.edit()
@@ -324,6 +329,7 @@ public class TodoApplication extends Application implements
     }
 
     public void loadTodoList () {
+        mIsLoading = true;
         if (m_loadingTask!=null && m_loadingTask.getStatus() == AsyncTask.Status.RUNNING) {
             Log.v(TAG, "Todolist is already loading, waiting");
             return;
@@ -349,6 +355,7 @@ public class TodoApplication extends Application implements
             @Override
             protected void onPostExecute(TodoList newTodoList) {
                 m_todoList = newTodoList;
+                mIsLoading = false;
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
             }
@@ -464,27 +471,21 @@ public class TodoApplication extends Application implements
         }
     }
 
-    private void loadTodoFile(File newTodo) {
-        setTodoFile(newTodo.getPath());
-        m_todoList = null;
-        m_todoList = getTodoList(null);
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-    }
-
-    public void switchTodoFile(File newTodo) {
-        todoTrail.add(getTodoFile());
-        loadTodoFile(newTodo);
+    public void switchTodoFile(String newTodo) {
+        todoTrail.add(getTodoFileName());
+        setTodoFile(newTodo);
+        loadTodoList();
 
     }
 
     public boolean switchPreviousTodoFile() {
         int size = todoTrail.size();
-        if (todoTrail.size()==0) {
+        if (size == 0) {
             return false;
         } else {
-            File newTodo = todoTrail.get(size - 1);
-            todoTrail.remove(size - 1);
-            loadTodoFile(newTodo);
+            String newTodo = todoTrail.remove(size - 1);
+            setTodoFile(newTodo);
+            loadTodoList();
             return true;
         }
     }
@@ -554,7 +555,7 @@ public class TodoApplication extends Application implements
                 new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {
-                        switchTodoFile(new File(file));
+                        switchTodoFile(file);
                     }
                 },
 		showTxtOnly());
