@@ -20,7 +20,7 @@ public interface FileStoreInterface {
     void startLogin(Activity caller, int i);
     void logout();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
-    void saveTasksToFile(String path, TodoList todoList, @Nullable BackupInterface backup);
+    void saveTasksToFile(String path, TodoList todoList, @Nullable BackupInterface backup) throws IOException;
     void appendTaskToFile(String path, List<Task> tasks) throws IOException;
 
     int getType();

@@ -74,6 +74,7 @@ public class TodoApplication extends Application implements
     private int m_Theme = -1;
     private AsyncTask<Void, Void, TodoList> m_loadingTask;
     private boolean mIsLoading = false;
+    private AsyncTask<Void, Void, Void> m_savingTask;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -341,12 +342,8 @@ public class TodoApplication extends Application implements
                 try {
                     newTodoList = store.loadTasksFromFile(getTodoFileName(),TodoApplication.this, TodoApplication.this);
                 } catch (Exception e) {
-                    newTodoList = new TodoList(TodoApplication.this);
                     e.printStackTrace();
-                    for (String line : e.getMessage().split("\n")) {
-                        newTodoList.add(new Task(line));
-                    }
-                } 
+                }
                 return newTodoList;
             }
 
@@ -491,8 +488,21 @@ public class TodoApplication extends Application implements
     public void todoListChanged() {
         Log.v(TAG, "Tasks have changed, update UI and save todo file");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-        getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), this);
-    }
+
+            m_savingTask = new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Util.showToastShort(getApplicationContext(), "File save failed. File is not stored");
+                    }
+                    return null;
+                }
+            }.execute();
+        }
 
     public int getActiveFont() {
         String fontsize =  getPrefs().getString("fontsize", "medium");

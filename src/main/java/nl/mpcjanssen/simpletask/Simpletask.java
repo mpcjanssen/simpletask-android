@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -623,13 +624,13 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private void archiveTasks(List<Task> tasksToArchive) {
-        TodoList todoList = getTodoList();
+        final TodoList todoList = getTodoList();
         if (m_app.getTodoFileName().equals(m_app.getDoneFileName())) {
             Util.showToastShort(this, "You have the done.txt file opened.");
             return;
         }
 
-        ArrayList<Task> tasksToDelete = new ArrayList<>();
+        final List<Task> tasksToDelete = new ArrayList<>();
         if (tasksToArchive==null) {
             tasksToArchive = todoList.getTasks();
         }
@@ -639,17 +640,25 @@ public class Simpletask extends ThemedListActivity implements
             }
         }
 
-        try {
-            m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(), tasksToDelete);
-            for (Task t: tasksToDelete) {
-                todoList.remove(t);
-            }
-            todoList.notifyChanged();
-        } catch (IOException e) {
-            Util.showToastShort(this,"Archive failed");
-            e.printStackTrace();
+        new AsyncTask<Void,Void,Void>() {
 
-        }
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(), tasksToDelete);
+                    for (Task t: tasksToDelete) {
+                        todoList.remove(t);
+                    }
+                    todoList.notifyChanged();
+                } catch (IOException e) {
+                    Util.showToastShort(Simpletask.this,"Archive failed");
+                    e.printStackTrace();
+
+                }
+                return null;
+            }
+        }.execute();
+
     }
 
     @Override
