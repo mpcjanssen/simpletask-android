@@ -25,13 +25,16 @@ package nl.mpcjanssen.simpletask.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.common.base.Joiner;
@@ -284,8 +287,8 @@ public class Util {
         globals.set( "completed", LuaBoolean.valueOf(t.isCompleted()));
         globals.set( "priority", t.getPriority().getCode());
 
-        globals.set("tags",javaListToLuaTable(t.getTags()));
-        globals.set("lists",javaListToLuaTable(t.getLists()));
+        globals.set("tags", javaListToLuaTable(t.getTags()));
+        globals.set("lists", javaListToLuaTable(t.getLists()));
     }
 
     private static LuaValue javaListToLuaTable(List<String>javaList) {
@@ -320,7 +323,7 @@ public class Util {
         ArrayList<String> result = new ArrayList<>();
         result.addAll(new AlphabeticalStringComparator(caseSensitive).sortedCopy(items));
         if (prefix !=null ) {
-            result.add(0,prefix);
+            result.add(0, prefix);
         }
         return result;
     }
@@ -329,5 +332,21 @@ public class Util {
         ArrayList<String> temp = new ArrayList<>();
         temp.addAll(items);
         return sortWithPrefix(temp, caseSensitive, prefix);
+    }
+
+
+    public static Dialog showLoadingOverlay(@NotNull Activity act, @Nullable Dialog visibleDialog, boolean show) {
+        if (show) {
+            Dialog newDialog = new Dialog(act);
+            newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            newDialog.setContentView(R.layout.loading);
+            newDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            newDialog.setCancelable(false);
+            newDialog.show();
+            return newDialog;
+        } else if (!show && visibleDialog!=null) {
+            visibleDialog.dismiss();
+        }
+        return null;
     }
 }

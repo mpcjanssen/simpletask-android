@@ -235,9 +235,9 @@ public class Simpletask extends ThemedListActivity implements
                     handleIntent();
                     getListView().setSelectionFromTop(position,0);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
-                    readOnlyProgress(true);
+                    mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
-                    readOnlyProgress(false);
+                    mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, false);
                 }
             }
         };
@@ -260,19 +260,7 @@ public class Simpletask extends ThemedListActivity implements
         }
     }
 
-    private void readOnlyProgress(boolean readOnly) {
-        if (readOnly && mOverlayDialog == null) {
-            mOverlayDialog = new Dialog(this);
-            mOverlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mOverlayDialog.setContentView(R.layout.loading);
-            mOverlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            mOverlayDialog.setCancelable(false);
-            mOverlayDialog.show();
-        } else if (mOverlayDialog!=null) {
-            mOverlayDialog.dismiss();
-            mOverlayDialog = null;
-        }
-    }
+
 
     private void handleIntent() {
         if (!m_app.isAuthenticated()) {
@@ -280,7 +268,7 @@ public class Simpletask extends ThemedListActivity implements
             startLogin();
             return;
         }
-        readOnlyProgress (!m_app.initialSyncDone() || m_app.isLoading());
+        mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
 
         mFilter = new ActiveFilter();
 

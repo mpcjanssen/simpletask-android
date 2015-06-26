@@ -18,16 +18,15 @@ public interface FileStoreInterface {
     boolean isAuthenticated();
     TodoList loadTasksFromFile(String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup)  throws IOException;
     void startLogin(Activity caller, int i);
-    void deauthenticate();
+    void logout();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
     void saveTasksToFile(String path, TodoList todoList, @Nullable BackupInterface backup);
     void appendTaskToFile(String path, List<Task> tasks) throws IOException;
 
     int getType();
     void setEol(String eol);
-    boolean initialSyncDone();
     void sync();
-    String readFile(String file);
+    String readFile(String file) throws IOException;
     boolean supportsSync();
     interface FileSelectedListener {
         void fileSelected(String file);

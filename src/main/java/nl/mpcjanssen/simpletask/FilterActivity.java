@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import nl.mpcjanssen.simpletask.remote.FileStore;
@@ -212,8 +213,13 @@ public class FilterActivity extends ThemedActivity {
 
             @Override
             public void fileSelected(String file) {
-                // Util.showToastShort(act ,"Selected file " + file);
-                setScript(m_app.getFileStore().readFile(file));
+
+                try {
+                    setScript(m_app.getFileStore().readFile(file));
+                } catch (IOException e) {
+                    Util.showToastShort(act ,"Failed to load script.");
+                    e.printStackTrace();
+                }
             }
         });
         dialog.createFileDialog(this,m_app.getFileStore());
