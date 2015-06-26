@@ -30,11 +30,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Window;
@@ -123,7 +121,7 @@ public class TodoApplication extends Application implements
 
     public void deauthenticate() {
         if (mFileStore!=null) {
-            mFileStore.deauthenticate();
+            mFileStore.logout();
             mFileStore=null;
         }
     }
@@ -342,12 +340,14 @@ public class TodoApplication extends Application implements
                 TodoList newTodoList = null;
                 try {
                     newTodoList = store.loadTasksFromFile(getTodoFileName(),TodoApplication.this, TodoApplication.this);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     newTodoList = new TodoList(TodoApplication.this);
                     e.printStackTrace();
                     for (String line : e.getMessage().split("\n")) {
                         newTodoList.add(new Task(line));
                     }
+                } finally {
+                    Log.w(TAG, "Something went terribly wrong");
                 }
                 return newTodoList;
             }
@@ -565,11 +565,6 @@ public class TodoApplication extends Application implements
     public String getDoneFileName() {
         return new File(getTodoFile().getParentFile(), "done.txt").getAbsolutePath();
     }
-
-    public boolean initialSyncDone() {
-        return mFileStore != null && mFileStore.initialSyncDone();
-    }
-
 
     @Override
     public void backup(String name, String contents) {

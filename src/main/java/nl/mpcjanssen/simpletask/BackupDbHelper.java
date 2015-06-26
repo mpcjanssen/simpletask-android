@@ -19,7 +19,7 @@ public class BackupDbHelper extends SQLiteOpenHelper {
                     FILE_NAME + TEXT_TYPE + COMMA_SEP +
                     FILE_DATE + TEXT_TYPE+ " )";
 
-    static final String WHERE_AFTER_DATE =  FILE_DATE + " < ? ";
+    static final String WHERE_AFTER_DATE =  FILE_DATE + " < ?";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
