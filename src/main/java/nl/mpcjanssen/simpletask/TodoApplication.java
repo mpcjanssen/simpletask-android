@@ -346,9 +346,7 @@ public class TodoApplication extends Application implements
                     for (String line : e.getMessage().split("\n")) {
                         newTodoList.add(new Task(line));
                     }
-                } finally {
-                    Log.w(TAG, "Something went terribly wrong");
-                }
+                } 
                 return newTodoList;
             }
 
