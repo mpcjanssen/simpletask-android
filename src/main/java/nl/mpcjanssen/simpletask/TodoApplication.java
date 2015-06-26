@@ -72,9 +72,9 @@ public class TodoApplication extends Application implements
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
-    private AsyncTask<Void, Void, TodoList> m_loadingTask;
+    private Thread m_loadingThread;
     private boolean mIsLoading = false;
-    private AsyncTask<Void, Void, Void> m_savingTask;
+    private Thread m_savingThread;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -329,32 +329,29 @@ public class TodoApplication extends Application implements
 
     public void loadTodoList () {
         mIsLoading = true;
-        if (m_loadingTask!=null && m_loadingTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (m_loadingThread!=null && m_loadingThread.isAlive()) {
             Log.v(TAG, "Todolist is already loading, waiting");
             return;
         }
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         final FileStoreInterface store = getFileStore();
-        m_loadingTask = new AsyncTask<Void, Void, TodoList>() {
+        m_loadingThread = new Thread(new Runnable() {
             @Override
-            protected TodoList doInBackground(Void... params) {
-                TodoList newTodoList = null;
+            public void run() {
+                TodoList newTodoList = new TodoList(null);
                 try {
-                    newTodoList = store.loadTasksFromFile(getTodoFileName(),TodoApplication.this, TodoApplication.this);
+                    newTodoList = store.loadTasksFromFile(getTodoFileName(), TodoApplication.this, TodoApplication.this);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return newTodoList;
-            }
-
-            @Override
-            protected void onPostExecute(TodoList newTodoList) {
                 m_todoList = newTodoList;
                 mIsLoading = false;
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
             }
-        }.execute();
+
+        });
+        m_loadingThread.start();
     }
 
     public void fileChanged() {
@@ -488,20 +485,18 @@ public class TodoApplication extends Application implements
     public void todoListChanged() {
         Log.v(TAG, "Tasks have changed, update UI and save todo file");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-
-            m_savingTask = new AsyncTask<Void, Void, Void>() {
-
+            m_savingThread = new Thread(new Runnable() {
                 @Override
-                protected Void doInBackground(Void... params) {
+                public void run() {
                     try {
                         getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Util.showToastShort(getApplicationContext(), "File save failed. File is not stored");
                     }
-                    return null;
                 }
-            }.execute();
+            });
+          m_savingThread.start();
         }
 
     public int getActiveFont() {
