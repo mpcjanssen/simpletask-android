@@ -3,10 +3,9 @@ package nl.mpcjanssen.simpletask.remote;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -41,18 +40,19 @@ public class FileStore implements FileStoreInterface {
     private final String TAG = getClass().getName();
     private final FileChangeListener mFileChangedListerer;
     private final Context mCtx;
-    private final SharedPreferences mPrefs;
+    private  SharedPreferences mPrefs;
     private String mEol;
     // In the class declaration section:
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private String mWatchedFile;
-    private AsyncTask<Void, Void, Void> pollingTask;
+    private AsyncTask<Void, Void, Boolean> pollingTask;
     private String latestCursor;
 
     private static String LOCAL_CONTENTS = "localContents";
     private static String LOCAL_NAME = "localName";
     private static String LOCAL_REVISION = "localRev";
     private static String CACHE_PREFS = "dropboxMeta";
+    private static String OAUTH2_TOKEN = "dropboxToken";
 
 
     private String loadContentsFromCache() {
@@ -76,11 +76,11 @@ public class FileStore implements FileStoreInterface {
     }
 
     public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
+        mPrefs = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
         mFileChangedListerer = fileChangedListener;
         mCtx = ctx;
         mEol = eol;
         setMDBApi();
-        mPrefs = ctx.getSharedPreferences(CACHE_PREFS,Context.MODE_PRIVATE);
     }
 
     private void setMDBApi() {
@@ -90,7 +90,8 @@ public class FileStore implements FileStoreInterface {
             app_key = app_key.replaceFirst("^db-", "");
             // And later in some initialization function:
             AppKeyPair appKeys = new AppKeyPair(app_key, app_secret);
-            AndroidAuthSession session = new AndroidAuthSession(appKeys);
+            String savedAuth = mPrefs.getString(OAUTH2_TOKEN, null);
+            AndroidAuthSession session = new AndroidAuthSession(appKeys, savedAuth);
             mDBApi = new DropboxAPI<AndroidAuthSession>(session);
         }
     }
@@ -113,6 +114,7 @@ public class FileStore implements FileStoreInterface {
                 // Required to complete auth, sets the access token on the session
                 mDBApi.getSession().finishAuthentication();
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
+                mPrefs.edit().putString(OAUTH2_TOKEN, accessToken).commit();
                 return true;
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
@@ -195,52 +197,32 @@ public class FileStore implements FileStoreInterface {
         }
     }
 
-
+    // FIXME only really look into this with the new Core API for now do manual refresh
     private void startLongPoll ()  {
-        pollingTask = new AsyncTask<Void,Void,Void>() {
+        pollingTask = new AsyncTask<Void,Void,Boolean>() {
             @Override
-            protected Void doInBackground(Void... v) {
+            protected Boolean doInBackground(Void... v) {
                 try {
-                    Log.v(TAG, "Long polling");
-                    ArrayList<String> params = new ArrayList<>();
-                    params.add("cursor");
-                    params.add(latestCursor);
-                    params.add("timeout");
-                    params.add("120");
-                    Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[0]), mDBApi.getSession());
-                    Log.v(TAG, "Longpoll response: " + response.toString());
-                    JsonThing result = new JsonThing(response);
-                    JsonMap resultMap = result.expectMap();
-                    boolean changes = resultMap.get("changes").expectBoolean();
-                    JsonThing backoff =  resultMap.getOrNull("backoff");
-                    Log.v(TAG, "Longpoll ended, changes " + changes + " backoff " + backoff);
-                    if (changes) {
-                        DropboxAPI.DeltaPage<DropboxAPI.Entry> delta = mDBApi.delta(latestCursor);
-                        latestCursor = delta.cursor;
-                        for (DropboxAPI.DeltaEntry entry : delta.entries) {
-                            if (entry.lcPath.equalsIgnoreCase(mWatchedFile)) {
-                                Log.v (TAG, "File " + mWatchedFile + " changed, reloading");
-                                mFileChangedListerer.fileChanged();
-                                return null;
-                            }
-                        }
-                    }
+
+                    Log.v(TAG, "Delta polling");
+                    DropboxAPI.DeltaPage<DropboxAPI.Entry> delta = mDBApi.delta(latestCursor);
+                    latestCursor = delta.cursor;
+
                 } catch (DropboxException e) {
                     e.printStackTrace();
-                } catch (JsonExtractionException e) {
-                    e.printStackTrace();
+                    return false;
                 }
-                return null;
+                return false;
             }
             @Override
-            protected void onPostExecute(Void v) {
-                startLongPoll();
+            protected void onPostExecute(Boolean success) {
+
             }
         }.execute();
     }
     
 
-    private void stopWatching(String path) {
+    private void stopWatching() {
         if (pollingTask ==null || mDBApi == null) {
             return;
         }
@@ -253,6 +235,7 @@ public class FileStore implements FileStoreInterface {
         if(mDBApi!=null) {
             mDBApi.getSession().unlink();
         }
+        mPrefs.edit().remove(OAUTH2_TOKEN);
     }
 
     @Override
@@ -269,7 +252,9 @@ public class FileStore implements FileStoreInterface {
         if (backup!=null) {
             backup.backup(path, Util.joinTasks(todoList.getTasks(), "\n"));
         }
-        stopWatching(path);
+        stopWatching();
+
+        // FIXME stuff here
         startWatching(path);
         LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
     }
@@ -321,6 +306,15 @@ public class FileStore implements FileStoreInterface {
     @Override
     public int getType() {
         return Constants.STORE_DROPBOX;
+    }
+
+    public void changedConnectionState(boolean connected) {
+        if (!connected) {
+            stopWatching();
+        } else {
+
+            mFileChangedListerer.fileChanged();
+        }
     }
 
     public static class FileDialog {
