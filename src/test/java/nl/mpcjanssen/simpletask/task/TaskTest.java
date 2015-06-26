@@ -19,36 +19,35 @@ import nl.mpcjanssen.simpletask.util.DateStrings;
 public class TaskTest extends TestCase {
 
     public void testEquals() {
-        Task a = new Task(1, "Test abcd");
-        Task b = new Task(1, "Test abcd");
-        Task c = new Task(1, "Test abcd ");
-        Task d = new Task(2, "Test abcd");
-        assertNotSame(a,b);
-        assertEquals(a,b);
+        Task a = new Task( "Test abcd");
+        Task b = new Task( "Test abcd");
+        Task c = new Task( "Test abcd ");
+        Task d = new Task("Test abcd");
         assertFalse(b.equals(c));
         assertFalse(b.equals(d));
+        assertFalse(a.equals(b));
     }
     
 
     public void testParseIdemPotence() {
         String s = "Test abcd ";
-        assertEquals(s,new Task(0,s).inFileFormat());
+        assertEquals(s,new Task(s).inFileFormat());
     }
 
     public void testWithoutCompletionInfo() {
-        Task t = new Task(0, "(B) 2014-07-05 Test t:2014-07-05 rec:2d");
+        Task t = new Task( "(B) 2014-07-05 Test t:2014-07-05 rec:2d");
         assertEquals("(B) Test t:2014-07-05 rec:2d", t.getTextWithoutCompletionInfo());
     }
 
     public void testHidden() {
-        assertTrue(!new Task(0,"Test h:1").isVisible());
-        assertFalse(!new Task(0,"Test").isVisible());
-        assertTrue(!new Task(0,"h:1").isVisible());
+        assertTrue(!new Task("Test h:1").isVisible());
+        assertFalse(!new Task("Test").isVisible());
+        assertTrue(!new Task("h:1").isVisible());
     }
 
     public void testCompletion() {
         String rawText = "Test";
-        Task t = new Task(0, rawText);
+        Task t = new Task( rawText);
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate, true);
         assertTrue(t.isCompleted());
@@ -58,7 +57,7 @@ public class TaskTest extends TestCase {
     }
     public void testCompletionWithPrependDate() {
         String rawText = "Test";
-        Task t = new Task(0, rawText, DateTime.today(TimeZone.getDefault()));
+        Task t = new Task( rawText, DateTime.today(TimeZone.getDefault()));
         rawText = t.inFileFormat();
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete(completionDate, true);
@@ -67,11 +66,11 @@ public class TaskTest extends TestCase {
         assertFalse(t.isCompleted());
         assertEquals(rawText, t.inFileFormat());
 
-        t = new Task(0, "x 2000-01-01 2001-01-01 Test");
+        t = new Task( "x 2000-01-01 2001-01-01 Test");
         assertEquals("2000-01-01", t.getCompletionDate());
         assertEquals("2001-01-01", t.getCreateDate());
 
-        t = new Task(0, "x 2000-01-01 (A) 2001-01-01 Test");
+        t = new Task( "x 2000-01-01 (A) 2001-01-01 Test");
         assertEquals("2000-01-01", t.getCompletionDate());
         assertEquals("2001-01-01", t.getCreateDate());
         assertEquals(Priority.A,t.getPriority());
@@ -79,7 +78,7 @@ public class TaskTest extends TestCase {
 
     public void testCompletionWithPriority1() {
         String rawText = "(A) Test";
-        Task t = new Task(0, rawText);
+        Task t = new Task( rawText);
         assertEquals(Priority.A, t.getPriority());
         ArrayList<Token> expectedTokens = new ArrayList<>();
         expectedTokens.add(new PRIO("(A) "));
@@ -97,7 +96,7 @@ public class TaskTest extends TestCase {
 
     public void testCompletionWithPriority2() {
         String rawText = "(A) Test";
-        Task t = new Task(0, rawText);
+        Task t = new Task( rawText);
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
         DateTime completionDate = DateTime.today(TimeZone.getDefault());
@@ -109,13 +108,13 @@ public class TaskTest extends TestCase {
         assertEquals("(A) Test", t.inFileFormat());
     }
     public void testPriority() {
-        Task t = new Task(0, "(C) Test");
+        Task t = new Task( "(C) Test");
         assertEquals(t.getPriority(), Priority.C);
         t.setPriority(Priority.A);
         assertEquals(t.getPriority(), Priority.A);
         t.setPriority(Priority.NONE);
         assertEquals(t.getPriority(), Priority.NONE);
-        t = new Task(0, "Test");
+        t = new Task( "Test");
         assertEquals(t.getPriority(), Priority.NONE);
         t.setPriority(Priority.A);
         assertEquals(t.getPriority(), Priority.A);
@@ -126,7 +125,7 @@ public class TaskTest extends TestCase {
     }
 
     public void testCompletedPriority() {
-        Task t = new Task(0,"x 1111-11-11 (A) Test");
+        Task t = new Task("x 1111-11-11 (A) Test");
         ArrayList<Token> expectedTokens = new ArrayList<>();
         expectedTokens.add(new COMPLETED());
         expectedTokens.add(new COMPLETED_DATE("1111-11-11 "));
@@ -138,41 +137,41 @@ public class TaskTest extends TestCase {
     }
 
     public void testRemoveTag() {
-        Task t = new Task(0, "Milk @@errands");
+        Task t = new Task( "Milk @@errands");
         t.removeTag("@errands");
         assertEquals("Milk @@errands", t.inFileFormat());
         t.removeTag("@@errands");
         assertEquals("Milk", t.inFileFormat());
         assertEquals("Milk", t.showParts(Token.SHOW_ALL));
-        t = new Task(0, "Milk @@errands +supermarket");
+        t = new Task( "Milk @@errands +supermarket");
         t.removeTag("@@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());
     }
 
     public void testRecurrence() {
-        Task t1 = new Task(0, "Test");
-        Task t2 = new Task(0, "Test rec:1d");
+        Task t1 = new Task( "Test");
+        Task t2 = new Task( "Test rec:1d");
         assertEquals(null, t1.getRecurrencePattern());
         assertEquals("1d", t2.getRecurrencePattern());
         String t3 = "(B) 2014-07-05 Test t:2014-07-05 rec:2d";
-        Task t4 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000,1,1), true);
-        Task t5 = new Task(0,t3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
+        Task t4 = new Task(t3).markComplete(DateTime.forDateOnly(2000,1,1), true);
+        Task t5 = new Task(t3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:2d", t4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t5.inFileFormat());
 
         String dt3 = "(B) 2014-07-05 Test due:2014-07-05 rec:2d";
-        Task dt4 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000,1,1), true);
-        Task dt5 = new Task(0,dt3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
+        Task dt4 = new Task(dt3).markComplete(DateTime.forDateOnly(2000,1,1), true);
+        Task dt5 = new Task(dt3).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:2d", dt4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt5.inFileFormat());
 
         String text = "Test due:2014-07-05 rec:1y";
-        Task task = new Task(0,text).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
+        Task task = new Task(text).markComplete(DateTime.forDateOnly(2000, 1, 1), false);
         assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
     }
 
     public void testDue() {
-        Task t1 = new Task(0,"Test");
+        Task t1 = new Task("Test");
         t1.setDueDate("2013-01-01");
         assertEquals("Test due:2013-01-01", t1.inFileFormat());
         // Don't add extra whitespace
@@ -184,8 +183,8 @@ public class TaskTest extends TestCase {
     }
 
     public void testThreshold() {
-        Task t1 = new Task(0, "t:2013-12-12 Test");
-        Task t2 = new Task(0, "Test t:2013-12-12");
+        Task t1 = new Task( "t:2013-12-12 Test");
+        Task t2 = new Task( "Test t:2013-12-12");
         ArrayList<Token> eTok = new ArrayList<Token>();
         eTok.add(new THRESHOLD_DATE("2013-12-12"));
         eTok.add(new WHITE_SPACE(" "));
@@ -193,34 +192,34 @@ public class TaskTest extends TestCase {
         assertEquals(eTok, t1.getTokens());
         assertEquals("2013-12-12", t1.getThresholdDateString(""));
         assertEquals("2013-12-12", t2.getThresholdDateString(""));
-        Task t3 = new Task(0, "Test");
+        Task t3 = new Task( "Test");
         assertNull(t3.getThresholdDate());
         t3.setThresholdDate("2013-12-12");
         assertEquals("Test t:2013-12-12", t3.inFileFormat());
     }
 
     public void testInvalidThresholdDate() {
-        Task t1 = new Task(0, "Test t:2013-11-31");
+        Task t1 = new Task( "Test t:2013-11-31");
         assertFalse(t1.inFuture());
     }
 
     public void testInvalidDueDate() {
-        Task t1 = new Task(0, "Test due:2013-11-31");
+        Task t1 = new Task( "Test due:2013-11-31");
         assertEquals(null,t1.getDueDate());
     }
 
     public void testInvalidCreateDate() {
-        Task t1 = new Task(0, "2013-11-31 Test");
+        Task t1 = new Task( "2013-11-31 Test");
         assertEquals("2013-11-31",t1.getRelativeAge(null));
     }
 
     public void testInvalidCompleteDate() {
-        Task t1 = new Task(0, "x 2013-11-31 Test");
+        Task t1 = new Task( "x 2013-11-31 Test");
         assertEquals("2013-11-31",t1.getCompletionDate());
     }
 
     public void testParseText() {
-        Task t1 = new Task(0, "abcd");
+        Task t1 = new Task( "abcd");
         ArrayList<Token> expected = new ArrayList<Token>();
         expected.add(new TEXT("abcd"));
         assertEquals(expected, t1.getTokens());
