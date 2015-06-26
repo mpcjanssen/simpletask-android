@@ -147,12 +147,6 @@ public class FileStore implements FileStoreInterface {
         }
     }
 
-
-    @Override
-    public void deauthenticate() {
-
-    }
-
     @Override
     public void browseForNewFile(Activity act, String path,  FileSelectedListener listener, boolean showTxt) {
         FileDialog dialog = new FileDialog(act, path, showTxt);
@@ -164,12 +158,12 @@ public class FileStore implements FileStoreInterface {
 
     public void saveTasksToFile(final String path, TodoList todoList, final BackupInterface backup) {
         Log.v(TAG,"Saving tasks to file: " + path);
-        bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
+        stopWatching(path);
+        final  ArrayList<String> output = Util.tasksToString(todoList);
         if (backup!=null) {
             backup.backup(path, Util.join(output,"\n"));
         }
-        stopWatching(path);
-       final  ArrayList<String> output = Util.tasksToString(todoList);
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -179,7 +173,6 @@ public class FileStore implements FileStoreInterface {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
                 }
-                bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 startWatching(path);
                 return null;
             }
@@ -312,7 +305,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean initialSyncDone() {
-        return true;
+    public void logout() {
+        return;
     }
 }
