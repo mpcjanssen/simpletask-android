@@ -83,6 +83,20 @@ public class FileStore implements FileStoreInterface {
         setMDBApi();
     }
 
+    private String getLocalTodoRev () {
+        if (mPrefs==null) {
+            return null;
+        }
+        return mPrefs.getString(LOCAL_REVISION, null);
+    }
+
+    private void setLocalTodoRev (String rev) {
+        if (mPrefs==null) {
+            return;
+        }
+        mPrefs.edit().putString(LOCAL_REVISION, rev).commit();
+    }
+
     private void setMDBApi() {
         if (mDBApi == null) {
             String app_secret = mCtx.getString(R.string.dropbox_consumer_secret);
@@ -146,7 +160,7 @@ public class FileStore implements FileStoreInterface {
                 readFile.add(line);
             }
             openFileStream.close();
-            String contents =  Util.join(readFile,"\n");
+            String contents =  Util.join(readFile, "\n");
             backup.backup(path, contents);
             saveToCache(fileInfo.getMetadata(),contents);
             startWatching(path);
@@ -246,22 +260,62 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(String path, TodoList todoList , @Nullable  final BackupInterface backup) {
-        //FIXME read only
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        if (backup!=null) {
+    public void saveTasksToFile(String path, TodoList todoList, @Nullable final BackupInterface backup) throws IOException {
+        if (backup != null) {
             backup.backup(path, Util.joinTasks(todoList.getTasks(), "\n"));
         }
         stopWatching();
+        try {
+            List<String> lines = Util.tasksToString(todoList);
+            // Create raw file contents
 
-        // FIXME stuff here
+            String contents = Util.join(lines, mEol);
+            byte[] toStore = new byte[0];
+
+            toStore = contents.getBytes("UTF-8");
+
+            String rev = getLocalTodoRev();
+            InputStream in = new ByteArrayInputStream(toStore);
+
+            DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                    toStore.length, rev, null);
+            setLocalTodoRev(newEntry.rev);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException(e);
+        }
         startWatching(path);
-        LocalBroadcastManager.getInstance(mCtx).sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
     }
 
     @Override
     public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
-          //FIXME read only
+        try {
+
+            // First read file to append to
+            DropboxAPI.DropboxInputStream openFileStream =  mDBApi.getFileStream(path, null);
+            DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
+            Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
+            String line;
+            ArrayList<String> doneContents = new ArrayList<>();
+            while ((line = reader.readLine()) != null) {
+                doneContents.add(line);
+            }
+            openFileStream.close();
+
+            // Then append
+            for (Task t : tasks) {
+                doneContents.add(t.inFileFormat());
+            }
+            byte[] toStore = Util.join(doneContents, mEol).getBytes("UTF-8");
+            InputStream in = new ByteArrayInputStream(toStore);
+
+            DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                   toStore.length, fileInfo.getMetadata().rev, null);
+            in.close();
+        } catch (DropboxException e) {
+            throw new IOException(e);
+        }
     }
 
 
