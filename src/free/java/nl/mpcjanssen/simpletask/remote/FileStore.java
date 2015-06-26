@@ -187,52 +187,23 @@ public class FileStore implements FileStoreInterface {
 
 
     private void startWatching(final String path) {
-        mWatchedFile = path;
-        if (pollingTask == null) {
-            Log.v(TAG, "Initializing slow polling thread");
-            try {
-                Log.v(TAG, "Finding latest cursor");
-                ArrayList<String> params = new ArrayList<>();
-                params.add("include_media_info");
-                params.add("false");
-                Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[0]), mDBApi.getSession());
-                Log.v(TAG, "Longpoll latestcursor response: " + response.toString());
-                JsonThing result = new JsonThing(response);
-                JsonMap resultMap = result.expectMap();
-                latestCursor = resultMap.get("cursor").expectString();
-            } catch (DropboxException e) {
-                e.printStackTrace();
-                latestCursor = null;
-            } catch (JsonExtractionException e) {
-                latestCursor = null;
-                e.printStackTrace();
-            }
-            startLongPoll();
-        }
-    }
+       pollingTask = new AsyncTask<Void, Void, Boolean>() {
+           @Override
+           protected Boolean doInBackground(Void... params) {
+               try {
+                   Thread.sleep(1000 * 60 * 5);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               return null;
+           }
 
-    // FIXME only really look into this with the new Core API for now do manual refresh
-    private void startLongPoll ()  {
-        pollingTask = new AsyncTask<Void,Void,Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... v) {
-                try {
-
-                    Log.v(TAG, "Delta polling");
-                    DropboxAPI.DeltaPage<DropboxAPI.Entry> delta = mDBApi.delta(latestCursor);
-                    latestCursor = delta.cursor;
-
-                } catch (DropboxException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-                return false;
-            }
-            @Override
-            protected void onPostExecute(Boolean success) {
-
-            }
-        }.execute();
+           @Override
+           protected void onPostExecute(Boolean aBoolean) {
+               super.onPostExecute(aBoolean);
+               mFileChangedListerer.fileChanged();
+           }
+       }.execute();
     }
     
 
