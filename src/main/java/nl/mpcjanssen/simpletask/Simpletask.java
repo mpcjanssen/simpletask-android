@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -640,10 +639,10 @@ public class Simpletask extends ThemedListActivity implements
             }
         }
 
-        new AsyncTask<Void,Void,Void>() {
+        Thread archiveThread = new Thread(new Runnable() {
 
             @Override
-            protected Void doInBackground(Void... params) {
+            public void run() {
                 try {
                     m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(), tasksToDelete);
                     for (Task t: tasksToDelete) {
@@ -655,9 +654,9 @@ public class Simpletask extends ThemedListActivity implements
                     e.printStackTrace();
 
                 }
-                return null;
-            }
-        }.execute();
+                            }
+        });
+        archiveThread.start();
 
     }
 

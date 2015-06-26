@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.FutureTask;
 
 /**
  * FileStore implementation backed by Dropbox
@@ -45,7 +46,7 @@ public class FileStore implements FileStoreInterface {
     // In the class declaration section:
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private String mWatchedFile;
-    private AsyncTask<Void, Void, Boolean> pollingTask;
+    private Thread pollingTask;
     private String latestCursor;
 
     private static String LOCAL_CONTENTS = "localContents";
@@ -187,32 +188,27 @@ public class FileStore implements FileStoreInterface {
 
 
     private void startWatching(final String path) {
-       pollingTask = new AsyncTask<Void, Void, Boolean>() {
-           @Override
-           protected Boolean doInBackground(Void... params) {
-               try {
-                   Thread.sleep(1000 * 60 * 5);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-               return null;
-           }
+        if (pollingTask==null) {
+            pollingTask = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000 * 60 * 5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mFileChangedListerer.fileChanged();
+                    return;
+                }
+            });
+            pollingTask.start();
+        }
 
-           @Override
-           protected void onPostExecute(Boolean aBoolean) {
-               super.onPostExecute(aBoolean);
-               mFileChangedListerer.fileChanged();
-           }
-       }.execute();
     }
     
 
     private void stopWatching() {
-        if (pollingTask ==null || mDBApi == null) {
-            return;
-        }
-        pollingTask.cancel(true);
-        pollingTask = null;
+        // Not implemented
     }
 
     @Override
@@ -376,6 +372,8 @@ public class FileStore implements FileStoreInterface {
             if (api==null) {
                 return;
             }
+
+            // Use an asynctask because we need to manage the UI
             new AsyncTask<Void,Void, AlertDialog.Builder>() {
                 @Override
                 protected AlertDialog.Builder doInBackground(Void... params) {
