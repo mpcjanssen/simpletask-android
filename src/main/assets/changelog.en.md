@@ -4,16 +4,21 @@
 5.5.0
 -----
 
-- Redid task memory backend. Fixes [#252](https://github.com/mpcjanssen/simpletask-android/issues/252).
-- Store last two days of todo.txt version in an internal database. This allows recovery in case of bugs.
-- Switched back to Dropbox Core API. The Sync API is not supported anymore. Background sync is 5 minutes.
-- Don't use AsyncTask if not necessary. This make background activity much more robust.
 - Redid the file loading feedback. If a file is loading the UI is locked.
 - Fixed file ordering (I hope for real now).
+- Improved connection detection and conflict handling for Dropbox. A `(conflicted file)` is automatically created and opened.
+- Keep the list position after modifying tasks.
+- Properly refresh the navigation drawer if lists/tags are added or removed.
+- Fixed a filter issue with empty Lua filter scripts being treated as false.
+
+- Store last two days of todo.txt version in an internal database. This allows recovery in case of bugs.
+- Redid task memory backend. Fixes [#252](https://github.com/mpcjanssen/simpletask-android/issues/252).
+- Don't use AsyncTask if not necessary. This make background activity much more robust.
+- Switched back to Dropbox Core API. The Sync API is not supported anymore.
 - With each file load a new TodoList is created, this fixes some concurrent modification issues.
 - Major refactoring for updated performance and easier debugging.
 - Show cached todo if Dropbox/device is offline.
-- Improved connection detection and conflict handling. A `(conflicted file)` is automatically created and openend.
+
 
 
 5.4.7
