@@ -57,6 +57,7 @@ public class FileStore implements FileStoreInterface {
     private Thread pollingTask;
     boolean continuePolling = true;
     private boolean offline = false;
+    private boolean mIsLoading = false;
 
     private String loadContentsFromCache() {
         if (mPrefs == null) {
@@ -214,48 +215,49 @@ public class FileStore implements FileStoreInterface {
         // on the dropbox side.
 
         Log.i(TAG, "Loading file fom dropnbox: " + path);
+        mIsLoading = true;
         if (!isAuthenticated()) {
             TodoList result = new TodoList(null);
+            mIsLoading = false;
             return result;
         }
-
+        final  TodoList todoList = new TodoList(todoListChanged);
         if (changesPending()) {
-            TodoList todoList = new TodoList(todoListChanged);
+
             for (String line: loadContentsFromCache().split("\r\n|\r|\n")) {
                 todoList.add(new Task(line));
             }
             saveTasksToFile(path,todoList,backup);
+            mIsLoading = false;
             return todoList;
+        } else {
+            try {
+                DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
+                DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
+                Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
+                String line;
+                ArrayList<String> readFile = new ArrayList<>();
+                while ((line = reader.readLine()) != null) {
+                    todoList.add(new Task(line));
+                    readFile.add(line);
+                }
+                openFileStream.close();
+                String contents = Util.join(readFile, "\n");
+                backup.backup(path, contents);
+                saveToCache(fileInfo.getMetadata().fileName(), fileInfo.getMetadata().rev, contents);
+                startWatching(path);
+            } catch (DropboxException e) {
+                // Couldn't download file use cached version
+                e.printStackTrace();
+                String contents = loadContentsFromCache();
+                for (String line : contents.split("(\r\n|\r|\n)")) {
+                    todoList.add(new Task(line));
+                }
+            }
         }
-
-        final TodoList todoList = new TodoList(todoListChanged);
-
-        try {
-            DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
-            DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-            Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
-            String line;
-            ArrayList<String> readFile = new ArrayList<>();
-            while ((line = reader.readLine()) != null) {
-                todoList.add(new Task(line));
-                readFile.add(line);
-            }
-            openFileStream.close();
-            String contents =  Util.join(readFile, "\n");
-            backup.backup(path, contents);
-            saveToCache(fileInfo.getMetadata().fileName(),fileInfo.getMetadata().rev,contents);
-            startWatching(path);
-        } catch (DropboxException e) {
-            // Couldn't download file use cached version
-            e.printStackTrace();
-            String contents = loadContentsFromCache();
-            for (String line: contents.split("(\r\n|\r|\n)")) {
-                todoList.add(new Task(line));
-            }
-        } ;
-
+        mIsLoading = false;
         return todoList;
     }
 
@@ -295,7 +297,6 @@ public class FileStore implements FileStoreInterface {
     
 
     private void stopWatching() {
-        // Not implemented
         continuePolling=false;
         pollingTask=null;
     }
@@ -396,6 +397,7 @@ public class FileStore implements FileStoreInterface {
         if (!isAuthenticated()) {
             return "";
         }
+        mIsLoading = true;
         try {
             DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
             DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
@@ -411,12 +413,19 @@ public class FileStore implements FileStoreInterface {
             return Util.join(readFile,"\n");
         } catch (DropboxException e) {
             throw (new IOException(e));
+        } finally {
+            mIsLoading = false;
         }
     }
 
     @Override
     public boolean supportsSync() {
         return true;
+    }
+
+    @Override
+    public boolean isLoading() {
+        return mIsLoading;
     }
 
     @Override

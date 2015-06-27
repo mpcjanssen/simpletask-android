@@ -40,6 +40,7 @@ public class FileStore implements FileStoreInterface {
     private final FileChangeListener m_fileChangedListener;
     private String mEol;
     private FileObserver m_observer;
+    private boolean mIsLoading;
 
     public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
         mEol = eol;
@@ -56,6 +57,7 @@ public class FileStore implements FileStoreInterface {
     @Override
     public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup) {
         Log.v(TAG, "Loading tasks from file: " + path);
+        mIsLoading = true;
         final TodoList todoList = new TodoList(todoListChanged);
         try {
             String readFile = TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
@@ -79,6 +81,8 @@ public class FileStore implements FileStoreInterface {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            mIsLoading = false;
         }
         return todoList;
     }
@@ -96,17 +100,25 @@ public class FileStore implements FileStoreInterface {
     @Override
     public String readFile(String file) {
         Log.v(TAG,"Reading file: " + file);
+        mIsLoading = true;
         try {
             return Files.toString(new File(file), Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return "";
+        } finally {
+            mIsLoading = false;
         }
     }
 
     @Override
     public boolean supportsSync() {
         return false;
+    }
+
+    @Override
+    public boolean isLoading() {
+        return mIsLoading;
     }
 
     @Override

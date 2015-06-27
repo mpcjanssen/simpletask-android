@@ -28,6 +28,9 @@ public interface FileStoreInterface {
     void sync();
     String readFile(String file) throws IOException;
     boolean supportsSync();
+
+    boolean isLoading();
+
     interface FileSelectedListener {
         void fileSelected(String file);
     }

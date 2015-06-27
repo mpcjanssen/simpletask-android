@@ -306,7 +306,7 @@ public class TodoApplication extends Application implements
 
 
     public boolean isLoading() {
-        return mIsLoading;
+        return getFileStore().isLoading();
     }
 
 
