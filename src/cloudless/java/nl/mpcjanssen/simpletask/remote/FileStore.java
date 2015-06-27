@@ -144,12 +144,13 @@ public class FileStore implements FileStoreInterface {
                     if (event == FileObserver.CLOSE_WRITE ||
                             event == FileObserver.MODIFY ||
                             event == FileObserver.MOVED_TO) {
-                        Log.v(TAG, "File changed in background reloading " + eventPath);
                         if (m_fileChangedListener!=null) {
+                            Log.v(TAG, "File changed in background reloading " + eventPath);
+                            Log.v(TAG, "Stop watching: " + path);
+                            this.stopWatching();
+                            m_observer = null;
                             m_fileChangedListener.fileChanged(path);
                         }
-
-
                     }
                 }
             }

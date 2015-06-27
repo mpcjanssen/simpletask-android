@@ -317,7 +317,7 @@ public class TodoApplication extends Application implements
     }
 
     @Nullable
-    public TodoList getTodoList(final Activity act) {
+    synchronized public  TodoList getTodoList(final Activity act) {
         if (m_todoList==null) {
             loadTodoList();
             return new TodoList(this);
