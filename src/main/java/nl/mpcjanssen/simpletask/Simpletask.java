@@ -317,6 +317,20 @@ public class Simpletask extends ThemedListActivity implements
         if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
             mFilter.initFromIntent(intent);
             Log.v(TAG, "handleIntent: launched with filter" + mFilter);
+            Bundle extras = intent.getExtras();
+            if (extras!=null) {
+                for (String key: extras.keySet()){
+                    Object value = extras.get(key);
+                    if (value!=null) {
+                        Log.d(TAG, String.format("%s %s (%s)", key,
+                                value.toString(), value.getClass().getName()));
+                    } else {
+                        Log.d(TAG, String.format("%s %s)", key,"<null>"));
+                    }
+
+                }
+
+            }
             Log.v(TAG, "handleIntent: saving filter in prefs");
             mFilter.saveInPrefs(TodoApplication.getPrefs());
         } else {
