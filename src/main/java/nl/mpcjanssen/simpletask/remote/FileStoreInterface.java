@@ -26,7 +26,7 @@ public interface FileStoreInterface {
     int getType();
     void setEol(String eol);
     void sync();
-    String readFile(String file) throws IOException;
+    String readFile(String file, FileReadListener fileRead) throws IOException;
     boolean supportsSync();
 
     boolean isLoading();
@@ -36,5 +36,9 @@ public interface FileStoreInterface {
     }
     public interface FileChangeListener {
         void fileChanged(String newName);
+    }
+
+    public interface FileReadListener {
+        void fileRead(String contents);
     }
 }

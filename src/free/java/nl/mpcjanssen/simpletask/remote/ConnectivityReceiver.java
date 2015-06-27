@@ -20,26 +20,6 @@ public class ConnectivityReceiver extends BroadcastReceiver {
         TodoApplication mApp = ((TodoApplication) context.getApplicationContext());
         FileStore store =  (FileStore) mApp.getFileStore();
         Log.v(TAG, "Connectivity changed");
-        debugIntent(intent,TAG);
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        boolean connected = netInfo != null && netInfo.isConnected();
-        store.changedConnectionState(connected);
-    }
-
-    private void debugIntent(Intent intent, String tag) {
-        Log.v(tag, "action: " + intent.getAction());
-        Log.v(tag, "component: " + intent.getComponent());
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            for (String key: extras.keySet()) {
-                Log.v(tag, "key [" + key + "]: " +
-                        extras.get(key));
-            }
-        }
-        else {
-            Log.v(tag, "no extras");
-        }
+        store.changedConnectionState(intent);
     }
 }

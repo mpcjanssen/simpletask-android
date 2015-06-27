@@ -98,17 +98,22 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public String readFile(String file) {
+    public String readFile(String file, FileReadListener fileRead) {
         Log.v(TAG,"Reading file: " + file);
         mIsLoading = true;
+        String contents = "";
         try {
-            return Files.toString(new File(file), Charsets.UTF_8);
+            contents =  Files.toString(new File(file), Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return "";
         } finally {
             mIsLoading = false;
         }
+        if (fileRead!=null) {
+            fileRead.fileRead(contents);
+        }
+        return contents;
     }
 
     @Override
@@ -140,7 +145,7 @@ public class FileStore implements FileStoreInterface {
                             event == FileObserver.MOVED_TO) {
                         Log.v(TAG, "File changed in background reloading " + eventPath);
                         if (m_fileChangedListener!=null) {
-                            m_fileChangedListener.fileChanged();
+                            m_fileChangedListener.fileChanged(path);
                         }
 
 
