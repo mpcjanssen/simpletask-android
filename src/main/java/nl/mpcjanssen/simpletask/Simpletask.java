@@ -75,7 +75,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 
 public class Simpletask extends ThemedListActivity implements
-                AdapterView.OnItemClickListener {
+                AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
 
     final static String TAG = Simpletask.class.getSimpleName();
 
@@ -103,7 +103,9 @@ public class Simpletask extends ThemedListActivity implements
     private DrawerLayout m_drawerLayout;
     private ActionBarDrawerToggle m_drawerToggle;
     private Bundle m_savedInstanceState;
+    int m_scrollPosition = 0;
     private Dialog mOverlayDialog;
+    private boolean mIgnoreScrollEvents = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -203,7 +205,6 @@ public class Simpletask extends ThemedListActivity implements
         m_app.setActionBarStyle(getWindow());
         m_savedInstanceState = savedInstanceState;
         super.onCreate(savedInstanceState);
-
         super.onCreate(savedInstanceState);
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);
@@ -230,10 +231,8 @@ public class Simpletask extends ThemedListActivity implements
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                    int position = getListView().getFirstVisiblePosition();
                     Log.v(TAG, "Updating UI because of broadcast");
                     handleIntent();
-                    getListView().setSelectionFromTop(position,0);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -353,19 +352,29 @@ public class Simpletask extends ThemedListActivity implements
         lv.setMultiChoiceModeListener(new ActionBarListener());
         lv.setClickable(true);
         lv.setOnItemClickListener(this);
+
+        mIgnoreScrollEvents = true;
+        // Setting a scroll listener reset the scroll
+        lv.setOnScrollListener(this);
+        mIgnoreScrollEvents = false;
+
+        if (m_savedInstanceState != null) {
+            m_scrollPosition = m_savedInstanceState.getInt("position");
+        }
         // If we were started with a selected task,
         // select it now and clear it from the intent
-        int selectedTaskPostion = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
-        getTodoList().clearSelectedTasks();
-        getTodoList().selectTask(selectedTaskPostion);
-        intent.removeExtra(Constants.INTENT_SELECTED_TASK_POSITION);
-        setIntent(intent);
-
-        setSelectedTasks(getTodoList().getSelectedTasks());
-        if (m_savedInstanceState != null) {
-            int position = m_savedInstanceState.getInt("position");
-            lv.setSelectionFromTop(position,0);
+        int selectedTask = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
+        if (selectedTask!=-1) {
+            m_scrollPosition = selectedTask;
+            getTodoList().clearSelectedTasks();
+            getTodoList().selectTask(m_scrollPosition);
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK_POSITION);
+            setSelectedTasks(getTodoList().getSelectedTasks());
+            setIntent(intent);
         }
+
+        lv.setSelectionFromTop(m_scrollPosition,0);
+
         updateDrawers();
     }
 
@@ -652,6 +661,7 @@ public class Simpletask extends ThemedListActivity implements
                 tasksToDelete.add(t);
             }
         }
+
 
         Thread archiveThread = new Thread(new Runnable() {
 
@@ -1126,6 +1136,17 @@ public class Simpletask extends ThemedListActivity implements
         return;
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (!mIgnoreScrollEvents) {
+            m_scrollPosition = firstVisibleItem;
+        }
+    }
+
 
     private static class ViewHolder {
         private TextView tasktext;
@@ -1387,7 +1408,6 @@ public class Simpletask extends ThemedListActivity implements
                         public void onClick(View v) {
                             completeTasks(task);
                             getTodoList().notifyChanged();
-
                             finishActionmode();
                         }
                     });
