@@ -13,6 +13,7 @@
 - With each file load a new TodoList is created, this fixes some concurrent modification issues.
 - Major refactoring for updated performance and easier debugging.
 - Show cached todo if Dropbox/device is offline.
+- Improved connection detection and conflict handling. A `(conflicted file)` is automatically created and openend.
 
 
 5.4.7

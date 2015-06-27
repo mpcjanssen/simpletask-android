@@ -349,7 +349,7 @@ public class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue;
                 }
-                if  (m_script!=null) {
+                if  (m_script!=null && !m_script.trim().isEmpty()) {
                     Util.initGlobals(globals,t);
                     LuaClosure closure = new LuaClosure(prototype, globals);
                     LuaValue result = closure.call(); 
