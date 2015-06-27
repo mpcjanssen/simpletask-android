@@ -97,7 +97,7 @@ public class FilterScriptFragment extends Fragment {
 
                     tvResult.setText(result.toString());
                    
-                    if (result.toboolean() ) {
+                    if (result.toboolean() || script.trim().isEmpty() ) {
                         tvBooleanResult.setText("true");
                     } else {
                         tvBooleanResult.setText("false");
