@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import nl.mpcjanssen.simpletask.TodoApplication;
@@ -18,13 +19,13 @@ public class ConnectivityReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         TodoApplication mApp = ((TodoApplication) context.getApplicationContext());
         FileStore store =  (FileStore) mApp.getFileStore();
-        boolean connected = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
         Log.v(TAG, "Connectivity changed");
         debugIntent(intent,TAG);
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        boolean connected = netInfo != null && netInfo.isConnected();
         store.changedConnectionState(connected);
-        if (connected) {
-            mApp.fileChanged();
-        }
     }
 
     private void debugIntent(Intent intent, String tag) {
