@@ -67,7 +67,7 @@ public class Util {
         return DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT);
     }
 
-    private static void runOnMainThread (Runnable r) {
+    public static void runOnMainThread (Runnable r) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(r);
     }

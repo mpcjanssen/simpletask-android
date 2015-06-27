@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
@@ -19,7 +18,6 @@ import com.dropbox.client2.jsonextract.JsonThing;
 import com.dropbox.client2.session.AppKeyPair;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.ListenerList;
@@ -32,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.FutureTask;
 
 
 /**
@@ -56,8 +55,9 @@ public class FileStore implements FileStoreInterface {
     private String latestCursor;
     private Thread pollingTask;
     boolean continuePolling = true;
-    private boolean offline = false;
+    Thread onOnline;
     private boolean mIsLoading = false;
+    private boolean mOnline;
 
     private String loadContentsFromCache() {
         if (mPrefs == null) {
@@ -102,7 +102,15 @@ public class FileStore implements FileStoreInterface {
         mFileChangedListerer = fileChangedListener;
         mCtx = ctx;
         mEol = eol;
+        mOnline = isOnline();
         setMDBApi();
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
     private String getLocalTodoRev () {
@@ -222,8 +230,13 @@ public class FileStore implements FileStoreInterface {
             return result;
         }
         final  TodoList todoList = new TodoList(todoListChanged);
-        if (changesPending()) {
 
+        if (!isOnline()) {
+            Log.v(TAG, "Device is offline loading from cache");
+            fillListFromCache(todoList);
+            mIsLoading = false;
+            return todoList;
+        } else if (changesPending() && isOnline()) {
             for (String line: loadContentsFromCache().split("\r\n|\r|\n")) {
                 todoList.add(new Task(line));
             }
@@ -251,17 +264,20 @@ public class FileStore implements FileStoreInterface {
             } catch (DropboxException e) {
                 // Couldn't download file use cached version
                 e.printStackTrace();
-                String contents = loadContentsFromCache();
-                for (String line : contents.split("(\r\n|\r|\n)")) {
-                    todoList.add(new Task(line));
-                }
+                fillListFromCache(todoList);
+                Util.showToastLong(mCtx, "Drobox error, loading from cache");
             }
         }
         mIsLoading = false;
         return todoList;
     }
 
-
+    private void fillListFromCache(TodoList todoList) {
+        String contents = loadContentsFromCache();
+        for (String line : contents.split("(\r\n|\r|\n)")) {
+            todoList.add(new Task(line));
+        }
+    }
 
     @Override
     public void startLogin(Activity caller, int i) {
@@ -272,6 +288,9 @@ public class FileStore implements FileStoreInterface {
 
 
     private void startWatching(final String path) {
+        if(!isOnline()) {
+            return;
+        }
         if (pollingTask == null) {
             Log.v(TAG, "Initializing slow polling thread");
             try {
@@ -311,6 +330,11 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
+        if (!isOnline()) {
+            Util.showToastLong(mCtx, "Device is offline");
+            Log.v(TAG, "Device is offline, browse closed");
+            return;
+        }
         FileDialog dialog = new FileDialog(act, path , true);
         dialog.addFileListener(listener);
         dialog.createFileDialog(act, this);
@@ -320,6 +344,10 @@ public class FileStore implements FileStoreInterface {
     public void saveTasksToFile(String path, TodoList todoList, @Nullable final BackupInterface backup) throws IOException {
         if (backup != null) {
             backup.backup(path, Util.joinTasks(todoList.getTasks(), "\n"));
+        }
+        if (!isOnline()) {
+            setChangesPending(true);
+            return;
         }
         stopWatching();
         String rev = getLocalTodoRev();
@@ -361,6 +389,9 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
+        if (!isOnline()) {
+            throw new IOException("Device is offline");
+        }
         try {
 
             // First read file to append to
@@ -398,12 +429,16 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void sync() {
+        if (!isOnline()) {
+            Util.showToastLong(mCtx, "Device is offline");
+            return;
+        }
         mFileChangedListerer.fileChanged(null);
     }
 
     @Override
-    public String readFile(String path) throws IOException {
-        if (!isAuthenticated()) {
+    public String readFile(String path, @Nullable FileReadListener fileRead) throws IOException {
+        if (!isAuthenticated() || !isOnline()) {
             return "";
         }
         mIsLoading = true;
@@ -419,7 +454,11 @@ public class FileStore implements FileStoreInterface {
                 readFile.add(line);
             }
             openFileStream.close();
-            return Util.join(readFile,"\n");
+            String contents = Util.join(readFile, "\n");
+            if (fileRead!=null) {
+                fileRead.fileRead(contents);
+            }
+            return contents;
         } catch (DropboxException e) {
             throw (new IOException(e));
         } finally {
@@ -443,13 +482,39 @@ public class FileStore implements FileStoreInterface {
     }
 
 
-    public void changedConnectionState(boolean connected) {
-        if (!connected) {
+    public void changedConnectionState(Intent intent) {
+        boolean prevOnline = mOnline;
+        mOnline = isOnline();
+        if (!prevOnline && mOnline) {
+            // Schedule a task to reload the file
+            // Give some time to settle so we ignore rapid connectivity changes
+            // Only schedule if another thread is not running
+            if (onOnline==null || !onOnline.isAlive()) {
+                onOnline = new  Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Check if we are still online
+                        Log.v(TAG, "Device went online, reloading in 5 seconds");
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (isOnline()) {
+                            mFileChangedListerer.fileChanged(null);
+                        } else {
+                            Log.v(TAG, "Device no longer online skipping reload");
+                        }
+                    }
+                });
+                onOnline.start();
+            }
+
+        } else if (!mOnline) {
             stopWatching();
-            offline = true;
-        } else if (offline && connected){
-            offline = false;
-            mFileChangedListerer.fileChanged(null);
+        }
+        if (prevOnline && !mOnline) {
+            Log.v(TAG, "Device went offline");
         }
     }
 
@@ -489,50 +554,48 @@ public class FileStore implements FileStoreInterface {
             }
 
             // Use an asynctask because we need to manage the UI
-            new AsyncTask<Void,Void, AlertDialog.Builder>() {
+            new Thread(new Runnable() {
                 @Override
-                protected AlertDialog.Builder doInBackground(Void... params) {
-
+                public void run() {
                     loadFileList(act, api, currentPath);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle(currentPath.getPath());
+                    loadingOverlay = Util.showLoadingOverlay(act, loadingOverlay, false);
+                    Util.runOnMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle(currentPath.getPath());
 
-                    builder.setItems(fileList, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            String fileChosen = fileList[which];
-                            if (fileChosen.equals(PARENT_DIR)) {
-                                currentPath = new File(currentPath.getParent());
-                                createFileDialog(act, fs);
-                                return;
-                            }
-                            File chosenFile = getChosenFile(fileChosen);
-                            Log.w("FileStore", "Selected file " + chosenFile.getName());
-                            DropboxAPI.Entry entry = entryHash.get(fileChosen);
-                            if (entry.isDir) {
-                                currentPath = chosenFile;
-                                createFileDialog(act, fs);
-                            } else {
+                            builder.setItems(fileList, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String fileChosen = fileList[which];
+                                    if (fileChosen.equals(PARENT_DIR)) {
+                                        currentPath = new File(currentPath.getParent());
+                                        createFileDialog(act, fs);
+                                        return;
+                                    }
+                                    File chosenFile = getChosenFile(fileChosen);
+                                    Log.w("FileStore", "Selected file " + chosenFile.getName());
+                                    DropboxAPI.Entry entry = entryHash.get(fileChosen);
+                                    if (entry.isDir) {
+                                        currentPath = chosenFile;
+                                        createFileDialog(act, fs);
+                                    } else {
+                                        dialog.cancel();
+                                        dialog.dismiss();
+                                        fireFileSelectedEvent(chosenFile);
+                                    }
+                                }
+                            });
+                            dialog = builder.create();
+                            if (dialog != null) {
                                 dialog.cancel();
                                 dialog.dismiss();
-                                fireFileSelectedEvent(chosenFile);
                             }
+                            dialog.show();
                         }
                     });
-                    return builder;
                 }
-
-                @Override
-                protected void onPostExecute(AlertDialog.Builder builder) {
-                    loadingOverlay = Util.showLoadingOverlay(act, loadingOverlay, false);
-                    if (dialog!=null) {
-                        dialog.cancel();
-                        dialog.dismiss();
-                    }
-                    dialog = builder.create();
-                    dialog.show();
-                }
-
-            }.execute();
+            }).start();
         }
 
 

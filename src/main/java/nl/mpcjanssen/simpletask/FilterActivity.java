@@ -48,7 +48,7 @@ public class FilterActivity extends ThemedActivity {
     boolean asWidgetConfigure = false;
     ActiveFilter mFilter;
 
-    TodoApplication  m_app;
+    TodoApplication m_app;
     SharedPreferences prefs;
 
     @Nullable
@@ -80,8 +80,8 @@ public class FilterActivity extends ThemedActivity {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {    	
-    	Log.v(TAG, "Called with intent: " + getIntent().toString());
+    public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "Called with intent: " + getIntent().toString());
         m_app = (TodoApplication) getApplication();
         prefs = TodoApplication.getPrefs();
         m_app.setActionBarStyle(getWindow());
@@ -91,12 +91,12 @@ public class FilterActivity extends ThemedActivity {
 
         Bundle arguments;
         actionbar = getActionBar();
-        if (actionbar!=null) {
+        if (actionbar != null) {
             actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         }
         Intent intent = getIntent();
 
-        if (intent.getAction()!=null) {
+        if (intent.getAction() != null) {
             asWidgetConfigure = getIntent().getAction().equals(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         }
 
@@ -108,8 +108,8 @@ public class FilterActivity extends ThemedActivity {
             mFilter.initFromIntent(intent);
         }
         // Fill arguments for fragment
-        arguments = new Bundle();        
-        arguments.putStringArrayList(FILTER_ITEMS, 
+        arguments = new Bundle();
+        arguments.putStringArrayList(FILTER_ITEMS,
                 Util.sortWithPrefix(m_app.getTodoList(this).getContexts(), m_app.sortCaseSensitive(), "-"));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
@@ -120,7 +120,7 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, 
+        arguments.putStringArrayList(FILTER_ITEMS,
                 Util.sortWithPrefix(m_app.getTodoList(this).getProjects(), m_app.sortCaseSensitive(), "-"));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
@@ -157,7 +157,7 @@ public class FilterActivity extends ThemedActivity {
                 .setText(getString(R.string.sort))
                 .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class.getName(), arguments))
                 .setTag(SORT_TAB);
-        arguments.putStringArrayList(FILTER_ITEMS,mFilter.getSort(m_app.getDefaultSorts()));
+        arguments.putStringArrayList(FILTER_ITEMS, mFilter.getSort(m_app.getDefaultSorts()));
         actionbar.addTab(sortTab);
 
         if (m_app.useScript()) {
@@ -193,36 +193,57 @@ public class FilterActivity extends ThemedActivity {
     public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter_action:
-            	if (asWidgetConfigure) {
-            		askWidgetName();
-            	} else {
-            		applyFilter();
-            	}
+                if (asWidgetConfigure) {
+                    askWidgetName();
+                } else {
+                    applyFilter();
+                }
                 break;
             case R.id.menu_filter_load_script:
-                openScript();
+                openScript(new FileStoreInterface.FileReadListener() {
+                    @Override
+                    public void fileRead(final String contents) {
+                        Util.runOnMainThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setScript(contents);
+                                    }
+                                }
+                        );
+                    }
+                });
                 break;
         }
         return true;
     }
 
-    private void openScript() {
-        final Context act = this;
-        FileStore.FileDialog dialog = new FileStore.FileDialog(this, new File(m_app.getTodoFileName()).getParent(), false);
-        dialog.addFileListener(new FileStoreInterface.FileSelectedListener() {
-
+    private void openScript(final FileStoreInterface.FileReadListener file_read) {
+        Util.runOnMainThread(new Runnable() {
             @Override
-            public void fileSelected(String file) {
+            public void run() {
+                FileStore.FileDialog dialog = new FileStore.FileDialog(FilterActivity.this, new File(m_app.getTodoFileName()).getParent(), false);
+                dialog.addFileListener(new FileStoreInterface.FileSelectedListener() {
+                    @Override
+                    public void fileSelected(final String file) {
+                        new Thread(new Runnable() {
 
-                try {
-                    setScript(m_app.getFileStore().readFile(file));
-                } catch (IOException e) {
-                    Util.showToastShort(act ,"Failed to load script.");
-                    e.printStackTrace();
-                }
+                            @Override
+                            public void run() {
+                                try {
+
+                                    m_app.getFileStore().readFile(file, file_read);
+                                } catch (IOException e) {
+                                    Util.showToastShort(FilterActivity.this, "Failed to load script.");
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+                });
+                dialog.createFileDialog(FilterActivity.this, m_app.getFileStore());
             }
         });
-        dialog.createFileDialog(this,m_app.getFileStore());
     }
 
     @NotNull
@@ -237,25 +258,25 @@ public class FilterActivity extends ThemedActivity {
         return target;
     }
 
-    private void updateFilterFromFragments () {
+    private void updateFilterFromFragments() {
         ArrayList<String> items;
         items = getFragmentFilter(CONTEXT_TAB);
-        if (items!=null) {
+        if (items != null) {
             mFilter.setContexts(items);
         }
-        mFilter.setContextsNot(getNot(CONTEXT_TAB,mFilter.getContextsNot()));
+        mFilter.setContextsNot(getNot(CONTEXT_TAB, mFilter.getContextsNot()));
 
         items = getFragmentFilter(PROJECT_TAB);
-        if (items!=null) {
+        if (items != null) {
             mFilter.setProjects(items);
         }
-        mFilter.setProjectsNot(getNot(PROJECT_TAB,mFilter.getProjectsNot()));
+        mFilter.setProjectsNot(getNot(PROJECT_TAB, mFilter.getProjectsNot()));
 
         items = getFragmentFilter(PRIO_TAB);
-        if (items!=null) {
+        if (items != null) {
             mFilter.setPriorities(items);
         }
-        mFilter.setPrioritiesNot(getNot(PRIO_TAB,mFilter.getPrioritiesNot()));
+        mFilter.setPrioritiesNot(getNot(PRIO_TAB, mFilter.getPrioritiesNot()));
 
         mFilter.setHideCompleted(getHideCompleted());
         mFilter.setHideFuture(getHideFuture());
@@ -265,7 +286,7 @@ public class FilterActivity extends ThemedActivity {
         mFilter.setScriptTestTask(getScriptTestTask());
 
         items = getSelectedSort();
-        if (items!=null) {
+        if (items != null) {
             mFilter.setSort(items);
         }
     }
@@ -382,22 +403,22 @@ public class FilterActivity extends ThemedActivity {
         }
     }
 
-    
-    private void createWidget(String name) {
-    	int mAppWidgetId;
 
-    	Intent intent = getIntent();
-    	Bundle extras = intent.getExtras();
+    private void createWidget(String name) {
+        int mAppWidgetId;
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
         updateFilterFromFragments();
-    	if (extras != null) {
-    		mAppWidgetId = extras.getInt(
-    				AppWidgetManager.EXTRA_APPWIDGET_ID, 
-    				AppWidgetManager.INVALID_APPWIDGET_ID);
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
 
             Context context = TodoApplication.getAppContext();
 
-    		// Store widget filter
-    		SharedPreferences preferences = context.getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
+            // Store widget filter
+            SharedPreferences preferences = context.getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);
             mFilter.setName(name);
             mFilter.saveInPrefs(preferences);
 
@@ -405,16 +426,16 @@ public class FilterActivity extends ThemedActivity {
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
                     mAppWidgetId, name);
 
-    		Intent resultValue = new Intent(getApplicationContext(), AppWidgetService.class);
-    		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-    		setResult(RESULT_OK, resultValue);
-    		finish();
-    	}
+            Intent resultValue = new Intent(getApplicationContext(), AppWidgetService.class);
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+        }
     }
 
-	private void applyFilter() {
-   		Intent data = createFilterIntent();
-   		startActivity(data);
+    private void applyFilter() {
+        Intent data = createFilterIntent();
+        startActivity(data);
         finish();
     }
 
@@ -433,15 +454,15 @@ public class FilterActivity extends ThemedActivity {
         input.setText(name);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                if (value.equals("")) {
-                    Util.showToastShort(getApplicationContext(), R.string.widget_name_empty);
-                } else {
-                    createWidget(value);
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        if (value.equals("")) {
+                            Util.showToastShort(getApplicationContext(), R.string.widget_name_empty);
+                        } else {
+                            createWidget(value);
+                        }
+                    }
                 }
-            }
-        }
         );
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -482,16 +503,16 @@ public class FilterActivity extends ThemedActivity {
             mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
-                Log.v(TAG,"Created new fragment: " + mClzName);
+                Log.v(TAG, "Created new fragment: " + mClzName);
                 mFragment = Fragment.instantiate(mActivity, mClzName, mArguments);
                 ft.add(android.R.id.content, mFragment, mTag);
             } else {
                 // If it exists, simply attach it in order to show it
                 ft.attach(mFragment);
             }
-            if (m_menu!=null) {
+            if (m_menu != null) {
                 MenuItem loadScript = m_menu.findItem(R.id.menu_filter_load_script);
-                if (loadScript==null) return;
+                if (loadScript == null) return;
                 if (mTag == SCRIPT_TAB) {
                     loadScript.setVisible(true);
                 } else {
