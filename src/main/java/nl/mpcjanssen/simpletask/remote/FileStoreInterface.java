@@ -35,6 +35,6 @@ public interface FileStoreInterface {
         void fileSelected(String file);
     }
     public interface FileChangeListener {
-        void fileChanged();
+        void fileChanged(String newName);
     }
 }

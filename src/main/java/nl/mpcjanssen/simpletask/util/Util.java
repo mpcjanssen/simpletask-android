@@ -29,6 +29,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -65,6 +67,11 @@ public class Util {
         return DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT);
     }
 
+    private static void runOnMainThread (Runnable r) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(r);
+    }
+
     public static void showToastShort(@NotNull Context cxt, int resid) {
         Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show();
     }
@@ -75,6 +82,16 @@ public class Util {
 
     public static void showToastShort(@NotNull Context cxt, String msg) {
         Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+    public static void showToastLong(@NotNull final Context cxt, final String msg) {
+        runOnMainThread (new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(cxt, msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Nullable
