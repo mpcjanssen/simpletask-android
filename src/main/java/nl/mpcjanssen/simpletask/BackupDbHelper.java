@@ -24,8 +24,8 @@ public class BackupDbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 // If you change the database schema, you must increment the database version.
-public static final int DATABASE_VERSION = 2;
-public static final String DATABASE_NAME = "TodoFiles.db";
+public static final int DATABASE_VERSION = 1;
+public static final String DATABASE_NAME = "TodoFiles_v" + DATABASE_VERSION + ".db";
 
     public BackupDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,7 +34,8 @@ public static final String DATABASE_NAME = "TodoFiles.db";
         db.execSQL(SQL_CREATE_ENTRIES);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // This database contains critical information, onUpgrade should usually not do anything
+        // This database contains critical information, onUpgrade will not do anything
+        // If the schema changes a new database is added
     }
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
