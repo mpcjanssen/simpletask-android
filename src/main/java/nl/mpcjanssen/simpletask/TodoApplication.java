@@ -30,8 +30,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.os.*;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -482,6 +481,7 @@ public class TodoApplication extends Application implements
         }
     }
 
+
     public void todoListChanged() {
         Log.v(TAG, "Tasks have changed, update UI and save todo file");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
@@ -492,7 +492,17 @@ public class TodoApplication extends Application implements
                         getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Util.showToastShort(getApplicationContext(), "File save failed. File is not stored");
+
+                        // Show toast on the main thread
+                        // Why not use AsyncTask you say? Because AsyncTask sucks and
+                        // brushes to many details under the carpet.
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                    Util.showToastLong(getApplicationContext(), R.string.write_failed);
+                            }
+                        });
                     }
                 }
             });
