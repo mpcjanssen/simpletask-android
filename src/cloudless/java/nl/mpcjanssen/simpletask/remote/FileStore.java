@@ -84,6 +84,7 @@ public class FileStore implements FileStoreInterface {
         } finally {
             mIsLoading = false;
         }
+        startWatching(path);
         return todoList;
     }
 
@@ -139,7 +140,7 @@ public class FileStore implements FileStoreInterface {
             @Override
             public void onEvent(int event, String eventPath) {
                 if (eventPath!=null && eventPath.equals(filename)) {
-                    // Log.v(TAG, "Observer event: " + eventPath + ":" + event);
+                    Log.v(TAG, "Observer event: " + eventPath + ":" + event);
                     if (event == FileObserver.CLOSE_WRITE ||
                             event == FileObserver.MODIFY ||
                             event == FileObserver.MOVED_TO) {

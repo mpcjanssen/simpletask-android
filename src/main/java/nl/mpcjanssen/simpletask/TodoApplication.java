@@ -345,6 +345,7 @@ public class TodoApplication extends Application implements
                 }
                 m_todoList = newTodoList;
                 mIsLoading = false;
+                Log.v(TAG, "Todolist loaded, refresh UI");
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
             }
