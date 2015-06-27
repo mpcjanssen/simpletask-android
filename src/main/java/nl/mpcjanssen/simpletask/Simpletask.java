@@ -232,7 +232,8 @@ public class Simpletask extends ThemedListActivity implements
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     Log.v(TAG, "Updating UI because of broadcast");
-                    handleIntent();
+                    m_adapter.setFilteredTasks();
+                    updateDrawers();
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {

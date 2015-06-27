@@ -199,7 +199,9 @@ public class TodoList {
     public void notifyChanged() {
         clearSelectedTasks();
         if (mTodoListChanged!=null) {
-            Log.v(TAG, "TodoList changed, notifying listener");
+            Log.v(TAG, "TodoList changed, notifying listener and invalidating cached values");
+            mTags = null;
+            mLists = null;
             mTodoListChanged.todoListChanged();
         } else {
             Log.v(TAG, "TodoList changed, but nobody is listening");
