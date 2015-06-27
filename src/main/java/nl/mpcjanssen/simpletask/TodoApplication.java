@@ -210,7 +210,7 @@ public class TodoApplication extends Application implements
     }
 
     public void setTodoFile(String todo) {
-        m_prefs.edit().putString(getString(R.string.todo_file_key), todo).apply();
+        m_prefs.edit().putString(getString(R.string.todo_file_key), todo).commit();
     }
 
     public boolean isAutoArchive() {
@@ -353,7 +353,10 @@ public class TodoApplication extends Application implements
         m_loadingThread.start();
     }
 
-    public void fileChanged() {
+    public void fileChanged(@Nullable String newName) {
+        if (newName!=null) {
+            setTodoFile(newName);
+        }
         loadTodoList();
     }
 

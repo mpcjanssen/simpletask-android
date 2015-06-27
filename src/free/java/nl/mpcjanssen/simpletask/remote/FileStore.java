@@ -170,7 +170,7 @@ public class FileStore implements FileStoreInterface {
                         for (DropboxAPI.DeltaEntry entry : delta.entries) {
                             if (entry.lcPath.equalsIgnoreCase(polledFile)) {
                                 Log.v(TAG, "File " + polledFile + " changed, reloading");
-                                mFileChangedListerer.fileChanged();
+                                mFileChangedListerer.fileChanged(null);
                             }
                         }
                     }
@@ -323,6 +323,7 @@ public class FileStore implements FileStoreInterface {
         }
         stopWatching();
         String rev = getLocalTodoRev();
+        String newName = path;
         List<String> lines = Util.tasksToString(todoList);
         String contents = Util.join(lines, mEol);
 
@@ -334,6 +335,7 @@ public class FileStore implements FileStoreInterface {
             DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
                     toStore.length, rev, null);
             rev  = newEntry.rev;
+            newName = newEntry.path;
         } catch (Exception e) {
             e.printStackTrace();
             // Changes are pending
@@ -346,8 +348,15 @@ public class FileStore implements FileStoreInterface {
         }
         // Saved success, nothing pending
         setChangesPending(false);
-        startWatching(path);
 
+        if(!newName.equals(path)) {
+            // The file was written under another name
+            // Usually this means the was a conflict.
+            Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
+            mFileChangedListerer.fileChanged(newName);
+        } else {
+            startWatching(path);
+        }
     }
 
     @Override
@@ -389,7 +398,7 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void sync() {
-        mFileChangedListerer.fileChanged();
+        mFileChangedListerer.fileChanged(null);
     }
 
     @Override
@@ -440,7 +449,7 @@ public class FileStore implements FileStoreInterface {
             offline = true;
         } else if (offline && connected){
             offline = false;
-            mFileChangedListerer.fileChanged();
+            mFileChangedListerer.fileChanged(null);
         }
     }
 
