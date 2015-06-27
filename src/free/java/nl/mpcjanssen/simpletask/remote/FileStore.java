@@ -12,6 +12,8 @@ import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.client2.exception.DropboxIOException;
+import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.dropbox.client2.jsonextract.JsonExtractionException;
 import com.dropbox.client2.jsonextract.JsonMap;
 import com.dropbox.client2.jsonextract.JsonThing;
@@ -143,31 +145,31 @@ public class FileStore implements FileStoreInterface {
         pollingTask = new Thread(new Runnable() {
             @Override
             public void run() {
+                int newBackoffSeconds = 0;
+                if (!continuePolling) return;
                 try {
                     Log.v(TAG, "Long polling");
 
                     ArrayList<String> params = new ArrayList<>();
                     params.add("cursor");
                     params.add(latestCursor);
-                    params.add("timeout");
-                    params.add("120");
                     if (backoffSeconds!=0) {
                         Log.v(TAG, "Backing off for " + backoffSeconds + " seconds");
                         try {
                             Thread.sleep(backoffSeconds*1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                            return;
                         }
                     }
                     if (!continuePolling) return;
+
                     Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[0]), mDBApi.getSession());
                     Log.v(TAG, "Longpoll response: " + response.toString());
                     JsonThing result = new JsonThing(response);
                     JsonMap resultMap = result.expectMap();
                     boolean changes = resultMap.get("changes").expectBoolean();
                     JsonThing backoffThing = resultMap.getOrNull("backoff");
-                    int newBackoffSeconds = 0;
+
                     if (backoffThing!=null) {
                         newBackoffSeconds = backoffThing.expectInt32();
                     }
@@ -182,12 +184,17 @@ public class FileStore implements FileStoreInterface {
                             }
                         }
                     }
-                    startLongPoll(polledFile,newBackoffSeconds);
-                } catch (DropboxException e) {
-                    e.printStackTrace();
+                } catch (DropboxIOException e) {
+                    Log.v(TAG, "Longpoll timed out, restarting");
                 } catch (JsonExtractionException e) {
                     e.printStackTrace();
+                } catch (DropboxUnlinkedException e) {
+                    Log.v(TAG, "Dropbox unlinked, no more polling");
+                    continuePolling = false;
+                } catch (DropboxException e) {
+                    e.printStackTrace();
                 }
+                startLongPoll(polledFile,newBackoffSeconds);
             }
         });
         pollingTask.start();
@@ -305,9 +312,7 @@ public class FileStore implements FileStoreInterface {
                 latestCursor = resultMap.get("cursor").expectString();
             } catch (DropboxException e) {
                 e.printStackTrace();
-                latestCursor = null;
             } catch (JsonExtractionException e) {
-                latestCursor = null;
                 e.printStackTrace();
             }
             startLongPoll(path,0);
