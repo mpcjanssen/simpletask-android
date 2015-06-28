@@ -243,13 +243,10 @@ public class FileStore implements FileStoreInterface {
             fillListFromCache(todoList);
             mIsLoading = false;
             return todoList;
-        } else if (changesPending() && isOnline()) {
-            for (String line: loadContentsFromCache().split("\r\n|\r|\n")) {
-                todoList.add(new Task(line));
-            }
-            saveTasksToFile(path,todoList,backup);
-            mIsLoading = false;
-            return todoList;
+        } else if (changesPending()) {
+            fillListFromCache(todoList);
+            Log.v(TAG, "Not loading, changes pending");
+            return null;
         } else {
             try {
                 DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
@@ -364,7 +361,7 @@ public class FileStore implements FileStoreInterface {
             byte[] toStore = new byte[0];
             toStore = contents.getBytes("UTF-8");
             InputStream in = new ByteArrayInputStream(toStore);
-
+            Log.v(TAG,"Saving to file " + path);
             DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
                     toStore.length, rev, null);
             rev  = newEntry.rev;
@@ -385,6 +382,7 @@ public class FileStore implements FileStoreInterface {
         if(!newName.equals(path)) {
             // The file was written under another name
             // Usually this means the was a conflict.
+            Log.v(TAG, "Filename was changed remotely. New name is: " + newName);
             Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
             mFileChangedListerer.fileChanged(newName);
         } else {
