@@ -358,6 +358,9 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="click_to_copy">Click to copy to clipboard.</string>
 
+    <string name="share_history">Share the internal history database for recovery.</string>
+    <string name="share_history_title">Todo History.</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 

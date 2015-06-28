@@ -44,6 +44,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -149,6 +150,25 @@ public class Preferences extends ThemedActivity {
             startActivity(Intent.createChooser(shareIntent, "Share log"));
         }
 
+        private void shareHistory() {
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("application/x-sqlite3");
+            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                    "Simpletask History Database");
+            File dataDir = new File(this.getActivity().getApplicationInfo().dataDir);
+            File databaseDir = new File(dataDir, "databases");
+            File dataBase = new File(databaseDir, BackupDbHelper.DATABASE_NAME);
+            try {
+            Util.createCachedDatabase(this.getActivity(),dataBase);
+            Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "history.db");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to create file for sharing");
+            }
+            startActivity(Intent.createChooser(shareIntent, "Share History Database"));
+
+        }
+
         @Override
         public void onResume() {
             super.onResume();
@@ -208,6 +228,9 @@ public class Preferences extends ThemedActivity {
                 case "send_log":
                     sendLog();
                     break;
+                case "share_history":
+                    shareHistory();
+                    break;
                 case "app_version":
                     ClipboardManager clipboard = (ClipboardManager)
                             m_app.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -219,5 +242,7 @@ public class Preferences extends ThemedActivity {
             }
 			return false;
 		}
-	}
+
+
+    }
 }
