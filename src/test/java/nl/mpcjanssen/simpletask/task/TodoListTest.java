@@ -27,4 +27,16 @@ public class TodoListTest extends TestCase {
         todoList.complete(t, false, false);
         assertEquals(2, todoList.size());
     }
+
+    public void testCompletedPrio () {
+        TodoList todoList = new TodoList(null);
+        Task t1 = new Task("(A) Test");
+        Task t2 = new Task("(B) Test");
+        todoList.add(t1);
+        todoList.add(t2);
+        todoList.complete(t1, false, true);
+        todoList.complete(t2, false, false);
+        assertEquals(Priority.A, t1.getPriority());
+        assertEquals(Priority.NONE, t2.getPriority());
+    }
 }

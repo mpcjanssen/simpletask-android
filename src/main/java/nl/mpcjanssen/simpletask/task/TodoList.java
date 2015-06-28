@@ -147,11 +147,11 @@ public class TodoList {
 
             Task extra = task.markComplete(DateTime.now(TimeZone.getDefault()), originalDate);
             if (extra!=null) {
-                if (!keepPrio) {
-                    extra.setPriority(Priority.NONE);
-                }
                 mTasks.add(extra);
             }
+        if (!keepPrio) {
+            task.setPriority(Priority.NONE);
+        }
     }
 
 
