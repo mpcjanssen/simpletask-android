@@ -613,7 +613,10 @@ public class Simpletask extends ThemedListActivity implements
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            getTodoList().defer(date.format(Constants.DATE_FORMAT), tasksToDefer, dateType);
+                            for (Task t: tasksToDefer) {
+                                m_app.getTodoList(null).defer(date.format(Constants.DATE_FORMAT),t,dateType);
+                            }
+                            getTodoList().notifyChanged();
 
                         }
                     },
@@ -627,8 +630,12 @@ public class Simpletask extends ThemedListActivity implements
                     dialog.getDatePicker().setSpinnersShown(!showCalendar);
                     dialog.show();
                 } else {
-                    getTodoList().defer(selected, tasksToDefer, dateType);
+                    for (Task t: tasksToDefer) {
+                        m_app.getTodoList(null).defer(selected, t, dateType);
+                    }
+                    getTodoList().notifyChanged();
                 }
+
             }
         });
         d.show();
