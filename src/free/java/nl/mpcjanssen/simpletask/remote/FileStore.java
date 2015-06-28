@@ -295,6 +295,7 @@ public class FileStore implements FileStoreInterface {
         if(!isOnline()) {
             return;
         }
+        continuePolling = true;
         if (pollingTask == null) {
             Log.v(TAG, "Initializing slow polling thread");
             try {
