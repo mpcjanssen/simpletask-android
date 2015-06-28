@@ -1,15 +1,12 @@
 ﻿Changelog
 =========
 
-5.5.3
+5.5.2
 -----
 
 - Fix issue with tasks being added while device is offline not being written to Dropbox.
 - Fix issue with Dropbox chnages not being detected after having been offline.
-
-5.5.2
------
-
+- Show toasts on main thread.
 - Add a setting to share the internal backup SQLite database.
 - Fix issue with `keep prio`. If unset while completing a recurring taks, the new task had the prio unset instead of the completed task.
 - Added huge (36sp) font size.
