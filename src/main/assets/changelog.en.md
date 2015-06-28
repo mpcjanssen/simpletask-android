@@ -5,6 +5,7 @@
 -----
 
 - Fix issue with tasks being added while device is offline not being written to Dropbox.
+- Fix issue with Dropbox chnages not being detected after having been offline.
 
 5.5.2
 -----

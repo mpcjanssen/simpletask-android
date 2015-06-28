@@ -350,7 +350,7 @@ public class FileStore implements FileStoreInterface {
         }
         if (!isOnline()) {
             setChangesPending(true);
-            return;
+            throw new IOException("Device is offline");
         }
         stopWatching();
         String rev = getLocalTodoRev();
@@ -505,6 +505,7 @@ public class FileStore implements FileStoreInterface {
                             e.printStackTrace();
                         }
                         if (isOnline()) {
+                            continuePolling = true;
                             mFileChangedListerer.fileChanged(null);
                         } else {
                             Log.v(TAG, "Device no longer online skipping reload");
