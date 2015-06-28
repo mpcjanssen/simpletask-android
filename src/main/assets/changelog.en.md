@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.5.2
+-----
+
+- Add a setting to share the internal backup SQLite database.
+- Fix issue with `keep prio`. If unset while completing a recurring taks, the new task had the prio unset instead of the completed task.
+
 5.5.1
 -----
 
