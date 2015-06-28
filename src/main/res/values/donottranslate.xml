@@ -87,11 +87,13 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>Small</item>
         <item>Medium</item>
         <item>Large</item>
+        <item>Huge</item>
     </string-array>
     <string-array name="fontsize_values">
         <item>small</item>
         <item>medium</item>
         <item>large</item>
+        <item>huge</item>
     </string-array>
 
 

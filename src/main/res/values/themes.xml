@@ -7,4 +7,7 @@
     <style name="FontSizeLarge">
         <item name="android:textSize">20sp</item>
     </style>
+    <style name="FontSizeHuge">
+        <item name="android:textSize">36sp</item>
+    </style>
 </resources>
