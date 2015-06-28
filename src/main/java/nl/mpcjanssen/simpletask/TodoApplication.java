@@ -503,17 +503,7 @@ public class TodoApplication extends Application implements
                         getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
                     } catch (IOException e) {
                         e.printStackTrace();
-
-                        // Show toast on the main thread
-                        // Why not use AsyncTask you say? Because AsyncTask sucks and
-                        // brushes to many details under the carpet.
-                        Handler mainHandler = new Handler(Looper.getMainLooper());
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                    Util.showToastLong(getApplicationContext(), R.string.write_failed);
-                            }
-                        });
+                        Util.showToastLong(getApplicationContext(), R.string.write_failed);
                     }
                 }
             });

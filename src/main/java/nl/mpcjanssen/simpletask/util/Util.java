@@ -75,18 +75,34 @@ public class Util {
         handler.post(r);
     }
 
-    public static void showToastShort(@NotNull Context cxt, int resid) {
-        Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show();
+
+    public static void showToastShort(@NotNull final Context cxt, final int resid) {
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public static void showToastLong(@NotNull Context cxt, int resid) {
-        Toast.makeText(cxt, resid, Toast.LENGTH_LONG).show();
+    public static void showToastLong(@NotNull final Context cxt, final int resid) {
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(cxt, resid, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    public static void showToastShort(@NotNull Context cxt, String msg) {
-        Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
-    }
 
+    public static void showToastShort(@NotNull final Context cxt, final String msg) {
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     public static void showToastLong(@NotNull final Context cxt, final String msg) {
         runOnMainThread (new Runnable() {
