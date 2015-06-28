@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.5.3
+-----
+
+- Fix issue with tasks being added while device is offline not being written to Dropbox.
+
 5.5.2
 -----
 
