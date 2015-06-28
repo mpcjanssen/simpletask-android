@@ -204,7 +204,10 @@
         <Preference
             android:key="app_version"
             android:summary="@string/click_to_copy" />
-
+        <Preference
+                android:key="share_history"
+                android:title="@string/share_history_title"
+                android:summary="@string/share_history" />
         <Preference
             android:title="@string/donate_title"
             android:key="donate"

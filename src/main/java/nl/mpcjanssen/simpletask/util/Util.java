@@ -29,6 +29,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Spannable;
@@ -41,6 +42,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.google.common.base.Joiner;
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.BackupDbHelper;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
@@ -52,6 +54,7 @@ import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.*;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -334,6 +337,34 @@ public class Util {
             pw.flush();
             pw.close();
         }
+    }
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if(!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        }
+        finally {
+            if(source != null) {
+                source.close();
+            }
+            if(destination != null) {
+                destination.close();
+            }
+        }
+    }
+
+    public static void createCachedDatabase(Context context, File dbFile) throws IOException {
+        File cacheFile = new File(context.getCacheDir() , "history.db");
+        copyFile(dbFile,cacheFile);
     }
 
     public static ArrayList<String> sortWithPrefix(List<String> items, boolean caseSensitive, String prefix) {
