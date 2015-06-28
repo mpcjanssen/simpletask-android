@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.5.1
+-----
+
+- Add the new task when completing a task with recurrence, Fixes [#258](https://github.com/mpcjanssen/simpletask-android/issues/258).
+
 5.5.0
 -----
 

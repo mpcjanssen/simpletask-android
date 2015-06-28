@@ -144,18 +144,14 @@ public class TodoList {
     public void complete(@NotNull Task task,
             boolean originalDate,
             boolean keepPrio) {
-        ArrayList<String> originalStrings = new ArrayList<String>();
-        ArrayList<Task> recurredTasks = new ArrayList<Task>();
 
-            originalStrings.add(task.inFileFormat());
             Task extra = task.markComplete(DateTime.now(TimeZone.getDefault()), originalDate);
             if (extra!=null) {
-                recurredTasks.add(extra);
+                if (!keepPrio) {
+                    extra.setPriority(Priority.NONE);
+                }
+                mTasks.add(extra);
             }
-            if (!keepPrio) {
-                task.setPriority(Priority.NONE);
-            }
-
     }
 
 

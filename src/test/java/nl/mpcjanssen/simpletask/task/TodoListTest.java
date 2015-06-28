@@ -14,14 +14,17 @@ import nl.mpcjanssen.simpletask.sort.CreationDateComparator;
 import nl.mpcjanssen.simpletask.sort.DueDateComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
+import org.junit.Test;
+
 
 public class TodoListTest extends TestCase {
+    @Test
     public void testRecurrence () {
-        TodoList tl = new TodoList(null);
+        TodoList todoList = new TodoList(null);
         Task t = new Task("Test rec:1d");
-        tl.add(t);
-        assertEquals(1, tl.size());
-        t.markComplete(DateTime.now(TimeZone.getDefault()), false);
-        assertEquals(2, tl.size());
+        todoList.add(t);
+        assertEquals(1, todoList.size());
+        todoList.complete(t, false, false);
+        assertEquals(2, todoList.size());
     }
 }
