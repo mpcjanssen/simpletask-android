@@ -56,6 +56,7 @@ public class FileStore implements FileStoreInterface {
     private static String OAUTH2_TOKEN = "dropboxToken";
     private String latestCursor;
     private Thread pollingTask;
+    private boolean ignoreNextEvent = false;
     boolean continuePolling = true;
     Thread onOnline;
     private boolean mIsLoading = false;
@@ -180,7 +181,13 @@ public class FileStore implements FileStoreInterface {
                         for (DropboxAPI.DeltaEntry entry : delta.entries) {
                             if (entry.lcPath.equalsIgnoreCase(polledFile)) {
                                 Log.v(TAG, "File " + polledFile + " changed, reloading");
-                                mFileChangedListerer.fileChanged(null);
+                                if (!ignoreNextEvent) {
+                                    mFileChangedListerer.fileChanged(null);
+                                    break;
+                                } else {
+                                    ignoreNextEvent = false;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -223,7 +230,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public TodoList loadTasksFromFile(String path, @Nullable TodoList.TodoListChanged todoListChanged, final @Nullable BackupInterface backup) throws IOException {
+    synchronized public TodoList loadTasksFromFile(String path, @Nullable TodoList.TodoListChanged todoListChanged, final @Nullable BackupInterface backup) throws IOException {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -246,6 +253,8 @@ public class FileStore implements FileStoreInterface {
         } else if (changesPending()) {
             fillListFromCache(todoList);
             Log.v(TAG, "Not loading, changes pending");
+            mIsLoading = false;
+            startWatching(path);
             return null;
         } else {
             try {
@@ -270,6 +279,9 @@ public class FileStore implements FileStoreInterface {
                 e.printStackTrace();
                 fillListFromCache(todoList);
                 Util.showToastLong(mCtx, "Drobox error, loading from cache");
+            } catch (IOException e) {
+                mIsLoading = false;
+                throw new IOException(e);
             }
         }
         mIsLoading = false;
@@ -344,7 +356,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void saveTasksToFile(String path, TodoList todoList, @Nullable final BackupInterface backup) throws IOException {
+    synchronized public void saveTasksToFile(String path, TodoList todoList, @Nullable final BackupInterface backup) throws IOException {
         if (backup != null) {
             backup.backup(path, Util.joinTasks(todoList.getTasks(), "\n"));
         }
@@ -352,13 +364,13 @@ public class FileStore implements FileStoreInterface {
             setChangesPending(true);
             throw new IOException("Device is offline");
         }
-        stopWatching();
         String rev = getLocalTodoRev();
         String newName = path;
         List<String> lines = Util.tasksToString(todoList);
         String contents = Util.join(lines, mEol);
 
         try {
+            ignoreNextEvent= true;
             byte[] toStore = new byte[0];
             toStore = contents.getBytes("UTF-8");
             InputStream in = new ByteArrayInputStream(toStore);
@@ -386,8 +398,6 @@ public class FileStore implements FileStoreInterface {
             Log.v(TAG, "Filename was changed remotely. New name is: " + newName);
             Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
             mFileChangedListerer.fileChanged(newName);
-        } else {
-            startWatching(path);
         }
     }
 
