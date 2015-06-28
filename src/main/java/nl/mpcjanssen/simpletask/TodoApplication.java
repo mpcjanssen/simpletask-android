@@ -340,6 +340,13 @@ public class TodoApplication extends Application implements
                 TodoList newTodoList = new TodoList(null);
                 try {
                     newTodoList = store.loadTasksFromFile(getTodoFileName(), TodoApplication.this, TodoApplication.this);
+                    if (newTodoList==null) {
+                        Log.v(TAG, "Changes were pending, saving...");
+                        Util.showToastLong(TodoApplication.this, "Uploading pending changes");
+                        store.saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
+                        newTodoList = getTodoList(null);
+                        mIsLoading = false;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
