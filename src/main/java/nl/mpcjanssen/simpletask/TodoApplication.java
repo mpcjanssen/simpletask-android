@@ -520,6 +520,8 @@ public class TodoApplication extends Application implements
                 return R.style.FontSizeSmall;
             case "large":
                 return R.style.FontSizeLarge;
+            case "huge":
+                return R.style.FontSizeHuge;
             default:
                 return R.style.FontSizeMedium;
         }
