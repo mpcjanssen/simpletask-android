@@ -167,16 +167,14 @@ public class TodoList {
         }
     }
 
-    public void defer(@NotNull String deferString, @NotNull List<Task> tasksToDefer, int dateType) {
-        for (Task t: tasksToDefer) {
-            switch (dateType) {
-                case Task.DUE_DATE:
-                    t.deferDueDate(deferString, Util.getTodayAsString());
-                    break;
-                case Task.THRESHOLD_DATE:
-                    t.deferThresholdDate(deferString, Util.getTodayAsString());
-                    break;
-            }
+    public void defer(@NotNull String deferString, @NotNull Task tasksToDefer, int dateType) {
+        switch (dateType) {
+            case Task.DUE_DATE:
+                tasksToDefer.deferDueDate(deferString, Util.getTodayAsString());
+                break;
+            case Task.THRESHOLD_DATE:
+                tasksToDefer.deferThresholdDate(deferString, Util.getTodayAsString());
+                break;
         }
     }
 

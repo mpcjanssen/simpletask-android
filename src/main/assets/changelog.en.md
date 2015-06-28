@@ -4,6 +4,7 @@
 5.5.1
 -----
 
+- Fix setting due and threshold dates.
 - Add the new task when completing a task with recurrence, Fixes [#258](https://github.com/mpcjanssen/simpletask-android/issues/258).
 
 5.5.0
