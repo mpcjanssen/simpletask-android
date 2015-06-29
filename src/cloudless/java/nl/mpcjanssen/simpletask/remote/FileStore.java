@@ -55,7 +55,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup) {
+    synchronized public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup) {
         Log.v(TAG, "Loading tasks from file: " + path);
         mIsLoading = true;
         final TodoList todoList = new TodoList(todoListChanged);
@@ -174,8 +174,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-
-    public void saveTasksToFile(final String path, TodoList todoList, final BackupInterface backup) {
+    synchronized public void saveTasksToFile(final String path, TodoList todoList, final BackupInterface backup) {
         Log.v(TAG,"Saving tasks to file: " + path);
         stopWatching(path);
         final  ArrayList<String> output = Util.tasksToString(todoList);
