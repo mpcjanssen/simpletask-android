@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+5.5.3
+-----
+
+- Synchronize Cloudless background threads.
+
 5.5.2
 -----
 

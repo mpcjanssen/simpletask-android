@@ -574,6 +574,7 @@ public class Simpletask extends ThemedListActivity implements
         ArrayList<Task> tasks = new ArrayList<>();
         tasks.add(task);
         completeTasks(tasks);
+        getTodoList().notifyChanged();
     }
 
     private void completeTasks(@NotNull List<Task> tasks) {
@@ -583,12 +584,14 @@ public class Simpletask extends ThemedListActivity implements
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
+        getTodoList().notifyChanged();
     }
 
     private void undoCompleteTasks(@NotNull Task task) {
         ArrayList<Task> tasks = new ArrayList<>();
         tasks.add(task);
         undoCompleteTasks(tasks);
+        getTodoList().notifyChanged();
     }
 
     private void undoCompleteTasks(@NotNull List<Task> tasks) {
@@ -616,7 +619,7 @@ public class Simpletask extends ThemedListActivity implements
                             for (Task t: tasksToDefer) {
                                 m_app.getTodoList(null).defer(date.format(Constants.DATE_FORMAT),t,dateType);
                             }
-                            getTodoList().notifyChanged();
+
 
                         }
                     },
@@ -1415,7 +1418,6 @@ public class Simpletask extends ThemedListActivity implements
                         @Override
                         public void onClick(View v) {
                             completeTasks(task);
-                            getTodoList().notifyChanged();
                             finishActionmode();
                         }
                     });

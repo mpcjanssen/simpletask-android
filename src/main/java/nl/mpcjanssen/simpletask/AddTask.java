@@ -212,7 +212,7 @@ public class AddTask extends ThemedActivity {
         super.onBackPressed();
     }
 
-    private void addBackgroundTask(String sharedText) {
+    private void addBackgroundTask(@NotNull String sharedText) {
         TodoList todoList = m_app.getTodoList(null);
         if (todoList == null) {
             Util.showToastShort(m_app, R.string.add_task_failed);
@@ -279,9 +279,6 @@ public class AddTask extends ThemedActivity {
                 try {
                     File sharedFile = new File(uri.getPath());
                     share_text =  Files.toString(sharedFile, Charsets.UTF_8);
-                } catch (FileNotFoundException e) {
-                    share_text  = "";
-                    e.printStackTrace();
                 } catch (IOException e) {
                     share_text  = "";
                     e.printStackTrace();
