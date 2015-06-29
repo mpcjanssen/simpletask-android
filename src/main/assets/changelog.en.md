@@ -5,6 +5,8 @@
 -----
 
 - Synchronize Cloudless background threads.
+- Save completed tasks if using the menu to complete. Fixes [#259](https://github.com/mpcjanssen/simpletask-android/issues/259).
+- Clear selected tasks after adding or updating them.
 
 5.5.2
 -----
