@@ -94,6 +94,7 @@ public class AddTask extends ThemedActivity {
     private EditText textInputField;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
+    private List<Task> m_backup = new ArrayList<>();
 
     public boolean hasWordWrap() {
         return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
@@ -187,9 +188,11 @@ public class AddTask extends ThemedActivity {
         }
 
         // Delete tasks that where selected for update
-        for (Task t: todoList.getSelectedTasks()) {
+        for (Task t: m_backup) {
             todoList.remove(t);
         }
+
+
 
         // Save
         todoList.notifyChanged();
@@ -327,7 +330,8 @@ public class AddTask extends ThemedActivity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        List<Task> m_backup = m_app.getTodoList(this).getSelectedTasks();
+        m_backup = m_app.getTodoList(this).getSelectedTasks();
+        m_app.getTodoList(this).clearSelectedTasks();
         if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<String>();
             for (Task t : m_backup) {
