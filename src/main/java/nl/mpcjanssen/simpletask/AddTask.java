@@ -184,7 +184,11 @@ public class AddTask extends ThemedActivity {
 
         // Add all lines
         for (String line : Arrays.asList(input.split("\\r\\n|\\r|\\n"))) {
-            todoList.add(new Task(line));
+            if(m_app.hasPrependDate()) {
+                todoList.add(new Task(line,DateTime.now(TimeZone.getDefault())));
+            } else {
+                todoList.add(new Task(line));
+            }
         }
 
         // Delete tasks that where selected for update
