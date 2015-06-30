@@ -172,6 +172,9 @@ public class Simpletask extends ThemedListActivity implements
             // and skip headers
             // This prevents double counting in the CAB title
             Task t = getTaskAt(i);
+            if (t==null) {
+                continue;
+            }
             selectedTasks.add(t);
             if (t != null && !lv.isItemChecked(i)) {
                 lv.setItemChecked(i, true);
