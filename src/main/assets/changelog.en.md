@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.5.4
+-----
+
+- Add create date to tasks if specified. Fixes [#261](https://github.com/mpcjanssen/simpletask-android/issues/261).
+- Don't select header lines. Fixes `Select All` crashes.
+
 5.5.3
 -----
 
