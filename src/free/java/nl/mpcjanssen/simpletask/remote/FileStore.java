@@ -367,7 +367,7 @@ public class FileStore implements FileStoreInterface {
         String rev = getLocalTodoRev();
         String newName = path;
         List<String> lines = Util.tasksToString(todoList);
-        String contents = Util.join(lines, mEol);
+        String contents = Util.join(lines, mEol)+mEol;
 
         try {
             ignoreNextEvent= true;
@@ -424,7 +424,7 @@ public class FileStore implements FileStoreInterface {
             for (Task t : tasks) {
                 doneContents.add(t.inFileFormat());
             }
-            byte[] toStore = Util.join(doneContents, mEol).getBytes("UTF-8");
+            byte[] toStore = (Util.join(doneContents, mEol)+mEol).getBytes("UTF-8");
             InputStream in = new ByteArrayInputStream(toStore);
 
             DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,

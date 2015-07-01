@@ -566,6 +566,7 @@ public class Simpletask extends ThemedListActivity implements
                 dialog.dismiss();
                 Priority prio = Priority.toPriority(prioArr[which]);
                 getTodoList().prioritize(tasks, prio);
+                getTodoList().notifyChanged();
                 finishActionmode();
             }
         });
