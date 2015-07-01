@@ -623,8 +623,7 @@ public class Simpletask extends ThemedListActivity implements
                             for (Task t: tasksToDefer) {
                                 m_app.getTodoList(null).defer(date.format(Constants.DATE_FORMAT),t,dateType);
                             }
-
-
+                            getTodoList().notifyChanged();
                         }
                     },
                             today.getYear(),
