@@ -34,10 +34,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
+import android.preference.*;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -112,6 +109,18 @@ public class Preferences extends ThemedActivity {
             }
             aboutCategory.removePreference(toHide);
 
+            // Only show Material themes if supported
+            final ListPreference themePref = (ListPreference)findPreference(getString(R.string.theme_pref_key));
+            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            if ( currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+                themePref.setEntries(R.array.themes);
+                themePref.setEntryValues(R.array.theme_values);
+            } else {
+                themePref.setEntries(R.array.holo_themes);
+                themePref.setEntryValues(R.array.holo_theme_values);
+            }
+
+
             if (!TodoApplication.API16) {
                 Preference calSyncPref = findPreference(getString(R.string.calendar_sync_screen));
                 PreferenceCategory behaviorCategory = (PreferenceCategory) findPreference(getString(R.string.experimental_cat_key));
@@ -159,7 +168,7 @@ public class Preferences extends ThemedActivity {
             File databaseDir = new File(dataDir, "databases");
             File dataBase = new File(databaseDir, BackupDbHelper.DATABASE_NAME);
             try {
-            Util.createCachedDatabase(this.getActivity(),dataBase);
+            Util.createCachedDatabase(this.getActivity(), dataBase);
             Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "history.db");
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             } catch (Exception e) {

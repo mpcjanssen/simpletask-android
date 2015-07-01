@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.5.6
+-----
+
+- Only show supported themes for the application and widgets. Fixes [#263](https://github.com/mpcjanssen/simpletask-android/issues/263)
+
+
 5.5.5
 -----
 
