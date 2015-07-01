@@ -186,7 +186,7 @@ public class FileStore implements FileStoreInterface {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    TaskIo.writeToFile(Util.join(output, mEol), new File(path), false);
+                    TaskIo.writeToFile(Util.join(output, mEol)+mEol, new File(path), false);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
@@ -206,7 +206,7 @@ public class FileStore implements FileStoreInterface {
             protected Void doInBackground(Void... params) {
                 Log.v(TAG, "Appending " + size + " tasks to "+ path);
                 try {
-                    TaskIo.writeToFile(mEol + Util.joinTasks(tasks, mEol), new File(path), true);
+                    TaskIo.writeToFile(Util.joinTasks(tasks, mEol)+mEol, new File(path), true);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));

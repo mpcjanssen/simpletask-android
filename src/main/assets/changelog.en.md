@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.5.5
+-----
+
+- Save the todolist after changing priorities.
+- Properly terminate files with a newline as to mirror todo.txt behavior. Fixes [#262](https://github.com/mpcjanssen/simpletask-android/issues/262)
+
 5.5.4
 -----
 
