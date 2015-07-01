@@ -5,7 +5,7 @@
 -----
 
 - Only show supported themes for the application and widgets. Fixes [#263](https://github.com/mpcjanssen/simpletask-android/issues/263)
-
+- Save defer dates when using calendar picker.
 
 5.5.5
 -----
