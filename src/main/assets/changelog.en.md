@@ -1,6 +1,10 @@
 ﻿Changelog
 =========
 
+5.5.7
+
+- Delay re-enabling of Cloudless background listener while saving todo file. Fixes [#265](https://github.com/mpcjanssen/simpletask-android/issues/265)
+
 5.5.6
 -----
 
