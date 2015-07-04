@@ -6,9 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.os.FileObserver;
+import android.os.*;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -20,10 +18,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.Override;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.RunnableFuture;
 
 import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
@@ -39,10 +35,10 @@ public class FileStore implements FileStoreInterface {
     private final LocalBroadcastManager bm;
     private final FileChangeListener m_fileChangedListener;
     private String mEol;
-    private FileObserver m_observer;
+    private TodoObserver m_observer;
     private boolean mIsLoading;
 
-    public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
+    public FileStore(Context ctx, FileChangeListener fileChangedListener, String eol) {
         mEol = eol;
         m_fileChangedListener = fileChangedListener;
         m_observer = null;
@@ -84,7 +80,7 @@ public class FileStore implements FileStoreInterface {
         } finally {
             mIsLoading = false;
         }
-        startWatching(path);
+        setWatching(path);
         return todoList;
     }
 
@@ -95,23 +91,23 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void sync() {
-        
+
     }
 
     @Override
     public String readFile(String file, FileReadListener fileRead) {
-        Log.v(TAG,"Reading file: " + file);
+        Log.v(TAG, "Reading file: " + file);
         mIsLoading = true;
         String contents = "";
         try {
-            contents =  Files.toString(new File(file), Charsets.UTF_8);
+            contents = Files.toString(new File(file), Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return "";
         } finally {
             mIsLoading = false;
         }
-        if (fileRead!=null) {
+        if (fileRead != null) {
             fileRead.fileRead(contents);
         }
         return contents;
@@ -132,42 +128,28 @@ public class FileStore implements FileStoreInterface {
 
     }
 
-    private void startWatching(final String path) {
-        Log.v(TAG,"Observer adding on: " + new File(path).getParentFile().getAbsolutePath());
-        final String folder = new File(path).getParentFile().getAbsolutePath();
-        final String filename = new File(path).getName();
-        m_observer = new FileObserver(folder) {
-            @Override
-            public void onEvent(int event, String eventPath) {
-                if (eventPath!=null && eventPath.equals(filename)) {
-                    Log.v(TAG, "Observer event: " + eventPath + ":" + event);
-                    if (event == FileObserver.CLOSE_WRITE ||
-                            event == FileObserver.MODIFY ||
-                            event == FileObserver.MOVED_TO) {
-                        if (m_fileChangedListener!=null) {
-                            Log.v(TAG, "File changed in background reloading " + eventPath);
-                            Log.v(TAG, "Stop watching: " + path);
-                            this.stopWatching();
-                            m_observer = null;
-                            m_fileChangedListener.fileChanged(path);
-                        }
-                    }
-                }
-            }
-        };
-        m_observer.startWatching();
+    synchronized TodoObserver getObserver() {
+        return m_observer;
     }
 
-    private void stopWatching(String path) {
-        if (m_observer!=null) {
-            Log.v(TAG,"Observer removing on: " + path);
-            m_observer.stopWatching();
-            m_observer = null;
+    synchronized private void setWatching(final String path) {
+
+        Log.v(TAG, "Observer: adding " + new File(path).getParentFile().getAbsolutePath());
+        TodoObserver obs = getObserver();
+        if (obs != null && path.equals(obs.path)) {
+            Log.w(TAG, "Observer: already watching: " + path);
+            return;
+        } else if (obs != null) {
+            Log.w(TAG, "Observer: already watching different path: " + obs.path);
+            obs.ignoreEvents(true);
+            obs.stopWatching();
         }
+        m_observer = new TodoObserver(path, m_fileChangedListener);
+        Log.v(TAG, "Observer: modifying done");
     }
 
     @Override
-    public void browseForNewFile(Activity act, String path,  FileSelectedListener listener, boolean showTxt) {
+    public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean showTxt) {
         FileDialog dialog = new FileDialog(act, path, showTxt);
         dialog.addFileListener(listener);
         dialog.createFileDialog(act, this);
@@ -175,43 +157,46 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     synchronized public void saveTasksToFile(final String path, TodoList todoList, final BackupInterface backup) {
-        Log.v(TAG,"Saving tasks to file: " + path);
-        stopWatching(path);
-        final  ArrayList<String> output = Util.tasksToString(todoList);
-        if (backup!=null) {
-            backup.backup(path, Util.join(output,"\n"));
+        Log.v(TAG, "Saving tasks to file: " + path);
+        final ArrayList<String> output = Util.tasksToString(todoList);
+        if (backup != null) {
+            backup.backup(path, Util.join(output, "\n"));
         }
+        final TodoObserver obs = getObserver();
+        obs.ignoreEvents(true);
 
-        new AsyncTask<Void, Void, Void>() {
+        new Thread(new Runnable() {
             @Override
-            protected Void doInBackground(Void... params) {
+            public void run() {
                 try {
-                    TaskIo.writeToFile(Util.join(output, mEol)+mEol, new File(path), false);
+                    TaskIo.writeToFile(Util.join(output, mEol) + mEol, new File(path), false);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
+                } finally {
+                    obs.delayedStartListen(1000);
                 }
-                startWatching(path);
-                return null;
+
+
             }
-        }.execute();
+        }).start();
+
     }
 
     @Override
     public void appendTaskToFile(final String path, final List<Task> tasks) {
-        Log.v(TAG,"Appending tasks to file: " + path);
+        Log.v(TAG, "Appending tasks to file: " + path);
         final int size = tasks.size();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                Log.v(TAG, "Appending " + size + " tasks to "+ path);
+                Log.v(TAG, "Appending " + size + " tasks to " + path);
                 try {
-                    TaskIo.writeToFile(Util.joinTasks(tasks, mEol)+mEol, new File(path), true);
+                    TaskIo.writeToFile(Util.joinTasks(tasks, mEol) + mEol, new File(path), true);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
                 }
-
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
                 return null;
             }
@@ -224,7 +209,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     public static String getDefaultPath() {
-        return Environment.getExternalStorageDirectory() +"/data/nl.mpcjanssen.simpletask/todo.txt";
+        return Environment.getExternalStorageDirectory() + "/data/nl.mpcjanssen.simpletask/todo.txt";
     }
 
     public static class FileDialog {
@@ -242,7 +227,7 @@ public class FileStore implements FileStoreInterface {
          */
         public FileDialog(Activity activity, String pathName, boolean txtOnly) {
             this.activity = activity;
-            this.txtOnly=txtOnly;
+            this.txtOnly = txtOnly;
             File path = new File(pathName);
             if (!path.exists() || !path.isDirectory()) path = Environment.getExternalStorageDirectory();
             loadFileList(path);
@@ -283,7 +268,7 @@ public class FileStore implements FileStoreInterface {
          * Show file dialog
          */
         public void showDialog() {
-            createFileDialog(null,null).show();
+            createFileDialog(null, null).show();
         }
 
         private void fireFileSelectedEvent(final File file) {
@@ -305,7 +290,7 @@ public class FileStore implements FileStoreInterface {
                         if (!sel.canRead()) return false;
                         else {
                             boolean txtFile = filename.toLowerCase(Locale.getDefault()).endsWith(".txt");
-                            return !txtOnly ||  sel.isDirectory() || txtFile;
+                            return !txtOnly || sel.isDirectory() || txtFile;
                         }
                     }
                 };
@@ -325,5 +310,64 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void logout() {
         return;
+    }
+
+    private class TodoObserver extends FileObserver {
+
+        private final String path;
+        private final String fileName;
+        private final FileChangeListener fileChangedListener;
+        private boolean ignoreEvents;
+        private Handler handler;
+        private Runnable delayedEnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.v(TAG, "Observer: Delayed enabling events for: " + path);
+                ignoreEvents(false);
+            }
+        };
+
+        public TodoObserver(String path, FileChangeListener fileChanged) {
+            super(new File(path).getParentFile().getAbsolutePath());
+            this.startWatching();
+            this.fileName = new File(path).getName();
+            Log.v(TAG, "Observer: creating observer on: " + path);
+            this.path = path;
+            this.ignoreEvents = false;
+            this.fileChangedListener = fileChanged;
+            this.handler = new Handler(Looper.getMainLooper());
+
+        }
+
+        public void ignoreEvents(boolean ignore) {
+            Log.v(TAG, "Observer: observing events on " + this.path + "? ignoreEvents: " + ignore );
+            this.ignoreEvents = ignore;
+        }
+
+        @Override
+        public void onEvent(int event, String eventPath) {
+            if (eventPath != null && eventPath.equals(fileName)) {
+                Log.v(TAG, "Observer event: " + path + ":" + event);
+                if (event == FileObserver.CLOSE_WRITE ||
+                        event == FileObserver.MODIFY ||
+                        event == FileObserver.MOVED_TO) {
+                    if (ignoreEvents) {
+                        Log.v(TAG, "Observer: ignored event on: " + path);
+                        return;
+                    } else {
+                        fileChangedListener.fileChanged(path);
+                    }
+                }
+            }
+
+        }
+
+        public void delayedStartListen(final int ms) {
+            // Cancel any running timers
+            handler.removeCallbacks(delayedEnable);
+            // Reschedule
+            Log.v(TAG, "Observer: Adding delayed enabling to queue");
+            handler.postDelayed(delayedEnable, ms);
+        }
     }
 }
