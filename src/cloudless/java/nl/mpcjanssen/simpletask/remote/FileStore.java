@@ -51,10 +51,10 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public TodoList loadTasksFromFile(final String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup) {
+    synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup) {
         Log.v(TAG, "Loading tasks from file: " + path);
+        final List<Task> result= new ArrayList<>();
         mIsLoading = true;
-        final TodoList todoList = new TodoList(todoListChanged);
         try {
             String readFile = TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
                 ArrayList<String> completeFile = new ArrayList<>();
@@ -62,7 +62,7 @@ public class FileStore implements FileStoreInterface {
                 @Override
                 public boolean processLine(String s) throws IOException {
                     completeFile.add(s);
-                    todoList.add(new Task(s));
+                    result.add(new Task(s));
                     return true;
                 }
 
@@ -81,7 +81,7 @@ public class FileStore implements FileStoreInterface {
             mIsLoading = false;
         }
         setWatching(path);
-        return todoList;
+        return result;
     }
 
     @Override
@@ -124,6 +124,11 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
+    public boolean changesPending() {
+        return false;
+    }
+
+    @Override
     public void startLogin(Activity caller, int i) {
 
     }
@@ -156,9 +161,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(final String path, TodoList todoList, final BackupInterface backup) {
+    synchronized public void saveTasksToFile(final String path, List<Task> tasks, final BackupInterface backup) {
         Log.v(TAG, "Saving tasks to file: " + path);
-        final ArrayList<String> output = Util.tasksToString(todoList);
+        final List<String> output = Util.tasksToString(tasks);
         if (backup != null) {
             backup.backup(path, Util.join(output, "\n"));
         }
