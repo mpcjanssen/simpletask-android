@@ -229,7 +229,7 @@ public class Simpletask extends ThemedListActivity implements
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
                     Log.v(TAG, "Logging out from Dropbox");
-                    m_app.deauthenticate();
+                    getTodoList().deauthenticate();
                     Intent i = new Intent(context, LoginScreen.class);
                     startActivity(i);
                     finish();
@@ -465,7 +465,7 @@ public class Simpletask extends ThemedListActivity implements
             inflater.inflate(R.menu.main_light, menu);
         }
 
-        if (!m_app.fileStoreCanSync()) {
+        if (!getTodoList().fileStoreCanSync()) {
             MenuItem mItem = menu.findItem(R.id.sync);
             mItem.setVisible(false);
         }
@@ -566,7 +566,7 @@ public class Simpletask extends ThemedListActivity implements
                 dialog.dismiss();
                 Priority prio = Priority.toPriority(prioArr[which]);
                 getTodoList().prioritize(tasks, prio);
-                getTodoList().notifyChanged();
+                getTodoList().notifyChanged(true);
                 finishActionmode();
             }
         });
@@ -578,7 +578,6 @@ public class Simpletask extends ThemedListActivity implements
         ArrayList<Task> tasks = new ArrayList<>();
         tasks.add(task);
         completeTasks(tasks);
-        getTodoList().notifyChanged();
     }
 
     private void completeTasks(@NotNull List<Task> tasks) {
@@ -588,19 +587,18 @@ public class Simpletask extends ThemedListActivity implements
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
-        getTodoList().notifyChanged();
+        getTodoList().notifyChanged(true);
     }
 
     private void undoCompleteTasks(@NotNull Task task) {
         ArrayList<Task> tasks = new ArrayList<>();
         tasks.add(task);
         undoCompleteTasks(tasks);
-        getTodoList().notifyChanged();
     }
 
     private void undoCompleteTasks(@NotNull List<Task> tasks) {
         getTodoList().undoComplete(tasks);
-        getTodoList().notifyChanged();
+        getTodoList().notifyChanged(true);
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -623,7 +621,7 @@ public class Simpletask extends ThemedListActivity implements
                             for (Task t: tasksToDefer) {
                                 m_app.getTodoList(null).defer(date.format(Constants.DATE_FORMAT),t,dateType);
                             }
-                            getTodoList().notifyChanged();
+                            getTodoList().notifyChanged(true);
                         }
                     },
                             today.getYear(),
@@ -639,7 +637,7 @@ public class Simpletask extends ThemedListActivity implements
                     for (Task t: tasksToDefer) {
                         m_app.getTodoList(null).defer(selected, t, dateType);
                     }
-                    getTodoList().notifyChanged();
+                    getTodoList().notifyChanged(true);
                 }
 
             }
@@ -654,7 +652,7 @@ public class Simpletask extends ThemedListActivity implements
                 for (Task t: tasks) {
                     m_app.getTodoList(null).remove(t);
                 }
-                getTodoList().notifyChanged();
+                getTodoList().notifyChanged(true);
             }
         }, R.string.delete_task_title);
     }
@@ -686,7 +684,7 @@ public class Simpletask extends ThemedListActivity implements
                     for (Task t: tasksToDelete) {
                         todoList.remove(t);
                     }
-                    todoList.notifyChanged();
+                    todoList.notifyChanged(true);
                 } catch (IOException e) {
                     Util.showToastShort(Simpletask.this,"Archive failed");
                     e.printStackTrace();
@@ -720,7 +718,7 @@ public class Simpletask extends ThemedListActivity implements
                 showHelp();
                 break;
             case R.id.sync:
-                m_app.sync();
+                getTodoList().sync();
                 break;
             case R.id.archive:
                 m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
@@ -1404,7 +1402,7 @@ public class Simpletask extends ThemedListActivity implements
                         @Override
                         public void onClick(View v) {
                             undoCompleteTasks(task);
-                            getTodoList().notifyChanged();
+                            getTodoList().notifyChanged(true);
 
                             finishActionmode();
                         }
@@ -1668,7 +1666,7 @@ public class Simpletask extends ThemedListActivity implements
                         t.removeTag("@" + item);
                     }
                 }
-                todoList.notifyChanged();
+                todoList.notifyChanged(true);
                 finishActionmode();
             }
         });
@@ -1732,7 +1730,7 @@ public class Simpletask extends ThemedListActivity implements
                         t.removeTag("+" + item);
                     }
                 }
-                getTodoList().notifyChanged();
+                getTodoList().notifyChanged(true);
                 finishActionmode();
             }
         });

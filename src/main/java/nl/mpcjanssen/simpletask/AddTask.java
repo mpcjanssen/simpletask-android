@@ -199,7 +199,7 @@ public class AddTask extends ThemedActivity {
 
 
         // Save
-        todoList.notifyChanged();
+        todoList.notifyChanged(true);
         finish();
     }
 
@@ -221,6 +221,7 @@ public class AddTask extends ThemedActivity {
 
     private void addBackgroundTask(@NotNull String sharedText) {
         TodoList todoList = m_app.getTodoList(null);
+        Log.v(TAG, "Adding tasks to todolist " + todoList);
         if (todoList == null) {
             Util.showToastShort(m_app, R.string.add_task_failed);
             return;
@@ -233,7 +234,7 @@ public class AddTask extends ThemedActivity {
                 todoList.add(new Task(taskText));
             }
         }
-        todoList.notifyChanged();
+        todoList.notifyChanged(true);
         Util.showToastShort(m_app, R.string.task_added);
     }
 

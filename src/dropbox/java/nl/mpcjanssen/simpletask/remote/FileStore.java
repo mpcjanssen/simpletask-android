@@ -64,12 +64,13 @@ public class FileStore implements FileStoreInterface {
 
     private String loadContentsFromCache() {
         if (mPrefs == null) {
+            Log.w(TAG, "Couldn't load cache from preferences, mPrefs == null");
             return "";
         }
        return  mPrefs.getString(LOCAL_CONTENTS, "");
     }
 
-    private boolean changesPending() {
+    public boolean changesPending() {
         if (mPrefs == null) {
             return false;
         }
@@ -230,7 +231,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public TodoList loadTasksFromFile(String path, @Nullable TodoList.TodoListChanged todoListChanged, final @Nullable BackupInterface backup) throws IOException {
+    synchronized public List<Task> loadTasksFromFile(String path, final @Nullable BackupInterface backup) throws IOException {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -239,23 +240,21 @@ public class FileStore implements FileStoreInterface {
         Log.i(TAG, "Loading file fom dropnbox: " + path);
         mIsLoading = true;
         if (!isAuthenticated()) {
-            TodoList result = new TodoList(null);
             mIsLoading = false;
-            return result;
+            throw new IOException("Not authenticated");
         }
-        final  TodoList todoList = new TodoList(todoListChanged);
+
+        List<Task> tasks = new ArrayList();
 
         if (!isOnline()) {
             Log.v(TAG, "Device is offline loading from cache");
-            fillListFromCache(todoList);
             mIsLoading = false;
-            return todoList;
+            return tasksFromCache();
         } else if (changesPending()) {
-            fillListFromCache(todoList);
             Log.v(TAG, "Not loading, changes pending");
             mIsLoading = false;
             startWatching(path);
-            return null;
+            return tasksFromCache();
         } else {
             try {
                 DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
@@ -266,7 +265,7 @@ public class FileStore implements FileStoreInterface {
                 String line;
                 ArrayList<String> readFile = new ArrayList<>();
                 while ((line = reader.readLine()) != null) {
-                    todoList.add(new Task(line));
+                    tasks.add(new Task(line));
                     readFile.add(line);
                 }
                 openFileStream.close();
@@ -277,7 +276,8 @@ public class FileStore implements FileStoreInterface {
             } catch (DropboxException e) {
                 // Couldn't download file use cached version
                 e.printStackTrace();
-                fillListFromCache(todoList);
+                tasks.clear();
+                tasks.addAll(tasksFromCache());
                 Util.showToastLong(mCtx, "Drobox error, loading from cache");
             } catch (IOException e) {
                 mIsLoading = false;
@@ -285,14 +285,16 @@ public class FileStore implements FileStoreInterface {
             }
         }
         mIsLoading = false;
-        return todoList;
+        return tasks;
     }
 
-    private void fillListFromCache(TodoList todoList) {
+    private List<Task> tasksFromCache() {
+        List <Task> result = new ArrayList<>();
         String contents = loadContentsFromCache();
         for (String line : contents.split("(\r\n|\r|\n)")) {
-            todoList.add(new Task(line));
+            result.add(new Task(line));
         }
+        return result;
     }
 
     @Override
@@ -356,9 +358,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(String path, TodoList todoList, @Nullable final BackupInterface backup) throws IOException {
+    synchronized public void saveTasksToFile(String path, List<Task> tasks, @Nullable final BackupInterface backup) throws IOException {
         if (backup != null) {
-            backup.backup(path, Util.joinTasks(todoList.getTasks(), "\n"));
+            backup.backup(path, Util.joinTasks(tasks, "\n"));
         }
         if (!isOnline()) {
             setChangesPending(true);
@@ -366,7 +368,7 @@ public class FileStore implements FileStoreInterface {
         }
         String rev = getLocalTodoRev();
         String newName = path;
-        List<String> lines = Util.tasksToString(todoList);
+        List<String> lines = Util.tasksToString(tasks);
         String contents = Util.join(lines, mEol)+mEol;
 
         try {

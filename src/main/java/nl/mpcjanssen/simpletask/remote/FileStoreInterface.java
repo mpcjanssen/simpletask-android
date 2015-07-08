@@ -16,11 +16,11 @@ import java.util.List;
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
-    TodoList loadTasksFromFile(String path, TodoList.TodoListChanged todoListChanged, @Nullable BackupInterface backup)  throws IOException;
+    List<Task> loadTasksFromFile(String path, @Nullable BackupInterface backup)  throws IOException;
     void startLogin(Activity caller, int i);
     void logout();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
-    void saveTasksToFile(String path, TodoList todoList, @Nullable BackupInterface backup) throws IOException;
+    void saveTasksToFile(String path, List<Task> tasks, @Nullable BackupInterface backup) throws IOException;
     void appendTaskToFile(String path, List<Task> tasks) throws IOException;
 
     int getType();
@@ -30,6 +30,8 @@ public interface FileStoreInterface {
     boolean supportsSync();
 
     boolean isLoading();
+
+    boolean changesPending();
 
     interface FileSelectedListener {
         void fileSelected(String file);
