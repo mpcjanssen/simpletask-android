@@ -114,10 +114,10 @@ public class Util {
     }
 
     @Nullable
-    public static ArrayList<String> tasksToString(@NotNull TodoList todoList) {
+    public static List<String> tasksToString(@NotNull List<Task> tasks) {
         ArrayList<String> result = new ArrayList<>();
-        for (int i = 0 ; i < todoList.size() ; i++) {
-            result.add(todoList.get(i).inFileFormat());
+        for (Task t: tasks) {
+            result.add(t.inFileFormat());
         }
         return result;
     }

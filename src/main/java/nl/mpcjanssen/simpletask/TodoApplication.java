@@ -63,16 +63,12 @@ public class TodoApplication extends Application implements
     private ArrayList<String> todoTrail = new ArrayList<>();
 
     @Nullable
-    private FileStoreInterface mFileStore;
-    @Nullable
     private TodoList m_todoList;
     private CalendarSync m_calSync;
     private BroadcastReceiver m_broadcastReceiver;
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
-    private Thread m_loadingThread;
-    private boolean mIsLoading = false;
     private Thread m_savingThread;
 
     public static Context getAppContext() {
@@ -106,7 +102,8 @@ public class TodoApplication extends Application implements
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
-        getTodoList(null);
+        m_todoList = new TodoList(this, this, this, getEol());
+        loadTodoList();
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
     }
 
@@ -119,30 +116,9 @@ public class TodoApplication extends Application implements
     }
 
 
-    public void deauthenticate() {
-        if (mFileStore!=null) {
-            mFileStore.logout();
-            mFileStore=null;
-        }
-    }
 
-    public boolean fileStoreCanSync() {
-        return mFileStore != null && mFileStore.supportsSync();
-    }
 
-    public void sync() {
-        if (mFileStore!=null) {
-            new AsyncTask<FileStoreInterface, Void, Void>() {
 
-                @Override
-                protected Void doInBackground(FileStoreInterface... params) {
-                    FileStoreInterface fs = params[0];
-                    fs.sync();
-                    return null;
-                }
-            }.execute(mFileStore);
-        }
-    }
 
     @Override
     public void onTerminate() {
@@ -317,49 +293,16 @@ public class TodoApplication extends Application implements
     }
 
     @Nullable
-    synchronized public  TodoList getTodoList(final Activity act) {
-        if (m_todoList==null) {
-            loadTodoList();
-            return new TodoList(this);
-        } else {
-            return m_todoList;
-        }
+    public TodoList getTodoList(final Activity act) {
+        return m_todoList;
     }
 
-    public void loadTodoList () {
-        mIsLoading = true;
-        if (m_loadingThread!=null && m_loadingThread.isAlive()) {
-            Log.v(TAG, "Todolist is already loading, waiting");
-            return;
-        }
-        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
-        final FileStoreInterface store = getFileStore();
-        m_loadingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TodoList newTodoList = new TodoList(null);
-                try {
-                    newTodoList = store.loadTasksFromFile(getTodoFileName(), TodoApplication.this, TodoApplication.this);
-                    if (newTodoList==null) {
-                        Log.v(TAG, "Changes were pending, saving...");
-                        Util.showToastLong(TodoApplication.this, "Uploading pending changes");
-                        store.saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
-                        newTodoList = getTodoList(null);
-                        mIsLoading = false;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                m_todoList = newTodoList;
-                mIsLoading = false;
-                Log.v(TAG, "Todolist loaded, refresh UI");
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-            }
+    public void loadTodoList() {
+        Log.v(TAG, "Load todolist");
+        m_todoList.reload(getTodoFileName(), TodoApplication.this, localBroadcastManager);
 
-        });
-        m_loadingThread.start();
     }
+
 
     public void fileChanged(@Nullable String newName) {
         if (newName!=null) {
@@ -460,9 +403,9 @@ public class TodoApplication extends Application implements
                 s.equals(getString(R.string.widget_header_transparency))) {
             redrawWidgets();
         } else if (s.equals(getString(R.string.line_breaks_pref_key))) {
-            if (mFileStore!=null) {
-                mFileStore.setEol(getEol());
-            }
+
+                m_todoList.setEol(getEol());
+
         } else if (s.equals(getString(R.string.calendar_sync_dues))) {
             m_calSync.setSyncDues(isSyncDues());
         } else if (s.equals(getString(R.string.calendar_sync_thresholds))) {
@@ -493,22 +436,15 @@ public class TodoApplication extends Application implements
     }
 
 
-    public void todoListChanged() {
-        Log.v(TAG, "Tasks have changed, update UI and save todo file");
+    public void todoListChanged(boolean save) {
+        Log.v(TAG, "Tasks have changed, update UI and save todo file? " + save);
+        localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-            m_savingThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        getFileStore().saveTasksToFile(getTodoFileName(), getTodoList(null), TodoApplication.this);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Util.showToastLong(getApplicationContext(), R.string.write_failed);
-                    }
-                }
-            });
-          m_savingThread.start();
+        if (save) {
+            m_todoList.save(getTodoFileName(), TodoApplication.this);
         }
+
+    }
 
     public int getActiveFont() {
         String fontsize =  getPrefs().getString("fontsize", "medium");
@@ -526,10 +462,7 @@ public class TodoApplication extends Application implements
 
     @NotNull
     public FileStoreInterface getFileStore() {
-        if (mFileStore==null) {
-            mFileStore = new FileStore(this, this, getEol());
-        }
-        return mFileStore;
+        return m_todoList.getFileStore();
     }
 
     public void showConfirmationDialog(@NotNull Context cxt, int msgid,
