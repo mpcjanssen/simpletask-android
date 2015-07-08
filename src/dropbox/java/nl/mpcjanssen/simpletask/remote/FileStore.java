@@ -342,7 +342,7 @@ public class FileStore implements FileStoreInterface {
         if(mDBApi!=null) {
             mDBApi.getSession().unlink();
         }
-        mPrefs.edit().remove(OAUTH2_TOKEN);
+        mPrefs.edit().remove(OAUTH2_TOKEN).commit();
     }
 
     @Override
