@@ -91,7 +91,6 @@ public class TodoList {
         this.mTodoListChanged = todoListChanged;
         this.mFileStore = new FileStore(ctx, fileChanged, eol);
 
-
     }
 
     public void sync() {
@@ -106,7 +105,6 @@ public class TodoList {
     public void queueRunnable(final String description, Runnable r) {
         Log.v(TAG, "Handler: Queue " + description);
         todolistQueue.post(new LoggingRunnable(description, r));
-
     }
 
     public boolean loadQueued() {
@@ -292,7 +290,6 @@ public class TodoList {
     public void deauthenticate() {
         if (mFileStore != null) {
             mFileStore.logout();
-            mFileStore = null;
         }
     }
 
