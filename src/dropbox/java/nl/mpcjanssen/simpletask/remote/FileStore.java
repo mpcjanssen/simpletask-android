@@ -7,6 +7,8 @@ import android.content.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
@@ -61,6 +63,7 @@ public class FileStore implements FileStoreInterface {
     Thread onOnline;
     private boolean mIsLoading = false;
     private boolean mOnline;
+    private Handler fileOperationsQueue;
 
     private String loadContentsFromCache() {
         if (mPrefs == null) {
@@ -68,6 +71,18 @@ public class FileStore implements FileStoreInterface {
             return "";
         }
        return  mPrefs.getString(LOCAL_CONTENTS, "");
+    }
+
+    public void queueRunnable(final String description, Runnable r) {
+        Log.v(TAG, "Handler: Queue " + description);
+        while (fileOperationsQueue==null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        fileOperationsQueue.post(r);
     }
 
     public boolean changesPending() {
@@ -104,6 +119,16 @@ public class FileStore implements FileStoreInterface {
     public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
         mPrefs = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
         mFileChangedListerer = fileChangedListener;
+        // Set up the message queue
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                fileOperationsQueue = new Handler();
+                Looper.loop();
+            }
+        });
+        t.start();
         mCtx = ctx;
         mEol = eol;
         mOnline = isOnline();
@@ -358,7 +383,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(String path, List<Task> tasks, @Nullable final BackupInterface backup) throws IOException {
+    synchronized public void saveTasksToFile(final String path, final List<Task> tasks, @Nullable final BackupInterface backup) throws IOException {
         if (backup != null) {
             backup.backup(path, Util.joinTasks(tasks, "\n"));
         }
@@ -366,75 +391,90 @@ public class FileStore implements FileStoreInterface {
             setChangesPending(true);
             throw new IOException("Device is offline");
         }
-        String rev = getLocalTodoRev();
-        String newName = path;
-        List<String> lines = Util.tasksToString(tasks);
-        String contents = Util.join(lines, mEol)+mEol;
+        Runnable r = new Runnable() {
 
-        try {
-            ignoreNextEvent= true;
-            byte[] toStore = new byte[0];
-            toStore = contents.getBytes("UTF-8");
-            InputStream in = new ByteArrayInputStream(toStore);
-            Log.v(TAG,"Saving to file " + path);
-            DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
-                    toStore.length, rev, null);
-            rev  = newEntry.rev;
-            newName = newEntry.path;
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Changes are pending
-            setChangesPending(true);
-            throw new IOException(e);
-        } finally {
-            // Always save to cache  so you wont lose changes
-            // if actual save fails (e.g. when the device is offline)
-            saveToCache(path,rev,contents);
-        }
-        // Saved success, nothing pending
-        setChangesPending(false);
+            @Override
+            public void run() {
 
-        if(!newName.equals(path)) {
-            // The file was written under another name
-            // Usually this means the was a conflict.
-            Log.v(TAG, "Filename was changed remotely. New name is: " + newName);
-            Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
-            mFileChangedListerer.fileChanged(newName);
-        }
+
+                String rev = getLocalTodoRev();
+                String newName = path;
+                List<String> lines = Util.tasksToString(tasks);
+                final String contents = Util.join(lines, mEol) + mEol;
+
+                try {
+                    ignoreNextEvent = true;
+                    byte[] toStore = new byte[0];
+                    toStore = contents.getBytes("UTF-8");
+                    InputStream in = new ByteArrayInputStream(toStore);
+                    Log.v(TAG, "Saving to file " + path);
+                    DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                            toStore.length, rev, null);
+                    rev = newEntry.rev;
+                    newName = newEntry.path;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Changes are pending
+                    setChangesPending(true);
+                } finally {
+                    // Always save to cache  so you wont lose changes
+                    // if actual save fails (e.g. when the device is offline)
+                    saveToCache(path, rev, contents);
+                }
+                // Saved success, nothing pending
+                setChangesPending(false);
+
+                if (!newName.equals(path)) {
+                    // The file was written under another name
+                    // Usually this means the was a conflict.
+                    Log.v(TAG, "Filename was changed remotely. New name is: " + newName);
+                    Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
+                    mFileChangedListerer.fileChanged(newName);
+                }
+            }
+        };
+        queueRunnable("Save to file " + path, r);
     }
 
     @Override
-    public void appendTaskToFile(String path, List<Task> tasks) throws IOException {
+    public void appendTaskToFile(final String path, final List<Task> tasks) throws IOException {
         if (!isOnline()) {
             throw new IOException("Device is offline");
         }
-        try {
+        Runnable r = new Runnable() {
 
-            // First read file to append to
-            DropboxAPI.DropboxInputStream openFileStream =  mDBApi.getFileStream(path, null);
-            DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-            Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
-            String line;
-            ArrayList<String> doneContents = new ArrayList<>();
-            while ((line = reader.readLine()) != null) {
-                doneContents.add(line);
+            @Override
+            public void run() {
+                try {
+
+                    // First read file to append to
+                    DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
+                    DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
+                    Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
+                    String line;
+                    ArrayList<String> doneContents = new ArrayList<>();
+                    while ((line = reader.readLine()) != null) {
+                        doneContents.add(line);
+                    }
+                    openFileStream.close();
+
+                    // Then append
+                    for (Task t : tasks) {
+                        doneContents.add(t.inFileFormat());
+                    }
+                    byte[] toStore = (Util.join(doneContents, mEol) + mEol).getBytes("UTF-8");
+                    InputStream in = new ByteArrayInputStream(toStore);
+
+                    DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                            toStore.length, fileInfo.getMetadata().rev, null);
+                    in.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            openFileStream.close();
-
-            // Then append
-            for (Task t : tasks) {
-                doneContents.add(t.inFileFormat());
-            }
-            byte[] toStore = (Util.join(doneContents, mEol)+mEol).getBytes("UTF-8");
-            InputStream in = new ByteArrayInputStream(toStore);
-
-            DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
-                   toStore.length, fileInfo.getMetadata().rev, null);
-            in.close();
-        } catch (DropboxException e) {
-            throw new IOException(e);
-        }
+        };
+        queueRunnable("Append to file " + path, r);
     }
 
 

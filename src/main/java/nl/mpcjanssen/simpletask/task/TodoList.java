@@ -104,6 +104,13 @@ public class TodoList {
 
     public void queueRunnable(final String description, Runnable r) {
         Log.v(TAG, "Handler: Queue " + description);
+        while (todolistQueue==null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         todolistQueue.post(new LoggingRunnable(description, r));
     }
 
@@ -119,8 +126,6 @@ public class TodoList {
                 mTasks.add(t);
             }
         });
-
-
     }
 
 

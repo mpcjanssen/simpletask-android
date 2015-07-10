@@ -37,17 +37,41 @@ public class FileStore implements FileStoreInterface {
     private String mEol;
     private TodoObserver m_observer;
     private boolean mIsLoading;
+    private Handler fileOperationsQueue;
 
     public FileStore(Context ctx, FileChangeListener fileChangedListener, String eol) {
         mEol = eol;
         m_fileChangedListener = fileChangedListener;
         m_observer = null;
         this.bm = LocalBroadcastManager.getInstance(ctx);
+
+        // Set up the message queue
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                fileOperationsQueue = new Handler();
+                Looper.loop();
+            }
+        });
+        t.start();
     }
 
     @Override
     public boolean isAuthenticated() {
         return true;
+    }
+
+    public void queueRunnable(final String description, Runnable r) {
+        Log.v(TAG, "Handler: Queue " + description);
+        while (fileOperationsQueue==null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        fileOperationsQueue.post(r);
     }
 
     @Override
@@ -170,7 +194,7 @@ public class FileStore implements FileStoreInterface {
         final TodoObserver obs = getObserver();
         obs.ignoreEvents(true);
 
-        new Thread(new Runnable() {
+        queueRunnable("Save to file " + path, new Runnable() {
             @Override
             public void run() {
                 try {
@@ -184,7 +208,7 @@ public class FileStore implements FileStoreInterface {
 
 
             }
-        }).start();
+        });
 
     }
 
@@ -192,9 +216,9 @@ public class FileStore implements FileStoreInterface {
     public void appendTaskToFile(final String path, final List<Task> tasks) {
         Log.v(TAG, "Appending tasks to file: " + path);
         final int size = tasks.size();
-        new AsyncTask<Void, Void, Void>() {
+        queueRunnable("Appending " + size + " tasks to " + path, new Runnable() {
             @Override
-            protected Void doInBackground(Void... params) {
+            public void run() {
                 Log.v(TAG, "Appending " + size + " tasks to " + path);
                 try {
                     TaskIo.writeToFile(Util.joinTasks(tasks, mEol) + mEol, new File(path), true);
@@ -203,9 +227,8 @@ public class FileStore implements FileStoreInterface {
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
                 }
                 bm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
-                return null;
             }
-        }.execute();
+        });
     }
 
     @Override
