@@ -277,9 +277,12 @@ public class FileStore implements FileStoreInterface {
             return tasksFromCache();
         } else if (changesPending()) {
             Log.v(TAG, "Not loading, changes pending");
+            Util.showToastLong(mCtx,"Saving pending changes");
             mIsLoading = false;
+            tasks = tasksFromCache();
+            saveTasksToFile(path, tasks, backup);
             startWatching(path);
-            return tasksFromCache();
+            return tasks;
         } else {
             try {
                 DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
@@ -331,35 +334,46 @@ public class FileStore implements FileStoreInterface {
 
 
     private void startWatching(final String path) {
-        if(!isOnline()) {
-            return;
-        }
-        continuePolling = true;
-        if (pollingTask == null) {
-            Log.v(TAG, "Initializing slow polling thread");
-            try {
-                Log.v(TAG, "Finding latest cursor");
-                ArrayList<String> params = new ArrayList<>();
-                params.add("include_media_info");
-                params.add("false");
-                Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[0]), mDBApi.getSession());
-                Log.v(TAG, "Longpoll latestcursor response: " + response.toString());
-                JsonThing result = new JsonThing(response);
-                JsonMap resultMap = result.expectMap();
-                latestCursor = resultMap.get("cursor").expectString();
-            } catch (DropboxException e) {
-                e.printStackTrace();
-            } catch (JsonExtractionException e) {
-                e.printStackTrace();
+        queueRunnable("startWatching", new Runnable() {
+            @Override
+            public void run() {
+
+                if (!isOnline()) {
+                    return;
+                }
+                continuePolling = true;
+                if (pollingTask == null) {
+                    Log.v(TAG, "Initializing slow polling thread");
+                    try {
+                        Log.v(TAG, "Finding latest cursor");
+                        ArrayList<String> params = new ArrayList<>();
+                        params.add("include_media_info");
+                        params.add("false");
+                        Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[0]), mDBApi.getSession());
+                        Log.v(TAG, "Longpoll latestcursor response: " + response.toString());
+                        JsonThing result = new JsonThing(response);
+                        JsonMap resultMap = result.expectMap();
+                        latestCursor = resultMap.get("cursor").expectString();
+                    } catch (DropboxException e) {
+                        e.printStackTrace();
+                    } catch (JsonExtractionException e) {
+                        e.printStackTrace();
+                    }
+                    startLongPoll(path, 0);
+                }
             }
-            startLongPoll(path,0);
-        }
+        });
     }
     
 
     private void stopWatching() {
-        continuePolling=false;
-        pollingTask=null;
+        queueRunnable("stopWatching", new Runnable() {
+            @Override
+            public void run() {
+                continuePolling = false;
+                pollingTask = null;
+            }
+        });
     }
 
     @Override
@@ -387,7 +401,11 @@ public class FileStore implements FileStoreInterface {
         if (backup != null) {
             backup.backup(path, Util.joinTasks(tasks, "\n"));
         }
+        List<String> lines = Util.tasksToString(tasks);
+        final String contents = Util.join(lines, mEol) + mEol;
+
         if (!isOnline()) {
+            saveToCache(path, getLocalTodoRev(), contents);
             setChangesPending(true);
             throw new IOException("Device is offline");
         }
@@ -395,13 +413,8 @@ public class FileStore implements FileStoreInterface {
 
             @Override
             public void run() {
-
-
-                String rev = getLocalTodoRev();
                 String newName = path;
-                List<String> lines = Util.tasksToString(tasks);
-                final String contents = Util.join(lines, mEol) + mEol;
-
+                String rev = getLocalTodoRev();
                 try {
                     ignoreNextEvent = true;
                     byte[] toStore = new byte[0];
@@ -546,7 +559,7 @@ public class FileStore implements FileStoreInterface {
             // Give some time to settle so we ignore rapid connectivity changes
             // Only schedule if another thread is not running
             if (onOnline==null || !onOnline.isAlive()) {
-                onOnline = new  Thread(new Runnable() {
+                queueRunnable("onOnline", new Runnable() {
                     @Override
                     public void run() {
                         // Check if we are still online
@@ -564,7 +577,6 @@ public class FileStore implements FileStoreInterface {
                         }
                     }
                 });
-                onOnline.start();
             }
 
         } else if (!mOnline) {
