@@ -820,7 +820,6 @@ public class Simpletask extends ThemedListActivity implements
                 // Canceled.
             }
         });
-
         alert.show();
     }
 

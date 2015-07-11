@@ -346,7 +346,7 @@ public class Util {
         File cacheFile = new File(context.getCacheDir() + File.separator
                 + fileName);
         if (cacheFile.createNewFile()) {
-            FileOutputStream fos = new FileOutputStream(cacheFile);
+            FileOutputStream fos = new FileOutputStream(cacheFile, false);
             OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF8");
             PrintWriter pw = new PrintWriter(osw);
             pw.println(content);

@@ -344,18 +344,6 @@ public class TodoList {
         queueRunnable("Reload", new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (!mFileStore.changesPending()) {
-                        Log.v(TAG, "Loading tasks into todolist");
-                    } else {
-                        Log.v(TAG, "Changes were pending, saving...");
-                        Util.showToastLong(mCtx, "Uploading pending changes");
-                        mFileStore.saveTasksToFile(filename, mTasks, backup);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mTasks = new ArrayList<Task>();
-                }
                 clearSelectedTasks();
                 try {
                     mTasks.clear();
