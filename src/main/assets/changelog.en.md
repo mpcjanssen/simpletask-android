@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+5.5.8
+-----
+
+- Queue todo list and file system actions to fix some weird race conditions.
+- Properly save tasks in the cache if offline. Fixes lost tasks after coming online again.
+
 5.5.7
 
 - Delay re-enabling of Cloudless background listener while saving todo file. Fixes [#265](https://github.com/mpcjanssen/simpletask-android/issues/265)
