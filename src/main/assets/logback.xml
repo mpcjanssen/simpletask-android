@@ -3,9 +3,25 @@
     </appender>
     <appender name="LC" class="ch.qos.logback.classic.android.LogcatAppender">
     </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- active log file -->
+        <file>log.txt</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS};%relative;[%thread];%level;%logger;%caller{1};%msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover period -->
+            <fileNamePattern>log.%d.txt</fileNamePattern>
+
+            <!-- keep 2 days' worth of history -->
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+    </appender>
 
     <root level="DEBUG" >
-        <appender-ref ref="DB" />
+        <appender-ref ref="FILE" />
         <appender-ref ref="LC" />
+        <!--- <appender-ref ref="DB" /> -->
     </root>
 </configuration>
