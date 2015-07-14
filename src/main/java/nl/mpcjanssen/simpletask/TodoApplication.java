@@ -33,7 +33,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.*;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
 import hirondelle.date4j.DateTime;
@@ -45,6 +44,8 @@ import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +57,6 @@ public class TodoApplication extends Application implements
 
         SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
 
-    private final static String TAG = TodoApplication.class.getSimpleName();
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
@@ -70,6 +70,7 @@ public class TodoApplication extends Application implements
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
     private Thread m_savingThread;
+    private Logger log;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -82,6 +83,8 @@ public class TodoApplication extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
+        log = LoggerFactory.getLogger(this.getClass());
+
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
@@ -122,7 +125,7 @@ public class TodoApplication extends Application implements
 
     @Override
     public void onTerminate() {
-        Log.v(TAG, "Deregistered receiver");
+        log.info("Deregistered receiver");
         m_prefs.unregisterOnSharedPreferenceChangeListener(this);
         if (m_broadcastReceiver!=null) {
             localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
@@ -298,7 +301,7 @@ public class TodoApplication extends Application implements
     }
 
     public void loadTodoList() {
-        Log.v(TAG, "Load todolist");
+        log.info("Load todolist");
         m_todoList.reload(getTodoFileName(), TodoApplication.this, localBroadcastManager);
 
     }
@@ -316,14 +319,14 @@ public class TodoApplication extends Application implements
         AppWidgetManager mgr = AppWidgetManager.getInstance(getApplicationContext());
         for (int appWidgetId : mgr.getAppWidgetIds(new ComponentName(getApplicationContext(), MyAppWidgetProvider.class))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
-            Log.v(TAG, "Updating widget: " + appWidgetId);
+            log.info("Updating widget: " + appWidgetId);
         }
     }
 
     private void redrawWidgets(){
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, MyAppWidgetProvider.class));
-        Log.v(TAG, "Redrawing widgets ");
+        log.info("Redrawing widgets ");
         if (appWidgetIds.length > 0) {
             new MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
         }
@@ -396,7 +399,7 @@ public class TodoApplication extends Application implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NotNull String s) {
-        Log.v(TAG, "Preference " + s + " changed");
+        log.info("Preference " + s + " changed");
         if (s.equals(getString(R.string.widget_theme_pref_key)) ||
                 s.equals(getString(R.string.widget_extended_pref_key)) ||
                 s.equals(getString(R.string.widget_background_transparency)) ||
@@ -437,7 +440,7 @@ public class TodoApplication extends Application implements
 
 
     public void todoListChanged(boolean save) {
-        Log.v(TAG, "Tasks have changed, update UI and save todo file? " + save);
+        log.info("Tasks have changed, update UI and save todo file? " + save);
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
         if (save) {

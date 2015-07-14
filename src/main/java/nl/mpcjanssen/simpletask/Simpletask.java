@@ -19,10 +19,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -32,8 +30,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.SpannableString;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -50,6 +46,7 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import ch.qos.logback.classic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,6 +69,7 @@ import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.slf4j.LoggerFactory;
 
 
 public class Simpletask extends ThemedListActivity implements
@@ -106,6 +104,7 @@ public class Simpletask extends ThemedListActivity implements
     int m_scrollPosition = 0;
     private Dialog mOverlayDialog;
     private boolean mIgnoreScrollEvents = false;
+    private org.slf4j.Logger log;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -203,7 +202,8 @@ public class Simpletask extends ThemedListActivity implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate");
+        log = LoggerFactory.getLogger(this.getClass());
+        log.info("onCreate");
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         m_savedInstanceState = savedInstanceState;
@@ -228,13 +228,13 @@ public class Simpletask extends ThemedListActivity implements
                     // push to remote
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
-                    Log.v(TAG, "Logging out from Dropbox");
+                    log.info("Logging out from Dropbox");
                     getTodoList().deauthenticate();
                     Intent i = new Intent(context, LoginScreen.class);
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                    Log.v(TAG, "Updating UI because of broadcast");
+                    log.info( "Updating UI because of broadcast");
                     m_adapter.setFilteredTasks();
                     updateDrawers();
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
@@ -267,7 +267,7 @@ public class Simpletask extends ThemedListActivity implements
 
     private void handleIntent() {
         if (!m_app.isAuthenticated()) {
-            Log.v(TAG, "handleIntent: not authenticated");
+            log.info( "handleIntent: not authenticated");
             startLogin();
             return;
         }
@@ -319,26 +319,26 @@ public class Simpletask extends ThemedListActivity implements
         Intent intent = getIntent();
         if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
             mFilter.initFromIntent(intent);
-            Log.v(TAG, "handleIntent: launched with filter" + mFilter);
+            log.info( "handleIntent: launched with filter" + mFilter);
             Bundle extras = intent.getExtras();
             if (extras!=null) {
                 for (String key: extras.keySet()){
                     Object value = extras.get(key);
                     if (value!=null) {
-                        Log.d(TAG, String.format("%s %s (%s)", key,
+                        log.debug( String.format("%s %s (%s)", key,
                                 value.toString(), value.getClass().getName()));
                     } else {
-                        Log.d(TAG, String.format("%s %s)", key,"<null>"));
+                        log.debug( String.format("%s %s)", key,"<null>"));
                     }
 
                 }
 
             }
-            Log.v(TAG, "handleIntent: saving filter in prefs");
+            log.info( "handleIntent: saving filter in prefs");
             mFilter.saveInPrefs(TodoApplication.getPrefs());
         } else {
             // Set previous filters and sort
-            Log.v(TAG, "handleIntent: from m_prefs state");
+            log.info( "handleIntent: from m_prefs state");
             mFilter.initFromPrefs(TodoApplication.getPrefs());
         }
 
@@ -544,7 +544,7 @@ public class Simpletask extends ThemedListActivity implements
                         + Constants.SHARE_FILE_NAME);
                 shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri );
             } catch (Exception e) {
-                Log.w(TAG, "Failed to create file for sharing");
+                log.warn( "Failed to create file for sharing");
             }
         }
         startActivity(Intent.createChooser(shareIntent, "Share"));
@@ -607,7 +607,7 @@ public class Simpletask extends ThemedListActivity implements
             @Override
             public void onClick(@Nullable String selected) {
                 if (selected==null) {
-                    Log.w(TAG, "Can't defer, selected is null. This should not happen");
+                    log.warn( "Can't defer, selected is null. This should not happen");
                     return;
                 }
                 if (selected.equals("pick")) {
@@ -673,32 +673,23 @@ public class Simpletask extends ThemedListActivity implements
                 tasksToDelete.add(t);
             }
         }
+        try {
+            m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(), tasksToDelete);
+            for (Task t: tasksToDelete) {
+                todoList.remove(t);
+            }
+            todoList.notifyChanged(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Util.showToastShort(this,"Task archiving failed");
+        }
 
-
-        Thread archiveThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(), tasksToDelete);
-                    for (Task t: tasksToDelete) {
-                        todoList.remove(t);
-                    }
-                    todoList.notifyChanged(true);
-                } catch (IOException e) {
-                    Util.showToastShort(Simpletask.this,"Archive failed");
-                    e.printStackTrace();
-
-                }
-                            }
-        });
-        archiveThread.start();
 
     }
 
     @Override
     public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
-        Log.v(TAG, "onMenuItemSelected: " + item.getItemId());
+        log.info( "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.add_new:
                 startAddTaskActivity(null);
@@ -738,7 +729,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private void startAddTaskActivity(List<Task> tasks) {
-        Log.v(TAG, "Starting addTask activity");
+        log.info( "Starting addTask activity");
         getTodoList().setSelectedTasks(tasks);
         Intent intent = new Intent(this, AddTask.class);
         mFilter.saveInIntent(intent);
@@ -861,7 +852,7 @@ public class Simpletask extends ThemedListActivity implements
             // Only change intent if it actually contains a filter
             setIntent(intent);
         }
-        Log.v(TAG, "onNewIntent: " + intent);
+        log.info( "onNewIntent: " + intent);
 
     }
 
@@ -981,7 +972,7 @@ public class Simpletask extends ThemedListActivity implements
         File prefs_xml = new File(prefs_path, prefsName + ".xml");
         final boolean deleted = prefs_xml.delete();
         if (!deleted) {
-            Log.w(TAG, "Failed to delete saved filter: " + deleted_filter.getName());
+            log.warn( "Failed to delete saved filter: " + deleted_filter.getName());
         }
         updateRightDrawer();
     }
@@ -1114,7 +1105,7 @@ public class Simpletask extends ThemedListActivity implements
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent;
                     String url = links.get(which);
-                    Log.v(TAG, "" + actions.get(which) + ": " + url);
+                    log.info( "" + actions.get(which) + ": " + url);
                     switch (actions.get(which)) {
                         case ACTION_LINK:
                             if (url.startsWith("todo://")) {
@@ -1226,7 +1217,7 @@ public class Simpletask extends ThemedListActivity implements
             }
             List<Task> visibleTasks;
             countVisbleTasks = 0;
-            Log.v(TAG, "setFilteredTasks called: " + getTodoList());
+            log.info( "setFilteredTasks called: " + getTodoList());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
             visibleTasks = getTodoList().getSortedTasksCopy(mFilter, sorts, m_app.sortCaseSensitive());
             visibleLines.clear();
@@ -1391,7 +1382,7 @@ public class Simpletask extends ThemedListActivity implements
                 holder.tasktext.setText(ss);
 
                 if (task.isCompleted()) {
-                    // Log.v(TAG, "Striking through " + task.getText());
+                    // log.info( "Striking through " + task.getText());
                     holder.tasktext.setPaintFlags(holder.tasktext
                             .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.taskage.setPaintFlags(holder.taskage

@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="DB" class="ch.qos.logback.classic.android.SQLiteAppender">
+    </appender>
+    <appender name="LC" class="ch.qos.logback.classic.android.LogcatAppender">
+    </appender>
+
+    <root level="DEBUG" >
+        <appender-ref ref="DB" />
+        <appender-ref ref="LC" />
+    </root>
+</configuration>
