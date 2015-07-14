@@ -379,7 +379,7 @@ public class Util {
     }
 
     public static void createCachedDatabase(Context context, File dbFile) throws IOException {
-        File cacheFile = new File(context.getCacheDir() , "history.db");
+        File cacheFile = new File(context.getCacheDir() , dbFile.getName());
         copyFile(dbFile,cacheFile);
     }
 

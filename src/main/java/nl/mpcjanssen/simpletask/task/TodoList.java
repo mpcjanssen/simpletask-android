@@ -30,7 +30,6 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import com.google.common.collect.Ordering;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
@@ -43,6 +42,8 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -58,6 +59,7 @@ import java.util.concurrent.RunnableFuture;
 public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
     private final Context mCtx;
+    private final Logger log;
 
     @org.jetbrains.annotations.Nullable
     private ArrayList<Task> mTasks = new ArrayList<Task>();
@@ -87,6 +89,7 @@ public class TodoList {
             }
         });
         t.start();
+        log = LoggerFactory.getLogger(this.getClass());
         this.mCtx = ctx;
         this.mTodoListChanged = todoListChanged;
         this.mFileStore = new FileStore(ctx, fileChanged, eol);
@@ -103,7 +106,7 @@ public class TodoList {
     }
 
     public void queueRunnable(final String description, Runnable r) {
-        Log.v(TAG, "Handler: Queue " + description);
+        log.info("Handler: Queue " + description);
         while (todolistQueue==null) {
             try {
                 Thread.sleep(100);
@@ -274,19 +277,19 @@ public class TodoList {
 
 
     public void notifyChanged(final boolean changed) {
-        Log.v(TAG, "Handler: Queue notifychanged");
+        log.info("Handler: Queue notifychanged");
         todolistQueue.post(new Runnable() {
             @Override
             public void run() {
-                Log.v(TAG, "Handler: Handle notifychanged");
+                log.info("Handler: Handle notifychanged");
                 clearSelectedTasks();
                 if (mTodoListChanged != null) {
-                    Log.v(TAG, "TodoList changed, notifying listener and invalidating cached values");
+                    log.info("TodoList changed, notifying listener and invalidating cached values");
                     mTags = null;
                     mLists = null;
                     mTodoListChanged.todoListChanged(changed);
                 } else {
-                    Log.v(TAG, "TodoList changed, but nobody is listening");
+                    log.info("TodoList changed, but nobody is listening");
                 }
             }
         });
@@ -336,7 +339,7 @@ public class TodoList {
 
     public void reload(final String filename, final BackupInterface backup, final LocalBroadcastManager lbm) {
         if (TodoList.this.loadQueued()) {
-            Log.v(TAG, "Todolist reload is already queued waiting");
+            log.info("Todolist reload is already queued waiting");
             return;
         }
         lbm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
@@ -352,7 +355,7 @@ public class TodoList {
                     e.printStackTrace();
                 }
                 loadQueued = false;
-                Log.v(TAG, "Todolist loaded, refresh UI");
+                log.info("Todolist loaded, refresh UI");
                 notifyChanged(false);
             }
         });
@@ -395,7 +398,7 @@ public class TodoList {
         private final Runnable runnable;
 
         LoggingRunnable(String description, Runnable r) {
-            Log.v(TAG, "Creating action " + description);
+            log.info("Creating action " + description);
             this.description = description;
             this.runnable = r;
         }
@@ -407,7 +410,7 @@ public class TodoList {
 
         @Override
         public void run() {
-            Log.v(TAG, "Execution action " + description);
+            log.info("Execution action " + description);
             runnable.run();
         }
 

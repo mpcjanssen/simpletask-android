@@ -128,35 +128,24 @@ public class Preferences extends ThemedActivity {
             }
         }
 
-        private void sendLog() {
-            StringBuilder log = new StringBuilder();
-            try {
-                Process process = Runtime.getRuntime().exec("logcat -d -v long");
-                BufferedReader bufferedReader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
 
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    log.append(line).append("\n");
-                }
-            } catch (IOException e) {
-                log.append(e.toString());
-            }
+        private void sendLog() {
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
+            shareIntent.setType("application/x-sqlite3");
             shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                    "Simpletask Logcat");
-            // Create a cache file to pass in EXTRA_STREAM
+                    "Simpletask Logging Database");
+            File dataDir = new File(this.getActivity().getApplicationInfo().dataDir);
+            File databaseDir = new File(dataDir, "databases");
+            File dataBase = new File(databaseDir, "logback.db");
             try {
-                Util.createCachedFile(this.getActivity(),
-                        "logcat.txt", log.toString());
-                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
-                        + "logcat.txt");
-                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri);
+                Util.createCachedDatabase(this.getActivity(), dataBase);
+                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "logback.db");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             } catch (Exception e) {
                 Log.w(TAG, "Failed to create file for sharing");
             }
-            startActivity(Intent.createChooser(shareIntent, "Share log"));
+            startActivity(Intent.createChooser(shareIntent, "Share Logging Database"));
+
         }
 
         private void shareHistory() {
