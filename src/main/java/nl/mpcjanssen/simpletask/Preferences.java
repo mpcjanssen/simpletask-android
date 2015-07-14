@@ -131,20 +131,20 @@ public class Preferences extends ThemedActivity {
 
         private void sendLog() {
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-            shareIntent.setType("application/x-sqlite3");
+            shareIntent.setType("text/plain");
             shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                    "Simpletask Logging Database");
+                    "Simpletask Logging File");
             File dataDir = new File(this.getActivity().getApplicationInfo().dataDir);
-            File databaseDir = new File(dataDir, "databases");
-            File dataBase = new File(databaseDir, "logback.db");
+            File databaseDir = new File(dataDir, "files");
+            File dataBase = new File(databaseDir, "log.txt");
             try {
                 Util.createCachedDatabase(this.getActivity(), dataBase);
-                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "logback.db");
+                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "log.txt");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             } catch (Exception e) {
                 Log.w(TAG, "Failed to create file for sharing");
             }
-            startActivity(Intent.createChooser(shareIntent, "Share Logging Database"));
+            startActivity(Intent.createChooser(shareIntent, "Share Logging File"));
 
         }
 
