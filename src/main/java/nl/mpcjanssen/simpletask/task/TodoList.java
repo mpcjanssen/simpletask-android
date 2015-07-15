@@ -349,9 +349,12 @@ public class TodoList {
             public void run() {
                 clearSelectedTasks();
                 try {
+                    List<Task> tasks = mFileStore.loadTasksFromFile(filename, backup);
                     mTasks.clear();
-                    mTasks.addAll(mFileStore.loadTasksFromFile(filename, backup));
+                    mTasks.addAll(tasks);
                 } catch (IOException e) {
+                    log.error("Todolist load failed: {}", filename, e);
+                    Util.showToastShort(mCtx, "Loading of todo file failed");
                     e.printStackTrace();
                 }
                 loadQueued = false;
