@@ -355,7 +355,6 @@ public class TodoList {
                 } catch (IOException e) {
                     log.error("Todolist load failed: {}", filename, e);
                     Util.showToastShort(mCtx, "Loading of todo file failed");
-                    e.printStackTrace();
                 }
                 loadQueued = false;
                 log.info("Todolist loaded, refresh UI");
