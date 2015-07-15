@@ -649,7 +649,7 @@ public class Simpletask extends ThemedListActivity implements
         m_app.showConfirmationDialog(this, R.string.delete_task_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                for (Task t: tasks) {
+                for (Task t : tasks) {
                     m_app.getTodoList(null).remove(t);
                 }
                 getTodoList().notifyChanged(true);
@@ -816,7 +816,7 @@ public class Simpletask extends ThemedListActivity implements
 
     @Override
     public void onBackPressed() {
-        if (m_drawerLayout!=null) {
+        if (m_drawerLayout != null) {
             if (m_drawerLayout.isDrawerOpen(Gravity.LEFT)) {
                 m_drawerLayout.closeDrawer(Gravity.LEFT);
                 return;
@@ -826,14 +826,12 @@ public class Simpletask extends ThemedListActivity implements
                 return;
             }
         }
-        if (m_app.backClearsFilter() && mFilter!=null && mFilter.hasFilter()) {
+        if (m_app.backClearsFilter() && mFilter != null && mFilter.hasFilter()) {
             clearFilter();
             onNewIntent(getIntent());
             return;
         }
-        if (!m_app.switchPreviousTodoFile()) {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
