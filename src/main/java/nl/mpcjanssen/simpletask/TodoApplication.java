@@ -60,7 +60,6 @@ public class TodoApplication extends Application implements
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
-    private ArrayList<String> todoTrail = new ArrayList<>();
 
     @Nullable
     private TodoList m_todoList;
@@ -420,22 +419,9 @@ public class TodoApplication extends Application implements
     }
 
     public void switchTodoFile(String newTodo) {
-        todoTrail.add(getTodoFileName());
         setTodoFile(newTodo);
         loadTodoList();
 
-    }
-
-    public boolean switchPreviousTodoFile() {
-        int size = todoTrail.size();
-        if (size == 0) {
-            return false;
-        } else {
-            String newTodo = todoTrail.remove(size - 1);
-            setTodoFile(newTodo);
-            loadTodoList();
-            return true;
-        }
     }
 
 
