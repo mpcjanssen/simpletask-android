@@ -18,7 +18,14 @@ public class ProjectComparator extends Ordering<Task> {
 
 
     @Override
-    public int compare(@NonNull Task a, @NonNull Task b) {
+    public int compare(Task a, Task b) {
+        if (a == b) {
+            return 0;
+        } else if (a == null) {
+            return -1;
+        } else if (b == null) {
+            return 1;
+        }
         List<String> projectsA = a.getTags();
         List<String> projectsB = b.getTags();
 

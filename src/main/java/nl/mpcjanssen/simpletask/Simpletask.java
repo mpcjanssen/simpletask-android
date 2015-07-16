@@ -1129,7 +1129,6 @@ public class Simpletask extends ThemedListActivity implements
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter {
         public class VisibleLine {
-            @NonNull
             private Task task;
             private String title = "";
             private boolean header = false;
@@ -1174,7 +1173,7 @@ public class Simpletask extends ThemedListActivity implements
         private LayoutInflater m_inflater;
         private int countVisbleTasks;
 
-        public TaskAdapter(LayoutInflater inflater) {
+        public TaskAdapter(@NonNull LayoutInflater inflater) {
             this.m_inflater = inflater;
         }
 
