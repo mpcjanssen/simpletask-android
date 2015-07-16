@@ -259,7 +259,7 @@ public class TodoList {
 
     @NonNull
     public List<Task> getSelectedTasks() {
-        return new ArrayList<>();
+        return mSelectedTask;
     }
 
     public void setSelectedTasks(List<Task> selectedTasks) {
