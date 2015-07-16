@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.sort;
 
-import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
 import nl.mpcjanssen.simpletask.task.Task;
 
@@ -31,9 +30,9 @@ public class ProjectComparator extends Ordering<Task> {
 
         if (projectsA.isEmpty() && projectsB.isEmpty()) {
             return 0;
-        } else if (projectsA.isEmpty() && !projectsB.isEmpty()) {
+        } else if (projectsA.isEmpty()) {
             return 1;
-        } else if (!projectsA.isEmpty() && projectsB.isEmpty()) {
+        } else if (projectsB.isEmpty()) {
             return -1;
         } else {
             Collections.sort(projectsA);

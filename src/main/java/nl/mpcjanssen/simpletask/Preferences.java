@@ -106,15 +106,6 @@ public class Preferences extends ThemedActivity {
 
             // Only show Material themes if supported
             final ListPreference themePref = (ListPreference)findPreference(getString(R.string.theme_pref_key));
-            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-            if ( currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-                themePref.setEntries(R.array.themes);
-                themePref.setEntryValues(R.array.theme_values);
-            } else {
-                themePref.setEntries(R.array.holo_themes);
-                themePref.setEntryValues(R.array.holo_theme_values);
-            }
-
 
             if (!TodoApplication.API16) {
                 Preference calSyncPref = findPreference(getString(R.string.calendar_sync_screen));

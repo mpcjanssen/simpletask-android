@@ -54,7 +54,7 @@ public class LinkParser {
         List<String> links = new ArrayList<String>();
         while (m.find()) {
             String link;
-            link = new String(m.group());
+            link = m.group();
             links.add(link);
         }
         return links;

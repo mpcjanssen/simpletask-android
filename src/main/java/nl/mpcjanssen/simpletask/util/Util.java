@@ -47,6 +47,7 @@ import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
+import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,7 +191,7 @@ public class Util {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    @Nullable
+    @NotNull
     public static DateTime addInterval(@Nullable DateTime date, @NonNull String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
         Matcher m = p.matcher(interval.toLowerCase(Locale.getDefault()));
@@ -200,13 +201,14 @@ public class Util {
             date = DateTime.today(TimeZone.getDefault());
         }
         if(!m.find()) {
-            return null;
+            //If the interval is invalid, just return the original date
+            return date;
         }
         if(m.groupCount()==2) {
             amount = Integer.parseInt(m.group(1));
             type = m.group(2).toLowerCase(Locale.getDefault());
         } else {
-            return null;
+            return date;
         }
         switch(type) {
             case "d":
@@ -405,7 +407,7 @@ public class Util {
             newDialog.setCancelable(false);
             newDialog.show();
             return newDialog;
-        } else if (!show && visibleDialog!=null) {
+        } else if (visibleDialog!=null) {
             visibleDialog.dismiss();
         }
         return null;

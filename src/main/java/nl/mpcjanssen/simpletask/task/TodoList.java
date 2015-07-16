@@ -58,12 +58,13 @@ public class TodoList {
     private final Context mCtx;
     private final Logger log;
 
-    @org.jetbrains.annotations.Nullable
+    @NonNull
     private ArrayList<Task> mTasks = new ArrayList<Task>();
-    private List<Task> mSelectedTask;
-    @org.jetbrains.annotations.Nullable
+    @NonNull
+    private List<Task> mSelectedTask = new ArrayList<Task>();;
+    @Nullable
     private ArrayList<String> mLists = null;
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     private ArrayList<String> mTags = null;
     private TodoListChanged mTodoListChanged;
 
@@ -140,11 +141,7 @@ public class TodoList {
 
 
     public int size() {
-        if (mTasks == null) {
-            return 0;
-        } else {
-            return mTasks.size();
-        }
+        return mTasks.size();
     }
 
     public Task get(int position) {
@@ -162,7 +159,7 @@ public class TodoList {
         return ret;
     }
 
-    @Nullable
+    @NonNull
     public ArrayList<String> getContexts() {
         if (mLists != null) {
             return mLists;
@@ -176,7 +173,7 @@ public class TodoList {
         return mLists;
     }
 
-    @org.jetbrains.annotations.Nullable
+    @NonNull
     public ArrayList<String> getProjects() {
         if (mTags != null) {
             return mTags;
@@ -260,12 +257,9 @@ public class TodoList {
         });
     }
 
+    @NonNull
     public List<Task> getSelectedTasks() {
-        if (mSelectedTask != null) {
-            return mSelectedTask;
-        } else {
-            return new ArrayList<>();
-        }
+        return new ArrayList<>();
     }
 
     public void setSelectedTasks(List<Task> selectedTasks) {
@@ -308,18 +302,12 @@ public class TodoList {
     }
 
     public void selectTask(Task t) {
-        if (mSelectedTask == null) {
-            mSelectedTask = new ArrayList<>();
-        }
         if (mSelectedTask.indexOf(t) == -1) {
             mSelectedTask.add(t);
         }
     }
 
     public void unSelectTask(Task t) {
-        if (mSelectedTask == null) {
-            mSelectedTask = new ArrayList<>();
-        }
         mSelectedTask.remove(t);
     }
 
@@ -331,7 +319,7 @@ public class TodoList {
         if (index < 0 || index > mTasks.size() - 1) {
             return;
         }
-        mSelectedTask.add(mTasks.get(index));
+        selectTask(mTasks.get(index));
     }
 
     public void reload(final String filename, final BackupInterface backup, final LocalBroadcastManager lbm) {

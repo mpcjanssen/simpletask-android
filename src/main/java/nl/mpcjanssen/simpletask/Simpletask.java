@@ -10,7 +10,11 @@
 package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
-import android.app.*;
+
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.*;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -25,8 +29,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
+
 import android.text.Editable;
 import android.text.SpannableString;
+
 import android.view.*;
 import android.widget.*;
 import hirondelle.date4j.DateTime;
@@ -44,7 +53,7 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class Simpletask extends ThemedListActivity implements
+public class Simpletask extends ThemedActivity implements
                 AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
 
     private final static int REQUEST_SHARE_PARTS = 1;
@@ -75,6 +84,7 @@ public class Simpletask extends ThemedListActivity implements
     private Dialog mOverlayDialog;
     private boolean mIgnoreScrollEvents = false;
     private org.slf4j.Logger log;
+    private ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -207,7 +217,7 @@ public class Simpletask extends ThemedListActivity implements
                 continue;
             }
             selectedTasks.add(t);
-            if (t != null && !lv.isItemChecked(i)) {
+            if (!lv.isItemChecked(i)) {
                 lv.setItemChecked(i, true);
             }
         }
@@ -221,19 +231,6 @@ public class Simpletask extends ThemedListActivity implements
             m_drawerToggle.onConfigurationChanged(newConfig);
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (m_drawerToggle != null && m_drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
 
 
     private void handleIntent() {
@@ -278,7 +275,7 @@ public class Simpletask extends ThemedListActivity implements
 
             // Set the drawer toggle as the DrawerListener
             m_drawerLayout.setDrawerListener(m_drawerToggle);
-            ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getSupportActionBar();
             if (actionBar!=null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setHomeButtonEnabled(true);
@@ -382,7 +379,7 @@ public class Simpletask extends ThemedListActivity implements
             actionbar.setVisibility(View.GONE);
         }
         int count = m_adapter!=null ? m_adapter.getCountVisbleTasks() : 0;
-        int total = getTodoList()!=null ? getTodoList().size() : 0;
+        int total = getTodoList().size();
 
         filterText.setText(mFilter.getTitle(
                 count,
@@ -590,7 +587,7 @@ public class Simpletask extends ThemedListActivity implements
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
                             for (Task t: tasksToDefer) {
-                                m_app.getTodoList(null).defer(date.format(Constants.DATE_FORMAT),t,dateType);
+                                m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT),t,dateType);
                             }
                             getTodoList().notifyChanged(true);
                         }
@@ -606,7 +603,7 @@ public class Simpletask extends ThemedListActivity implements
                     dialog.show();
                 } else {
                     for (Task t: tasksToDefer) {
-                        m_app.getTodoList(null).defer(selected, t, dateType);
+                        m_app.getTodoList().defer(selected, t, dateType);
                     }
                     getTodoList().notifyChanged(true);
                 }
@@ -621,7 +618,7 @@ public class Simpletask extends ThemedListActivity implements
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 for (Task t : tasks) {
-                    m_app.getTodoList(null).remove(t);
+                    m_app.getTodoList().remove(t);
                 }
                 getTodoList().notifyChanged(true);
             }
@@ -659,7 +656,10 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (m_drawerToggle != null && m_drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         log.info( "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.add_new:
@@ -694,7 +694,7 @@ public class Simpletask extends ThemedListActivity implements
                 m_app.browseForNewFile(this);
                 break;
             default:
-                return super.onMenuItemSelected(featureId, item);
+                return super.onOptionsItemSelected(item);
         }
         return true;
     }
@@ -821,7 +821,7 @@ public class Simpletask extends ThemedListActivity implements
             // Only change intent if it actually contains a filter
             setIntent(intent);
         }
-        log.info( "onNewIntent: " + intent);
+        log.info("onNewIntent: " + intent);
 
     }
 
@@ -1033,7 +1033,7 @@ public class Simpletask extends ThemedListActivity implements
     }
 
     private TodoList getTodoList() {
-        return m_app.getTodoList(null);
+        return m_app.getTodoList();
     }
 
     public void startFilterActivity() {
@@ -1044,26 +1044,25 @@ public class Simpletask extends ThemedListActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Task t = getTaskAt(position);
-        final ArrayList <String> actions = new ArrayList<>();
         final ArrayList <String> links = new ArrayList<>();
-
-        for (String link : t.getLinks()) {
-            actions.add(ACTION_LINK);
-            links.add(link);
+        final ArrayList<String> actions = new ArrayList<>();
+        Task t = getTaskAt(position);
+        if (t!=null) {
+            for (String link : t.getLinks()) {
+                actions.add(ACTION_LINK);
+                links.add(link);
+            }
+            for (String number : t.getPhoneNumbers()) {
+                actions.add(ACTION_PHONE);
+                links.add(number);
+            }
+            for (String mail : t.getMailAddresses()) {
+                actions.add(ACTION_MAIL);
+                links.add(mail);
+            }
         }
 
-        for (String number : t.getPhoneNumbers()) {
-            actions.add(ACTION_PHONE);
-            links.add(number);
-        }
-
-        for (String mail : t.getMailAddresses()) {
-            actions.add(ACTION_MAIL);
-            links.add(mail);
-        }
-
-        final String[] linksArray = links.toArray(new String[0]);
+        final String[] linksArray = links.toArray(new String[links.size()]);
         if (linksArray.length==0) {
             getListView().setItemChecked(position, !getListView().isItemChecked(position));
         } else {
@@ -1116,6 +1115,11 @@ public class Simpletask extends ThemedListActivity implements
         if (!mIgnoreScrollEvents) {
             m_scrollPosition = firstVisibleItem;
         }
+    }
+
+    public ListView getListView() {
+        View lv = findViewById(android.R.id.list);
+        return (ListView) lv;
     }
 
 

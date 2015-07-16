@@ -35,10 +35,7 @@ import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,7 +67,9 @@ public class Task implements Serializable {
     @NonNull
     private ArrayList<Token> mTokens = new ArrayList<>();
     private boolean mCompleted;
+    @NonNull
     private ArrayList<String> mLists;
+    @NonNull
     private ArrayList<String> mTags;
     @Nullable
     private String mCompletionDate;
@@ -112,6 +111,9 @@ public class Task implements Serializable {
 
     @Nullable
     public DateTime getDueDate() {
+        if (mDuedate==null) {
+            return null;
+        }
         return stringToDateTime(mDuedate);
     }
 
@@ -148,10 +150,12 @@ public class Task implements Serializable {
     }
 
     @Nullable
-    public DateTime stringToDateTime(@NonNull String dateString) {
+    public DateTime stringToDateTime(@Nullable String dateString) {
         DateTime date;
-        if (DateTime.isParseable(dateString)) {
+        if (dateString != null && DateTime.isParseable(dateString)) {
             date = new DateTime(dateString);
+        } else if (dateString==null){
+            date = DateTime.today(TimeZone.getDefault());
         } else {
             date = null;
         }
@@ -470,9 +474,7 @@ public class Task implements Serializable {
             olddate = new DateTime(deferFromDate);
         }
         DateTime newDate = Util.addInterval(olddate,deferString);
-        if (newDate!=null) {
-            setThresholdDate(newDate);
-        }
+        setThresholdDate(newDate);
     }
 
     public void deferDueDate(@NonNull String deferString, @NonNull String deferFromDate) {
@@ -492,9 +494,7 @@ public class Task implements Serializable {
         }
 
         DateTime newDate = Util.addInterval(olddate, deferString);
-        if (newDate!=null) {
-            setDueDate(newDate);
-        }
+        setDueDate(newDate);
     }
 
 

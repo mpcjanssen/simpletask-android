@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.sort;
 
-import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;

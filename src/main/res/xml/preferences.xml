@@ -34,8 +34,10 @@
 
     <PreferenceCategory android:title="@string/todotxt_ui_settings_header">
         <ListPreference
-            android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
+            android:defaultValue="light_darkactionbar"
             android:key="@string/theme_pref_key"
+            android:entries="@array/themes"
+            android:entryValues="@array/theme_values"
             android:summary="@string/theme_pref_summary"
             android:title="@string/theme_pref_title" />
         <ListPreference
@@ -46,9 +48,9 @@
             android:summary="@string/font_size_delta_pref_summary"
             android:title="@string/font_size_delta_pref_title" />
         <ListPreference
-            android:defaultValue="android.R.style.Theme_Holo_Light_DarkActionBar"
-            android:entries="@array/holo_themes"
-            android:entryValues="@array/holo_theme_values"
+            android:defaultValue="light_darkactionbar"
+            android:entries="@array/themes"
+            android:entryValues="@array/theme_values"
             android:key="@string/widget_theme_pref_key"
             android:summary="@string/widget_theme_pref_summary"
             android:title="@string/widget_theme_pref_title" />

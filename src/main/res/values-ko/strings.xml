@@ -308,7 +308,7 @@
     <string name="calendar_sync_prefix_due">일정 마감일:</string>
     <string name="calendar_sync_prefix_thre">일정 시작일:</string>
     <string name="calendar_sync_evt_desc">심플태스크가 자동 생성함</string>
-    <string name="calendar_exists_warning">경고: 같은 이름의 달력이 이미 존재함, 덮어쓰는중...</string>
+    <string name="calendar_exists_warning">경고: 같은 이름의 달력이 이미 존재함, 덮어쓰는중…</string>
 
     <string name="click_to_copy">클립보드에 복사하려면 선택</string>
 </resources>

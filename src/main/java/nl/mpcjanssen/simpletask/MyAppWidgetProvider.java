@@ -37,7 +37,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         ColorDrawable headerColor;
         String theme = appPreferences.getString("widget_theme", "");
 
-        if (theme.equals("android.R.style.Theme_Holo")) {
+        if (theme.equals("dark")) {
             view = new RemoteViews(context.getPackageName(), R.layout.appwidget_dark);
             listColor = new ColorDrawable(0xFF000000);
             headerColor = new ColorDrawable(0xFF000000);

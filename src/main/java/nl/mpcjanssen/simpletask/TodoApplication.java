@@ -25,6 +25,7 @@
  */
 package nl.mpcjanssen.simpletask;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -62,7 +63,7 @@ public class TodoApplication extends Application implements
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
 
-    @Nullable
+    @NonNull
     private TodoList m_todoList;
     private CalendarSync m_calSync;
     private BroadcastReceiver m_broadcastReceiver;
@@ -188,6 +189,7 @@ public class TodoApplication extends Application implements
         return new File(getTodoFileName());
     }
 
+    @SuppressLint("CommitPrefEdits")
     public void setTodoFile(String todo) {
         m_prefs.edit().putString(getString(R.string.todo_file_key), todo).commit();
     }
@@ -295,8 +297,8 @@ public class TodoApplication extends Application implements
                 .apply();
     }
 
-    @Nullable
-    public TodoList getTodoList(final Activity act) {
+    @NonNull
+    public TodoList getTodoList() {
         return m_todoList;
     }
 
@@ -334,26 +336,14 @@ public class TodoApplication extends Application implements
 
     private int themeStringToId (String theme) {
         switch (theme) {
-            case "android.R.style.Theme_Holo":
-                return android.R.style.Theme_Holo;
-            case "android.R.style.Theme_Holo_Light_DarkActionBar":
-                return android.R.style.Theme_Holo_Light_DarkActionBar;
-            case "android.R.style.Theme_Holo_Light":
-                return android.R.style.Theme_Holo_Light;
+            case "dark":
+                return R.style.Theme_AppCompat;
+            case "light_darkactionbar":
+                return R.style.Theme_AppCompat_Light_DarkActionBar;
+            case "light":
+                return R.style.Theme_AppCompat_Light;
         }
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if ( currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-            switch (theme) {
-                case "android.R.style.Theme_Material":
-                    return android.R.style.Theme_Material;
-                case "android.R.style.Theme_Material_Light_DarkActionBar":
-                    return android.R.style.Theme_Material_Light_DarkActionBar;
-                case "android.R.style.Theme_Material_Light":
-                    return android.R.style.Theme_Material_Light;
-            }
-
-        }
-        return android.R.style.Theme_Holo_Light_DarkActionBar;
+        return R.style.Theme_AppCompat;
 
     }
 
@@ -377,8 +367,7 @@ public class TodoApplication extends Application implements
 
     public boolean isDarkTheme() {
         switch (getActiveTheme()) {
-            case android.R.style.Theme_Holo:
-            case android.R.style.Theme_Material:
+            case R.style.Theme_AppCompat:
                 return true;
             default:
                 return false;
@@ -387,10 +376,8 @@ public class TodoApplication extends Application implements
 
     public boolean isDarkActionbar() {
         switch (getActiveTheme()) {
-            case android.R.style.Theme_Holo:
-            case android.R.style.Theme_Holo_Light_DarkActionBar:
-            case android.R.style.Theme_Material:
-            case android.R.style.Theme_Material_Light_DarkActionBar:
+            case R.style.Theme_AppCompat:
+            case R.style.Theme_AppCompat_Light_DarkActionBar:
                 return true;
             default:
                 return false;

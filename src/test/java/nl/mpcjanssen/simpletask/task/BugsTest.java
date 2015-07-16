@@ -32,10 +32,4 @@ public class BugsTest extends TestCase {
         assertEquals("test",t.showParts(~Token.LIST & ~Token.CREATION_DATE).trim());
         
     }
-
-    public void testBugAnr() {
-        Task t = new Task("2012-01-01 @list test");
-        DateTime.isParseable(null);
-        assertEquals(null, t.stringToDateTime(null));
-    }
 }

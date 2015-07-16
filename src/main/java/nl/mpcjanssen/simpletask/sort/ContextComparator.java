@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.sort;
 
-import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
 import nl.mpcjanssen.simpletask.task.Task;
 
@@ -30,9 +29,9 @@ public class ContextComparator extends Ordering<Task> {
 
         if (contextsA.isEmpty() && contextsB.isEmpty()) {
             return 0;
-        } else if (contextsA.isEmpty() && !contextsB.isEmpty()) {
+        } else if (contextsA.isEmpty()) {
             return -1;
-        } else if (!contextsA.isEmpty() && contextsB.isEmpty()) {
+        } else if (contextsB.isEmpty()) {
             return 1;
         } else {
             Collections.sort(contextsA);

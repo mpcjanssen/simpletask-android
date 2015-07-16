@@ -1,10 +1,10 @@
 package nl.mpcjanssen.simpletask;
 
 import android.app.ActionBar;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
@@ -22,6 +22,7 @@ public class FilterListFragment extends Fragment {
     private GestureDetector gestureDetector;
     @Nullable
     ActionBar actionbar;
+    String type;
     private ArrayList<String> selectedItems;
     private boolean not;
     private Logger log;
@@ -84,24 +85,6 @@ public class FilterListFragment extends Fragment {
         }
 
         cb.setChecked(not);
-
-        gestureDetector = new GestureDetector(TodoApplication.getAppContext(),
-                new FilterGestureDetector());
-        OnTouchListener gestureListener = new OnTouchListener() {
-            @Override
-            public boolean onTouch(@NonNull View v, @NonNull MotionEvent event) {
-                if (gestureDetector.onTouchEvent(event)) {
-                    MotionEvent cancelEvent = MotionEvent.obtain(event);
-                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
-                    v.onTouchEvent(cancelEvent);
-                    cancelEvent.recycle();
-                    return true;
-                }
-                return false;
-            }
-        };
-
-        lv.setOnTouchListener(gestureListener);
         return layout;
     }
 
@@ -127,41 +110,5 @@ public class FilterListFragment extends Fragment {
             }
         }
         return arr;
-    }
-
-    class FilterGestureDetector extends SimpleOnGestureListener {
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_MAX_OFF_PATH = 250;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-        @Override
-        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX,
-                               float velocityY) {
-
-            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                return false;
-            if (actionbar==null) {
-                return false;
-            }
-            int index = actionbar.getSelectedNavigationIndex();
-            // right to left swipe
-            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                log.debug("Fling left");
-                if (index < actionbar.getTabCount() - 1)
-                    index++;
-                actionbar.setSelectedNavigationItem(index);
-                return true;
-            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                // left to right swipe
-                log.debug("Fling right");
-                if (index > 0)
-                    index--;
-                actionbar.setSelectedNavigationItem(index);
-                return true;
-            }
-            return false;
-        }
     }
 }
