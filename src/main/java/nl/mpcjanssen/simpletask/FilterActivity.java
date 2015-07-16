@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask;
 
-import android.app.*;
+
+import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -10,6 +11,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.design.widget.TabLayout;
+
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,10 +32,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class FilterActivity extends ThemedActivity {
+public class FilterActivity extends ThemedFragmentActivity {
 
     final static String TAG = FilterActivity.class.getSimpleName();
+    public static final String TAB_TYPE = "type";
     final static String CONTEXT_TAB = "context";
     final static String PROJECT_TAB = "project";
     final static String PRIO_TAB = "prio";
@@ -40,6 +50,7 @@ public class FilterActivity extends ThemedActivity {
     public static final String INITIAL_SELECTED_ITEMS = "initialSelectedItems";
     public static final String INITIAL_NOT = "initialNot";
 
+
     boolean asWidgetConfigure = false;
     ActiveFilter mFilter;
 
@@ -47,25 +58,11 @@ public class FilterActivity extends ThemedActivity {
     SharedPreferences prefs;
 
     @Nullable
-    private ActionBar actionbar;
+    private ViewPager pager;
     private Menu m_menu;
     private Logger log;
-
-    private int getLastActiveTab() {
-        return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
-    }
-
-    private void saveActiveTab(int i) {
-        prefs.edit()
-                .putInt(getString(R.string.last_open_filter_tab), i)
-                .apply();
-    }
-
-    @Override
-    protected void onDestroy() {
-        saveActiveTab(actionbar.getSelectedNavigationIndex());
-        super.onDestroy();
-    }
+    private ScreenSlidePagerAdapter pagerAdapter;
+    private FilterScriptFragment scriptFragment;
 
     @Override
     public void onBackPressed() {
@@ -82,15 +79,11 @@ public class FilterActivity extends ThemedActivity {
         log.info("Called with intent: " + getIntent().toString());
         m_app = (TodoApplication) getApplication();
         prefs = TodoApplication.getPrefs();
-        m_app.setActionBarStyle(getWindow());
 
         setContentView(R.layout.filter);
 
         Bundle arguments;
-        actionbar = getActionBar();
-        if (actionbar != null) {
-            actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        }
+
         Intent intent = getIntent();
 
         if (intent.getAction() != null) {
@@ -104,37 +97,42 @@ public class FilterActivity extends ThemedActivity {
         } else {
             mFilter.initFromIntent(intent);
         }
+
+
+        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+
         // Fill arguments for fragment
         arguments = new Bundle();
         arguments.putStringArrayList(FILTER_ITEMS,
-                Util.sortWithPrefix(m_app.getTodoList(this).getContexts(), m_app.sortCaseSensitive(), "-"));
+                Util.sortWithPrefix(m_app.getTodoList().getContexts(), m_app.sortCaseSensitive(), "-"));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getContexts());
         arguments.putBoolean(INITIAL_NOT, mFilter.getContextsNot());
-        actionbar.addTab(actionbar.newTab()
-                .setText(getString(R.string.context_prompt))
-                .setTabListener(new MyTabsListener(this, CONTEXT_TAB, FilterListFragment.class.getName(), arguments))
-                .setTag(CONTEXT_TAB));
+        arguments.putString(TAB_TYPE, CONTEXT_TAB);
+        Fragment contextTab = new FilterListFragment();
+        contextTab.setArguments(arguments);
+        pagerAdapter.add(contextTab);
+
 
         // Fill arguments for fragment
         arguments = new Bundle();
         arguments.putStringArrayList(FILTER_ITEMS,
-                Util.sortWithPrefix(m_app.getTodoList(this).getProjects(), m_app.sortCaseSensitive(), "-"));
+                Util.sortWithPrefix(m_app.getTodoList().getProjects(), m_app.sortCaseSensitive(), "-"));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.getProjects());
         arguments.putBoolean(INITIAL_NOT, mFilter.getProjectsNot());
-        actionbar.addTab(actionbar.newTab()
-                .setText(getString(R.string.project_prompt))
-                .setTabListener(new MyTabsListener(this, PROJECT_TAB, FilterListFragment.class.getName(), arguments))
-                .setTag(PROJECT_TAB));
+        arguments.putString(TAB_TYPE, PROJECT_TAB);
+        Fragment projectTab = new FilterListFragment();
+        projectTab.setArguments(arguments);
+        pagerAdapter.add(projectTab);
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTodoList(this).getPriorities()));
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTodoList().getPriorities()));
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
         arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
-        actionbar.addTab(actionbar.newTab()
-                .setText(getString(R.string.priority_short_prompt))
-                .setTabListener(new MyTabsListener(this, PRIO_TAB, FilterListFragment.class.getName(), arguments))
-                .setTag(PRIO_TAB));
+        arguments.putString(TAB_TYPE, PRIO_TAB);
+        Fragment prioTab = new FilterListFragment();
+        prioTab.setArguments(arguments);
+        pagerAdapter.add(prioTab);
 
         // Fill arguments for fragment
         arguments = new Bundle();
@@ -142,35 +140,37 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.getHideFuture());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, mFilter.getHideLists());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.getHideTags());
+        arguments.putString(TAB_TYPE, OTHER_TAB);
+        Fragment otherTab = new FilterOtherFragment();
+        otherTab.setArguments(arguments);
+        pagerAdapter.add(otherTab);
 
-        actionbar.addTab(actionbar.newTab()
-                .setText(getString(R.string.filter_show_prompt))
-                .setTabListener(new MyTabsListener(this, OTHER_TAB, FilterOtherFragment.class.getName(), arguments))
-                .setTag(OTHER_TAB));
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        Tab sortTab = actionbar.newTab()
-                .setText(getString(R.string.sort))
-                .setTabListener(new MyTabsListener(this, SORT_TAB, FilterSortFragment.class.getName(), arguments))
-                .setTag(SORT_TAB);
         arguments.putStringArrayList(FILTER_ITEMS, mFilter.getSort(m_app.getDefaultSorts()));
-        actionbar.addTab(sortTab);
+        arguments.putString(TAB_TYPE, SORT_TAB);
+        Fragment sortTab = new FilterSortFragment();
+        sortTab.setArguments(arguments);
+        pagerAdapter.add(sortTab);
 
         if (m_app.useScript()) {
             arguments = new Bundle();
-            Tab scriptTab = actionbar.newTab()
-                    .setText(getString(R.string.script))
-                    .setTabListener(new MyTabsListener(this, SCRIPT_TAB, FilterScriptFragment.class.getName(), arguments))
-                    .setTag(SCRIPT_TAB);
             arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.getScript());
             arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.getScriptTestTask());
-            actionbar.addTab(scriptTab);
+            arguments.putString(TAB_TYPE, SCRIPT_TAB);
+            FilterScriptFragment scriptTab = new FilterScriptFragment();
+            scriptFragment = scriptTab;
+            scriptTab.setArguments(arguments);
+            pagerAdapter.add(scriptTab);
         }
-        int previousTab = getLastActiveTab();
-        if (previousTab < actionbar.getTabCount()) {
-            actionbar.setSelectedNavigationItem(previousTab);
-        }
+
+        pager = (ViewPager)findViewById(R.id.pager);
+        pager.setAdapter(pagerAdapter);
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(pager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class FilterActivity extends ThemedActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter_action:
                 if (asWidgetConfigure) {
@@ -257,148 +257,56 @@ public class FilterActivity extends ThemedActivity {
 
     private void updateFilterFromFragments() {
         ArrayList<String> items;
-        items = getFragmentFilter(CONTEXT_TAB);
-        if (items != null) {
-            mFilter.setContexts(items);
-        }
-        mFilter.setContextsNot(getNot(CONTEXT_TAB, mFilter.getContextsNot()));
+        for (Fragment f : pagerAdapter.getFragments()) {
+            switch (f.getArguments().getString(TAB_TYPE,"")) {
+                case "":
+                    break;
+                case OTHER_TAB:
+                    FilterOtherFragment of = (FilterOtherFragment) f;
+                    mFilter.setHideCompleted(of.getHideCompleted());
+                    mFilter.setHideFuture(of.getHideFuture());
+                    mFilter.setHideLists(of.getHideLists());
+                    mFilter.setHideTags(of.getHideTags());
+                    break;
+                case CONTEXT_TAB:
+                    FilterListFragment lf = (FilterListFragment) f;
+                    mFilter.setContexts(lf.getSelectedItems());
+                    mFilter.setContextsNot(lf.getNot());
+                    break;
+                case PROJECT_TAB:
+                    FilterListFragment pf = (FilterListFragment) f;
+                    mFilter.setProjects(pf.getSelectedItems());
+                    mFilter.setProjectsNot(pf.getNot());
+                    break;
+                case PRIO_TAB:
+                    FilterListFragment prf = (FilterListFragment) f;
+                    mFilter.setPriorities(prf.getSelectedItems());
+                    mFilter.setPrioritiesNot(prf.getNot());
+                    break;
+                case SORT_TAB:
+                    FilterSortFragment sf = (FilterSortFragment) f;
+                    mFilter.setSort(sf.getSelectedItem());
+                    break;
+                case SCRIPT_TAB:
+                    FilterScriptFragment scrf = (FilterScriptFragment) f;
+                    mFilter.setScript(scrf.getScript());
+                    mFilter.setScriptTestTask(scrf.getTestTask());
+                    break;
 
-        items = getFragmentFilter(PROJECT_TAB);
-        if (items != null) {
-            mFilter.setProjects(items);
-        }
-        mFilter.setProjectsNot(getNot(PROJECT_TAB, mFilter.getProjectsNot()));
-
-        items = getFragmentFilter(PRIO_TAB);
-        if (items != null) {
-            mFilter.setPriorities(items);
-        }
-        mFilter.setPrioritiesNot(getNot(PRIO_TAB, mFilter.getPrioritiesNot()));
-
-        mFilter.setHideCompleted(getHideCompleted());
-        mFilter.setHideFuture(getHideFuture());
-        mFilter.setHideLists(getHideLists());
-        mFilter.setHideTags(getHideTags());
-        mFilter.setScript(getScript());
-        mFilter.setScriptTestTask(getScriptTestTask());
-
-        items = getSelectedSort();
-        if (items != null) {
-            mFilter.setSort(items);
-        }
-    }
-
-    @Nullable
-    private ArrayList<String> getFragmentFilter(String tag) {
-        FilterListFragment fr;
-        fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);
-        if (fr == null) {
-            // fragment was not initialized so no update
-            return null;
-        } else {
-            return fr.getSelectedItems();
+            }
         }
     }
 
-    @Nullable
-    private ArrayList<String> getSelectedSort() {
-        FilterSortFragment fr;
-        fr = (FilterSortFragment) this.getFragmentManager().findFragmentByTag(SORT_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return null;
-        } else {
-            return fr.getSelectedItem();
-        }
-    }
-
-    private boolean getHideCompleted() {
-        FilterOtherFragment fr;
-        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return mFilter.getHideCompleted();
-        } else {
-            return fr.getHideCompleted();
-        }
-    }
-
-    private boolean getHideFuture() {
-        FilterOtherFragment fr;
-        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return mFilter.getHideFuture();
-        } else {
-            return fr.getHideFuture();
-        }
-    }
-
-    private boolean getHideLists() {
-        FilterOtherFragment fr;
-        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return mFilter.getHideLists();
-        } else {
-            return fr.getHideLists();
-        }
-    }
-
-    private boolean getHideTags() {
-        FilterOtherFragment fr;
-        fr = (FilterOtherFragment) this.getFragmentManager().findFragmentByTag(OTHER_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return mFilter.getHideTags();
-        } else {
-            return fr.getHideTags();
-        }
-    }
-
-    private String getScript() {
-        FilterScriptFragment fr;
-        fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return mFilter.getScript();
-        } else {
-            return fr.getScript();
-        }
-    }
 
     private void setScript(String script) {
-        FilterScriptFragment fr;
-        fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
-        if (fr == null) {
+        if (scriptFragment == null) {
             // fragment was never intialized
             Util.showToastShort(this, "Script tab not visible??");
         } else {
-            fr.setScript(script);
+            scriptFragment.setScript(script);
         }
     }
 
-    private String getScriptTestTask() {
-        FilterScriptFragment fr;
-        fr = (FilterScriptFragment) this.getFragmentManager().findFragmentByTag(SCRIPT_TAB);
-        if (fr == null) {
-            // fragment was never intialized
-            return mFilter.getScriptTestTask();
-        } else {
-            return fr.getTestTask();
-        }
-    }
-
-    private boolean getNot(String tag, boolean current) {
-        FilterListFragment fr;
-        fr = (FilterListFragment) this.getFragmentManager().findFragmentByTag(tag);
-        if (fr == null) {
-            // fragment was never intialized
-            return current;
-        } else {
-            return fr.getNot();
-        }
-    }
 
 
     private void createWidget(String name) {
@@ -473,57 +381,42 @@ public class FilterActivity extends ThemedActivity {
     }
 
 
-    private class MyTabsListener implements ActionBar.TabListener {
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        private final ArrayList<Fragment> fragments;
+        private FragmentManager fm;
 
-        private Fragment mFragment;
-        private final Activity mActivity;
-        private final String mTag;
-        private final Bundle mArguments;
-        private String mClzName;
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+            this.fm=fm;
+            fragments = new ArrayList<>();
+        }
 
-        public MyTabsListener(Activity activity, String tag, String clzName, Bundle arguments) {
-            mActivity = activity;
-            mTag = tag;
-            mArguments = arguments;
-            mClzName = clzName;
+        public void add(Fragment frag) {
+            fragments.add(frag);
         }
 
         @Override
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
-
+        public CharSequence	getPageTitle(int position) {
+            Fragment f = fragments.get(position);
+            return f.getArguments().getString(TAB_TYPE,"unknown");
         }
 
         @Override
-        public void onTabSelected(Tab tab, @NonNull FragmentTransaction ft) {
-            // Check to see if we already have a fragment for this tab, probably
-            // from a previously saved state.
-            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
-            if (mFragment == null) {
-                // If not, instantiate and add it to the activity
-                log.debug("Created new fragment: " + mClzName);
-                mFragment = Fragment.instantiate(mActivity, mClzName, mArguments);
-                ft.add(android.R.id.content, mFragment, mTag);
-            } else {
-                // If it exists, simply attach it in order to show it
-                ft.attach(mFragment);
-            }
-            if (m_menu != null) {
-                MenuItem loadScript = m_menu.findItem(R.id.menu_filter_load_script);
-                if (loadScript == null) return;
-                if (mTag == SCRIPT_TAB) {
-                    loadScript.setVisible(true);
-                } else {
-                    loadScript.setVisible(false);
-                }
-            }
+        public Fragment getItem(int position) {
+            return fragments.get(position);
         }
 
         @Override
-        public void onTabUnselected(Tab tab, @NonNull FragmentTransaction ft) {
-            if (mFragment != null) {
-                // Detach the fragment, because another one is being attached
-                ft.detach(mFragment);
-            }
+        public int getCount() {
+            return fragments.size();
+        }
+
+        public ArrayList<Fragment> getFragments() {
+            return fragments;
         }
     }
 }

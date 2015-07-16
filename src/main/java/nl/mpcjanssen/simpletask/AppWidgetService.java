@@ -15,6 +15,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -77,11 +78,9 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         if (!application.isAuthenticated()) {
             return;
         }
-        if (application.getTodoList(null)==null)  {
-            log.debug("taskcache object was null");
-            return;
-        }
-        List<Task> tasks = application.getTodoList(null).getTasks();
+
+        TodoList tl = application.getTodoList();
+        List<Task> tasks = tl.getTasks();
         if (tasks==null) {
             return;
         }
@@ -235,6 +234,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 
     @Override
+    @Nullable
     public RemoteViews getViewAt(int position) {
         
         if (visibleTasks.size()<=position) {
@@ -245,7 +245,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
         // find index in the todolist of the clicked task
         Task task = visibleTasks.get(position);
-        int taskIndex = application.getTodoList(null).getTasks().indexOf(task);
+        TodoList tl = application.getTodoList();
+        int taskIndex = tl.getTasks().indexOf(task);
 
         RemoteViews rv;
         boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);

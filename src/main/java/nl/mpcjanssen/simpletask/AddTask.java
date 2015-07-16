@@ -172,8 +172,11 @@ public class AddTask extends ThemedActivity {
         Task iniTask = null;
         setTitle(R.string.addtask);
 
-        m_backup = m_app.getTodoList(this).getSelectedTasks();
-        m_app.getTodoList(this).clearSelectedTasks();
+        TodoList todoList = m_app.getTodoList();
+
+        m_backup = todoList.getSelectedTasks();
+        todoList.clearSelectedTasks();
+
         if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<String>();
             for (Task t : m_backup) {
@@ -402,7 +405,7 @@ public class AddTask extends ThemedActivity {
         }
 
         // Update the TodoList with changes
-        TodoList todoList = m_app.getTodoList(this);
+        TodoList todoList = m_app.getTodoList();
 
         // Add all lines
         for (String line : Arrays.asList(input.split("\\r\\n|\\r|\\n"))) {
@@ -442,12 +445,9 @@ public class AddTask extends ThemedActivity {
     }
 
     private void addBackgroundTask(@NonNull String sharedText) {
-        TodoList todoList = m_app.getTodoList(null);
+        TodoList todoList = m_app.getTodoList();
         log.debug("Adding tasks to todolist " + todoList);
-        if (todoList == null) {
-            Util.showToastShort(m_app, R.string.add_task_failed);
-            return;
-        }
+
         for (String taskText : sharedText.split("\n|\r\n")) {
 
             if (m_app.hasPrependDate()) {
@@ -512,7 +512,9 @@ public class AddTask extends ThemedActivity {
 
     private void showTagMenu() {
         Set<String> items = new TreeSet<String>();
-        items.addAll(m_app.getTodoList(null).getProjects());
+        TodoList todoList = m_app.getTodoList();
+
+        items.addAll(todoList.getProjects());
         // Also display contexts in tasks being added
         Task t = new Task(textInputField.getText().toString());
         items.addAll(t.getTags());
@@ -580,7 +582,9 @@ public class AddTask extends ThemedActivity {
 
     private void showContextMenu() {
         Set<String> items = new TreeSet<String>();
-        items.addAll(m_app.getTodoList(this).getContexts());
+        TodoList todoList = m_app.getTodoList();
+
+        items.addAll(todoList.getContexts());
         // Also display contexts in tasks being added
         Task t = new Task(textInputField.getText().toString());
         items.addAll(t.getLists());

@@ -34,11 +34,11 @@ public interface FileStoreInterface {
     interface FileSelectedListener {
         void fileSelected(String file);
     }
-    public interface FileChangeListener {
+    interface FileChangeListener {
         void fileChanged(String newName);
     }
 
-    public interface FileReadListener {
+    interface FileReadListener {
         void fileRead(String contents);
     }
 }
