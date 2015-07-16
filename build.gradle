@@ -28,7 +28,7 @@ android {
 
     defaultConfig {
         versionName '5.5.8'
-        versionCode 1571
+        versionCode 1572
 	    minSdkVersion 14
         targetSdkVersion 22
     }
