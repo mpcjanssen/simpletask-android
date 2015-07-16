@@ -7,7 +7,8 @@
         <!-- active log file -->
         <file>log.txt</file>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS};%relative;[%thread];%level;%logger;%caller{1};%msg%n</pattern>
+            <!-- see http://logback.qos.ch/manual/layouts.html#conversionWord for format -->
+            <pattern>%d{HH:mm:ss.SSS};%relative;[%thread];%level;%logger;%msg%n;%caller{1};%n%n</pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -22,6 +23,6 @@
     <root level="DEBUG" >
         <appender-ref ref="FILE" />
         <appender-ref ref="LC" />
-        <!--- <appender-ref ref="DB" /> -->
+        <!-- <appender-ref ref="DB" /> -->
     </root>
 </configuration>
