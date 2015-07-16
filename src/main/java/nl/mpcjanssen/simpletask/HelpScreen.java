@@ -10,14 +10,14 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import org.jetbrains.annotations.NotNull;
 import com.github.rjeschke.txtmark.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,12 +30,13 @@ public class HelpScreen extends Activity {
     final static String TAG = HelpScreen.class.getSimpleName();
     final static String BASE_URL = "file:///android_asset/"; 
 
-    @NotNull
+    @NonNull
     private Stack<String> history = new Stack<>();
 
     private WebView wvHelp;
+    private Logger log;
 
-    private void loadDesktop (@NotNull WebView wv, String url) {
+    private void loadDesktop (@NonNull WebView wv, String url) {
         wv.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
         wv.loadUrl(url);
     }
@@ -43,7 +44,7 @@ public class HelpScreen extends Activity {
     @Override
     public void onBackPressed()
     {
-        Log.v(TAG, "History " + history  + "empty: " + history.empty() );
+        log.debug("History " + history + "empty: " + history.empty());
         history.pop();
         if(!history.empty()) {
             showMarkdownAsset(wvHelp, this, history.pop());
@@ -56,6 +57,7 @@ public class HelpScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        log = LoggerFactory.getLogger(this.getClass());
         TodoApplication m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
         String page = "index." + getText(R.string.help_locale).toString() + ".md";
@@ -72,8 +74,8 @@ public class HelpScreen extends Activity {
         wvHelp = (WebView)findViewById(R.id.help_view);
         wvHelp.setWebViewClient(new WebViewClient()  {  
             @Override  
-            public boolean shouldOverrideUrlLoading(@NotNull WebView view, @NotNull String url)  {
-                Log.v(TAG, "Loading url: " + url);
+            public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull String url)  {
+                log.debug("Loading url: " + url);
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
                     loadDesktop(view,url);
@@ -110,8 +112,8 @@ public class HelpScreen extends Activity {
         startActivity(browserIntent);
     }
 
-    @NotNull
-    public static String readAsset(@NotNull AssetManager assets, String name) throws IOException  {
+    @NonNull
+    public static String readAsset(@NonNull AssetManager assets, String name) throws IOException  {
         StringBuilder buf=new StringBuilder();
         InputStream input =assets.open(name);
         BufferedReader in=
@@ -126,14 +128,14 @@ public class HelpScreen extends Activity {
         return buf.toString();
     }
 
-    public void showMarkdownAsset(@NotNull WebView wv, @NotNull Context ctxt,  String name) {
-        Log.v(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")"); 
+    public void showMarkdownAsset(@NonNull WebView wv, @NonNull Context ctxt,  String name) {
+        log.debug("Loading asset " + name + " into " + wv + "(" + ctxt + ")");
         String html = "";
         try {
             html = Processor.process(readAsset(ctxt.getAssets(), name));
             html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + html + "</body></html>";
         } catch (IOException e) {
-            Log.e(TAG,""+e);
+            log.error("Failed to load markdown asset: {}", name, e);
         }
         history.push(name);
         wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8","file:///android_asset/index." + getText(R.string.help_locale) + ".md");
@@ -141,7 +143,7 @@ public class HelpScreen extends Activity {
 
 
     @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.menu_simpletask:

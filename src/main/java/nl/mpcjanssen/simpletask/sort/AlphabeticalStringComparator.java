@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.sort;
 
 import com.google.common.collect.Ordering;
-
 import org.jetbrains.annotations.Nullable;
 
 

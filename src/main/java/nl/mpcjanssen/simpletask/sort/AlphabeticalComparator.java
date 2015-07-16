@@ -1,11 +1,9 @@
 package nl.mpcjanssen.simpletask.sort;
 
 import com.google.common.collect.Ordering;
-
-import org.jetbrains.annotations.Nullable;
-
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.token.Token;
+import org.jetbrains.annotations.Nullable;
 
 public class AlphabeticalComparator extends Ordering<Task> {
 

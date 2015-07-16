@@ -3,33 +3,26 @@ package nl.mpcjanssen.simpletask;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
-
 import org.luaj.vm2.*;
-import org.luaj.vm2.compiler.*;
-import org.luaj.vm2.lib.jse.*;
+import org.luaj.vm2.compiler.LuaC;
+import org.luaj.vm2.lib.jse.JsePlatform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FilterScriptFragment extends Fragment {
 
@@ -42,37 +35,39 @@ public class FilterScriptFragment extends Fragment {
     private TextView tvResult;
     private TextView tvBooleanResult;
     private Button btnTest;
+    private Logger log;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate() this:" + this);
+        log = LoggerFactory.getLogger(this.getClass());
+        log.debug("onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        Log.v(TAG, "onDestroy() this:" + this);
+        log.debug("onDestroy() this:" + this);
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.v(TAG, "onSaveInstanceState() this:" + this);
+        log.debug("onSaveInstanceState() this:" + this);
         outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER,getScript());
         outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,getTestTask());
     }
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView() this:" + this);
+        log.debug("onCreateView() this:" + this);
 
         Bundle arguments = getArguments();
         actionbar = getActivity().getActionBar();
-        Log.v(TAG, "Fragment bundle:" + this);
+        log.debug("Fragment bundle:" + this);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.script_filter,
                 container, false);
 
@@ -103,11 +98,11 @@ public class FilterScriptFragment extends Fragment {
                         tvBooleanResult.setText("false");
                     }
                 } catch (LuaError e) {
-                    Log.v(TAG, "Lua execution failed " + e.getMessage());
+                    log.debug("Lua execution failed " + e.getMessage());
                     tvBooleanResult.setText("error");
                     tvResult.setText(e.getMessage());
                 } catch (IOException e) {
-                    Log.v(TAG, "Execution failed " + e.getMessage());
+                    log.debug("Execution failed " + e.getMessage());
                 }
             }
 
@@ -124,7 +119,7 @@ public class FilterScriptFragment extends Fragment {
                 new FilterGestureDetector());
         OnTouchListener gestureListener = new OnTouchListener() {
             @Override
-            public boolean onTouch(@NotNull View v, @NotNull MotionEvent event) {
+            public boolean onTouch(@NonNull View v, @NonNull MotionEvent event) {
                 if (gestureDetector.onTouchEvent(event)) {
                     MotionEvent cancelEvent = MotionEvent.obtain(event);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
@@ -169,7 +164,7 @@ public class FilterScriptFragment extends Fragment {
         private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
         @Override
-        public boolean onFling(@NotNull MotionEvent e1, @NotNull MotionEvent e2, float velocityX,
+        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX,
                                float velocityY) {
 
             if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
@@ -181,7 +176,7 @@ public class FilterScriptFragment extends Fragment {
             // right to left swipe
             if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                Log.v(TAG, "Fling left");
+                log.debug("Fling left");
                 if (index < actionbar.getTabCount() - 1)
                     index++;
                 actionbar.setSelectedNavigationItem(index);
@@ -189,7 +184,7 @@ public class FilterScriptFragment extends Fragment {
             } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 // left to right swipe
-                Log.v(TAG, "Fling right");
+                log.debug("Fling right");
                 if (index > 0)
                     index--;
                 actionbar.setSelectedNavigationItem(index);

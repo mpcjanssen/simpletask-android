@@ -21,8 +21,8 @@
 
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,12 +38,12 @@ public class PhoneNumberParser {
     private PhoneNumberParser() {
     }
 
-    @NotNull
+    @NonNull
     public static PhoneNumberParser getInstance() {
         return INSTANCE;
     }
 
-    @NotNull
+    @NonNull
     public List<String> parse(@Nullable String inputText) {
         if (inputText == null) {
             return Collections.emptyList();

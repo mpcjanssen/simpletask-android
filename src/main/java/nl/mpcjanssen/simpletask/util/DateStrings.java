@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.util;
 
 import android.content.Context;
-
 import nl.mpcjanssen.simpletask.R;
 
 public class DateStrings {

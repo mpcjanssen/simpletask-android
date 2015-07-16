@@ -8,29 +8,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
-
-import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
-	final static String TAG = MyAppWidgetProvider.class.getSimpleName();
     final static int FROM_LISTVIEW = 0;
     // Create unique numbers for every widget pendingintent
     // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
 
-    public static void putFilterExtras (Intent target , @NotNull SharedPreferences preferences,  int widgetId) {
-        // Log.d(TAG, "putFilter extras  for appwidget " + widgetId);
+    public static void putFilterExtras (Intent target , @NonNull SharedPreferences preferences,  int widgetId) {
+        // log.debug("putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter();
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
     }
 
-	public static RemoteViews updateView(int widgetId, @NotNull Context context) {
+	public static RemoteViews updateView(int widgetId, @NonNull Context context) {
         SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
         RemoteViews view ;
         SharedPreferences appPreferences = TodoApplication.getPrefs();
@@ -94,10 +93,11 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	}
 	
 	@Override
-	public void onUpdate(@NotNull Context context, @NotNull AppWidgetManager appWidgetManager,
-			@NotNull int[] appWidgetIds) {
+	public void onUpdate(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager,
+			@NonNull int[] appWidgetIds) {
+        Logger log = LoggerFactory.getLogger(this.getClass());
         for (int widgetId : appWidgetIds) {
-            Log.v(TAG, "onUpdate " + widgetId);
+            log.debug("onUpdate " + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
@@ -108,9 +108,10 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	}
 
     @Override
-    public void onDeleted(@NotNull Context context, @NotNull int[] appWidgetIds) {
+    public void onDeleted(@NonNull Context context, @NonNull int[] appWidgetIds) {
+        Logger log = LoggerFactory.getLogger(this.getClass());
         for (int widgetId : appWidgetIds) {
-            Log.v(TAG, "cleaning up widget configuration id:" + widgetId);
+            log.debug("cleaning up widget configuration id:" + widgetId);
             // At least clear contents of the preferences file
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
             preferences.edit().clear().apply();
@@ -118,15 +119,16 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             File prefs_xml = new File(prefs_path, widgetId + ".xml");
             // Remove the XML file
             if (!prefs_xml.delete()) {
-                Log.w(TAG, "File not deleted: " + prefs_xml.toString());
+                log.warn("File not deleted: " + prefs_xml.toString());
             }
 
         }
     }
 
 
-    public static void updateAppWidget(@NotNull Context context, @NotNull AppWidgetManager appWidgetManager, int appWidgetId, String name) {
-        Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+    public static void updateAppWidget(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId, String name) {
+        Logger log = LoggerFactory.getLogger(MyAppWidgetProvider.class);
+        log.debug("updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our
         // package, but it needs this because on the other side it's the widget host inflating

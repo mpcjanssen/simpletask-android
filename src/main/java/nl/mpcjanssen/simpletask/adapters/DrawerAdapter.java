@@ -7,11 +7,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import nl.mpcjanssen.simpletask.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import nl.mpcjanssen.simpletask.R;
 
 public class DrawerAdapter extends BaseAdapter implements ListAdapter {
 

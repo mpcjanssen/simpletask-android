@@ -1,26 +1,22 @@
 package nl.mpcjanssen.simpletask.sort;
 
-import android.util.Log;
-
+import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class MultiComparator implements Comparator<Task> {
     private Ordering<? super Task> ordering;
 
-    public MultiComparator (@NotNull ArrayList<String> sorts, boolean caseSensitve, List<Task> taskList) {
+    public MultiComparator (@NonNull ArrayList<String> sorts, boolean caseSensitve, List<Task> taskList) {
+        Logger log = LoggerFactory.getLogger(this.getClass());
         List<Comparator<? super Task>> comparators = new ArrayList<>();
-
-
         for (String sort : sorts) {
             String parts[] = sort.split(ActiveFilter.SORT_SEPARATOR);
             boolean reverse = false;
@@ -63,7 +59,7 @@ public class MultiComparator implements Comparator<Task> {
             }else if (sortType.equals("by_threshold_date")){
                 comp = new ThresholdDateComparator();
             } else {
-                Log.w("Simpletask", "Unknown sort: " + sort);
+                log.warn("Unknown sort: " + sort);
                 comp = Ordering.allEqual();
             }
             if (reverse) {

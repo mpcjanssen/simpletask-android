@@ -23,8 +23,8 @@
 
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,12 +42,12 @@ public class MailAddressParser {
     private MailAddressParser() {
     }
 
-    @NotNull
+    @NonNull
     public static MailAddressParser getInstance() {
         return INSTANCE;
     }
 
-    @NotNull
+    @NonNull
     public List<String> parse(@Nullable String inputText) {
         if (inputText == null) {
             return Collections.emptyList();

@@ -25,11 +25,11 @@ package nl.mpcjanssen.simpletask;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
-import android.text.format.DateFormat;
-import org.jetbrains.annotations.NotNull;
 
 
 public class TimePreference extends DialogPreference {
@@ -61,7 +61,7 @@ public class TimePreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(@NotNull View v) {
+    protected void onBindDialogView(@NonNull View v) {
         super.onBindDialogView(v);
         m_picker.setCurrentHour(m_minutes / 60);
         m_picker.setCurrentMinute(m_minutes % 60);

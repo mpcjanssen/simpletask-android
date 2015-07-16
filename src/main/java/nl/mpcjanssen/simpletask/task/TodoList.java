@@ -22,12 +22,11 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import com.google.common.collect.Ordering;
@@ -35,19 +34,17 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.RunnableFuture;
+
 
 
 /**
@@ -132,7 +129,7 @@ public class TodoList {
     }
 
 
-    public void remove(@NotNull final Task t) {
+    public void remove(@NonNull final Task t) {
         queueRunnable("Remove", new Runnable() {
             @Override
             public void run() {
@@ -154,7 +151,7 @@ public class TodoList {
         return mTasks.get(position);
     }
 
-    @NotNull
+    @NonNull
     public ArrayList<Priority> getPriorities() {
         Set<Priority> res = new HashSet<Priority>();
         for (Task item : mTasks) {
@@ -203,7 +200,7 @@ public class TodoList {
     }
 
 
-    public void undoComplete(@NotNull final List<Task> tasks) {
+    public void undoComplete(@NonNull final List<Task> tasks) {
         queueRunnable("Uncomplete", new Runnable() {
             @Override
             public void run() {
@@ -216,7 +213,7 @@ public class TodoList {
         });
     }
 
-    public void complete(@NotNull final Task task,
+    public void complete(@NonNull final Task task,
                          final boolean originalDate,
                          final boolean keepPrio) {
 
@@ -247,7 +244,7 @@ public class TodoList {
         });
     }
 
-    public void defer(@NotNull final String deferString, @NotNull final Task tasksToDefer, final int dateType) {
+    public void defer(@NonNull final String deferString, @NonNull final Task tasksToDefer, final int dateType) {
         queueRunnable("Defer", new Runnable() {
             @Override
             public void run() {
@@ -305,7 +302,7 @@ public class TodoList {
         return mTasks;
     }
 
-    public List<Task> getSortedTasksCopy(@NotNull ActiveFilter filter, @NotNull ArrayList<String> sorts, boolean caseSensitive) {
+    public List<Task> getSortedTasksCopy(@NonNull ActiveFilter filter, @NonNull ArrayList<String> sorts, boolean caseSensitive) {
         List<Task> filteredTasks = filter.apply(mTasks);
         return Ordering.from(new MultiComparator(sorts, caseSensitive, filteredTasks)).sortedCopy(filteredTasks);
     }

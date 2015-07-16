@@ -25,13 +25,18 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.*;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Window;
 import android.widget.EditText;
@@ -39,17 +44,13 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
-import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.TimeZone;
 
 
@@ -92,7 +93,7 @@ public class TodoApplication extends Application implements
         intentFilter.addAction(Constants.BROADCAST_FILE_WRITE_FAILED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, @NotNull Intent intent) {
+            public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
                     m_calSync.syncLater();
                     redrawWidgets();
@@ -228,7 +229,7 @@ public class TodoApplication extends Application implements
                 getResources().getBoolean(R.bool.is_landscape));
     }
 
-    public void setEditTextHint(@NotNull EditText editText, int resid ) {
+    public void setEditTextHint(@NonNull EditText editText, int resid ) {
         if (m_prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
             editText.setHint(resid);
         }
@@ -264,7 +265,7 @@ public class TodoApplication extends Application implements
         return m_prefs.getBoolean(getString(R.string.ui_sort_case_sensitive),true);
     }
 
-    @NotNull
+    @NonNull
     public String getEol() {
         if( m_prefs.getBoolean(getString(R.string.line_breaks_pref_key),true)) {
             return "\r\n";
@@ -368,7 +369,7 @@ public class TodoApplication extends Application implements
 
     }
 
-    public void setActionBarStyle(@NotNull Window window) {
+    public void setActionBarStyle(@NonNull Window window) {
         if (getPrefs().getBoolean(getString(R.string.split_actionbar_key), true)) {
             window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
         }
@@ -397,7 +398,7 @@ public class TodoApplication extends Application implements
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NotNull String s) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NonNull String s) {
         log.info("Preference " + s + " changed");
         if (s.equals(getString(R.string.widget_theme_pref_key)) ||
                 s.equals(getString(R.string.widget_extended_pref_key)) ||
@@ -449,13 +450,13 @@ public class TodoApplication extends Application implements
         }
     }
 
-    @NotNull
+    @NonNull
     public FileStoreInterface getFileStore() {
         return m_todoList.getFileStore();
     }
 
-    public void showConfirmationDialog(@NotNull Context cxt, int msgid,
-                                              @NotNull DialogInterface.OnClickListener oklistener, int titleid) {
+    public void showConfirmationDialog(@NonNull Context cxt, int msgid,
+                                              @NonNull DialogInterface.OnClickListener oklistener, int titleid) {
         boolean show = getPrefs().getBoolean(getString(R.string.ui_show_confirmation_dialogs), true);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(cxt);
@@ -485,7 +486,7 @@ public class TodoApplication extends Application implements
         return getFileStore().getType();
     }
 
-    public void browseForNewFile(@NotNull final Activity act) {
+    public void browseForNewFile(@NonNull final Activity act) {
         FileStoreInterface fileStore = getFileStore();
         fileStore.browseForNewFile(
                 act,
@@ -499,7 +500,7 @@ public class TodoApplication extends Application implements
 		showTxtOnly());
     }
 
-    @NotNull
+    @NonNull
     public String getDoneFileName() {
         return new File(getTodoFile().getParentFile(), "done.txt").getAbsolutePath();
     }

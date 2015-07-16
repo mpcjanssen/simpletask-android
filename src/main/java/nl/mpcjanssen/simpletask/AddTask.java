@@ -29,58 +29,33 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import nl.mpcjanssen.simpletask.task.TodoList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
-
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 
 public class AddTask extends ThemedActivity {
@@ -95,157 +70,19 @@ public class AddTask extends ThemedActivity {
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
     private List<Task> m_backup = new ArrayList<>();
+    private Logger log;
 
-    public boolean hasWordWrap() {
-        return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
-    }
-
-    public void setWordWrap(boolean bool) {
-        ((CheckBox) findViewById(R.id.cb_wrap)).setChecked(bool);
-        if (textInputField!=null) {
-            textInputField.setHorizontallyScrolling(!bool);
-        }
-    }
-
-    public boolean hasCloneTags() {
-        return ((CheckBox) findViewById(R.id.cb_clone)).isChecked();
-    }
-
-    public void setCloneTags(boolean bool) {
-        ((CheckBox) findViewById(R.id.cb_clone)).setChecked(bool);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-         MenuInflater inflater = getMenuInflater();
-        if (m_app.isDarkActionbar()) {
-            inflater.inflate(R.menu.add_task, menu);
-        } else {
-            inflater.inflate(R.menu.add_task_light, menu);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                if (m_app.isBackSaving()) {
-                    saveTasksAndClose();
-                }
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                finish();
-                startActivity(upIntent);
-                return true;
-            case R.id.menu_save_task:
-                saveTasksAndClose();
-                return true;
-            case R.id.menu_cancel_task:
-                finish();
-                return true;
-            case R.id.menu_help:
-                showHelp();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void showHelp() {
-        Intent i = new Intent(this, HelpScreen.class);
-        i.putExtra(Constants.EXTRA_HELP_PAGE,getText(R.string.help_add_task));
-        startActivity(i);
-    }
-
-
-    private void saveTasksAndClose() {
-        // save clone CheckBox state
-        m_app.setAddTagsCloneTags(hasCloneTags());
-        m_app.setWordWrap(hasWordWrap());
-        
-        // strip line breaks
-        textInputField = (EditText) findViewById(R.id.taskText);
-        String input;
-                if (textInputField!=null) {
-                    input = textInputField.getText().toString();
-                } else {
-                    input = "";
-                }
-
-        // Don't add empty tasks
-        if (input.trim().equals("")) {
-             finish();
-             return;
-        }
-
-        // Update the TodoList with changes
-        TodoList todoList = m_app.getTodoList(this);
-
-        // Add all lines
-        for (String line : Arrays.asList(input.split("\\r\\n|\\r|\\n"))) {
-            if(m_app.hasPrependDate()) {
-                todoList.add(new Task(line,DateTime.now(TimeZone.getDefault())));
-            } else {
-                todoList.add(new Task(line));
-            }
-        }
-
-        // Delete tasks that where selected for update
-        for (Task t: m_backup) {
-            todoList.remove(t);
-        }
-
-
-
-        // Save
-        todoList.notifyChanged(true);
-        finish();
-    }
-
-    private void noteToSelf(@NotNull Intent intent) {
-        String task = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            Log.v(TAG, "Voice note added.");
-        }
-        addBackgroundTask(task);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (m_app.isBackSaving()) {
-            saveTasksAndClose();
-        }
-        super.onBackPressed();
-    }
-
-    private void addBackgroundTask(@NotNull String sharedText) {
-        TodoList todoList = m_app.getTodoList(null);
-        Log.v(TAG, "Adding tasks to todolist " + todoList);
-        if (todoList == null) {
-            Util.showToastShort(m_app, R.string.add_task_failed);
-            return;
-        }
-        for (String taskText : sharedText.split("\n|\r\n")) {
-
-            if (m_app.hasPrependDate()) {
-                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
-            } else {
-                todoList.add(new Task(taskText));
-            }
-        }
-        todoList.notifyChanged(true);
-        Util.showToastShort(m_app, R.string.task_added);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate()");
+        log = LoggerFactory.getLogger(this.getClass());
+        log.debug("onCreate()");
 
         m_app = (TodoApplication) getApplication();
         m_app.setActionBarStyle(getWindow());
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
@@ -255,7 +92,7 @@ public class AddTask extends ThemedActivity {
 
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, @NotNull Intent intent) {
+            public void onReceive(Context context, @NonNull Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_SYNC_START)) {
                     setProgressBarIndeterminateVisibility(true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
@@ -276,12 +113,12 @@ public class AddTask extends ThemedActivity {
         final String action = intent.getAction();
         // create shortcut and exit
         if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
-            Log.d(TAG, "Setting up shortcut icon");
+            log.debug("Setting up shortcut icon");
             setupShortcut();
             finish();
             return;
         } else if (Intent.ACTION_SEND.equals(action)) {
-            Log.d(TAG, "Share");
+            log.debug("Share");
             if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
                 try {
@@ -310,11 +147,11 @@ public class AddTask extends ThemedActivity {
             finish();
             return;
         } else if (Constants.INTENT_BACKGROUND_TASK.equals(action)) {
-            Log.v(TAG, "Adding background task");
+            log.debug("Adding background task");
             if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
                 addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK));
             } else {
-                Log.w(TAG, "Task was not in extras");
+                log.warn("Task was not in extras");
             }
             finish();
             return;
@@ -422,7 +259,7 @@ public class AddTask extends ThemedActivity {
                             tags.add("+" + prj);
                         }
                         replaceTextAtSelection(Util.join(tags, " "), true);
-                    } 
+                    }
                     endOfLine++;
                     textInputField.setSelection(endOfLine);
                 }
@@ -432,7 +269,7 @@ public class AddTask extends ThemedActivity {
 
         setCloneTags(m_app.isAddTagsCloneTags());
         setWordWrap(m_app.isWordWrap());
-        
+
         findViewById(R.id.cb_wrap).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -481,10 +318,153 @@ public class AddTask extends ThemedActivity {
         }
     }
 
+    public boolean hasWordWrap() {
+        return ((CheckBox) findViewById(R.id.cb_wrap)).isChecked();
+    }
+
+    public void setWordWrap(boolean bool) {
+        ((CheckBox) findViewById(R.id.cb_wrap)).setChecked(bool);
+        if (textInputField!=null) {
+            textInputField.setHorizontallyScrolling(!bool);
+        }
+    }
+
+    public boolean hasCloneTags() {
+        return ((CheckBox) findViewById(R.id.cb_clone)).isChecked();
+    }
+
+    public void setCloneTags(boolean bool) {
+        ((CheckBox) findViewById(R.id.cb_clone)).setChecked(bool);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+         MenuInflater inflater = getMenuInflater();
+        if (m_app.isDarkActionbar()) {
+            inflater.inflate(R.menu.add_task, menu);
+        } else {
+            inflater.inflate(R.menu.add_task_light, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                if (m_app.isBackSaving()) {
+                    saveTasksAndClose();
+                }
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                finish();
+                startActivity(upIntent);
+                return true;
+            case R.id.menu_save_task:
+                saveTasksAndClose();
+                return true;
+            case R.id.menu_cancel_task:
+                finish();
+                return true;
+            case R.id.menu_help:
+                showHelp();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showHelp() {
+        Intent i = new Intent(this, HelpScreen.class);
+        i.putExtra(Constants.EXTRA_HELP_PAGE,getText(R.string.help_add_task));
+        startActivity(i);
+    }
+
+
+    private void saveTasksAndClose() {
+        // save clone CheckBox state
+        m_app.setAddTagsCloneTags(hasCloneTags());
+        m_app.setWordWrap(hasWordWrap());
+        
+        // strip line breaks
+        textInputField = (EditText) findViewById(R.id.taskText);
+        String input;
+                if (textInputField!=null) {
+                    input = textInputField.getText().toString();
+                } else {
+                    input = "";
+                }
+
+        // Don't add empty tasks
+        if (input.trim().equals("")) {
+             finish();
+             return;
+        }
+
+        // Update the TodoList with changes
+        TodoList todoList = m_app.getTodoList(this);
+
+        // Add all lines
+        for (String line : Arrays.asList(input.split("\\r\\n|\\r|\\n"))) {
+            if(m_app.hasPrependDate()) {
+                todoList.add(new Task(line,DateTime.now(TimeZone.getDefault())));
+            } else {
+                todoList.add(new Task(line));
+            }
+        }
+
+        // Delete tasks that where selected for update
+        for (Task t: m_backup) {
+            todoList.remove(t);
+        }
+
+
+
+        // Save
+        todoList.notifyChanged(true);
+        finish();
+    }
+
+    private void noteToSelf(@NonNull Intent intent) {
+        String task = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+            log.debug("Voice note added.");
+        }
+        addBackgroundTask(task);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (m_app.isBackSaving()) {
+            saveTasksAndClose();
+        }
+        super.onBackPressed();
+    }
+
+    private void addBackgroundTask(@NonNull String sharedText) {
+        TodoList todoList = m_app.getTodoList(null);
+        log.debug("Adding tasks to todolist " + todoList);
+        if (todoList == null) {
+            Util.showToastShort(m_app, R.string.add_task_failed);
+            return;
+        }
+        for (String taskText : sharedText.split("\n|\r\n")) {
+
+            if (m_app.hasPrependDate()) {
+                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
+            } else {
+                todoList.add(new Task(taskText));
+            }
+        }
+        todoList.notifyChanged(true);
+        Util.showToastShort(m_app, R.string.task_added);
+    }
+
+
     private void insertDate(final int dateType) {
         Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
             @Override
-            public void onClick(@NotNull String selected) {
+            public void onClick(@NonNull String selected) {
                 if (selected.equals("pick")) {
                     /* Note on some Android versions the OnDateSetListener can fire twice
                      * https://code.google.com/p/android/issues/detail?id=34860
@@ -518,7 +498,7 @@ public class AddTask extends ThemedActivity {
         d.show();
     }
 
-    private void replaceDate(int dateType, @NotNull String date) {
+    private void replaceDate(int dateType, @NonNull String date) {
            if (dateType==Task.DUE_DATE) {
                replaceDueDate(date);
            } else {
@@ -526,7 +506,7 @@ public class AddTask extends ThemedActivity {
            }
     }
 
-    private void insertDateAtSelection(int dateType, @NotNull DateTime date) {
+    private void insertDateAtSelection(int dateType, @NonNull DateTime date) {
         replaceDate(dateType, date.format("YYYY-MM-DD"));
     }
 
@@ -642,7 +622,7 @@ public class AddTask extends ThemedActivity {
         dialog.show();
     }
 
-    public int getCurrentCursorLine(@NotNull EditText editText) {
+    public int getCurrentCursorLine(@NonNull EditText editText) {
         int selectionStart = Selection.getSelectionStart(editText.getText());
         Layout layout = editText.getLayout();
 
@@ -653,7 +633,7 @@ public class AddTask extends ThemedActivity {
         return -1;
     }
 
-    private void replaceDueDate(@NotNull CharSequence newDueDate) {
+    private void replaceDueDate(@NonNull CharSequence newDueDate) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
@@ -683,7 +663,7 @@ public class AddTask extends ThemedActivity {
         textInputField.setSelection(newStart, newEnd);
     }
 
-    private void replaceThresholdDate(@NotNull CharSequence newThresholdDate) {
+    private void replaceThresholdDate(@NonNull CharSequence newThresholdDate) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
@@ -713,11 +693,11 @@ public class AddTask extends ThemedActivity {
         textInputField.setSelection(start, end);
     }
 
-    private void replacePriority(@NotNull CharSequence newPrio) {
+    private void replacePriority(@NonNull CharSequence newPrio) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
-        Log.v(TAG, "Current selection: " + start + "-" + end);
+        log.debug("Current selection: " + start + "-" + end);
         int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<String>();
@@ -731,7 +711,7 @@ public class AddTask extends ThemedActivity {
         }
         if (currentLine != -1) {
             Task t = new Task(lines.get(currentLine));
-            Log.v(TAG,"Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString()); 
+            log.debug("Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString());
             t.setPriority(Priority.toPriority(newPrio.toString()));
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
@@ -742,7 +722,7 @@ public class AddTask extends ThemedActivity {
         int newStart = Math.max(0, start + sizeDelta);
         int newEnd = Math.min(end + sizeDelta, newLength);
         newEnd = Math.max(newStart, newEnd);
-        Log.v(TAG, "New selection (" + sizeDelta + "): " + newStart + "-" + newEnd);
+        log.debug("New selection (" + sizeDelta + "): " + newStart + "-" + newEnd);
         textInputField.setSelection(newStart, newEnd);
 
     }

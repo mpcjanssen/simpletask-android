@@ -1,14 +1,10 @@
 package nl.mpcjanssen.simpletask.sort;
 
 import junit.framework.TestCase;
+import nl.mpcjanssen.simpletask.task.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import nl.mpcjanssen.simpletask.sort.CompletedComparator;
-import nl.mpcjanssen.simpletask.sort.CreationDateComparator;
-import nl.mpcjanssen.simpletask.sort.DueDateComparator;
-import nl.mpcjanssen.simpletask.task.Task;
 
 public class SortTest extends TestCase {
     public void testAlphabeticalSort1 () {

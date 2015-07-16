@@ -3,20 +3,16 @@ package nl.mpcjanssen.simpletask;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FilterOtherFragment extends Fragment {
 
@@ -28,25 +24,26 @@ public class FilterOtherFragment extends Fragment {
     private GestureDetector gestureDetector;
     @Nullable
     ActionBar actionbar;
+    private Logger log;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate() this:" + this);
+        log = LoggerFactory.getLogger(this.getClass());
+        log.debug("onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        Log.v(TAG, "onDestroy() this:" + this);
+        log.debug("onDestroy() this:" + this);
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.v(TAG, "onSaveInstanceState() this:" + this);
+        log.debug("onSaveInstanceState() this:" + this);
         outState.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, getHideCompleted());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, getHideFuture());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, getHideLists());
@@ -54,13 +51,13 @@ public class FilterOtherFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
+        log.debug("onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
         actionbar = getActivity().getActionBar();
-        Log.v(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
+        log.debug("Fragment bundle:" + this + " arguments:" + arguments);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
                 container, false);
 
@@ -84,7 +81,7 @@ public class FilterOtherFragment extends Fragment {
                 new FilterGestureDetector());
         OnTouchListener gestureListener = new OnTouchListener() {
             @Override
-            public boolean onTouch(@NotNull View v, @NotNull MotionEvent event) {
+            public boolean onTouch(@NonNull View v, @NonNull MotionEvent event) {
                 if (gestureDetector.onTouchEvent(event)) {
                     MotionEvent cancelEvent = MotionEvent.obtain(event);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
@@ -140,7 +137,7 @@ public class FilterOtherFragment extends Fragment {
         private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
         @Override
-        public boolean onFling(@NotNull MotionEvent e1, @NotNull MotionEvent e2, float velocityX,
+        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX,
                                float velocityY) {
 
             if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
@@ -152,7 +149,7 @@ public class FilterOtherFragment extends Fragment {
             // right to left swipe
             if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                Log.v(TAG, "Fling left");
+                log.debug("Fling left");
                 if (index < actionbar.getTabCount() - 1)
                     index++;
                 actionbar.setSelectedNavigationItem(index);
@@ -160,7 +157,7 @@ public class FilterOtherFragment extends Fragment {
             } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 // left to right swipe
-                Log.v(TAG, "Fling right");
+                log.debug("Fling right");
                 if (index > 0)
                     index--;
                 actionbar.setSelectedNavigationItem(index);

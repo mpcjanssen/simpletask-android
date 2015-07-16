@@ -22,8 +22,8 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author Tim Barlotta
  */
 public class ByProjectFilter implements TaskFilter {
-    @NotNull
+    @NonNull
     private ArrayList<String> projects = new ArrayList<String>();
     boolean not;
 
@@ -47,7 +47,7 @@ public class ByProjectFilter implements TaskFilter {
 
 
     @Override
-    public boolean apply(@NotNull Task input) {
+    public boolean apply(@NonNull Task input) {
         if (not) {
             return !filter(input);
         } else {
@@ -55,7 +55,7 @@ public class ByProjectFilter implements TaskFilter {
         }
     }
 
-    public boolean filter(@NotNull Task input) {
+    public boolean filter(@NonNull Task input) {
         if (projects.size() == 0) {
             return true;
         }
@@ -70,7 +70,7 @@ public class ByProjectFilter implements TaskFilter {
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    @NotNull
+    @NonNull
     ArrayList<String> getProjects() {
         return projects;
     }

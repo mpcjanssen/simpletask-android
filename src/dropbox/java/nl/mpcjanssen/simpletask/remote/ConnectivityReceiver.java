@@ -3,23 +3,19 @@ package nl.mpcjanssen.simpletask.remote;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.util.Log;
 import nl.mpcjanssen.simpletask.TodoApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Created by Mark on 6/26/2015.
- */
+
 public class ConnectivityReceiver extends BroadcastReceiver {
-    private final String TAG = getClass().getName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Logger log = LoggerFactory.getLogger(this.getClass());
         TodoApplication mApp = ((TodoApplication) context.getApplicationContext());
         FileStore store =  (FileStore) mApp.getFileStore();
-        Log.v(TAG, "Connectivity changed");
+        log.debug("Connectivity changed {}", intent);
         store.changedConnectionState(intent);
     }
 }

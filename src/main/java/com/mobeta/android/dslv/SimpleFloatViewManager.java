@@ -1,14 +1,13 @@
 package com.mobeta.android.dslv;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.Color;
-import android.widget.ListView;
-import android.widget.ImageView;
+import android.graphics.Point;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.jetbrains.annotations.NotNull;
+import android.widget.ImageView;
+import android.widget.ListView;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -82,7 +81,7 @@ public class SimpleFloatViewManager implements DragSortListView.FloatViewManager
      * onCreateFloatView() and tells the system to recycle it.
      */
     @Override
-    public void onDestroyFloatView(@NotNull View floatView) {
+    public void onDestroyFloatView(@NonNull View floatView) {
         ((ImageView) floatView).setImageDrawable(null);
 
         mFloatBitmap.recycle();

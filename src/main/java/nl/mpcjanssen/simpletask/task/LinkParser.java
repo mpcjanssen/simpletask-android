@@ -22,18 +22,14 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nl.mpcjanssen.simpletask.TodoException;
 
 public class LinkParser {
     private static final Pattern LINK_PATTERN = Pattern
@@ -43,12 +39,12 @@ public class LinkParser {
     private LinkParser() {
     }
 
-    @NotNull
+    @NonNull
     public static LinkParser getInstance() {
         return INSTANCE;
     }
 
-    @NotNull
+    @NonNull
     public List<String> parse(@Nullable String inputText) {
         if (inputText == null) {
             return Collections.emptyList();

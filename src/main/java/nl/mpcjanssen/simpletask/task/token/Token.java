@@ -1,9 +1,7 @@
 package nl.mpcjanssen.simpletask.task.token;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created Mark Janssen
@@ -29,7 +27,7 @@ abstract public class Token {
         this.value = value;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public String toString() {
         return type + ":'" + value + "'";

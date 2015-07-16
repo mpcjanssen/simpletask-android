@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.concurrent.ConcurrentMap;
-
 public class BackupDbHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "todofiles";
     public static final String FILE_ID = "contents";

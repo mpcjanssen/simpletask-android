@@ -6,25 +6,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AppWidgetService extends RemoteViewsService {
 
@@ -37,6 +37,7 @@ public class AppWidgetService extends RemoteViewsService {
 
 class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     final static String TAG = AppWidgetRemoteViewsFactory.class.getSimpleName();
+    private final Logger log;
 
     private ActiveFilter mFilter;
 
@@ -46,8 +47,9 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     ArrayList<Task> visibleTasks = new ArrayList<Task>();
 
     public AppWidgetRemoteViewsFactory(TodoApplication application,  Intent intent) {
+        log = LoggerFactory.getLogger(this.getClass());
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        Log.v(TAG, "Creating view for widget: " + widgetId);
+        log.debug("Creating view for widget: " + widgetId);
         mContext = TodoApplication.getAppContext();
         SharedPreferences preferences = mContext.getSharedPreferences("" + widgetId, 0);
         mFilter = new ActiveFilter();
@@ -66,17 +68,17 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 
     void setFilteredTasks() {
-        // Log.v(TAG, "Widget: setFilteredTasks called");
+        // log.debug("Widget: setFilteredTasks called");
         visibleTasks = new ArrayList<Task>();
         if (application==null)  {
-            Log.v(TAG, "application object was null");
+            log.debug("application object was null");
             return;
         }
         if (!application.isAuthenticated()) {
             return;
         }
         if (application.getTodoList(null)==null)  {
-            Log.v(TAG, "taskcache object was null");
+            log.debug("taskcache object was null");
             return;
         }
         List<Task> tasks = application.getTodoList(null).getTasks();
@@ -268,13 +270,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate() {
-        // Log.v(TAG, "Widget: OnCreate called in ViewFactory");
+        // log.debug("Widget: OnCreate called in ViewFactory");
         setFilteredTasks();
     }
 
     @Override
     public void onDataSetChanged() {
-        // Log.v(TAG, "Widget: Data set changed, refresh");
+        // log.debug("Widget: Data set changed, refresh");
         setFilteredTasks();
     }
 

@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask.util;
 
-import org.jetbrains.annotations.NotNull;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by a156712 on 19-9-13.
  */
 public class ListenerList<L> {
-    @NotNull
+    @NonNull
     private List<L> listenerList = new ArrayList<L>();
 
     public interface FireHandler<L> {
@@ -20,7 +20,7 @@ public class ListenerList<L> {
         listenerList.add(listener);
     }
 
-    public void fireEvent(@NotNull FireHandler<L> fireHandler) {
+    public void fireEvent(@NonNull FireHandler<L> fireHandler) {
         List<L> copy = new ArrayList<L>(listenerList);
         for (L l : copy) {
             fireHandler.fireEvent(l);
@@ -31,7 +31,7 @@ public class ListenerList<L> {
         listenerList.remove(listener);
     }
 
-    @NotNull
+    @NonNull
     public List<L> getListenerList() {
         return listenerList;
     }

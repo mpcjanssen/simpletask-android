@@ -19,12 +19,12 @@ package com.mobeta.android.dslv;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 // taken from sdk/sources/android-16/android/widget/SimpleCursorAdapter.java
 
@@ -82,7 +82,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * use {@link android.app.LoaderManager} with a {@link android.content.CursorLoader}.
      */
     @Deprecated
-    public SimpleDragSortCursorAdapter(Context context, int layout, Cursor c, @NotNull String[] from, int[] to) {
+    public SimpleDragSortCursorAdapter(Context context, int layout, Cursor c, @NonNull String[] from, int[] to) {
         super(context, layout, c);
         mTo = to;
         mOriginalFrom = from;
@@ -108,7 +108,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * as per {@link CursorAdapter#CursorAdapter(Context, Cursor, int)}.
      */
     public SimpleDragSortCursorAdapter(Context context, int layout,
-            Cursor c, @NotNull String[] from, int[] to, int flags) {
+            Cursor c, @NonNull String[] from, int[] to, int flags) {
         super(context, layout, c, flags);
         mTo = to;
         mOriginalFrom = from;
@@ -140,7 +140,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @see #setViewText(TextView, String)
      */
     @Override
-    public void bindView(@NotNull View view, Context context, @NotNull Cursor cursor) {
+    public void bindView(@NonNull View view, Context context, @NonNull Cursor cursor) {
         final ViewBinder binder = mViewBinder;
         final int count = mTo.length;
         final int[] from = mFrom;
@@ -213,7 +213,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @param v ImageView to receive an image
      * @param value the value retrieved from the cursor
      */
-    public void setViewImage(@NotNull ImageView v, String value) {
+    public void setViewImage(@NonNull ImageView v, String value) {
         try {
             v.setImageResource(Integer.parseInt(value));
         } catch (NumberFormatException nfe) {
@@ -232,7 +232,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @param v TextView to receive text
      * @param text the text to be set for the TextView
      */    
-    public void setViewText(@NotNull TextView v, String text) {
+    public void setViewText(@NonNull TextView v, String text) {
         v.setText(text);
     }
 
@@ -313,7 +313,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @return a non-null CharSequence representing the cursor
      */
     @Override
-    public CharSequence convertToString(@NotNull Cursor cursor) {
+    public CharSequence convertToString(@NonNull Cursor cursor) {
         if (mCursorToStringConverter != null) {
             return mCursorToStringConverter.convertToString(cursor);
         } else if (mStringConversionColumn > -1) {
@@ -330,7 +330,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @param c the cursor to find the columns from
      * @param from the Strings naming the columns of interest
      */
-    private void findColumns(@Nullable Cursor c, @NotNull String[] from) {
+    private void findColumns(@Nullable Cursor c, @NonNull String[] from) {
         if (c != null) {
             int i;
             int count = from.length;
@@ -420,7 +420,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
          *
          * @return a non-null CharSequence representing the cursor
          */
-        @NotNull
+        @NonNull
         CharSequence convertToString(Cursor cursor);
     }
 
