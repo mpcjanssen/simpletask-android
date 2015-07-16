@@ -329,10 +329,10 @@ public class Simpletask extends ThemedActivity implements
         // Setting a scroll listener reset the scroll
         lv.setOnScrollListener(this);
         mIgnoreScrollEvents = false;
-
         if (m_savedInstanceState != null) {
             m_scrollPosition = m_savedInstanceState.getInt("position");
         }
+        
         // If we were started with a selected task,
         // select it now and clear it from the intent
         int selectedTask = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
@@ -343,6 +343,8 @@ public class Simpletask extends ThemedActivity implements
             intent.removeExtra(Constants.INTENT_SELECTED_TASK_POSITION);
             setSelectedTasks(getTodoList().getSelectedTasks());
             setIntent(intent);
+        } else {
+            setSelectedTasks(getTodoList().getSelectedTasks());
         }
 
         lv.setSelectionFromTop(m_scrollPosition,0);
