@@ -1,15 +1,13 @@
 package nl.mpcjanssen.simpletask.sort;
 
+import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
-
-import org.jetbrains.annotations.NotNull;
-
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class DueDateComparator extends Ordering<Task> {
 
     @Override
-    public int compare(@NotNull Task a, @NotNull Task b) {
+    public int compare(@NonNull Task a, @NonNull Task b) {
         int result;
         if (a.getDueDate() == null && b.getDueDate() == null) {
             result = 0;

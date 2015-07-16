@@ -1,34 +1,29 @@
 package nl.mpcjanssen.simpletask;
 
-import android.app.ActionBar;
+import android.app.*;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class FilterActivity extends ThemedActivity {
 
@@ -54,6 +49,7 @@ public class FilterActivity extends ThemedActivity {
     @Nullable
     private ActionBar actionbar;
     private Menu m_menu;
+    private Logger log;
 
     private int getLastActiveTab() {
         return prefs.getInt(getString(R.string.last_open_filter_tab), 0);
@@ -81,11 +77,12 @@ public class FilterActivity extends ThemedActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "Called with intent: " + getIntent().toString());
+        super.onCreate(savedInstanceState);
+        log = LoggerFactory.getLogger(this.getClass());
+        log.info("Called with intent: " + getIntent().toString());
         m_app = (TodoApplication) getApplication();
         prefs = TodoApplication.getPrefs();
         m_app.setActionBarStyle(getWindow());
-        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.filter);
 
@@ -190,7 +187,7 @@ public class FilterActivity extends ThemedActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter_action:
                 if (asWidgetConfigure) {
@@ -246,7 +243,7 @@ public class FilterActivity extends ThemedActivity {
         });
     }
 
-    @NotNull
+    @NonNull
     private Intent createFilterIntent() {
         Intent target = new Intent(this, Simpletask.class);
         target.setAction(Constants.INTENT_START_FILTER);
@@ -497,13 +494,13 @@ public class FilterActivity extends ThemedActivity {
         }
 
         @Override
-        public void onTabSelected(Tab tab, @NotNull FragmentTransaction ft) {
+        public void onTabSelected(Tab tab, @NonNull FragmentTransaction ft) {
             // Check to see if we already have a fragment for this tab, probably
             // from a previously saved state.
             mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
-                Log.v(TAG, "Created new fragment: " + mClzName);
+                log.debug("Created new fragment: " + mClzName);
                 mFragment = Fragment.instantiate(mActivity, mClzName, mArguments);
                 ft.add(android.R.id.content, mFragment, mTag);
             } else {
@@ -522,7 +519,7 @@ public class FilterActivity extends ThemedActivity {
         }
 
         @Override
-        public void onTabUnselected(Tab tab, @NotNull FragmentTransaction ft) {
+        public void onTabUnselected(Tab tab, @NonNull FragmentTransaction ft) {
             if (mFragment != null) {
                 // Detach the fragment, because another one is being attached
                 ft.detach(mFragment);

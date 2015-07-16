@@ -3,13 +3,16 @@ package nl.mpcjanssen.simpletask.remote;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -23,18 +26,16 @@ import com.dropbox.client2.session.AppKeyPair;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.FutureTask;
 
 
 /**
@@ -42,9 +43,9 @@ import java.util.concurrent.FutureTask;
  */
 public class FileStore implements FileStoreInterface {
 
-    private final String TAG = getClass().getName();
     private final FileChangeListener mFileChangedListerer;
     private final Context mCtx;
+    private final Logger log;
     private  SharedPreferences mPrefs;
     private String mEol;
     // In the class declaration section:
@@ -65,16 +66,36 @@ public class FileStore implements FileStoreInterface {
     private boolean mOnline;
     private Handler fileOperationsQueue;
 
+    public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
+        log = LoggerFactory.getLogger(this.getClass());
+        mPrefs = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
+        mFileChangedListerer = fileChangedListener;
+        // Set up the message queue
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                fileOperationsQueue = new Handler();
+                Looper.loop();
+            }
+        });
+        t.start();
+        mCtx = ctx;
+        mEol = eol;
+        mOnline = isOnline();
+        setMDBApi();
+    }
+
     private String loadContentsFromCache() {
         if (mPrefs == null) {
-            Log.w(TAG, "Couldn't load cache from preferences, mPrefs == null");
+            log.warn("Couldn't load cache from preferences, mPrefs == null");
             return "";
         }
        return  mPrefs.getString(LOCAL_CONTENTS, "");
     }
 
     public void queueRunnable(final String description, Runnable r) {
-        Log.v(TAG, "Handler: Queue " + description);
+        log.info("Handler: Queue " + description);
         while (fileOperationsQueue==null) {
             try {
                 Thread.sleep(100);
@@ -92,8 +113,8 @@ public class FileStore implements FileStoreInterface {
         return  mPrefs.getBoolean(LOCAL_CHANGES_PENDING, false);
     }
 
-    private void saveToCache(@NotNull String fileName, @NotNull String rev, @NotNull String contents) {
-        Log.v(TAG, "Storing file in cache rev: " + rev + " of file: " + fileName);
+    private void saveToCache(@NonNull String fileName, @NonNull String rev, @NonNull String contents) {
+        log.info("Storing file in cache rev: " + rev + " of file: " + fileName);
         if (mPrefs == null) {
 
             return ;
@@ -105,34 +126,15 @@ public class FileStore implements FileStoreInterface {
         edit.commit();
     }
 
-    private void setChangesPending(@NotNull boolean pending) {
+    private void setChangesPending(@NonNull boolean pending) {
         if (mPrefs == null) {
             return ;
         }
         if (pending) {
-            Log.v(TAG, "Changes are pending");
+            log.info("Changes are pending");
         }
         SharedPreferences.Editor edit = mPrefs.edit();
         mPrefs.edit().putBoolean(LOCAL_CHANGES_PENDING, pending).commit();
-    }
-
-    public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
-        mPrefs = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
-        mFileChangedListerer = fileChangedListener;
-        // Set up the message queue
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                fileOperationsQueue = new Handler();
-                Looper.loop();
-            }
-        });
-        t.start();
-        mCtx = ctx;
-        mEol = eol;
-        mOnline = isOnline();
-        setMDBApi();
     }
 
     private boolean isOnline() {
@@ -162,26 +164,26 @@ public class FileStore implements FileStoreInterface {
         }
     }
 
-    @NotNull
+    @NonNull
     static public String getDefaultPath() {
         return "/todo/todo.txt";
     }
 
 
-    private void startLongPoll ( @NotNull final String polledFile, @NotNull final int backoffSeconds)  {
+    private void startLongPoll ( @NonNull final String polledFile, @NonNull final int backoffSeconds)  {
         pollingTask = new Thread(new Runnable() {
             @Override
             public void run() {
                 int newBackoffSeconds = 0;
                 if (!continuePolling) return;
                 try {
-                    Log.v(TAG, "Long polling");
+                    log.info("Long polling");
 
                     ArrayList<String> params = new ArrayList<>();
                     params.add("cursor");
                     params.add(latestCursor);
                     if (backoffSeconds!=0) {
-                        Log.v(TAG, "Backing off for " + backoffSeconds + " seconds");
+                        log.info("Backing off for " + backoffSeconds + " seconds");
                         try {
                             Thread.sleep(backoffSeconds*1000);
                         } catch (InterruptedException e) {
@@ -191,7 +193,7 @@ public class FileStore implements FileStoreInterface {
                     if (!continuePolling) return;
 
                     Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[0]), mDBApi.getSession());
-                    Log.v(TAG, "Longpoll response: " + response.toString());
+                    log.info("Longpoll response: " + response.toString());
                     JsonThing result = new JsonThing(response);
                     JsonMap resultMap = result.expectMap();
                     boolean changes = resultMap.get("changes").expectBoolean();
@@ -200,13 +202,13 @@ public class FileStore implements FileStoreInterface {
                     if (backoffThing!=null) {
                         newBackoffSeconds = backoffThing.expectInt32();
                     }
-                    Log.v(TAG, "Longpoll ended, changes " + changes + " backoff " + newBackoffSeconds);
+                    log.info("Longpoll ended, changes " + changes + " backoff " + newBackoffSeconds);
                     if (changes) {
                         DropboxAPI.DeltaPage<DropboxAPI.Entry> delta = mDBApi.delta(latestCursor);
                         latestCursor = delta.cursor;
                         for (DropboxAPI.DeltaEntry entry : delta.entries) {
                             if (entry.lcPath.equalsIgnoreCase(polledFile)) {
-                                Log.v(TAG, "File " + polledFile + " changed, reloading");
+                                log.info("File " + polledFile + " changed, reloading");
                                 if (!ignoreNextEvent) {
                                     mFileChangedListerer.fileChanged(null);
                                     break;
@@ -218,11 +220,11 @@ public class FileStore implements FileStoreInterface {
                         }
                     }
                 } catch (DropboxIOException e) {
-                    Log.v(TAG, "Longpoll timed out, restarting");
+                    log.info("Longpoll timed out, restarting");
                 } catch (JsonExtractionException e) {
                     e.printStackTrace();
                 } catch (DropboxUnlinkedException e) {
-                    Log.v(TAG, "Dropbox unlinked, no more polling");
+                    log.info("Dropbox unlinked, no more polling");
                     continuePolling = false;
                 } catch (DropboxException e) {
                     e.printStackTrace();
@@ -249,7 +251,7 @@ public class FileStore implements FileStoreInterface {
                 mPrefs.edit().putString(OAUTH2_TOKEN, accessToken).commit();
                 return true;
             } catch (IllegalStateException e) {
-                Log.i("DbAuthLog", "Error authenticating", e);
+                log.info("Error authenticating", e);
             }
         }
         return false;
@@ -262,7 +264,7 @@ public class FileStore implements FileStoreInterface {
         // our local changes, instead we upload local and handle any conflicts
         // on the dropbox side.
 
-        Log.i(TAG, "Loading file fom dropnbox: " + path);
+        log.info( "Loading file fom dropnbox: " + path);
         mIsLoading = true;
         if (!isAuthenticated()) {
             mIsLoading = false;
@@ -272,11 +274,11 @@ public class FileStore implements FileStoreInterface {
         List<Task> tasks = new ArrayList();
 
         if (!isOnline()) {
-            Log.v(TAG, "Device is offline loading from cache");
+            log.info("Device is offline loading from cache");
             mIsLoading = false;
             return tasksFromCache();
         } else if (changesPending()) {
-            Log.v(TAG, "Not loading, changes pending");
+            log.info("Not loading, changes pending");
             Util.showToastLong(mCtx,"Saving pending changes");
             mIsLoading = false;
             tasks = tasksFromCache();
@@ -287,7 +289,7 @@ public class FileStore implements FileStoreInterface {
             try {
                 DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
                 DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-                Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+                log.info( "The file's rev is: " + fileInfo.getMetadata().rev);
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
                 String line;
@@ -343,14 +345,14 @@ public class FileStore implements FileStoreInterface {
                 }
                 continuePolling = true;
                 if (pollingTask == null) {
-                    Log.v(TAG, "Initializing slow polling thread");
+                    log.info("Initializing slow polling thread");
                     try {
-                        Log.v(TAG, "Finding latest cursor");
+                        log.info("Finding latest cursor");
                         ArrayList<String> params = new ArrayList<>();
                         params.add("include_media_info");
                         params.add("false");
                         Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[0]), mDBApi.getSession());
-                        Log.v(TAG, "Longpoll latestcursor response: " + response.toString());
+                        log.info("Longpoll latestcursor response: " + response.toString());
                         JsonThing result = new JsonThing(response);
                         JsonMap resultMap = result.expectMap();
                         latestCursor = resultMap.get("cursor").expectString();
@@ -388,7 +390,7 @@ public class FileStore implements FileStoreInterface {
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
         if (!isOnline()) {
             Util.showToastLong(mCtx, "Device is offline");
-            Log.v(TAG, "Device is offline, browse closed");
+            log.info("Device is offline, browse closed");
             return;
         }
         FileDialog dialog = new FileDialog(act, path , true);
@@ -420,7 +422,7 @@ public class FileStore implements FileStoreInterface {
                     byte[] toStore = new byte[0];
                     toStore = contents.getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);
-                    Log.v(TAG, "Saving to file " + path);
+                    log.info("Saving to file " + path);
                     DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
                             toStore.length, rev, null);
                     rev = newEntry.rev;
@@ -440,7 +442,7 @@ public class FileStore implements FileStoreInterface {
                 if (!newName.equals(path)) {
                     // The file was written under another name
                     // Usually this means the was a conflict.
-                    Log.v(TAG, "Filename was changed remotely. New name is: " + newName);
+                    log.info("Filename was changed remotely. New name is: " + newName);
                     Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
                     mFileChangedListerer.fileChanged(newName);
                 }
@@ -463,7 +465,7 @@ public class FileStore implements FileStoreInterface {
                     // First read file to append to
                     DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
                     DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-                    Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+                    log.info( "The file's rev is: " + fileInfo.getMetadata().rev);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
                     String line;
                     ArrayList<String> doneContents = new ArrayList<>();
@@ -514,7 +516,7 @@ public class FileStore implements FileStoreInterface {
         try {
             DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
             DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-            Log.i(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+            log.info( "The file's rev is: " + fileInfo.getMetadata().rev);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
             String line;
@@ -563,7 +565,7 @@ public class FileStore implements FileStoreInterface {
                     @Override
                     public void run() {
                         // Check if we are still online
-                        Log.v(TAG, "Device went online, reloading in 5 seconds");
+                        log.info("Device went online, reloading in 5 seconds");
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -573,7 +575,7 @@ public class FileStore implements FileStoreInterface {
                             continuePolling = true;
                             mFileChangedListerer.fileChanged(null);
                         } else {
-                            Log.v(TAG, "Device no longer online skipping reload");
+                            log.info("Device no longer online skipping reload");
                         }
                     }
                 });
@@ -583,12 +585,13 @@ public class FileStore implements FileStoreInterface {
             stopWatching();
         }
         if (prevOnline && !mOnline) {
-            Log.v(TAG, "Device went offline");
+            log.info("Device went offline");
         }
     }
 
     public static class FileDialog {
         private static final String PARENT_DIR = "..";
+        private final Logger log;
         private String[] fileList;
         private HashMap<String,DropboxAPI.Entry> entryHash = new HashMap<>();
         private File currentPath;
@@ -605,6 +608,7 @@ public class FileStore implements FileStoreInterface {
          * @param pathName
          */
         public FileDialog(Activity activity, String pathName, boolean txtOnly) {
+            log = LoggerFactory.getLogger(this.getClass());
             this.activity = activity;
             this.txtOnly=txtOnly;
             currentPath = new File(pathName);
@@ -643,7 +647,7 @@ public class FileStore implements FileStoreInterface {
                                         return;
                                     }
                                     File chosenFile = getChosenFile(fileChosen);
-                                    Log.w("FileStore", "Selected file " + chosenFile.getName());
+                                    log.warn("Selected file " + chosenFile.getName());
                                     DropboxAPI.Entry entry = entryHash.get(fileChosen);
                                     if (entry.isDir) {
                                         currentPath = chosenFile;
@@ -715,7 +719,7 @@ public class FileStore implements FileStoreInterface {
                     entryHash.put(entry.fileName(), entry);
                 }
             } catch (DropboxException e) {
-                Log.w("FileStore", "Couldn't load list from " + path.getName() + " loading root instead.");
+                log.warn("Couldn't load list from " + path.getName() + " loading root instead.");
                 loadFileList(act, api, null);
                 return;
             }

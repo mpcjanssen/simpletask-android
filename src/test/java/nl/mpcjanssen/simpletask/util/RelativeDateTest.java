@@ -1,9 +1,7 @@
 package nl.mpcjanssen.simpletask.util;
 
+import hirondelle.date4j.DateTime;
 import junit.framework.TestCase;
-
-import nl.mpcjanssen.simpletask.util.DateStrings;
-
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +9,6 @@ import nl.mpcjanssen.simpletask.util.DateStrings;
  * Date: 21-7-13
  * Time: 12:28
  */
-import hirondelle.date4j.DateTime;
 
 public class RelativeDateTest extends TestCase {
     public void testMonthWrap()  {

@@ -22,8 +22,8 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author Tim Barlotta
  */
 public class ByContextFilter implements TaskFilter {
-    @NotNull
+    @NonNull
     private ArrayList<String> contexts = new ArrayList<String>();
     private boolean not;
 
@@ -46,7 +46,7 @@ public class ByContextFilter implements TaskFilter {
     }
 
     @Override
-    public boolean apply(@NotNull Task input) {
+    public boolean apply(@NonNull Task input) {
         if (not) {
             return !filter(input);
         } else {
@@ -54,7 +54,7 @@ public class ByContextFilter implements TaskFilter {
         }
     }
 
-    public boolean filter(@NotNull Task input) {
+    public boolean filter(@NonNull Task input) {
         if (contexts.size() == 0) {
             return true;
         }
@@ -71,7 +71,7 @@ public class ByContextFilter implements TaskFilter {
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    @NotNull
+    @NonNull
     ArrayList<String> getContexts() {
         return contexts;
     }

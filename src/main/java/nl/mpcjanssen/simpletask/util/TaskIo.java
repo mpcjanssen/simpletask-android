@@ -22,31 +22,22 @@
  */
 package nl.mpcjanssen.simpletask.util;
 
+import android.support.annotation.NonNull;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
 import com.google.common.io.LineProcessor;
-import org.jetbrains.annotations.NotNull;
-
 
 import java.io.*;
-import java.util.List;
 
-
-/**
- * A utility class for performing Task level I/O
- *
- * @author Tim Barlotta
- */
 public class TaskIo {
     private final static String TAG = TaskIo.class.getSimpleName();
 
-    @NotNull
-    public static String loadFromFile(@NotNull File file, LineProcessor<String> lineProc) throws IOException {
+    @NonNull
+    public static String loadFromFile(@NonNull File file, LineProcessor<String> lineProc) throws IOException {
         return Files.readLines(file, Charsets.UTF_8, lineProc);
     }
 
-    public static void writeToFile(@NotNull String contents, @NotNull File file, boolean append) throws IOException {
+    public static void writeToFile(@NonNull String contents, @NonNull File file, boolean append) throws IOException {
         Util.createParentDirectory(file);
         FileOutputStream str = new FileOutputStream(file, append);
 

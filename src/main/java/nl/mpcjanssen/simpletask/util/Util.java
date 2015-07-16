@@ -29,29 +29,27 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Window;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.common.base.Joiner;
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.BackupDbHelper;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TodoList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -60,8 +58,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util {
-
-    private static String TAG = Util.class.getSimpleName();
 
     private Util() {
     }
@@ -76,7 +72,7 @@ public class Util {
     }
 
 
-    public static void showToastShort(@NotNull final Context cxt, final int resid) {
+    public static void showToastShort(@NonNull final Context cxt, final int resid) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -85,7 +81,7 @@ public class Util {
         });
     }
 
-    public static void showToastLong(@NotNull final Context cxt, final int resid) {
+    public static void showToastLong(@NonNull final Context cxt, final int resid) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +91,7 @@ public class Util {
     }
 
 
-    public static void showToastShort(@NotNull final Context cxt, final String msg) {
+    public static void showToastShort(@NonNull final Context cxt, final String msg) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -104,7 +100,7 @@ public class Util {
         });
     }
 
-    public static void showToastLong(@NotNull final Context cxt, final String msg) {
+    public static void showToastLong(@NonNull final Context cxt, final String msg) {
         runOnMainThread (new Runnable() {
             @Override
             public void run() {
@@ -114,7 +110,7 @@ public class Util {
     }
 
     @Nullable
-    public static List<String> tasksToString(@NotNull List<Task> tasks) {
+    public static List<String> tasksToString(@NonNull List<Task> tasks) {
         ArrayList<String> result = new ArrayList<>();
         for (Task t: tasks) {
             result.add(t.inFileFormat());
@@ -127,6 +123,7 @@ public class Util {
     }
 
     public static void createParentDirectory(@Nullable File dest) throws TodoException {
+        Logger log = LoggerFactory.getLogger(Util.class);
         if (dest == null) {
             throw new TodoException("createParentDirectory: dest is null");
         }
@@ -135,7 +132,7 @@ public class Util {
             createParentDirectory(dir);
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
-                    Log.e(TAG, "Could not create dirs: " + dir.getAbsolutePath());
+                    log.error("Could not create dirs: " + dir.getAbsolutePath());
                     throw new TodoException("Could not create dirs: "
                             + dir.getAbsolutePath());
                 }
@@ -143,7 +140,7 @@ public class Util {
         }
     }
 
-    @NotNull
+    @NonNull
     public static String joinTasks(@Nullable Collection<Task> s, String delimiter) {
         StringBuilder builder = new StringBuilder();
         if (s==null) {
@@ -160,7 +157,7 @@ public class Util {
         return builder.toString();
     }
 
-    @NotNull
+    @NonNull
     public static String join(@Nullable Collection<String> s, String delimiter) {
         if (s==null) {
             return "";
@@ -168,13 +165,13 @@ public class Util {
         return Joiner.on(delimiter).join(s);
     }
 
-    public static void setColor(@NotNull SpannableString ss, int color, String s) {
+    public static void setColor(@NonNull SpannableString ss, int color, String s) {
         ArrayList<String> strList = new ArrayList<>();
         strList.add(s);
         setColor(ss,color,strList);
     }
 
-    public static void setColor(@NotNull SpannableString ss, int color ,  @NotNull List<String> items) {
+    public static void setColor(@NonNull SpannableString ss, int color ,  @NonNull List<String> items) {
         String data = ss.toString();
         for (String item : items) {
             int i = data.indexOf(item);
@@ -186,7 +183,7 @@ public class Util {
         }
     }
 
-    public static void setColor(@NotNull SpannableString ss, int color) {
+    public static void setColor(@NonNull SpannableString ss, int color) {
 
         ss.setSpan(new ForegroundColorSpan(color), 0,
                 ss.length(),
@@ -194,7 +191,7 @@ public class Util {
     }
 
     @Nullable
-    public static DateTime addInterval(@Nullable DateTime date, @NotNull String interval) {
+    public static DateTime addInterval(@Nullable DateTime date, @NonNull String interval) {
         Pattern p = Pattern.compile("(\\d+)([dwmy])");
         Matcher m = p.matcher(interval.toLowerCase(Locale.getDefault()));
         int amount;
@@ -231,8 +228,8 @@ public class Util {
         return date;
     }
 
-    @NotNull
-    public static ArrayList<String> prefixItems(String prefix, @NotNull ArrayList<String> items) {
+    @NonNull
+    public static ArrayList<String> prefixItems(String prefix, @NonNull ArrayList<String> items) {
         ArrayList<String> result = new ArrayList<>();
         for (String item : items) {
             result.add(prefix + item);
@@ -240,8 +237,8 @@ public class Util {
         return result;
     }
 
-    @NotNull
-    public static ArrayList<String> getCheckedItems(@NotNull ListView listView , boolean checked) {
+    @NonNull
+    public static ArrayList<String> getCheckedItems(@NonNull ListView listView , boolean checked) {
         SparseBooleanArray checks = listView.getCheckedItemPositions();
         ArrayList<String> items = new ArrayList<>();
         for (int i = 0 ; i < checks.size() ; i++) {
@@ -255,8 +252,8 @@ public class Util {
         return items;
     }
 
-    @NotNull
-    public static AlertDialog createDeferDialog(@NotNull final Activity act, int dateType, final boolean showNone,  @NotNull final InputDialogListener listener) {
+    @NonNull
+    public static AlertDialog createDeferDialog(@NonNull final Activity act, int dateType, final boolean showNone,  @NonNull final InputDialogListener listener) {
         String[] keys = act.getResources().getStringArray(R.array.deferOptions);
         String today = "0d";
         String tomorrow = "1d";
@@ -399,7 +396,7 @@ public class Util {
     }
 
 
-    public static Dialog showLoadingOverlay(@NotNull Activity act, @Nullable Dialog visibleDialog, boolean show) {
+    public static Dialog showLoadingOverlay(@NonNull Activity act, @Nullable Dialog visibleDialog, boolean show) {
         if (show) {
             Dialog newDialog = new Dialog(act);
             newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

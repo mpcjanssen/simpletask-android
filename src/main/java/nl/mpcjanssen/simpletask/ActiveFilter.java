@@ -3,28 +3,22 @@ package nl.mpcjanssen.simpletask;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.util.*;
-
-import nl.mpcjanssen.simpletask.task.ByPriorityFilter;
-import nl.mpcjanssen.simpletask.task.ByProjectFilter;
-import nl.mpcjanssen.simpletask.task.ByTextFilter;
-import nl.mpcjanssen.simpletask.task.ByContextFilter;
-import nl.mpcjanssen.simpletask.task.Priority;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TaskFilter;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.luaj.vm2.*;
-import org.luaj.vm2.compiler.*;
-import org.luaj.vm2.lib.jse.*;
+import org.luaj.vm2.compiler.LuaC;
+import org.luaj.vm2.lib.jse.JsePlatform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
 /**
  * Active filter, has methods for serialization in several formats
  */
@@ -56,8 +50,9 @@ public class ActiveFilter {
     public final static String INTENT_SCRIPT_TEST_TASK_FILTER =  "LUASCRIPT_TEST_TASK";
 
     public final static String INTENT_EXTRA_DELIMITERS = "\n|,";
+    private final Logger log;
 
-    @NotNull
+    @NonNull
     private ArrayList<Priority> m_prios = new ArrayList<Priority>();
     private ArrayList<String> m_contexts = new ArrayList<String>();
     private ArrayList<String> m_projects = new ArrayList<String>();
@@ -93,9 +88,10 @@ public class ActiveFilter {
     private String mName;
 
     public ActiveFilter() {
+        log = LoggerFactory.getLogger(this.getClass());
     }
 
-    public void initFromIntent(@NotNull Intent intent) {
+    public void initFromIntent(@NonNull Intent intent) {
         String prios;
         String projects;
         String contexts;
@@ -141,7 +137,7 @@ public class ActiveFilter {
         }
     }
 
-    public void initFromPrefs(@NotNull SharedPreferences prefs) {
+    public void initFromPrefs(@NonNull SharedPreferences prefs) {
         m_sorts = new ArrayList<String>();
         m_sorts.addAll(Arrays.asList(prefs.getString(INTENT_SORT_ORDER, "")
                 .split(INTENT_EXTRA_DELIMITERS)));
@@ -307,7 +303,7 @@ public class ActiveFilter {
         return m_projectsNot;
     }
 
-    @NotNull
+    @NonNull
     public ArrayList<Priority> getPriorities() {
         return m_prios;
     }
@@ -324,8 +320,8 @@ public class ActiveFilter {
         this.m_projects = projects;
     }
 
-    @NotNull
-    public ArrayList<Task> apply(@NotNull List<Task> tasks) {
+    @NonNull
+    public ArrayList<Task> apply(@NonNull List<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<Task>();
 
@@ -360,9 +356,9 @@ public class ActiveFilter {
                 matched.add(t);
             }
         } catch (LuaError e) {
-            Log.v(TAG, "Lua execution failed " + e.getMessage());
+            log.debug("Lua execution failed " + e.getMessage());
         } catch (IOException e) {
-            Log.v(TAG, "Execution failed " + e.getMessage());
+            log.debug("Execution failed " + e.getMessage());
         }
         return matched;
     }
@@ -439,7 +435,7 @@ public class ActiveFilter {
     }
 
     private class AndFilter {
-        @NotNull
+        @NonNull
         private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
 
         private AndFilter() {

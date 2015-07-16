@@ -1,16 +1,14 @@
 package nl.mpcjanssen.simpletask.sort;
 
+import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
-
-import org.jetbrains.annotations.NotNull;
-
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class PriorityComparator extends Ordering<Task> {
 
     @Override
-    public int compare(@NotNull Task a, @NotNull Task b) {
+    public int compare(@NonNull Task a, @NonNull Task b) {
         Priority prioA = a.getPriority();
         Priority prioB = b.getPriority();
 

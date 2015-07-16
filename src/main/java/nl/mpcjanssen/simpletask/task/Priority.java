@@ -22,8 +22,8 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public enum Priority {
         return fileFormat;
     }
 
-    @NotNull
+    @NonNull
     private static Priority[] reverseValues() {
         Priority[] values = Priority.values();
         Priority[] reversed = new Priority[values.length];
@@ -81,8 +81,8 @@ public enum Priority {
         return reversed;
     }
 
-    @NotNull
-    public static List<Priority> range(@NotNull Priority p1, @NotNull Priority p2) {
+    @NonNull
+    public static List<Priority> range(@NonNull Priority p1, @NonNull Priority p2) {
         ArrayList<Priority> priorities = new ArrayList<Priority>();
         boolean add = false;
 
@@ -101,8 +101,8 @@ public enum Priority {
         return priorities;
     }
 
-    @NotNull
-    public static List<String> rangeInCode(@NotNull Priority p1, @NotNull Priority p2) {
+    @NonNull
+    public static List<String> rangeInCode(@NonNull Priority p1, @NonNull Priority p2) {
         List<Priority> priorities = Priority.range(p1, p2);
         List<String> result = new ArrayList<String>(priorities.size());
         for (Priority p : priorities) {
@@ -111,8 +111,8 @@ public enum Priority {
         return result;
     }
 
-    @NotNull
-    public static ArrayList<String> inCode(@NotNull List<Priority> priorities) {
+    @NonNull
+    public static ArrayList<String> inCode(@NonNull List<Priority> priorities) {
         ArrayList<String> strings = new ArrayList<String>();
         for (Priority p : priorities) {
             strings.add(p.getCode());
@@ -120,7 +120,7 @@ public enum Priority {
         return strings;
     }
 
-    @NotNull
+    @NonNull
     public static ArrayList<Priority> toPriority(@Nullable List<String> codes) {
         ArrayList<Priority> priorities = new ArrayList<Priority>();
         if (codes == null) {
@@ -132,7 +132,7 @@ public enum Priority {
         return priorities;
     }
 
-    @NotNull
+    @NonNull
     public static Priority toPriority(@Nullable String s) {
         if (s == null) {
             return NONE;

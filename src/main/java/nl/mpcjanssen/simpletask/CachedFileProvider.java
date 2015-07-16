@@ -1,15 +1,16 @@
 package nl.mpcjanssen.simpletask;
- 
-import java.io.File;
-import java.io.FileNotFoundException;
- 
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
  
 public class CachedFileProvider extends ContentProvider {
  
@@ -20,11 +21,13 @@ public class CachedFileProvider extends ContentProvider {
  
     // UriMatcher used to match against incoming requests
     private UriMatcher uriMatcher;
- 
+    private Logger log;
+
     @Override
     public boolean onCreate() {
+        log = LoggerFactory.getLogger(this.getClass());
+
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
- 
         // Add a URI to the matcher which will match against the form
         // 'content://com.stephendnicholas.gmailattach.provider/*'
         // and return 1 in the case that the incoming Uri matches this pattern
@@ -39,8 +42,7 @@ public class CachedFileProvider extends ContentProvider {
  
         String LOG_TAG = CLASS_NAME + " - openFile";
  
-        Log.v(LOG_TAG,
-                "Called with uri: '" + uri + "'." + uri.getLastPathSegment());
+        log.debug("Called with uri: '" + uri + "'." + uri.getLastPathSegment());
  
         // Check incoming Uri against the matcher
         switch (uriMatcher.match(uri)) {
@@ -65,7 +67,7 @@ public class CachedFileProvider extends ContentProvider {
  
             // Otherwise unrecognised Uri
         default:
-            Log.v(LOG_TAG, "Unsupported uri: '" + uri + "'.");
+            log.debug("Unsupported uri: '" + uri + "'.");
             throw new FileNotFoundException("Unsupported uri: "
                     + uri.toString());
         }

@@ -6,20 +6,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.*;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.lang.Override;
-import java.util.*;
-
 import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -28,6 +18,10 @@ import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 
 public class FileStore implements FileStoreInterface {
 
@@ -326,7 +320,15 @@ public class FileStore implements FileStoreInterface {
                     }
                 };
                 String[] fileList1 = path.list(filter);
-                Collections.addAll(r, fileList1);
+                if (fileList1 != null) {
+                    Collections.addAll(r, fileList1);
+                } else {
+                    // Fallback to root
+                    r.add("/");
+                }
+            } else {
+                // Fallback to root
+                r.add("/");
             }
             Collections.sort(r);
             fileList = r.toArray(new String[r.size()]);

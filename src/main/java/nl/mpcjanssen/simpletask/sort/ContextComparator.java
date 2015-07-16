@@ -1,13 +1,11 @@
 package nl.mpcjanssen.simpletask.sort;
 
+import android.support.annotation.NonNull;
 import com.google.common.collect.Ordering;
-
-import org.jetbrains.annotations.NotNull;
+import nl.mpcjanssen.simpletask.task.Task;
 
 import java.util.Collections;
 import java.util.List;
-
-import nl.mpcjanssen.simpletask.task.Task;
 
 public class ContextComparator extends Ordering<Task> {
 
@@ -19,7 +17,7 @@ public class ContextComparator extends Ordering<Task> {
     }
 
     @Override
-    public int compare(@NotNull Task a, @NotNull Task b) {
+    public int compare(@NonNull Task a, @NonNull Task b) {
         List<String> contextsA = a.getLists();
         List<String> contextsB = b.getLists();
 

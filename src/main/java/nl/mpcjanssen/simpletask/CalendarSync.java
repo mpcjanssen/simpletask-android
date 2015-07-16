@@ -31,17 +31,17 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
-import android.util.Log;
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.util.Util;
 
 
 public class CalendarSync {
@@ -60,6 +60,7 @@ public class CalendarSync {
     private static final int EVT_DURATION = 5*60*60*1000;  // ie. 5 hours
 
     private static final int SYNC_DELAY_MS = 1000;
+    private final Logger log;
 
     private class SyncRunnable implements Runnable {
         @Override
@@ -67,7 +68,7 @@ public class CalendarSync {
             try {
                 CalendarSync.this.sync();
             } catch (Exception e) {
-                Log.e(TAG, "STPE exception", e);
+                log.error("STPE exception", e);
             }
         }
     }
@@ -96,7 +97,7 @@ public class CalendarSync {
     private void addCalendar(boolean warnCalExists) {
         if (getCalID() != -1) {
             if (warnCalExists) {
-                Log.w(TAG, "Calendar already exists, overwriting...");
+                log.warn("Calendar already exists, overwriting...");
                 Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
             }
             return;
@@ -119,10 +120,10 @@ public class CalendarSync {
         else if (getCalID() == -1) added = false;    // This might happen eg. because of CM's privacy guard
 
         if (added) {
-            Log.v(TAG, "Calendar added");
+            log.debug("Calendar added");
         }
         else {
-            Log.e(TAG, "Could not add calendar");
+            log.error("Could not add calendar");
             m_sync_type = 0;
         }
     }
@@ -131,8 +132,8 @@ public class CalendarSync {
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
         int ret = m_cr.delete(CAL_URI, selection, args);
-        if (ret == 1) Log.v(TAG, "Calendar removed");
-        else Log.w(TAG, "Unexpected return value while removing calendar: "+ret);
+        if (ret == 1) log.debug("Calendar removed");
+        else log.warn("Unexpected return value while removing calendar: " + ret);
     }
 
     @SuppressWarnings("NewApi")
@@ -216,11 +217,11 @@ public class CalendarSync {
 
         long calID = getCalID();
         if (calID == -1) {
-            Log.e(TAG, "sync(): No calendar!");
+            log.error("sync(): No calendar!");
             return;
         }
 
-        Log.v(TAG, "Syncing due/threshold calendar reminders...");
+        log.debug("Syncing due/threshold calendar reminders...");
         purgeEvts(calID);
         insertEvts(calID, tasks);
     }
@@ -249,6 +250,7 @@ public class CalendarSync {
     public static final int SYNC_TYPE_DUES = 1, SYNC_TYPE_THRESHOLDS = 2;
 
     public CalendarSync(TodoApplication app, boolean syncDues, boolean syncThresholds) {
+        log = LoggerFactory.getLogger(this.getClass());
         m_app = app;
         m_sync_runnable = new SyncRunnable();
         m_cr = app.getContentResolver();

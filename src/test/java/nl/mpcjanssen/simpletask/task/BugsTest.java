@@ -2,10 +2,8 @@ package nl.mpcjanssen.simpletask.task;
 
 import hirondelle.date4j.DateTime;
 import junit.framework.TestCase;
-
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.task.token.Token;
 
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ public class BugsTest extends TestCase {
     public void testActiveSortNullCrash() {
         ActiveFilter f = new ActiveFilter();
         MultiComparator mc =  new MultiComparator(f.getSort(null),true, new ArrayList<Task>());
-        assertNotNull(mc);
+        assertNonNull(mc);
     }
 
     public void testBug50() {

@@ -22,8 +22,8 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Locale;
 
@@ -47,7 +47,7 @@ public class ByTextFilter implements TaskFilter {
     }
 
     @Override
-    public boolean apply(@NotNull Task input) {
+    public boolean apply(@NonNull Task input) {
         String taskText = caseSensitive ? input.inFileFormat() : input.inFileFormat()
                 .toUpperCase(Locale.getDefault());
         for (String part : parts) {

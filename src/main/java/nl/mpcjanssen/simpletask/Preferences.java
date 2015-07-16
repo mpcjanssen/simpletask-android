@@ -24,10 +24,6 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -35,19 +31,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
@@ -56,8 +46,9 @@ public class Preferences extends ThemedActivity {
 	public static final int RESULT_ARCHIVE = RESULT_FIRST_USER + 2;
     public static final int RESULT_RECREATE_ACTIVITY = RESULT_FIRST_USER + 3;
     private LocalBroadcastManager localBroadcastManager;
+    private Logger log;
 
-	private void broadcastIntentAndClose(String intent, int result) {
+    private void broadcastIntentAndClose(String intent, int result) {
 
 		Intent broadcastIntent = new Intent(intent);
 		localBroadcastManager.sendBroadcast(broadcastIntent);
@@ -70,8 +61,9 @@ public class Preferences extends ThemedActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Display the fragment as the main content.
+        log = LoggerFactory.getLogger(this.getClass());
 
+		// Display the fragment as the main content.
         TodoTxtPrefFragment prefFragment = new TodoTxtPrefFragment();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
@@ -82,9 +74,12 @@ public class Preferences extends ThemedActivity {
 
 	public static class TodoTxtPrefFragment extends PreferenceFragment implements
     SharedPreferences.OnSharedPreferenceChangeListener {
+        private Logger log;
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            log = LoggerFactory.getLogger(this.getClass());
             addPreferencesFromResource(R.xml.preferences);
             PackageInfo packageInfo;
             final Preference versionPref = findPreference("app_version");
@@ -142,7 +137,7 @@ public class Preferences extends ThemedActivity {
                 Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "log.txt");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             } catch (Exception e) {
-                Log.w(TAG, "Failed to create file for sharing");
+                log.warn("Failed to create file for sharing");
             }
             startActivity(Intent.createChooser(shareIntent, "Share Logging File"));
 
@@ -161,7 +156,7 @@ public class Preferences extends ThemedActivity {
             Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "history.db");
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             } catch (Exception e) {
-                Log.w(TAG, "Failed to create file for sharing");
+                log.warn("Failed to create file for sharing");
             }
             startActivity(Intent.createChooser(shareIntent, "Share History Database"));
 
@@ -192,7 +187,7 @@ public class Preferences extends ThemedActivity {
 
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-                @NotNull Preference preference) {
+                @NonNull Preference preference) {
 
             String key = preference.getKey();
             if (key == null) {
@@ -200,8 +195,7 @@ public class Preferences extends ThemedActivity {
             }
             switch (key) {
                 case "archive_now":
-                    Log.v("PREFERENCES",
-                            "Archiving completed items from preferences");
+                    log.info("Archiving completed items from preferences");
                     m_app.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -212,7 +206,7 @@ public class Preferences extends ThemedActivity {
                     }, R.string.archive_task_title);
                     break;
                 case "logout_dropbox":
-                    Log.v("PREFERENCES", "Logging out from Dropbox");
+                    log.info("Logging out from Dropbox");
                     m_app.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

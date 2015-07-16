@@ -3,9 +3,6 @@ package nl.mpcjanssen.simpletask;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Window;
-import ch.qos.logback.classic.android.BasicLogcatConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 abstract class ThemedListActivity extends ListActivity {
 

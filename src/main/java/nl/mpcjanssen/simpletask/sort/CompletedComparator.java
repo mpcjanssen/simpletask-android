@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.sort;
 
 import com.google.common.collect.Ordering;
-
 import nl.mpcjanssen.simpletask.task.Task;
 
 public class CompletedComparator extends Ordering<Task> {

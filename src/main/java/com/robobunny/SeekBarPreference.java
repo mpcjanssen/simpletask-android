@@ -3,8 +3,8 @@ package com.robobunny;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.Preference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -12,10 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-
-import org.jetbrains.annotations.NotNull;
-
 import nl.mpcjanssen.simpletask.R;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
 
@@ -24,6 +23,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     private static final String ANDROIDNS="http://schemas.android.com/apk/res/android";
     private static final String APPLICATIONNS="http://robobunny.com";
     private static final int DEFAULT_VALUE = 50;
+    private final Logger log;
 
     private int mMaxValue      = 100;
     private int mMinValue      = 0;
@@ -35,17 +35,19 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     private TextView mStatusText;
 
-    public SeekBarPreference(@NotNull Context context, @NotNull AttributeSet attrs) {
+    public SeekBarPreference(@NonNull Context context, @NonNull AttributeSet attrs) {
         super(context, attrs);
+        log = LoggerFactory.getLogger(this.getClass());
         initPreference(context, attrs);
     }
 
-    public SeekBarPreference(@NotNull Context context, @NotNull AttributeSet attrs, int defStyle) {
+    public SeekBarPreference(@NonNull Context context, @NonNull AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        log = LoggerFactory.getLogger(this.getClass());
         initPreference(context, attrs);
     }
 
-    private void initPreference(Context context, @NotNull AttributeSet attrs) {
+    private void initPreference(Context context, @NonNull AttributeSet attrs) {
         setValuesFromXml(attrs);
         mSeekBar = new SeekBar(context, attrs);
         mSeekBar.setMax(mMaxValue - mMinValue);
@@ -54,7 +56,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         setWidgetLayoutResource(R.layout.seek_bar_preference);
     }
 
-    private void setValuesFromXml(@NotNull AttributeSet attrs) {
+    private void setValuesFromXml(@NonNull AttributeSet attrs) {
         mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
         mMinValue = attrs.getAttributeIntValue(APPLICATIONNS, "min", 0);
 
@@ -68,12 +70,12 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
                 mInterval = Integer.parseInt(newInterval);
         }
         catch(Exception e) {
-            Log.e(TAG, "Invalid interval value", e);
+            log.error("Invalid interval value", e);
         }
 
     }
 
-    private String getAttributeStringValue(@NotNull AttributeSet attrs, String namespace, String name, String defaultValue) {
+    private String getAttributeStringValue(@NonNull AttributeSet attrs, String namespace, String name, String defaultValue) {
         String value = attrs.getAttributeValue(namespace, name);
         if(value == null)
             value = defaultValue;
@@ -94,7 +96,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     @Override
-    public void onBindView(@NotNull View view) {
+    public void onBindView(@NonNull View view) {
         super.onBindView(view);
 
         try {
@@ -114,7 +116,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             }
         }
         catch(Exception ex) {
-            Log.e(TAG, "Error binding view: " + ex.toString());
+            log.error("Error binding view: " + ex.toString());
         }
 
         //if dependency is false from the beginning, disable the seek bar
@@ -130,7 +132,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
      * Update a SeekBarPreference view with our current state
      * @param view
      */
-    protected void updateView(@NotNull View view) {
+    protected void updateView(@NonNull View view) {
 
         try {
             mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
@@ -148,13 +150,13 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
         }
         catch(Exception e) {
-            Log.e(TAG, "Error updating seek bar preference", e);
+            log.error("Error updating seek bar preference", e);
         }
 
     }
 
     @Override
-    public void onProgressChanged(@NotNull SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressChanged(@NonNull SeekBar seekBar, int progress, boolean fromUser) {
         int newValue = progress + mMinValue;
 
         if(newValue > mMaxValue)
@@ -187,7 +189,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
 
     @Override
-    protected Object onGetDefaultValue(@NotNull TypedArray ta, int index){
+    protected Object onGetDefaultValue(@NonNull TypedArray ta, int index){
 
         int defaultValue = ta.getInt(index, DEFAULT_VALUE);
         return defaultValue;
@@ -195,7 +197,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     @Override
-    protected void onSetInitialValue(boolean restoreValue, @NotNull Object defaultValue) {
+    protected void onSetInitialValue(boolean restoreValue, @NonNull Object defaultValue) {
 
         if(restoreValue) {
             mCurrentValue = getPersistedInt(mCurrentValue);
@@ -206,7 +208,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
                 temp = (Integer)defaultValue;
             }
             catch(Exception ex) {
-                Log.e(TAG, "Invalid default value: " + defaultValue.toString());
+                log.error("Invalid default value: " + defaultValue.toString());
             }
 
             persistInt(temp);

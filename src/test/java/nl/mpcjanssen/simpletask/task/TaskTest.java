@@ -1,13 +1,11 @@
 package nl.mpcjanssen.simpletask.task;
 
+import hirondelle.date4j.DateTime;
 import junit.framework.TestCase;
+import nl.mpcjanssen.simpletask.task.token.*;
 
 import java.util.ArrayList;
 import java.util.TimeZone;
-
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.task.token.*;
-import nl.mpcjanssen.simpletask.util.DateStrings;
 
 /**
  * Created with IntelliJ IDEA.

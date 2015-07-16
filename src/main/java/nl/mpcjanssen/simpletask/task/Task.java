@@ -23,6 +23,8 @@
 package nl.mpcjanssen.simpletask.task;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import com.google.common.base.Strings;
 import hirondelle.date4j.DateTime;
@@ -31,8 +33,6 @@ import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.token.*;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class Task implements Serializable {
             .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
     private final static String COMPLETED_PREFIX = "x ";
 
-    @NotNull
+    @NonNull
     private ArrayList<Token> mTokens = new ArrayList<>();
     private boolean mCompleted;
     private ArrayList<String> mLists;
@@ -85,19 +85,19 @@ public class Task implements Serializable {
     private boolean mIsHidden;
 
 
-    public Task(@NotNull String rawText, DateTime defaultPrependedDate) {
+    public Task(@NonNull String rawText, DateTime defaultPrependedDate) {
         this.init(rawText, defaultPrependedDate);
     }
 
-    public Task(@NotNull String rawText) {
+    public Task(@NonNull String rawText) {
         this(rawText, null);
     }
 
-    public void update(@NotNull String rawText) {
+    public void update(@NonNull String rawText) {
         this.init(rawText, null);
     }
 
-    public void init(@NotNull String rawText, @Nullable DateTime defaultCreateDate) {
+    public void init(@NonNull String rawText, @Nullable DateTime defaultCreateDate) {
         parse(rawText);
         if (defaultCreateDate != null
             && getCreateDate() == null) {
@@ -105,7 +105,7 @@ public class Task implements Serializable {
         }
     }
 
-    @NotNull
+    @NonNull
     public ArrayList<Token> getTokens() {
         return mTokens;
     }
@@ -115,7 +115,7 @@ public class Task implements Serializable {
         return stringToDateTime(mDuedate);
     }
 
-    public void setDueDate(@NotNull DateTime dueDate) {
+    public void setDueDate(@NonNull DateTime dueDate) {
         setDueDate(dueDate.format(Constants.DATE_FORMAT));
     }
 
@@ -148,7 +148,7 @@ public class Task implements Serializable {
     }
 
     @Nullable
-    public DateTime stringToDateTime(@NotNull String dateString) {
+    public DateTime stringToDateTime(@NonNull String dateString) {
         DateTime date;
         if (DateTime.isParseable(dateString)) {
             date = new DateTime(dateString);
@@ -167,7 +167,7 @@ public class Task implements Serializable {
         }
     }
 
-    public void setThresholdDate(@NotNull DateTime thresholdDate) {
+    public void setThresholdDate(@NonNull DateTime thresholdDate) {
         setThresholdDate(thresholdDate.format(Constants.DATE_FORMAT));
     }
 
@@ -199,7 +199,7 @@ public class Task implements Serializable {
         }
     }
 
-    @NotNull
+    @NonNull
     public Priority getPriority() {
         if (mPrio == null) {
             return Priority.NONE;
@@ -231,7 +231,7 @@ public class Task implements Serializable {
         mCreateDate = newCreateDate;
     }
 
-    public void setPriority(@NotNull Priority priority) {
+    public void setPriority(@NonNull Priority priority) {
         ArrayList<Token> temp = new ArrayList<>();
         if (mTokens.size() > 0 && mTokens.get(0).type == Token.COMPLETED) {
             temp.add(mTokens.get(0));
@@ -322,7 +322,7 @@ public class Task implements Serializable {
     }
 
     @Nullable
-    public Task markComplete(@NotNull DateTime date, boolean useOriginalDate) {
+    public Task markComplete(@NonNull DateTime date, boolean useOriginalDate) {
         Task newTask = null;
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
@@ -366,7 +366,7 @@ public class Task implements Serializable {
         this.update("");
     }
 
-    @NotNull
+    @NonNull
     public String showParts(int flags) {
         StringBuilder sb = new StringBuilder();
         for (Token token: mTokens) {
@@ -388,7 +388,7 @@ public class Task implements Serializable {
         }
     }
 
-    @NotNull
+    @NonNull
     public String inFileFormat() {
        return showParts(Token.SHOW_ALL);
     }
@@ -402,7 +402,7 @@ public class Task implements Serializable {
         return result;
     }
 
-    public void initWithFilter(@NotNull ActiveFilter mFilter) {
+    public void initWithFilter(@NonNull ActiveFilter mFilter) {
         if (!mFilter.getContextsNot() && mFilter.getContexts().size()==1) {
             addList(mFilter.getContexts().get(0));
         }
@@ -453,7 +453,7 @@ public class Task implements Serializable {
         }
     }
 
-    public void deferThresholdDate(@NotNull String deferString, @NotNull String deferFromDate) {
+    public void deferThresholdDate(@NonNull String deferString, @NonNull String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setThresholdDate(deferString);
             return;
@@ -475,7 +475,7 @@ public class Task implements Serializable {
         }
     }
 
-    public void deferDueDate(@NotNull String deferString, @NotNull String deferFromDate) {
+    public void deferDueDate(@NonNull String deferString, @NonNull String deferFromDate) {
         if (DateTime.isParseable(deferString)) {
             setDueDate(deferString);
             return;
@@ -498,7 +498,7 @@ public class Task implements Serializable {
     }
 
 
-    @NotNull
+    @NonNull
     public String getThresholdDateString(String empty) {
         if (mThresholdate==null) {
             return empty;
@@ -507,8 +507,8 @@ public class Task implements Serializable {
         }
     }
 
-    @NotNull
-    public String getHeader(@NotNull String sort, String empty) {
+    @NonNull
+    public String getHeader(@NonNull String sort, String empty) {
         if (sort.contains("by_context")) {
             if (mLists.size() > 0) {
                 return mLists.get(0);
@@ -529,7 +529,7 @@ public class Task implements Serializable {
         return "";
     }
 
-    @NotNull
+    @NonNull
     public String getTextWithoutCompletionInfo() {
         int flags = Token.SHOW_ALL;
         flags = flags  & ~Token.COMPLETED;
@@ -538,7 +538,7 @@ public class Task implements Serializable {
         return showParts(flags);
     }
 
-    private void parse(@NotNull String text) {
+    private void parse(@NonNull String text) {
         mTokens.clear();
         mThresholdate = null;
         mDuedate = null;
@@ -659,7 +659,7 @@ public class Task implements Serializable {
         Collections.sort(mTags);
     }
 
-    private String calculateRelativeAge(Context ctx, @NotNull String date) {
+    private String calculateRelativeAge(Context ctx, @NonNull String date) {
         String result;
         if (!DateTime.isParseable(date)) {
             result = date;
@@ -695,7 +695,7 @@ public class Task implements Serializable {
         return null;
     }
 
-    @NotNull
+    @NonNull
     public String getText() {
         StringBuilder sb = new StringBuilder();
         for (Token t : mTokens) {

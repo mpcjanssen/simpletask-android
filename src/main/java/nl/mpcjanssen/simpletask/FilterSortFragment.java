@@ -3,26 +3,20 @@ package nl.mpcjanssen.simpletask;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.mobeta.android.dslv.DragSortListView;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import nl.mpcjanssen.simpletask.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import nl.mpcjanssen.simpletask.util.Strings;
 
 public class FilterSortFragment extends Fragment {
     
@@ -32,16 +26,16 @@ public class FilterSortFragment extends Fragment {
     private ArrayList<String> originalItems;
     private DragSortListView lv;
     SortItemAdapter adapter;
-    @NotNull
+    @NonNull
     ArrayList<String> directions = new ArrayList<>();
-    @NotNull
+    @NonNull
     ArrayList<String> adapterList = new ArrayList<>();
     int sortUpId;
     int sortDownId;
 
     TodoApplication m_app;
 
-    @NotNull
+    @NonNull
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {
                 @Override
@@ -57,7 +51,7 @@ public class FilterSortFragment extends Fragment {
                 }
             };
 
-    @NotNull
+    @NonNull
     private DragSortListView.RemoveListener onRemove =
             new DragSortListView.RemoveListener() {
                 @Override
@@ -65,6 +59,7 @@ public class FilterSortFragment extends Fragment {
                     adapter.remove(adapter.getItem(which));
                 }
             };
+    private Logger log;
 
     protected int getLayout() {
         // this DSLV xml declaration does not call for the use
@@ -74,8 +69,9 @@ public class FilterSortFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        log = LoggerFactory.getLogger(this.getClass());
 
         Bundle arguments = getArguments();
         if (originalItems == null) {
@@ -85,7 +81,7 @@ public class FilterSortFragment extends Fragment {
                 originalItems = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS);
             }
         }
-        Log.v(TAG, "Created view with: " + originalItems);
+        log.debug("Created view with: " + originalItems);
         m_app = (TodoApplication) getActivity().getApplication();
 
         // Set the proper theme
@@ -160,7 +156,7 @@ public class FilterSortFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(STATE_SELECTED, getSelectedItem());
     }
@@ -171,7 +167,7 @@ public class FilterSortFragment extends Fragment {
         super.onDestroyView();
     }
 
-    @NotNull
+    @NonNull
     public ArrayList<String> getSelectedItem() {
         ArrayList<String> multiSort = new ArrayList<>();
         if (lv != null) {
@@ -186,7 +182,7 @@ public class FilterSortFragment extends Fragment {
 
     public class SortItemAdapter extends ArrayAdapter<String> {
 
-        public SortItemAdapter(@NotNull Context context, int resource, int textViewResourceId, List<String> objects) {
+        public SortItemAdapter(@NonNull Context context, int resource, int textViewResourceId, List<String> objects) {
             super(context, resource, textViewResourceId, objects);
         }
 
