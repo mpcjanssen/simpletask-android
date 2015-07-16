@@ -4,6 +4,10 @@
 5.5.8
 -----
 
+- Switched to logback logging for more useful log files from inside the app.
+- Revert using back for todo file navigation. Fixes [#255](https://github.com/mpcjanssen/simpletask-android/issues/255).
+- Code cleanup.
+- Don't clear todolist if reloading a file failed.
 - Queue todo list and file system actions to fix some weird race conditions.
 - Properly save tasks in the cache if offline. Fixes lost tasks after coming online again.
 
