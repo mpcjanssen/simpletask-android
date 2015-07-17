@@ -11,16 +11,28 @@
         <item name="android:textSize">36sp</item>
     </style>
 
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#22BBEE</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:background">#FFFFFF</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyleDark" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">#22BBEE</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:background">#000000</item>
+    </style>
+
 
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">#0099CC</item>
         <item name="colorAccent">#22BBEE</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
     </style>
-    <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">#22BBEE</item>
-    </style>
+
     <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#0099CC</item>
         <item name="colorAccent">#22BBEE</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 </resources>
