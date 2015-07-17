@@ -440,11 +440,7 @@ public class Simpletask extends ThemedActivity implements
     @Override
     public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (m_app.isDarkActionbar()) {
-            inflater.inflate(R.menu.main, menu);
-        } else {
-            inflater.inflate(R.menu.main_light, menu);
-        }
+        inflater.inflate(R.menu.main, menu);
 
         if (!getTodoList().fileStoreCanSync()) {
             MenuItem mItem = menu.findItem(R.id.sync);
@@ -676,9 +672,6 @@ public class Simpletask extends ThemedActivity implements
         }
         log.info( "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
-            case R.id.add_new:
-                startAddTaskActivity(null);
-                break;
             case R.id.search:
                 break;
             case R.id.preferences:
@@ -1495,12 +1488,8 @@ public class Simpletask extends ThemedActivity implements
             fab.setVisibility(View.GONE);
             actionMode = mode;
             toolbar.getMenu().clear();
-            if (m_app.isDarkActionbar()) {
-                toolbar.setBackgroundColor(R.color.background_material_dark);
-                inflater.inflate(R.menu.task_context, toolbar.getMenu());
-            } else {
-                inflater.inflate(R.menu.task_context_light,  toolbar.getMenu());
-            }
+            inflater.inflate(R.menu.task_context, toolbar.getMenu());
+
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
