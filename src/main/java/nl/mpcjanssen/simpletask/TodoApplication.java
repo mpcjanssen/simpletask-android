@@ -70,7 +70,6 @@ public class TodoApplication extends Application implements
 
     public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
-    private Thread m_savingThread;
     private Logger log;
 
     public static Context getAppContext() {
@@ -337,13 +336,13 @@ public class TodoApplication extends Application implements
     private int themeStringToId (String theme) {
         switch (theme) {
             case "dark":
-                return R.style.Theme_AppCompat;
+                return R.style.AppTheme;
             case "light_darkactionbar":
-                return R.style.Theme_AppCompat_Light_DarkActionBar;
+                return R.style.AppTheme_Light_DarkActionBar;
             case "light":
-                return R.style.Theme_AppCompat_Light;
+                return R.style.AppTheme_Light;
         }
-        return R.style.Theme_AppCompat;
+        return R.style.AppTheme_Light_DarkActionBar;
 
     }
 
@@ -366,18 +365,22 @@ public class TodoApplication extends Application implements
     }
 
     public boolean isDarkTheme() {
-        switch (getActiveTheme()) {
-            case R.style.Theme_AppCompat:
+        switch (getActiveThemeString()) {
+            case "dark":
                 return true;
             default:
                 return false;
         }
     }
 
+    private String getActiveThemeString() {
+        return getPrefs().getString(getString(R.string.theme_pref_key), "light_darkactionbar");
+    }
+
     public boolean isDarkActionbar() {
-        switch (getActiveTheme()) {
-            case R.style.Theme_AppCompat:
-            case R.style.Theme_AppCompat_Light_DarkActionBar:
+        switch (getActiveThemeString()) {
+            case "dark":
+            case "light_darkactionbar":
                 return true;
             default:
                 return false;

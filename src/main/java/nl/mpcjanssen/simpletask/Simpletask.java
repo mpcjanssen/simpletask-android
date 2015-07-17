@@ -33,11 +33,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
 
 import android.view.*;
 import android.widget.*;
+import android.widget.PopupMenu;
+import android.widget.SearchView;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -440,8 +443,9 @@ public class Simpletask extends ThemedActivity implements
             mItem.setVisible(false);
         }
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search)
-                .getActionView();
+        MenuItem searchMenu = menu.findItem(R.id.search);
+
+        SearchView searchView =  (SearchView) searchMenu.getActionView();
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
 
@@ -1476,14 +1480,23 @@ public class Simpletask extends ThemedActivity implements
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode mode, @NonNull Menu menu) {
+        public boolean onCreateActionMode(final ActionMode mode, @NonNull Menu menu) {
             MenuInflater inflater = getMenuInflater();
-            if (m_app.isDarkActionbar()) {
-                inflater.inflate(R.menu.task_context, menu);
-            } else {
-                inflater.inflate(R.menu.task_context_light, menu);
-            }
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setVisibility(View.VISIBLE);
             actionMode = mode;
+            toolbar.getMenu().clear();
+            if (m_app.isDarkActionbar()) {
+                inflater.inflate(R.menu.task_context, toolbar.getMenu());
+            } else {
+                inflater.inflate(R.menu.task_context_light,  toolbar.getMenu());
+            }
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return onActionItemClicked(mode, item);
+                }
+            });
             if (!m_app.showCompleteCheckbox()) {
                 menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -1577,6 +1590,8 @@ public class Simpletask extends ThemedActivity implements
             if (m_drawerLayout != null) {
                 m_drawerLayout.closeDrawers();
             }
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setVisibility(View.GONE);
             updateDrawers();
         }
     }
@@ -1708,6 +1723,8 @@ public class Simpletask extends ThemedActivity implements
         dialog.setTitle(R.string.update_tags);
         dialog.show();
     }
+
+    // Google can't seem to build proper widgets if their life depended on it :)
 
     private class DrawerItemClickListener implements
             AdapterView.OnItemClickListener {

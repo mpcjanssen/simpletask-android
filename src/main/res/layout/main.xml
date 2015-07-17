@@ -83,6 +83,12 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:text="@string/main_no_items"
                 android:gravity="center_vertical|center_horizontal" />
         </LinearLayout>
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="fill_parent"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
     </LinearLayout>
     <!-- The left navigation drawer -->
     <ListView
@@ -133,6 +139,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:contentDescription="@string/add_filter_shortcut"
             android:onClick="onAddFilterClick"
             android:id="@+id/button" />
+
 
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
