@@ -67,11 +67,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- Defined themes -->
     <string-array name="themes">
         <item>Light</item>
-        <item>Light (Dark Actionbar)</item>
         <item>Dark</item>
     </string-array>
     <string-array name="theme_values">
-        <item>light</item>
         <item>light_darkactionbar</item>
         <item>dark</item>
     </string-array>

@@ -96,7 +96,9 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_width="fill_parent"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:theme="@style/AppTheme"
+                android:background="?attr/colorPrimary"/>
 
     </LinearLayout>
 

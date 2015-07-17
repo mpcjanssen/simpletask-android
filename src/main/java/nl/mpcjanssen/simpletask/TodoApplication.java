@@ -339,8 +339,6 @@ public class TodoApplication extends Application implements
                 return R.style.AppTheme;
             case "light_darkactionbar":
                 return R.style.AppTheme_Light_DarkActionBar;
-            case "light":
-                return R.style.AppTheme_Light;
         }
         return R.style.AppTheme_Light_DarkActionBar;
 
@@ -377,15 +375,6 @@ public class TodoApplication extends Application implements
         return getPrefs().getString(getString(R.string.theme_pref_key), "light_darkactionbar");
     }
 
-    public boolean isDarkActionbar() {
-        switch (getActiveThemeString()) {
-            case "dark":
-            case "light_darkactionbar":
-                return true;
-            default:
-                return false;
-        }
-    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NonNull String s) {

@@ -177,11 +177,7 @@ public class FilterActivity extends ThemedFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
-        if (m_app.isDarkActionbar()) {
-            inflater.inflate(R.menu.filter, menu);
-        } else {
-            inflater.inflate(R.menu.filter_light, menu);
-        }
+        inflater.inflate(R.menu.filter, menu);
         m_menu = menu;
         return true;
     }
