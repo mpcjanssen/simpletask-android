@@ -26,11 +26,11 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 
 import android.text.Editable;
@@ -254,7 +254,6 @@ public class Simpletask extends ThemedActivity implements
         if (m_drawerLayout != null) {
             m_drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                     m_drawerLayout, /* DrawerLayout object */
-                    R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
                     R.string.changelist, /* "open drawer" description */
                     R.string.app_label /* "close drawer" description */
             ) {
@@ -279,6 +278,7 @@ public class Simpletask extends ThemedActivity implements
             if (actionBar!=null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setHomeButtonEnabled(true);
+                m_drawerToggle.setDrawerIndicatorEnabled(true);
             }
             m_drawerToggle.syncState();
         }
@@ -332,7 +332,7 @@ public class Simpletask extends ThemedActivity implements
         if (m_savedInstanceState != null) {
             m_scrollPosition = m_savedInstanceState.getInt("position");
         }
-        
+
         // If we were started with a selected task,
         // select it now and clear it from the intent
         int selectedTask = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
