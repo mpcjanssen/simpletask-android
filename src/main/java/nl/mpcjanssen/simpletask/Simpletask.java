@@ -41,6 +41,7 @@ import android.view.*;
 import android.widget.*;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
+import com.melnykov.fab.FloatingActionButton;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.task.Priority;
@@ -350,8 +351,15 @@ public class Simpletask extends ThemedActivity implements
             setSelectedTasks(getTodoList().getSelectedTasks());
         }
 
-        lv.setSelectionFromTop(m_scrollPosition,0);
-
+        lv.setSelectionFromTop(m_scrollPosition, 0);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.attachToListView(lv); // or attachToRecyclerView
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAddTaskActivity(null);
+            }
+        });
         updateDrawers();
     }
 
@@ -1483,10 +1491,12 @@ public class Simpletask extends ThemedActivity implements
         public boolean onCreateActionMode(final ActionMode mode, @NonNull Menu menu) {
             MenuInflater inflater = getMenuInflater();
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setVisibility(View.VISIBLE);
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
             actionMode = mode;
             toolbar.getMenu().clear();
             if (m_app.isDarkActionbar()) {
+                toolbar.setBackgroundColor(R.color.background_material_dark);
                 inflater.inflate(R.menu.task_context, toolbar.getMenu());
             } else {
                 inflater.inflate(R.menu.task_context_light,  toolbar.getMenu());
@@ -1501,6 +1511,7 @@ public class Simpletask extends ThemedActivity implements
                 menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            toolbar.setVisibility(View.VISIBLE);
             numSelected = 0;
             return true;
         }
@@ -1592,6 +1603,8 @@ public class Simpletask extends ThemedActivity implements
             }
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setVisibility(View.GONE);
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
             updateDrawers();
         }
     }
