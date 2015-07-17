@@ -5,12 +5,12 @@
     <item
             android:id="@+id/menu_filter_action"
             android:orderInCategory="100"
-            app:showAsAction="always"
+            android:showAsAction="always"
             android:icon="@drawable/complete_light"
             android:title="@string/filter"/>
         <item
                 android:id="@+id/menu_filter_load_script"
                 android:orderInCategory="200"
-                app:showAsAction="never"
+                android:showAsAction="never"
                 android:title="Script from file"/>
 </menu>

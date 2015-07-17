@@ -24,31 +24,29 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:title="@string/search"
-        android:id="@+id/search"
-        android:orderInCategory="2"
-        android:icon="@drawable/action_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.widget.SearchView" />
-    <item
-        android:title="@string/filter"
-        android:id="@+id/filter"
-        android:orderInCategory="2"
-        android:icon="@drawable/labels"
-        app:showAsAction="always" />
+
     <item
         android:title="@string/addtask"
         android:id="@+id/add_new"
         app:showAsAction="always"
-        android:orderInCategory="2"
         android:icon="@drawable/content_new" />
+    <item
+            android:title="@string/filter"
+            android:id="@+id/filter"
+            android:orderInCategory="2"
+            android:icon="@drawable/labels"
+            app:showAsAction="always" />
     <item
         android:title="@string/share"
         app:showAsAction="ifRoom"
-        android:orderInCategory="1"
         android:icon="@drawable/share"
         android:id="@+id/share" />
+    <item
+            android:title="@string/search"
+            android:id="@+id/search"
+            android:icon="@drawable/action_search"
+            app:showAsAction="ifRoom|collapseActionView"
+            app:actionViewClass="android.widget.SearchView" />
     <item
         android:title="@string/preferences"
         app:showAsAction="never"

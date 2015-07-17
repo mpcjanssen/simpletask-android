@@ -10,4 +10,17 @@
     <style name="FontSizeHuge">
         <item name="android:textSize">36sp</item>
     </style>
+
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">#0099CC</item>
+        <item name="colorAccent">#22BBEE</item>
+    </style>
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">#22BBEE</item>
+    </style>
+    <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#0099CC</item>
+        <item name="colorAccent">#22BBEE</item>
+    </style>
 </resources>

@@ -24,69 +24,70 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <!--suppress ALL -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:title="@string/done"
         android:id="@+id/complete"
         android:icon="@drawable/complete_light" 
-        android:showAsAction="never"
+        app:showAsAction="never"
         />
-    <item    
+    <item
 	android:title="@string/unComplete"
-        android:icon="@drawable/uncomplete_light" 
+        android:icon="@drawable/uncomplete_light"
         android:id="@+id/uncomplete"
-        android:showAsAction="never"
+        app:showAsAction="never"
         />
     <item
         android:title="@string/update"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:id="@+id/update"
         android:icon="@drawable/edit_light" />
     <item
         android:title="@string/update_lists"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:icon="@drawable/ic_action_collections_view_as_list_light"
         android:id="@+id/update_lists" />
     <item
         android:title="@string/update_tags"
-        android:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:icon="@drawable/ic_action_collections_new_label_light"
         android:id="@+id/update_tags" />
     <item
         android:title="@string/priority"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:id="@+id/priority"
         android:icon="@drawable/prio_light" />
     <item
         android:title="@string/select_all"
         android:id="@+id/select_all"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_content_select_all_light" />
     <item
         android:title="@string/share"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:id="@+id/share"
         android:icon="@drawable/share_light" />
     <item
         android:title="@string/add_to_calendar"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:id="@+id/calendar" />
     <item
         android:title="@string/defer_due"
         android:id="@+id/defer_due"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
     <item
         android:title="@string/defer_threshold"
         android:id="@+id/defer_threshold"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
     <item
         android:title="@string/delete"
         android:id="@+id/delete"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:icon="@drawable/delete_light" />
     <item
         android:title="@string/archive"
         android:id="@+id/archive"
-        android:showAsAction="never"
+        app:showAsAction="never"
         />
 </menu>
