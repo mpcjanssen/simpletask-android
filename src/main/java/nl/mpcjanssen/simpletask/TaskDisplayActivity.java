@@ -15,7 +15,6 @@ public class TaskDisplayActivity extends ThemedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         m_app = (TodoApplication)getApplication();
-        m_app.setActionBarStyle(getWindow());
         setContentView(R.layout.activity_task_display);
     }
 

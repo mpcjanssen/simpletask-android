@@ -96,7 +96,6 @@ public class Simpletask extends ThemedActivity implements
         log = LoggerFactory.getLogger(this.getClass());
         log.info("onCreate");
         m_app = (TodoApplication) getApplication();
-        m_app.setActionBarStyle(getWindow());
         m_savedInstanceState = savedInstanceState;
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE);

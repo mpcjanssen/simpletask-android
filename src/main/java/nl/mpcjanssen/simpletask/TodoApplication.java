@@ -356,12 +356,6 @@ public class TodoApplication extends Application implements
 
     }
 
-    public void setActionBarStyle(@NonNull Window window) {
-        if (getPrefs().getBoolean(getString(R.string.split_actionbar_key), true)) {
-            window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
-        }
-    }
-
     public boolean isDarkTheme() {
         switch (getActiveThemeString()) {
             case "dark":
