@@ -438,6 +438,12 @@ public class Simpletask extends ThemedActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
+        populateMainMenu(menu);
+        this.options_menu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void populateMainMenu(@NonNull final Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
 
@@ -482,8 +488,6 @@ public class Simpletask extends ThemedActivity implements
                 return true;
             }
         });
-        this.options_menu = menu;
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Nullable
@@ -793,10 +797,6 @@ public class Simpletask extends ThemedActivity implements
 
     @Override
     public void onBackPressed() {
-        if (getTodoList().getSelectedTasks().size()>0) {
-            closeSelectionMode();
-            return;
-        }
         if (m_drawerLayout != null) {
             if (m_drawerLayout.isDrawerOpen(Gravity.LEFT)) {
                 m_drawerLayout.closeDrawer(Gravity.LEFT);
@@ -806,6 +806,10 @@ public class Simpletask extends ThemedActivity implements
                 m_drawerLayout.closeDrawer(Gravity.RIGHT);
                 return;
             }
+        }
+        if (getTodoList().getSelectedTasks().size()>0) {
+            closeSelectionMode();
+            return;
         }
         if (m_app.backClearsFilter() && mFilter != null && mFilter.hasFilter()) {
             clearFilter();
@@ -823,7 +827,7 @@ public class Simpletask extends ThemedActivity implements
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         toolbar.setVisibility(View.GONE);
         //getTodoList().clearSelectedTasks();
-        getMenuInflater().inflate(R.menu.main, options_menu);
+        populateMainMenu(options_menu);
         fab.setVisibility(View.VISIBLE);
         updateDrawers();
 
@@ -1080,11 +1084,7 @@ public class Simpletask extends ThemedActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if(numSelected==0) {
-            toolbar.setVisibility(View.GONE);
-            //getTodoList().clearSelectedTasks();
-            getMenuInflater().inflate(R.menu.main, options_menu);
-            fab.setVisibility(View.VISIBLE);
-            updateDrawers();
+            closeSelectionMode();
         } else {
             options_menu.clear();
             fab.setVisibility(View.GONE);
