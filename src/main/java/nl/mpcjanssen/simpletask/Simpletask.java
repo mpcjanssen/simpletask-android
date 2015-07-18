@@ -58,7 +58,7 @@ import java.util.*;
 
 
 public class Simpletask extends ThemedActivity implements
-                AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
+                AdapterView.OnItemClickListener, AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
 
     private final static int REQUEST_SHARE_PARTS = 1;
     private final static int REQUEST_PREFERENCES = 2;
@@ -323,10 +323,10 @@ public class Simpletask extends ThemedActivity implements
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        lv.setMultiChoiceModeListener(new ActionBarListener());
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         lv.setClickable(true);
         lv.setOnItemClickListener(this);
+        lv.setOnItemLongClickListener(this);
 
         mIgnoreScrollEvents = true;
         // Setting a scroll listener reset the scroll
@@ -706,7 +706,7 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void startAddTaskActivity(List<Task> tasks) {
-        log.info( "Starting addTask activity");
+        log.info("Starting addTask activity");
         getTodoList().setSelectedTasks(tasks);
         Intent intent = new Intent(this, AddTask.class);
         mFilter.saveInIntent(intent);
@@ -793,6 +793,10 @@ public class Simpletask extends ThemedActivity implements
 
     @Override
     public void onBackPressed() {
+        if (getTodoList().getSelectedTasks().size()>0) {
+            closeSelectionMode();
+            return;
+        }
         if (m_drawerLayout != null) {
             if (m_drawerLayout.isDrawerOpen(Gravity.LEFT)) {
                 m_drawerLayout.closeDrawer(Gravity.LEFT);
@@ -808,7 +812,21 @@ public class Simpletask extends ThemedActivity implements
             onNewIntent(getIntent());
             return;
         }
+
         super.onBackPressed();
+    }
+
+    private void closeSelectionMode() {
+        getTodoList().clearSelectedTasks();
+        m_adapter.notifyDataSetChanged();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        toolbar.setVisibility(View.GONE);
+        //getTodoList().clearSelectedTasks();
+        getMenuInflater().inflate(R.menu.main, options_menu);
+        fab.setVisibility(View.VISIBLE);
+        updateDrawers();
+
     }
 
     @Override
@@ -1049,6 +1067,115 @@ public class Simpletask extends ThemedActivity implements
     }
 
     @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Task t = getTaskAt(position);
+        boolean selected = getListView().isItemChecked(position);
+        if (selected) {
+            getTodoList().selectTask(t);
+        } else {
+            getTodoList().unSelectTask(t);
+        }
+        getListView().setItemChecked(position, selected);
+        int numSelected = getTodoList().getSelectedTasks().size();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if(numSelected==0) {
+            toolbar.setVisibility(View.GONE);
+            //getTodoList().clearSelectedTasks();
+            getMenuInflater().inflate(R.menu.main, options_menu);
+            fab.setVisibility(View.VISIBLE);
+            updateDrawers();
+        } else {
+            options_menu.clear();
+            fab.setVisibility(View.GONE);
+            MenuInflater inflater = getMenuInflater();
+            Menu menu = toolbar.getMenu();
+            menu.clear();
+            inflater.inflate(R.menu.task_context, toolbar.getMenu());
+
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    List<Task> checkedTasks = getTodoList().getSelectedTasks();
+                    int menuid = item.getItemId();
+                    Intent intent;
+                    switch (menuid) {
+                        case R.id.complete:
+                            completeTasks(checkedTasks);
+                            break;
+                        case R.id.select_all:
+                            selectAllTasks();
+                            return true;
+                        case R.id.uncomplete:
+                            undoCompleteTasks(checkedTasks);
+                            break;
+                        case R.id.update:
+                            startAddTaskActivity(checkedTasks);
+                            break;
+                        case R.id.delete:
+                            deleteTasks(checkedTasks);
+                            break;
+                        case R.id.archive:
+                            archiveTasks(checkedTasks);
+                            break;
+                        case R.id.defer_due:
+                            deferTasks(checkedTasks, Task.DUE_DATE);
+                            break;
+                        case R.id.defer_threshold:
+                            deferTasks(checkedTasks, Task.THRESHOLD_DATE);
+                            break;
+                        case R.id.priority:
+                            prioritizeTasks(checkedTasks);
+                            return true;
+                        case R.id.share:
+                            String shareText = selectedTasksAsString();
+                            shareText(shareText);
+                            break;
+                        case R.id.calendar:
+                            String calendarTitle = getString(R.string.calendar_title);
+                            String calendarDescription = "";
+                            if (checkedTasks.size() == 1) {
+                                // Set the task as title
+                                calendarTitle = checkedTasks.get(0).getText();
+                            } else {
+                                // Set the tasks as description
+                                calendarDescription = selectedTasksAsString();
+
+                            }
+                            intent = new Intent(android.content.Intent.ACTION_EDIT)
+                                    .setType(Constants.ANDROID_EVENT)
+                                    .putExtra(Events.TITLE, calendarTitle)
+                                    .putExtra(Events.DESCRIPTION, calendarDescription);
+                            // Explicitly set start and end date/time.
+                            // Some calendar providers need this.
+                            GregorianCalendar calDate = new GregorianCalendar();
+                            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                    calDate.getTimeInMillis());
+                            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                                    calDate.getTimeInMillis() + 60 * 60 * 1000);
+                            startActivity(intent);
+                            break;
+                        case R.id.update_lists:
+                            updateLists(checkedTasks);
+                            return true;
+                        case R.id.update_tags:
+                            updateTags(checkedTasks);
+                            return true;
+                    }
+                    return true;
+                }
+            });
+            if (!m_app.showCompleteCheckbox()) {
+                menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }
+            toolbar.setVisibility(View.VISIBLE);
+        }
+        return false;
+    }
+
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final ArrayList <String> links = new ArrayList<>();
         final ArrayList<String> actions = new ArrayList<>();
@@ -1070,7 +1197,7 @@ public class Simpletask extends ThemedActivity implements
 
         final String[] linksArray = links.toArray(new String[links.size()]);
         if (linksArray.length==0) {
-            getListView().setItemChecked(position, !getListView().isItemChecked(position));
+            onItemLongClick(parent,view,position,id);
         } else {
             AlertDialog.Builder build = new AlertDialog.Builder(this);
             build.setTitle(R.string.task_action);
@@ -1127,6 +1254,7 @@ public class Simpletask extends ThemedActivity implements
         View lv = findViewById(android.R.id.list);
         return (ListView) lv;
     }
+
 
 
     private static class ViewHolder {
@@ -1456,148 +1584,6 @@ public class Simpletask extends ThemedActivity implements
         }
     }
 
-    class ActionBarListener implements AbsListView.MultiChoiceModeListener {
-        int numSelected;
-        Menu menu;
-
-        @Override
-        public void onItemCheckedStateChanged(@NonNull ActionMode mode, int position,
-                                              long id, boolean checked) {
-            Task t = getTaskAt(position);
-            if(checked) {
-                getTodoList().selectTask(t);
-                numSelected++;
-            } else {
-                getTodoList().unSelectTask(t);
-                numSelected--;
-            }
-            if (numSelected==0) {
-                getTodoList().clearSelectedTasks();
-                return;
-            }
-            String title = "" + numSelected;
-            mode.setTitle(title);
-        }
-
-        @Override
-        public boolean onCreateActionMode(final ActionMode mode, @NonNull Menu menu) {
-            MenuInflater inflater = getMenuInflater();
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setVisibility(View.GONE);
-            actionMode = mode;
-            toolbar.getMenu().clear();
-            inflater.inflate(R.menu.task_context, toolbar.getMenu());
-
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    return onActionItemClicked(mode, item);
-                }
-            });
-            if (!m_app.showCompleteCheckbox()) {
-                menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
-            toolbar.setVisibility(View.VISIBLE);
-            numSelected = 0;
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            this.menu = menu;
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
-            List<Task> checkedTasks = getTodoList().getSelectedTasks();
-            int menuid = item.getItemId();
-            Intent intent;
-            switch (menuid) {
-                case R.id.complete:
-                    completeTasks(checkedTasks);
-                    break;
-                case R.id.select_all:
-                    selectAllTasks();
-                    return true;
-                case R.id.uncomplete:
-                    undoCompleteTasks(checkedTasks);
-                    break;
-                case R.id.update:
-                    startAddTaskActivity(checkedTasks);
-                    break;
-                case R.id.delete:
-                    deleteTasks(checkedTasks);
-                    break;
-                case R.id.archive:
-                    archiveTasks(checkedTasks);
-                    break;
-                case R.id.defer_due:
-                    deferTasks(checkedTasks, Task.DUE_DATE);
-                    break;
-                case R.id.defer_threshold:
-                    deferTasks(checkedTasks, Task.THRESHOLD_DATE);
-                    break;
-                case R.id.priority:
-                    prioritizeTasks(checkedTasks);
-                    return true;
-                case R.id.share:
-                    String shareText = selectedTasksAsString();
-                    shareText(shareText);
-                    break;
-                case R.id.calendar:
-                    String calendarTitle = getString(R.string.calendar_title);
-                    String calendarDescription = "";
-                    if (checkedTasks.size() == 1) {
-                        // Set the task as title
-                        calendarTitle = checkedTasks.get(0).getText();
-                    } else {
-                        // Set the tasks as description
-                        calendarDescription = selectedTasksAsString();
-
-                    }
-                    intent = new Intent(android.content.Intent.ACTION_EDIT)
-                            .setType(Constants.ANDROID_EVENT)
-                            .putExtra(Events.TITLE, calendarTitle)
-                            .putExtra(Events.DESCRIPTION, calendarDescription);
-                    // Explicitly set start and end date/time.
-                    // Some calendar providers need this.
-                    GregorianCalendar calDate = new GregorianCalendar();
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                            calDate.getTimeInMillis());
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                            calDate.getTimeInMillis() + 60 * 60 * 1000);
-                    startActivity(intent);
-                    break;
-                case R.id.update_lists:
-                    updateLists(checkedTasks);
-                    return true;
-                case R.id.update_tags:
-                    updateTags(checkedTasks);
-                    return true;
-            }
-            mode.finish();
-            return true;
-        }
-
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            actionMode = null;
-            if (m_drawerLayout != null) {
-                m_drawerLayout.closeDrawers();
-            }
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setVisibility(View.GONE);
-            getTodoList().clearSelectedTasks();
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setVisibility(View.VISIBLE);
-            updateDrawers();
-        }
-    }
-
     private void updateLists(@NonNull final List<Task> checkedTasks) {
         final ArrayList<String> contexts = new ArrayList<String>();
         Set<String> selectedContexts = new HashSet<String>();
@@ -1612,7 +1598,7 @@ public class Simpletask extends ThemedActivity implements
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()])));
-        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        //lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         for (String context : selectedContexts) {
             int position = contexts.indexOf(context);
             if (position != -1) {
