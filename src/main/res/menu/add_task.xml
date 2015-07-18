@@ -1,17 +1,18 @@
 <!--suppress ALL -->
 
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_cancel_task"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/cancel"
         android:icon="@drawable/cancel" />
     <item
         android:id="@+id/menu_save_task"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/save_task"
         android:icon="@drawable/ic_action_navigation_accept" />
     <item
