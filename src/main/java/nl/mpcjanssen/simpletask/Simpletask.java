@@ -818,7 +818,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void closeSelectionMode() {
         getTodoList().clearSelectedTasks();
-        m_adapter.notifyDataSetChanged();
+        getListView().clearChoices();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         toolbar.setVisibility(View.GONE);
