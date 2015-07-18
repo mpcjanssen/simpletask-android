@@ -112,7 +112,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="clone_tags_key">clone_tags</string>
     <string name="word_wrap_key">word_wrap</string>
     <string name="color_due_date_key">color_due_date</string>
-    <string name="split_actionbar_key">split_actionbar</string>
     <string name="todo_file_key">todo_file</string>
     <string name="back_key_saves_key">back_saves</string>
     <string name="ui_drawer_fixed_landscape">ui_drawer_fixed_landscape</string>

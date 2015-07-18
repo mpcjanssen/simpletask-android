@@ -80,11 +80,6 @@
             android:title="@string/widget_extended_pref_title" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="@string/split_actionbar_key"
-            android:summary="@string/split_actionbar_pref_summary"
-            android:title="@string/split_actionbar_pref_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
             android:key="@string/color_due_date_key"
             android:summary="@string/color_due_pref_summary"
             android:title="@string/color_due_pref_title" />

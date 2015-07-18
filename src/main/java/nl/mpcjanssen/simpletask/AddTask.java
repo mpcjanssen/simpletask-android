@@ -79,7 +79,6 @@ public class AddTask extends ThemedActivity {
         log.debug("onCreate()");
 
         m_app = (TodoApplication) getApplication();
-        m_app.setActionBarStyle(getWindow());
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
@@ -414,11 +413,11 @@ public class AddTask extends ThemedActivity {
         }
 
         // Delete tasks that where selected for update
-        for (Task t: m_backup) {
-            todoList.remove(t);
+        if (m_backup!=null){
+            for (Task t : m_backup) {
+                todoList.remove(t);
+            }
         }
-
-
 
         // Save
         todoList.notifyChanged(true);
