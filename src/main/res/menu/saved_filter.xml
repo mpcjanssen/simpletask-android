@@ -1,25 +1,26 @@
 <!--suppress ALL -->
 
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_saved_filter_rename"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/rename_filter"/>
     <item
         android:id="@+id/menu_saved_filter_update"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/update_filter"/>
     <item
         android:id="@+id/menu_saved_filter_shortcut"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/add_filter_shortcut"/>
     <item
         android:id="@+id/menu_saved_filter_delete"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/delete"/>
 </menu>

@@ -17,6 +17,6 @@
         android:icon="@drawable/ic_action_navigation_accept" />
     <item
             android:id="@+id/menu_help"
-            android:showAsAction="never"
+            app:showAsAction="never"
             android:title="@string/help" />
 </menu>

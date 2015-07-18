@@ -62,7 +62,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
         android:title="@string/select_all"
         android:id="@+id/select_all"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_content_select_all" />
     <item
         android:title="@string/share"
@@ -80,7 +80,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
         android:title="@string/defer_threshold"
         android:id="@+id/defer_threshold"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
     <item
         android:title="@string/delete"
         android:id="@+id/delete"
