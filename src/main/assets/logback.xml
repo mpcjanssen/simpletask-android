@@ -1,6 +1,4 @@
 <configuration>
-    <appender name="DB" class="ch.qos.logback.classic.android.SQLiteAppender">
-    </appender>
     <appender name="LC" class="ch.qos.logback.classic.android.LogcatAppender">
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -11,13 +9,15 @@
             <pattern>%d{HH:mm:ss.SSS};%relative;[%thread];%level;%logger;%msg%n;%caller{1};%n%n</pattern>
         </encoder>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover period -->
-            <fileNamePattern>log.%d.txt</fileNamePattern>
-
-            <!-- keep 2 days' worth of history -->
-            <maxHistory>2</maxHistory>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>log.%i.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>2</maxIndex>
         </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>400KB</maxFileSize>
+        </triggeringPolicy>
     </appender>
 
     <root level="DEBUG" >
