@@ -1591,6 +1591,7 @@ public class Simpletask extends ThemedActivity implements
             }
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setVisibility(View.GONE);
+            getTodoList().clearSelectedTasks();
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setVisibility(View.VISIBLE);
             updateDrawers();
