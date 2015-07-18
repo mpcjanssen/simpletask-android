@@ -406,6 +406,7 @@ public class Simpletask extends ThemedActivity implements
             m_scrollPosition = m_savedInstanceState.getInt("position");
         }
 
+
         // If we were started with a selected task,
         // select it now and clear it from the intent
         int selectedTask = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION, -1);
@@ -429,6 +430,9 @@ public class Simpletask extends ThemedActivity implements
                 startAddTaskActivity(null);
             }
         });
+        if(getTodoList().getSelectedTasks().size()==0) {
+            closeSelectionMode();
+        }
         updateDrawers();
     }
 
@@ -503,17 +507,24 @@ public class Simpletask extends ThemedActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        closeSelectionMode();
     }
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
-        populateMainMenu(menu);
+
         this.options_menu = menu;
+        if (getTodoList().getSelectedTasks().size()> 0) {
+            openSelectionMode();
+        } else {
+            populateMainMenu(menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     private void populateMainMenu(@NonNull final Menu menu) {
+        if (menu==null) {
+            return;
+        }
         menu.clear();
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
@@ -639,6 +650,7 @@ public class Simpletask extends ThemedActivity implements
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
+        closeSelectionMode();
         getTodoList().notifyChanged(true);
     }
 
@@ -650,6 +662,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void undoCompleteTasks(@NonNull List<Task> tasks) {
         getTodoList().undoComplete(tasks);
+        closeSelectionMode();
         getTodoList().notifyChanged(true);
     }
 
@@ -673,6 +686,7 @@ public class Simpletask extends ThemedActivity implements
                             for (Task t : tasksToDefer) {
                                 m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT), t, dateType);
                             }
+                            closeSelectionMode();
                             getTodoList().notifyChanged(true);
                         }
                     },
@@ -689,6 +703,7 @@ public class Simpletask extends ThemedActivity implements
                     for (Task t : tasksToDefer) {
                         m_app.getTodoList().defer(selected, t, dateType);
                     }
+                    closeSelectionMode();
                     getTodoList().notifyChanged(true);
                 }
 
@@ -704,6 +719,7 @@ public class Simpletask extends ThemedActivity implements
                 for (Task t : tasks) {
                     m_app.getTodoList().remove(t);
                 }
+                closeSelectionMode();
                 getTodoList().notifyChanged(true);
             }
         }, R.string.delete_task_title);
@@ -735,8 +751,7 @@ public class Simpletask extends ThemedActivity implements
             e.printStackTrace();
             Util.showToastShort(this, "Task archiving failed");
         }
-
-
+        closeSelectionMode();
     }
 
     @Override
@@ -932,7 +947,7 @@ public class Simpletask extends ThemedActivity implements
         mFilter.saveInIntent(intent);
         mFilter.saveInPrefs(TodoApplication.getPrefs());
         setIntent(intent);
-        finishActionmode();
+        closeSelectionMode();
         updateDrawers();
         m_adapter.setFilteredTasks();
     }
@@ -968,7 +983,6 @@ public class Simpletask extends ThemedActivity implements
                 if (m_drawerLayout != null) {
                     m_drawerLayout.closeDrawer(Gravity.RIGHT);
                 }
-                finishActionmode();
                 updateDrawers();
             }
         });
@@ -1152,97 +1166,101 @@ public class Simpletask extends ThemedActivity implements
         }
         getListView().setItemChecked(position, selected);
         int numSelected = getTodoList().getSelectedTasks().size();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (numSelected == 0) {
             closeSelectionMode();
         } else {
-            options_menu.clear();
-            fab.setVisibility(View.GONE);
-            MenuInflater inflater = getMenuInflater();
-            Menu menu = toolbar.getMenu();
-            menu.clear();
-            inflater.inflate(R.menu.task_context, toolbar.getMenu());
-
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    List<Task> checkedTasks = getTodoList().getSelectedTasks();
-                    int menuid = item.getItemId();
-                    Intent intent;
-                    switch (menuid) {
-                        case R.id.complete:
-                            completeTasks(checkedTasks);
-                            break;
-                        case R.id.select_all:
-                            selectAllTasks();
-                            return true;
-                        case R.id.uncomplete:
-                            undoCompleteTasks(checkedTasks);
-                            break;
-                        case R.id.update:
-                            startAddTaskActivity(checkedTasks);
-                            break;
-                        case R.id.delete:
-                            deleteTasks(checkedTasks);
-                            break;
-                        case R.id.archive:
-                            archiveTasks(checkedTasks);
-                            break;
-                        case R.id.defer_due:
-                            deferTasks(checkedTasks, Task.DUE_DATE);
-                            break;
-                        case R.id.defer_threshold:
-                            deferTasks(checkedTasks, Task.THRESHOLD_DATE);
-                            break;
-                        case R.id.priority:
-                            prioritizeTasks(checkedTasks);
-                            return true;
-                        case R.id.share:
-                            String shareText = selectedTasksAsString();
-                            shareText(shareText);
-                            break;
-                        case R.id.calendar:
-                            String calendarTitle = getString(R.string.calendar_title);
-                            String calendarDescription = "";
-                            if (checkedTasks.size() == 1) {
-                                // Set the task as title
-                                calendarTitle = checkedTasks.get(0).getText();
-                            } else {
-                                // Set the tasks as description
-                                calendarDescription = selectedTasksAsString();
-
-                            }
-                            intent = new Intent(android.content.Intent.ACTION_EDIT)
-                                    .setType(Constants.ANDROID_EVENT)
-                                    .putExtra(Events.TITLE, calendarTitle)
-                                    .putExtra(Events.DESCRIPTION, calendarDescription);
-                            // Explicitly set start and end date/time.
-                            // Some calendar providers need this.
-                            GregorianCalendar calDate = new GregorianCalendar();
-                            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                    calDate.getTimeInMillis());
-                            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                                    calDate.getTimeInMillis() + 60 * 60 * 1000);
-                            startActivity(intent);
-                            break;
-                        case R.id.update_lists:
-                            updateLists(checkedTasks);
-                            return true;
-                        case R.id.update_tags:
-                            updateTags(checkedTasks);
-                            return true;
-                    }
-                    return true;
-                }
-            });
-            if (!m_app.showCompleteCheckbox()) {
-                menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
-            toolbar.setVisibility(View.VISIBLE);
+            openSelectionMode();
         }
         return true;
+    }
+
+    private void openSelectionMode() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        options_menu.clear();
+        fab.setVisibility(View.GONE);
+        MenuInflater inflater = getMenuInflater();
+        Menu menu = toolbar.getMenu();
+        menu.clear();
+        inflater.inflate(R.menu.task_context, toolbar.getMenu());
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                List<Task> checkedTasks = getTodoList().getSelectedTasks();
+                int menuid = item.getItemId();
+                Intent intent;
+                switch (menuid) {
+                    case R.id.complete:
+                        completeTasks(checkedTasks);
+                        break;
+                    case R.id.select_all:
+                        selectAllTasks();
+                        return true;
+                    case R.id.uncomplete:
+                        undoCompleteTasks(checkedTasks);
+                        break;
+                    case R.id.update:
+                        startAddTaskActivity(checkedTasks);
+                        break;
+                    case R.id.delete:
+                        deleteTasks(checkedTasks);
+                        break;
+                    case R.id.archive:
+                        archiveTasks(checkedTasks);
+                        break;
+                    case R.id.defer_due:
+                        deferTasks(checkedTasks, Task.DUE_DATE);
+                        break;
+                    case R.id.defer_threshold:
+                        deferTasks(checkedTasks, Task.THRESHOLD_DATE);
+                        break;
+                    case R.id.priority:
+                        prioritizeTasks(checkedTasks);
+                        return true;
+                    case R.id.share:
+                        String shareText = selectedTasksAsString();
+                        shareText(shareText);
+                        break;
+                    case R.id.calendar:
+                        String calendarTitle = getString(R.string.calendar_title);
+                        String calendarDescription = "";
+                        if (checkedTasks.size() == 1) {
+                            // Set the task as title
+                            calendarTitle = checkedTasks.get(0).getText();
+                        } else {
+                            // Set the tasks as description
+                            calendarDescription = selectedTasksAsString();
+
+                        }
+                        intent = new Intent(Intent.ACTION_EDIT)
+                                .setType(Constants.ANDROID_EVENT)
+                                .putExtra(Events.TITLE, calendarTitle)
+                                .putExtra(Events.DESCRIPTION, calendarDescription);
+                        // Explicitly set start and end date/time.
+                        // Some calendar providers need this.
+                        GregorianCalendar calDate = new GregorianCalendar();
+                        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                calDate.getTimeInMillis());
+                        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                                calDate.getTimeInMillis() + 60 * 60 * 1000);
+                        startActivity(intent);
+                        break;
+                    case R.id.update_lists:
+                        updateLists(checkedTasks);
+                        return true;
+                    case R.id.update_tags:
+                        updateTags(checkedTasks);
+                        return true;
+                }
+                return true;
+            }
+        });
+        if (!m_app.showCompleteCheckbox()) {
+            menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        toolbar.setVisibility(View.VISIBLE);
     }
 
 
@@ -1504,9 +1522,8 @@ public class Simpletask extends ThemedActivity implements
                         @Override
                         public void onClick(View v) {
                             undoCompleteTasks(task);
+                            closeSelectionMode();
                             getTodoList().notifyChanged(true);
-
-                            finishActionmode();
                         }
                     });
                 } else {
@@ -1521,7 +1538,8 @@ public class Simpletask extends ThemedActivity implements
                         @Override
                         public void onClick(View v) {
                             completeTasks(task);
-                            finishActionmode();
+                            closeSelectionMode();
+                            getTodoList().notifyChanged(true);
                         }
                     });
                 }
@@ -1604,7 +1622,7 @@ public class Simpletask extends ThemedActivity implements
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()])));
-        //lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         for (String context : selectedContexts) {
             int position = contexts.indexOf(context);
             if (position != -1) {
@@ -1640,7 +1658,7 @@ public class Simpletask extends ThemedActivity implements
                     }
                 }
                 todoList.notifyChanged(true);
-                finishActionmode();
+                closeSelectionMode();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1704,7 +1722,7 @@ public class Simpletask extends ThemedActivity implements
                     }
                 }
                 getTodoList().notifyChanged(true);
-                finishActionmode();
+                closeSelectionMode();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1717,8 +1735,6 @@ public class Simpletask extends ThemedActivity implements
         dialog.setTitle(R.string.update_tags);
         dialog.show();
     }
-
-    // Google can't seem to build proper widgets if their life depended on it :)
 
     private class DrawerItemClickListener implements
             AdapterView.OnItemClickListener {
@@ -1753,15 +1769,10 @@ public class Simpletask extends ThemedActivity implements
             mFilter.saveInIntent(intent);
             mFilter.saveInPrefs(TodoApplication.getPrefs());
             setIntent(intent);
-            finishActionmode();
+            closeSelectionMode();
             m_adapter.setFilteredTasks();
             adapter.notifyDataSetChanged();
         }
     }
 
-    private void finishActionmode() {
-        if (actionMode != null) {
-            actionMode.finish();
-        }
-    }
 }
