@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilterActivity extends ThemedFragmentActivity {
+public class FilterActivity extends ThemedActivity {
 
     final static String TAG = FilterActivity.class.getSimpleName();
     public static final String TAB_TYPE = "type";
