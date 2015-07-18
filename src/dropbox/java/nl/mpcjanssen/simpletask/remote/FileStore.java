@@ -32,10 +32,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -219,15 +221,26 @@ public class FileStore implements FileStoreInterface {
                             }
                         }
                     }
-                } catch (DropboxIOException e) {
-                    log.info("Longpoll timed out, restarting");
-                } catch (JsonExtractionException e) {
-                    e.printStackTrace();
                 } catch (DropboxUnlinkedException e) {
                     log.info("Dropbox unlinked, no more polling");
                     continuePolling = false;
-                } catch (DropboxException e) {
-                    e.printStackTrace();
+                } catch (DropboxIOException e) {
+                    if (SocketTimeoutException.class.isAssignableFrom(e.getCause().getClass())) {
+                        log.info("Longpoll timed out, restarting");
+                        if (!isOnline()) {
+                            log.info("Device was not online, stopping polling");
+                            continuePolling = false;
+                        }
+                    } else {
+                        log.info("Longpoll IO exception, restarting backing of {} seconds", 30,  e);
+                        newBackoffSeconds = 30;
+                    }
+                } catch (JsonExtractionException e) {
+                    log.info("Longpoll Json exception, restarting backing of {} seconds", 30, e);
+                    newBackoffSeconds = 30;
+                }  catch (DropboxException e) {
+                    log.info("Longpoll Dropbox exception, restarting backing of {} seconds", 30, e);
+                    newBackoffSeconds = 30;
                 }
                 startLongPoll(polledFile,newBackoffSeconds);
             }
