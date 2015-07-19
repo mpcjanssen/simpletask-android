@@ -34,7 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 
-public class LoginScreen extends Activity {
+public class LoginScreen extends ThemedActivity {
 
     final static String TAG = LoginScreen.class.getSimpleName();
 
