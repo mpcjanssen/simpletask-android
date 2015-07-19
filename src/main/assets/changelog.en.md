@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+6.0.0
+-----
+
+- Material, material, material. Material themes only also on KitKat, Jellybean and Ice Cream Sandwich.
+- Always enable script filter support.
+- Introduced floating action button.
+- View and clear todo file history database (From settings).
+- Improved Dropbox background polling.
+
+
 5.5.8
 -----
 

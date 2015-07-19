@@ -421,7 +421,6 @@ public class Simpletask extends ThemedActivity implements
             setSelectedTasks(getTodoList().getSelectedTasks());
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        boolean fabVisible = fab.isShown();
         lv.setSelectionFromTop(m_scrollPosition, 0);
         fab.attachToListView(lv);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -432,11 +431,6 @@ public class Simpletask extends ThemedActivity implements
         });
         if(getTodoList().getSelectedTasks().size()==0) {
             closeSelectionMode();
-        }
-        if (fabVisible) {
-            fab.show(false);
-        } else {
-            fab.hide(false);
         }
         updateDrawers();
     }
