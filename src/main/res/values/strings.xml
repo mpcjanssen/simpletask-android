@@ -54,6 +54,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="updatetask">Update</string>
     <string name="viewtask">View Task</string>
     <string name="cleartask">Clear Task</string>
+    <string name="clear_database">Empty database</string>
     <string name="done">Complete</string>
     <string name="priority">Prioritize</string>
     <string name="select_priority">Select priority</string>

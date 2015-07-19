@@ -39,20 +39,25 @@ public class HistoryScreen extends ThemedActivity {
     private Cursor cursor;
     private Menu toolbar_menu;
     private int mScroll = 0;
+    private TodoApplication m_app;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log = LoggerFactory.getLogger(this.getClass());
-        TodoApplication m_app = (TodoApplication) getApplication();
+        m_app = (TodoApplication) getApplication();
         BackupDbHelper backupDbHelper = new BackupDbHelper(this.getApplication().getApplicationContext());
-        // Gets the data repository in read mode
         db = backupDbHelper.getReadableDatabase();
-        cursor = db.query(BackupDbHelper.TABLE_NAME, null, null, null, null, null, BackupDbHelper.FILE_DATE, null);
-        cursor.moveToLast();
+        // Gets the data repository in read mode
+        initCursor();
         setContentView(R.layout.history);
         displayCurrent();
+    }
+
+    private void initCursor() {
+        cursor = db.query(BackupDbHelper.TABLE_NAME, null, null, null, null, null, BackupDbHelper.FILE_DATE, null);
+        cursor.moveToLast();
     }
 
     @Override
@@ -71,15 +76,15 @@ public class HistoryScreen extends ThemedActivity {
         shareIntent.setType("application/x-sqlite3");
         shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 "Simpletask History Database");
-        File dataDir = new File(this.getApplicationInfo().dataDir);
+        File dataDir = new File(m_app.getApplicationInfo().dataDir);
         File databaseDir = new File(dataDir, "databases");
         File dataBase = new File(databaseDir, BackupDbHelper.DATABASE_NAME);
         try {
             Util.createCachedDatabase(this, dataBase);
-            Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "history.db");
+            Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + dataBase.getName());
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         } catch (Exception e) {
-            log.warn("Failed to create file for sharing");
+            log.warn("Failed to create file for sharing", e);
         }
         startActivity(Intent.createChooser(shareIntent, "Share History Database"));
 
@@ -93,6 +98,7 @@ public class HistoryScreen extends ThemedActivity {
         toolbar_menu = toolbar.getMenu();
         toolbar_menu.clear();
         inflater.inflate(R.menu.history_menu, toolbar_menu);
+        updateMenu();
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -103,6 +109,9 @@ public class HistoryScreen extends ThemedActivity {
                         return true;
                     case R.id.menu_next:
                         showNext();
+                        return true;
+                    case R.id.menu_clear_database:
+                        clearDatabase();
                         return true;
                     case R.id.menu_share:
                         Util.shareText(HistoryScreen.this, getCurrentFileContents());
@@ -117,11 +126,20 @@ public class HistoryScreen extends ThemedActivity {
         return true;
     }
 
+    private void clearDatabase() {
+        log.info("Clearing history database");
+        BackupDbHelper backupDbHelper = new BackupDbHelper(this.getApplication().getApplicationContext());
+        SQLiteDatabase database = backupDbHelper.getWritableDatabase();
+        database.delete(BackupDbHelper.TABLE_NAME, null, null);
+        database.close();
+        initCursor();
+        displayCurrent();
+    }
+
     private void showNext() {
         saveScroll();
         cursor.moveToNext();
         displayCurrent();
-        updateMenu();
     }
 
     private void saveScroll() {
@@ -134,13 +152,19 @@ public class HistoryScreen extends ThemedActivity {
         saveScroll();
         cursor.moveToPrevious();
         displayCurrent();
-        updateMenu();
     }
 
     private void displayCurrent() {
-        String todoContents = getCurrentFileContents();
-        String date = cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_DATE));
-        String name = cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_NAME));
+        String todoContents = "no history";
+        String date = "";
+        String name = "";
+        if (cursor.getCount() != 0) {
+            todoContents = getCurrentFileContents();
+            date = cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_DATE));
+            name = cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_NAME));
+
+        }
+
         TextView fileView = (TextView) findViewById(R.id.history_view);
 
         TextView nameView = (TextView) findViewById(R.id.name);
@@ -150,6 +174,7 @@ public class HistoryScreen extends ThemedActivity {
         nameView.setText(name);
         dateView.setText(date);
         sv.setScrollY(mScroll);
+        updateMenu();
     }
 
     private String getCurrentFileContents() {
