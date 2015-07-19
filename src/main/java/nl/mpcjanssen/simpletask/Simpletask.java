@@ -585,33 +585,10 @@ public class Simpletask extends ThemedActivity implements
                 text.append(task.showParts(format)).append("\n");
             }
         }
-        shareText(text.toString());
+        Util.shareText(this, text.toString());
     }
 
-    private void shareText(String text) {
-        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Simpletask list");
 
-        // If text is small enough SEND it directly
-        if (text.length() < 50000) {
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-        } else {
-
-            // Create a cache file to pass in EXTRA_STREAM
-            try {
-                Util.createCachedFile(this,
-                        Constants.SHARE_FILE_NAME, text);
-                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
-                        + Constants.SHARE_FILE_NAME);
-                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri);
-            } catch (Exception e) {
-                log.warn("Failed to create file for sharing");
-            }
-        }
-        startActivity(Intent.createChooser(shareIntent, "Share"));
-    }
 
     private void prioritizeTasks(@NonNull final List<Task> tasks) {
         List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
@@ -1220,7 +1197,7 @@ public class Simpletask extends ThemedActivity implements
                         return true;
                     case R.id.share:
                         String shareText = selectedTasksAsString();
-                        shareText(shareText);
+                        Util.shareText(Simpletask.this, shareText);
                         break;
                     case R.id.calendar:
                         String calendarTitle = getString(R.string.calendar_title);

@@ -24,16 +24,20 @@ package nl.mpcjanssen.simpletask.util;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
+
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -44,6 +48,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.common.base.Joiner;
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.CachedFileProvider;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoException;
@@ -399,6 +404,31 @@ public class Util {
         return sortWithPrefix(temp, caseSensitive, prefix);
     }
 
+    public static void shareText(Activity act, String text) {
+        Logger log = LoggerFactory.getLogger(Util.class);
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                "Simpletask list");
+
+        // If text is small enough SEND it directly
+        if (text.length() < 50000) {
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+        } else {
+
+            // Create a cache file to pass in EXTRA_STREAM
+            try {
+                Util.createCachedFile(act,
+                        Constants.SHARE_FILE_NAME, text);
+                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/"
+                        + Constants.SHARE_FILE_NAME);
+                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri);
+            } catch (Exception e) {
+                log.warn("Failed to create file for sharing");
+            }
+        }
+        act.startActivity(Intent.createChooser(shareIntent, "Share"));
+    }
 
     public static Dialog showLoadingOverlay(@NonNull Activity act, @Nullable Dialog visibleDialog, boolean show) {
         if (show) {

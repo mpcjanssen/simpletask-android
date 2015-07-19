@@ -41,6 +41,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preferences">Settings</string>
     <string name="archive">Archive</string>
     <string name="help">Help</string>
+    <string name="history">History</string>
+    <string name="next">Next</string>
+    <string name="prev">Previous</string>
     <string name="open_file">Open todo file</string>
     <string name="sync">Refresh</string>
     <string name="changelist">Select list</string>
@@ -66,6 +69,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="insert_due">Insert due date</string>
     <string name="insert_threshold">Insert threshold date</string>
     <string name="share">Share</string>
+    <string name="share_database">Share database</string>
     <string name="unComplete">Undo complete</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -358,8 +362,8 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="click_to_copy">Click to copy to clipboard.</string>
 
-    <string name="share_history">Share the internal history database for recovery.</string>
-    <string name="share_history_title">Todo History.</string>
+    <string name="share_history">View and share the internal todo.txt history database for recovery.</string>
+    <string name="share_history_title">Todo history</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -368,6 +372,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="help_locale">en</string>
 
     <string name="task_action">Action</string>
+
+    <string name="name">Name</string>
+    <string name="date">Date</string>
 
 
 

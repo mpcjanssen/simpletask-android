@@ -1,0 +1,27 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_next"
+        android:orderInCategory="100"
+        app:showAsAction="always|withText"
+        android:enabled="false"
+        android:title="@string/next"/>
+    <item
+        android:id="@+id/menu_prev"
+        android:orderInCategory="100"
+        app:showAsAction="always|withText"
+        android:title="@string/prev"/>
+    <item
+        android:id="@+id/menu_share"
+        android:orderInCategory="100"
+        app:showAsAction="always|withText"
+        android:title="@string/share"/>
+    <item
+            android:id="@+id/menu_share_database"
+            android:orderInCategory="100"
+            app:showAsAction="never"
+            android:title="@string/share_database"/>
+</menu>
