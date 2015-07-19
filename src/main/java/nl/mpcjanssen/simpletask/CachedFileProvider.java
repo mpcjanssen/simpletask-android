@@ -95,7 +95,10 @@ public class CachedFileProvider extends ContentProvider {
  
     @Override
     public String getType(Uri uri) {
-        return null;
+        if (uri.toString().endsWith(".db")) {
+            return "application/x-sqlite3";
+        }
+        return "text/plain";
     }
  
     @Override
