@@ -9,17 +9,15 @@
             <pattern>%d{HH:mm:ss.SSS};%relative;[%thread];%level;%logger;%msg%n;%caller{1};%n%n</pattern>
         </encoder>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>log.%d.txt</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 100MB -->
-                <maxFileSize>500KB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- keep 2 days' worth of history -->
-            <maxHistory>2</maxHistory>
+            <fileNamePattern>log.%i.txt</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
         </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>500KB</maxFileSize>
+        </triggeringPolicy>
     </appender>
 
     <root level="DEBUG" >
