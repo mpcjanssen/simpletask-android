@@ -61,7 +61,6 @@ public class FileStore implements FileStoreInterface {
     private static String OAUTH2_TOKEN = "dropboxToken";
     private String latestCursor;
     private Thread pollingTask;
-    private boolean ignoreNextEvent = false;
     boolean continuePolling = true;
     Thread onOnline;
     private boolean mIsLoading = false;
@@ -212,13 +211,12 @@ public class FileStore implements FileStoreInterface {
                         latestCursor = delta.cursor;
                         for (DropboxAPI.DeltaEntry entry : delta.entries) {
                             if (entry.lcPath.equalsIgnoreCase(polledFile)) {
-                                log.info("File " + polledFile + " changed, reloading");
-                                if (!ignoreNextEvent) {
-                                    mFileChangedListerer.fileChanged(null);
-                                    break;
+                                DropboxAPI.Entry newMetaData = (DropboxAPI.Entry) entry.metadata;
+                                if (newMetaData!=null && getLocalTodoRev().equals(newMetaData.rev)) {
+                                    log.info("Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " same as local rev, not reloading" );
                                 } else {
-                                    ignoreNextEvent = false;
-                                    break;
+                                    log.info("Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " reloading" );
+                                    mFileChangedListerer.fileChanged(null);
                                 }
                             }
                         }
@@ -433,7 +431,6 @@ public class FileStore implements FileStoreInterface {
                 String newName = path;
                 String rev = getLocalTodoRev();
                 try {
-                    ignoreNextEvent = true;
                     byte[] toStore = new byte[0];
                     toStore = contents.getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);
