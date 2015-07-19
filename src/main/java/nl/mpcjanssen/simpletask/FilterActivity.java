@@ -154,16 +154,14 @@ public class FilterActivity extends ThemedActivity {
         sortTab.setArguments(arguments);
         pagerAdapter.add(sortTab);
 
-        if (m_app.useScript()) {
-            arguments = new Bundle();
-            arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.getScript());
-            arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.getScriptTestTask());
-            arguments.putString(TAB_TYPE, SCRIPT_TAB);
-            FilterScriptFragment scriptTab = new FilterScriptFragment();
-            scriptFragment = scriptTab;
-            scriptTab.setArguments(arguments);
-            pagerAdapter.add(scriptTab);
-        }
+        arguments = new Bundle();
+        arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.getScript());
+        arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.getScriptTestTask());
+        arguments.putString(TAB_TYPE, SCRIPT_TAB);
+        FilterScriptFragment scriptTab = new FilterScriptFragment();
+        scriptFragment = scriptTab;
+        scriptTab.setArguments(arguments);
+
 
         pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);

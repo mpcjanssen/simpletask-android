@@ -250,10 +250,6 @@ public class TodoApplication extends Application implements
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
 
-    public boolean useScript() {
-        return m_prefs.getBoolean(getString(R.string.use_rhino),false);
-    }
-
     public boolean showTodoPath() {
         return m_prefs.getBoolean(getString(R.string.show_todo_path),false);
     }

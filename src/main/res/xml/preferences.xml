@@ -251,11 +251,6 @@
         </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="@string/use_rhino"
-            android:summary="Enable the embedded Lua compiler for advanced task filtering."
-            android:title="Use Lua" />
-        <CheckBoxPreference
-            android:defaultValue="false"
 	    android:key="@string/back_clears_filter"
             android:summary="If enabled, the first press of the back button clears the active filter and only the second press exits the app."
             android:title="Back clears filter" />
