@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
-public class HelpScreen extends Activity {
+public class HelpScreen extends ThemedActivity {
 
     final static String TAG = HelpScreen.class.getSimpleName();
     final static String BASE_URL = "file:///android_asset/"; 
