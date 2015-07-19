@@ -134,24 +134,7 @@ public class Preferences extends ThemedActivity {
 
         }
 
-        private void shareHistory() {
-            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-            shareIntent.setType("application/x-sqlite3");
-            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                    "Simpletask History Database");
-            File dataDir = new File(this.getActivity().getApplicationInfo().dataDir);
-            File databaseDir = new File(dataDir, "databases");
-            File dataBase = new File(databaseDir, BackupDbHelper.DATABASE_NAME);
-            try {
-            Util.createCachedDatabase(this.getActivity(), dataBase);
-            Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "history.db");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            } catch (Exception e) {
-                log.warn("Failed to create file for sharing");
-            }
-            startActivity(Intent.createChooser(shareIntent, "Share History Database"));
 
-        }
 
         @Override
         public void onResume() {
@@ -212,7 +195,7 @@ public class Preferences extends ThemedActivity {
                     sendLog();
                     break;
                 case "share_history":
-                    shareHistory();
+                    startActivity(new Intent(this.getActivity(), HistoryScreen.class));
                     break;
                 case "app_version":
                     ClipboardManager clipboard = (ClipboardManager)
