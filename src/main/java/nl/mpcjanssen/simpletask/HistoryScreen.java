@@ -25,6 +25,7 @@ import com.github.rjeschke.txtmark.Processor;
 import com.melnykov.fab.FloatingActionButton;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,12 @@ public class HistoryScreen extends ThemedActivity {
         db = backupDbHelper.getReadableDatabase();
         // Gets the data repository in read mode
         initCursor();
+        File dbFile = getDatabaseFile();
+        if (dbFile.exists()) {
+            String title = getTitle().toString();
+            title = title + " (" + dbFile.length()/1024 + "KB)";
+            setTitle(title);
+        }
         setContentView(R.layout.history);
         displayCurrent();
     }
@@ -76,9 +83,7 @@ public class HistoryScreen extends ThemedActivity {
         shareIntent.setType("application/x-sqlite3");
         shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 "Simpletask History Database");
-        File dataDir = new File(m_app.getApplicationInfo().dataDir);
-        File databaseDir = new File(dataDir, "databases");
-        File dataBase = new File(databaseDir, BackupDbHelper.DATABASE_NAME);
+        File dataBase = getDatabaseFile();
         try {
             Util.createCachedDatabase(this, dataBase);
             Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + dataBase.getName());
@@ -88,6 +93,13 @@ public class HistoryScreen extends ThemedActivity {
         }
         startActivity(Intent.createChooser(shareIntent, "Share History Database"));
 
+    }
+
+    @NotNull
+    private File getDatabaseFile() {
+        File dataDir = new File(m_app.getApplicationInfo().dataDir);
+        File databaseDir = new File(dataDir, "databases");
+        return new File(databaseDir, BackupDbHelper.DATABASE_NAME);
     }
 
     @Override
@@ -114,7 +126,11 @@ public class HistoryScreen extends ThemedActivity {
                         clearDatabase();
                         return true;
                     case R.id.menu_share:
-                        Util.shareText(HistoryScreen.this, getCurrentFileContents());
+                        if (cursor.getCount()==0) {
+                            Util.showToastShort(HistoryScreen.this, "Nothing to share");
+                        } else {
+                            Util.shareText(HistoryScreen.this, getCurrentFileContents());
+                        }
                         return true;
                     case R.id.menu_share_database:
                         shareHistory();
@@ -187,12 +203,12 @@ public class HistoryScreen extends ThemedActivity {
         }
         MenuItem prev = toolbar_menu.findItem(R.id.menu_prev);
         MenuItem next = toolbar_menu.findItem(R.id.menu_next);
-        if (cursor.isFirst()) {
+        if (cursor.isFirst() || cursor.getCount()==0) {
             prev.setEnabled(false);
         } else {
             prev.setEnabled(true);
         }
-        if (cursor.isLast()) {
+        if (cursor.isLast() ||  cursor.getCount()==0) {
             next.setEnabled(false);
         } else {
             next.setEnabled(true);
