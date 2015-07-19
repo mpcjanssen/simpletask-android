@@ -139,11 +139,6 @@
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/recur_from_original_date"
-            android:summary="@string/recur_from_original_date_pref_summary"
-            android:title="@string/recur_from_original_date_pref_title" />
-        <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/show_hidden"
             android:summary="@string/show_hidden_summary"

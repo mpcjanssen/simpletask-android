@@ -57,7 +57,7 @@ public class Task implements Serializable {
     private static final Pattern THRESHOLD_PATTERN = Pattern
             .compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)");
     private static final Pattern RECURRENCE_PATTERN = Pattern
-            .compile("(^||\\s)[Rr][Ee][Cc]:(\\d+[dDwWmMyY])");
+            .compile("(^||\\s)[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyY])");
     private final static Pattern PRIORITY_PATTERN = Pattern
             .compile("^(\\(([A-Z])\\) )(.*)");
     private final static Pattern SINGLE_DATE_PATTERN = Pattern
@@ -254,7 +254,7 @@ public class Task implements Serializable {
             mTokens.remove(0);
         }
         if (!priority.equals(Priority.NONE)) {
-            temp.add(new PRIO(priority.inFileFormat()+" "));
+            temp.add(new PRIO(priority.inFileFormat() + " "));
         }
         temp.addAll(mTokens);
         mTokens = temp;
@@ -308,6 +308,15 @@ public class Task implements Serializable {
         }
     }
 
+    public boolean hasRecurOriginalDates() {
+        Matcher matcher = RECURRENCE_PATTERN.matcher(inFileFormat());
+        if (matcher.find()) {
+            return matcher.group(0).contains("+");
+        } else {
+            return false;
+        }
+    }
+
     public List<String> getLinks() {
         return LinkParser.getInstance().parse(inFileFormat());
     }
@@ -326,16 +335,16 @@ public class Task implements Serializable {
     }
 
     @Nullable
-    public Task markComplete(@NonNull DateTime date, boolean useOriginalDate) {
+    public Task markComplete(@NonNull DateTime date) {
         Task newTask = null;
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
-            String deferFromDate = "";
-            if (!useOriginalDate) {
-                deferFromDate = completionDate;
-            }
             parse(COMPLETED_PREFIX + completionDate + " " + inFileFormat());
             if (getRecurrencePattern() != null) {
+                String deferFromDate = "";
+                if (!this.hasRecurOriginalDates()) {
+                    deferFromDate = completionDate;
+                }
                 newTask = new Task(getTextWithoutCompletionInfo());
                 if (newTask.getDueDate() == null && newTask.getThresholdDate() == null) {
                     newTask.deferDueDate(getRecurrencePattern(), deferFromDate);
