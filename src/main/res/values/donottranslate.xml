@@ -120,7 +120,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_show_confirmation_dialogs">ui_show_confirmation_dialogs</string>
     <string name="widget_header_transparency">widget_header_transparency</string>
     <string name="widget_background_transparency">widget_background_transparency</string>
-    <string name="recur_from_original_date">recur_from_original_date</string>
     <string name="last_open_filter_tab">last_open_filter_tab</string>
     <string name="capitalize_tasks">capitalize_tasks</string>
     <string name="show_hidden">show_hidden</string>

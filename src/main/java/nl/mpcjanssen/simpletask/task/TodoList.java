@@ -211,14 +211,13 @@ public class TodoList {
     }
 
     public void complete(@NonNull final Task task,
-                         final boolean originalDate,
                          final boolean keepPrio) {
 
         queueRunnable("Complete", new Runnable() {
             @Override
             public void run() {
 
-                Task extra = task.markComplete(DateTime.now(TimeZone.getDefault()), originalDate);
+                Task extra = task.markComplete(DateTime.now(TimeZone.getDefault()));
                 if (extra != null) {
                     mTasks.add(extra);
                 }
