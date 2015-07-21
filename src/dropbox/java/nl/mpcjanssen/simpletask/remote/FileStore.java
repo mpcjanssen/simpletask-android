@@ -176,9 +176,10 @@ public class FileStore implements FileStoreInterface {
             @Override
             public void run() {
                 int newBackoffSeconds = 0;
+                long start_time = 0;
                 if (!continuePolling) return;
                 try {
-                    log.info("Long polling");
+                    //log.info("Long polling");
 
                     ArrayList<String> params = new ArrayList<>();
                     params.add("cursor");
@@ -194,7 +195,7 @@ public class FileStore implements FileStoreInterface {
                         }
                     }
                     if (!continuePolling) return;
-
+                    start_time = System.currentTimeMillis();
                     Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[0]), mDBApi.getSession());
                     log.info("Longpoll response: " + response.toString());
                     JsonThing result = new JsonThing(response);
@@ -226,10 +227,14 @@ public class FileStore implements FileStoreInterface {
                     continuePolling = false;
                 } catch (DropboxIOException e) {
                     if (SocketTimeoutException.class.isAssignableFrom(e.getCause().getClass())) {
-                        log.info("Longpoll timed out, restarting");
+                        //log.info("Longpoll timed out, restarting");
                         if (!isOnline()) {
                             log.info("Device was not online, stopping polling");
                             continuePolling = false;
+                        }
+                        if (System.currentTimeMillis()-start_time<30*1000) {
+                            log.info("Longpoll timed out to quick, backing off for 60 seconds");
+                            newBackoffSeconds = 60;
                         }
                     } else {
                         log.info("Longpoll IO exception, restarting backing of {} seconds", 30,  e);
@@ -374,6 +379,7 @@ public class FileStore implements FileStoreInterface {
                     } catch (JsonExtractionException e) {
                         e.printStackTrace();
                     }
+                    log.info("Starting slow polling");
                     startLongPoll(path, 0);
                 }
             }

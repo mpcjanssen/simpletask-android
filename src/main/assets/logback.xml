@@ -4,20 +4,20 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- active log file -->
         <file>log.txt</file>
-        <encoder>
-            <!-- see http://logback.qos.ch/manual/layouts.html#conversionWord for format -->
-            <pattern>%d{HH:mm:ss.SSS};%relative;[%thread];%level;%logger;%msg%n;%caller{1};%n%n</pattern>
-        </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>log.%i.txt</fileNamePattern>
+            <fileNamePattern>log.%i.txt.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>3</maxIndex>
         </rollingPolicy>
+
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>500KB</maxFileSize>
+            <maxFileSize>1MB</maxFileSize>
         </triggeringPolicy>
+        <encoder>
+            <!-- see http://logback.qos.ch/manual/layouts.html#conversionWord for format -->
+            <pattern>%d;%relative;[%thread];%level;%logger;%msg%n;%caller{1};%n%n</pattern>
+        </encoder>
     </appender>
 
     <root level="DEBUG" >

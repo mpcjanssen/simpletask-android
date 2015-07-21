@@ -114,28 +114,6 @@ public class Preferences extends ThemedActivity {
             }
         }
 
-
-        private void sendLog() {
-            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                    "Simpletask Logging File");
-            File dataDir = new File(this.getActivity().getApplicationInfo().dataDir);
-            File databaseDir = new File(dataDir, "files");
-            File dataBase = new File(databaseDir, "log.txt");
-            try {
-                Util.createCachedDatabase(this.getActivity(), dataBase);
-                Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "log.txt");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            } catch (Exception e) {
-                log.warn("Failed to create file for sharing");
-            }
-            startActivity(Intent.createChooser(shareIntent, "Share Logging File"));
-
-        }
-
-
-
         @Override
         public void onResume() {
             super.onResume();
@@ -192,7 +170,7 @@ public class Preferences extends ThemedActivity {
 
                     break;
                 case "send_log":
-                    sendLog();
+                    startActivity(new Intent(this.getActivity(), LogScreen.class));
                     break;
                 case "share_history":
                     startActivity(new Intent(this.getActivity(), HistoryScreen.class));
