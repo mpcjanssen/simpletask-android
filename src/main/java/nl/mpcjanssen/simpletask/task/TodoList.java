@@ -385,6 +385,36 @@ public class TodoList {
 
     }
 
+    public void archive(final List<Task> tasks) {
+        queueRunnable("Archive", new Runnable() {
+            @Override
+            public void run() {
+                List<Task> tasksToArchive;
+                if (tasks == null) {
+                    tasksToArchive = mTasks;
+                } else {
+                    tasksToArchive = tasks;
+                }
+                List<Task> tasksToDelete = new ArrayList<>();
+                for (Task t : tasksToArchive) {
+                    if (t.isCompleted()) {
+                        tasksToDelete.add(t);
+                    }
+                }
+                try {
+                    mFileStore.appendTaskToFile(mApp.getDoneFileName(), tasksToDelete);
+                    for (Task t : tasksToDelete) {
+                        mTasks.remove(t);
+                    }
+                    notifyChanged(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Util.showToastShort(mApp, "Task archiving failed");
+                }
+            }
+        });
+    }
+
     public interface TodoListChanged {
         void todoListChanged();
     }
