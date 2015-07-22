@@ -440,7 +440,7 @@ public class AddTask extends ThemedActivity {
 
     private void addBackgroundTask(@NonNull String sharedText) {
         TodoList todoList = m_app.getTodoList();
-        log.debug("Adding tasks to todolist " + todoList);
+        log.debug("Adding background tasks to todolist {} " , todoList);
 
         for (String taskText : sharedText.split("\n|\r\n")) {
 

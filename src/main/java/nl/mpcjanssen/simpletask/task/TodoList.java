@@ -122,9 +122,10 @@ public class TodoList {
 
 
     public void add(final Task t) {
-        queueRunnable("Add task " + t.inFileFormat(), new Runnable() {
+        queueRunnable("Add task", new Runnable() {
             @Override
             public void run() {
+                log.debug("Adding task '{}' into {}", t.inFileFormat(), TodoList.this);
                 mTasks.add(t);
             }
         });
@@ -348,11 +349,11 @@ public class TodoList {
                 notifyChanged(false);
             }};
         if (background ) {
-            log.info("Loading todolist asynchronously");
+            log.info("Loading todolist asynchronously into {}", this);
             queueRunnable("Reload", r);
 
         } else {
-            log.info("Loading todolist synchronously");
+            log.info("Loading todolist synchronously into {}", this);
             r.run();
         }
     }
