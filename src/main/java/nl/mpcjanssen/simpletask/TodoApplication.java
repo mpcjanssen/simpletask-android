@@ -83,9 +83,6 @@ public class TodoApplication extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
-        final String APPHOME = getFilesDir().getPath() ;
-        //sets APPHOME referenced in logback.xml
-        System.setProperty("APPHOME", APPHOME);
         log = LoggerFactory.getLogger(this.getClass());
         log.debug("onCreate()");
 
