@@ -106,7 +106,7 @@ public class TodoApplication extends Application implements
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
         m_todoList = new TodoList(this, this, this, getEol());
-        loadTodoList();
+        loadTodoList(false);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
     }
 
@@ -293,9 +293,9 @@ public class TodoApplication extends Application implements
         return m_todoList;
     }
 
-    public void loadTodoList() {
+    public void loadTodoList(boolean background) {
         log.info("Load todolist");
-        m_todoList.reload(getTodoFileName(), TodoApplication.this, localBroadcastManager);
+        m_todoList.reload(getTodoFileName(), TodoApplication.this, localBroadcastManager, background);
 
     }
 
@@ -304,7 +304,7 @@ public class TodoApplication extends Application implements
         if (newName!=null) {
             setTodoFile(newName);
         }
-        loadTodoList();
+        loadTodoList(true);
     }
 
 
@@ -386,7 +386,7 @@ public class TodoApplication extends Application implements
 
     public void switchTodoFile(String newTodo) {
         setTodoFile(newTodo);
-        loadTodoList();
+        loadTodoList(false);
 
     }
 

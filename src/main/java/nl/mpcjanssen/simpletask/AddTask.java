@@ -60,8 +60,6 @@ import java.util.*;
 
 public class AddTask extends ThemedActivity {
 
-    private final static String TAG = AddTask.class.getSimpleName();
-
     private TodoApplication m_app;
 
     private String share_text;
