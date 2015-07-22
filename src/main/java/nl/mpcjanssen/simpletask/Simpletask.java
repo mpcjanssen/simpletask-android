@@ -702,31 +702,11 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void archiveTasks(List<Task> tasksToArchive) {
-        final TodoList todoList = getTodoList();
         if (m_app.getTodoFileName().equals(m_app.getDoneFileName())) {
             Util.showToastShort(this, "You have the done.txt file opened.");
             return;
         }
-
-        final List<Task> tasksToDelete = new ArrayList<>();
-        if (tasksToArchive == null) {
-            tasksToArchive = todoList.getTasks();
-        }
-        for (Task t : tasksToArchive) {
-            if (t.isCompleted()) {
-                tasksToDelete.add(t);
-            }
-        }
-        try {
-            m_app.getFileStore().appendTaskToFile(m_app.getDoneFileName(), tasksToDelete);
-            for (Task t : tasksToDelete) {
-                todoList.remove(t);
-            }
-            todoList.notifyChanged(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Util.showToastShort(this, "Task archiving failed");
-        }
+        getTodoList().archive(tasksToArchive);
         closeSelectionMode();
     }
 
