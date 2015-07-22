@@ -347,7 +347,7 @@ public class TodoList {
                 log.info("Todolist loaded, refresh UI");
                 notifyChanged(false);
             }};
-        if (background) {
+        if (background ) {
             log.info("Loading todolist asynchronously");
             queueRunnable("Reload", r);
 
