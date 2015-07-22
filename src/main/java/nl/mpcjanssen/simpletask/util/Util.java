@@ -441,7 +441,7 @@ public class Util {
             newDialog.setCancelable(false);
             newDialog.show();
             return newDialog;
-        } else if (visibleDialog!=null) {
+        } else if (visibleDialog!=null && visibleDialog.isShowing()) {
             visibleDialog.dismiss();
         }
         return null;
