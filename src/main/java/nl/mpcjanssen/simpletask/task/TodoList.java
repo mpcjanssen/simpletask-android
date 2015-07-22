@@ -321,14 +321,14 @@ public class TodoList {
         selectTask(mTasks.get(index));
     }
 
-    public void reload(final String filename, final BackupInterface backup, final LocalBroadcastManager lbm) {
+    public void reload(final String filename, final BackupInterface backup, final LocalBroadcastManager lbm, boolean background) {
         if (TodoList.this.loadQueued()) {
             log.info("Todolist reload is already queued waiting");
             return;
         }
         lbm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
         loadQueued = true;
-        queueRunnable("Reload", new Runnable() {
+        Runnable r = new Runnable() {
             @Override
             public void run() {
                 clearSelectedTasks();
@@ -343,8 +343,15 @@ public class TodoList {
                 loadQueued = false;
                 log.info("Todolist loaded, refresh UI");
                 notifyChanged(false);
-            }
-        });
+            }};
+        if (background) {
+            log.info("Loading todolist asynchronously");
+            queueRunnable("Reload", r);
+
+        } else {
+            log.info("Loading todolist synchronously");
+            r.run();
+        }
     }
 
     public void setEol(String eol) {
