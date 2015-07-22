@@ -18,6 +18,7 @@ import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.exception.DropboxIOException;
+import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.dropbox.client2.jsonextract.JsonExtractionException;
 import com.dropbox.client2.jsonextract.JsonMap;
@@ -305,10 +306,26 @@ public class FileStore implements FileStoreInterface {
             return tasks;
         } else {
             try {
-                DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
-                DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-                log.info( "The file's rev is: " + fileInfo.getMetadata().rev);
-
+                DropboxAPI.DropboxInputStream openFileStream;
+                DropboxAPI.DropboxFileInfo fileInfo;
+                try {
+                    openFileStream = mDBApi.getFileStream(path, null);
+                    fileInfo = openFileStream.getFileInfo();
+                    log.info("The file's rev is: " + fileInfo.getMetadata().rev);
+                } catch (DropboxServerException e) {
+                    log.debug("Dropbox server exception", e);
+                    if (e.error == DropboxServerException._404_NOT_FOUND) {
+                        log.info("File not found, creating file instead");
+                        byte[] toStore = "".getBytes();
+                        InputStream in = new ByteArrayInputStream(toStore);
+                        DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                                toStore.length, null, null);
+                        openFileStream = mDBApi.getFileStream(path, null);
+                        fileInfo = openFileStream.getFileInfo();
+                    } else {
+                        throw(e);
+                    }
+                }
                 BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
                 String line;
                 ArrayList<String> readFile = new ArrayList<>();

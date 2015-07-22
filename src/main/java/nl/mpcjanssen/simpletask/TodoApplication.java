@@ -84,6 +84,7 @@ public class TodoApplication extends Application implements
     public void onCreate() {
         super.onCreate();
         log = LoggerFactory.getLogger(this.getClass());
+        log.debug("onCreate()");
 
         TodoApplication.m_appContext = getApplicationContext();
         TodoApplication.m_prefs = PreferenceManager.getDefaultSharedPreferences(getAppContext());
@@ -105,7 +106,9 @@ public class TodoApplication extends Application implements
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
+
         m_todoList = new TodoList(this, this, this, getEol());
+        log.info("Created todolist {}", m_todoList);
         loadTodoList(true);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
     }
