@@ -106,7 +106,7 @@ public class TodoApplication extends Application implements
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
         m_todoList = new TodoList(this, this, this, getEol());
-        loadTodoList(false);
+        loadTodoList(true);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
     }
 
@@ -117,11 +117,6 @@ public class TodoApplication extends Application implements
     public LocalBroadcastManager getLocalBroadCastManager() {
         return localBroadcastManager;
     }
-
-
-
-
-
 
     @Override
     public void onTerminate() {
