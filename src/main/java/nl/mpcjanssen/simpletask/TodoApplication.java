@@ -384,20 +384,18 @@ public class TodoApplication extends Application implements
         }
     }
 
-    public void switchTodoFile(String newTodo) {
+    public void switchTodoFile(String newTodo, boolean background) {
         setTodoFile(newTodo);
-        loadTodoList(false);
+        loadTodoList(background);
 
     }
 
 
-    public void todoListChanged(boolean save) {
-        log.info("Tasks have changed, update UI and save todo file? " + save);
+    public void todoListChanged() {
+        log.info("Tasks have changed, update UI");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
-        if (save) {
-            m_todoList.save(getTodoFileName(), TodoApplication.this);
-        }
+
 
     }
 
@@ -459,7 +457,7 @@ public class TodoApplication extends Application implements
                 new FileStoreInterface.FileSelectedListener() {
                     @Override
                     public void fileSelected(String file) {
-                        switchTodoFile(file);
+                        switchTodoFile(file, true);
                     }
                 },
 		showTxtOnly());
