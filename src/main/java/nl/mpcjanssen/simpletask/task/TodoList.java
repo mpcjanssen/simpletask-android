@@ -34,6 +34,7 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -55,8 +56,8 @@ import java.util.*;
  */
 public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
-    private final Context mCtx;
     private final Logger log;
+    private final TodoApplication mApp;
 
     @NonNull
     private ArrayList<Task> mTasks = new ArrayList<Task>();
@@ -73,7 +74,7 @@ public class TodoList {
     private FileStoreInterface mFileStore;
 
 
-    public TodoList(Context ctx,
+    public TodoList(TodoApplication app,
                     TodoListChanged todoListChanged,
                     FileStoreInterface.FileChangeListener fileChanged,
                     String eol) {
@@ -88,9 +89,9 @@ public class TodoList {
         });
         t.start();
         log = LoggerFactory.getLogger(this.getClass());
-        this.mCtx = ctx;
+        this.mApp = app;
         this.mTodoListChanged = todoListChanged;
-        this.mFileStore = new FileStore(ctx, fileChanged, eol);
+        this.mFileStore = new FileStore(mApp.getApplicationContext(), fileChanged, eol);
 
     }
 
@@ -272,12 +273,14 @@ public class TodoList {
             @Override
             public void run() {
                 log.info("Handler: Handle notifychanged");
+                log.info("Saving todo list, size {}", mTasks.size());
+                save(mApp.getTodoFileName(), mApp);
                 clearSelectedTasks();
                 if (mTodoListChanged != null) {
                     log.info("TodoList changed, notifying listener and invalidating cached values");
                     mTags = null;
                     mLists = null;
-                    mTodoListChanged.todoListChanged(changed);
+                    mTodoListChanged.todoListChanged();
                 } else {
                     log.info("TodoList changed, but nobody is listening");
                 }
@@ -338,7 +341,7 @@ public class TodoList {
                     mTasks.addAll(tasks);
                 } catch (IOException e) {
                     log.error("Todolist load failed: {}", filename, e);
-                    Util.showToastShort(mCtx, "Loading of todo file failed");
+                    Util.showToastShort(mApp, "Loading of todo file failed");
                 }
                 loadQueued = false;
                 log.info("Todolist loaded, refresh UI");
@@ -375,7 +378,7 @@ public class TodoList {
                     mFileStore.saveTasksToFile(todoFileName, mTasks, backup);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Util.showToastLong(mCtx, R.string.write_failed);
+                    Util.showToastLong(mApp, R.string.write_failed);
                 }
             }
         });
@@ -383,7 +386,7 @@ public class TodoList {
     }
 
     public interface TodoListChanged {
-        void todoListChanged(boolean save);
+        void todoListChanged();
     }
 
     public class LoggingRunnable implements Runnable {

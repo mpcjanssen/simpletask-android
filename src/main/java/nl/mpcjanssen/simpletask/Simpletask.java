@@ -370,7 +370,7 @@ public class Simpletask extends ThemedActivity implements
                                     if (url.startsWith("todo://")) {
                                         File todoFolder = m_app.getTodoFile().getParentFile();
                                         File newName = new File(todoFolder, url.substring(7));
-                                        m_app.switchTodoFile(newName.getAbsolutePath());
+                                        m_app.switchTodoFile(newName.getAbsolutePath(),true);
                                     } else {
                                         intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                                         startActivity(intent);
