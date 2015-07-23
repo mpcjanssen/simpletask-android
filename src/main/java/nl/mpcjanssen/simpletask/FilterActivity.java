@@ -161,6 +161,7 @@ public class FilterActivity extends ThemedActivity {
         FilterScriptFragment scriptTab = new FilterScriptFragment();
         scriptFragment = scriptTab;
         scriptTab.setArguments(arguments);
+        pagerAdapter.add(scriptTab);
 
 
         pager = (ViewPager)findViewById(R.id.pager);
