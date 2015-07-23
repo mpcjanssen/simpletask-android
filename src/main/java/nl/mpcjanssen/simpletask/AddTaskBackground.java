@@ -25,10 +25,7 @@
 package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.app.*;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,28 +65,19 @@ public class AddTaskBackground extends Activity {
 
     private Logger log;
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle instance) {
         log = LoggerFactory.getLogger(this.getClass());
         log.debug("onCreate()");
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        super.onCreate(savedInstanceState);
-        m_app = (TodoApplication) getApplication();
+        super.onCreate(instance);
+        m_app = (TodoApplication) this.getApplication();
 
-        final Intent intent = getIntent();
-        ActiveFilter mFilter = new ActiveFilter();
-        mFilter.initFromIntent(intent);
+        Intent intent = getIntent();
         final String action = intent.getAction();
 
         String append_text = m_app.getShareAppendText();
 
-        if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
-            log.debug("Setting up shortcut icon");
-            setupShortcut();
-            finish();
-            return;
-        } else if (Intent.ACTION_SEND.equals(action)) {
+         if (Intent.ACTION_SEND.equals(action)) {
             log.debug("Share");
             if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
@@ -106,15 +94,11 @@ public class AddTaskBackground extends Activity {
             } else {
                 share_text = "";
             }
-            addBackgroundTask(share_text,append_text);
-            finish();
-            return;
-
+            addBackgroundTask(share_text, append_text);
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now
             noteToSelf(intent, append_text);
-            finish();
-            return;
+
         } else if (Constants.INTENT_BACKGROUND_TASK.equals(action)) {
             log.debug("Adding background task");
             if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
@@ -122,8 +106,7 @@ public class AddTaskBackground extends Activity {
             } else {
                 log.warn("Task was not in extras");
             }
-            finish();
-            return;
+
         }
     }
 
@@ -138,7 +121,7 @@ public class AddTaskBackground extends Activity {
 
     private void addBackgroundTask(@NonNull String sharedText, @NonNull String appendText) {
         TodoList todoList = m_app.getTodoList();
-        log.debug("Adding background tasks to todolist {} " , todoList);
+        log.debug("Adding background tasks to todolist {} ", todoList);
 
         for (String taskText : sharedText.split("\n|\r\n")) {
             if (!appendText.isEmpty()) {
@@ -152,21 +135,8 @@ public class AddTaskBackground extends Activity {
             }
         }
         todoList.notifyChanged(true);
+        finish();
         Util.showToastShort(m_app, R.string.task_added);
     }
 
-    private void setupShortcut() {
-        Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
-        shortcutIntent.setClassName(this, AddTask.class.getName());
-
-        Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                getString(R.string.shortcut_addtask_name));
-        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this,
-                R.drawable.ic_launcher);
-        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
-
-        setResult(RESULT_OK, intent);
-    }
 }

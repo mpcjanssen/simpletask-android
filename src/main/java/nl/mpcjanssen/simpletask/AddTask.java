@@ -26,6 +26,7 @@ package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.*;
