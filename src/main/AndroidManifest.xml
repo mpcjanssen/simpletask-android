@@ -89,20 +89,24 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
+
+
         <activity-alias
             android:name=".AddTaskShortcut"
             android:label="@string/shortcut_addtask_name"
-            android:targetActivity=".AddTask" >
+            android:targetActivity=".AddTaskBackground" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity-alias>
-        <activity-alias
-            android:name=".AddTaskShare"
-            android:label="@string/share_addtask_name"
-            android:targetActivity=".AddTask" >
+
+
+        <activity
+            android:name=".AddTaskBackground"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/share_addtask_name">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="nl.mpcjanssen.simpletask.BACKGROUND_TASK" />
@@ -112,7 +116,7 @@ You should have received a copy of the GNU General Public License along with Sim
 
                 <data android:mimeType="text/*" />
             </intent-filter>
-        </activity-alias>
+        </activity>
 
         <activity
             android:name=".Simpletask"

@@ -148,9 +148,9 @@
             android:key="@string/show_empty_lists"
             android:summary="@string/show_empty_lists_summary"
             android:title="@string/show_empty_lists_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/share_task_show_edit"
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="@string/share_task_append_text"
             android:summary="@string/share_task_show_edit_summary"
             android:title="@string/share_task_show_edit_pref_title" />
         <CheckBoxPreference

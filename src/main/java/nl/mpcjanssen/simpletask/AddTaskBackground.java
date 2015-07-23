@@ -1,0 +1,172 @@
+/**
+ * This file is part of Simpletask.
+ *
+ * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * Copyright (c) 2013- Mark Janssen
+ *
+ * LICENSE:
+ *
+ * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ * @author Mark Janssen
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
+ * @copyright 2013- Mark Janssen
+ */
+package nl.mpcjanssen.simpletask;
+
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.*;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.text.Layout;
+import android.text.Selection;
+import android.view.*;
+import android.view.inputmethod.EditorInfo;
+import android.widget.*;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TodoList;
+import nl.mpcjanssen.simpletask.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+
+public class AddTaskBackground extends Activity {
+
+    private TodoApplication m_app;
+
+    private String share_text;
+
+    private Logger log;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        log = LoggerFactory.getLogger(this.getClass());
+        log.debug("onCreate()");
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        super.onCreate(savedInstanceState);
+        m_app = (TodoApplication) getApplication();
+
+        final Intent intent = getIntent();
+        ActiveFilter mFilter = new ActiveFilter();
+        mFilter.initFromIntent(intent);
+        final String action = intent.getAction();
+
+        String append_text = m_app.getShareAppendText();
+
+        if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
+            log.debug("Setting up shortcut icon");
+            setupShortcut();
+            finish();
+            return;
+        } else if (Intent.ACTION_SEND.equals(action)) {
+            log.debug("Share");
+            if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+                Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
+                try {
+                    File sharedFile = new File(uri.getPath());
+                    share_text = Files.toString(sharedFile, Charsets.UTF_8);
+                } catch (IOException e) {
+                    share_text = "";
+                    e.printStackTrace();
+                }
+
+            } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+                share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
+            } else {
+                share_text = "";
+            }
+            addBackgroundTask(share_text,append_text);
+            finish();
+            return;
+
+        } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
+            // Called as note to self from google search/now
+            noteToSelf(intent, append_text);
+            finish();
+            return;
+        } else if (Constants.INTENT_BACKGROUND_TASK.equals(action)) {
+            log.debug("Adding background task");
+            if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
+                addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK),append_text);
+            } else {
+                log.warn("Task was not in extras");
+            }
+            finish();
+            return;
+        }
+    }
+
+
+    private void noteToSelf(@NonNull Intent intent, @NonNull String append_text) {
+        String task = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+            log.debug("Voice note added.");
+        }
+        addBackgroundTask(task, append_text);
+    }
+
+    private void addBackgroundTask(@NonNull String sharedText, @NonNull String appendText) {
+        TodoList todoList = m_app.getTodoList();
+        log.debug("Adding background tasks to todolist {} " , todoList);
+
+        for (String taskText : sharedText.split("\n|\r\n")) {
+            if (!appendText.isEmpty()) {
+                taskText = taskText + " " + appendText;
+            }
+
+            if (m_app.hasPrependDate()) {
+                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
+            } else {
+                todoList.add(new Task(taskText));
+            }
+        }
+        todoList.notifyChanged(true);
+        Util.showToastShort(m_app, R.string.task_added);
+    }
+
+    private void setupShortcut() {
+        Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+        shortcutIntent.setClassName(this, AddTask.class.getName());
+
+        Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
+                getString(R.string.shortcut_addtask_name));
+        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this,
+                R.drawable.ic_launcher);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+
+        setResult(RESULT_OK, intent);
+    }
+}
