@@ -79,6 +79,10 @@ public class AddTask extends ThemedActivity {
         m_app = (TodoApplication) getApplication();
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
@@ -99,11 +103,6 @@ public class AddTask extends ThemedActivity {
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
 
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar!=null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
         final Intent intent = getIntent();
         ActiveFilter mFilter = new ActiveFilter();
         mFilter.initFromIntent(intent);
@@ -153,6 +152,9 @@ public class AddTask extends ThemedActivity {
             finish();
             return;
         }
+
+
+
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 

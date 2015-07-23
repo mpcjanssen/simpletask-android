@@ -871,7 +871,7 @@ public class Simpletask extends ThemedActivity implements
         //getTodoList().clearSelectedTasks();
         populateMainMenu(options_menu);
         fab.setVisibility(View.VISIBLE);
-        updateDrawers();
+        //updateDrawers();
 
     }
 
@@ -1727,7 +1727,7 @@ public class Simpletask extends ThemedActivity implements
             setIntent(intent);
             closeSelectionMode();
             m_adapter.setFilteredTasks();
-            adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
         }
     }
 
