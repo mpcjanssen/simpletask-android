@@ -7,8 +7,10 @@
 - Material, material, material. Material themes only also on KitKat, Jellybean and Ice Cream Sandwich.
 - Always enable script filter support.
 - Introduced floating action button.
+- View and share application logging (From settings).
 - View and clear todo file history database (From settings).
 - Improved Dropbox background polling.
+- Changed the way adding tasks in the background is handled. You can configure a string to append to these tasks. So for example `+background` will allow easy filtering. 
 
 
 5.5.8
