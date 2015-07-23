@@ -11,7 +11,8 @@
 - View and clear todo file history database (From settings).
 - Improved Dropbox background polling.
 - Changed the way adding tasks in the background is handled. You can configure a string to append to these tasks. So for example `+background` will allow easy filtering. 
-
+- Don't scroll filter drawer list if item is checked.
+- Use `rec:+` to mean recur from original date instead of a using setting. Fixes [#29](https://github.com/mpcjanssen/simpletask-android/issues/29)
 
 5.5.8
 -----
@@ -22,6 +23,7 @@
 - Don't clear todolist if reloading a file failed.
 - Queue todo list and file system actions to fix some weird race conditions.
 - Properly save tasks in the cache if offline. Fixes lost tasks after coming online again.
+
 
 5.5.7
 
