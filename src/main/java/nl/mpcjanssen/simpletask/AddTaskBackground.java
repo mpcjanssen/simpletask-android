@@ -94,7 +94,7 @@ public class AddTaskBackground extends Activity {
             } else {
                 share_text = "";
             }
-            addBackgroundTask(share_text, append_text);
+            addBackgroundTask(share_text, "");
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now
             noteToSelf(intent, append_text);
