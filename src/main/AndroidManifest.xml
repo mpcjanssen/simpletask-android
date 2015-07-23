@@ -73,9 +73,9 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
             android:name=".AddTask"
             android:exported="true"
+            android:taskAffinity="nl.mpcjanssen.simpletask.task_add"
             android:label="@string/addtask"
             android:parentActivityName=".Simpletask"
-            android:taskAffinity=":nl.mpcjanssen.simpletask.affinity.add_task"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="UnusedAttribute" >
 
@@ -89,34 +89,31 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-
-
-        <activity-alias
-            android:name=".AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name"
-            android:targetActivity=".AddTaskBackground" >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity-alias>
-
-
         <activity
-            android:name=".AddTaskBackground"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/share_addtask_name">
+                android:name=".AddTaskBackground"
+                android:enabled="true"
+                android:theme="@android:style/Theme.NoDisplay"
+                android:taskAffinity="nl.mpcjanssen.simpletask.task_add_background"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="nl.mpcjanssen.simpletask.BACKGROUND_TASK" />
-                <action android:name="com.google.android.gm.action.AUTO_SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
+                <action android:name="com.google.android.gm.action.AUTO_SEND" />
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".AddTaskShortcut"
+            android:label="@string/shortcut_addtask_name">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".Simpletask"
