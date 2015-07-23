@@ -136,9 +136,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="theme_pref_title">Application theme</string>
     <string name="theme_pref_summary">Change the theme used for the application</string>
 
-    <string name="share_task_show_edit_pref_title">Edit shared task</string>
-    <string name="share_task_show_edit_summary">Allow editing of a shared task before saving it.
-        Disable this to have the shared task stored without intervention.</string>
+    <string name="share_task_show_edit_pref_title">Background tag</string>
+    <string name="share_task_show_edit_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
     <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
     <string name="back_saves_pref_title">Back button</string>

@@ -60,7 +60,7 @@ public class TodoList {
     private final TodoApplication mApp;
 
     @NonNull
-    private ArrayList<Task> mTasks = new ArrayList<Task>();
+    private List<Task> mTasks = new ArrayList<Task>();
     @NonNull
     private List<Task> mSelectedTask = new ArrayList<Task>();;
     @Nullable
@@ -338,8 +338,7 @@ public class TodoList {
                 clearSelectedTasks();
                 try {
                     List<Task> tasks = mFileStore.loadTasksFromFile(filename, backup);
-                    mTasks.clear();
-                    mTasks.addAll(tasks);
+                    mTasks = tasks;
                 } catch (IOException e) {
                     log.error("Todolist load failed: {}", filename, e);
                     Util.showToastShort(mApp, "Loading of todo file failed");

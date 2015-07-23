@@ -75,10 +75,16 @@ public class AddTask extends ThemedActivity {
     public void onCreate(Bundle savedInstanceState) {
         log = LoggerFactory.getLogger(this.getClass());
         log.debug("onCreate()");
-
-        m_app = (TodoApplication) getApplication();
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+        m_app = (TodoApplication) getApplication();
+
+        final Intent intent = getIntent();
+        ActiveFilter mFilter = new ActiveFilter();
+        mFilter.initFromIntent(intent);
+
+
+
         ActionBar actionBar = getActionBar();
         if (actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -102,56 +108,6 @@ public class AddTask extends ThemedActivity {
             }
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
-
-        final Intent intent = getIntent();
-        ActiveFilter mFilter = new ActiveFilter();
-        mFilter.initFromIntent(intent);
-        final String action = intent.getAction();
-        // create shortcut and exit
-        if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
-            log.debug("Setting up shortcut icon");
-            setupShortcut();
-            finish();
-            return;
-        } else if (Intent.ACTION_SEND.equals(action)) {
-            log.debug("Share");
-            if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-                Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
-                try {
-                    File sharedFile = new File(uri.getPath());
-                    share_text =  Files.toString(sharedFile, Charsets.UTF_8);
-                } catch (IOException e) {
-                    share_text  = "";
-                    e.printStackTrace();
-                }
-
-            } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-                share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
-            } else {
-                share_text = "";
-            }
-            if (!m_app.hasShareTaskShowsEdit()) {
-                if (!share_text.equals("")) {
-                    addBackgroundTask(share_text);
-                }
-                finish();
-                return;
-            }
-        } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
-            // Called as note to self from google search/now
-            noteToSelf(intent);
-            finish();
-            return;
-        } else if (Constants.INTENT_BACKGROUND_TASK.equals(action)) {
-            log.debug("Adding background task");
-            if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
-                addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK));
-            } else {
-                log.warn("Task was not in extras");
-            }
-            finish();
-            return;
-        }
 
 
 
@@ -424,14 +380,6 @@ public class AddTask extends ThemedActivity {
         finish();
     }
 
-    private void noteToSelf(@NonNull Intent intent) {
-        String task = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            log.debug("Voice note added.");
-        }
-        addBackgroundTask(task);
-    }
-
     @Override
     public void onBackPressed() {
         if (m_app.isBackSaving()) {
@@ -439,23 +387,6 @@ public class AddTask extends ThemedActivity {
         }
         super.onBackPressed();
     }
-
-    private void addBackgroundTask(@NonNull String sharedText) {
-        TodoList todoList = m_app.getTodoList();
-        log.debug("Adding background tasks to todolist {} " , todoList);
-
-        for (String taskText : sharedText.split("\n|\r\n")) {
-
-            if (m_app.hasPrependDate()) {
-                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
-            } else {
-                todoList.add(new Task(taskText));
-            }
-        }
-        todoList.notifyChanged(true);
-        Util.showToastShort(m_app, R.string.task_added);
-    }
-
 
     private void insertDate(final int dateType) {
         Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
@@ -740,23 +671,11 @@ public class AddTask extends ThemedActivity {
                 title, 0, title.length());
     }
 
-    private void setupShortcut() {
-        Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
-        shortcutIntent.setClassName(this, this.getClass().getName());
-
-        Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                getString(R.string.shortcut_addtask_name));
-        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this,
-                R.drawable.ic_launcher);
-        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
-
-        setResult(RESULT_OK, intent);
-    }
 
     public void onDestroy() {
         super.onDestroy();
-        localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
+        if (localBroadcastManager!=null) {
+            localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
+        }
     }
 }
