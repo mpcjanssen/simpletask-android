@@ -1726,8 +1726,6 @@ public class Simpletask extends ThemedActivity implements
             setIntent(intent);
             closeSelectionMode();
             m_adapter.setFilteredTasks();
-            //adapter.notifyDataSetChanged();
         }
     }
-
 }
