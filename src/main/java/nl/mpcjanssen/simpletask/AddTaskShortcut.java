@@ -24,30 +24,13 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
-import android.text.InputType;
-import android.text.Layout;
-import android.text.Selection;
-import android.view.*;
-import android.view.inputmethod.EditorInfo;
 import android.widget.*;
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TodoList;
-import nl.mpcjanssen.simpletask.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

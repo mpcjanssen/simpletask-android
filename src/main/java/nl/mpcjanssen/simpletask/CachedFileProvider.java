@@ -40,8 +40,6 @@ public class CachedFileProvider extends ContentProvider {
     public ParcelFileDescriptor openFile(Uri uri, String mode)
             throws FileNotFoundException {
  
-        String LOG_TAG = CLASS_NAME + " - openFile";
- 
         log.debug("Called with uri: '" + uri + "'." + uri.getLastPathSegment());
  
         // Check incoming Uri against the matcher

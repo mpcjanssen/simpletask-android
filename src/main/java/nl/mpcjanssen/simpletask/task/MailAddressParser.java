@@ -54,7 +54,7 @@ public class MailAddressParser {
         }
 
         Matcher m = MAIL_ADDRESS_PATTERN.matcher(inputText);
-        List<String> addresses = new ArrayList<String>();
+        List<String> addresses = new ArrayList<>();
         while (m.find()) {
             addresses.add(m.group().trim());
         }

@@ -100,9 +100,6 @@ public class Preferences extends ThemedActivity {
             }
             aboutCategory.removePreference(toHide);
 
-            // Only show Material themes if supported
-            final ListPreference themePref = (ListPreference)findPreference(getString(R.string.theme_pref_key));
-
             if (!TodoApplication.ATLEAST_API16) {
                 Preference calSyncPref = findPreference(getString(R.string.calendar_sync_screen));
                 PreferenceCategory behaviorCategory = (PreferenceCategory) findPreference(getString(R.string.experimental_cat_key));

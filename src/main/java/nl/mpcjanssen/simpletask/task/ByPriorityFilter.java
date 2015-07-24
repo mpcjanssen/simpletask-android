@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class ByPriorityFilter implements TaskFilter {
     @NonNull
-    ArrayList<Priority> priorities = new ArrayList<Priority>();
+    ArrayList<Priority> priorities = new ArrayList<>();
     private boolean not;
 
     public ByPriorityFilter(@Nullable List<Priority> priorities, boolean not) {

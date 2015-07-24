@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.task;
 
-import hirondelle.date4j.DateTime;
 import junit.framework.TestCase;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;

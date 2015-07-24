@@ -54,10 +54,10 @@ public class ActiveFilter {
     private final Logger log;
 
     @NonNull
-    private ArrayList<Priority> m_prios = new ArrayList<Priority>();
-    private ArrayList<String> m_contexts = new ArrayList<String>();
-    private ArrayList<String> m_projects = new ArrayList<String>();
-    private ArrayList<String> m_sorts = new ArrayList<String>();
+    private ArrayList<Priority> m_prios = new ArrayList<>();
+    private ArrayList<String> m_contexts = new ArrayList<>();
+    private ArrayList<String> m_projects = new ArrayList<>();
+    private ArrayList<String> m_sorts = new ArrayList<>();
     private boolean m_projectsNot = false;
     @Nullable
     private String m_search;
@@ -126,31 +126,31 @@ public class ActiveFilter {
                 INTENT_HIDE_CREATE_DATE_FILTER, false);
         m_search = intent.getStringExtra(SearchManager.QUERY);
         if (sorts != null && !sorts.equals("")) {
-            m_sorts = new ArrayList<String>(
+            m_sorts = new ArrayList<>(
                     Arrays.asList(sorts.split(INTENT_EXTRA_DELIMITERS)));
         }
         if (prios != null && !prios.equals("")) {
             m_prios = Priority.toPriority(Arrays.asList(prios.split(INTENT_EXTRA_DELIMITERS)));
         }
         if (projects != null && !projects.equals("")) {
-            m_projects = new ArrayList<String>(Arrays.asList(projects
+            m_projects = new ArrayList<>(Arrays.asList(projects
                     .split(INTENT_EXTRA_DELIMITERS)));
         }
         if (contexts != null && !contexts.equals("")) {
-            m_contexts = new ArrayList<String>(Arrays.asList(contexts
+            m_contexts = new ArrayList<>(Arrays.asList(contexts
                     .split(INTENT_EXTRA_DELIMITERS)));
         }
     }
 
     public void initFromPrefs(@NonNull SharedPreferences prefs) {
-        m_sorts = new ArrayList<String>();
+        m_sorts = new ArrayList<>();
         m_sorts.addAll(Arrays.asList(prefs.getString(INTENT_SORT_ORDER, "")
                 .split(INTENT_EXTRA_DELIMITERS)));
-        m_contexts = new ArrayList<String>(prefs.getStringSet(
+        m_contexts = new ArrayList<>(prefs.getStringSet(
                 INTENT_CONTEXTS_FILTER, Collections.<String>emptySet()));
-        m_prios = Priority.toPriority(new ArrayList<String>(prefs
+        m_prios = Priority.toPriority(new ArrayList<>(prefs
                 .getStringSet(INTENT_PRIORITIES_FILTER, Collections.<String>emptySet())));
-        m_projects = new ArrayList<String>(prefs.getStringSet(
+        m_projects = new ArrayList<>(prefs.getStringSet(
                 INTENT_PROJECTS_FILTER, Collections.<String>emptySet()));
         m_contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false);
         m_priosNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false);
@@ -175,7 +175,7 @@ public class ActiveFilter {
         String filterTitle = "" + filterApplied ;
         if (hasFilter()) {
             filterTitle = "(" + visible + "/" + total +  ") " + filterTitle;
-            ArrayList<String> activeParts = new ArrayList<String>();
+            ArrayList<String> activeParts = new ArrayList<>();
             if (m_prios.size() > 0) {
                 activeParts.add(prio.toString());
             }
@@ -201,7 +201,7 @@ public class ActiveFilter {
     }
 
     public String getProposedName() {
-        ArrayList<String> appliedFilters = new ArrayList<String>();
+        ArrayList<String> appliedFilters = new ArrayList<>();
         appliedFilters.addAll(m_contexts);
         appliedFilters.remove("-");
         appliedFilters.addAll(Priority.inCode(m_prios));
@@ -218,7 +218,7 @@ public class ActiveFilter {
         if (m_sorts == null || m_sorts.size() == 0
                 || Strings.isEmptyOrNull(m_sorts.get(0))) {
             // Set a default sort
-            m_sorts = new ArrayList<String>();
+            m_sorts = new ArrayList<>();
             if (defaultSort==null) return  m_sorts;
             for (String type : defaultSort) {
                 m_sorts.add(NORMAL_SORT + SORT_SEPARATOR
@@ -253,10 +253,10 @@ public class ActiveFilter {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(INTENT_TITLE, mName);
             editor.putString(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
-            editor.putStringSet(INTENT_CONTEXTS_FILTER, new HashSet<String>(m_contexts));
+            editor.putStringSet(INTENT_CONTEXTS_FILTER, new HashSet<>(m_contexts));
             editor.putStringSet(INTENT_PRIORITIES_FILTER,
-                    new HashSet<String>(Priority.inCode(m_prios)));
-            editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<String>(m_projects));
+                    new HashSet<>(Priority.inCode(m_prios)));
+            editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<>(m_projects));
             editor.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
             editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
             editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
@@ -273,9 +273,9 @@ public class ActiveFilter {
     }
 
     public void clear() {
-        m_prios = new ArrayList<Priority>();
-        m_contexts = new ArrayList<String>();
-        m_projects = new ArrayList<String>();
+        m_prios = new ArrayList<>();
+        m_contexts = new ArrayList<>();
+        m_projects = new ArrayList<>();
         m_projectsNot = false;
         m_search = null;
         m_priosNot = false;
@@ -331,7 +331,7 @@ public class ActiveFilter {
     @NonNull
     public ArrayList<Task> apply(@NonNull List<Task> tasks) {
         AndFilter filter = new AndFilter();
-        ArrayList<Task> matched = new ArrayList<Task>();
+        ArrayList<Task> matched = new ArrayList<>();
 
         try {
             String script = getScript();
@@ -451,7 +451,7 @@ public class ActiveFilter {
 
     private class AndFilter {
         @NonNull
-        private ArrayList<TaskFilter> filters = new ArrayList<TaskFilter>();
+        private ArrayList<TaskFilter> filters = new ArrayList<>();
 
         private AndFilter() {
             filters.clear();

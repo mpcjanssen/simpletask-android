@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.adapters.LogAdapter;
 import nl.mpcjanssen.simpletask.util.TaskIo;

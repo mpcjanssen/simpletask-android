@@ -186,7 +186,7 @@ public class TaskTest extends TestCase {
     public void testThreshold() {
         Task t1 = new Task( "t:2013-12-12 Test");
         Task t2 = new Task( "Test t:2013-12-12");
-        ArrayList<Token> eTok = new ArrayList<Token>();
+        ArrayList<Token> eTok = new ArrayList<>();
         eTok.add(new THRESHOLD_DATE("2013-12-12"));
         eTok.add(new WHITE_SPACE(" "));
         eTok.add(new TEXT("Test"));
@@ -221,7 +221,7 @@ public class TaskTest extends TestCase {
 
     public void testParseText() {
         Task t1 = new Task( "abcd");
-        ArrayList<Token> expected = new ArrayList<Token>();
+        ArrayList<Token> expected = new ArrayList<>();
         expected.add(new TEXT("abcd"));
         assertEquals(expected, t1.getTokens());
     }

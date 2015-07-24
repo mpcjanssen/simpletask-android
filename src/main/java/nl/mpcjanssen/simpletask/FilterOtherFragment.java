@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.*;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.View.OnTouchListener;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import org.slf4j.Logger;

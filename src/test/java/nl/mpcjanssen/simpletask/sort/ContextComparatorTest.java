@@ -1,9 +1,7 @@
 package nl.mpcjanssen.simpletask.sort;
 
 import junit.framework.TestCase;
-import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.task.TodoList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +13,7 @@ import java.util.List;
 public class ContextComparatorTest extends TestCase {
 
     public void testCompare() throws Exception {
-        List<Task> tasks = new ArrayList<Task>();
+        List<Task> tasks = new ArrayList<>();
         tasks.add(new Task("Test @b"));
         tasks.add(new Task("Test @a"));
         tasks.add(new Task("Test"));

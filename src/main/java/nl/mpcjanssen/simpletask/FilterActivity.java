@@ -1,8 +1,6 @@
 package nl.mpcjanssen.simpletask;
 
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class FilterActivity extends ThemedActivity {
 
@@ -252,7 +249,6 @@ public class FilterActivity extends ThemedActivity {
     }
 
     private void updateFilterFromFragments() {
-        ArrayList<String> items;
         for (Fragment f : pagerAdapter.getFragments()) {
             switch (f.getArguments().getString(TAB_TYPE,"")) {
                 case "":
