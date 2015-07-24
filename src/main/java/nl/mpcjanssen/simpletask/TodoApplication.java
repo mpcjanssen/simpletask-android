@@ -356,6 +356,10 @@ public class TodoApplication extends Application implements
         }
     }
 
+    public boolean isDarkWidgetTheme() {
+        return "dark".equals(getPrefs().getString(getString(R.string.widget_theme_pref_key), "light_darkactionbar"));
+    }
+
     private String getActiveThemeString() {
         return getPrefs().getString(getString(R.string.theme_pref_key), "light_darkactionbar");
     }
