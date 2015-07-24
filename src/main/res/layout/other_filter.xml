@@ -32,4 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter_show_tags" />
+    <CheckBox
+            android:id="@+id/cb_show_create_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_show_create_date" />
 </LinearLayout>

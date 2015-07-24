@@ -21,7 +21,7 @@ public class FilterOtherFragment extends Fragment {
     private CheckBox cbHideFuture;
     private CheckBox cbHideLists;
     private CheckBox cbHideTags;
-    private GestureDetector gestureDetector;
+    private CheckBox cbHideCreateDate;
     @Nullable
     ActionBar actionbar;
     private Logger log;
@@ -48,6 +48,7 @@ public class FilterOtherFragment extends Fragment {
         outState.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, getHideFuture());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, getHideLists());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, getHideTags());
+        outState.putBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, getHideTags());
     }
 
     @Override
@@ -65,34 +66,21 @@ public class FilterOtherFragment extends Fragment {
         cbHideFuture = (CheckBox) layout.findViewById(R.id.cb_show_future);
         cbHideLists = (CheckBox) layout.findViewById(R.id.cb_show_lists);
         cbHideTags = (CheckBox) layout.findViewById(R.id.cb_show_tags);
+        cbHideCreateDate = (CheckBox) layout.findViewById(R.id.cb_show_create_date);
         if (savedInstanceState != null) {
             cbHideCompleted.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
             cbHideLists.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false));
             cbHideTags.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
+            cbHideCreateDate.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false));
         } else {
             cbHideCompleted.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
             cbHideLists.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false));
             cbHideTags.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
+            cbHideCreateDate.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false));
         }
 
-        gestureDetector = new GestureDetector(TodoApplication.getAppContext(),
-                new FilterGestureDetector());
-        OnTouchListener gestureListener = new OnTouchListener() {
-            @Override
-            public boolean onTouch(@NonNull View v, @NonNull MotionEvent event) {
-                if (gestureDetector.onTouchEvent(event)) {
-                    MotionEvent cancelEvent = MotionEvent.obtain(event);
-                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
-                    v.onTouchEvent(cancelEvent);
-                    return true;
-                }
-                return false;
-            }
-        };
-
-        layout.setOnTouchListener(gestureListener);
         return layout;
     }
 
@@ -130,40 +118,12 @@ public class FilterOtherFragment extends Fragment {
             return !cbHideTags.isChecked();
         }
     }
-
-    class FilterGestureDetector extends SimpleOnGestureListener {
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_MAX_OFF_PATH = 250;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-        @Override
-        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX,
-                               float velocityY) {
-
-            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                return false;
-            if (actionbar==null) {
-                return false;
-            }
-            int index = actionbar.getSelectedNavigationIndex();
-            // right to left swipe
-            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                log.debug("Fling left");
-                if (index < actionbar.getTabCount() - 1)
-                    index++;
-                actionbar.setSelectedNavigationItem(index);
-                return true;
-            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                // left to right swipe
-                log.debug("Fling right");
-                if (index > 0)
-                    index--;
-                actionbar.setSelectedNavigationItem(index);
-                return true;
-            }
-            return false;
+    public boolean getHideCreateDate() {
+        Bundle arguments = getArguments();
+        if (cbHideCreateDate == null) {
+            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false);
+        } else {
+            return !cbHideCreateDate.isChecked();
         }
     }
 }

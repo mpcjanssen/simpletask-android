@@ -45,6 +45,7 @@ public class ActiveFilter {
     public final static String INTENT_HIDE_FUTURE_FILTER = "HIDEFUTURE";
     public final static String INTENT_HIDE_LISTS_FILTER = "HIDELISTS";
     public final static String INTENT_HIDE_TAGS_FILTER =  "HIDETAGS";
+    public final static String INTENT_HIDE_CREATE_DATE_FILTER =  "HIDECREATEDATE";
 
     public final static String INTENT_SCRIPT_FILTER =  "LUASCRIPT";
     public final static String INTENT_SCRIPT_TEST_TASK_FILTER =  "LUASCRIPT_TEST_TASK";
@@ -66,8 +67,10 @@ public class ActiveFilter {
     private boolean m_hideFuture = false;
     private boolean m_hideLists = false;
     private boolean m_hideTags = false;
+    private boolean m_hideCreateDate = false;
     private String m_script = null;
     private String m_script_test_task = null;
+
 
     public String getPrefName() {
         return mPrefName;
@@ -119,6 +122,8 @@ public class ActiveFilter {
                 INTENT_HIDE_LISTS_FILTER, false);
         m_hideTags = intent.getBooleanExtra(
                 INTENT_HIDE_TAGS_FILTER, false);
+        m_hideCreateDate = intent.getBooleanExtra(
+                INTENT_HIDE_CREATE_DATE_FILTER, false);
         m_search = intent.getStringExtra(SearchManager.QUERY);
         if (sorts != null && !sorts.equals("")) {
             m_sorts = new ArrayList<String>(
@@ -154,6 +159,7 @@ public class ActiveFilter {
         m_hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false);
         m_hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false);
         m_hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false);
+        m_hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false);
         mName = prefs.getString(INTENT_TITLE, "Simpletask");
         m_search = prefs.getString(SearchManager.QUERY, null);
         m_script = prefs.getString(INTENT_SCRIPT_FILTER, null);
@@ -236,6 +242,7 @@ public class ActiveFilter {
             target.putExtra(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
             target.putExtra(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             target.putExtra(INTENT_HIDE_TAGS_FILTER, m_hideTags);
+            target.putExtra(INTENT_HIDE_CREATE_DATE_FILTER, m_hideCreateDate);
             target.putExtra(INTENT_SCRIPT_FILTER, m_script);
             target.putExtra(SearchManager.QUERY, m_search);
         }
@@ -257,6 +264,7 @@ public class ActiveFilter {
             editor.putBoolean(INTENT_HIDE_FUTURE_FILTER, m_hideFuture);
             editor.putBoolean(INTENT_HIDE_LISTS_FILTER, m_hideLists);
             editor.putBoolean(INTENT_HIDE_TAGS_FILTER, m_hideTags);
+            editor.putBoolean(INTENT_HIDE_CREATE_DATE_FILTER, m_hideCreateDate);
             editor.putString(INTENT_SCRIPT_FILTER, m_script);
             editor.putString(INTENT_SCRIPT_TEST_TASK_FILTER, m_script_test_task);
             editor.putString(SearchManager.QUERY, m_search);
@@ -402,6 +410,9 @@ public class ActiveFilter {
     public boolean getHideTags() {
         return m_hideTags;
     }
+    public boolean getHideCreateDate() {
+        return m_hideCreateDate;
+    }
     public void setHideCompleted(boolean hide) {
         this.m_hideCompleted = hide;
     }
@@ -417,6 +428,10 @@ public class ActiveFilter {
     public void setHideTags(boolean hide) {
         this.m_hideTags = hide;
     }
+    public void setHideCreateDate(boolean hide) {
+        this.m_hideCreateDate = hide;
+    }
+
 
     public String getScript() {
         return this.m_script;
