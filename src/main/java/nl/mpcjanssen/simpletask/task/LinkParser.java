@@ -51,7 +51,7 @@ public class LinkParser {
         }
 
         Matcher m = LINK_PATTERN.matcher(inputText);
-        List<String> links = new ArrayList<String>();
+        List<String> links = new ArrayList<>();
         while (m.find()) {
             String link;
             link = m.group();

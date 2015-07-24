@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class ByProjectFilter implements TaskFilter {
     @NonNull
-    private ArrayList<String> projects = new ArrayList<String>();
+    private ArrayList<String> projects = new ArrayList<>();
     boolean not;
 
     public ByProjectFilter(@Nullable List<String> projects, boolean not) {

@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class SortTest extends TestCase {
     public void testAlphabeticalSort1 () {
-        ArrayList<Task> tasks = new ArrayList<Task>();
+        ArrayList<Task> tasks = new ArrayList<>();
         Task t1 = new Task("2011-01-01 B");
         Task t2 = new Task("2012-01-01 A");
         tasks.add(t1);
@@ -19,7 +19,7 @@ public class SortTest extends TestCase {
     }
 
     public void testAlphabeticalSort2 () {
-        ArrayList<Task> tasks = new ArrayList<Task>();
+        ArrayList<Task> tasks = new ArrayList<>();
         Task t1 = new Task("(A) B");
         Task t2 = new Task("(B) A");
         tasks.add(t1);

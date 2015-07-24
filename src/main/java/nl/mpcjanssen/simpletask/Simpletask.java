@@ -39,8 +39,6 @@ import android.text.SpannableString;
 
 import android.view.*;
 import android.widget.*;
-import android.widget.PopupMenu;
-import android.widget.SearchView;
 import com.melnykov.fab.FloatingActionButton;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
@@ -54,7 +52,6 @@ import nl.mpcjanssen.simpletask.util.Util;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -200,7 +197,7 @@ public class Simpletask extends ThemedActivity implements
 
     @NonNull
     private String selectedTasksAsString() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (Task t : getTodoList().getSelectedTasks()) {
             result.add(t.inFileFormat());
         }
@@ -772,14 +769,12 @@ public class Simpletask extends ThemedActivity implements
      * Handle clear filter click *
      */
     public void onClearClick(View v) {
-        // Collapse the actionview if we are searching
-        Intent intent = getIntent();
         clearFilter();
     }
 
     @NonNull
     public ArrayList<ActiveFilter> getSavedFilter() {
-        ArrayList<ActiveFilter> saved_filters = new ArrayList<ActiveFilter>();
+        ArrayList<ActiveFilter> saved_filters = new ArrayList<>();
         SharedPreferences saved_filter_ids = getSharedPreferences("filters", MODE_PRIVATE);
         Set<String> filterIds = saved_filter_ids.getStringSet("ids", new HashSet<String>());
         for (String id : filterIds) {
@@ -917,7 +912,7 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void updateRightDrawer() {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         final ArrayList<ActiveFilter> filters = getSavedFilter();
         Collections.sort(filters, new Comparator<ActiveFilter>() {
             public int compare(@NonNull ActiveFilter f1, @NonNull ActiveFilter f2) {
@@ -927,7 +922,7 @@ public class Simpletask extends ThemedActivity implements
         for (ActiveFilter f : filters) {
             names.add(f.getName());
         }
-        m_rightDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, names));
+        m_rightDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, names));
         m_rightDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
         m_rightDrawerList.setLongClickable(true);
         m_rightDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1001,7 +996,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void deleteSavedFilter(String prefsName) {
         SharedPreferences saved_filters = getSharedPreferences("filters", MODE_PRIVATE);
-        HashSet<String> ids = new HashSet<String>();
+        HashSet<String> ids = new HashSet<>();
         ids.addAll(saved_filters.getStringSet("ids", new HashSet<String>()));
         ids.remove(prefsName);
         saved_filters.edit().putStringSet("ids", ids).apply();
@@ -1441,7 +1436,7 @@ public class Simpletask extends ThemedActivity implements
                 }
                 SpannableString ss = new SpannableString(
                         task.showParts(tokensToShow).trim());
-                ArrayList<String> colorizeStrings = new ArrayList<String>();
+                ArrayList<String> colorizeStrings = new ArrayList<>();
                 for (String context : task.getLists()) {
                     colorizeStrings.add("@" + context);
                 }
@@ -1573,8 +1568,8 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void updateLists(@NonNull final List<Task> checkedTasks) {
-        final ArrayList<String> contexts = new ArrayList<String>();
-        Set<String> selectedContexts = new HashSet<String>();
+        final ArrayList<String> contexts = new ArrayList<>();
+        Set<String> selectedContexts = new HashSet<>();
         final TodoList todoList = getTodoList();
         contexts.addAll(Util.sortWithPrefix(todoList.getContexts(), m_app.sortCaseSensitive(), null));
         for (Task t : checkedTasks) {
@@ -1585,7 +1580,7 @@ public class Simpletask extends ThemedActivity implements
         @SuppressLint("InflateParams")
         View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
-        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+        lv.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()])));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         for (String context : selectedContexts) {
@@ -1603,8 +1598,8 @@ public class Simpletask extends ThemedActivity implements
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> items = new ArrayList<String>();
-                ArrayList<String> uncheckedItems = new ArrayList<String>();
+                ArrayList<String> items = new ArrayList<>();
+                ArrayList<String> uncheckedItems = new ArrayList<>();
                 uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
@@ -1637,8 +1632,8 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void updateTags(@NonNull final List<Task> checkedTasks) {
-        final ArrayList<String> projects = new ArrayList<String>();
-        Set<String> selectedProjects = new HashSet<String>();
+        final ArrayList<String> projects = new ArrayList<>();
+        Set<String> selectedProjects = new HashSet<>();
         final TodoList taskbag = getTodoList();
         projects.addAll(Util.sortWithPrefix(taskbag.getProjects(), m_app.sortCaseSensitive(), null));
         for (Task t : checkedTasks) {
@@ -1648,7 +1643,7 @@ public class Simpletask extends ThemedActivity implements
 
         @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
-        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+        lv.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
                 projects.toArray(new String[projects.size()])));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         for (String context : selectedProjects) {
@@ -1666,8 +1661,8 @@ public class Simpletask extends ThemedActivity implements
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> items = new ArrayList<String>();
-                ArrayList<String> uncheckedItems = new ArrayList<String>();
+                ArrayList<String> items = new ArrayList<>();
+                ArrayList<String> uncheckedItems = new ArrayList<>();
                 uncheckedItems.addAll(Util.getCheckedItems(lv, false));
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
@@ -1715,8 +1710,8 @@ public class Simpletask extends ThemedActivity implements
                 mFilter.setContextsNot(!mFilter.getContextsNot());
             } else {
                 tags = Util.getCheckedItems(lv, true);
-                ArrayList<String> filteredContexts = new ArrayList<String>();
-                ArrayList<String> filteredProjects = new ArrayList<String>();
+                ArrayList<String> filteredContexts = new ArrayList<>();
+                ArrayList<String> filteredProjects = new ArrayList<>();
 
                 for (String tag : tags) {
                     if (tag.startsWith("+")) {

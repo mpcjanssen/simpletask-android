@@ -22,7 +22,6 @@
  */
 package nl.mpcjanssen.simpletask.task;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,7 +35,6 @@ import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
-import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -61,9 +59,9 @@ public class TodoList {
     private final boolean mStartLooper;
 
     @NonNull
-    private List<Task> mTasks = new ArrayList<Task>();
+    private List<Task> mTasks = new ArrayList<>();
     @NonNull
-    private List<Task> mSelectedTask = new ArrayList<Task>();
+    private List<Task> mSelectedTask = new ArrayList<>();
     @Nullable
     private ArrayList<String> mLists = null;
     @Nullable
@@ -154,11 +152,11 @@ public class TodoList {
 
     @NonNull
     public ArrayList<Priority> getPriorities() {
-        Set<Priority> res = new HashSet<Priority>();
+        Set<Priority> res = new HashSet<>();
         for (Task item : mTasks) {
             res.add(item.getPriority());
         }
-        ArrayList<Priority> ret = new ArrayList<Priority>(res);
+        ArrayList<Priority> ret = new ArrayList<>(res);
         Collections.sort(ret);
         return ret;
     }
@@ -168,11 +166,11 @@ public class TodoList {
         if (mLists != null) {
             return mLists;
         }
-        Set<String> res = new HashSet<String>();
+        Set<String> res = new HashSet<>();
         for (Task item : mTasks) {
             res.addAll(item.getLists());
         }
-        mLists = new ArrayList<String>();
+        mLists = new ArrayList<>();
         mLists.addAll(res);
         return mLists;
     }
@@ -182,11 +180,11 @@ public class TodoList {
         if (mTags != null) {
             return mTags;
         }
-        Set<String> res = new HashSet<String>();
+        Set<String> res = new HashSet<>();
         for (Task item : mTasks) {
             res.addAll(item.getTags());
         }
-        mTags = new ArrayList<String>();
+        mTags = new ArrayList<>();
         mTags.addAll(res);
         return mTags;
     }
@@ -205,9 +203,7 @@ public class TodoList {
         queueRunnable("Uncomplete", new Runnable() {
             @Override
             public void run() {
-                ArrayList<String> originalStrings = new ArrayList<String>();
                 for (Task t : tasks) {
-                    originalStrings.add(t.inFileFormat());
                     t.markIncomplete();
                 }
             }

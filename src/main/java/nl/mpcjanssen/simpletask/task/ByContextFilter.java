@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class ByContextFilter implements TaskFilter {
     @NonNull
-    private ArrayList<String> contexts = new ArrayList<String>();
+    private ArrayList<String> contexts = new ArrayList<>();
     private boolean not;
 
     public ByContextFilter(@Nullable List<String> contexts, boolean not) {

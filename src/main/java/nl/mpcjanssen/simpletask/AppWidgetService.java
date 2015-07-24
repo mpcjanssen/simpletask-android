@@ -45,7 +45,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     private Context mContext;
     private TodoApplication application;
     
-    ArrayList<Task> visibleTasks = new ArrayList<Task>();
+    ArrayList<Task> visibleTasks = new ArrayList<>();
 
     public AppWidgetRemoteViewsFactory(TodoApplication application,  Intent intent) {
         log = LoggerFactory.getLogger(this.getClass());
@@ -70,7 +70,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     void setFilteredTasks() {
         // log.debug("Widget: setFilteredTasks called");
-        visibleTasks = new ArrayList<Task>();
+        visibleTasks = new ArrayList<>();
         if (application==null)  {
             log.debug("application object was null");
             return;
@@ -134,7 +134,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             } else {
                 itemForLightTheme(rv);
             }
-            ArrayList<String> colorizeStrings = new ArrayList<String>();
+            ArrayList<String> colorizeStrings = new ArrayList<>();
             for (String context : task.getLists()) {
                 colorizeStrings.add("@" + context);
             }

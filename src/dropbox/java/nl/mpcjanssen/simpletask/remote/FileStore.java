@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -134,7 +133,7 @@ public class FileStore implements FileStoreInterface {
             log.info("Changes are pending");
         }
         SharedPreferences.Editor edit = mPrefs.edit();
-        mPrefs.edit().putBoolean(LOCAL_CHANGES_PENDING, pending).commit();
+        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit();
     }
 
     private boolean isOnline() {
@@ -160,7 +159,7 @@ public class FileStore implements FileStoreInterface {
             AppKeyPair appKeys = new AppKeyPair(app_key, app_secret);
             String savedAuth = mPrefs.getString(OAUTH2_TOKEN, null);
             AndroidAuthSession session = new AndroidAuthSession(appKeys, savedAuth);
-            mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+            mDBApi = new DropboxAPI<>(session);
         }
     }
 
@@ -195,7 +194,7 @@ public class FileStore implements FileStoreInterface {
                     }
                     if (!continuePolling) return;
                     start_time = System.currentTimeMillis();
-                    Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[0]), mDBApi.getSession());
+                    Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[params.size()]), mDBApi.getSession());
                     log.info("Longpoll response: " + response.toString());
                     JsonThing result = new JsonThing(response);
                     JsonMap resultMap = result.expectMap();
@@ -316,7 +315,7 @@ public class FileStore implements FileStoreInterface {
                         log.info("File not found, creating file instead");
                         byte[] toStore = "".getBytes();
                         InputStream in = new ByteArrayInputStream(toStore);
-                        DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                        mDBApi.putFile(path, in,
                                 toStore.length, null, null);
                         openFileStream = mDBApi.getFileStream(path, null);
                         fileInfo = openFileStream.getFileInfo();
@@ -384,15 +383,14 @@ public class FileStore implements FileStoreInterface {
                         ArrayList<String> params = new ArrayList<>();
                         params.add("include_media_info");
                         params.add("false");
-                        Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[0]), mDBApi.getSession());
+                        Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[params.size()]), mDBApi.getSession());
                         log.info("Longpoll latestcursor response: " + response.toString());
                         JsonThing result = new JsonThing(response);
                         JsonMap resultMap = result.expectMap();
                         latestCursor = resultMap.get("cursor").expectString();
-                    } catch (DropboxException e) {
+                    } catch (DropboxException | JsonExtractionException e) {
                         e.printStackTrace();
-                    } catch (JsonExtractionException e) {
-                        e.printStackTrace();
+                        log.error("Error reading polling cursor" + e);
                     }
                     log.info("Starting slow polling");
                     startLongPoll(path, 0);
@@ -452,8 +450,7 @@ public class FileStore implements FileStoreInterface {
                 String newName = path;
                 String rev = getLocalTodoRev();
                 try {
-                    byte[] toStore = new byte[0];
-                    toStore = contents.getBytes("UTF-8");
+                    byte[]  toStore = contents.getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);
                     log.info("Saving to file " + path);
                     DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
@@ -514,7 +511,7 @@ public class FileStore implements FileStoreInterface {
                     byte[] toStore = (Util.join(doneContents, eol) + eol).getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);
 
-                    DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
+                    mDBApi.putFile(path, in,
                             toStore.length, fileInfo.getMetadata().rev, null);
                     in.close();
                 } catch (Exception e) {
@@ -623,7 +620,7 @@ public class FileStore implements FileStoreInterface {
         private HashMap<String,DropboxAPI.Entry> entryHash = new HashMap<>();
         private File currentPath;
 
-        private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
+        private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<>();
         private final Activity activity;
         private boolean txtOnly;
         Dialog dialog;
@@ -726,8 +723,8 @@ public class FileStore implements FileStoreInterface {
             }
 
             this.currentPath = path;
-            List<String> f = new ArrayList<String>();
-            List<String> d = new ArrayList<String>();
+            List<String> f = new ArrayList<>();
+            List<String> d = new ArrayList<>();
 
             try {
                 DropboxAPI.Entry entries = getPathMetaData(api,path) ;

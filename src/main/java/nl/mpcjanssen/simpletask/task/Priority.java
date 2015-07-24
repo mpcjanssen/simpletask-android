@@ -83,7 +83,7 @@ public enum Priority {
 
     @NonNull
     public static List<Priority> range(@NonNull Priority p1, @NonNull Priority p2) {
-        ArrayList<Priority> priorities = new ArrayList<Priority>();
+        ArrayList<Priority> priorities = new ArrayList<>();
         boolean add = false;
 
         for (Priority p : (p1.ordinal() < p2.ordinal() ? Priority.values()
@@ -104,7 +104,7 @@ public enum Priority {
     @NonNull
     public static List<String> rangeInCode(@NonNull Priority p1, @NonNull Priority p2) {
         List<Priority> priorities = Priority.range(p1, p2);
-        List<String> result = new ArrayList<String>(priorities.size());
+        List<String> result = new ArrayList<>(priorities.size());
         for (Priority p : priorities) {
             result.add(p.getCode());
         }
@@ -113,7 +113,7 @@ public enum Priority {
 
     @NonNull
     public static ArrayList<String> inCode(@NonNull List<Priority> priorities) {
-        ArrayList<String> strings = new ArrayList<String>();
+        ArrayList<String> strings = new ArrayList<>();
         for (Priority p : priorities) {
             strings.add(p.getCode());
         }
@@ -122,9 +122,9 @@ public enum Priority {
 
     @NonNull
     public static ArrayList<Priority> toPriority(@Nullable List<String> codes) {
-        ArrayList<Priority> priorities = new ArrayList<Priority>();
+        ArrayList<Priority> priorities = new ArrayList<>();
         if (codes == null) {
-            return new ArrayList<Priority>();
+            return new ArrayList<>();
         }
         for (String code : codes) {
             priorities.add(Priority.toPriority(code));

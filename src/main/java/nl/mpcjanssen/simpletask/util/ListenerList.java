@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ListenerList<L> {
     @NonNull
-    private List<L> listenerList = new ArrayList<L>();
+    private List<L> listenerList = new ArrayList<>();
 
     public interface FireHandler<L> {
         void fireEvent(L listener);
@@ -21,7 +21,7 @@ public class ListenerList<L> {
     }
 
     public void fireEvent(@NonNull FireHandler<L> fireHandler) {
-        List<L> copy = new ArrayList<L>(listenerList);
+        List<L> copy = new ArrayList<>(listenerList);
         for (L l : copy) {
             fireHandler.fireEvent(l);
         }

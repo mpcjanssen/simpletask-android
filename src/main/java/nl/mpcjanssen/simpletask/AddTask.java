@@ -26,13 +26,10 @@ package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
@@ -44,8 +41,6 @@ import android.text.Selection;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -54,8 +49,6 @@ import nl.mpcjanssen.simpletask.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -134,7 +127,7 @@ public class AddTask extends ThemedActivity {
         todoList.clearSelectedTasks();
 
         if (m_backup!=null && m_backup.size()>0) {
-            ArrayList<String> prefill = new ArrayList<String>();
+            ArrayList<String> prefill = new ArrayList<>();
             for (Task t : m_backup) {
                 prefill.add(t.inFileFormat());
             }
@@ -210,7 +203,7 @@ public class AddTask extends ThemedActivity {
                             line = precedingText;
                         }
                         Task t = new Task(line);
-                        LinkedHashSet<String> tags = new LinkedHashSet<String>();
+                        LinkedHashSet<String> tags = new LinkedHashSet<>();
                         for (String ctx : t.getLists()) {
                             tags.add("@" + ctx);
                         }
@@ -439,7 +432,7 @@ public class AddTask extends ThemedActivity {
     }
 
     private void showTagMenu() {
-        Set<String> items = new TreeSet<String>();
+        Set<String> items = new TreeSet<>();
         TodoList todoList = m_app.getTodoList();
 
         items.addAll(todoList.getProjects());
@@ -454,14 +447,14 @@ public class AddTask extends ThemedActivity {
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
+        lv.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
                 projects.toArray(new String[projects.size()])));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> items = new ArrayList<>();
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
                 if (!newText.equals("")) {
@@ -486,7 +479,7 @@ public class AddTask extends ThemedActivity {
     private void showPrioMenu() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final Priority[] priorities = Priority.values();
-        ArrayList<String> priorityCodes = new ArrayList<String>();
+        ArrayList<String> priorityCodes = new ArrayList<>();
 
         for (Priority prio : priorities) {
             priorityCodes.add(prio.getCode());
@@ -508,7 +501,7 @@ public class AddTask extends ThemedActivity {
 
 
     private void showContextMenu() {
-        Set<String> items = new TreeSet<String>();
+        Set<String> items = new TreeSet<>();
         TodoList todoList = m_app.getTodoList();
 
         items.addAll(todoList.getContexts());
@@ -523,14 +516,14 @@ public class AddTask extends ThemedActivity {
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
         String [] choices = contexts.toArray(new String[contexts.size()]);
-                lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
-                choices ));
+                lv.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
+                        choices));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> items = new ArrayList<>();
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
                 if (!newText.equals("")) {
@@ -569,7 +562,7 @@ public class AddTask extends ThemedActivity {
         int end = textInputField.getSelectionEnd();
         int length = textInputField.getText().length();
         int sizeDelta;
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
@@ -599,7 +592,7 @@ public class AddTask extends ThemedActivity {
         int end = textInputField.getSelectionEnd();
         int length = textInputField.getText().length();
         int sizeDelta;
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
@@ -620,7 +613,7 @@ public class AddTask extends ThemedActivity {
         int newStart = Math.max(0, start + sizeDelta);
         int newEnd = Math.min(end + sizeDelta, newLength);
         newEnd = Math.max(newStart, newEnd);
-        textInputField.setSelection(start, end);
+        textInputField.setSelection(start, newEnd);
     }
 
     private void replacePriority(@NonNull CharSequence newPrio) {
@@ -630,7 +623,7 @@ public class AddTask extends ThemedActivity {
         log.debug("Current selection: " + start + "-" + end);
         int length = textInputField.getText().length();
         int sizeDelta;
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText

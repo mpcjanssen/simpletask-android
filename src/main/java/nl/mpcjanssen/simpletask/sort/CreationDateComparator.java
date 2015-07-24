@@ -9,7 +9,7 @@ public class CreationDateComparator extends Ordering<Task> {
 
     @Override
     public int compare(Task a, Task b) {
-        int result = 0;
+        int result;
         if (Strings.isEmptyOrNull(a.getCreateDate()) && Strings.isEmptyOrNull(b.getCreateDate())) {
             result = 0;
         } else if (Strings.isEmptyOrNull(a.getCreateDate())) {

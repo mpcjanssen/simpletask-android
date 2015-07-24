@@ -868,7 +868,7 @@ public class DragSortListView extends ListView {
 
         public HeightCache(int size) {
             mMap = new SparseIntArray(size);
-            mOrder = new ArrayList<Integer>(size);
+            mOrder = new ArrayList<>(size);
             mMaxSize = size;
         }
 

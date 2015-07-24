@@ -3,35 +3,23 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import com.github.rjeschke.txtmark.Processor;
-import com.melnykov.fab.FloatingActionButton;
-import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.Stack;
-import java.util.TimeZone;
 
 public class HistoryScreen extends ThemedActivity {
 

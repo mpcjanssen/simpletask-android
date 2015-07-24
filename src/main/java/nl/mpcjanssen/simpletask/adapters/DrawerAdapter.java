@@ -25,7 +25,7 @@ public class DrawerAdapter extends BaseAdapter implements ListAdapter {
 			 String projectHeader,
 			 List<String> projects) {
         this.m_inflater = inflater;
-        this.items = new ArrayList<String>();
+        this.items = new ArrayList<>();
         this.items.add(contextHeader);
         contextHeaderPos = 0;
         this.items.addAll(contexts);
