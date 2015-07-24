@@ -530,7 +530,6 @@ public class TodoApplication extends Application implements
             return getString(R.string.none);
         }
         String value = values[index];
-
         return value;
     }
 }
