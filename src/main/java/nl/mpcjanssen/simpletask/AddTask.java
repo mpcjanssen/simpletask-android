@@ -457,7 +457,6 @@ public class AddTask extends ThemedActivity {
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 projects.toArray(new String[projects.size()])));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        m_app.setEditTextHint(ed,R.string.new_tag_name);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -480,7 +479,7 @@ public class AddTask extends ThemedActivity {
         });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.setTitle(R.string.project_prompt);
+        dialog.setTitle(m_app.getTagTerm());
         dialog.show();
     }
 
@@ -527,7 +526,6 @@ public class AddTask extends ThemedActivity {
                 lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 choices ));
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        m_app.setEditTextHint(ed,R.string.new_list_name);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -550,7 +548,7 @@ public class AddTask extends ThemedActivity {
         });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.setTitle(R.string.context_prompt);
+        dialog.setTitle(m_app.getListTerm());
         dialog.show();
     }
 

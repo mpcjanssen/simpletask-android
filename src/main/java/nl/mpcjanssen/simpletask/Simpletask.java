@@ -470,8 +470,8 @@ public class Simpletask extends ThemedActivity implements
                 count,
                 total,
                 getText(R.string.priority_prompt),
-                getText(R.string.project_prompt),
-                getText(R.string.context_prompt),
+                m_app.getTagTerm(),
+                m_app.getListTerm(),
                 getText(R.string.search),
                 getText(R.string.script),
                 getText(R.string.title_filter_applied),
@@ -1075,9 +1075,9 @@ public class Simpletask extends ThemedActivity implements
         ArrayList<String> decoratedContexts = Util.sortWithPrefix(taskBag.getDecoratedContexts(), m_app.sortCaseSensitive(), "@-");
         ArrayList<String> decoratedProjects = Util.sortWithPrefix(taskBag.getDecoratedProjects(), m_app.sortCaseSensitive(), "+-");
         DrawerAdapter drawerAdapter = new DrawerAdapter(getLayoutInflater(),
-                getString(R.string.context_prompt),
+                m_app.getListTerm(),
                 decoratedContexts,
-                getString(R.string.project_prompt),
+                m_app.getTagTerm(),
                 decoratedProjects);
 
         m_leftDrawerList.setAdapter(drawerAdapter);
@@ -1574,7 +1574,8 @@ public class Simpletask extends ThemedActivity implements
         }
 
 
-        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
+        @SuppressLint("InflateParams")
+        View view = getLayoutInflater().inflate(R.layout.tag_dialog, null, false);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,
                 contexts.toArray(new String[contexts.size()])));
@@ -1587,7 +1588,6 @@ public class Simpletask extends ThemedActivity implements
         }
 
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        m_app.setEditTextHint(ed, R.string.new_list_name);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view);
@@ -1624,7 +1624,7 @@ public class Simpletask extends ThemedActivity implements
         });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.setTitle(R.string.update_lists);
+        dialog.setTitle(m_app.getListTerm());
         dialog.show();
     }
 
@@ -1651,7 +1651,6 @@ public class Simpletask extends ThemedActivity implements
         }
 
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        m_app.setEditTextHint(ed, R.string.new_tag_name);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view);
@@ -1688,7 +1687,7 @@ public class Simpletask extends ThemedActivity implements
         });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.setTitle(R.string.update_tags);
+        dialog.setTitle(m_app.getTagTerm());
         dialog.show();
     }
 

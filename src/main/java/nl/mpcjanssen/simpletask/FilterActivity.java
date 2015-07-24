@@ -399,7 +399,15 @@ public class FilterActivity extends ThemedActivity {
         @Override
         public CharSequence	getPageTitle(int position) {
             Fragment f = fragments.get(position);
-            return f.getArguments().getString(TAB_TYPE,"unknown");
+            String type = f.getArguments().getString(TAB_TYPE,"unknown");
+            switch ( type) {
+                case PROJECT_TAB:
+                    return m_app.getTagTerm();
+                case CONTEXT_TAB:
+                    return m_app.getListTerm();
+                default:
+                    return type;
+            }
         }
 
         @Override

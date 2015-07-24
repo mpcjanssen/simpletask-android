@@ -200,6 +200,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_case_sensitive_title">Sort case-sensitive</string>
     <string name="sort_case_sensitive_summary">Observe case when sorting lists, tags and saved filters.</string>
 
+    <string name="todotxt_terms_title">Use todo.txt terms</string>
+    <string name="todotxt_terms_summary">Use context and project instead of tag and list to match the terms in todo.txt.</string>
+
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
     <string name="visit_website_title">Help</string>
@@ -252,6 +255,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_prio">By Priority</string>
     <string name="by_project">By Tag</string>
     <string name="by_context">By List</string>
+    <string name="by_project_todotxt">By Project</string>
+    <string name="by_context_todotxt">By Context</string>
     <string name="completed">Completed</string>
     <string name="by_creation_date">By Creation Date</string>
     <string name="in_future">Threshold date in future</string>
@@ -290,10 +295,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="priority_short_prompt">Prio</string>
     <string name="project_prompt">Tag</string>
     <string name="context_prompt">List</string>
-
+    <string name="project_prompt_todotxt">Project</string>
+    <string name="context_prompt_todotxt">Context</string>
     <string name="priority_format">(prio)</string>
-    <string name="context_format">\@list</string>
-    <string name="project_format">+tag</string>
 
     <string name="separator">Separator</string>
 
@@ -339,9 +343,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_added">Task added to Simpletask</string>
     <string name="default_sort">Default sort</string>
     <string name="pull_to_refresh_refreshing_label">Syncing with dropbox…</string>
-    <string name="not_tagged">Tasks not on list or tagged</string>
-    <string name="new_list_name">Input new list</string>
-    <string name="new_tag_name">Input new tag</string>
+    <string name="input_new">Input new </string>
     <string name="no_filter">No filter</string>
     <string name="dropbox">Dropbox</string>
 

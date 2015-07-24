@@ -52,6 +52,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.TimeZone;
 
 
@@ -151,6 +153,26 @@ public class TodoApplication extends Application implements
 
     public boolean showEmptyLists() {
         return m_prefs.getBoolean(getString(R.string.show_empty_lists), true);
+    }
+
+    public String getListTerm() {
+        if (useTodotxtTerms()) {
+            return getString(R.string.context_prompt_todotxt);
+        } else {
+            return getString(R.string.context_prompt);
+        }
+    }
+
+    public String getTagTerm() {
+        if (useTodotxtTerms()) {
+            return getString(R.string.project_prompt_todotxt);
+        } else {
+            return getString(R.string.project_prompt);
+        }
+    }
+
+    private boolean useTodotxtTerms() {
+        return m_prefs.getBoolean(getString(R.string.ui_todotxt_terms), false);
     }
 
     public boolean showTxtOnly() {
@@ -492,4 +514,23 @@ public class TodoApplication extends Application implements
         backupDbHelper.close();
     }
 
+    public String getSortString(String key) {
+        if (useTodotxtTerms()) {
+            if ("by_context".equals(key)) {
+                return getString(R.string.by_context_todotxt);
+            }
+            if ("by_project".equals(key)) {
+                return getString(R.string.by_project_todotxt);
+            }
+        }
+        List<String> keys = Arrays.asList(getResources().getStringArray(R.array.sortKeys));
+        String[] values = getResources().getStringArray(R.array.sort);
+        int index = keys.indexOf(key);
+        if (index==-1) {
+            return getString(R.string.none);
+        }
+        String value = values[index];
+
+        return value;
+    }
 }
