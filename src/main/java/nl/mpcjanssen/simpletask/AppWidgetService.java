@@ -111,6 +111,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     private RemoteViews getExtendedView(int taskIndex, Task task) {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+        boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);
 
         if (task != null) {
             int tokensToShow = Token.SHOW_ALL;
@@ -195,7 +196,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             } else {
                 rv.setTextViewText(R.id.taskthreshold, "");
             }
-            if (!anyDateShown || task.isCompleted()) {
+            if (!anyDateShown || task.isCompleted() || !extended_widget) {
                 rv.setViewVisibility(R.id.datebar, View.GONE);
                 //rv.setViewPadding(R.id.tasktext,
                 //       4, 4, 4, 4);
@@ -223,29 +224,6 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         rv.setTextColor(R.id.taskthreshold, application.getResources().getColor(android.R.color.darker_gray));
     }
 
-    private RemoteViews getSimpleView(int taskIndex, Task task) {
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
-
-        int tokensToShow = Token.SHOW_ALL;
-        tokensToShow = tokensToShow & ~Token.CREATION_DATE;
-        tokensToShow = tokensToShow & ~Token.COMPLETED;
-        tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
-        SpannableString ss = new SpannableString(
-                task.showParts(tokensToShow).trim());
-        if (task.isCompleted()) {
-            ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        rv.setTextViewText(R.id.widget_item_text, ss);
-        if (application.isDarkWidgetTheme()) {
-            itemForDarkTheme(rv);
-        } else {
-            itemForLightTheme(rv);
-        }
-        rv.setOnClickFillInIntent(R.id.widget_item_text, createSelectedIntent(taskIndex));
-        return rv;
-    }
-
-
     @Override
     @Nullable
     public RemoteViews getViewAt(int position) {
@@ -261,12 +239,8 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         TodoList tl = application.getTodoList();
         int taskIndex = tl.getTasks().indexOf(task);
 
-        boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);
-        if (extended_widget) {
-            return getExtendedView(taskIndex,task);
-        } else {
-            return getSimpleView(taskIndex,task);
-        }
+
+        return getExtendedView(taskIndex,task);
     }
 
 
