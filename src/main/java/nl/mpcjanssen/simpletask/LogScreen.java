@@ -60,7 +60,7 @@ public class LogScreen extends ThemedActivity {
         fastScroller.setRecyclerView(mRecyclerView);
 
         // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
-        mRecyclerView.setOnScrollListener(fastScroller.getOnScrollListener());
+        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);

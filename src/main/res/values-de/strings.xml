@@ -275,8 +275,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="context_prompt">Liste</string>
 
     <string name="priority_format">(prio)</string>
-    <string name="context_format">\@Liste</string>
-    <string name="project_format">+Kat.</string>
 
     <string name="separator">Trennzeichen</string>
 
@@ -322,9 +320,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_added">Aufgabe zu Simpletask hinzugefügt</string>
     <string name="default_sort">Standardsortierung</string>
     <string name="pull_to_refresh_refreshing_label">Synchronisiere mit Dropbox…</string>
-    <string name="not_tagged">Aufgaben ohne Liste oder Kategorie</string>
-    <string name="new_list_name">Neue Liste erstellen</string>
-    <string name="new_tag_name">Neue Kategorie erstellen</string>
     <string name="no_filter">Kein Filter</string>
     <string name="dropbox">Dropbox</string>
 

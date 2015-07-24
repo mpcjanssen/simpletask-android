@@ -273,9 +273,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="project_prompt">Etichetta</string>
     <string name="context_prompt">Lista</string>
     
-    <string name="priority_format">(prio)</string>
-    <string name="context_format">\@lista</string>
-    <string name="project_format">+etic.</string>
+    <string name="priority_format">(prio)</string>>
 
     <string name="separator">Separatore</string>
 
@@ -321,9 +319,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_added">Task aggiunto a Simpletask</string>
     <string name="default_sort">Ordine di default</string>
     <string name="pull_to_refresh_refreshing_label">Sincronizzo con dropbox…</string>
-    <string name="not_tagged">Task non in lista o etichettati</string>
-    <string name="new_list_name">Inserisci nuova Lista</string>
-    <string name="new_tag_name">Inserisci nuova Etichetta</string>
+
     <string name="no_filter">Nessun filtro</string>
     <string name="dropbox">Dropbox</string>
 

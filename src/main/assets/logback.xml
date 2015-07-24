@@ -1,3 +1,4 @@
+<!--suppress XmlUnboundNsPrefix -->
 <configuration debug="true">
     <appender name="LC" class="ch.qos.logback.classic.android.LogcatAppender">
         <encoder>

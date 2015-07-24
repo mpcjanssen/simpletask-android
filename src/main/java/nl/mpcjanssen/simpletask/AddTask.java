@@ -377,7 +377,7 @@ public class AddTask extends ThemedActivity {
         }
 
         // Save
-        todoList.notifyChanged(true);
+        todoList.notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(),m_app);
         finish();
     }
 

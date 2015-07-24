@@ -152,8 +152,6 @@ Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo d
 <string name="context_prompt">Lista</string>
 
 <string name="priority_format">(prio)</string>
-<string name="context_format">\@lista</string>
-<string name="project_format">+etiqueta</string>
 
 <string name="separator">Separador</string>
 
@@ -199,9 +197,6 @@ Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo d
 <string name="task_added">Tarea añadida a Simpletask</string>
 <string name="default_sort">Orden predeterminado</string>
 <string name="pull_to_refresh_refreshing_label">Sincronizando con dropbox…</string>
-<string name="not_tagged">Tareas no en listas o etiquetadas</string>
-<string name="new_list_name">Introducir nueva lista</string>
-<string name="new_tag_name">Introducir nueva etiqueta</string>
 <string name="no_filter">Ningún filtro</string>
 <string name="dropbox">Dropbox</string>
 

@@ -134,7 +134,7 @@ public class AddTaskBackground extends Activity {
                 todoList.add(new Task(taskText));
             }
         }
-        todoList.notifyChanged(true);
+        todoList.notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(),m_app);
         finish();
         Util.showToastShort(m_app, R.string.task_added);
     }

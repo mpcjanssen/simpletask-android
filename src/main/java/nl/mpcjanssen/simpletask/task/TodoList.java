@@ -57,12 +57,13 @@ import java.util.*;
 public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
     private final Logger log;
-    private final TodoApplication mApp;
+
+    private final boolean mStartLooper;
 
     @NonNull
     private List<Task> mTasks = new ArrayList<Task>();
     @NonNull
-    private List<Task> mSelectedTask = new ArrayList<Task>();;
+    private List<Task> mSelectedTask = new ArrayList<Task>();
     @Nullable
     private ArrayList<String> mLists = null;
     @Nullable
@@ -71,38 +72,35 @@ public class TodoList {
 
     private Handler todolistQueue;
     private boolean loadQueued = false;
-    private FileStoreInterface mFileStore;
 
 
-    public TodoList(TodoApplication app,
-                    TodoListChanged todoListChanged,
-                    FileStoreInterface.FileChangeListener fileChanged,
-                    String eol) {
+    public TodoList(TodoListChanged todoListChanged) {
+        this(todoListChanged, true);
+    }
+
+
+    public TodoList(TodoListChanged todoListChanged,
+                    boolean startLooper) {
+
         // Set up the message queue
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                todolistQueue = new Handler();
-                Looper.loop();
-            }
-        });
-        t.start();
+        this.mStartLooper = startLooper;
+        if (startLooper) {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    todolistQueue = new Handler();
+                    Looper.loop();
+                }
+            });
+            t.start();
+        }
         log = LoggerFactory.getLogger(this.getClass());
-        this.mApp = app;
         this.mTodoListChanged = todoListChanged;
-        this.mFileStore = new FileStore(mApp.getApplicationContext(), fileChanged, eol);
+
 
     }
 
-    public void sync() {
-        queueRunnable("Sync", new Runnable() {
-            @Override
-            public void run() {
-                mFileStore.sync();
-            }
-        });
-    }
 
     public void queueRunnable(final String description, Runnable r) {
         log.info("Handler: Queue " + description);
@@ -113,7 +111,11 @@ public class TodoList {
                 e.printStackTrace();
             }
         }
-        todolistQueue.post(new LoggingRunnable(description, r));
+        if (todolistQueue!=null) {
+            todolistQueue.post(new LoggingRunnable(description, r));
+        } else {
+            r.run();
+        }
     }
 
     public boolean loadQueued() {
@@ -268,14 +270,14 @@ public class TodoList {
     }
 
 
-    public void notifyChanged(final boolean changed) {
+    public void notifyChanged(final FileStoreInterface filestore, final String todoname, final String eol, final BackupInterface backup) {
         log.info("Handler: Queue notifychanged");
         todolistQueue.post(new Runnable() {
             @Override
             public void run() {
                 log.info("Handler: Handle notifychanged");
                 log.info("Saving todo list, size {}", mTasks.size());
-                save(mApp.getTodoFileName(), mApp);
+                save(filestore, todoname, backup, eol);
                 clearSelectedTasks();
                 if (mTodoListChanged != null) {
                     log.info("TodoList changed, notifying listener and invalidating cached values");
@@ -287,12 +289,6 @@ public class TodoList {
                 }
             }
         });
-    }
-
-    public void deauthenticate() {
-        if (mFileStore != null) {
-            mFileStore.logout();
-        }
     }
 
     public List<Task> getTasks() {
@@ -325,7 +321,7 @@ public class TodoList {
         selectTask(mTasks.get(index));
     }
 
-    public void reload(final String filename, final BackupInterface backup, final LocalBroadcastManager lbm, boolean background) {
+    public void reload(final FileStoreInterface fileStore, final String filename, final BackupInterface backup, final LocalBroadcastManager lbm, final boolean background, final String eol) {
         if (TodoList.this.loadQueued()) {
             log.info("Todolist reload is already queued waiting");
             return;
@@ -337,15 +333,15 @@ public class TodoList {
             public void run() {
                 clearSelectedTasks();
                 try {
-                    List<Task> tasks = mFileStore.loadTasksFromFile(filename, backup);
+                    List<Task> tasks = fileStore.loadTasksFromFile(filename, backup, eol);
                     mTasks = tasks;
                 } catch (IOException e) {
                     log.error("Todolist load failed: {}", filename, e);
-                    Util.showToastShort(mApp, "Loading of todo file failed");
+                    Util.showToastShort(TodoApplication.getAppContext(), "Loading of todo file failed");
                 }
                 loadQueued = false;
                 log.info("Todolist loaded, refresh UI");
-                notifyChanged(false);
+                notifyChanged(fileStore,filename,eol,backup);
             }};
         if (background ) {
             log.info("Loading todolist asynchronously into {}", this);
@@ -357,35 +353,22 @@ public class TodoList {
         }
     }
 
-    public void setEol(String eol) {
-        this.mFileStore.setEol(eol);
-    }
-
-    public FileStoreInterface getFileStore() {
-        return mFileStore;
-    }
-
-    public boolean fileStoreCanSync() {
-        return mFileStore != null && mFileStore.supportsSync();
-    }
-
-    public void save(final String todoFileName, final BackupInterface backup) {
+    public void save(final FileStoreInterface filestore, final String todoFileName, final BackupInterface backup, final String eol) {
         queueRunnable("Save", new Runnable() {
             @Override
             public void run() {
-
                 try {
-                    mFileStore.saveTasksToFile(todoFileName, mTasks, backup);
+                    filestore.saveTasksToFile(todoFileName, mTasks, backup, eol);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Util.showToastLong(mApp, R.string.write_failed);
+                    Util.showToastLong(TodoApplication.getAppContext(), R.string.write_failed);
                 }
             }
         });
 
     }
 
-    public void archive(final List<Task> tasks) {
+    public void archive(final FileStoreInterface filestore, final String doneFileName,  final List<Task> tasks, final String eol) {
         queueRunnable("Archive", new Runnable() {
             @Override
             public void run() {
@@ -402,14 +385,14 @@ public class TodoList {
                     }
                 }
                 try {
-                    mFileStore.appendTaskToFile(mApp.getDoneFileName(), tasksToDelete);
+                    filestore.appendTaskToFile(doneFileName, tasksToDelete, eol);
                     for (Task t : tasksToDelete) {
                         mTasks.remove(t);
                     }
-                    notifyChanged(true);
+                    notifyChanged(filestore,doneFileName,eol,null);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Util.showToastShort(mApp, "Task archiving failed");
+                    Util.showToastShort(TodoApplication.getAppContext(), "Task archiving failed");
                 }
             }
         });

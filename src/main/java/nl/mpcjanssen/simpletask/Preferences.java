@@ -27,8 +27,6 @@ package nl.mpcjanssen.simpletask;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 import android.support.annotation.NonNull;
@@ -36,8 +34,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
@@ -107,7 +103,7 @@ public class Preferences extends ThemedActivity {
             // Only show Material themes if supported
             final ListPreference themePref = (ListPreference)findPreference(getString(R.string.theme_pref_key));
 
-            if (!TodoApplication.API16) {
+            if (!TodoApplication.ATLEAST_API16) {
                 Preference calSyncPref = findPreference(getString(R.string.calendar_sync_screen));
                 PreferenceCategory behaviorCategory = (PreferenceCategory) findPreference(getString(R.string.experimental_cat_key));
                 behaviorCategory.removePreference(calSyncPref);

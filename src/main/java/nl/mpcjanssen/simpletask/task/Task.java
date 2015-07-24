@@ -68,9 +68,9 @@ public class Task implements Serializable {
     private ArrayList<Token> mTokens = new ArrayList<>();
     private boolean mCompleted;
     @NonNull
-    private ArrayList<String> mLists;
+    private ArrayList<String> mLists = new ArrayList<>();
     @NonNull
-    private ArrayList<String> mTags;
+    private ArrayList<String> mTags = new ArrayList<>();
     @Nullable
     private String mCompletionDate;
     @Nullable

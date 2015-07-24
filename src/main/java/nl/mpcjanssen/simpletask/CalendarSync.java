@@ -231,7 +231,7 @@ public class CalendarSync {
 
     private void setSyncType(int syncType, boolean warnCalExists) {
         if (syncType == m_sync_type) return;
-        if (!TodoApplication.API16) {
+        if (!TodoApplication.ATLEAST_API16) {
             m_sync_type = 0;
             return;
         }

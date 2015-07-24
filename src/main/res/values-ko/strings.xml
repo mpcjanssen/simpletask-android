@@ -241,8 +241,6 @@
     <string name="context_prompt">목록</string>
 
     <string name="priority_format">(우선순위)</string>
-    <string name="context_format">\@목록</string>
-    <string name="project_format">+t태그</string>
 
     <string name="separator">구분선</string>
 
@@ -288,9 +286,7 @@
     <string name="task_added">심플태스크에 일정 추가됨</string>
     <string name="default_sort">기본 정렬</string>
     <string name="pull_to_refresh_refreshing_label">Dropbox 동기화중…</string>
-    <string name="not_tagged">목록에 일정이 없거나 태그 없음</string>
-    <string name="new_list_name">새 목록 입력</string>
-    <string name="new_tag_name">새 태그 입력</string>
+
     <string name="no_filter">필터 없음</string>
     <string name="dropbox">Dropbox</string>
 

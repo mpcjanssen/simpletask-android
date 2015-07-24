@@ -37,15 +37,13 @@ public class FileStore implements FileStoreInterface {
     private final LocalBroadcastManager bm;
     private final FileChangeListener m_fileChangedListener;
     private final Logger log;
-    private String mEol;
     private TodoObserver m_observer;
     private boolean mIsLoading;
     private Handler fileOperationsQueue;
 
-    public FileStore(Context ctx, FileChangeListener fileChangedListener, String eol) {
+    public FileStore(Context ctx, FileChangeListener fileChangedListener) {
         log = LoggerFactory.getLogger(this.getClass());
         log.info("onCreate");
-        mEol = eol;
         m_fileChangedListener = fileChangedListener;
         m_observer = null;
         this.bm = LocalBroadcastManager.getInstance(ctx);
@@ -80,7 +78,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup) {
+    synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
         log.info("Loading tasks from file: {}" , path);
         final List<Task> result= new ArrayList<>();
         mIsLoading = true;
@@ -111,11 +109,6 @@ public class FileStore implements FileStoreInterface {
         }
         setWatching(path);
         return result;
-    }
-
-    @Override
-    public void setEol(String eol) {
-        mEol = eol;
     }
 
     @Override
@@ -190,7 +183,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(final String path, List<Task> tasks, final BackupInterface backup) {
+    synchronized public void saveTasksToFile(final String path, List<Task> tasks, @Nullable final BackupInterface backup, final String eol) {
         log.info("Saving tasks to file: {}" ,path);
         final List<String> output = Util.tasksToString(tasks);
         if (backup != null) {
@@ -203,7 +196,7 @@ public class FileStore implements FileStoreInterface {
             @Override
             public void run() {
                 try {
-                    TaskIo.writeToFile(Util.join(output, mEol) + mEol, new File(path), false);
+                    TaskIo.writeToFile(Util.join(output, eol) + eol, new File(path), false);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
@@ -218,7 +211,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void appendTaskToFile(final String path, final List<Task> tasks) {
+    public void appendTaskToFile(final String path, final List<Task> tasks, final String eol) {
         log.info(TAG, "Appending tasks to file: " + path);
         final int size = tasks.size();
         queueRunnable("Appending " + size + " tasks to " + path, new Runnable() {
@@ -226,7 +219,7 @@ public class FileStore implements FileStoreInterface {
             public void run() {
                 log.info("Appending " + size + " tasks to " + path);
                 try {
-                    TaskIo.writeToFile(Util.joinTasks(tasks, mEol) + mEol, new File(path), true);
+                    TaskIo.writeToFile(Util.joinTasks(tasks, eol) + eol, new File(path), true);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
@@ -350,7 +343,6 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void logout() {
-        return;
     }
 
     private class TodoObserver extends FileObserver {
@@ -396,7 +388,6 @@ public class FileStore implements FileStoreInterface {
                         event == FileObserver.MOVED_TO) {
                     if (ignoreEvents) {
                         log.info(TAG, "Observer: ignored event on: " + path);
-                        return;
                     } else {
                         log.info("File changed {}", path);
                         fileChangedListener.fileChanged(path);
