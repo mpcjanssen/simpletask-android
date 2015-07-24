@@ -11,4 +11,4 @@
     android:configure="nl.mpcjanssen.simpletask.FilterActivity" 
     android:resizeMode="horizontal|vertical"
     android:previewImage="@drawable/appwidget_preview"
-    tools:ignore="UnusedAttribute" />
+  />

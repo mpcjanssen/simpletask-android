@@ -128,10 +128,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             SpannableString ss = new SpannableString(
                     task.showParts(tokensToShow).trim());
 
-            if (TodoApplication.getPrefs().getString("widget_theme", "").equals("android.R.style.Theme_Holo")) {
-                rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.white));
+            if (application.isDarkWidgetTheme()) {
+                itemForDarkTheme(rv);
             } else {
-                rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.black));
+                itemForLightTheme(rv);
             }
             ArrayList<String> colorizeStrings = new ArrayList<String>();
             for (String context : task.getLists()) {
@@ -177,7 +177,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                     true);
             String relThres = task.getRelativeThresholdDate(mContext);
             boolean anyDateShown = false;
-            if (!Strings.isEmptyOrNull(relAge)) {
+            if (!Strings.isEmptyOrNull(relAge) && !mFilter.getHideCreateDate()) {
                 rv.setTextViewText(R.id.taskage, relAge);
                 anyDateShown = true;
             } else {
@@ -209,9 +209,23 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         return rv;
     }
 
+    private void itemForLightTheme(RemoteViews rv) {
+        rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.black));
+        rv.setTextColor(R.id.taskage, application.getResources().getColor(android.R.color.darker_gray));
+        rv.setTextColor(R.id.taskdue, application.getResources().getColor(android.R.color.darker_gray));
+        rv.setTextColor(R.id.taskthreshold, application.getResources().getColor(android.R.color.darker_gray));
+    }
+
+    private void itemForDarkTheme(RemoteViews rv) {
+        rv.setTextColor(R.id.tasktext, application.getResources().getColor(android.R.color.white));
+        rv.setTextColor(R.id.taskage, application.getResources().getColor(android.R.color.darker_gray));
+        rv.setTextColor(R.id.taskdue, application.getResources().getColor(android.R.color.darker_gray));
+        rv.setTextColor(R.id.taskthreshold, application.getResources().getColor(android.R.color.darker_gray));
+    }
+
     private RemoteViews getSimpleView(int taskIndex, Task task) {
-        RemoteViews rv;
-        rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_simple_list_item);
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+
         int tokensToShow = Token.SHOW_ALL;
         tokensToShow = tokensToShow & ~Token.CREATION_DATE;
         tokensToShow = tokensToShow & ~Token.COMPLETED;
@@ -222,12 +236,11 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             ss.setSpan(new StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         rv.setTextViewText(R.id.widget_item_text, ss);
-        if (TodoApplication.getPrefs().getString("widget_theme", "").equals("android.R.style.Theme_Holo")) {
-            rv.setTextColor(R.id.widget_item_text, application.getResources().getColor(android.R.color.white));
+        if (application.isDarkWidgetTheme()) {
+            itemForDarkTheme(rv);
         } else {
-            rv.setTextColor(R.id.widget_item_text, application.getResources().getColor(android.R.color.black));
+            itemForLightTheme(rv);
         }
-
         rv.setOnClickFillInIntent(R.id.widget_item_text, createSelectedIntent(taskIndex));
         return rv;
     }
@@ -248,20 +261,18 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         TodoList tl = application.getTodoList();
         int taskIndex = tl.getTasks().indexOf(task);
 
-        RemoteViews rv;
         boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);
         if (extended_widget) {
-            rv = getExtendedView(taskIndex,task);
+            return getExtendedView(taskIndex,task);
         } else {
-            rv = getSimpleView(taskIndex,task);
+            return getSimpleView(taskIndex,task);
         }
-        return rv;
     }
 
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 1;
     }
 
     @Override
