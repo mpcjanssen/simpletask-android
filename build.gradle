@@ -10,8 +10,9 @@ buildscript {
 apply plugin: 'com.android.application'
 
 // Call gradle with -Plint to enable all warnings.
-if (hasProperty("lint")) { 
-   tasks.withType(Compile) { 
+if (hasProperty("lint")) {
+    //noinspection GroovyAssignabilityCheck
+    tasks.withType(Compile) {
       options.compilerArgs << "-Xlint:all" 
    } 
 }
@@ -50,6 +51,7 @@ android {
 
     buildTypes {
         release {
+            //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
         }
     }

@@ -31,15 +31,12 @@ import android.app.Application;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
-import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
-import android.view.Window;
 import android.widget.EditText;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
@@ -65,14 +62,14 @@ public class TodoApplication extends Application implements
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
 
-    @NonNull
     private TodoList m_todoList;
     private CalendarSync m_calSync;
     private BroadcastReceiver m_broadcastReceiver;
 
-    public static final boolean API16 = android.os.Build.VERSION.SDK_INT >= 16;
+    public static final boolean ATLEAST_API16 = android.os.Build.VERSION.SDK_INT >= 16;
     private int m_Theme = -1;
     private Logger log;
+    private FileStore mFileStore;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -109,8 +106,8 @@ public class TodoApplication extends Application implements
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
-
-        m_todoList = new TodoList(this, this, this, getEol());
+        m_todoList = new TodoList(this);
+        this.mFileStore = new FileStore(this, this);
         log.info("Created todolist {}", m_todoList);
         loadTodoList(true);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
@@ -180,11 +177,11 @@ public class TodoApplication extends Application implements
     }
 
     public boolean isSyncDues() {
-        return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_dues), false);
+        return ATLEAST_API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_dues), false);
     }
 
     public boolean isSyncThresholds() {
-        return API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false);
+        return ATLEAST_API16 && m_prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false);
     }
 
     public int getReminderDays() {
@@ -316,7 +313,7 @@ public class TodoApplication extends Application implements
 
     public void loadTodoList(boolean background) {
         log.info("Load todolist");
-        m_todoList.reload(getTodoFileName(), TodoApplication.this, localBroadcastManager, background);
+        m_todoList.reload(mFileStore,getTodoFileName(),this,localBroadcastManager,background,getEol());
 
     }
 
@@ -395,11 +392,7 @@ public class TodoApplication extends Application implements
                 s.equals(getString(R.string.widget_background_transparency)) ||
                 s.equals(getString(R.string.widget_header_transparency))) {
             redrawWidgets();
-        } else if (s.equals(getString(R.string.line_breaks_pref_key))) {
-
-                m_todoList.setEol(getEol());
-
-        } else if (s.equals(getString(R.string.calendar_sync_dues))) {
+        }  else if (s.equals(getString(R.string.calendar_sync_dues))) {
             m_calSync.setSyncDues(isSyncDues());
         } else if (s.equals(getString(R.string.calendar_sync_thresholds))) {
             m_calSync.setSyncThresholds(isSyncThresholds());
@@ -440,7 +433,7 @@ public class TodoApplication extends Application implements
 
     @NonNull
     public FileStoreInterface getFileStore() {
-        return m_todoList.getFileStore();
+        return mFileStore;
     }
 
     public void showConfirmationDialog(@NonNull Context cxt, int msgid,

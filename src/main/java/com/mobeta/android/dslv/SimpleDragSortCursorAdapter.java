@@ -83,6 +83,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      */
     @Deprecated
     public SimpleDragSortCursorAdapter(Context context, int layout, Cursor c, @NonNull String[] from, int[] to) {
+        //noinspection deprecation
         super(context, layout, c);
         mTo = to;
         mOriginalFrom = from;

@@ -50,7 +50,6 @@ public class FileStore implements FileStoreInterface {
     private final Context mCtx;
     private final Logger log;
     private  SharedPreferences mPrefs;
-    private String mEol;
     // In the class declaration section:
     private DropboxAPI<AndroidAuthSession> mDBApi;
 
@@ -68,7 +67,7 @@ public class FileStore implements FileStoreInterface {
     private boolean mOnline;
     private Handler fileOperationsQueue;
 
-    public FileStore(Context ctx, FileChangeListener fileChangedListener,  String eol) {
+    public FileStore(Context ctx, FileChangeListener fileChangedListener) {
         log = LoggerFactory.getLogger(this.getClass());
         mPrefs = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
         mFileChangedListerer = fileChangedListener;
@@ -83,7 +82,6 @@ public class FileStore implements FileStoreInterface {
         });
         t.start();
         mCtx = ctx;
-        mEol = eol;
         mOnline = isOnline();
         setMDBApi();
     }
@@ -128,7 +126,7 @@ public class FileStore implements FileStoreInterface {
         edit.commit();
     }
 
-    private void setChangesPending(@NonNull boolean pending) {
+    private void setChangesPending(boolean pending) {
         if (mPrefs == null) {
             return ;
         }
@@ -172,7 +170,7 @@ public class FileStore implements FileStoreInterface {
     }
 
 
-    private void startLongPoll ( @NonNull final String polledFile, @NonNull final int backoffSeconds)  {
+    private void startLongPoll ( @NonNull final String polledFile, final int backoffSeconds)  {
         pollingTask = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -277,7 +275,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public List<Task> loadTasksFromFile(String path, final @Nullable BackupInterface backup) throws IOException {
+    synchronized public List<Task> loadTasksFromFile(String path, final @Nullable BackupInterface backup, String eol) throws IOException {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -301,7 +299,7 @@ public class FileStore implements FileStoreInterface {
             Util.showToastLong(mCtx,"Saving pending changes");
             mIsLoading = false;
             tasks = tasksFromCache();
-            saveTasksToFile(path, tasks, backup);
+            saveTasksToFile(path, tasks, backup, eol);
             startWatching(path);
             return tasks;
         } else {
@@ -435,12 +433,12 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(final String path, final List<Task> tasks, @Nullable final BackupInterface backup) throws IOException {
+    synchronized public void saveTasksToFile(final String path, final List<Task> tasks, @Nullable final BackupInterface backup, String eol) throws IOException {
         if (backup != null) {
             backup.backup(path, Util.joinTasks(tasks, "\n"));
         }
         List<String> lines = Util.tasksToString(tasks);
-        final String contents = Util.join(lines, mEol) + mEol;
+        final String contents = Util.join(lines, eol) + eol;
 
         if (!isOnline()) {
             saveToCache(path, getLocalTodoRev(), contents);
@@ -487,7 +485,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void appendTaskToFile(final String path, final List<Task> tasks) throws IOException {
+    public void appendTaskToFile(final String path, final List<Task> tasks, final String eol) throws IOException {
         if (!isOnline()) {
             throw new IOException("Device is offline");
         }
@@ -513,7 +511,7 @@ public class FileStore implements FileStoreInterface {
                     for (Task t : tasks) {
                         doneContents.add(t.inFileFormat());
                     }
-                    byte[] toStore = (Util.join(doneContents, mEol) + mEol).getBytes("UTF-8");
+                    byte[] toStore = (Util.join(doneContents, eol) + eol).getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);
 
                     DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
@@ -525,12 +523,6 @@ public class FileStore implements FileStoreInterface {
             }
         };
         queueRunnable("Append to file " + path, r);
-    }
-
-
-    @Override
-    public void setEol(String eol) {
-        mEol = eol;
     }
 
     @Override
