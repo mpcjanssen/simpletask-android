@@ -1,6 +1,19 @@
 ﻿Changelog
 =========
 
+6.0.2
+-----
+
+- Add a setting to hide creation date if this is the only specified date. Fixes [#272](https://github.com/mpcjanssen/simpletask-android/issues/272)
+- Fix widget colors.
+- Add setting to use `context` and `project` instead of `list` and `tag` to match `todo.txt`.  [#242](https://github.com/mpcjanssen/simpletask-android/issues/242)
+
+
+6.0.1
+-----
+
+- Re-enable `script` filter tab.
+
 6.0.0
 -----
 
