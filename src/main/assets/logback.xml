@@ -2,7 +2,7 @@
     <appender name="LC" class="ch.qos.logback.classic.android.LogcatAppender">
         <encoder>
         <!-- see http://logback.qos.ch/manual/layouts.html#conversionWord for format -->
-        <pattern>%relative;[%thread];%level;%msg%n;%n</pattern>
+        <pattern>%relative;[%thread];%level;%msg%n</pattern>
     </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -27,6 +27,5 @@
     <root level="DEBUG" >
         <appender-ref ref="FILE" />
         <appender-ref ref="LC" />
-        <!-- <appender-ref ref="DB" /> -->
     </root>
 </configuration>
