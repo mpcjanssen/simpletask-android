@@ -99,7 +99,6 @@ public class FilterSortFragment extends Fragment {
             layout = (LinearLayout) inflater.inflate(R.layout.single_filter,
                     container, false);
 
-        String[] values = getResources().getStringArray(R.array.sort);
         String[] keys = getResources().getStringArray(R.array.sortKeys);
         for (String item : originalItems) {
             String[] parts =  item.split("!");
@@ -118,14 +117,14 @@ public class FilterSortFragment extends Fragment {
 
             int index = Arrays.asList(keys).indexOf(sortType);
             if (index!=-1) {
-                adapterList.add(values[index]);
+                adapterList.add(sortType);
                 directions.add(sortDirection);
-                values[index]=null;
+                keys[index]=null;
             }
         }
 
         // Add sorts not already in the sortlist
-        for (String item : values) {
+        for (String item : keys) {
             if (item!=null) {
                 adapterList.add(item);
                 directions.add(ActiveFilter.NORMAL_SORT);
@@ -182,14 +181,19 @@ public class FilterSortFragment extends Fragment {
 
     public class SortItemAdapter extends ArrayAdapter<String> {
 
+        private final String[] names;
+
         public SortItemAdapter(@NonNull Context context, int resource, int textViewResourceId, List<String> objects) {
             super(context, resource, textViewResourceId, objects);
+            names = getResources().getStringArray(R.array.sort);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = super.getView(position, convertView, parent);
             ImageButton reverseButton = (ImageButton)row.findViewById(R.id.reverse_button);
+            TextView label = (TextView)row.findViewById(R.id.text);
+            label.setText(m_app.getSortString(adapterList.get(position)));
 
             if (directions.get(position).equals(ActiveFilter.REVERSED_SORT)) {
                 reverseButton.setBackgroundResource(sortUpId);
@@ -200,12 +204,7 @@ public class FilterSortFragment extends Fragment {
         }
 
         public String getSortType(int position) {
-            String[] values = getResources().getStringArray(R.array.sort);
-            String[] keys = getResources().getStringArray(R.array.sortKeys);
-            View row = this.getView(position, null, null);
-            TextView text = (TextView)row.findViewById(R.id.text);
-            int index = Arrays.asList(values).indexOf(text.getText().toString());
-            return keys[index];
+            return adapterList.get(position);
         }
     }
 }

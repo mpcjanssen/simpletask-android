@@ -81,8 +81,8 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/context_format"
             android:id="@+id/btnContext"
+            android:text="\@..."
             style="?android:attr/borderlessButtonStyle"
             />
 
@@ -90,7 +90,7 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/project_format"
+        android:text="+..."
         android:id="@+id/btnProject"
         style="?android:attr/borderlessButtonStyle" />
 
@@ -98,7 +98,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/priority_format"
+            android:text="(.)"
             android:id="@+id/btnPrio"
             style="?android:attr/borderlessButtonStyle" />
 
