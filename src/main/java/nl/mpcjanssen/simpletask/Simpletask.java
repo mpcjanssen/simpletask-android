@@ -1507,7 +1507,7 @@ public class Simpletask extends ThemedActivity implements
                         res.getColor(android.R.color.holo_red_light),
                         m_app.hasColorDueDates());
                 String relThres = task.getRelativeThresholdDate(mContext);
-                if (!Strings.isEmptyOrNull(relAge)) {
+                if (!Strings.isEmptyOrNull(relAge) && !mFilter.getHideCreateDate()) {
                     holder.taskage.setText(relAge);
                     holder.taskage.setVisibility(View.VISIBLE);
                 } else {
