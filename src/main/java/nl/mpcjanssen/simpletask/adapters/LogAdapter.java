@@ -45,8 +45,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
                 .inflate(R.layout.log_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         TextView tv = (TextView) v.findViewById(R.id.logtext);
-        ViewHolder vh = new ViewHolder(v,tv);
-        return vh;
+        return new ViewHolder(v,tv);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

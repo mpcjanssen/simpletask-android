@@ -290,7 +290,7 @@ public class FileStore implements FileStoreInterface {
             throw new IOException("Not authenticated");
         }
 
-        List<Task> tasks = new ArrayList();
+        List<Task> tasks = new ArrayList<>();
 
         if (!isOnline()) {
             log.info("Device is offline loading from cache");

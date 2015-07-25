@@ -32,12 +32,10 @@ public class FilterScriptFragment extends Fragment {
     private EditText txtTestTask;
     private TextView tvResult;
     private TextView tvBooleanResult;
-    private Button btnTest;
     private Logger log;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         log = LoggerFactory.getLogger(this.getClass());
         log.debug("onCreate() this:" + this);
@@ -45,7 +43,6 @@ public class FilterScriptFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         log.debug("onDestroy() this:" + this);
     }
@@ -73,7 +70,7 @@ public class FilterScriptFragment extends Fragment {
         txtTestTask = (EditText) layout.findViewById(R.id.txt_testtask);
         tvResult = (TextView) layout.findViewById(R.id.result);
         tvBooleanResult = (TextView) layout.findViewById(R.id.booleanResult);
-        btnTest = (Button) layout.findViewById(R.id.btnTest);
+        Button btnTest = (Button) layout.findViewById(R.id.btnTest);
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,14 +80,14 @@ public class FilterScriptFragment extends Fragment {
                     InputStream input = new ByteArrayInputStream(script.getBytes());
                     Prototype prototype = LuaC.instance.compile(input, "script");
                     Globals globals = JsePlatform.standardGlobals();
-                    
-                    Util.initGlobals(globals,t);
+
+                    Util.initGlobals(globals, t);
                     LuaClosure closure = new LuaClosure(prototype, globals);
-                    LuaValue result = closure.call(); 
+                    LuaValue result = closure.call();
 
                     tvResult.setText(result.toString());
-                   
-                    if (result.toboolean() || script.trim().isEmpty() ) {
+
+                    if (result.toboolean() || script.trim().isEmpty()) {
                         tvBooleanResult.setText("true");
                     } else {
                         tvBooleanResult.setText("false");

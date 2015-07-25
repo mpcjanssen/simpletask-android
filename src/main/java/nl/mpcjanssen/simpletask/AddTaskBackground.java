@@ -47,8 +47,6 @@ public class AddTaskBackground extends Activity {
 
     private TodoApplication m_app;
 
-    private String share_text;
-
     private Logger log;
 
     @Override
@@ -65,7 +63,8 @@ public class AddTaskBackground extends Activity {
 
          if (Intent.ACTION_SEND.equals(action)) {
             log.debug("Share");
-            if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+             String share_text;
+             if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
                 try {
                     File sharedFile = new File(uri.getPath());

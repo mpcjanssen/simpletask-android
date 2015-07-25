@@ -2690,17 +2690,16 @@ public class DragSortListView extends ListView {
             return;
         int[] runStart = new int[cip.size()];
         int[] runEnd = new int[cip.size()];
-        int rangeStart = position;
         int rangeEnd = cip.keyAt(cip.size() - 1) + 1;
-        int runCount = buildRunList(cip, rangeStart, rangeEnd, runStart, runEnd);
+        int runCount = buildRunList(cip, position, rangeEnd, runStart, runEnd);
         for (int i = 0; i != runCount; i++) {
             if (!(runStart[i] == position || (runEnd[i] < runStart[i] && runEnd[i] > position))) {
                 // Only set a new check mark in front of this run if it does
                 // not contain the deleted position. If it does, we only need
                 // to make it one check mark shorter at the end.
-                setItemChecked(rotate(runStart[i], -1, rangeStart, rangeEnd), true);
+                setItemChecked(rotate(runStart[i], -1, position, rangeEnd), true);
             }
-            setItemChecked(rotate(runEnd[i], -1, rangeStart, rangeEnd), false);
+            setItemChecked(rotate(runEnd[i], -1, position, rangeEnd), false);
         }
     }
 

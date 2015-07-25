@@ -59,9 +59,8 @@ public class CachedFileProvider extends ContentProvider {
             // Create & return a ParcelFileDescriptor pointing to the file
             // Note: I don't care what mode they ask for - they're only getting
             // read only
-            ParcelFileDescriptor pfd = ParcelFileDescriptor.open(new File(
+            return ParcelFileDescriptor.open(new File(
                     fileLocation), ParcelFileDescriptor.MODE_READ_ONLY);
-            return pfd;
  
             // Otherwise unrecognised Uri
         default:

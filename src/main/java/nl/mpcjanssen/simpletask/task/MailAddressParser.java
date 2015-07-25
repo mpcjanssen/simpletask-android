@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 public class MailAddressParser {
     private static final Pattern MAIL_ADDRESS_PATTERN = Pattern
-            .compile("[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" + "\\@"
+            .compile("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                     + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
                     + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+");
     private static final MailAddressParser INSTANCE = new MailAddressParser();

@@ -39,23 +39,11 @@ import java.util.*;
 
 public class AddTaskShortcut extends ThemedActivity {
 
-    private TodoApplication m_app;
-
-    private String share_text;
-
-    private EditText textInputField;
-    private BroadcastReceiver m_broadcastReceiver;
-    private LocalBroadcastManager localBroadcastManager;
-    private List<Task> m_backup = new ArrayList<>();
-    private Logger log;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        log = LoggerFactory.getLogger(this.getClass());
+        Logger log = LoggerFactory.getLogger(this.getClass());
         log.debug("onCreate()");
         super.onCreate(savedInstanceState);
-        m_app = (TodoApplication) getApplication();
         setupShortcut();
         finish();
     }

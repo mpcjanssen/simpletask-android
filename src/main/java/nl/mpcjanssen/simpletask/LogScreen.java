@@ -30,23 +30,15 @@ import java.util.ArrayList;
 public class LogScreen extends ThemedActivity {
 
     private Logger log;
-    private SQLiteDatabase db;
-    private Cursor cursor;
-    private Menu toolbar_menu;
-    private int mScroll = 0;
-    private TodoApplication m_app;
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
-    private ArrayList<String> myDataset;
 
+    private ArrayList<String> myDataset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log = LoggerFactory.getLogger(this.getClass());
-        m_app = (TodoApplication) getApplication();
         setContentView(R.layout.log);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -61,7 +53,7 @@ public class LogScreen extends ThemedActivity {
         mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         myDataset = new ArrayList<>();
         File logFile = getLogFile();
@@ -89,18 +81,6 @@ public class LogScreen extends ThemedActivity {
         mRecyclerView.setAdapter(mAdapter);
 
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (cursor!=null) {
-            cursor.close();
-        }
-        if (db!=null) {
-            db.close();
-        }
-    }
-
 
     private void sendLog() {
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -132,7 +112,7 @@ public class LogScreen extends ThemedActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);MenuInflater inflater = getMenuInflater();
-        toolbar_menu = toolbar.getMenu();
+        Menu toolbar_menu = toolbar.getMenu();
         toolbar_menu.clear();
         inflater.inflate(R.menu.log_menu, toolbar_menu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
