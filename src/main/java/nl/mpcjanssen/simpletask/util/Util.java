@@ -281,7 +281,7 @@ public class Util {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle(titleId);
-        builder.setItems(keys,  new DialogInterface.OnClickListener() {
+        builder.setItems(keys, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 if (!showNone) {
@@ -361,9 +361,10 @@ public class Util {
     }
 
     public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if(!destFile.exists()) {
-            destFile.createNewFile();
-        }
+        Logger log = LoggerFactory.getLogger(Util.class);
+        if (destFile.createNewFile()) {
+            log.debug("Destination file created {}" , destFile.getAbsolutePath());
+        };
 
         FileChannel source = null;
         FileChannel destination = null;

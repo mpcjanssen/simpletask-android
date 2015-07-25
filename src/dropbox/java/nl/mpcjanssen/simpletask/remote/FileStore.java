@@ -112,10 +112,9 @@ public class FileStore implements FileStoreInterface {
         return  mPrefs.getBoolean(LOCAL_CHANGES_PENDING, false);
     }
 
-    private void saveToCache(@NonNull String fileName, @NonNull String rev, @NonNull String contents) {
+    private void saveToCache(@NonNull String fileName, @Nullable String rev, @NonNull String contents) {
         log.info("Storing file in cache rev: " + rev + " of file: " + fileName);
         if (mPrefs == null) {
-
             return ;
         }
         SharedPreferences.Editor edit = mPrefs.edit();
@@ -143,9 +142,10 @@ public class FileStore implements FileStoreInterface {
         return netInfo != null && netInfo.isConnected();
     }
 
+    @Nullable
     private String getLocalTodoRev () {
         if (mPrefs==null) {
-            return null;
+            return "";
         }
         return mPrefs.getString(LOCAL_REVISION, null);
     }
@@ -211,7 +211,10 @@ public class FileStore implements FileStoreInterface {
                         for (DropboxAPI.DeltaEntry entry : delta.entries) {
                             if (entry.lcPath.equalsIgnoreCase(polledFile)) {
                                 DropboxAPI.Entry newMetaData = (DropboxAPI.Entry) entry.metadata;
-                                if (newMetaData!=null && getLocalTodoRev().equals(newMetaData.rev)) {
+                                if (newMetaData==null || newMetaData.rev == null) {
+                                    throw new DropboxException("Metadata (or rev) in entry is null " + entry);
+                                }
+                                if (newMetaData.rev.equals(getLocalTodoRev())) {
                                     log.info("Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " same as local rev, not reloading" );
                                 } else {
                                     log.info("Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " reloading" );
@@ -332,7 +335,9 @@ public class FileStore implements FileStoreInterface {
                 }
                 openFileStream.close();
                 String contents = Util.join(readFile, "\n");
-                backup.backup(path, contents);
+                if (backup!=null) {
+                    backup.backup(path, contents);
+                }
                 saveToCache(fileInfo.getMetadata().fileName(), fileInfo.getMetadata().rev, contents);
                 startWatching(path);
             } catch (DropboxException e) {
@@ -683,11 +688,11 @@ public class FileStore implements FileStoreInterface {
                                     }
                                 }
                             });
-                            dialog = builder.create();
-                            if (dialog != null) {
+                            if (dialog != null && dialog.isShowing()) {
                                 dialog.cancel();
                                 dialog.dismiss();
                             }
+                            dialog = builder.create();
                             dialog.show();
                         }
                     });

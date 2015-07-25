@@ -156,6 +156,8 @@ public class TaskTest extends TestCase {
         String t3a = "(B) 2014-07-05 Test t:2014-07-05 rec:+2d";
         Task t4 = new Task(t3).markComplete(DateTime.forDateOnly(2000,1,1));
         Task t5 = new Task(t3a).markComplete(DateTime.forDateOnly(2000, 1, 1));
+        assertNotNull(t4);
+        assertNotNull(t5);
         assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:+2d", t5.inFileFormat());
 
@@ -163,11 +165,14 @@ public class TaskTest extends TestCase {
         String dt3a = "(B) 2014-07-05 Test due:2014-07-05 rec:+2d";
         Task dt4 = new Task(dt3).markComplete(DateTime.forDateOnly(2000,1,1));
         Task dt5 = new Task(dt3a).markComplete(DateTime.forDateOnly(2000,1,1));
+        assertNotNull(dt4);
+        assertNotNull(dt5);
         assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt4.inFileFormat());
         assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:+2d", dt5.inFileFormat());
 
         String text = "Test due:2014-07-05 rec:1y";
         Task task = new Task(text).markComplete(DateTime.forDateOnly(2000, 1, 1));
+        assertNotNull(task);
         assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
     }
 
