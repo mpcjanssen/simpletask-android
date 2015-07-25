@@ -55,6 +55,7 @@ import java.util.*;
 public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
     private final Logger log;
+    private final boolean startLooper;
 
     @NonNull
     private List<Task> mTasks = new ArrayList<>();
@@ -77,7 +78,7 @@ public class TodoList {
 
     public TodoList(TodoListChanged todoListChanged,
                     boolean startLooper) {
-
+        this.startLooper = startLooper;
         // Set up the message queue
         if (startLooper) {
             Thread t = new Thread(new Runnable() {
@@ -99,7 +100,7 @@ public class TodoList {
 
     public void queueRunnable(final String description, Runnable r) {
         log.info("Handler: Queue " + description);
-        while (todolistQueue==null) {
+        while (todolistQueue==null && startLooper ) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
