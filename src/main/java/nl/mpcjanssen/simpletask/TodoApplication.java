@@ -522,7 +522,6 @@ public class TodoApplication extends Application implements
         if (index==-1) {
             return getString(R.string.none);
         }
-        String value = values[index];
-        return value;
+        return values[index];
     }
 }

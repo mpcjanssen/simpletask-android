@@ -56,8 +56,6 @@ public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
     private final Logger log;
 
-    private final boolean mStartLooper;
-
     @NonNull
     private List<Task> mTasks = new ArrayList<>();
     @NonNull
@@ -81,7 +79,6 @@ public class TodoList {
                     boolean startLooper) {
 
         // Set up the message queue
-        this.mStartLooper = startLooper;
         if (startLooper) {
             Thread t = new Thread(new Runnable() {
                 @Override
@@ -329,8 +326,7 @@ public class TodoList {
             public void run() {
                 clearSelectedTasks();
                 try {
-                    List<Task> tasks = fileStore.loadTasksFromFile(filename, backup, eol);
-                    mTasks = tasks;
+                    mTasks = fileStore.loadTasksFromFile(filename, backup, eol);
                 } catch (IOException e) {
                     log.error("Todolist load failed: {}", filename, e);
                     Util.showToastShort(TodoApplication.getAppContext(), "Loading of todo file failed");

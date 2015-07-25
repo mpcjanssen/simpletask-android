@@ -42,7 +42,6 @@ public class Preferences extends ThemedActivity {
 	public static final int RESULT_ARCHIVE = RESULT_FIRST_USER + 2;
     public static final int RESULT_RECREATE_ACTIVITY = RESULT_FIRST_USER + 3;
     private LocalBroadcastManager localBroadcastManager;
-    private Logger log;
 
     private void broadcastIntentAndClose(String intent, int result) {
 
@@ -57,7 +56,7 @@ public class Preferences extends ThemedActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        log = LoggerFactory.getLogger(this.getClass());
+        Logger log = LoggerFactory.getLogger(this.getClass());
 
 		// Display the fragment as the main content.
         TodoTxtPrefFragment prefFragment = new TodoTxtPrefFragment();

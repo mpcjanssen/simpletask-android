@@ -364,7 +364,7 @@ public class Util {
         Logger log = LoggerFactory.getLogger(Util.class);
         if (destFile.createNewFile()) {
             log.debug("Destination file created {}" , destFile.getAbsolutePath());
-        };
+        }
 
         FileChannel source = null;
         FileChannel destination = null;

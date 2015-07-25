@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by Mark on 2015-07-16.
- */
 public class ContextComparatorTest extends TestCase {
 
     public void testCompare() throws Exception {

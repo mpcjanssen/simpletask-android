@@ -9,12 +9,9 @@ import nl.mpcjanssen.simpletask.task.token.Token;
 
 public class TaskDisplayActivity extends ThemedActivity {
 
-    private TodoApplication m_app;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        m_app = (TodoApplication)getApplication();
         setContentView(R.layout.activity_task_display);
     }
 

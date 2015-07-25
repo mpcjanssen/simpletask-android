@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by a156712 on 19-9-13.
- */
 public class ListenerList<L> {
     @NonNull
     private List<L> listenerList = new ArrayList<>();
