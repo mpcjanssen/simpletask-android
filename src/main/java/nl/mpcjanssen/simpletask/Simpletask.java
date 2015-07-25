@@ -68,6 +68,7 @@ public class Simpletask extends ThemedActivity implements
     public final static Uri URI_BASE = Uri.fromParts("simpletask", "", null);
     public final static Uri URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search");
 
+    @Nullable
     Menu options_menu;
     TodoApplication m_app;
     ActiveFilter mFilter;
@@ -180,6 +181,9 @@ public class Simpletask extends ThemedActivity implements
 
     @Override
     public boolean onSearchRequested() {
+        if (options_menu==null) {
+            return false;
+        }
         MenuItem searchMenuItem = options_menu.findItem(R.id.search);
         searchMenuItem.expandActionView();
 
@@ -517,8 +521,10 @@ public class Simpletask extends ThemedActivity implements
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void populateMainMenu(@NonNull final Menu menu) {
+    private void populateMainMenu(@Nullable final Menu menu) {
+
         if (menu==null) {
+            log.warn("Menu was null");
             return;
         }
         menu.clear();
@@ -880,11 +886,14 @@ public class Simpletask extends ThemedActivity implements
             Intent currentIntent = getIntent();
             currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY));
             setIntent(currentIntent);
+            if (options_menu==null) {
+                return;
+            }
             options_menu.findItem(R.id.search).collapseActionView();
+
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT.equals(intent.getAction())) {
-            Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-            String search = uri.getLastPathSegment();
-            // TODO: activate search
+            // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
+            log.warn("Not implenented search");
         } else if (intent.getExtras() != null) {
             // Only change intent if it actually contains a filter
             setIntent(intent);
@@ -1135,6 +1144,9 @@ public class Simpletask extends ThemedActivity implements
     private void openSelectionMode() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (options_menu==null) {
+            return;
+        }
         options_menu.clear();
         fab.setVisibility(View.GONE);
         MenuInflater inflater = getMenuInflater();

@@ -10,6 +10,8 @@ public class TodoListTest extends TestCase implements TodoList.TodoListChanged {
 
     public void testInit() {
         TodoList t = new TodoList(null, false);
+        t.add(new Task("Test"));
+        assertEquals(1,t.size());
     }
 
     @Override

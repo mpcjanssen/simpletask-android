@@ -433,6 +433,12 @@ public class Task implements Serializable {
      */
     @Override
     public boolean equals (Object another) {
+        if (another==null) {
+            return false;
+        }
+        if(this.getClass()!=another.getClass()) {
+            return false;
+        }
         return (this==another);
     }
 

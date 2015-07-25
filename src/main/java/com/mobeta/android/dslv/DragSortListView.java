@@ -1469,8 +1469,9 @@ public class DragSortListView extends ListView {
      * this is a position in your input ListAdapter).
      */
     public void moveItem(int from, int to) {
-        if (mDropListener != null) {
-            final int count = getInputAdapter().getCount();
+        ListAdapter adapter = getInputAdapter();
+        if (mDropListener != null && adapter!=null) {
+            final int count = adapter.getCount();
             if (from >= 0 && from < count && to >= 0 && to < count) {
                 mDropListener.drop(from, to);
             }
@@ -2018,8 +2019,6 @@ public class DragSortListView extends ListView {
 
     private int calcItemHeight(int position, int childHeight) {
 
-        int divHeight = getDividerHeight();
-
         boolean isSliding = mAnimate && mFirstExpPos != mSecondExpPos;
         int maxNonSrcBlankHeight = mFloatViewHeight - mItemHeightCollapsed;
         int slideHeight = (int) (mSlideFrac * maxNonSrcBlankHeight);
@@ -2161,7 +2160,6 @@ public class DragSortListView extends ListView {
 
     protected boolean onDragTouchEvent(@NonNull MotionEvent ev) {
         // we are in a drag
-        int action = ev.getAction() & MotionEvent.ACTION_MASK;
 
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_CANCEL:
@@ -2900,6 +2898,9 @@ public class DragSortListView extends ListView {
                         return;
                     }
                 }
+                if (mScrollProfile==null) {
+                    return;
+                }
                 mScrollSpeed = mScrollProfile.getSpeed((mUpScrollStartYF - maxY)
                         / mDragUpScrollHeight, mPrevTime);
             } else {
@@ -2912,6 +2913,9 @@ public class DragSortListView extends ListView {
                         mScrolling = false;
                         return;
                     }
+                }
+                if (mScrollProfile==null) {
+                    return;
                 }
                 mScrollSpeed = -mScrollProfile.getSpeed((minY - mDownScrollStartYF)
                         / mDragDownScrollHeight, mPrevTime);
@@ -2978,8 +2982,9 @@ public class DragSortListView extends ListView {
 
             if (!mFile.exists()) {
                 try {
-                    mFile.createNewFile();
-                    log.debug("file created");
+                    if (mFile.createNewFile()) {
+                        log.debug("file created");
+                    }
                 } catch (IOException e) {
                     log.error("Could not create dslv_state.txt",e);
                 }
