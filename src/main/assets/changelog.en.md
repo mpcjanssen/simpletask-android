@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+6.0.3
+-----
+
+- Fix rare crash if Dropbox metadata is not filled when receiving a response.
+
 6.0.2
 -----
 
