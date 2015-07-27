@@ -82,7 +82,8 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/btnContext"
-            android:text="\@..."
+            android:text="\@…"
+            android:maxLines="1"
             style="?android:attr/borderlessButtonStyle"
             />
 
@@ -90,8 +91,9 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="+..."
+        android:text="+…"
         android:id="@+id/btnProject"
+        android:maxLines="1"
         style="?android:attr/borderlessButtonStyle" />
 
         <Button
@@ -99,6 +101,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="(.)"
+            android:maxLines="1"
             android:id="@+id/btnPrio"
             style="?android:attr/borderlessButtonStyle" />
 
@@ -106,15 +109,17 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="due:..."
+            android:text="due:…"
             android:id="@+id/btnDue"
+            android:maxLines="1"
             style="?android:attr/borderlessButtonStyle" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="t:..."
+            android:text="t:…"
+            android:maxLines="1"
             android:id="@+id/btnThreshold"
             style="?android:attr/borderlessButtonStyle" />
     </LinearLayout>
