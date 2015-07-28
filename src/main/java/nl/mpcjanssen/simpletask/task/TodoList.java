@@ -361,7 +361,7 @@ public class TodoList {
 
     }
 
-    public void archive(final FileStoreInterface filestore, final String doneFileName,  final List<Task> tasks, final String eol) {
+    public void archive(final FileStoreInterface filestore, final String todoFilename, final String doneFileName,  final List<Task> tasks, final String eol) {
         queueRunnable("Archive", new Runnable() {
             @Override
             public void run() {
@@ -382,7 +382,7 @@ public class TodoList {
                     for (Task t : tasksToDelete) {
                         mTasks.remove(t);
                     }
-                    notifyChanged(filestore,doneFileName,eol,null);
+                    notifyChanged(filestore,todoFilename,eol,null);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Util.showToastShort(TodoApplication.getAppContext(), "Task archiving failed");

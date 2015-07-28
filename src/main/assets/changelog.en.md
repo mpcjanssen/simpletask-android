@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+6.0.4
+-----
+
+- Fix issue with conflicted files when archiving.
+
 6.0.3
 -----
 

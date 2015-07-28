@@ -712,7 +712,7 @@ public class Simpletask extends ThemedActivity implements
             Util.showToastShort(this, "You have the done.txt file opened.");
             return;
         }
-        getTodoList().archive(getFileStore(), m_app.getDoneFileName(), tasksToArchive, m_app.getEol());
+        getTodoList().archive(getFileStore(), m_app.getTodoFileName(), m_app.getDoneFileName(), tasksToArchive, m_app.getEol());
         closeSelectionMode();
     }
 

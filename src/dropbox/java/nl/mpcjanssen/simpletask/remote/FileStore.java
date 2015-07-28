@@ -461,6 +461,7 @@ public class FileStore implements FileStoreInterface {
                     DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
                             toStore.length, rev, null);
                     rev = newEntry.rev;
+
                     newName = newEntry.path;
                 } catch (Exception e) {
                     e.printStackTrace();
