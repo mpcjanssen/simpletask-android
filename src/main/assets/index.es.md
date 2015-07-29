@@ -13,7 +13,7 @@ Simpletask soporta las siguientes extensiones de todo.txt:
 
 -   Fecha de vencimiento: `due:YYYY-MM-DD` (año-mes-día)
 -   Fecha umbral/de inicio: `t:YYYY-MM-DD`
--   Tareas recurrentes: `rec:[0-9]+[dwmy]` (días, semanas, meses, años) como se describe [aquí](https://github.com/bram85/todo.txt-tools/wiki/Recurrence) pero con alguna variación.
+-   Tareas recurrentes: `rec:[0-9]+[dwmy]` (días, semanas, meses, años) como se describe [aquí](https://github.com/bram85/topydo/wiki/Recurrence) pero con alguna variación.
     - De forma predeterminada Simpletask utilizará las fechas originales de la tarea para crear la tarea recurrente, no la fecha de conclusión como se describe en el enlace. Este comportamiento puede ser configurado de los Ajustes.
     - La descripción del formato unas lineas más arriba es una [expresión regular](http://es.wikipedia.org/wiki/Expresi%C3%B3n_regular), o sea, que en lenguaje humano la sintaxis es `rec:` seguido de 1 o más números (el `+`) seguido por una de las siguientes `d` día, `w` semana, `m` mes o `y` año. Por ejemplo `rec:12d` especifica una tarea recurrente cada 12 días.
 - Tareas escondidas: `h:1`, esto permite tareas ficticias asignadas a listas y etiquetas predefinidas de modo que las mismas esten disponibles incluso si la última tarea que las contenía se borra del archivo `todo.txt`. Estas tareas no serán mostradas de forma predeterminada. Temporalmente se pueden mostrar usando los Ajustes.
