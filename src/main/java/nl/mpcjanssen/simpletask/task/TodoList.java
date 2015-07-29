@@ -382,13 +382,22 @@ public class TodoList {
                     for (Task t : tasksToDelete) {
                         mTasks.remove(t);
                     }
-                    notifyChanged(filestore,todoFilename,eol,null);
+                    notifyChanged(filestore, todoFilename, eol, null);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Util.showToastShort(TodoApplication.getAppContext(), "Task archiving failed");
                 }
             }
         });
+    }
+
+    public void replace(Task old, Task updated) {
+        int index = mTasks.indexOf(old);
+        if (index>-1) {
+            mTasks.set(index,updated);
+        } else {
+            mTasks.add(updated);
+        }
     }
 
     public interface TodoListChanged {
