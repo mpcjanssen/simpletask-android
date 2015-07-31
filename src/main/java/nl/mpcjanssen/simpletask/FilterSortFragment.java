@@ -175,6 +175,8 @@ public class FilterSortFragment extends Fragment {
             }
         } else if (originalItems !=null ) {
             multiSort.addAll(originalItems);
+        } else {
+            multiSort.addAll(getArguments().getStringArrayList(FilterActivity.FILTER_ITEMS));
         }
         return multiSort;
     }
