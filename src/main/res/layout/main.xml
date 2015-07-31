@@ -74,20 +74,13 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:fastScrollEnabled="true" />
-            <com.melnykov.fab.FloatingActionButton
+            <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|right"
                     android:layout_margin="16dp"
-                    android:src="@drawable/content_new"
-                    fab:fab_colorNormal="#0099CC"
-                    fab:fab_colorPressed="#22BBEE"
-                    fab:fab_colorRipple="@color/ripple_material_dark"
-
-                    android:clickable="true"
-                    fab:fab_type="normal"
-                    fab:fab_shadow="true"/>
+                    android:src="@drawable/content_new"/>
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
