@@ -320,7 +320,15 @@ public class Simpletask extends ThemedActivity implements
         }
         m_adapter.setFilteredTasks();
 
+<<<<<<< Updated upstream
         getListView().setAdapter(this.m_adapter);
+=======
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+>>>>>>> Stashed changes
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
@@ -1253,6 +1261,7 @@ public class Simpletask extends ThemedActivity implements
 
     private static class ViewHolder {
         private TextView tasktext;
+        private TextView header;
         private TextView taskage;
         private TextView taskdue;
         private TextView taskthreshold;
@@ -1381,6 +1390,7 @@ public class Simpletask extends ThemedActivity implements
         public Task getItem(int position) {
             VisibleLine line = visibleLines.get(position);
             if (line.header) {
+<<<<<<< Updated upstream
                 return null;
             }
             return line.task;
@@ -1427,6 +1437,105 @@ public class Simpletask extends ThemedActivity implements
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
+=======
+                if (header == null ) {
+                    header = (TextView) itemView
+                            .findViewById(R.id.list_header_title);
+                }
+                header.setText(line.title);
+
+            } else {
+                final int position = getAdapterPosition();
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final ArrayList<String> links = new ArrayList<>();
+                        final ArrayList<String> actions = new ArrayList<>();
+                        itemView.setSelected(!itemView.isSelected());
+                        m_adapter.notifyItemChanged(position);
+                        if (getTodoList().getSelectedTasks().size() > 0) {
+                            //onItemLongClick(parent, view, position, id);
+                            return;
+                        }
+                        int position = getTaskListView().getChildAdapterPosition(view);
+                        Task t = getTaskAt(position);
+                        if (t != null) {
+                            for (String link : t.getLinks()) {
+                                actions.add(ACTION_LINK);
+                                links.add(link);
+                            }
+                            for (String number : t.getPhoneNumbers()) {
+                                actions.add(ACTION_PHONE);
+                                links.add(number);
+                            }
+                            for (String mail : t.getMailAddresses()) {
+                                actions.add(ACTION_MAIL);
+                                links.add(mail);
+                            }
+                        }
+                        final String[] linksArray = links.toArray(new String[links.size()]);
+                        if (linksArray.length == 0) {
+                            //onItemLongClick(parent, view, position, id);
+                        } else {
+                            AlertDialog.Builder build = new AlertDialog.Builder(Simpletask.this);
+                            build.setTitle(R.string.task_action);
+                            build.setItems(linksArray, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent;
+                                    String url = links.get(which);
+                                    log.info("" + actions.get(which) + ": " + url);
+                                    switch (actions.get(which)) {
+                                        case ACTION_LINK:
+                                            if (url.startsWith("todo://")) {
+                                                File todoFolder = m_app.getTodoFile().getParentFile();
+                                                File newName = new File(todoFolder, url.substring(7));
+                                                m_app.switchTodoFile(newName.getAbsolutePath(), true);
+                                            } else {
+                                                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                                startActivity(intent);
+                                            }
+                                            break;
+                                        case ACTION_PHONE:
+                                            String encodedNumber = Uri.encode(url);
+                                            intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+                                                    + encodedNumber));
+                                            startActivity(intent);
+                                            break;
+                                        case ACTION_MAIL:
+                                            intent = new Intent(Intent.ACTION_SEND, Uri.parse(url));
+                                            intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                                                    new String[]{url});
+                                            intent.setType("text/plain");
+                                            startActivity(intent);
+
+                                    }
+                                }
+                            });
+                            build.create().show();
+                        }
+                    }
+                });
+                if (tasktext==null) {
+                    this.tasktext = (TextView) itemView
+                            .findViewById(R.id.tasktext);
+                }
+                if (taskage==null) {
+                    this.taskage = (TextView) itemView
+                            .findViewById(R.id.taskage);
+                }
+                if (taskdue==null) {
+                    this.taskdue = (TextView) itemView
+                            .findViewById(R.id.taskdue);
+                }
+                if (taskthreshold==null) {
+                    this.taskthreshold = (TextView) itemView
+                            .findViewById(R.id.taskthreshold);
+                }
+                if (cbCompleted==null) {
+                    this.cbCompleted = (CheckBox) itemView
+                            .findViewById(R.id.checkBox);
+>>>>>>> Stashed changes
                 }
                 final Task task = line.task;
                 if (m_app.showCompleteCheckbox()) {
@@ -1555,6 +1664,66 @@ public class Simpletask extends ThemedActivity implements
             } else {
                 return 1;
             }
+<<<<<<< Updated upstream
+=======
+            List<Task> visibleTasks;
+            countVisbleTasks = 0;
+            log.info("setFilteredTasks called: " + getTodoList());
+            ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
+            visibleTasks = getTodoList().getSortedTasksCopy(mFilter, sorts, m_app.sortCaseSensitive());
+
+
+            ArrayList<VisibleLine> newVisibleLines = new ArrayList<>();
+
+            String header = "";
+            String newHeader;
+            int firstGroupSortIndex = 0;
+
+            if (sorts.size() > 1 && sorts.get(0).contains("completed")
+                    || sorts.get(0).contains("future")) {
+                firstGroupSortIndex++;
+                if (sorts.size() > 2 && sorts.get(1).contains("completed")
+                        || sorts.get(1).contains("future")) {
+                    firstGroupSortIndex++;
+                }
+            }
+            String firstSort = sorts.get(firstGroupSortIndex);
+            for (Task t : visibleTasks) {
+                newHeader = t.getHeader(firstSort, getString(R.string.no_header));
+                if (!header.equals(newHeader)) {
+                    VisibleLine headerLine = new VisibleLine(newHeader);
+                    int last = newVisibleLines.size() - 1;
+                    if (last != -1 && newVisibleLines.get(last).header && !m_app.showEmptyLists()) {
+                        newVisibleLines.set(last, headerLine);
+                    } else {
+                        newVisibleLines.add(headerLine);
+                    }
+                    header = newHeader;
+                }
+
+                if (t.isVisible() || m_app.showHidden()) {
+                    // enduring tasks should not be displayed
+                    VisibleLine taskLine = new VisibleLine(t);
+                    newVisibleLines.add(taskLine);
+                    countVisbleTasks++;
+                }
+            }
+            visibleLines = newVisibleLines;
+            notifyDataSetChanged();
+            updateFilterBar();
+        }
+
+        public int getCountVisbleTasks() {
+            return visibleLines.size();
+        }
+
+        /*
+        ** Get the adapter position for task
+        */
+        public int getPosition(Task task) {
+            VisibleLine line = new VisibleLine(task);
+            return visibleLines.indexOf(line);
+>>>>>>> Stashed changes
         }
 
         @Override
@@ -1563,9 +1732,28 @@ public class Simpletask extends ThemedActivity implements
         }
 
         @Override
+<<<<<<< Updated upstream
         public boolean isEmpty() {
             return visibleLines.size() == 0;
         }
+=======
+        public LineHolder onCreateViewHolder(ViewGroup parent, int type) {
+                View view;
+                if (type==0) {
+                    view = m_inflater
+                            .inflate(R.layout.list_header, parent, false);
+                } else if (type == 1 ){
+                    view = m_inflater
+                            .inflate(R.layout.list_item, parent, false);view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.list_item, parent, false);
+                } else {
+                    view = m_inflater
+                            .inflate(R.layout.empty_list_item, parent, false);
+                }
+                return new LineHolder(view);
+
+            }
+>>>>>>> Stashed changes
 
         @Override
         public boolean areAllItemsEnabled() {
