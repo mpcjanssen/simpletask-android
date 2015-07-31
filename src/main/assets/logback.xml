@@ -21,7 +21,7 @@
         </triggeringPolicy>
         <encoder>
             <!-- see http://logback.qos.ch/manual/layouts.html#conversionWord for format -->
-            <pattern>%d;%relative;[%thread];%level;%logger;%msg%n;%caller{1};%n%n</pattern>
+            <pattern>%d +%relative [%thread] %logger:%level\t%msg%n%caller{1}%n%n</pattern>
         </encoder>
     </appender>
 

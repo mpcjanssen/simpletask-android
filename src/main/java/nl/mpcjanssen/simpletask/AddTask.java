@@ -345,7 +345,7 @@ public class AddTask extends ThemedActivity {
                 }
 
         // Don't add empty tasks
-        if (input.trim().equals("")) {
+        if (input.trim().isEmpty()) {
              finish();
              return;
         }
@@ -354,7 +354,7 @@ public class AddTask extends ThemedActivity {
         TodoList todoList = m_app.getTodoList();
         ArrayList<Task> updated = new ArrayList<>();
         // Create new tasks
-        for (String line : Arrays.asList(input.split("\\r\\n|\\r|\\n"))) {
+        for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
 
             if(m_app.hasPrependDate()) {
                 updated.add(new Task(line.trim(),DateTime.now(TimeZone.getDefault())));
