@@ -29,7 +29,11 @@ public class TaskTest extends TestCase {
 
     public void testParseIdemPotence() {
         String s = "Test abcd ";
+        String t = " ";
+        String v = "";
         assertEquals(s,new Task(s).inFileFormat());
+        assertEquals(t,new Task(t).inFileFormat());
+        assertEquals(v,new Task(v).inFileFormat());
     }
 
     public void testWithoutCompletionInfo() {
