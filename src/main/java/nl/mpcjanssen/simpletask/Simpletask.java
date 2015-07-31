@@ -870,6 +870,7 @@ public class Simpletask extends ThemedActivity implements
         getListView().clearChoices();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.GONE);
         //getTodoList().clearSelectedTasks();
         populateMainMenu(options_menu);
@@ -1141,12 +1142,10 @@ public class Simpletask extends ThemedActivity implements
 
     private void openSelectionMode() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (options_menu==null) {
             return;
         }
         options_menu.clear();
-        fab.setVisibility(View.GONE);
         MenuInflater inflater = getMenuInflater();
         Menu menu = toolbar.getMenu();
         menu.clear();
@@ -1228,6 +1227,8 @@ public class Simpletask extends ThemedActivity implements
             menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         toolbar.setVisibility(View.VISIBLE);
     }
 
