@@ -85,7 +85,7 @@ public class FilterOtherFragment extends Fragment {
     public boolean getHideCompleted() {
         Bundle arguments = getArguments();
         if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false);
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false);
         } else {
             return !cbHideCompleted.isChecked();
         }
@@ -94,7 +94,7 @@ public class FilterOtherFragment extends Fragment {
     public boolean getHideFuture() {
         Bundle arguments = getArguments();
         if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false);
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false);
         } else {
             return !cbHideFuture.isChecked();
         }
@@ -103,7 +103,7 @@ public class FilterOtherFragment extends Fragment {
     public boolean getHideLists() {
         Bundle arguments = getArguments();
         if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false);
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, false);
         } else {
             return !cbHideLists.isChecked();
         }
@@ -111,7 +111,7 @@ public class FilterOtherFragment extends Fragment {
     public boolean getHideTags() {
         Bundle arguments = getArguments();
         if (cbHideCompleted == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false);
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false);
         } else {
             return !cbHideTags.isChecked();
         }
@@ -119,7 +119,7 @@ public class FilterOtherFragment extends Fragment {
     public boolean getHideCreateDate() {
         Bundle arguments = getArguments();
         if (cbHideCreateDate == null) {
-            return !arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false);
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false);
         } else {
             return !cbHideCreateDate.isChecked();
         }
