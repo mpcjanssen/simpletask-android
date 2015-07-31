@@ -87,8 +87,9 @@ public class FilterListFragment extends Fragment {
     }
 
     public boolean getNot() {
-        if (cb == null) {
-            return not;
+        if (selectedItems == null) {
+            // Tab was not displayed so no selections were changed
+            return  getArguments().getBoolean(FilterActivity.INITIAL_NOT);
         } else {
             return cb.isChecked();
         }
@@ -97,9 +98,9 @@ public class FilterListFragment extends Fragment {
     public ArrayList<String> getSelectedItems() {
 
         ArrayList<String> arr = new ArrayList<>();
-        if (lv == null) {
+        if (selectedItems == null) {
             // Tab was not displayed so no selections were changed
-            return selectedItems;
+            return getArguments().getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS);
         }
         int size = lv.getCount();
         for (int i = 0; i < size; i++) {
