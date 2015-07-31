@@ -8,7 +8,7 @@
 
     <ImageButton
             android:id="@+id/reverse_button"
-            android:background="@drawable/ic_action_sort_up"
+            android:background="@drawable/ic_action_sort_down"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/item_height"
             android:focusable="false"
