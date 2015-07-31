@@ -36,9 +36,7 @@ public class LogScreen extends ThemedActivity {
         log = LoggerFactory.getLogger(this.getClass());
         setContentView(R.layout.log);
         ListView mListView = (ListView) findViewById(R.id.listView);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        
         mListView.setFastScrollEnabled(true);
 
         myDataset = new ArrayList<>();
