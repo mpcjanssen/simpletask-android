@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+6.0.5
+-----
+
+- Leave updated tasks in the original location in the todo file. Fixes [#274](https://github.com/mpcjanssen/simpletask-android/issues/274)
+- Fix issues with resetting filters after opening filter screen. Fixes [#276](https://github.com/mpcjanssen/simpletask-android/issues/276)
+
 6.0.4
 -----
 
