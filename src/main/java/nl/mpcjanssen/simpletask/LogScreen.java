@@ -4,24 +4,21 @@
 package nl.mpcjanssen.simpletask;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import com.google.common.io.LineProcessor;
-import nl.mpcjanssen.simpletask.adapters.LogAdapter;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,23 +35,12 @@ public class LogScreen extends ThemedActivity {
         super.onCreate(savedInstanceState);
         log = LoggerFactory.getLogger(this.getClass());
         setContentView(R.layout.log);
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        ListView mListView = (ListView) findViewById(R.id.listView);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(false);
+        mListView.setFastScrollEnabled(true);
 
-        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) findViewById(R.id.fast_scroller);
-
-        // Connect the recycler to the scroller (to let the scroller scroll the list)
-        fastScroller.setRecyclerView(mRecyclerView);
-
-        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
-        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
-
-        // use a linear layout manager
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
         myDataset = new ArrayList<>();
         File logFile = getLogFile();
         try {
@@ -77,8 +63,8 @@ public class LogScreen extends ThemedActivity {
         }
 
         // specify an adapter (see also next example)
-        LogAdapter mAdapter = new LogAdapter(myDataset);
-        mRecyclerView.setAdapter(mAdapter);
+        ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.log_item, myDataset);
+        mListView.setAdapter(mAdapter);
 
     }
 

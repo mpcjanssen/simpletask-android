@@ -15,16 +15,12 @@
                   android:layout_weight="1"
                   android:orientation="horizontal">
     <!-- A RecyclerView with some commonly used attributes -->
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+    <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
+            android:scrollbars="vertical"
             android:layout_height="match_parent"/>
-    <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
-            android:id="@+id/fast_scroller"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            />
+
         </RelativeLayout>
     <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
