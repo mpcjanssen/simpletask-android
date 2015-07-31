@@ -26,6 +26,7 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 
@@ -39,7 +40,6 @@ import android.text.SpannableString;
 
 import android.view.*;
 import android.widget.*;
-import com.melnykov.fab.FloatingActionButton;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -423,7 +423,6 @@ public class Simpletask extends ThemedActivity implements
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         lv.setSelectionFromTop(m_scrollPosition, 0);
-        fab.attachToListView(lv);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -874,7 +873,6 @@ public class Simpletask extends ThemedActivity implements
         toolbar.setVisibility(View.GONE);
         //getTodoList().clearSelectedTasks();
         populateMainMenu(options_menu);
-        fab.setVisibility(View.VISIBLE);
         //updateDrawers();
 
     }
@@ -1373,7 +1371,7 @@ public class Simpletask extends ThemedActivity implements
 
         @Override
         public int getCount() {
-            return visibleLines.size();
+            return visibleLines.size()+1;
         }
 
         @Nullable
@@ -1400,6 +1398,12 @@ public class Simpletask extends ThemedActivity implements
         @Nullable
         @Override
         public View getView(int position, @Nullable View convertView, ViewGroup parent) {
+            if (position == visibleLines.size()) {
+                if (convertView==null) {
+                    convertView = m_inflater.inflate(R.layout.empty_list_item, parent, false);
+                }
+                return convertView;
+            }
             VisibleLine line = visibleLines.get(position);
             if (line.header) {
                 if (convertView == null) {
@@ -1549,6 +1553,9 @@ public class Simpletask extends ThemedActivity implements
 
         @Override
         public int getItemViewType(int position) {
+            if (position == visibleLines.size()) {
+                return 2;
+            }
             VisibleLine line = visibleLines.get(position);
             if (line.header) {
                 return 0;
@@ -1559,7 +1566,7 @@ public class Simpletask extends ThemedActivity implements
 
         @Override
         public int getViewTypeCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -1574,6 +1581,9 @@ public class Simpletask extends ThemedActivity implements
 
         @Override
         public boolean isEnabled(int position) {
+            if (position == visibleLines.size()) {
+                return false;
+            }
             VisibleLine line = visibleLines.get(position);
             return !line.header;
         }
