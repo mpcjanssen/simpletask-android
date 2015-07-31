@@ -36,7 +36,7 @@ public class LogScreen extends ThemedActivity {
         log = LoggerFactory.getLogger(this.getClass());
         setContentView(R.layout.log);
         ListView mListView = (ListView) findViewById(R.id.listView);
-        
+
         mListView.setFastScrollEnabled(true);
 
         myDataset = new ArrayList<>();
