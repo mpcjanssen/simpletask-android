@@ -108,7 +108,7 @@ public class AddTaskBackground extends Activity {
         TodoList todoList = m_app.getTodoList();
         log.debug("Adding background tasks to todolist {} ", todoList);
 
-        for (String taskText : sharedText.split("\n|\r\n")) {
+        for (String taskText : sharedText.split("\\r\\n|\\r|\\n")) {
             if (!appendText.isEmpty()) {
                 taskText = taskText + " " + appendText;
             }
