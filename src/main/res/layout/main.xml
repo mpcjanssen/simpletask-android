@@ -72,9 +72,15 @@ You should have received a copy of the GNU General Public License along with Tod
             <ListView
                 android:id="@android:id/list"
                 android:layout_width="fill_parent"
+<<<<<<< Updated upstream
                 android:layout_height="fill_parent"
                 android:fastScrollEnabled="true" />
             <com.melnykov.fab.FloatingActionButton
+=======
+                android:scrollbars="vertical"
+                android:layout_height="fill_parent"/>
+            <android.support.design.widget.FloatingActionButton
+>>>>>>> Stashed changes
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
