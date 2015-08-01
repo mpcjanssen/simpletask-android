@@ -607,7 +607,7 @@ public class Simpletask extends ThemedActivity implements
                 dialog.dismiss();
                 Priority prio = Priority.toPriority(prioArr[which]);
                 getTodoList().prioritize(tasks, prio);
-                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                 closeSelectionMode();
             }
         });
@@ -629,7 +629,7 @@ public class Simpletask extends ThemedActivity implements
             archiveTasks(null);
         }
         closeSelectionMode();
-        getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+        getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
     }
 
     private void undoCompleteTasks(@NonNull Task task) {
@@ -641,7 +641,7 @@ public class Simpletask extends ThemedActivity implements
     private void undoCompleteTasks(@NonNull List<Task> tasks) {
         getTodoList().undoComplete(tasks);
         closeSelectionMode();
-        getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+        getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
     }
 
     private void deferTasks(List<Task> tasks, final int dateType) {
@@ -665,7 +665,7 @@ public class Simpletask extends ThemedActivity implements
                                 m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT), t, dateType);
                             }
                             closeSelectionMode();
-                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
                         }
                     },
@@ -683,7 +683,7 @@ public class Simpletask extends ThemedActivity implements
                         m_app.getTodoList().defer(selected, t, dateType);
                     }
                     closeSelectionMode();
-                    getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                    getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app,true );
 
                 }
 
@@ -700,7 +700,7 @@ public class Simpletask extends ThemedActivity implements
                     m_app.getTodoList().remove(t);
                 }
                 closeSelectionMode();
-                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
             }
         }, R.string.delete_task_title);
@@ -1498,7 +1498,7 @@ public class Simpletask extends ThemedActivity implements
                         public void onClick(View v) {
                             undoCompleteTasks(task);
                             closeSelectionMode();
-                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
                         }
                     });
@@ -1515,7 +1515,7 @@ public class Simpletask extends ThemedActivity implements
                         public void onClick(View v) {
                             completeTasks(task);
                             closeSelectionMode();
-                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                         }
                     });
                 }
@@ -1639,7 +1639,7 @@ public class Simpletask extends ThemedActivity implements
                         t.removeTag("@" + item);
                     }
                 }
-                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                 closeSelectionMode();
             }
         });
@@ -1702,7 +1702,7 @@ public class Simpletask extends ThemedActivity implements
                         t.removeTag("+" + item);
                     }
                 }
-                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app);
+                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                 closeSelectionMode();
             }
         });
