@@ -264,14 +264,16 @@ public class TodoList {
     }
 
 
-    public void notifyChanged(final FileStoreInterface filestore, final String todoname, final String eol, final BackupInterface backup) {
+    public void notifyChanged(final FileStoreInterface filestore, final String todoname, final String eol, final BackupInterface backup, final boolean save) {
         log.info("Handler: Queue notifychanged");
         todolistQueue.post(new Runnable() {
             @Override
             public void run() {
-                log.info("Handler: Handle notifychanged");
-                log.info("Saving todo list, size {}", mTasks.size());
-                save(filestore, todoname, backup, eol);
+                if (save) {
+                    log.info("Handler: Handle notifychanged");
+                    log.info("Saving todo list, size {}", mTasks.size());
+                    save(filestore, todoname, backup, eol);
+                }
                 clearSelectedTasks();
                 if (mTodoListChanged != null) {
                     log.info("TodoList changed, notifying listener and invalidating cached values");
@@ -334,7 +336,7 @@ public class TodoList {
                 }
                 loadQueued = false;
                 log.info("Todolist loaded, refresh UI");
-                notifyChanged(fileStore,filename,eol,backup);
+                notifyChanged(fileStore,filename,eol,backup, false);
             }};
         if (background ) {
             log.info("Loading todolist asynchronously into {}", this);
@@ -382,7 +384,7 @@ public class TodoList {
                     for (Task t : tasksToDelete) {
                         mTasks.remove(t);
                     }
-                    notifyChanged(filestore, todoFilename, eol, null);
+                    notifyChanged(filestore, todoFilename, eol, null, false);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Util.showToastShort(TodoApplication.getAppContext(), "Task archiving failed");
