@@ -117,7 +117,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
     <string name="keep_prio_header">Prio in completed tasks</string>
-    <string name="keep_prio_summary">Keep priorities in completed tasks. disable this to restore the todo.txt app behavior which removes the priority when completing a task.</string>
+    <string name="keep_prio_summary">Keep priorities in completed tasks. disable this to restore the todo.txt app behavior, which removes the priority when completing a task.</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
     <string name="line_breaks_pref_title">Windows line breaks</string>
@@ -134,7 +134,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="font_size_delta_pref_title">Change font size</string>
     <string name="font_size_delta_pref_summary">Change the font size.</string>
     <string name="theme_pref_title">Application theme</string>
-    <string name="theme_pref_summary">Change the theme used for the application</string>
+    <string name="theme_pref_summary">Change the theme used for the application.</string>
 
     <string name="share_task_show_edit_pref_title">Background tag</string>
     <string name="share_task_show_edit_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
@@ -160,7 +160,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="widget_theme_pref_title">Widget theme</string>
-    <string name="widget_theme_pref_summary">Change the theme used for the widgets</string>
+    <string name="widget_theme_pref_summary">Change the theme used for the widgets.</string>
 
     <string name="widget_header_transparency_title">Widget header transparency</string>
     <string name="widget_background_transparency_title">Widget background transparency</string>
@@ -172,7 +172,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="color_due_pref_summary">Color due dates based on whether they are due today, due in the future or overdue.</string>
 
     <string name="show_hidden_title">Show hidden tasks</string>
-    <string name="show_hidden_summary">Show hidden (h:1) tasks so you can edit them. After editing uncheck this setting again.</string>
+    <string name="show_hidden_summary">Show hidden (h:1) tasks so you can edit them. After editing, uncheck this setting again.</string>
 
     <string name="show_empty_lists_title">Show empty headers</string>
     <string name="show_empty_lists_summary">Show header even if all tasks under that header are hidden.</string>
@@ -276,7 +276,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_show_future">Show tasks with threshold date in future</string>
     <string name="filter_show_lists">Show lists in the tasks</string>
     <string name="filter_show_tags">Show tags in the tasks</string>
-    <string name="filter_show_create_date">Show tasks ages</string>
+    <string name="filter_show_create_date">Show tasks' ages</string>
 
     <string name="filter_show_completed_short">Completed</string>
     <string name="filter_show_future_short">Future</string>
@@ -349,7 +349,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="save_filter">Save current filter</string>
-    <string name="save_filter_message">Enter the name for the current filter to be displayed in the saved filters drawer</string>
+    <string name="save_filter_message">Enter a name for the current filter, to be displayed in the saved filters drawer.</string>
 
     <string name="donate_title">Donate</string>
     <string name="donate_summary">Donate if you like simpletask. NOTE: Donation is voluntary, simpletask will always be free.  </string>
