@@ -1731,9 +1731,11 @@ public class Simpletask extends ThemedActivity implements
             DrawerAdapter adapter = (DrawerAdapter) lv.getAdapter();
             if (adapter.getProjectsHeaderPosition() == position) {
                 mFilter.setProjectsNot(!mFilter.getProjectsNot());
+                updateDrawers();
             }
             if (adapter.getContextHeaderPosition() == position) {
                 mFilter.setContextsNot(!mFilter.getContextsNot());
+                updateDrawers();
             } else {
                 tags = Util.getCheckedItems(lv, true);
                 ArrayList<String> filteredContexts = new ArrayList<>();
