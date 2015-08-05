@@ -47,10 +47,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.common.base.Joiner;
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.CachedFileProvider;
-import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.TodoException;
+import nl.mpcjanssen.simpletask.*;
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator;
 import nl.mpcjanssen.simpletask.task.Task;
 import org.jetbrains.annotations.NotNull;
@@ -145,6 +142,32 @@ public class Util {
                 }
             }
         }
+    }
+
+    public static List<VisibleLine> addHeaderLines(List<Task> visibleTasks, String firstSort, String no_header, boolean showHidden, boolean showEmptyLists) {
+        String header = "" ;
+        String newHeader;
+        ArrayList<VisibleLine> result = new ArrayList<>();
+        for (Task t : visibleTasks) {
+            newHeader = t.getHeader(firstSort, no_header);
+            if (!header.equals(newHeader)) {
+                VisibleLine headerLine = new VisibleLine(newHeader);
+                int last = result.size() - 1;
+                if (last != -1 && result.get(last).header && !showEmptyLists) {
+                    result.set(last, headerLine);
+                } else {
+                    result.add(headerLine);
+                }
+                header = newHeader;
+            }
+
+            if (t.isVisible() || showHidden) {
+                // enduring tasks should not be displayed
+                VisibleLine taskLine = new VisibleLine(t);
+                result.add(taskLine);
+            }
+        }
+        return result;
     }
 
     @NonNull
