@@ -1,6 +1,19 @@
 ﻿Changelog
 =========
 
+6.0.6
+-----
+
+- Fix some punctuation errors. (Shayne Holmes)
+- Don't save todo list after a reload. This should prevent another case of conflicts on Dropbox.
+- Hide last empty header if `show empty headers` is disabled.  Fixes [#283](https://github.com/mpcjanssen/simpletask-android/issues/283)
+- Fix NPE in broadcast receiver.
+- Link to the topydo project rather than the (obsoleted) todo.txt-tools. (Bram Schoenmakers)
+- Don't hide FAB, removes required external dependency.
+- Properly split multiline texts added in background. Possible fix for #277.
+-  Don't add empty tasks in the background. Possible fix for #277.
+
+
 6.0.5
 -----
 

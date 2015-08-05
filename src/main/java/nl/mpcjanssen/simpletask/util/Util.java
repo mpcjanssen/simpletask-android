@@ -154,6 +154,7 @@ public class Util {
                 VisibleLine headerLine = new VisibleLine(newHeader);
                 int last = result.size() - 1;
                 if (last != -1 && result.get(last).header && !showEmptyLists) {
+                    // replace empty preceding header
                     result.set(last, headerLine);
                 } else {
                     result.add(headerLine);
@@ -166,6 +167,12 @@ public class Util {
                 VisibleLine taskLine = new VisibleLine(t);
                 result.add(taskLine);
             }
+        }
+
+        // Clean up possible last empty list header that should be hidden
+        int i = result.size();
+        if (i > 0 && result.get(i-1).header && !showEmptyLists) {
+            result.remove(i-1);
         }
         return result;
     }
