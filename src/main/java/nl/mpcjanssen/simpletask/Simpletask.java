@@ -1262,50 +1262,12 @@ public class Simpletask extends ThemedActivity implements
     }
 
     public class TaskAdapter extends BaseAdapter implements ListAdapter {
-        public class VisibleLine {
-            private Task task;
-            private String title = "";
-            private boolean header = false;
 
-            public VisibleLine(@NonNull String title) {
-                this.title = title;
-                this.header = true;
-            }
-
-            public VisibleLine(@NonNull Task task) {
-                this.task = task;
-                this.header = false;
-            }
-
-            @Override
-            public boolean equals(@Nullable Object obj) {
-                if (this == obj)
-                    return true;
-                if (obj == null)
-                    return false;
-                if (getClass() != obj.getClass())
-                    return false;
-
-                VisibleLine other = (VisibleLine) obj;
-                return other.header == this.header && this.task.equals(other.task);
-            }
-
-            @Override
-            public int hashCode() {
-                final int prime = 31;
-                int result = 1;
-                int headerHash = header ? 1231 : 1237;
-                result = prime * result + headerHash;
-                result = prime * result + task.hashCode();
-                return result;
-            }
-        }
 
         @NonNull
         ArrayList<VisibleLine> visibleLines = new ArrayList<>();
         @NonNull
         private LayoutInflater m_inflater;
-        private int countVisbleTasks;
 
         public TaskAdapter(@NonNull LayoutInflater inflater) {
             this.m_inflater = inflater;
@@ -1318,16 +1280,13 @@ public class Simpletask extends ThemedActivity implements
                 setTitle(R.string.app_label);
             }
             List<Task> visibleTasks;
-            countVisbleTasks = 0;
             log.info("setFilteredTasks called: " + getTodoList());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
             visibleTasks = getTodoList().getSortedTasksCopy(mFilter, sorts, m_app.sortCaseSensitive());
             visibleLines.clear();
 
-            String header = "";
-            String newHeader;
-            int firstGroupSortIndex = 0;
 
+            int firstGroupSortIndex = 0;
             if (sorts.size() > 1 && sorts.get(0).contains("completed")
                     || sorts.get(0).contains("future")) {
                 firstGroupSortIndex++;
@@ -1336,33 +1295,18 @@ public class Simpletask extends ThemedActivity implements
                     firstGroupSortIndex++;
                 }
             }
-            String firstSort = sorts.get(firstGroupSortIndex);
-            for (Task t : visibleTasks) {
-                newHeader = t.getHeader(firstSort, getString(R.string.no_header));
-                if (!header.equals(newHeader)) {
-                    VisibleLine headerLine = new VisibleLine(newHeader);
-                    int last = visibleLines.size() - 1;
-                    if (last != -1 && visibleLines.get(last).header && !m_app.showEmptyLists()) {
-                        visibleLines.set(last, headerLine);
-                    } else {
-                        visibleLines.add(headerLine);
-                    }
-                    header = newHeader;
-                }
 
-                if (t.isVisible() || m_app.showHidden()) {
-                    // enduring tasks should not be displayed
-                    VisibleLine taskLine = new VisibleLine(t);
-                    visibleLines.add(taskLine);
-                    countVisbleTasks++;
-                }
-            }
+
+            String firstSort = sorts.get(firstGroupSortIndex);
+            visibleLines.addAll(Util.addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header),m_app.showHidden(),m_app.showEmptyLists()));
             notifyDataSetChanged();
             updateFilterBar();
         }
 
+
+
         public int getCountVisbleTasks() {
-            return countVisbleTasks;
+            return visibleLines.size();
         }
 
         /*
