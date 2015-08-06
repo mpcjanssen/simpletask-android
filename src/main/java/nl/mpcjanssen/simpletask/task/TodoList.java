@@ -123,7 +123,7 @@ public class TodoList {
         queueRunnable("Add task", new Runnable() {
             @Override
             public void run() {
-                log.debug("Adding task '{}' into {}", t.inFileFormat(), TodoList.this);
+                log.debug("Adding task of length {} into {}", t.inFileFormat().length(), TodoList.this);
                 mTasks.add(t);
             }
         });
