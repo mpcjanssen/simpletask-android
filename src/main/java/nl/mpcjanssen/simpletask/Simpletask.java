@@ -214,21 +214,17 @@ public class Simpletask extends ThemedActivity implements
     private void selectAllTasks() {
         ArrayList<Task> selectedTasks = new ArrayList<>();
         ListView lv = getListView();
-        int itemCount = lv.getCount();
-        for (int i = 0; i < itemCount; i++) {
+        int itemCount = m_adapter.visibleLines.size();
+        for (VisibleLine vline : m_adapter.visibleLines ) {
             // Only check tasks that are not checked yet
             // and skip headers
             // This prevents double counting in the CAB title
-            Task t = getTaskAt(i);
-            if (t == null) {
-                continue;
-            }
-            selectedTasks.add(t);
-            if (!lv.isItemChecked(i)) {
-                lv.setItemChecked(i, true);
+            if (!vline.header) {
+                selectedTasks.add(vline.task);
             }
         }
         getTodoList().setSelectedTasks(selectedTasks);
+        handleIntent();
     }
 
     @Override
@@ -578,7 +574,10 @@ public class Simpletask extends ThemedActivity implements
 
     @Nullable
     private Task getTaskAt(final int pos) {
-        return m_adapter.getItem(pos);
+        if (pos < m_adapter.getCount()) {
+            return m_adapter.getItem(pos);
+        }
+        return null;
     }
 
     private void shareTodoList(int format) {
