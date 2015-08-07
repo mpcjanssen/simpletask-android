@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -38,8 +39,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
@@ -67,8 +67,9 @@ public class AddTaskBackground extends Activity {
              if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
                 try {
-                    File sharedFile = new File(uri.getPath());
-                    share_text = Files.toString(sharedFile, Charsets.UTF_8);
+                    InputStream is = getContentResolver().openInputStream(uri);
+                    share_text = CharStreams.toString(new InputStreamReader(is, "UTF-8"));
+                    is.close();
                 } catch (IOException e) {
                     share_text = "";
                     e.printStackTrace();
