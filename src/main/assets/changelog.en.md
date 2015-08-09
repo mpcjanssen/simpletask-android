@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+6.0.7
+-----
+
+- Fix crash with `select all`.
+- Don't log actual task contents in application logging.
+- Fix an issue with sharing large todo files.
+
 6.0.6
 -----
 
