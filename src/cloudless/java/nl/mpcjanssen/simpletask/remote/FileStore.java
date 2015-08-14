@@ -16,6 +16,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
@@ -234,7 +235,7 @@ public class FileStore implements FileStoreInterface {
         return Constants.STORE_SDCARD;
     }
 
-    public static String getDefaultPath() {
+    public static String getDefaultPath(TodoApplication app) {
         return Environment.getExternalStorageDirectory() + "/data/nl.mpcjanssen.simpletask/todo.txt";
     }
 
