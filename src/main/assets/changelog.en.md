@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+6.0.8
+-----
+
+- Fix crash with `Share all`.
+- Add support for Dropbox App Folder permissions.
+- Save todo file after acrhive.  Fixes [#290](https://github.com/mpcjanssen/simpletask-android/issues/290)
+
 6.0.7
 -----
 
