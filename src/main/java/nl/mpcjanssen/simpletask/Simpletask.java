@@ -582,7 +582,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void shareTodoList(int format) {
         StringBuilder text = new StringBuilder();
-        for (int i = 0; i < m_adapter.getCount(); i++) {
+        for (int i = 0; i < m_adapter.getCount()-1; i++) {
             Task task = m_adapter.getItem(i);
             if (task != null) {
                 text.append(task.showParts(format)).append("\n");
