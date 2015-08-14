@@ -228,6 +228,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Log in to Dropbox</string>
+    <string name="login_folder_screen_button">Log in to Dropbox\n(App folder access)</string>
     <string name="login_cloudless">If you don\'t have a dropbox account or don\'t want to use it to store your todo list,
         you can download Simpletask Cloudless from the Play Store.
         \nhttp://goo.gl/X1C55P

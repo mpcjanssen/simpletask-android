@@ -66,9 +66,20 @@ public class LoginScreen extends ThemedActivity {
         m_LoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                m_app.setFullDropboxAccess(true);
                 startLogin();
             }
         });
+
+        m_LoginButton = (Button) findViewById(R.id.login_folder);
+        m_LoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                m_app.setFullDropboxAccess(false);
+                startLogin();
+            }
+        });
+
 
         if (m_app.isAuthenticated()) {
             switchToTodolist();

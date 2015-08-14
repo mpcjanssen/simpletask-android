@@ -41,13 +41,25 @@ You should have received a copy of the GNU General Public License along with Tod
             android:singleLine="true"
             android:gravity="center_horizontal"/>
 
-    <Button
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="8pt"
-            android:text="@string/login_screen_button"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <Button
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:textSize="8pt"
+                android:text="@string/login_screen_button"/>
+        <Button
+                android:id="@+id/login_folder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:textSize="8pt"
+                android:text="@string/login_folder_screen_button"/>
+    </LinearLayout>
     <TextView
             android:id="@+id/cloudless"
             android:layout_width="fill_parent"
