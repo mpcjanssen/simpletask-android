@@ -26,6 +26,7 @@ import com.dropbox.client2.jsonextract.JsonThing;
 import com.dropbox.client2.session.AppKeyPair;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.R;
+import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -46,7 +47,7 @@ import java.util.List;
 public class FileStore implements FileStoreInterface {
 
     private final FileChangeListener mFileChangedListerer;
-    private final Context mCtx;
+    private final TodoApplication mApp;
     private final Logger log;
     private  SharedPreferences mPrefs;
     // In the class declaration section:
@@ -66,9 +67,9 @@ public class FileStore implements FileStoreInterface {
     private boolean mOnline;
     private Handler fileOperationsQueue;
 
-    public FileStore(Context ctx, FileChangeListener fileChangedListener) {
+    public FileStore(TodoApplication app, FileChangeListener fileChangedListener) {
         log = LoggerFactory.getLogger(this.getClass());
-        mPrefs = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
+        mPrefs = app.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
         mFileChangedListerer = fileChangedListener;
         // Set up the message queue
         Thread t = new Thread(new Runnable() {
@@ -80,9 +81,9 @@ public class FileStore implements FileStoreInterface {
             }
         });
         t.start();
-        mCtx = ctx;
+        mApp = app;
         mOnline = isOnline();
-        setMDBApi();
+        setMDBApi(app);
     }
 
     private String loadContentsFromCache() {
@@ -137,7 +138,7 @@ public class FileStore implements FileStoreInterface {
 
     private boolean isOnline() {
         ConnectivityManager cm =
-                (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) mApp.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
     }
@@ -150,10 +151,18 @@ public class FileStore implements FileStoreInterface {
         return mPrefs.getString(LOCAL_REVISION, null);
     }
 
-    private void setMDBApi() {
+    private void setMDBApi(TodoApplication app) {
+        String app_secret;
+        String app_key;
         if (mDBApi == null) {
-            String app_secret = mCtx.getString(R.string.dropbox_consumer_secret);
-            String app_key = mCtx.getString(R.string.dropbox_consumer_key);
+            // Full access or folder access?
+            if (app.getFullDropboxAccess()) {
+                app_secret = mApp.getString(R.string.dropbox_consumer_secret);
+                app_key = mApp.getString(R.string.dropbox_consumer_key);
+            } else {
+                app_secret = mApp.getString(R.string.dropbox_folder_consumer_secret);
+                app_key = mApp.getString(R.string.dropbox_folder_consumer_key);
+            }
             app_key = app_key.replaceFirst("^db-", "");
             // And later in some initialization function:
             AppKeyPair appKeys = new AppKeyPair(app_key, app_secret);
@@ -164,8 +173,12 @@ public class FileStore implements FileStoreInterface {
     }
 
     @NonNull
-    static public String getDefaultPath() {
-        return "/todo/todo.txt";
+    static public String getDefaultPath(TodoApplication app) {
+        if (app.getFullDropboxAccess()) {
+            return "/todo/todo.txt";
+        } else {
+            return "/todo.txt";
+        }
     }
 
 
@@ -276,6 +289,7 @@ public class FileStore implements FileStoreInterface {
         return false;
     }
 
+
     @Override
     synchronized public List<Task> loadTasksFromFile(String path, final @Nullable BackupInterface backup, String eol) throws IOException {
 
@@ -298,7 +312,7 @@ public class FileStore implements FileStoreInterface {
             return tasksFromCache();
         } else if (changesPending()) {
             log.info("Not loading, changes pending");
-            Util.showToastLong(mCtx,"Saving pending changes");
+            Util.showToastLong(mApp,"Saving pending changes");
             mIsLoading = false;
             tasks = tasksFromCache();
             saveTasksToFile(path, tasks, backup, eol);
@@ -345,7 +359,7 @@ public class FileStore implements FileStoreInterface {
                 e.printStackTrace();
                 tasks.clear();
                 tasks.addAll(tasksFromCache());
-                Util.showToastLong(mCtx, "Drobox error, loading from cache");
+                Util.showToastLong(mApp, "Drobox error, loading from cache");
             } catch (IOException e) {
                 mIsLoading = false;
                 throw new IOException(e);
@@ -367,7 +381,9 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void startLogin(Activity caller, int i) {
         // MyActivity below should be your activity class name
-       mDBApi.getSession().startOAuth2Authentication(caller);
+        mDBApi = null;
+        setMDBApi(mApp);
+        mDBApi.getSession().startOAuth2Authentication(caller);
     }
 
 
@@ -426,7 +442,7 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
         if (!isOnline()) {
-            Util.showToastLong(mCtx, "Device is offline");
+            Util.showToastLong(mApp, "Device is offline");
             log.info("Device is offline, browse closed");
             return;
         }
@@ -479,7 +495,7 @@ public class FileStore implements FileStoreInterface {
                     // The file was written under another name
                     // Usually this means the was a conflict.
                     log.info("Filename was changed remotely. New name is: " + newName);
-                    Util.showToastLong(mCtx, "Filename was changed remotely. New name is: " + newName);
+                    Util.showToastLong(mApp, "Filename was changed remotely. New name is: " + newName);
                     mFileChangedListerer.fileChanged(newName);
                 }
             }
@@ -531,7 +547,7 @@ public class FileStore implements FileStoreInterface {
     @Override
     public void sync() {
         if (!isOnline()) {
-            Util.showToastLong(mCtx, "Device is offline");
+            Util.showToastLong(mApp, "Device is offline");
             return;
         }
         mFileChangedListerer.fileChanged(null);

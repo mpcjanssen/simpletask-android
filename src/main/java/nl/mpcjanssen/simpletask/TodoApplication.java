@@ -193,12 +193,12 @@ public class TodoApplication extends Application implements
     }
 
     public String getTodoFileName() {
-        String name =  m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath());
+        String name =  m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath(this));
         File todoFile = new File(name);
         try {
             return todoFile.getCanonicalPath();
         } catch (IOException e) {
-            return FileStore.getDefaultPath();
+            return FileStore.getDefaultPath(this);
         }
     }
 
@@ -313,7 +313,7 @@ public class TodoApplication extends Application implements
 
     public void loadTodoList(boolean background) {
         log.info("Load todolist");
-        m_todoList.reload(mFileStore,getTodoFileName(),this,localBroadcastManager,background,getEol());
+        m_todoList.reload(mFileStore, getTodoFileName(), this, localBroadcastManager, background, getEol());
 
     }
 
@@ -381,6 +381,14 @@ public class TodoApplication extends Application implements
 
     private String getActiveThemeString() {
         return getPrefs().getString(getString(R.string.theme_pref_key), "light_darkactionbar");
+    }
+
+    public boolean getFullDropboxAccess() {
+        return getPrefs().getBoolean(getString(R.string.dropbox_full_access), true);
+    }
+
+    public void setFullDropboxAccess(boolean full) {
+        getPrefs().edit().putBoolean(getString(R.string.dropbox_full_access), full).commit();
     }
 
 
