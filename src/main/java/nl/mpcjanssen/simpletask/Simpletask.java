@@ -110,9 +110,6 @@ public class Simpletask extends ThemedActivity implements
             @Override
             public void onReceive(Context context, @NonNull Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_ACTION_ARCHIVE)) {
-                    // archive
-                    // refresh screen to remove completed tasks
-                    // push to remote
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
                     log.info("Logging out from Dropbox");
