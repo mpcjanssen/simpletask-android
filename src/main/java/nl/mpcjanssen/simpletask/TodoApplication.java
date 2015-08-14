@@ -192,9 +192,6 @@ public class TodoApplication extends Application implements
         return m_prefs.getInt(getString(R.string.calendar_reminder_time), 720);
     }
 
-    public void clearTodoFileName() {
-        m_prefs.edit().remove(getString(R.string.todo_file_key)).commit();
-    }
 
     public String getTodoFileName() {
         String name =  m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath(this));
