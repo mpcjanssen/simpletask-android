@@ -436,6 +436,7 @@ public class FileStore implements FileStoreInterface {
         if(mDBApi!=null) {
             mDBApi.getSession().unlink();
         }
+        mApp.clearTodoFileName();
         mPrefs.edit().remove(OAUTH2_TOKEN).commit();
     }
 
