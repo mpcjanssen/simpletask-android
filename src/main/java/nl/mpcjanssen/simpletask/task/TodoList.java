@@ -384,7 +384,7 @@ public class TodoList {
                     for (Task t : tasksToDelete) {
                         mTasks.remove(t);
                     }
-                    notifyChanged(filestore, todoFilename, eol, null, false);
+                    notifyChanged(filestore, todoFilename, eol, null, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Util.showToastShort(TodoApplication.getAppContext(), "Task archiving failed");

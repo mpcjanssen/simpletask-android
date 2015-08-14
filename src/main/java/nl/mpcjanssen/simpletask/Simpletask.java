@@ -592,7 +592,6 @@ public class Simpletask extends ThemedActivity implements
     }
 
 
-
     private void prioritizeTasks(@NonNull final List<Task> tasks) {
         List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
         final String[] prioArr = strings.toArray(new String[strings.size()]);
