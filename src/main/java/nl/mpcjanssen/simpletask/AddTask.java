@@ -586,13 +586,6 @@ public class AddTask extends ThemedActivity {
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
-        // restore selection
-        int newLength = textInputField.getText().length();
-        sizeDelta = newLength - length;
-        int newStart = Math.max(0, start + sizeDelta);
-        int newEnd = Math.min(end + sizeDelta, newLength);
-        newEnd = Math.max(newStart, newEnd);
-        textInputField.setSelection(newStart, newEnd);
     }
 
     private void replaceThresholdDate(@NonNull CharSequence newThresholdDate) {
@@ -616,13 +609,6 @@ public class AddTask extends ThemedActivity {
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
-        // restore selection
-        int newLength = textInputField.getText().length();
-        sizeDelta = newLength - length;
-        int newStart = Math.max(0, start + sizeDelta);
-        int newEnd = Math.min(end + sizeDelta, newLength);
-        newEnd = Math.max(newStart, newEnd);
-        textInputField.setSelection(start, newEnd);
     }
 
     private void replacePriority(@NonNull CharSequence newPrio) {
@@ -648,15 +634,6 @@ public class AddTask extends ThemedActivity {
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
-        // restore selection
-        int newLength = textInputField.getText().length();
-        sizeDelta = newLength - length;
-        int newStart = Math.max(0, start + sizeDelta);
-        int newEnd = Math.min(end + sizeDelta, newLength);
-        newEnd = Math.max(newStart, newEnd);
-        log.debug("New selection (" + sizeDelta + "): " + newStart + "-" + newEnd);
-        textInputField.setSelection(newStart, newEnd);
-
     }
 
     private void replaceTextAtSelection(CharSequence title, boolean spaces) {
