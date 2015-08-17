@@ -25,7 +25,7 @@
 - Link to the topydo project rather than the (obsoleted) todo.txt-tools. (Bram Schoenmakers)
 - Don't hide FAB, removes required external dependency.
 - Properly split multiline texts added in background. Possible fix for #277.
--  Don't add empty tasks in the background. Possible fix for #277.
+- Don't add empty tasks in the background. Possible fix for #277.
 
 
 6.0.5

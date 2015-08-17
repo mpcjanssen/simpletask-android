@@ -532,4 +532,8 @@ public class TodoApplication extends Application implements
         }
         return values[index];
     }
+
+    public boolean hasShareTaskShowsEdit() {
+        return m_prefs.getBoolean(getString(R.string.share_task_show_edit), false);
+    }
 }
