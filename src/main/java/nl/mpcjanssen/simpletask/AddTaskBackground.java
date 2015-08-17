@@ -96,6 +96,12 @@ public class AddTaskBackground extends Activity {
         }
     }
 
+    private void startAddTaskActivity(List<Task> tasks) {
+        log.info("Starting addTask activity");
+        m_app.getTodoList().setSelectedTasks(tasks);
+        Intent intent = new Intent(this, AddTask.class);
+        startActivity(intent);
+    }
 
     private void noteToSelf(@NonNull Intent intent, @NonNull String append_text) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -107,6 +113,7 @@ public class AddTaskBackground extends Activity {
 
     private void addBackgroundTask(@NonNull String sharedText, @NonNull String appendText) {
         TodoList todoList = m_app.getTodoList();
+        ArrayList<Task> addedTasks = new ArrayList<>();
         log.debug("Adding background tasks to todolist {} ", todoList);
 
         for (String taskText : sharedText.split("\r\n|\r|\n")) {
@@ -116,16 +123,21 @@ public class AddTaskBackground extends Activity {
             if (!appendText.isEmpty()) {
                 taskText = taskText + " " + appendText;
             }
-
+            Task t;
             if (m_app.hasPrependDate()) {
-                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
+                t = new Task(taskText, DateTime.today(TimeZone.getDefault()));
             } else {
-                todoList.add(new Task(taskText));
+                t = new Task(taskText);
             }
+            todoList.add(t);
+            addedTasks.add(t);
         }
-        todoList.notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(),m_app, true);
+        todoList.notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
         finish();
         Util.showToastShort(m_app, R.string.task_added);
+        if (m_app.hasShareTaskShowsEdit()) {
+            startAddTaskActivity(addedTasks);
+        }
     }
 
 }
