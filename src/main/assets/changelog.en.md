@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+6.0.9
+-----
+
+- Always add configured text for tasks added in background.
+- Restore the edit after share option. Fixes [#292](https://github.com/mpcjanssen/simpletask-android/issues/292)
+
 6.0.8
 -----
 
