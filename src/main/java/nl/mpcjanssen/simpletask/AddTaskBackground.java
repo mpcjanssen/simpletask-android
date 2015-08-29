@@ -60,10 +60,9 @@ public class AddTaskBackground extends Activity {
         final String action = intent.getAction();
 
         String append_text = m_app.getShareAppendText();
-
          if (Intent.ACTION_SEND.equals(action)) {
             log.debug("Share");
-             String share_text;
+             String share_text = "";
              if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
                 try {
@@ -71,15 +70,14 @@ public class AddTaskBackground extends Activity {
                     share_text = CharStreams.toString(new InputStreamReader(is, "UTF-8"));
                     is.close();
                 } catch (IOException e) {
-                    share_text = "";
                     e.printStackTrace();
                 }
-
             } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-                share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
-            } else {
-                share_text = "";
-            }
+                 CharSequence text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
+                 if (text != null) {
+                     share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
+                 }
+             }
             addBackgroundTask(share_text, append_text);
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now
