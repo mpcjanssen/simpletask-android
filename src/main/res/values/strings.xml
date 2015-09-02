@@ -167,6 +167,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_title">Widget theme</string>
     <string name="widget_theme_pref_summary">Change the theme used for the widgets.</string>
 
+    <string name="task_text_ellipsizing_pref_title">Task text ellipsizing</string>
+    <string name="task_text_ellipsizing_pref_summary">Ellipsize task text in main window if it takes more than 2 lines.</string>
+
     <string name="widget_header_transparency_title">Widget header transparency</string>
     <string name="widget_background_transparency_title">Widget background transparency</string>
 

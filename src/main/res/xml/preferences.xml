@@ -54,6 +54,13 @@
                 android:key="@string/widget_theme_pref_key"
                 android:summary="@string/widget_theme_pref_summary"
                 android:title="@string/widget_theme_pref_title"/>
+        <ListPreference
+            android:defaultValue="no_ellipsize"
+            android:entries="@array/task_text_ellipsizing"
+            android:entryValues="@array/task_text_ellipsizing_values"
+            android:key="ellipsizing"
+            android:summary="@string/task_text_ellipsizing_pref_summary"
+            android:title="@string/task_text_ellipsizing_pref_title"/>
 
         <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
                                          android:key="@string/widget_header_transparency"
