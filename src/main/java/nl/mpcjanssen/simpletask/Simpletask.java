@@ -1566,10 +1566,11 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void handleEllipsizing(TextView tasktext) {
-        final String no_ellipsize_value = "no_ellipsize";
-        final String ellipsizingPref = TodoApplication.getPrefs().getString("ellipsizing", no_ellipsize_value);
+        final String noEllipsizeValue = "no_ellipsize";
+        final String ellipsizingKey = TodoApplication.getAppContext().getString(R.string.task_text_ellipsizing_pref_key);
+        final String ellipsizingPref = TodoApplication.getPrefs().getString(ellipsizingKey, noEllipsizeValue);
 
-        if (!no_ellipsize_value.equals(ellipsizingPref)) {
+        if (!noEllipsizeValue.equals(ellipsizingPref)) {
             final TextUtils.TruncateAt truncateAt;
             switch (ellipsizingPref) {
                 case "start":
@@ -1594,7 +1595,7 @@ public class Simpletask extends ThemedActivity implements
                 tasktext.setHorizontallyScrolling(true);
                 tasktext.setEllipsize(truncateAt);
             } else {
-                log.warn("Unrecognized preference value for task text ellipsizing: \"" + ellipsizingPref + "\"!");
+                log.warn("Unrecognized preference value for task text ellipsizing: {} !", ellipsizingPref);
             }
         }
     }

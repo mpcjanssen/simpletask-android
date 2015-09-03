@@ -58,7 +58,7 @@
             android:defaultValue="no_ellipsize"
             android:entries="@array/task_text_ellipsizing"
             android:entryValues="@array/task_text_ellipsizing_values"
-            android:key="ellipsizing"
+            android:key="@string/task_text_ellipsizing_pref_key"
             android:summary="@string/task_text_ellipsizing_pref_summary"
             android:title="@string/task_text_ellipsizing_pref_title"/>
 
