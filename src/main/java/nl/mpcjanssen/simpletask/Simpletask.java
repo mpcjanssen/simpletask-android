@@ -10,12 +10,16 @@
 package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -29,17 +33,48 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.SearchView;
+import android.widget.TextView;
 
-import android.view.*;
-import android.widget.*;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -49,10 +84,6 @@ import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.*;
 
 
 public class Simpletask extends ThemedActivity implements
@@ -1428,6 +1459,8 @@ public class Simpletask extends ThemedActivity implements
                         .inFileFormat());
                 holder.tasktext.setText(ss);
 
+                handleEllipsizing(holder.tasktext);
+
                 if (task.isCompleted()) {
                     // log.info( "Striking through " + task.getText());
                     holder.tasktext.setPaintFlags(holder.tasktext
@@ -1529,6 +1562,41 @@ public class Simpletask extends ThemedActivity implements
             }
             VisibleLine line = visibleLines.get(position);
             return !line.header;
+        }
+    }
+
+    private void handleEllipsizing(TextView tasktext) {
+        final String noEllipsizeValue = "no_ellipsize";
+        final String ellipsizingKey = TodoApplication.getAppContext().getString(R.string.task_text_ellipsizing_pref_key);
+        final String ellipsizingPref = TodoApplication.getPrefs().getString(ellipsizingKey, noEllipsizeValue);
+
+        if (!noEllipsizeValue.equals(ellipsizingPref)) {
+            final TextUtils.TruncateAt truncateAt;
+            switch (ellipsizingPref) {
+                case "start":
+                    truncateAt = TextUtils.TruncateAt.START;
+                    break;
+                case "end":
+                    truncateAt = TextUtils.TruncateAt.END;
+                    break;
+                case "middle":
+                    truncateAt = TextUtils.TruncateAt.MIDDLE;
+                    break;
+                case "marquee":
+                    truncateAt = TextUtils.TruncateAt.MARQUEE;
+                    break;
+                default:
+                    truncateAt = null;
+                    break;
+            }
+
+            if (truncateAt != null) {
+                tasktext.setMaxLines(1);
+                tasktext.setHorizontallyScrolling(true);
+                tasktext.setEllipsize(truncateAt);
+            } else {
+                log.warn("Unrecognized preference value for task text ellipsizing: {} !", ellipsizingPref);
+            }
         }
     }
 
