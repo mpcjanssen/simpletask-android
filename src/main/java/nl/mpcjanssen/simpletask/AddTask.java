@@ -375,7 +375,7 @@ public class AddTask extends ThemedActivity {
             }
         }
         for (Task rest: updated) {
-            todoList.add(rest);
+            todoList.add(rest, m_app.hasAppendAtEnd());
         }
 
         // Save
