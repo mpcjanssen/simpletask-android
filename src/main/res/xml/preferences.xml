@@ -184,6 +184,11 @@
                 android:key="@string/show_txt_only"
                 android:summary="@string/show_txt_only_summary"
                 android:title="@string/show_txt_only_pref_title"/>
+        <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/append_tasks_at_end"
+                android:summary="@string/append_tasks_at_end_summary"
+                android:title="@string/append_tasks_at_end_title"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/DROPBOX_settings_header"
