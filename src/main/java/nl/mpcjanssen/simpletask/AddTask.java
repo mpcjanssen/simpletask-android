@@ -28,7 +28,11 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,18 +42,40 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
+
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 
 public class AddTask extends ThemedActivity {
@@ -446,8 +472,8 @@ public class AddTask extends ThemedActivity {
 
         items.addAll(todoList.getProjects());
         // Also display contexts in tasks being added
-        Task t = new Task(textInputField.getText().toString());
-        items.addAll(t.getTags());
+        final Task task = new Task(textInputField.getText().toString());
+        items.addAll(task.getTags());
         final ArrayList<String> projects = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),null);
 
 
@@ -456,9 +482,12 @@ public class AddTask extends ThemedActivity {
         builder.setView(view);
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
-        lv.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
-                projects.toArray(new String[projects.size()])));
+        ArrayAdapter<String> lvAdapter = new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
+                projects.toArray(new String[projects.size()]));
+        lv.setAdapter(lvAdapter);
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+        initListViewSelection(lv, lvAdapter, task.getTags());
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -466,11 +495,18 @@ public class AddTask extends ThemedActivity {
                 ArrayList<String> items = new ArrayList<>();
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
-                if (!newText.equals("")) {
+                if (!newText.isEmpty()) {
                     items.add(ed.getText().toString());
                 }
                 for (String item : items) {
-                    replaceTextAtSelection("+" + item + " ", true);
+                    if (!task.getTags().contains(item)) {
+                        replaceTextAtSelection("+" + item + " ", true);
+                    }
+                }
+                for (String taskTagItem : task.getTags()) {
+                    if (!items.contains(taskTagItem)) {
+                        removeText("+" + taskTagItem);
+                    }
                 }
             }
         });
@@ -515,8 +551,8 @@ public class AddTask extends ThemedActivity {
 
         items.addAll(todoList.getContexts());
         // Also display contexts in tasks being added
-        Task t = new Task(textInputField.getText().toString());
-        items.addAll(t.getLists());
+        final Task task = new Task(textInputField.getText().toString());
+        items.addAll(task.getLists());
         final ArrayList<String> contexts = Util.sortWithPrefix(items, m_app.sortCaseSensitive(),null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -525,9 +561,12 @@ public class AddTask extends ThemedActivity {
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         final EditText ed = (EditText) view.findViewById(R.id.editText);
         String [] choices = contexts.toArray(new String[contexts.size()]);
-                lv.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
-                        choices));
+        final ArrayAdapter<String> lvAdapter = new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice,
+                choices);
+        lv.setAdapter(lvAdapter);
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+        initListViewSelection(lv, lvAdapter, task.getLists());
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -535,11 +574,18 @@ public class AddTask extends ThemedActivity {
                 ArrayList<String> items = new ArrayList<>();
                 items.addAll(Util.getCheckedItems(lv, true));
                 String newText = ed.getText().toString();
-                if (!newText.equals("")) {
+                if (!newText.isEmpty()) {
                     items.add(ed.getText().toString());
                 }
                 for (String item : items) {
-                    replaceTextAtSelection("@" + item + " ", true);
+                    if (!task.getLists().contains(item)) {
+                        replaceTextAtSelection("@" + item + " ", true);
+                    }
+                }
+                for (String taskListItem : task.getLists()) {
+                    if (!items.contains(taskListItem)) {
+                        removeText("@" + taskListItem);
+                    }
                 }
             }
         });
@@ -552,6 +598,25 @@ public class AddTask extends ThemedActivity {
         AlertDialog dialog = builder.create();
         dialog.setTitle(m_app.getListTerm());
         dialog.show();
+    }
+
+    private void removeText(String text) {
+        final String escapedText = Pattern.quote(text);
+        final String regexp = "(?:^|\\s)" + escapedText + "(?:\\s|$)";
+        final String taskText = String.valueOf(textInputField.getText());
+        String newText = taskText.replaceAll(regexp, " ");
+        newText = newText.trim();
+        textInputField.setText(newText);
+    }
+
+    private void initListViewSelection(ListView lv, ArrayAdapter<String> lvAdapter, List<String> selectedItems) {
+        for (int i = 0; i < lvAdapter.getCount(); i++) {
+            for (String item : selectedItems) {
+                if (item.equals(lvAdapter.getItem(i))) {
+                    lv.setItemChecked(i, true);
+                }
+            }
+        }
     }
 
     public int getCurrentCursorLine(@NonNull EditText editText) {
@@ -648,7 +713,6 @@ public class AddTask extends ThemedActivity {
         textInputField.getText().replace(Math.min(start, end), Math.max(start, end),
                 title, 0, title.length());
     }
-
 
     public void onDestroy() {
         super.onDestroy();
