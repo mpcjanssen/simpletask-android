@@ -93,6 +93,7 @@ public class Simpletask extends ThemedActivity implements
     private final static int REQUEST_PREFERENCES = 2;
 
     private final static String ACTION_LINK = "link";
+    private final static String ACTION_SMS = "sms";
     private final static String ACTION_PHONE = "phone";
     private final static String ACTION_MAIL = "mail";
 
@@ -376,19 +377,36 @@ public class Simpletask extends ThemedActivity implements
                     for (String number : t.getPhoneNumbers()) {
                         actions.add(ACTION_PHONE);
                         links.add(number);
+                        actions.add(ACTION_SMS);
+                        links.add(number);
                     }
                     for (String mail : t.getMailAddresses()) {
                         actions.add(ACTION_MAIL);
                         links.add(mail);
                     }
                 }
-                final String[] linksArray = links.toArray(new String[links.size()]);
-                if (linksArray.length == 0) {
+                if (links.size() == 0) {
                     onItemLongClick(parent, view, position, id);
                 } else {
+                    // Decorate the links array
+                    ArrayList<String> titles = new ArrayList<String>();
+                    for (int i = 0 ; i < links.size() ; i ++) {
+                        switch (actions.get(i)) {
+                            case ACTION_SMS:
+                                titles.add(i,"SMS: " + links.get(i));
+                                break;
+                            case ACTION_PHONE:
+                                titles.add(i,"Call: " + links.get(i));
+                                break;
+                            default:
+                                titles.add(i, links.get(i));
+                                break;
+                        }
+                    }
                     AlertDialog.Builder build = new AlertDialog.Builder(Simpletask.this);
                     build.setTitle(R.string.task_action);
-                    build.setItems(linksArray, new DialogInterface.OnClickListener() {
+                    final String[] titleArray = titles.toArray(new String[titles.size()]);
+                    build.setItems(titleArray, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent;
@@ -406,9 +424,11 @@ public class Simpletask extends ThemedActivity implements
                                     }
                                     break;
                                 case ACTION_PHONE:
-                                    String encodedNumber = Uri.encode(url);
-                                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-                                            + encodedNumber));
+                                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse( "tel:" + Uri.encode(url)));
+                                    startActivity(intent);
+                                    break;
+                                case ACTION_SMS:
+                                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)));
                                     startActivity(intent);
                                     break;
                                 case ACTION_MAIL:
