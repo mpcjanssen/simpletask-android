@@ -271,7 +271,6 @@ public class Simpletask extends ThemedActivity implements
             startLogin();
             return;
         }
-        mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
 
         mFilter = new ActiveFilter();
 
@@ -480,6 +479,7 @@ public class Simpletask extends ThemedActivity implements
             closeSelectionMode();
         }
         updateDrawers();
+        mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
     }
 
     private void setSelectedTasks(List<Task> tasks) {
