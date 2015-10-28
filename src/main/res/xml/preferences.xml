@@ -255,7 +255,7 @@
                                              android:key="@string/calendar_reminder_days"
                                              android:title="@string/calendar_reminder_days_title"
                                              android:summary="@string/calendar_reminder_days_summary"
-                                             android:defaultValue="1"
+                                             android:defaultValue="0"
                                              android:max="7"
                                              robobunny:min="0"
                                              robobunny:unitsLeft=""
