@@ -58,7 +58,7 @@ public class CalendarSync {
             .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build();
     private static final String CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI";
     private static final int CAL_COLOR = Color.BLUE;       // Chosen arbitrarily...
-    private static final int EVT_DURATION = 5*60*60*1000;  // ie. 5 hours
+    private static final int EVT_DURATION_DAY = 24*60*60*1000;  // ie. 24 hours
 
     private static final int SYNC_DELAY_MS = 1000;
     private final Logger log;
@@ -141,17 +141,15 @@ public class CalendarSync {
     private void insertEvt(long calID, DateTime date, String titlePrefix, String title) {
         ContentValues values = new ContentValues();
 
-        DateTime startDate = new DateTime(date.getYear(), date.getMonth(), date.getDay(), m_rem_time.getHour(),
-                m_rem_time.getMinute(), m_rem_time.getSecond(), m_rem_time.getNanoseconds());
         TimeZone localZone = Calendar.getInstance().getTimeZone();
-        long dtstart = startDate.getMilliseconds(localZone);
+        long dtstart = date.getMilliseconds(UTC);
 
         // Event:
         values.put(Events.CALENDAR_ID, calID);
         values.put(Events.TITLE, titlePrefix+' '+title);
         values.put(Events.DTSTART, dtstart);
-        values.put(Events.DTEND, dtstart + EVT_DURATION);
-        values.put(Events.ALL_DAY, 0);
+        values.put(Events.DTEND, dtstart + EVT_DURATION_DAY);  // Needs to be set to DTSTART +24h, otherwise reminders don't work
+        values.put(Events.ALL_DAY, 1);
         values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
         values.put(Events.EVENT_TIMEZONE, UTC.getID());
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
@@ -162,14 +160,14 @@ public class CalendarSync {
 
         // Reminder:
         // Only create reminder if it's in the future, otherwise it would go off immediately
-        DateTime remDate = startDate.minus(0, 0, 0, m_rem_margin / 60, m_rem_margin % 60 + 1, 0, 0, DateTime.DayOverflow.Spillover);
-        // NOTE: DateTime.minus() only accepts values lower than 10000, hence the division.
-        //       Also, +1 to minutes because of a corner case of modifying tasks the minute a reminder went off
+        // NOTE: DateTime.minus()/plus() only accept values >=0 and <10000 (goddamnit date4j!), hence the division.
+        DateTime remDate = date.minus(0, 0, 0,  m_rem_margin / 60,  m_rem_margin % 60, 0, 0, DateTime.DayOverflow.Spillover);
+        remDate = remDate.plus(0, 0, 0, m_rem_time.getHour(), m_rem_time.getMinute(), 0, 0, DateTime.DayOverflow.Spillover);
         if (remDate.isInTheFuture(localZone)) {
             long evtID = Long.parseLong(uri.getLastPathSegment());
             values.clear();
             values.put(Reminders.EVENT_ID, evtID);
-            values.put(Reminders.MINUTES, m_rem_margin);
+            values.put(Reminders.MINUTES, remDate.numSecondsFrom(date) / 60);
             values.put(Reminders.METHOD, Reminders.METHOD_ALERT);
             m_cr.insert(Reminders.CONTENT_URI, values);
         }
