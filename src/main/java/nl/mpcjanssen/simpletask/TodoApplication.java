@@ -261,6 +261,10 @@ public class TodoApplication extends Application implements
                 .apply();
     }
 
+    public boolean hasAppendAtEnd() {
+        return m_prefs.getBoolean(getString(R.string.append_tasks_at_end),true);
+    }
+
     public boolean isWordWrap() {
         return m_prefs.getBoolean(getString(R.string.word_wrap_key),true);
     }
@@ -531,5 +535,9 @@ public class TodoApplication extends Application implements
             return getString(R.string.none);
         }
         return values[index];
+    }
+
+    public boolean hasShareTaskShowsEdit() {
+        return m_prefs.getBoolean(getString(R.string.share_task_show_edit), false);
     }
 }

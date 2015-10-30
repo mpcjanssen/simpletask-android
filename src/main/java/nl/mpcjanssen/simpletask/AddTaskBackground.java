@@ -60,10 +60,9 @@ public class AddTaskBackground extends Activity {
         final String action = intent.getAction();
 
         String append_text = m_app.getShareAppendText();
-
          if (Intent.ACTION_SEND.equals(action)) {
             log.debug("Share");
-             String share_text;
+             String share_text = "";
              if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
                 try {
@@ -71,16 +70,15 @@ public class AddTaskBackground extends Activity {
                     share_text = CharStreams.toString(new InputStreamReader(is, "UTF-8"));
                     is.close();
                 } catch (IOException e) {
-                    share_text = "";
                     e.printStackTrace();
                 }
-
             } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-                share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
-            } else {
-                share_text = "";
-            }
-            addBackgroundTask(share_text, "");
+                 CharSequence text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
+                 if (text != null) {
+                     share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString();
+                 }
+             }
+            addBackgroundTask(share_text, append_text);
         } else if ("com.google.android.gm.action.AUTO_SEND".equals(action)) {
             // Called as note to self from google search/now
             noteToSelf(intent, append_text);
@@ -96,6 +94,12 @@ public class AddTaskBackground extends Activity {
         }
     }
 
+    private void startAddTaskActivity(List<Task> tasks) {
+        log.info("Starting addTask activity");
+        m_app.getTodoList().setSelectedTasks(tasks);
+        Intent intent = new Intent(this, AddTask.class);
+        startActivity(intent);
+    }
 
     private void noteToSelf(@NonNull Intent intent, @NonNull String append_text) {
         String task = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -107,6 +111,7 @@ public class AddTaskBackground extends Activity {
 
     private void addBackgroundTask(@NonNull String sharedText, @NonNull String appendText) {
         TodoList todoList = m_app.getTodoList();
+        ArrayList<Task> addedTasks = new ArrayList<>();
         log.debug("Adding background tasks to todolist {} ", todoList);
 
         for (String taskText : sharedText.split("\r\n|\r|\n")) {
@@ -116,16 +121,21 @@ public class AddTaskBackground extends Activity {
             if (!appendText.isEmpty()) {
                 taskText = taskText + " " + appendText;
             }
-
+            Task t;
             if (m_app.hasPrependDate()) {
-                todoList.add(new Task(taskText, DateTime.today(TimeZone.getDefault())));
+                t = new Task(taskText, DateTime.today(TimeZone.getDefault()));
             } else {
-                todoList.add(new Task(taskText));
+                t = new Task(taskText);
             }
+            todoList.add(t,m_app.hasAppendAtEnd());
+            addedTasks.add(t);
         }
-        todoList.notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(),m_app, true);
+        todoList.notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
         finish();
         Util.showToastShort(m_app, R.string.task_added);
+        if (m_app.hasShareTaskShowsEdit()) {
+            startAddTaskActivity(addedTasks);
+        }
     }
 
 }

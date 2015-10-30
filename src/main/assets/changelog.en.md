@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+6.0.9
+-----
+
+- Always add configured text for tasks added in background.
+- Restore the edit after share option. Fixes [#292](https://github.com/mpcjanssen/simpletask-android/issues/292)
+
 6.0.8
 -----
 
@@ -25,7 +31,7 @@
 - Link to the topydo project rather than the (obsoleted) todo.txt-tools. (Bram Schoenmakers)
 - Don't hide FAB, removes required external dependency.
 - Properly split multiline texts added in background. Possible fix for #277.
--  Don't add empty tasks in the background. Possible fix for #277.
+- Don't add empty tasks in the background. Possible fix for #277.
 
 
 6.0.5

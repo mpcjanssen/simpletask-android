@@ -10,36 +10,75 @@
 package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.widget.DrawerLayout;
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
 
-import android.view.*;
-import android.widget.*;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -49,10 +88,6 @@ import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.*;
 
 
 public class Simpletask extends ThemedActivity implements
@@ -62,6 +97,7 @@ public class Simpletask extends ThemedActivity implements
     private final static int REQUEST_PREFERENCES = 2;
 
     private final static String ACTION_LINK = "link";
+    private final static String ACTION_SMS = "sms";
     private final static String ACTION_PHONE = "phone";
     private final static String ACTION_MAIL = "mail";
 
@@ -185,7 +221,7 @@ public class Simpletask extends ThemedActivity implements
             return false;
         }
         MenuItem searchMenuItem = options_menu.findItem(R.id.search);
-        searchMenuItem.expandActionView();
+        MenuItemCompat.expandActionView(searchMenuItem);
 
         return true;
     }
@@ -239,7 +275,6 @@ public class Simpletask extends ThemedActivity implements
             startLogin();
             return;
         }
-        mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
 
         mFilter = new ActiveFilter();
 
@@ -345,19 +380,36 @@ public class Simpletask extends ThemedActivity implements
                     for (String number : t.getPhoneNumbers()) {
                         actions.add(ACTION_PHONE);
                         links.add(number);
+                        actions.add(ACTION_SMS);
+                        links.add(number);
                     }
                     for (String mail : t.getMailAddresses()) {
                         actions.add(ACTION_MAIL);
                         links.add(mail);
                     }
                 }
-                final String[] linksArray = links.toArray(new String[links.size()]);
-                if (linksArray.length == 0) {
+                if (links.size() == 0) {
                     onItemLongClick(parent, view, position, id);
                 } else {
+                    // Decorate the links array
+                    ArrayList<String> titles = new ArrayList<String>();
+                    for (int i = 0 ; i < links.size() ; i ++) {
+                        switch (actions.get(i)) {
+                            case ACTION_SMS:
+                                titles.add(i,"SMS: " + links.get(i));
+                                break;
+                            case ACTION_PHONE:
+                                titles.add(i,"Call: " + links.get(i));
+                                break;
+                            default:
+                                titles.add(i, links.get(i));
+                                break;
+                        }
+                    }
                     AlertDialog.Builder build = new AlertDialog.Builder(Simpletask.this);
                     build.setTitle(R.string.task_action);
-                    build.setItems(linksArray, new DialogInterface.OnClickListener() {
+                    final String[] titleArray = titles.toArray(new String[titles.size()]);
+                    build.setItems(titleArray, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent;
@@ -375,9 +427,11 @@ public class Simpletask extends ThemedActivity implements
                                     }
                                     break;
                                 case ACTION_PHONE:
-                                    String encodedNumber = Uri.encode(url);
-                                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-                                            + encodedNumber));
+                                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse( "tel:" + Uri.encode(url)));
+                                    startActivity(intent);
+                                    break;
+                                case ACTION_SMS:
+                                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)));
                                     startActivity(intent);
                                     break;
                                 case ACTION_MAIL:
@@ -429,6 +483,7 @@ public class Simpletask extends ThemedActivity implements
             closeSelectionMode();
         }
         updateDrawers();
+        mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
     }
 
     private void setSelectedTasks(List<Task> tasks) {
@@ -538,6 +593,24 @@ public class Simpletask extends ThemedActivity implements
                 .getSearchableInfo(getComponentName()));
 
         searchView.setIconifiedByDefault(false);
+        MenuItemCompat.setOnActionExpandListener(searchMenu, new OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Do something when collapsed
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                //get focus
+                item.getActionView().requestFocus();
+                //get input method
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                return true;  // Return true to expand action view
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             public boolean m_ignoreSearchChangeCallback;
 
@@ -1428,6 +1501,8 @@ public class Simpletask extends ThemedActivity implements
                         .inFileFormat());
                 holder.tasktext.setText(ss);
 
+                handleEllipsizing(holder.tasktext);
+
                 if (task.isCompleted()) {
                     // log.info( "Striking through " + task.getText());
                     holder.tasktext.setPaintFlags(holder.tasktext
@@ -1529,6 +1604,41 @@ public class Simpletask extends ThemedActivity implements
             }
             VisibleLine line = visibleLines.get(position);
             return !line.header;
+        }
+    }
+
+    private void handleEllipsizing(TextView tasktext) {
+        final String noEllipsizeValue = "no_ellipsize";
+        final String ellipsizingKey = TodoApplication.getAppContext().getString(R.string.task_text_ellipsizing_pref_key);
+        final String ellipsizingPref = TodoApplication.getPrefs().getString(ellipsizingKey, noEllipsizeValue);
+
+        if (!noEllipsizeValue.equals(ellipsizingPref)) {
+            final TextUtils.TruncateAt truncateAt;
+            switch (ellipsizingPref) {
+                case "start":
+                    truncateAt = TextUtils.TruncateAt.START;
+                    break;
+                case "end":
+                    truncateAt = TextUtils.TruncateAt.END;
+                    break;
+                case "middle":
+                    truncateAt = TextUtils.TruncateAt.MIDDLE;
+                    break;
+                case "marquee":
+                    truncateAt = TextUtils.TruncateAt.MARQUEE;
+                    break;
+                default:
+                    truncateAt = null;
+                    break;
+            }
+
+            if (truncateAt != null) {
+                tasktext.setMaxLines(1);
+                tasktext.setHorizontallyScrolling(true);
+                tasktext.setEllipsize(truncateAt);
+            } else {
+                log.warn("Unrecognized preference value for task text ellipsizing: {} !", ellipsizingPref);
+            }
         }
     }
 

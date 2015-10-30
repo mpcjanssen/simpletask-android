@@ -34,89 +34,96 @@
 
     <PreferenceCategory android:title="@string/todotxt_ui_settings_header">
         <ListPreference
-            android:defaultValue="light_darkactionbar"
-            android:key="@string/theme_pref_key"
-            android:entries="@array/themes"
-            android:entryValues="@array/theme_values"
-            android:summary="@string/theme_pref_summary"
-            android:title="@string/theme_pref_title" />
+                android:defaultValue="light_darkactionbar"
+                android:key="@string/theme_pref_key"
+                android:entries="@array/themes"
+                android:entryValues="@array/theme_values"
+                android:summary="@string/theme_pref_summary"
+                android:title="@string/theme_pref_title"/>
         <ListPreference
-            android:defaultValue="medium"
-            android:entries="@array/fontsize"
-            android:entryValues="@array/fontsize_values"
-            android:key="fontsize"
-            android:summary="@string/font_size_delta_pref_summary"
-            android:title="@string/font_size_delta_pref_title" />
+                android:defaultValue="medium"
+                android:entries="@array/fontsize"
+                android:entryValues="@array/fontsize_values"
+                android:key="fontsize"
+                android:summary="@string/font_size_delta_pref_summary"
+                android:title="@string/font_size_delta_pref_title"/>
         <ListPreference
-            android:defaultValue="light_darkactionbar"
-            android:entries="@array/themes"
-            android:entryValues="@array/theme_values"
-            android:key="@string/widget_theme_pref_key"
-            android:summary="@string/widget_theme_pref_summary"
-            android:title="@string/widget_theme_pref_title" />
+                android:defaultValue="light_darkactionbar"
+                android:entries="@array/themes"
+                android:entryValues="@array/theme_values"
+                android:key="@string/widget_theme_pref_key"
+                android:summary="@string/widget_theme_pref_summary"
+                android:title="@string/widget_theme_pref_title"/>
+        <ListPreference
+            android:defaultValue="no_ellipsize"
+            android:entries="@array/task_text_ellipsizing"
+            android:entryValues="@array/task_text_ellipsizing_values"
+            android:key="@string/task_text_ellipsizing_pref_key"
+            android:summary="@string/task_text_ellipsizing_pref_summary"
+            android:title="@string/task_text_ellipsizing_pref_title"/>
 
         <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-            android:key="@string/widget_header_transparency"
-            android:title="@string/widget_header_transparency_title"
-            android:summary=""
-            android:defaultValue="0"
-            android:max="100"
-            robobunny:min="0"
-            robobunny:unitsLeft=""
-            robobunny:unitsRight="%" />
+                                         android:key="@string/widget_header_transparency"
+                                         android:title="@string/widget_header_transparency_title"
+                                         android:summary=""
+                                         android:defaultValue="0"
+                                         android:max="100"
+                                         robobunny:min="0"
+                                         robobunny:unitsLeft=""
+                                         robobunny:unitsRight="%"/>
         <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-            android:key="@string/widget_background_transparency"
-            android:title="@string/widget_background_transparency_title"
-            android:summary=""
-            android:defaultValue="0"
-            android:max="100"
-            robobunny:min="0"
-            robobunny:unitsLeft=""
-            robobunny:unitsRight="%" />
+                                         android:key="@string/widget_background_transparency"
+                                         android:title="@string/widget_background_transparency_title"
+                                         android:summary=""
+                                         android:defaultValue="0"
+                                         android:max="100"
+                                         robobunny:min="0"
+                                         robobunny:unitsLeft=""
+                                         robobunny:unitsRight="%"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/widget_extended_pref_key"
-            android:summary="@string/widget_extended_pref_summary"
-            android:title="@string/widget_extended_pref_title" />
+                android:defaultValue="true"
+                android:key="@string/widget_extended_pref_key"
+                android:summary="@string/widget_extended_pref_summary"
+                android:title="@string/widget_extended_pref_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/color_due_date_key"
-            android:summary="@string/color_due_pref_summary"
-            android:title="@string/color_due_pref_title" />
+                android:defaultValue="true"
+                android:key="@string/color_due_date_key"
+                android:summary="@string/color_due_pref_summary"
+                android:title="@string/color_due_pref_title"/>
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/ui_drawer_fixed_landscape"
-            android:summary="@string/drawer_fixed_landscape_summary"
-            android:title="@string/drawer_fixed_landscape_title" />
+                android:defaultValue="false"
+                android:key="@string/ui_drawer_fixed_landscape"
+                android:summary="@string/drawer_fixed_landscape_summary"
+                android:title="@string/drawer_fixed_landscape_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/ui_show_edittext_hints"
-            android:summary="@string/show_edittext_hints_summary"   
-            android:title="@string/show_edittext_hints_title" />
+                android:defaultValue="true"
+                android:key="@string/ui_show_edittext_hints"
+                android:summary="@string/show_edittext_hints_summary"
+                android:title="@string/show_edittext_hints_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/ui_complete_checkbox"
-            android:summary="@string/show_complete_checkbox_summary"
-            android:title="@string/show_complete_checkbox_title" />        
+                android:defaultValue="true"
+                android:key="@string/ui_complete_checkbox"
+                android:summary="@string/show_complete_checkbox_summary"
+                android:title="@string/show_complete_checkbox_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/ui_show_confirmation_dialogs"
-            android:summary="@string/show_confirmation_dialogs_summary"
-            android:title="@string/show_confirmation_dialogs_title" />
+                android:defaultValue="true"
+                android:key="@string/ui_show_confirmation_dialogs"
+                android:summary="@string/show_confirmation_dialogs_summary"
+                android:title="@string/show_confirmation_dialogs_title"/>
         <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/show_todo_path"
                 android:summary="@string/show_todo_path_summary"
-                android:title="@string/show_todo_path_title" />
+                android:title="@string/show_todo_path_title"/>
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/ui_show_calendarview"
-            android:title="@string/show_calendarview_title" />
+                android:defaultValue="false"
+                android:key="@string/ui_show_calendarview"
+                android:title="@string/show_calendarview_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/ui_sort_case_sensitive"
-            android:title="@string/sort_case_sensitive_title"
-            android:summary="@string/sort_case_sensitive_summary"/>
+                android:defaultValue="true"
+                android:key="@string/ui_sort_case_sensitive"
+                android:title="@string/sort_case_sensitive_title"
+                android:summary="@string/sort_case_sensitive_summary"/>
         <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/ui_todotxt_terms"
@@ -125,139 +132,149 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/todotxt_behavior_settings_header"
-        android:key="@string/behavior_cat_key">
+            android:title="@string/todotxt_behavior_settings_header"
+            android:key="@string/behavior_cat_key">
 
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/prepend_date_pref_key"
-            android:summary="@string/prepend_date_pref_summary"
-            android:title="@string/prepend_date_pref_title" />
+                android:defaultValue="true"
+                android:key="@string/prepend_date_pref_key"
+                android:summary="@string/prepend_date_pref_summary"
+                android:title="@string/prepend_date_pref_title"/>
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/back_key_saves_key"
-            android:summary="@string/back_saves_summary"
-            android:title="@string/back_saves_pref_title" />
+                android:defaultValue="false"
+                android:key="@string/back_key_saves_key"
+                android:summary="@string/back_saves_summary"
+                android:title="@string/back_saves_pref_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/line_breaks_pref_key"
-            android:summary="@string/line_breaks_pref_summary"
-            android:title="@string/line_breaks_pref_title" />
+                android:defaultValue="true"
+                android:key="@string/line_breaks_pref_key"
+                android:summary="@string/line_breaks_pref_summary"
+                android:title="@string/line_breaks_pref_title"/>
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/show_hidden"
-            android:summary="@string/show_hidden_summary"
-            android:title="@string/show_hidden_title" />
+                android:defaultValue="false"
+                android:key="@string/show_hidden"
+                android:summary="@string/show_hidden_summary"
+                android:title="@string/show_hidden_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/show_empty_lists"
-            android:summary="@string/show_empty_lists_summary"
-            android:title="@string/show_empty_lists_title" />
+                android:defaultValue="true"
+                android:key="@string/show_empty_lists"
+                android:summary="@string/show_empty_lists_summary"
+                android:title="@string/show_empty_lists_title"/>
+        <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/share_task_show_edit"
+                android:summary="@string/share_task_show_edit_summary"
+                android:title="@string/share_task_show_edit_pref_title"/>
         <EditTextPreference
-            android:defaultValue=""
-            android:key="@string/share_task_append_text"
-            android:summary="@string/share_task_show_edit_summary"
-            android:title="@string/share_task_show_edit_pref_title" />
+                android:defaultValue=""
+                android:key="@string/share_task_append_text"
+                android:summary="@string/share_task_append_text_summary"
+                android:title="@string/share_task_append_text_title"/>
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/capitalize_tasks"
-            android:title="@string/capitalize_tasks_pref_title" />
+                android:defaultValue="false"
+                android:key="@string/capitalize_tasks"
+                android:title="@string/capitalize_tasks_pref_title"/>
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/keep_prio"
-            android:summary="@string/keep_prio_summary"
-            android:title="@string/keep_prio_header" />
+                android:defaultValue="true"
+                android:key="@string/keep_prio"
+                android:summary="@string/keep_prio_summary"
+                android:title="@string/keep_prio_header"/>
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/show_txt_only"
-            android:summary="@string/show_txt_only_summary"
-            android:title="@string/show_txt_only_pref_title" />
+                android:defaultValue="false"
+                android:key="@string/show_txt_only"
+                android:summary="@string/show_txt_only_summary"
+                android:title="@string/show_txt_only_pref_title"/>
+        <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/append_tasks_at_end"
+                android:summary="@string/append_tasks_at_end_summary"
+                android:title="@string/append_tasks_at_end_title"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/DROPBOX_settings_header"
-        android:key="@string/dropbox_cat_key">
+            android:title="@string/DROPBOX_settings_header"
+            android:key="@string/dropbox_cat_key">
 
         <Preference
-            android:key="logout_dropbox"
-            android:summary="@string/dropbox_logout_pref_summary"
-            android:title="@string/dropbox_logout_pref_title" />
+                android:key="logout_dropbox"
+                android:summary="@string/dropbox_logout_pref_summary"
+                android:title="@string/dropbox_logout_pref_title"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/ARCHIVE_settings_header">
         <CheckBoxPreference
-            android:key="@string/auto_archive_pref_key"
-            android:summary="@string/auto_archive_pref_summary"
-            android:title="@string/auto_archive_pref_title" />
+                android:key="@string/auto_archive_pref_key"
+                android:summary="@string/auto_archive_pref_summary"
+                android:title="@string/auto_archive_pref_title"/>
 
         <Preference
-            android:key="archive_now"
-            android:summary="@string/archive_now_pref_summary"
-            android:title="@string/archive_now_pref_title" />
+                android:key="archive_now"
+                android:summary="@string/archive_now_pref_summary"
+                android:title="@string/archive_now_pref_title"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/about_settings_header"
-        android:key="about">
+            android:title="@string/about_settings_header"
+            android:key="about">
         <Preference
-            android:key="app_version"
-            android:summary="@string/click_to_copy" />
+                android:key="app_version"
+                android:summary="@string/click_to_copy"/>
         <Preference
                 android:key="share_history"
                 android:title="@string/share_history_title"
-                android:summary="@string/share_history" />
+                android:summary="@string/share_history"/>
         <Preference
-            android:title="@string/donate_title"
-            android:key="donate"
-            android:summary="@string/donate_summary">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
+                android:title="@string/donate_title"
+                android:key="donate"
+                android:summary="@string/donate_summary">
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"/>
         </Preference>
         <Preference
-            android:title="@string/donate_title"
-            android:key="donated"
-            android:summary="@string/donated_summary">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate" />
+                android:title="@string/donate_title"
+                android:key="donated"
+                android:summary="@string/donated_summary">
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"/>
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Experimental"
-        android:summary="Enable experimental features"
-        android:key="experimental">
+            android:title="Experimental"
+            android:summary="Enable experimental features"
+            android:key="experimental">
         <PreferenceScreen
-            android:key="@string/calendar_sync_screen"
-            android:summary="@string/calendar_sync_screen_summary"
-            android:title="@string/calendar_sync_screen_title">
+                android:key="@string/calendar_sync_screen"
+                android:summary="@string/calendar_sync_screen_summary"
+                android:title="@string/calendar_sync_screen_title">
             <CheckBoxPreference
-                android:key="@string/calendar_sync_dues"
-                android:title="@string/calendar_sync_dues_title" />
+                    android:key="@string/calendar_sync_dues"
+                    android:title="@string/calendar_sync_dues_title"/>
             <CheckBoxPreference
-                android:key="@string/calendar_sync_thresholds"
-                android:title="@string/calendar_sync_thresholds_title" />
+                    android:key="@string/calendar_sync_thresholds"
+                    android:title="@string/calendar_sync_thresholds_title"/>
             <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-                android:key="@string/calendar_reminder_days"
-                android:title="@string/calendar_reminder_days_title"
-                android:summary="@string/calendar_reminder_days_summary"
-                android:defaultValue="1"
-                android:max="7"
-                robobunny:min="0"
-                robobunny:unitsLeft=""
-                robobunny:unitsRight="" />
+                                             android:key="@string/calendar_reminder_days"
+                                             android:title="@string/calendar_reminder_days_title"
+                                             android:summary="@string/calendar_reminder_days_summary"
+                                             android:defaultValue="0"
+                                             android:max="7"
+                                             robobunny:min="0"
+                                             robobunny:unitsLeft=""
+                                             robobunny:unitsRight=""/>
             <nl.mpcjanssen.simpletask.TimePreference
-                android:key="@string/calendar_reminder_time"
-                android:title="@string/calendar_reminder_time_title"
-                android:summary="@string/calendar_reminder_time_summary"
-                android:defaultValue="720" />
+                    android:key="@string/calendar_reminder_time"
+                    android:title="@string/calendar_reminder_time_title"
+                    android:summary="@string/calendar_reminder_time_summary"
+                    android:defaultValue="720"/>
         </PreferenceScreen>
         <CheckBoxPreference
-            android:defaultValue="false"
-	    android:key="@string/back_clears_filter"
-            android:summary="If enabled, the first press of the back button clears the active filter and only the second press exits the app."
-            android:title="Back clears filter" />
+                android:defaultValue="false"
+                android:key="@string/back_clears_filter"
+                android:summary="If enabled, the first press of the back button clears the active filter and only the second press exits the app."
+                android:title="Back clears filter"/>
         <Preference
-            android:title="View log"
-            android:key="send_log"
-            android:summary="View and share the application log for debugging purposes.">
+                android:title="View log"
+                android:key="send_log"
+                android:summary="View and share the application log for debugging purposes.">
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

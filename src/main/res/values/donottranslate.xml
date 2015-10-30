@@ -87,6 +87,20 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>large</item>
         <item>huge</item>
     </string-array>
+    <string-array name="task_text_ellipsizing">
+        <item>None: Very long task text</item>
+        <item>Start: ...task text</item>
+        <item>Middle: Very... text</item>
+        <item>End: Very long...</item>
+        <item>Marquee: Very long ta</item>
+    </string-array>
+    <string-array name="task_text_ellipsizing_values">
+        <item>no_ellipsize</item>
+        <item>start</item>
+        <item>middle</item>
+        <item>end</item>
+        <item>marquee</item>
+    </string-array>
 
 
     <!-- Unlocalized Help names -->
@@ -105,6 +119,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="font_size_delta_pref_key">fontsizedelta</string>
     <string name="theme_pref_key">theme</string>
     <string name="widget_theme_pref_key">widget_theme</string>
+    <string name="task_text_ellipsizing_pref_key">task_text_ellipsizing</string>
     <string name="widget_extended_pref_key">widget_extended</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="behavior_cat_key">behavior_category</string>
@@ -138,6 +153,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="back_clears_filter">back_clears_filter</string>
     <string name="keep_prio">todotxt_completion</string>
     <string name="dropbox_full_access">dropbox_full_access</string>
+    <string name="share_task_show_edit">share_task_show_edit</string>
+    <string name="append_tasks_at_end">append_tasks_at_end</string>
 </resources>
 
 

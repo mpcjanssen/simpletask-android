@@ -119,12 +119,16 @@ public class TodoList {
     }
 
 
-    public void add(final Task t) {
+    public void add(final Task t, final boolean atEnd) {
         queueRunnable("Add task", new Runnable() {
             @Override
             public void run() {
-                log.debug("Adding task of length {} into {}", t.inFileFormat().length(), TodoList.this);
-                mTasks.add(t);
+                log.debug("Adding task of length {} into {} atEnd", t.inFileFormat().length(), TodoList.this, atEnd);
+                if (atEnd) {
+                    mTasks.add(t);
+                } else {
+                    mTasks.add(0,t);
+                }
             }
         });
     }
