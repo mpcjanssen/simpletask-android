@@ -136,8 +136,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="theme_pref_title">Application theme</string>
     <string name="theme_pref_summary">Change the theme used for the application.</string>
 
-    <string name="share_task_show_edit_pref_title">Background tag</string>
-    <string name="share_task_show_edit_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
+    <string name="share_task_show_edit_pref_title">Edit shared task</string>
+    <string name="share_task_show_edit_summary">Allow editing of a shared task before saving it.
+            Disable this to have the shared task stored without intervention.</string>
+
+
+    <string name="share_task_append_text_title">Background tag</string>
+    <string name="share_task_append_text_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
     <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
     <string name="back_saves_pref_title">Back button</string>
@@ -150,7 +155,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_screen_summary">Automatically create calendar reminders for due and/or threshold dates.</string>
     <string name="calendar_sync_dues_title">Due dates</string>
     <string name="calendar_sync_thresholds_title">Threshold dates</string>
-    <string name="calendar_reminder_days_title">Reminders margin</string>
+    <string name="calendar_reminder_days_title">Remind in advance</string>
     <string name="calendar_reminder_days_summary">How many days before the due/threshold date should the reminder be set.</string>
     <string name="calendar_reminder_time_title">Reminders time</string>
     <string name="calendar_reminder_time_summary">At what time of day should the reminder be set.</string>
@@ -162,11 +167,17 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_title">Widget theme</string>
     <string name="widget_theme_pref_summary">Change the theme used for the widgets.</string>
 
+    <string name="task_text_ellipsizing_pref_title">Task text ellipsizing</string>
+    <string name="task_text_ellipsizing_pref_summary">Ellipsize task text in main window if it takes more than 2 lines.</string>
+
     <string name="widget_header_transparency_title">Widget header transparency</string>
     <string name="widget_background_transparency_title">Widget background transparency</string>
 
     <string name="widget_extended_pref_title">Extended widget</string>
     <string name="widget_extended_pref_summary">Show tasks in widget with separate dates line.</string>
+
+    <string name="append_tasks_at_end_title">Append new tasks</string>
+    <string name="append_tasks_at_end_summary">Append new tasks at the end of the todo file. When disabled, new tasks are inserted at the beginning.</string>
 
     <string name="color_due_pref_title">Color due dates</string>
     <string name="color_due_pref_summary">Color due dates based on whether they are due today, due in the future or overdue.</string>
