@@ -41,7 +41,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preferences">Einstellungen</string>
     <string name="archive">Archivieren</string>
     <string name="help">Hilfe</string>
+
+    <string name="history">Verlauf</string>
+    <string name="log">Log</string>
+    <string name="next">Nächstes</string>
+    <string name="prev">Vorheriges</string>
+   <string name="open_file">Öffne Todo-Datei</string>
+
     <string name="open_file">Todo-Datei öffnen</string>
+
     <string name="sync">Aktualisieren</string>
     <string name="changelist">Liste auswählen</string>
     <string name="search">Suchen</string>
@@ -234,7 +242,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="word_wrap">Zeilenumbruch</string>
     <string name="search_hint">Durchsuche todo.txt</string>
     <!-- sort -->
-    <string name="sort_help">Ziehen und Ablegen um die Reihenfolge zu ändern, Einträge antippem um die Sortierrichtung zu ändern.</string>
+    <string name="sort_help">Ziehen und Ablegen um die Reihenfolge zu ändern, Einträge antippen um die Sortierrichtung zu ändern.</string>
     <string name="alphabetical">Alphabetisch</string>
     <string name="by_prio">Nach Priorität</string>
     <string name="by_project">Nach Kategorie</string>
@@ -265,6 +273,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_show_prompt">Zeige</string>
     <string name="filter_saved_prompt">Gespeicherte Filter</string>
 
+
+    <!-- task parts -->
+    <string name="task_select_parts">Teilaufgaben auswählen</string>
+    <string name="task_show_all">Alle</string>
 
     <!-- title bar changes -->
     <string name="title_filter_applied">Gefiltert nach:</string>
