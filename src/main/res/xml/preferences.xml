@@ -129,6 +129,11 @@
                 android:key="@string/ui_todotxt_terms"
                 android:title="@string/todotxt_terms_title"
                 android:summary="@string/todotxt_terms_summary"/>
+        <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/ui_fast_scroll"
+                android:title="@string/show_fast_scroll_title"
+                android:summary="@string/show_fast_scroll_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory

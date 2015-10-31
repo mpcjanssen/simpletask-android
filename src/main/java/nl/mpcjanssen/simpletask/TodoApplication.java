@@ -172,6 +172,9 @@ public class TodoApplication extends Application implements
         return m_prefs.getBoolean(getString(R.string.ui_todotxt_terms), false);
     }
 
+    public boolean useFastScroll() {
+        return m_prefs.getBoolean(getString(R.string.ui_fast_scroll), true);
+    }
     public boolean showTxtOnly() {
         return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
     }

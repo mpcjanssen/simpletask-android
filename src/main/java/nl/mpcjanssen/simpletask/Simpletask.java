@@ -457,6 +457,8 @@ public class Simpletask extends ThemedActivity implements
             m_scrollPosition = m_savedInstanceState.getInt("position");
         }
 
+        lv.setFastScrollEnabled(m_app.useFastScroll());
+
 
         // If we were started with a selected task,
         // select it now and clear it from the intent
