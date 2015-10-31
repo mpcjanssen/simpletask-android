@@ -46,8 +46,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="log">Log</string>
     <string name="next">Nächstes</string>
     <string name="prev">Vorheriges</string>
-   <string name="open_file">Öffne Todo-Datei</string>
-
     <string name="open_file">Todo-Datei öffnen</string>
 
     <string name="sync">Aktualisieren</string>
