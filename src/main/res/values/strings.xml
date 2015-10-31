@@ -206,6 +206,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_todo_path_title">Show todo path</string>
     <string name="show_todo_path_summary">Shows the path to the todo file. The directories are shortened to the first letter. For example /todo/home/todo.txt becomes /t/h/todo.txt.</string>
 
+    <string name="show_fast_scroll_title">Fast scrolling</string>
+    <string name="show_fast_scroll_summary">Use fast scrolling if the todo list gets longer.</string>
+
     <string name="show_calendarview_title">Use calendar for date entry</string>
 
     <string name="sort_case_sensitive_title">Sort case-sensitive</string>
