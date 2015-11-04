@@ -28,7 +28,7 @@ android {
     compileSdkVersion 22
 
     defaultConfig {
-        versionName '6.1.2'
+        versionName '6.2.0'
         versionCode 3001
 	    minSdkVersion 14
         targetSdkVersion 22
