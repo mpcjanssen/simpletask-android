@@ -383,9 +383,9 @@ public class AddTask extends ThemedActivity {
         for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
 
             if(m_app.hasPrependDate()) {
-                updated.add(new Task(line.trim(),DateTime.now(TimeZone.getDefault())));
+                updated.add(new Task(line,DateTime.now(TimeZone.getDefault())));
             } else {
-                updated.add(new Task(line.trim()));
+                updated.add(new Task(line));
             }
         }
 
@@ -605,7 +605,6 @@ public class AddTask extends ThemedActivity {
         final String regexp = "(?:^|\\s)" + escapedText + "(?:\\s|$)";
         final String taskText = String.valueOf(textInputField.getText());
         String newText = taskText.replaceAll(regexp, " ");
-        newText = newText.trim();
         textInputField.setText(newText);
     }
 
