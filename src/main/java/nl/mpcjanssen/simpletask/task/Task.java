@@ -524,6 +524,15 @@ public class Task implements Serializable {
     }
 
     @NonNull
+    public String getDueDateString(String empty) {
+        if (mDuedate==null) {
+            return empty;
+        } else {
+            return mDuedate;
+        }
+    }
+
+    @NonNull
     public String getHeader(@NonNull String sort, String empty) {
         if (sort.contains("by_context")) {
             if (mLists.size() > 0) {
@@ -541,6 +550,8 @@ public class Task implements Serializable {
             return getThresholdDateString(empty);
         } else if (sort.contains("by_prio")) {
             return getPriority().getCode();
+        } else if (sort.contains("by_due_date")) {
+            return getDueDateString(empty);
         }
         return "";
     }
