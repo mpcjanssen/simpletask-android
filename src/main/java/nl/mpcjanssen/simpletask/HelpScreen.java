@@ -131,7 +131,10 @@ public class HelpScreen extends ThemedActivity {
         log.debug("Loading asset " + name + " into " + wv + "(" + ctxt + ")");
         String html = "";
         try {
-            html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(readAsset(ctxt.getAssets(), name)) + "</body></html>";
+            String markdown = readAsset(ctxt.getAssets(), name);
+            // Change issue numbers to links
+            markdown = markdown.replaceAll("(\\s)(#)([0-9]+)", "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)");
+            html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>";
         } catch (IOException e) {
             log.error("Failed to load markdown asset: {}", name, e);
         }
