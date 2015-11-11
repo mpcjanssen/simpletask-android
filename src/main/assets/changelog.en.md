@@ -1,6 +1,39 @@
 ﻿Changelog
 =========
 
+6.2.1
+-----
+
+- Add grouping by due date. Fixes #322.
+- Merged don't prefix event titles in calendar (vojtechkral).
+
+
+6.2.0
+-----
+
+- Try to force FDroid rebuild again.
+- Keep enclosing whitespace when updating or adding tasks. Partial fix for #315.
+
+6.1.2
+-----
+
+- Try to force FDroid rebuild.
+
+6.1.1
+-----
+
+- Fix build error caused by duplicate strings.
+
+6.1.0
+-----
+
+- Merged use of all day events for calendar sync (vojtechkral).
+- Merged updated settings and default for calendar sync (vojtechkral).
+- Give proper focus to SearchView so keyboard pops up. Fixes #318. 
+- Add preference for fast scrolling of task view. Fixes #319.
+- Merged updated German translation (twckr).
+
+
 6.0.9
 -----
 
