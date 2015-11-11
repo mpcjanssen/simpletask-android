@@ -138,7 +138,7 @@ public class CalendarSync {
     }
 
     @SuppressWarnings("NewApi")
-    private void insertEvt(long calID, DateTime date, String titlePrefix, String title) {
+    private void insertEvt(long calID, DateTime date, String title, String description) {
         ContentValues values = new ContentValues();
 
         TimeZone localZone = Calendar.getInstance().getTimeZone();
@@ -146,11 +146,11 @@ public class CalendarSync {
 
         // Event:
         values.put(Events.CALENDAR_ID, calID);
-        values.put(Events.TITLE, titlePrefix+' '+title);
+        values.put(Events.TITLE, title);
         values.put(Events.DTSTART, dtstart);
         values.put(Events.DTEND, dtstart + EVT_DURATION_DAY);  // Needs to be set to DTSTART +24h, otherwise reminders don't work
         values.put(Events.ALL_DAY, 1);
-        values.put(Events.DESCRIPTION, m_app.getString(R.string.calendar_sync_evt_desc));
+        values.put(Events.DESCRIPTION, description);
         values.put(Events.EVENT_TIMEZONE, UTC.getID());
         values.put(Events.STATUS, Events.STATUS_CONFIRMED);
         values.put(Events.HAS_ATTENDEE_DATA, true);      // If this is not set, Calendar app is confused about Event.STATUS
@@ -185,7 +185,7 @@ public class CalendarSync {
                 dt = task.getDueDate();
                 if (dt != null) {
                     text = task.getText();
-                    insertEvt(calID, dt, m_app.getString(R.string.calendar_sync_prefix_due), text);
+                    insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_due));
                 }
             }
 
@@ -194,7 +194,7 @@ public class CalendarSync {
                 dt = task.getThresholdDate();
                 if (dt != null) {
                     if (text == null) text = task.getText();
-                    insertEvt(calID, dt, m_app.getString(R.string.calendar_sync_prefix_thre), text);
+                    insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_thre));
                 }
             }
         }
