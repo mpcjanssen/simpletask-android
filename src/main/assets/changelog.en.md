@@ -38,14 +38,14 @@
 -----
 
 - Always add configured text for tasks added in background.
-- Restore the edit after share option. Fixes [#292](https://github.com/mpcjanssen/simpletask-android/issues/292)
+- Restore the edit after share option. Fixes #292
 
 6.0.8
 -----
 
 - Fix crash with `Share all`.
 - Add support for Dropbox App Folder permissions.
-- Save todo file after acrhive.  Fixes [#290](https://github.com/mpcjanssen/simpletask-android/issues/290)
+- Save todo file after acrhive.  Fixes #290
 
 6.0.7
 -----
@@ -59,7 +59,7 @@
 
 - Fix some punctuation errors. (Shayne Holmes)
 - Don't save todo list after a reload. This should prevent another case of conflicts on Dropbox.
-- Hide last empty header if `show empty headers` is disabled.  Fixes [#283](https://github.com/mpcjanssen/simpletask-android/issues/283)
+- Hide last empty header if `show empty headers` is disabled.  Fixes #283
 - Fix NPE in broadcast receiver.
 - Link to the topydo project rather than the (obsoleted) todo.txt-tools. (Bram Schoenmakers)
 - Don't hide FAB, removes required external dependency.
@@ -70,8 +70,8 @@
 6.0.5
 -----
 
-- Leave updated tasks in the original location in the todo file. Fixes [#274](https://github.com/mpcjanssen/simpletask-android/issues/274)
-- Fix issues with resetting filters after opening filter screen. Fixes [#276](https://github.com/mpcjanssen/simpletask-android/issues/276)
+- Leave updated tasks in the original location in the todo file. Fixes #274
+- Fix issues with resetting filters after opening filter screen. Fixes #276
 
 6.0.4
 -----
@@ -86,9 +86,9 @@
 6.0.2
 -----
 
-- Add a setting to hide creation date if this is the only specified date. Fixes [#272](https://github.com/mpcjanssen/simpletask-android/issues/272)
+- Add a setting to hide creation date if this is the only specified date. Fixes #272
 - Fix widget colors.
-- Add setting to use `context` and `project` instead of `list` and `tag` to match `todo.txt`.  [#242](https://github.com/mpcjanssen/simpletask-android/issues/242)
+- Add setting to use `context` and `project` instead of `list` and `tag` to match `todo.txt`.  #242
 
 
 6.0.1
@@ -107,13 +107,13 @@
 - Improved Dropbox background polling.
 - Changed the way adding tasks in the background is handled. You can configure a string to append to these tasks. So for example `+background` will allow easy filtering. 
 - Don't scroll filter drawer list if item is checked.
-- Use `rec:+` to mean recur from original date instead of a using setting. Fixes [#29](https://github.com/mpcjanssen/simpletask-android/issues/29)
+- Use `rec:+` to mean recur from original date instead of a using setting. Fixes #29
 
 5.5.8
 -----
 
 - Switched to logback logging for more useful log files from inside the app.
-- Revert using back for todo file navigation. Fixes [#255](https://github.com/mpcjanssen/simpletask-android/issues/255).
+- Revert using back for todo file navigation. Fixes #255.
 - Code cleanup.
 - Don't clear todolist if reloading a file failed.
 - Queue todo list and file system actions to fix some weird race conditions.
@@ -122,31 +122,31 @@
 
 5.5.7
 
-- Delay re-enabling of Cloudless background listener while saving todo file. Fixes [#265](https://github.com/mpcjanssen/simpletask-android/issues/265)
+- Delay re-enabling of Cloudless background listener while saving todo file. Fixes #265
 
 5.5.6
 -----
 
-- Only show supported themes for the application and widgets. Fixes [#263](https://github.com/mpcjanssen/simpletask-android/issues/263)
+- Only show supported themes for the application and widgets. Fixes #263
 - Save defer dates when using calendar picker.
 
 5.5.5
 -----
 
 - Save the todolist after changing priorities.
-- Properly terminate files with a newline as to mirror todo.txt behavior. Fixes [#262](https://github.com/mpcjanssen/simpletask-android/issues/262)
+- Properly terminate files with a newline as to mirror todo.txt behavior. Fixes #262
 
 5.5.4
 -----
 
-- Add create date to tasks if specified. Fixes [#261](https://github.com/mpcjanssen/simpletask-android/issues/261).
+- Add create date to tasks if specified. Fixes #261.
 - Don't select header lines. Fixes `Select All` crashes.
 
 5.5.3
 -----
 
 - Synchronize Cloudless background threads.
-- Save completed tasks if using the menu to complete. Fixes [#259](https://github.com/mpcjanssen/simpletask-android/issues/259).
+- Save completed tasks if using the menu to complete. Fixes #259.
 - Clear selected tasks after adding or updating them.
 
 5.5.2
@@ -163,7 +163,7 @@
 -----
 
 - Fix setting due and threshold dates.
-- Add the new task when completing a task with recurrence, Fixes [#258](https://github.com/mpcjanssen/simpletask-android/issues/258).
+- Add the new task when completing a task with recurrence, Fixes #258.
 
 5.5.0
 -----
@@ -176,7 +176,7 @@
 - Fixed a filter issue with empty Lua filter scripts being treated as false.
 
 - Store last two days of todo.txt version in an internal database. This allows recovery in case of bugs.
-- Redid task memory backend. Fixes [#252](https://github.com/mpcjanssen/simpletask-android/issues/252).
+- Redid task memory backend. Fixes #252.
 - Don't use AsyncTask if not necessary. This make background activity much more robust.
 - Switched back to Dropbox Core API. The Sync API is not supported anymore.
 - With each file load a new TodoList is created, this fixes some concurrent modification issues.
@@ -195,8 +195,8 @@
 -----
 
 - Fix NPE reported through play in updateFilterBar().
-- Don't write to todo file if it is still loading. Fixes [#251](https://github.com/mpcjanssen/simpletask-android/issues/251).
-- Fix file sort for newly created task, should really fix [#248](https://github.com/mpcjanssen/simpletask-android/issues/248).
+- Don't write to todo file if it is still loading. Fixes #251.
+- Fix file sort for newly created task, should really fix #248.
 
 5.4.5
 -----
@@ -206,7 +206,7 @@
 5.4.4
 -----
 
-- Fix broken File Order sort [#248](https://github.com/mpcjanssen/simpletask-android/issues/248).
+- Fix broken File Order sort #248.
 - Fix possible NPE while handling threshold dates.
 
 
@@ -232,7 +232,7 @@
 - Show todo file path in the titlebar (enable in settings).
 - Updated back button behavior to switch to previous file if next file was openend via todo://... link.
 - When creating a widget pre-fill it with the current active application filter.
-- Observe case sensitive sorting setting in all sorts, partial fix for [#239](https://github.com/mpcjanssen/simpletask-android/issues/229).
+- Observe case sensitive sorting setting in all sorts, partial fix for #239.
 - Added Spanish translation of help. (courtesy Martin Laclaustra)
 - Added Korean translation. (courtesy halcyonera)
 - Updated German translation. (courtesy twickr)
@@ -290,17 +290,17 @@
 
 - Fix an issue with multiline shared texts being treated as a single task.
 - Add menu item `Refresh` to force manual sync with Dropbox.
-- Use proper string resource in new tag dialog. Fixes [#179](https://github.com/mpcjanssen/simpletask-android/issues/179).
+- Use proper string resource in new tag dialog. Fixes #179.
 - Fix possible NPE reported via Developer Console.
 - Prepend date to "Note to self" messages if auto date is active.
-- Don't set selection outside of text range. Fixes [#148](https://github.com/mpcjanssen/simpletask-android/issues/148).
-- Observe Back saves setting when using up icon. Fixes [#185](https://github.com/mpcjanssen/simpletask-android/issues/185).
+- Don't set selection outside of text range. Fixes #148.
+- Observe Back saves setting when using up icon. Fixes #185.
 
 5.2.13
 ------
 
-- Add option to send logs directly from the app. Fixes [#174](https://github.com/mpcjanssen/simpletask-android/issues/174).
-- Respect calendar setting when changing dates in AddTask activity. Fixes [#145](https://github.com/mpcjanssen/simpletask-android/issues/145).
+- Add option to send logs directly from the app. Fixes #174.
+- Respect calendar setting when changing dates in AddTask activity. Fixes #145.
 - Allow sharing of application log from the settings for better FDroid and debugging support.
 
 5.2.12
@@ -308,8 +308,8 @@
 
 - Added Italian translation (thanks to Carlo D.)
 - Fix link to issue tracker.
-- Observe .txt only setting for Cloudless build.  Fixes [#154](https://github.com/mpcjanssen/simpletask-android/issues/154).
-- Updated Dropbox API to 3.1.1. Possible fix for Lollipop issues [#163](https://github.com/mpcjanssen/simpletask-android/issues/163).
+- Observe .txt only setting for Cloudless build.  Fixes #154.
+- Updated Dropbox API to 3.1.1. Possible fix for Lollipop issues #163.
 	
 5.2.11
 ------
@@ -320,14 +320,14 @@
 ------
 
 - Fix a rare NPE in text search.
-- Add a setting to remove the prio of completed tasks. Fixes [#137](https://github.com/mpcjanssen/simpletask-android/issues/137).
+- Add a setting to remove the prio of completed tasks. Fixes #137.
 
 
 5.2.9
 -----
 
-- Add `-` to tag and list filters. Fixes [#135](https://github.com/mpcjanssen/simpletask-android/issues/135).
-- Share text directly if possible. Fixes [#134](https://github.com/mpcjanssen/simpletask-android/issues/134).
+- Add `-` to tag and list filters. Fixes #135.
+- Share text directly if possible. Fixes #134.
 
 5.2.7-8
 -------
@@ -339,8 +339,8 @@
 
 - Include VCS revision in version number.
 - Documented `h:1` extension in help.
-- Don't show create date in simple widget. Fixes [#123](https://github.com/mpcjanssen/simpletask-android/issues/123).
-- Better filter description. Fixes [#120](https://github.com/mpcjanssen/simpletask-android/issues/120).
+- Don't show create date in simple widget. Fixes #123.
+- Better filter description. Fixes #120.
 - Expanded Javascript filtering documentation.
 - Expose task parser information to Javascript.
 
@@ -349,9 +349,9 @@
 -----
 
 - Make use of calendar for setting dates a setting (default off).
-- Fix file order sorting for newly added tasks. Fixes [#117](https://github.com/mpcjanssen/simpletask-android/issues/117).
+- Fix file order sorting for newly added tasks. Fixes #117.
 - Make filterbar better suited for small devices.
-- Use a ContentProvider for sharing tasks. Fixes [#118](https://github.com/mpcjanssen/simpletask-android/issues/118).
+- Use a ContentProvider for sharing tasks. Fixes #118.
 
 5.2.4
 ------
@@ -361,7 +361,7 @@
 5.2.3
 -----
 
-- Fix add task bug if "Date new tasks" not selected. Fixes [#116](https://github.com/mpcjanssen/simpletask-android/issues/116).
+- Fix add task bug if "Date new tasks" not selected. Fixes #116.
 - Use calendarview to select dates instead of spinners.
 
 5.2.2
@@ -372,38 +372,38 @@
 5.2.1
 -----
 
-- Prevent race conditions for possible fixes of [#99](https://github.com/mpcjanssen/simpletask-android/issues/99) and [#103](http://github.com/mpcjanssen/simpletask-android/issues/103).
+- Prevent race conditions for possible fixes of #99.
 
 5.2.0
 -----
 
 - (Experimental) Included Javascript engine to allow advanced filtering. See [Javascript](./javascript.md) for usage.
-- Don't use `removeAll` in task stores. Fixes [#112](https://github.com/mpcjanssen/simpletask-android/issues/112).
+- Don't use `removeAll` in task stores. Fixes #112.
 - Return to filter activity when switching to another app and back instead of to the main screen.
 
 5.1.8
 -----
 
-- Finish files with EOL on Cloudless. Possible fix for [#103](https://github.com/mpcjanssen/simpletask-android/issues/103)
+- Finish files with EOL on Cloudless. Possible fix for #103
 5.1.7
 -----
 
 - Updated German translations.
-- Fix rec:1y recurrence. Fixes [#108](https://github.com/mpcjanssen/simpletask-android/issues/108).
+- Fix rec:1y recurrence. Fixes #108.
 - Better initial Dropbox sync feedback.
 
 5.1.6
 -----
 
-- Back will close the left navigation drawer if it's open. Fixes [#100](https://github.com/mpcjanssen/simpletask-android/issues/100).
+- Back will close the left navigation drawer if it's open. Fixes #100.
 - Select current priority when changing a single task's priority.
-- Ensure todo file always ends with an EOL. Possible fix for [#103](https://github.com/mpcjanssen/simpletask-android/issues/103).
-- Save incremental search and fix search submit. Fixes [#104](https://github.com/mpcjanssen/simpletask-android/issues/104).
+- Ensure todo file always ends with an EOL. Possible fix for #103.
+- Save incremental search and fix search submit. Fixes #104.
 
 5.1.5
 -----
 
-- Consider complete task inFileFormat when text searching. Fixes [#98](https://github.com/mpcjanssen/simpletask-android/issues/98).
+- Consider complete task inFileFormat when text searching. Fixes #98.
 
 5.1.4
 -----
