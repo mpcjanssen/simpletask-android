@@ -86,13 +86,18 @@ public class CalendarSync {
         final String[] projection = {Calendars._ID, Calendars.NAME};
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
-        Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);
-        if (cursor == null) return -1;
-        if (cursor.getCount() == 0) return -1;
-        cursor.moveToFirst();
-        long ret = cursor.getLong(0);
-        cursor.close();
-        return ret;
+        try {
+            Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);
+            if (cursor == null) return -1;
+            if (cursor.getCount() == 0) return -1;
+            cursor.moveToFirst();
+            long ret = cursor.getLong(0);
+            cursor.close();
+            return ret;
+        }
+        catch (IllegalArgumentException e) {
+            return -1;
+        }
     }
 
     private void addCalendar(boolean warnCalExists) {
@@ -115,10 +120,15 @@ public class CalendarSync {
         cv.put(Calendars.VISIBLE, 1);
         cv.put(Calendars.SYNC_EVENTS, 1);
 
-        Uri calUri = m_cr.insert(CAL_URI, cv);
         boolean added = true;
-        if (calUri == null) added = false;
-        else if (getCalID() == -1) added = false;    // This might happen eg. because of CM's privacy guard
+        try {
+            Uri calUri = m_cr.insert(CAL_URI, cv);
+            if (calUri == null) added = false;
+            else if (getCalID() == -1) added = false;    // This might happen eg. because of CM's privacy guard
+        }
+        catch (IllegalArgumentException e) {
+            added = false;
+        }
 
         if (added) {
             log.debug("Calendar added");
@@ -126,15 +136,21 @@ public class CalendarSync {
         else {
             log.error("Could not add calendar");
             m_sync_type = 0;
+            Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_add_error);
         }
     }
 
     private void removeCalendar() {
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
-        int ret = m_cr.delete(CAL_URI, selection, args);
-        if (ret == 1) log.debug("Calendar removed");
-        else log.warn("Unexpected return value while removing calendar: " + ret);
+        try {
+            int ret = m_cr.delete(CAL_URI, selection, args);
+            if (ret == 1) log.debug("Calendar removed");
+            else log.warn("Unexpected return value while removing calendar: " + ret);
+        }
+        catch (IllegalArgumentException e) {
+            log.warn("Exception while removing calendar", e);
+        }
     }
 
     @SuppressWarnings("NewApi")
