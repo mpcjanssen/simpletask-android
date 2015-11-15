@@ -215,6 +215,7 @@ Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo d
 <string name="calendar_sync_desc_due">Due date reminder, generated automatically by Simpletask</string>
 <string name="calendar_sync_desc_thre">Threshold date reminder, generated automatically by Simpletask</string>
 <string name="calendar_exists_warning">Aviso: Ya existe un calendario con el mismo nombre, sobreescribiendolo…</string>
+<string name="calendar_add_error">Error: Could not add calendar</string>
 
 <string name="click_to_copy">Clic para copiar al portapapeles.</string>
 
