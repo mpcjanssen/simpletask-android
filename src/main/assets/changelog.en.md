@@ -4,8 +4,10 @@
 6.2.1
 -----
 
+- Use create date as threshold if threshold date is not set.
+- Don't crash if no calendar is available. Fixes #324.
 - Add grouping by due date. Fixes #322.
-- Merged don't prefix event titles in calendar (vojtechkral).
+- Merged: Don't prefix event titles in calendar (vojtechkral).
 
 
 6.2.0
