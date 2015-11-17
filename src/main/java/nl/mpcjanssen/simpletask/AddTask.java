@@ -150,7 +150,6 @@ public class AddTask extends ThemedActivity {
         TodoList todoList = m_app.getTodoList();
 
         m_backup = todoList.getSelectedTasks();
-        todoList.clearSelectedTasks();
 
         if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<>();
