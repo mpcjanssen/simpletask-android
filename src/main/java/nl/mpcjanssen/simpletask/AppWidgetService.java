@@ -60,9 +60,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     }
 
     
-    private Intent createSelectedIntent( int selectedTaskPosition) {
+    private Intent createSelectedIntent(Task t) {
         Intent target = new Intent();
-        target.putExtra(Constants.INTENT_SELECTED_TASK_POSITION, selectedTaskPosition);
+        TodoList tl = application.getTodoList();
+        target.putExtra(Constants.INTENT_SELECTED_TASK_POSITION, tl.find(t));
         mFilter.saveInIntent(target);
         return target;
     }
@@ -206,7 +207,7 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
                 //        4, 4, 4, 0);
             }
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(taskIndex));
+        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(task));
         return rv;
     }
 

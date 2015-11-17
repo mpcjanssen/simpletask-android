@@ -460,19 +460,20 @@ public class Simpletask extends ThemedActivity implements
         lv.setFastScrollEnabled(m_app.useFastScroll());
 
 
-        // If we were started with a selected task,
-        // select it now and clear it from the intent
-        int selectedTask = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION, -1);
-        if (selectedTask != -1) {
-            m_scrollPosition = selectedTask;
-            getTodoList().clearSelectedTasks();
-            getTodoList().selectTask(m_scrollPosition);
+        // If we were started with a single selected task,
+        // scroll to its position
+        List<Task> selection = getTodoList().getSelectedTasks();
+        int pos = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
+        if (pos!= -1) {
+            selection = new ArrayList();
+            Task selectedTask = getTodoList().get(pos);
+            selection.add(selectedTask);
+            m_scrollPosition = m_adapter.getPosition(selectedTask);
+            getTodoList().selectTask(selectedTask);
             intent.removeExtra(Constants.INTENT_SELECTED_TASK_POSITION);
-            setSelectedTasks(getTodoList().getSelectedTasks());
             setIntent(intent);
-        } else {
-            setSelectedTasks(getTodoList().getSelectedTasks());
         }
+        setSelectedTasks(selection);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         lv.setSelectionFromTop(m_scrollPosition, 0);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -483,7 +484,7 @@ public class Simpletask extends ThemedActivity implements
         });
         if(getTodoList().getSelectedTasks().size()==0) {
             closeSelectionMode();
-        }
+        } 
         updateDrawers();
         mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
     }
@@ -939,7 +940,7 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void closeSelectionMode() {
-        getTodoList().clearSelectedTasks();
+        //getTodoList().clearSelectedTasks();
         getListView().clearChoices();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
