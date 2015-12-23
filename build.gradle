@@ -1,13 +1,18 @@
 buildscript {
+
+    ext.kotlin_version = '1.0.0-beta-4583'
+
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
+	classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 // Call gradle with -Plint to enable all warnings.
 if (hasProperty("lint")) {
@@ -24,14 +29,14 @@ android {
         exclude 'LICENSE.txt'
     }
 
-    buildToolsVersion "22.0.1"
-    compileSdkVersion 22
+    buildToolsVersion "23.0.2"
+    compileSdkVersion 23
 
     defaultConfig {
         versionName '6.2.0'
         versionCode 3001
-	    minSdkVersion 14
-        targetSdkVersion 22
+	minSdkVersion 14
+        targetSdkVersion 23
     }
 
     productFlavors {
@@ -63,10 +68,10 @@ repositories {
 
 dependencies {
     dropboxCompile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.intellij:annotations:12.0'
-    compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.android.support:design:22.2.0'
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.google.guava:guava:18.0'
