@@ -28,7 +28,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import com.google.common.collect.Ordering;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
@@ -267,6 +266,9 @@ public class TodoList {
 
     @NonNull
     public List<Task> getSelectedTasks() {
+        if (mSelectedTask==null) {
+            mSelectedTask = new ArrayList<>();
+        }
         return mSelectedTask;
     }
 
@@ -304,7 +306,8 @@ public class TodoList {
 
     public List<Task> getSortedTasksCopy(@NonNull ActiveFilter filter, @NonNull ArrayList<String> sorts, boolean caseSensitive) {
         List<Task> filteredTasks = filter.apply(mTasks);
-        return Ordering.from(new MultiComparator(sorts, caseSensitive, filteredTasks)).sortedCopy(filteredTasks);
+        Collections.sort(filteredTasks, new MultiComparator(sorts, caseSensitive, filteredTasks));
+        return filteredTasks;
     }
 
     public void selectTask(Task t) {

@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
@@ -42,20 +41,14 @@ public class LogScreen extends ThemedActivity {
         myDataset = new ArrayList<>();
         File logFile = getLogFile();
         try {
-            TaskIo.loadFromFile(logFile, new LineProcessor<String>() {
-                @Override
-                public boolean processLine(String line) throws IOException {
-                    if (!line.trim().isEmpty()){
-                        myDataset.add(line);
-                    }
-                    return true;
-                }
+            for (String line : TaskIo.loadFromFile(logFile)) {
 
-                @Override
-                public String getResult() {
-                    return null;
+                if (!line.trim().isEmpty()) {
+                    myDataset.add(line);
                 }
-            });
+            }
+
+
         } catch (IOException e) {
             log.error("Failed to load logfile", e);
         }

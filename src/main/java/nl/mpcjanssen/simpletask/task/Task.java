@@ -27,12 +27,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
-import com.google.common.base.Strings;
+
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.task.token.*;
 import nl.mpcjanssen.simpletask.util.RelativeDate;
+import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.Serializable;
@@ -361,7 +362,7 @@ public class Task implements Serializable {
                         newTask.deferThresholdDate(getRecurrencePattern(), deferFromDate);
                     }
                 }
-                if (!Strings.isNullOrEmpty(getCreateDate())) {
+                if (!Strings.isEmptyOrNull(getCreateDate())) {
                     newTask.setCreateDate(date.format(Constants.DATE_FORMAT));
                 }
             }
@@ -488,7 +489,7 @@ public class Task implements Serializable {
         }
 
         DateTime olddate;
-        if (Strings.isNullOrEmpty(deferFromDate)) {
+        if (Strings.isEmptyOrNull(deferFromDate)) {
             olddate = getThresholdDate();
         } else {
             olddate = new DateTime(deferFromDate);
@@ -507,7 +508,7 @@ public class Task implements Serializable {
             return;
         }
         DateTime olddate;
-        if (Strings.isNullOrEmpty(deferFromDate)) {
+        if (Strings.isEmptyOrNull(deferFromDate)) {
             olddate = getDueDate();
         } else {
             olddate = new DateTime(deferFromDate);
