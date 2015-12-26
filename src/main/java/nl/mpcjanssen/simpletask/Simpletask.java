@@ -67,6 +67,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.view.inputmethod.InputMethodManager;
 
+import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -490,6 +491,7 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void setSelectedTasks(List<Task> tasks) {
+        if (tasks == null) return;
         for (Task t : tasks) {
             int position = m_adapter.getPosition(t);
             if (position != -1) {
@@ -720,7 +722,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void deferTasks(List<Task> tasks, final int dateType) {
         final List<Task> tasksToDefer = tasks;
-        Dialog d = Util.createDeferDialog(this, dateType, true, new Util.InputDialogListener() {
+        Dialog d = Util.createDeferDialog(this, dateType, true, new InputDialogListener() {
             @Override
             public void onClick(@Nullable String selected) {
                 if (selected == null) {

@@ -58,6 +58,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -417,7 +418,7 @@ public class AddTask extends ThemedActivity {
     }
 
     private void insertDate(final int dateType) {
-        Dialog d = Util.createDeferDialog(this, dateType, false, new Util.InputDialogListener() {
+        Dialog d = Util.createDeferDialog(this, dateType, false, new InputDialogListener() {
             @Override
             public void onClick(@NonNull String selected) {
                 if (selected.equals("pick")) {

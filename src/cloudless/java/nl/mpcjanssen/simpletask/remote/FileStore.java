@@ -12,9 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import com.google.common.io.LineProcessor;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -84,24 +81,15 @@ public class FileStore implements FileStoreInterface {
         final List<Task> result= new ArrayList<>();
         mIsLoading = true;
         try {
-            String readFile = TaskIo.loadFromFile(new File(path), new LineProcessor<String>() {
+            for (String line : TaskIo.loadFromFile(new File(path))) {
                 ArrayList<String> completeFile = new ArrayList<>();
 
-                @Override
-                public boolean processLine(String s) throws IOException {
-                    completeFile.add(s);
-                    result.add(new Task(s));
-                    return true;
-                }
+                completeFile.add(line);
+                result.add(new Task(line));
 
-                @Override
-                public String getResult() {
-                    return Util.join(completeFile, "\n");
+                if (backup != null) {
+                    backup.backup(path, Util.join(completeFile, "\n"));
                 }
-
-            });
-            if (backup != null) {
-                backup.backup(path, readFile);
             }
         } catch (IOException e) {
             e.printStackTrace();
