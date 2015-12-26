@@ -111,7 +111,7 @@ public class FileStore implements FileStoreInterface {
         mIsLoading = true;
         String contents = "";
         try {
-            contents = Files.toString(new File(file), Charsets.UTF_8);
+            contents = Util.join(TaskIo.loadFromFile(new File(file)), "\n");
         } catch (IOException e) {
             e.printStackTrace();
             return "";
