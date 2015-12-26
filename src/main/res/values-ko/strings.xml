@@ -304,7 +304,7 @@
     <string name="calendar_sync_desc_due">Due date reminder, generated automatically by Simpletask</string>
     <string name="calendar_sync_desc_thre">Threshold date reminder, generated automatically by Simpletask</string>
     <string name="calendar_exists_warning">경고: 같은 이름의 달력이 이미 존재함, 덮어쓰는중…</string>
-    <string name="calendar_add_error">Error: Could not add calendar</string>
+    <string name="calendar_write_error">Error: Could not write calendar</string>
 
     <string name="click_to_copy">클립보드에 복사하려면 선택</string>
 </resources>

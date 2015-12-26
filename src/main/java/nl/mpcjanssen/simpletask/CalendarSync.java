@@ -46,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class CalendarSync {
-    private static final String TAG = CalendarSync.class.getSimpleName();
     private static final String PACKAGE = TodoApplication.getAppContext().getPackageName();
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
@@ -82,33 +81,30 @@ public class CalendarSync {
     private DateTime m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0);
     private ScheduledThreadPoolExecutor m_stpe;
 
+    private void calendarError(Exception e) {
+        if (e != null) {
+            log.error("Error writing calendar", e);
+        } else {
+            log.error("Error writing calendar");
+        }
+        m_sync_type = 0;
+        Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_write_error);
+    }
+
     private long getCalID() {
         final String[] projection = {Calendars._ID, Calendars.NAME};
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
-        try {
-            Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);
-            if (cursor == null) return -1;
-            if (cursor.getCount() == 0) return -1;
-            cursor.moveToFirst();
-            long ret = cursor.getLong(0);
-            cursor.close();
-            return ret;
-        }
-        catch (IllegalArgumentException e) {
-            return -1;
-        }
+        Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);
+        if (cursor == null) throw new IllegalArgumentException("null cursor");
+        if (cursor.getCount() == 0) return -1;
+        cursor.moveToFirst();
+        long ret = cursor.getLong(0);
+        cursor.close();
+        return ret;
     }
 
-    private void addCalendar(boolean warnCalExists) {
-        if (getCalID() != -1) {
-            if (warnCalExists) {
-                log.warn("Calendar already exists, overwriting...");
-                Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_exists_warning);
-            }
-            return;
-        }
-
+    private void addCalendar() {
         final ContentValues cv = new ContentValues();
         cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);
         cv.put(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE);
@@ -119,25 +115,7 @@ public class CalendarSync {
         cv.put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME);
         cv.put(Calendars.VISIBLE, 1);
         cv.put(Calendars.SYNC_EVENTS, 1);
-
-        boolean added = true;
-        try {
-            Uri calUri = m_cr.insert(CAL_URI, cv);
-            if (calUri == null) added = false;
-            else if (getCalID() == -1) added = false;    // This might happen eg. because of CM's privacy guard
-        }
-        catch (IllegalArgumentException e) {
-            added = false;
-        }
-
-        if (added) {
-            log.debug("Calendar added");
-        }
-        else {
-            log.error("Could not add calendar");
-            m_sync_type = 0;
-            Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_add_error);
-        }
+        m_cr.insert(CAL_URI, cv);
     }
 
     private void removeCalendar() {
@@ -146,10 +124,10 @@ public class CalendarSync {
         try {
             int ret = m_cr.delete(CAL_URI, selection, args);
             if (ret == 1) log.debug("Calendar removed");
-            else log.warn("Unexpected return value while removing calendar: " + ret);
+            else log.error("Unexpected return value while removing calendar: " + ret);
         }
-        catch (IllegalArgumentException e) {
-            log.warn("Exception while removing calendar", e);
+        catch (Exception e) {
+            log.error("Exception while removing calendar", e);
         }
     }
 
@@ -224,42 +202,46 @@ public class CalendarSync {
     }
 
     private void sync() {
-        if (m_sync_type == 0) return;
+        long calID;
 
-        TodoList tl =  m_app.getTodoList();
+        try {
+            calID = getCalID();
+            if (m_sync_type == 0) {
+                if (calID >= 0) removeCalendar();
+                return;
+            }
 
-        final List<Task> tasks =tl.getTasks();
-        setReminderDays(m_app.getReminderDays());
-        setReminderTime(m_app.getReminderTime());
+            if (calID < 0) {
+                addCalendar();
+                calID = getCalID();  // This needs to be checked, various privacy guards might cause the calendar to silently not be added
+                if (calID < 0) {
+                    calendarError(null);
+                    return;
+                }
+            }
 
-        long calID = getCalID();
-        if (calID == -1) {
-            log.error("sync(): No calendar!");
-            return;
+            TodoList tl = m_app.getTodoList();
+
+            final List<Task> tasks = tl.getTasks();
+            setReminderDays(m_app.getReminderDays());
+            setReminderTime(m_app.getReminderTime());
+
+            log.debug("Syncing due/threshold calendar reminders...");
+            purgeEvts(calID);
+            insertEvts(calID, tasks);
+        } catch (Exception e) {
+            calendarError(e);
         }
-
-        log.debug("Syncing due/threshold calendar reminders...");
-        purgeEvts(calID);
-        insertEvts(calID, tasks);
     }
 
-    private void setSyncType(int syncType, boolean warnCalExists) {
+    private void setSyncType(int syncType) {
         if (syncType == m_sync_type) return;
         if (!TodoApplication.ATLEAST_API16) {
             m_sync_type = 0;
             return;
         }
-        int old_sync_type = m_sync_type;
         m_sync_type = syncType;
-
-        if ((old_sync_type == 0) && (m_sync_type > 0)) {
-            addCalendar(warnCalExists);
-        }
-        else if ((old_sync_type > 0) && (m_sync_type == 0)) {
-            removeCalendar();
-        }
-
-        if (m_sync_type > 0) syncLater();
+        syncLater();
     }
 
 
@@ -275,24 +257,22 @@ public class CalendarSync {
         int syncType = 0;
         if (syncDues) syncType |= SYNC_TYPE_DUES;
         if (syncThresholds) syncType |= SYNC_TYPE_THRESHOLDS;
-        setSyncType(syncType, false);
+        setSyncType(syncType);
     }
 
     public void syncLater() {
-        if (m_sync_type == 0) return;
-
         m_stpe.getQueue().clear();
         m_stpe.schedule(m_sync_runnable, SYNC_DELAY_MS, TimeUnit.MILLISECONDS);
     }
 
     public void setSyncDues(boolean bool) {
         int syncType = bool ? m_sync_type | SYNC_TYPE_DUES : m_sync_type & ~SYNC_TYPE_DUES;
-        setSyncType(syncType, true);
+        setSyncType(syncType);
     }
 
     public void setSyncThresholds(boolean bool) {
         int syncType = bool ? m_sync_type | SYNC_TYPE_THRESHOLDS : m_sync_type & ~SYNC_TYPE_THRESHOLDS;
-        setSyncType(syncType, true);
+        setSyncType(syncType);
     }
 
     public void setReminderDays(int days) {
