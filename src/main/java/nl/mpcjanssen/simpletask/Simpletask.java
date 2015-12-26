@@ -252,8 +252,8 @@ public class Simpletask extends ThemedActivity implements
             // Only check tasks that are not checked yet
             // and skip headers
             // This prevents double counting in the CAB title
-            if (!vline.header) {
-                selectedTasks.add(vline.task);
+            if (!vline.getHeader()) {
+                selectedTasks.add(vline.getTask());
             }
         }
         getTodoList().setSelectedTasks(selectedTasks);
@@ -1384,7 +1384,7 @@ public class Simpletask extends ThemedActivity implements
         ** Get the adapter position for task
         */
         public int getPosition(Task task) {
-            VisibleLine line = new VisibleLine(task);
+            VisibleLine line = new TaskLine(task);
             return visibleLines.indexOf(line);
         }
 
@@ -1397,10 +1397,10 @@ public class Simpletask extends ThemedActivity implements
         @Override
         public Task getItem(int position) {
             VisibleLine line = visibleLines.get(position);
-            if (line.header) {
+            if (line.getHeader()) {
                 return null;
             }
-            return line.task;
+            return line.getTask();
         }
 
         @Override
@@ -1424,13 +1424,13 @@ public class Simpletask extends ThemedActivity implements
                 return convertView;
             }
             VisibleLine line = visibleLines.get(position);
-            if (line.header) {
+            if (line.getHeader()) {
                 if (convertView == null) {
                     convertView = m_inflater.inflate(R.layout.list_header, parent, false);
                 }
                 TextView t = (TextView) convertView
                         .findViewById(R.id.list_header_title);
-                t.setText(line.title);
+                t.setText(line.getTitle());
 
             } else {
                 final ViewHolder holder;
@@ -1451,7 +1451,7 @@ public class Simpletask extends ThemedActivity implements
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
-                final Task task = line.task;
+                final Task task = line.getTask();
                 if (m_app.showCompleteCheckbox()) {
                     holder.cbCompleted.setVisibility(View.VISIBLE);
                 } else {
@@ -1578,7 +1578,7 @@ public class Simpletask extends ThemedActivity implements
                 return 2;
             }
             VisibleLine line = visibleLines.get(position);
-            if (line.header) {
+            if (line.getHeader()) {
                 return 0;
             } else {
                 return 1;
@@ -1606,7 +1606,7 @@ public class Simpletask extends ThemedActivity implements
                 return false;
             }
             VisibleLine line = visibleLines.get(position);
-            return !line.header;
+            return !line.getHeader();
         }
     }
 

@@ -151,9 +151,9 @@ public class Util {
         for (Task t : visibleTasks) {
             newHeader = t.getHeader(firstSort, no_header);
             if (!header.equals(newHeader)) {
-                VisibleLine headerLine = new VisibleLine(newHeader);
+                VisibleLine headerLine = new HeaderLine(newHeader);
                 int last = result.size() - 1;
-                if (last != -1 && result.get(last).header && !showEmptyLists) {
+                if (last != -1 && result.get(last).getHeader() && !showEmptyLists) {
                     // replace empty preceding header
                     result.set(last, headerLine);
                 } else {
@@ -164,14 +164,14 @@ public class Util {
 
             if (t.isVisible() || showHidden) {
                 // enduring tasks should not be displayed
-                VisibleLine taskLine = new VisibleLine(t);
+                VisibleLine taskLine = new TaskLine(t);
                 result.add(taskLine);
             }
         }
 
         // Clean up possible last empty list header that should be hidden
         int i = result.size();
-        if (i > 0 && result.get(i-1).header && !showEmptyLists) {
+        if (i > 0 && result.get(i-1).getHeader() && !showEmptyLists) {
             result.remove(i-1);
         }
         return result;
