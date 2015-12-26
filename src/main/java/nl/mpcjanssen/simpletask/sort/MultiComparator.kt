@@ -4,13 +4,14 @@ import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.task.Task
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
+
 
 import kotlin.collections.dropLastWhile
 import kotlin.collections.toTypedArray
 import kotlin.text.isEmpty
 import kotlin.text.split
 import kotlin.text.toRegex
+import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList: List<Task>) : Comparator<Task> {
     var comparators : Comparator<Task>? = null
