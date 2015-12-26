@@ -15,7 +15,7 @@ import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList: List<Task>) : Comparator<Task> {
     var comparators : Comparator<Task>? = null
-    val defaultComparator = AlphabeticalComparator(true)
+    val defaultComparator = FileOrderComparator(taskList)
     init {
         val log = LoggerFactory.getLogger(this.javaClass)
 
