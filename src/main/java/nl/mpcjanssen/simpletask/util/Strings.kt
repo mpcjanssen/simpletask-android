@@ -22,18 +22,18 @@
  * *
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
  */
+@file:JvmName("Strings")
 package nl.mpcjanssen.simpletask.util
 
-object Strings {
-    /**
-     * Checks the passed in string to see if it is null or an blank string
+/**
+ * Checks the passed in string to see if it is null or an blank string
 
-     * @param s
-     * *            the string to check
-     * *
-     * @return true if null or ""
-     */
-    fun isEmptyOrNull(s: String?): Boolean {
-        return s == null || s.length == 0
-    }
+ * @param s
+ * *            the string to check
+ * *
+ * @return true if null or ""
+ */
+fun isEmptyOrNull(s: String?): Boolean {
+    return s == null || s.length == 0
 }
+

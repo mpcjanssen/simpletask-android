@@ -306,7 +306,10 @@ public class TodoList {
 
     public List<Task> getSortedTasksCopy(@NonNull ActiveFilter filter, @NonNull ArrayList<String> sorts, boolean caseSensitive) {
         List<Task> filteredTasks = filter.apply(mTasks);
-        Collections.sort(filteredTasks, new MultiComparator(sorts, caseSensitive, filteredTasks));
+        List<Task> originalOrder = new ArrayList<>();
+        originalOrder.addAll(filteredTasks);
+        MultiComparator comp = new MultiComparator(sorts, caseSensitive, originalOrder);
+        Collections.sort(filteredTasks, comp);
         return filteredTasks;
     }
 
