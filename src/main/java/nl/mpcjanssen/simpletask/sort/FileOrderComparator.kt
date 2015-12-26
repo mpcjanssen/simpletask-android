@@ -3,7 +3,8 @@ package nl.mpcjanssen.simpletask.sort
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class FileComparator  (val taskList : List<Task>) :  Comparator<Task> {
+
+class FileOrderComparator  (val taskList : List<Task>) : Comparator<Task> {
     override fun compare(a: Task?, b: Task?): Int {
         if (a === b) {
             return 0

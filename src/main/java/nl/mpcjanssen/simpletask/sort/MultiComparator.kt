@@ -4,9 +4,8 @@ import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.task.Task
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
-import java.util.ArrayList
-import java.util.Comparator
 import kotlin.collections.dropLastWhile
 import kotlin.collections.toTypedArray
 import kotlin.text.isEmpty
@@ -35,17 +34,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList:
             }
             var comp : Comparator<Task>
             when (sortType) {
-                "file_order" -> {
-                    // In case of revers file order sort, we can just reverse
-                    // based on the object order
-                    if (reverse) {
-                        comp = ReverseFileComparator(taskList)
-                        comparators = comparators?.then(comp) ?:  comp
-                    }
-                    // No need to continue sorting after unsorted
-                    break@label
-                }
-
+                "file_order" -> comp = FileOrderComparator(taskList)
                 "by_context" -> comp = ContextComparator(caseSensitve)
                 "by_project" -> comp = ProjectComparator(caseSensitve)
                 "alphabetical" -> comp = AlphabeticalComparator(caseSensitve)
