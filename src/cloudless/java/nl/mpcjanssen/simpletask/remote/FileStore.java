@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FileStore implements FileStoreInterface {
 
@@ -78,7 +79,7 @@ public class FileStore implements FileStoreInterface {
     @Override
     synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
         log.info("Loading tasks from file: {}" , path);
-        final List<Task> result= new ArrayList<>();
+        final List<Task> result= new CopyOnWriteArrayList();
         mIsLoading = true;
         try {
             for (String line : TaskIo.loadFromFile(new File(path))) {
