@@ -62,7 +62,7 @@ public class TodoList {
     private final boolean startLooper;
 
     @NonNull
-    private List<Task> mTasks = new ArrayList<>();
+    private List<Task> mTasks = new CopyOnWriteArrayList();
     @NonNull
     private List<Task> mSelectedTask = new CopyOnWriteArrayList();
     @Nullable

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -304,20 +305,19 @@ public class FileStore implements FileStoreInterface {
             throw new IOException("Not authenticated");
         }
 
-        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks = new CopyOnWriteArrayList();
 
         if (!isOnline()) {
             log.info("Device is offline loading from cache");
             mIsLoading = false;
-            return tasksFromCache();
+            tasks.addAll(tasksFromCache());
         } else if (changesPending()) {
             log.info("Not loading, changes pending");
             Util.showToastLong(mApp,"Saving pending changes");
             mIsLoading = false;
-            tasks = tasksFromCache();
+            tasks.addAll(tasksFromCache());
             saveTasksToFile(path, tasks, backup, eol);
             startWatching(path);
-            return tasks;
         } else {
             try {
                 DropboxAPI.DropboxInputStream openFileStream;
@@ -370,7 +370,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     private List<Task> tasksFromCache() {
-        List <Task> result = new ArrayList<>();
+        List <Task> result = new CopyOnWriteArrayList();
         String contents = loadContentsFromCache();
         for (String line : contents.split("(\r\n|\r|\n)")) {
             result.add(new Task(line));
