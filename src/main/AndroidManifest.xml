@@ -88,8 +88,9 @@ You should have received a copy of the GNU General Public License along with Sim
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
+        <!-- Implemented in Kotlin, so fix lint complaining about it -->
         <activity
+                tools:ignore="MissingRegistered"
                 android:name=".AddTaskBackground"
                 android:enabled="true"
                 android:theme="@android:style/Theme.NoDisplay"
