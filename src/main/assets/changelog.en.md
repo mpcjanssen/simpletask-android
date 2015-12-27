@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+6.3.1
+-----
+
+- Fix crash when trying to add tags or lists.
+
 6.3.0
 -----
 
