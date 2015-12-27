@@ -47,6 +47,7 @@ import java.util.TimeZone;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Collections;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -63,7 +64,7 @@ public class TodoList {
     @NonNull
     private List<Task> mTasks = new ArrayList<>();
     @NonNull
-    private List<Task> mSelectedTask = new ArrayList<>();
+    private List<Task> mSelectedTask = new CopyOnWriteArrayList();
     @Nullable
     private ArrayList<String> mLists = null;
     @Nullable
@@ -271,7 +272,7 @@ public class TodoList {
     @NonNull
     public List<Task> getSelectedTasks() {
         if (mSelectedTask==null) {
-            mSelectedTask = new ArrayList<>();
+            mSelectedTask = new CopyOnWriteArrayList();
         }
         return mSelectedTask;
     }
@@ -327,12 +328,8 @@ public class TodoList {
         mSelectedTask.remove(t);
     }
 
-    public void replaceSelection(List<Task> t) {
-        mSelectedTask = t;
-    }
-
-    private void clearSelectedTasks() {
-        mSelectedTask = new ArrayList<>();
+    public void clearSelectedTasks() {
+        mSelectedTask = new CopyOnWriteArrayList();
     }
 
     public void selectTask(int index) {
