@@ -1,13 +1,19 @@
 ﻿Changelog
 =========
 
-6.2.1
+6.3.0
 -----
 
 - Use create date as threshold if threshold date is not set.
-- Don't crash if no calendar is available. Fixes #324.
+- Merged: Don't crash if no calendar is available (vojtechkral #326). Fixes #324.
 - Add grouping by due date. Fixes #322.
-- Merged: Don't prefix event titles in calendar (vojtechkral).
+- Merged: Don't prefix event titles in calendar (vojtechkral #323).
+- Parse #xxx as a github issue in changelog.
+- Merged: Updated German translations (twckr #325).
+- Fix some selection bugs and crashes (hopefully).
+- Switch parts of the code to Kotlin for better null safety and less verbose code.
+- Removed Guava dependency and replace with kotlin code.
+- Merged: Refactored calendar sync error handling (vojtechkral #330)
 
 
 6.2.0
