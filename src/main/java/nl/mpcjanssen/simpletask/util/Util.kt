@@ -392,7 +392,7 @@ import kotlin.text.toLowerCase
         return result
     }
 
-    fun sortWithPrefix(items: Set<String>, caseSensitive: Boolean, prefix: String): ArrayList<String> {
+    fun sortWithPrefix(items: Set<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
         val temp = ArrayList<String>()
         temp.addAll(items)
         return sortWithPrefix(temp, caseSensitive, prefix)

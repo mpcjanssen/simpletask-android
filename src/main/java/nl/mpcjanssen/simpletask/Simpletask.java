@@ -1607,6 +1607,10 @@ public class Simpletask extends ThemedActivity implements
             if (position == visibleLines.size()) {
                 return false;
             }
+
+            if (visibleLines == null || visibleLines.size() < position+1) {
+                return false;
+            }
             VisibleLine line = visibleLines.get(position);
             return !line.getHeader();
         }
