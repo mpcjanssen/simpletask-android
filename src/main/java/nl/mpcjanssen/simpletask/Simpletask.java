@@ -465,7 +465,7 @@ public class Simpletask extends ThemedActivity implements
         // scroll to its position
         List<Task> selection = getTodoList().getSelectedTasks();
         int pos = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
-        if (pos!= -1) {
+        if (pos!= -1 && getTodoList().get(pos)!=null) {
             selection = new ArrayList();
             Task selectedTask = getTodoList().get(pos);
             selection.add(selectedTask);
