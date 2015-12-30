@@ -160,7 +160,11 @@ public class TodoList {
     }
 
     public Task get(int position) {
-        return mTasks.get(position);
+        if (position < mTasks.size()) {
+            return mTasks.get(position);
+        } else {
+            return null;
+        }
     }
 
     @NonNull
