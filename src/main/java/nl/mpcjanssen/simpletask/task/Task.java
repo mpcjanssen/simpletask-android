@@ -167,11 +167,7 @@ public class Task implements Serializable {
     @Nullable
     public DateTime getThresholdDate() {
         if (mThresholdate == null) {
-            if (mCreateDate == null) {
-                return null;
-            } else {
-                return stringToDateTime(mCreateDate);
-            }
+            return null;
         } else {
             return stringToDateTime(mThresholdate);
         }
@@ -522,11 +518,7 @@ public class Task implements Serializable {
     @NonNull
     public String getThresholdDateString(String empty) {
         if (mThresholdate==null) {
-            if (mCreateDate == null) {
-                return empty;
-            } else {
-                return mCreateDate;
-            }
+            return null;
         } else {
             return mThresholdate;
         }
