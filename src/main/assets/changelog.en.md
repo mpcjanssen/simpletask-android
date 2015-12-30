@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+6.3.2
+-----
+
+- Don't crash if todolist not initialized (for instance when launching from widget and Simpletask is not running)
+- Revert use of create date as threshold date, it had unintended consequences in the UI.
+
 6.3.1
 -----
 
