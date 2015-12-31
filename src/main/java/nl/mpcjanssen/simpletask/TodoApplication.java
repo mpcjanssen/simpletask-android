@@ -72,6 +72,7 @@ public class TodoApplication extends Application implements
     private Logger log;
     private FileStore mFileStore;
     public BackupDbHelper backupDbHelper;
+    private SQLiteDatabase db;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -507,8 +508,9 @@ public class TodoApplication extends Application implements
     public void backup(String name, String contents) {
         if (backupDbHelper==null) {
             backupDbHelper = new BackupDbHelper(getAppContext());
+            db = backupDbHelper.getWritableDatabase();
         }
-        SQLiteDatabase db = backupDbHelper.getWritableDatabase();
+        
         DateTime now = DateTime.now(TimeZone.getDefault());
         DateTime keepAfter = now.minusDays(2);
         String strNow = now.format("YYYY-MM-DD hh:mm:ss");
