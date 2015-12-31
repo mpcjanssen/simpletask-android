@@ -146,6 +146,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
 
+    <string name="share_task_append_text_title">Hintergrund-tag</string>
+    <string name="share_task_append_text_summary">Füge zu Auggaben, welche im Hintergrund hinzugefügt werden, einen konfigurierbares tag hinzu.</string>
+    
+
     <string name="calendar_sync_screen_title">Erinnerungen in Kalender</string>
     <string name="calendar_sync_screen_summary">Kalendereintäge für Fälligkeits- und/oder Anfangsdaten automatisch generieren.</string>
     <string name="calendar_sync_dues_title">Fälligkeitsdaten</string>
@@ -168,8 +172,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_extended_pref_title">Erweitertes Widget</string>
     <string name="widget_extended_pref_summary">Zeige Aufgaben im Widget mit Trennlinien.</string>
 
+    <string name="task_text_ellipsizing_pref_title">Aufgabentext kürzen</string>
+    <string name="task_text_ellipsizing_pref_summary">Aufgabentext im Hauptfenster kürzen, wenn er mehr als zwei Zeilen einnimmt.</string>
+    
     <string name="color_due_pref_title">Farbe der Fälligkeitsdaten</string>
-    <string name="color_due_pref_summary">Farbe der Fälligkeitsdaten abhängig von Fälligkeit heute, zukünftig oder überfallig.</string>
+    <string name="color_due_pref_summary">Farbe der Fälligkeitsdaten anpassen (heute, zukünftig oder überfällig).</string>
 
     <string name="show_hidden_title">Zeige versteckte Aufgaben</string>
     <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben um sie zu editieren. Nach dem Editieren deaktiviere diese Einstellung wieder.</string>
@@ -184,8 +191,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_edittext_hints_title">Zeige Hinweise</string>
     <string name="show_edittext_hints_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
 
-    <string name="show_complete_checkbox_title">Zeige !fertig! checkbox</string>
-    <string name="show_complete_checkbox_summary">Zeige eine Fertigstellungs-Checkbox vor den Aufgaben.</string>
+    <string name="show_complete_checkbox_title">Zeige \"Fertig\"-Auswahlfeld</string>
+    <string name="show_complete_checkbox_summary">Zeige ein Fertigstellungs-Auswahlfeld vor den Aufgaben.</string>
 
     <string name="show_confirmation_dialogs_title">Zeige Bestätigungsdialoge</string>
     <string name="show_confirmation_dialogs_summary">Zeige einen Bestätigungsdialog vor dem Ausführen unzulässiger Operationen oder Operationen, die zu Datenverlust führen können.
@@ -195,6 +202,15 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="sort_case_sensitive_title">Sortiereinstellungen</string>
     <string name="sort_case_sensitive_summary">Groß- und Kleinschreibung beachten beim Sortieren von Listen, Kategorien und Filtern.</string>
+
+    <string name="show_todo_path_title">Zeige Pfadnamen</string>
+    <string name="show_todo_path_summary">Zeigt den Pfadnamen zur todo.txt-Datei. Verzeichnisnamen werden abgekürzt. /todo/home/todo.txt wird beispielweise gekürzt zu /t/h/todo.txt.</string>
+
+<string name="show_fast_scroll_title">Schnelles Scrollen</string>
+    <string name="show_fast_scroll_summary">Bei längerer Aufgabenliste zügiger scrollen.</string>
+
+ <string name="todotxt_terms_title">todo.txt Begrifflichkeiten</string>
+    <string name="todotxt_terms_summary">Verwende die Begriffe \"context\" und \"project\" an Stelle von \"tag\" und \"list\" um Konformität zu den todo.txt-Begrifflichkeiten herzustellen.</string>
 
     <string name="about_settings_header">Über</string>
     <string name="about_settings_summary">Anwendungsinformationen</string>
