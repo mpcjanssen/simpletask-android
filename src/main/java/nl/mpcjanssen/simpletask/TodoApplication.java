@@ -71,8 +71,7 @@ public class TodoApplication extends Application implements
     private int m_Theme = -1;
     private Logger log;
     private FileStore mFileStore;
-    private BackupDbHelper backupDbHelper;
-    private SQLiteDatabase db;
+    public BackupDbHelper backupDbHelper;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -509,9 +508,7 @@ public class TodoApplication extends Application implements
         if (backupDbHelper==null) {
             backupDbHelper = new BackupDbHelper(getAppContext());
         }
-        if (db ==null) {
-            db = backupDbHelper.getWritableDatabase();
-        }
+        SQLiteDatabase db = backupDbHelper.getWritableDatabase();
         DateTime now = DateTime.now(TimeZone.getDefault());
         DateTime keepAfter = now.minusDays(2);
         String strNow = now.format("YYYY-MM-DD hh:mm:ss");
@@ -519,14 +516,21 @@ public class TodoApplication extends Application implements
 
 
         // Gets the data repository in write mode
-        db.beginTransaction();
+
         ContentValues values = new ContentValues();
-        values.put(BackupDbHelper.FILE_ID, contents);
-        values.put(BackupDbHelper.FILE_NAME, name);
-        values.put(BackupDbHelper.FILE_DATE, strNow);
-        db.replace(BackupDbHelper.TABLE_NAME,null,values);
-        db.delete(BackupDbHelper.TABLE_NAME, BackupDbHelper.WHERE_AFTER_DATE, whereArgs );
-        db.endTransaction();
+        db.beginTransaction();
+        try {
+            values.put(BackupDbHelper.FILE_ID, contents);
+            values.put(BackupDbHelper.FILE_NAME, name);
+            values.put(BackupDbHelper.FILE_DATE, strNow);
+            db.replace(BackupDbHelper.TABLE_NAME, null, values);
+            db.delete(BackupDbHelper.TABLE_NAME, BackupDbHelper.WHERE_AFTER_DATE, whereArgs);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        db.close();
     }
 
     public String getSortString(String key) {
