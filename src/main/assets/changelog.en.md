@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+6.3.3
+-----
+
+- Restore cursor position when modifying the priority or due/threshold date. Fixes #329.
+
 6.3.2
 -----
 
