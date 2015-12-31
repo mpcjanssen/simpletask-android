@@ -24,11 +24,11 @@ import java.io.*;
 public class HistoryScreen extends ThemedActivity {
 
     private Logger log;
-    private SQLiteDatabase db;
     private Cursor cursor;
     private Menu toolbar_menu;
     private int mScroll = 0;
     private TodoApplication m_app;
+    private SQLiteDatabase db;
 
 
     @Override
@@ -36,9 +36,7 @@ public class HistoryScreen extends ThemedActivity {
         super.onCreate(savedInstanceState);
         log = LoggerFactory.getLogger(this.getClass());
         m_app = (TodoApplication) getApplication();
-        BackupDbHelper backupDbHelper = new BackupDbHelper(this.getApplication().getApplicationContext());
-        db = backupDbHelper.getReadableDatabase();
-        // Gets the data repository in read mode
+
         initCursor();
         File dbFile = getDatabaseFile();
         if (dbFile.exists()) {
@@ -51,6 +49,7 @@ public class HistoryScreen extends ThemedActivity {
     }
 
     private void initCursor() {
+        db = m_app.backupDbHelper.getReadableDatabase();
         cursor = db.query(BackupDbHelper.TABLE_NAME, null, null, null, null, null, BackupDbHelper.FILE_DATE, null);
         cursor.moveToLast();
     }
@@ -60,10 +59,9 @@ public class HistoryScreen extends ThemedActivity {
         super.onDestroy();
         if (cursor!=null) {
             cursor.close();
-        }
-        if (db!=null) {
             db.close();
         }
+
     }
 
     private void shareHistory() {
