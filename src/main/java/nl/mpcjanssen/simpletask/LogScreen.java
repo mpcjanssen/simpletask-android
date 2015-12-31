@@ -96,6 +96,4 @@ public class LogScreen extends ThemedActivity {
         });
         return true;
     }
-
-
 }
