@@ -25,6 +25,7 @@ import com.dropbox.client2.jsonextract.JsonMap;
 import com.dropbox.client2.jsonextract.JsonThing;
 import com.dropbox.client2.session.AppKeyPair;
 import nl.mpcjanssen.simpletask.Constants;
+import nl.mpcjanssen.simpletask.Logger;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -46,6 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class FileStore implements FileStoreInterface {
 
+    private static final String TAG = "FileStoreDB";
     private final FileChangeListener mFileChangedListerer;
     private final TodoApplication mApp;
     private final Logger log;
@@ -251,14 +253,14 @@ public class FileStore implements FileStoreInterface {
                             newBackoffSeconds = 60;
                         }
                     } else {
-                        log.info(TAG, "Longpoll IO exception, restarting backing of {} seconds", 30,  e);
+                        log.info(TAG, "Longpoll IO exception, restarting backing of {} seconds" + 30,  e);
                         newBackoffSeconds = 30;
                     }
                 } catch (JsonExtractionException e) {
-                    log.info(TAG, "Longpoll Json exception, restarting backing of {} seconds", 30, e);
+                    log.info(TAG, "Longpoll Json exception, restarting backing of {} seconds" + 30, e);
                     newBackoffSeconds = 30;
                 }  catch (DropboxException e) {
-                    log.info(TAG, "Longpoll Dropbox exception, restarting backing of {} seconds", 30, e);
+                    log.info(TAG, "Longpoll Dropbox exception, restarting backing of {} seconds" +  30, e);
                     newBackoffSeconds = 30;
                 }
                 startLongPoll(polledFile,newBackoffSeconds);
@@ -297,7 +299,7 @@ public class FileStore implements FileStoreInterface {
         // our local changes, instead we upload local and handle any conflicts
         // on the dropbox side.
 
-        log.info( "Loading file fom dropnbox: " + path);
+        log.info(TAG, "Loading file fom dropnbox: " + path);
         mIsLoading = true;
         if (!isAuthenticated()) {
             mIsLoading = false;
@@ -516,7 +518,7 @@ public class FileStore implements FileStoreInterface {
                     // First read file to append to
                     DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
                     DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-                    log.info( "The file's rev is: " + fileInfo.getMetadata().rev);
+                    log.info(TAG,  "The file's rev is: " + fileInfo.getMetadata().rev);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
                     String line;
                     ArrayList<String> doneContents = new ArrayList<>();
@@ -561,7 +563,7 @@ public class FileStore implements FileStoreInterface {
         try {
             DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
             DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-            log.info( "The file's rev is: " + fileInfo.getMetadata().rev);
+            log.info(TAG,  "The file's rev is: " + fileInfo.getMetadata().rev);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
             String line;
