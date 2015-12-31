@@ -518,7 +518,7 @@ public class Task implements Serializable {
     @NonNull
     public String getThresholdDateString(String empty) {
         if (mThresholdate==null) {
-            return null;
+            return empty;
         } else {
             return mThresholdate;
         }
