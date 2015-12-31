@@ -62,6 +62,7 @@ public class TodoApplication extends Application implements
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
 
+
     private TodoList m_todoList;
     private CalendarSync m_calSync;
     private BroadcastReceiver m_broadcastReceiver;
@@ -70,6 +71,8 @@ public class TodoApplication extends Application implements
     private int m_Theme = -1;
     private Logger log;
     private FileStore mFileStore;
+    private BackupDbHelper backupDbHelper;
+    private SQLiteDatabase db;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -503,7 +506,12 @@ public class TodoApplication extends Application implements
 
     @Override
     public void backup(String name, String contents) {
-        BackupDbHelper backupDbHelper = new BackupDbHelper(getAppContext());
+        if (backupDbHelper==null) {
+            backupDbHelper = new BackupDbHelper(getAppContext());
+        }
+        if (db ==null) {
+            db = backupDbHelper.getWritableDatabase();
+        }
         DateTime now = DateTime.now(TimeZone.getDefault());
         DateTime keepAfter = now.minusDays(2);
         String strNow = now.format("YYYY-MM-DD hh:mm:ss");
@@ -511,15 +519,14 @@ public class TodoApplication extends Application implements
 
 
         // Gets the data repository in write mode
-        SQLiteDatabase db = backupDbHelper.getWritableDatabase();
+        db.beginTransaction();
         ContentValues values = new ContentValues();
         values.put(BackupDbHelper.FILE_ID, contents);
         values.put(BackupDbHelper.FILE_NAME, name);
         values.put(BackupDbHelper.FILE_DATE, strNow);
         db.replace(BackupDbHelper.TABLE_NAME,null,values);
         db.delete(BackupDbHelper.TABLE_NAME, BackupDbHelper.WHERE_AFTER_DATE, whereArgs );
-        db.close();
-        backupDbHelper.close();
+        db.endTransaction();
     }
 
     public String getSortString(String key) {

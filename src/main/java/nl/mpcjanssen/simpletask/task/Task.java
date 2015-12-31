@@ -48,22 +48,22 @@ public class Task implements Serializable {
     public final static int DUE_DATE = 0;
     public final static int THRESHOLD_DATE = 1;
     private static final long serialVersionUID = 1L;
-    private final static Pattern LIST_PATTERN = Pattern
-            .compile("^@(\\S*\\w)(.*)");
-    private final static Pattern TAG_PATTERN = Pattern
-            .compile("^\\+(\\S*\\w)(.*)");
-    private static final Pattern HIDDEN_PATTERN = Pattern
-            .compile("^[Hh]:([01])(.*)");
-    private static final Pattern DUE_PATTERN = Pattern
-            .compile("^[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})(.*)");
-    private static final Pattern THRESHOLD_PATTERN = Pattern
-            .compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)");
-    private static final Pattern RECURRENCE_PATTERN = Pattern
-            .compile("(^||\\s)[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyY])");
-    private final static Pattern PRIORITY_PATTERN = Pattern
-            .compile("^(\\(([A-Z])\\) )(.*)");
-    private final static Pattern SINGLE_DATE_PATTERN = Pattern
-            .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)");
+    private final static Matcher LIST_MATCHER = Pattern
+            .compile("^@(\\S*\\w)(.*)").matcher("");
+    private final static Matcher TAG_MATCHER = Pattern
+            .compile("^\\+(\\S*\\w)(.*)").matcher("");
+    private static final Matcher HIDDEN_MATCHER = Pattern
+            .compile("^[Hh]:([01])(.*)").matcher("");
+    private static final Matcher DUE_MATCHER = Pattern
+            .compile("^[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})(.*)").matcher("");
+    private static final Matcher THRESHOLD_MATCHER = Pattern
+            .compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)").matcher("");
+    private static final Matcher RECURRENCE_MATCHER = Pattern
+            .compile("(^||\\s)[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyY])").matcher("");
+    private final static Matcher PRIORITY_MATCHER = Pattern
+            .compile("^(\\(([A-Z])\\) )(.*)").matcher("");
+    private final static Matcher SINGLE_DATE_MATCHER = Pattern
+            .compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)").matcher("");
     private final static String COMPLETED_PREFIX = "x ";
 
     @NonNull
@@ -302,7 +302,7 @@ public class Task implements Serializable {
 
     @Nullable
     public String getRecurrencePattern() {
-        Matcher matcher = RECURRENCE_PATTERN.matcher(inFileFormat());
+        Matcher matcher = RECURRENCE_MATCHER.reset(inFileFormat());
         if (matcher.find()) {
             return matcher.group(2);
         } else {
@@ -311,7 +311,7 @@ public class Task implements Serializable {
     }
 
     public boolean hasRecurOriginalDates() {
-        Matcher matcher = RECURRENCE_PATTERN.matcher(inFileFormat());
+        Matcher matcher = RECURRENCE_MATCHER.reset(inFileFormat());
         if (matcher.find()) {
             return matcher.group(0).contains("+");
         } else {
@@ -566,7 +566,8 @@ public class Task implements Serializable {
         return showParts(flags);
     }
 
-    private void parse(@NonNull String text) {
+    // Synchronized access as matcher.reset is not thread safe
+    synchronized  void parse(@NonNull String text) {
         mTokens.clear();
         mThresholdate = null;
         mDuedate = null;
@@ -584,14 +585,14 @@ public class Task implements Serializable {
             mTokens.add(new COMPLETED());
             mCompleted = true;
             remaining = text.substring(2);
-            m = SINGLE_DATE_PATTERN.matcher(remaining);
+            m = SINGLE_DATE_MATCHER.reset(remaining);
             // read optional completion date (this 'violates' the format spec)
             // be liberal with date format errors
             if (m.matches()) {
                 mCompletionDate = m.group(1).trim();
                 remaining = m.group(2);
                 mTokens.add(new COMPLETED_DATE(m.group(1)));
-                m = SINGLE_DATE_PATTERN.matcher(remaining);
+                m = SINGLE_DATE_MATCHER.reset(remaining);
                 // read possible create date
                 if (m.matches()) {
                     mCreateDate = m.group(1).trim();
@@ -603,7 +604,7 @@ public class Task implements Serializable {
         }
 
         // Check for optional priority
-        m = PRIORITY_PATTERN.matcher(remaining);
+        m = PRIORITY_MATCHER.reset(remaining);
         if (m.matches()) {
             mPrio = Priority.toPriority(m.group(2));
             remaining = m.group(3);
@@ -612,7 +613,7 @@ public class Task implements Serializable {
             mPrio = Priority.NONE;
         }
         // Check for optional creation date
-        m = SINGLE_DATE_PATTERN.matcher(remaining);
+        m = SINGLE_DATE_MATCHER.reset(remaining);
         if (m.matches()) {
             mCreateDate = m.group(1).trim();
             remaining = m.group(2);
@@ -630,7 +631,7 @@ public class Task implements Serializable {
                 mTokens.add(ws);
                 continue;
             }
-            m = LIST_PATTERN.matcher(remaining);
+            m = LIST_MATCHER.reset(remaining);
             if (m.matches()) {
                 String list = m.group(1);
                 remaining = m.group(2);
@@ -639,7 +640,7 @@ public class Task implements Serializable {
                 mLists.add(list);
                 continue;
             }
-            m = TAG_PATTERN.matcher(remaining);
+            m = TAG_MATCHER.reset(remaining);
             if (m.matches()) {
                 String match = m.group(1);
                 remaining = m.group(2);
@@ -648,7 +649,7 @@ public class Task implements Serializable {
                 mTags.add(match);
                 continue;
             }
-            m = THRESHOLD_PATTERN.matcher(remaining);
+            m = THRESHOLD_MATCHER.reset(remaining);
             if (m.matches()) {
                 String match = m.group(1);
                 remaining = m.group(2);
@@ -657,7 +658,7 @@ public class Task implements Serializable {
                 mThresholdate = match;
                 continue;
             }
-            m = DUE_PATTERN.matcher(remaining);
+            m = DUE_MATCHER.reset(remaining);
             if (m.matches()) {
                 String match = m.group(1);
                 remaining = m.group(2);
@@ -666,7 +667,7 @@ public class Task implements Serializable {
                 mDuedate = match;
                 continue;
             }
-            m = HIDDEN_PATTERN.matcher(remaining);
+            m = HIDDEN_MATCHER.reset(remaining);
             if (m.matches()) {
                 String match = m.group(1);
                 remaining = m.group(2);

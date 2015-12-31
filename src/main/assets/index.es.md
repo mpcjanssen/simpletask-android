@@ -21,7 +21,7 @@ Simpletask soporta las siguientes extensiones de todo.txt:
 Soporte
 -------
 
-[![Unase al chat en https://gitter.im/mpcjanssen/simpletask-android](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Unase al chat en  [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Si  quiere informar de un problema o pedir una característica nueva para [Simpletask](https://github.com/mpcjanssen/simpletask-android/) puede ir a [el tracker](https://github.com/mpcjanssen/simpletask-android/issues). Si encuentra Simpletask útil, puedes comprar la aplicación (vea Ajustes) o donarme vía [Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) unas cervezas.
 
