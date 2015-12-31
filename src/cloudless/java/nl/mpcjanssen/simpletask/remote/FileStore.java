@@ -82,15 +82,13 @@ public class FileStore implements FileStoreInterface {
         final List<Task> result= new CopyOnWriteArrayList();
         mIsLoading = true;
         try {
+            ArrayList<String> completeFile = new ArrayList<>();
             for (String line : TaskIo.loadFromFile(new File(path))) {
-                ArrayList<String> completeFile = new ArrayList<>();
-
                 completeFile.add(line);
                 result.add(new Task(line));
-
-                if (backup != null) {
-                    backup.backup(path, Util.join(completeFile, "\n"));
-                }
+            }
+            if (backup != null) {
+                backup.backup(path, Util.join(completeFile, "\n"));
             }
         } catch (IOException e) {
             e.printStackTrace();
