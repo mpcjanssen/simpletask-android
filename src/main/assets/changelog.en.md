@@ -5,6 +5,7 @@
 -----
 
 - Restore cursor position when modifying the priority or due/threshold date. Fixes #329.
+- Fix crash in threshold date sort.
 
 6.3.2
 -----

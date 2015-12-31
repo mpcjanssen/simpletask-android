@@ -26,8 +26,8 @@ android {
 
 
     defaultConfig {
-        versionName '6.3.2'
-        versionCode 3004
+        versionName '6.3.3'
+        versionCode 3005
 	minSdkVersion 14
         targetSdkVersion 23
 	dexOptions {
