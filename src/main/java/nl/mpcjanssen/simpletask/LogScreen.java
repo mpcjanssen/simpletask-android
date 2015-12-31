@@ -12,12 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import nl.mpcjanssen.simpletask.dao.LogItem;
+import nl.mpcjanssen.simpletask.dao.LogItemDao;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class LogScreen extends ThemedActivity {
@@ -26,6 +29,7 @@ public class LogScreen extends ThemedActivity {
     private Logger log;
 
     private ArrayList<String> myDataset;
+    private TodoApplication m_app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +41,10 @@ public class LogScreen extends ThemedActivity {
         mListView.setFastScrollEnabled(true);
 
         myDataset = new ArrayList<>();
-        File logFile = getLogFile();
-        try {
-            for (String line : TaskIo.loadFromFile(logFile)) {
-
-                if (!line.trim().isEmpty()) {
-                    myDataset.add(line);
-                }
-            }
-
-
-        } catch (IOException e) {
-            log.error(TAG, "Failed to load logfile", e);
+        m_app = (TodoApplication) getApplication();
+        for (LogItem entry : m_app.logDao.queryBuilder().orderDesc(LogItemDao.Properties.Timestamp).list()) {
+            String line = logItemToString(entry);
+            myDataset.add(line);
         }
 
         // specify an adapter (see also next example)
@@ -57,29 +53,24 @@ public class LogScreen extends ThemedActivity {
 
     }
 
-    private void sendLog() {
-        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Simpletask Logging File");
-        File dataBase = getLogFile();
-        try {
-            Util.createCachedDatabase(this, dataBase);
-            Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + "log.txt");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-        } catch (Exception e) {
-            log.warn(TAG, "Failed to create file for sharing");
-        }
-        startActivity(Intent.createChooser(shareIntent, "Share Logging File"));
-
-    }
-
     @NotNull
-    private File getLogFile() {
-        File dataDir = new File(getApplicationInfo().dataDir);
-        File databaseDir = new File(dataDir, "files");
-        return new File(databaseDir, "log.txt");
+    private String logItemToString(LogItem entry) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.S");
+        return format.format(entry.getTimestamp()) + "\t"
+                        + entry.getSeverity() + "\t"
+                        + entry.getTag() + "\t"
+                        + entry.getMessage() + "\t"
+                        + entry.getException();
     }
+
+    private void sendLog() {
+        StringBuilder logContents = new StringBuilder();
+        for (LogItem item : m_app.logDao.loadAll()){
+            logContents.append(logItemToString(item) + "\n");
+        }
+        Util.shareText(LogScreen.this, logContents.toString() );
+    }
+
 
 
     @Override

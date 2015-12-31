@@ -14,10 +14,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import de.greenrobot.dao.query.QueryBuilder;
+import nl.mpcjanssen.simpletask.dao.TodoFile;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class HistoryScreen extends ThemedActivity {
 
@@ -46,8 +50,8 @@ public class HistoryScreen extends ThemedActivity {
     }
 
     private void initCursor() {
-        m_app.db = m_app.backupDbHelper.getReadableDatabase();
-        cursor = m_app.db.query(BackupDbHelper.TABLE_NAME, null, null, null, null, null, BackupDbHelper.FILE_DATE, null);
+        QueryBuilder<TodoFile> builder = m_app.daoSession.getTodoFileDao().queryBuilder();
+        cursor = builder.buildCursor().query();
         cursor.moveToLast();
     }
 
@@ -79,9 +83,7 @@ public class HistoryScreen extends ThemedActivity {
 
     @NotNull
     private File getDatabaseFile() {
-        File dataDir = new File(m_app.getApplicationInfo().dataDir);
-        File databaseDir = new File(dataDir, "databases");
-        return new File(databaseDir, BackupDbHelper.DATABASE_NAME);
+        return new File(m_app.daoSession.getDatabase().getPath());
     }
 
     @Override
@@ -126,10 +128,7 @@ public class HistoryScreen extends ThemedActivity {
 
     private void clearDatabase() {
         log.info(TAG, "Clearing history database");
-        BackupDbHelper backupDbHelper = new BackupDbHelper(this.getApplication().getApplicationContext());
-        SQLiteDatabase database = backupDbHelper.getWritableDatabase();
-        database.delete(BackupDbHelper.TABLE_NAME, null, null);
-        database.close();
+        m_app.backupDao.deleteAll();
         initCursor();
         displayCurrent();
     }
@@ -154,15 +153,15 @@ public class HistoryScreen extends ThemedActivity {
 
     private void displayCurrent() {
         String todoContents = "no history";
-        String date = "";
+        long date = 0L;
         String name = "";
         if (cursor.getCount() != 0) {
             todoContents = getCurrentFileContents();
-            date = cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_DATE));
-            name = cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_NAME));
+            date = cursor.getLong(2);
+            name = cursor.getString(1);
 
         }
-
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         TextView fileView = (TextView) findViewById(R.id.history_view);
 
         TextView nameView = (TextView) findViewById(R.id.name);
@@ -170,13 +169,13 @@ public class HistoryScreen extends ThemedActivity {
         ScrollView sv = (ScrollView) findViewById(R.id.scrollView);
         fileView.setText(todoContents);
         nameView.setText(name);
-        dateView.setText(date);
+        dateView.setText(format.format(new Date(date)));
         sv.setScrollY(mScroll);
         updateMenu();
     }
 
     private String getCurrentFileContents() {
-        return cursor.getString(cursor.getColumnIndex(BackupDbHelper.FILE_ID));
+        return cursor.getString(0);
     }
 
     private void updateMenu() {
