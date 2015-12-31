@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+6.3.4
+-----
+
+- Fix issue with writing each line of the todo file to the todo history on Cloudless.
+- Much improved loading performance for Cloudless because of above fix.
+
 6.3.3
 -----
 
