@@ -16,3 +16,4 @@ _FOSSIL_
 *.iml
 apk/
 Thumbs.db
+*.swp

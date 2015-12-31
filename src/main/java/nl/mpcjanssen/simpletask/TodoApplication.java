@@ -38,7 +38,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.widget.EditText;
+import de.greenrobot.dao.AbstractDao;
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.dao.*;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -49,6 +51,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -71,8 +74,14 @@ public class TodoApplication extends Application implements
     private int m_Theme = -1;
     private Logger log;
     private FileStore mFileStore;
-    public BackupDbHelper backupDbHelper;
-    SQLiteDatabase db;
+
+    DaoSession daoSession;
+    private DaoMaster.DevOpenHelper helper;
+    private SQLiteDatabase todoDb;
+    private DaoMaster daoMaster;
+    public LogItemDao logDao;
+    TodoFileDao backupDao;
+
 
     public static Context getAppContext() {
         return m_appContext;
@@ -85,7 +94,15 @@ public class TodoApplication extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
+        helper = new DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null);
+        todoDb = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(todoDb);
+        daoSession = daoMaster.newSession();
+        logDao = daoSession.getLogItemDao();
+        backupDao = daoSession.getTodoFileDao();
         log = Logger.INSTANCE;
+        log.setDao(logDao);
+
         log.debug(TAG, "onCreate()");
 
 
@@ -506,31 +523,13 @@ public class TodoApplication extends Application implements
 
     @Override
     public void backup(String name, String contents) {
-        if (backupDbHelper==null) {
-            backupDbHelper = new BackupDbHelper(getAppContext());
-            db = backupDbHelper.getWritableDatabase();
-        }
-
-        DateTime now = DateTime.now(TimeZone.getDefault());
-        DateTime keepAfter = now.minusDays(2);
-        String strNow = now.format("YYYY-MM-DD hh:mm:ss");
-        String[] whereArgs  =  {keepAfter.format("YYYY-MM-DD hh:mm:ss")};
-
 
         // Gets the data repository in write mode
 
-        ContentValues values = new ContentValues();
-        db.beginTransaction();
-        try {
-            values.put(BackupDbHelper.FILE_ID, contents);
-            values.put(BackupDbHelper.FILE_NAME, name);
-            values.put(BackupDbHelper.FILE_DATE, strNow);
-            db.replace(BackupDbHelper.TABLE_NAME, null, values);
-            db.delete(BackupDbHelper.TABLE_NAME, BackupDbHelper.WHERE_AFTER_DATE, whereArgs);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
+        Date now = new Date();
+        TodoFile fileToBackup = new TodoFile(contents, name, now);
+        backupDao.insertOrReplace(fileToBackup);
+
     }
 
     public String getSortString(String key) {
