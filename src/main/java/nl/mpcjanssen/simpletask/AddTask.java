@@ -650,12 +650,12 @@ public class AddTask extends ThemedActivity {
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
+        restoreSelection(start, length, false);
     }
 
     private void replaceThresholdDate(@NonNull CharSequence newThresholdDate) {
         // save current selection and length
         int start = textInputField.getSelectionStart();
-        int end = textInputField.getSelectionEnd();
         int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<>();
@@ -673,6 +673,22 @@ public class AddTask extends ThemedActivity {
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
+        restoreSelection(start, length, false);
+    }
+
+    private void restoreSelection(int location, int oldLenght, boolean moveCursor) {
+        int newLength = textInputField.getText().length();
+        int deltaLength  = newLength - oldLenght;
+        // Check if we want the cursor to move by delta (for prio changes)
+        // or not (for due and threshold changes
+        if (moveCursor) {
+            location = location + deltaLength;
+        }
+
+        // Don't go out of bounds
+        location = Math.min(location, newLength-1);
+        location = Math.max(0, location);
+        textInputField.setSelection(location, location);
     }
 
     private void replacePriority(@NonNull CharSequence newPrio) {
@@ -698,6 +714,7 @@ public class AddTask extends ThemedActivity {
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }
+        restoreSelection(start, length, true);
     }
 
     private void replaceTextAtSelection(CharSequence title, boolean spaces) {
