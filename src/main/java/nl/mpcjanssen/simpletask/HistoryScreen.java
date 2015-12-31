@@ -16,10 +16,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
 
 public class HistoryScreen extends ThemedActivity {
 
@@ -28,13 +26,12 @@ public class HistoryScreen extends ThemedActivity {
     private Menu toolbar_menu;
     private int mScroll = 0;
     private TodoApplication m_app;
-    private SQLiteDatabase db;
-
+    private static String TAG = "HistoryScreen";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
         m_app = (TodoApplication) getApplication();
 
         initCursor();
@@ -49,8 +46,8 @@ public class HistoryScreen extends ThemedActivity {
     }
 
     private void initCursor() {
-        db = m_app.backupDbHelper.getReadableDatabase();
-        cursor = db.query(BackupDbHelper.TABLE_NAME, null, null, null, null, null, BackupDbHelper.FILE_DATE, null);
+        m_app.db = m_app.backupDbHelper.getReadableDatabase();
+        cursor = m_app.db.query(BackupDbHelper.TABLE_NAME, null, null, null, null, null, BackupDbHelper.FILE_DATE, null);
         cursor.moveToLast();
     }
 
@@ -59,7 +56,6 @@ public class HistoryScreen extends ThemedActivity {
         super.onDestroy();
         if (cursor!=null) {
             cursor.close();
-            db.close();
         }
 
     }
@@ -75,7 +71,7 @@ public class HistoryScreen extends ThemedActivity {
             Uri fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + dataBase.getName());
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         } catch (Exception e) {
-            log.warn("Failed to create file for sharing", e);
+            log.warn(TAG, "Failed to create file for sharing", e);
         }
         startActivity(Intent.createChooser(shareIntent, "Share History Database"));
 
@@ -129,7 +125,7 @@ public class HistoryScreen extends ThemedActivity {
     }
 
     private void clearDatabase() {
-        log.info("Clearing history database");
+        log.info(TAG, "Clearing history database");
         BackupDbHelper backupDbHelper = new BackupDbHelper(this.getApplication().getApplicationContext());
         SQLiteDatabase database = backupDbHelper.getWritableDatabase();
         database.delete(BackupDbHelper.TABLE_NAME, null, null);

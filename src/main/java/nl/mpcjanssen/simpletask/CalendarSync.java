@@ -35,8 +35,7 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.Calendar;
 import java.util.List;
@@ -60,6 +59,7 @@ public class CalendarSync {
     private static final int EVT_DURATION_DAY = 24*60*60*1000;  // ie. 24 hours
 
     private static final int SYNC_DELAY_MS = 1000;
+    private static final String TAG = "CalendarSync";
     private final Logger log;
 
     private class SyncRunnable implements Runnable {
@@ -68,7 +68,7 @@ public class CalendarSync {
             try {
                 CalendarSync.this.sync();
             } catch (Exception e) {
-                log.error("STPE exception", e);
+                log.error(TAG, "STPE exception", e);
             }
         }
     }
@@ -83,9 +83,9 @@ public class CalendarSync {
 
     private void calendarError(Exception e) {
         if (e != null) {
-            log.error("Error writing calendar", e);
+            log.error(TAG, "Error writing calendar", e);
         } else {
-            log.error("Error writing calendar");
+            log.error(TAG, "Error writing calendar");
         }
         m_sync_type = 0;
         Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_write_error);
@@ -123,11 +123,11 @@ public class CalendarSync {
         final String[] args = {CAL_NAME};
         try {
             int ret = m_cr.delete(CAL_URI, selection, args);
-            if (ret == 1) log.debug("Calendar removed");
-            else log.error("Unexpected return value while removing calendar: " + ret);
+            if (ret == 1) log.debug(TAG, "Calendar removed");
+            else log.error(TAG, "Unexpected return value while removing calendar: " + ret);
         }
         catch (Exception e) {
-            log.error("Exception while removing calendar", e);
+            log.error(TAG, "Exception while removing calendar", e);
         }
     }
 
@@ -226,7 +226,7 @@ public class CalendarSync {
             setReminderDays(m_app.getReminderDays());
             setReminderTime(m_app.getReminderTime());
 
-            log.debug("Syncing due/threshold calendar reminders...");
+            log.debug(TAG, "Syncing due/threshold calendar reminders...");
             purgeEvts(calID);
             insertEvts(calID, tasks);
         } catch (Exception e) {
@@ -249,7 +249,7 @@ public class CalendarSync {
     public static final int SYNC_TYPE_DUES = 1, SYNC_TYPE_THRESHOLDS = 2;
 
     public CalendarSync(TodoApplication app, boolean syncDues, boolean syncThresholds) {
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
         m_app = app;
         m_sync_runnable = new SyncRunnable();
         m_cr = app.getContentResolver();

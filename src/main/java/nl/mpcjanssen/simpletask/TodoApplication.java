@@ -44,8 +44,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +57,7 @@ public class TodoApplication extends Application implements
 
         SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
 
+    private static final String TAG = "TodoApplication";
     private static Context m_appContext;
     private static SharedPreferences m_prefs;
     private LocalBroadcastManager localBroadcastManager;
@@ -72,7 +72,7 @@ public class TodoApplication extends Application implements
     private Logger log;
     private FileStore mFileStore;
     public BackupDbHelper backupDbHelper;
-    private SQLiteDatabase db;
+    SQLiteDatabase db;
 
     public static Context getAppContext() {
         return m_appContext;
@@ -85,8 +85,8 @@ public class TodoApplication extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
-        log = LoggerFactory.getLogger(this.getClass());
-        log.debug("onCreate()");
+        log = Logger.INSTANCE;
+        log.debug(TAG, "onCreate()");
 
 
         TodoApplication.m_appContext = getApplicationContext();
@@ -111,7 +111,7 @@ public class TodoApplication extends Application implements
         prefsChangeListener(this);
         m_todoList = new TodoList(this);
         this.mFileStore = new FileStore(this, this);
-        log.info("Created todolist {}", m_todoList);
+        log.info(TAG, "Created todolist {}" + m_todoList);
         loadTodoList(true);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
     }
@@ -126,7 +126,7 @@ public class TodoApplication extends Application implements
 
     @Override
     public void onTerminate() {
-        log.info("Deregistered receiver");
+        log.info(TAG, "Deregistered receiver");
         m_prefs.unregisterOnSharedPreferenceChangeListener(this);
         if (m_broadcastReceiver!=null) {
             localBroadcastManager.unregisterReceiver(m_broadcastReceiver);
@@ -323,7 +323,7 @@ public class TodoApplication extends Application implements
     }
 
     public void loadTodoList(boolean background) {
-        log.info("Load todolist");
+        log.info(TAG, "Load todolist");
         m_todoList.reload(mFileStore, getTodoFileName(), this, localBroadcastManager, background, getEol());
 
     }
@@ -341,14 +341,14 @@ public class TodoApplication extends Application implements
         AppWidgetManager mgr = AppWidgetManager.getInstance(getApplicationContext());
         for (int appWidgetId : mgr.getAppWidgetIds(new ComponentName(getApplicationContext(), MyAppWidgetProvider.class))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv);
-            log.info("Updating widget: " + appWidgetId);
+            log.info(TAG, "Updating widget: " + appWidgetId);
         }
     }
 
     private void redrawWidgets(){
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, MyAppWidgetProvider.class));
-        log.info("Redrawing widgets ");
+        log.info(TAG, "Redrawing widgets ");
         if (appWidgetIds.length > 0) {
             new MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
         }
@@ -428,7 +428,7 @@ public class TodoApplication extends Application implements
 
 
     public void todoListChanged() {
-        log.info("Tasks have changed, update UI");
+        log.info(TAG, "Tasks have changed, update UI");
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_DONE));
         localBroadcastManager.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_UI));
 
@@ -510,7 +510,7 @@ public class TodoApplication extends Application implements
             backupDbHelper = new BackupDbHelper(getAppContext());
             db = backupDbHelper.getWritableDatabase();
         }
-        
+
         DateTime now = DateTime.now(TimeZone.getDefault());
         DateTime keepAfter = now.minusDays(2);
         String strNow = now.format("YYYY-MM-DD hh:mm:ss");
@@ -531,8 +531,6 @@ public class TodoApplication extends Application implements
         } finally {
             db.endTransaction();
         }
-
-        db.close();
     }
 
     public String getSortString(String key) {

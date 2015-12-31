@@ -28,12 +28,15 @@ import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.preference.*;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 public class Preferences extends ThemedActivity {
     static TodoApplication m_app ;
@@ -56,7 +59,6 @@ public class Preferences extends ThemedActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        Logger log = LoggerFactory.getLogger(this.getClass());
 
 		// Display the fragment as the main content.
         TodoTxtPrefFragment prefFragment = new TodoTxtPrefFragment();
@@ -69,12 +71,11 @@ public class Preferences extends ThemedActivity {
 
 	public static class TodoTxtPrefFragment extends PreferenceFragment implements
     SharedPreferences.OnSharedPreferenceChangeListener {
-        private Logger log;
+        private Logger log = Logger.INSTANCE;
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            log = LoggerFactory.getLogger(this.getClass());
             addPreferencesFromResource(R.xml.preferences);
             PackageInfo packageInfo;
             final Preference versionPref = findPreference("app_version");
@@ -139,7 +140,7 @@ public class Preferences extends ThemedActivity {
             }
             switch (key) {
                 case "archive_now":
-                    log.info("Archiving completed items from preferences");
+                    log.info(TAG, "Archiving completed items from preferences");
                     m_app.showConfirmationDialog(this.getActivity(), R.string.delete_task_message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -150,7 +151,7 @@ public class Preferences extends ThemedActivity {
                     }, R.string.archive_task_title);
                     break;
                 case "logout_dropbox":
-                    log.info("Logging out from Dropbox");
+                    log.info(TAG, "Logging out from Dropbox");
                     m_app.showConfirmationDialog(this.getActivity(), R.string.logout_message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

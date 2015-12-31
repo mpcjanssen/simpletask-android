@@ -28,7 +28,7 @@ android {
     defaultConfig {
         versionName '6.3.4'
         versionCode 3006
-	minSdkVersion 14
+	    minSdkVersion 14
         targetSdkVersion 23
 	dexOptions {
         	incremental true
@@ -72,9 +72,6 @@ dependencies {
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'org.luaj:luaj-jse:3.0.1'
-    compile 'com.github.tony19:logback-android-core:1.1.1-4'
-    compile 'com.github.tony19:logback-android-classic:1.1.1-4'
-    compile 'org.slf4j:slf4j-api:1.7.6'
     testCompile 'junit:junit:4.12'
 }
 

@@ -25,24 +25,20 @@
 package nl.mpcjanssen.simpletask;
 
 import android.app.Activity;
-import android.content.*;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.widget.*;
-import nl.mpcjanssen.simpletask.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
 
 
 public class AddTaskShortcut extends ThemedActivity {
 
+    private static final String TAG = "AddTaskShortcut";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Logger log = LoggerFactory.getLogger(this.getClass());
-        log.debug("onCreate()");
+        Logger log = Logger.INSTANCE;
+        log.debug(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setupShortcut();
         finish();

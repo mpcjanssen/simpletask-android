@@ -15,8 +15,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.github.rjeschke.txtmark.Processor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class HelpScreen extends ThemedActivity {
     @Override
     public void onBackPressed()
     {
-        log.debug("History " + history + "empty: " + history.empty());
+        log.debug(TAG, "History " + history + "empty: " + history.empty());
         history.pop();
         if(!history.empty()) {
             showMarkdownAsset(wvHelp, this, history.pop());
@@ -56,7 +55,7 @@ public class HelpScreen extends ThemedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
         TodoApplication m_app = (TodoApplication) getApplication();
         setTheme(m_app.getActiveTheme());
         String page = "index." + getText(R.string.help_locale).toString() + ".md";
@@ -74,7 +73,7 @@ public class HelpScreen extends ThemedActivity {
         wvHelp.setWebViewClient(new WebViewClient()  {  
             @Override  
             public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull String url)  {
-                log.debug("Loading url: " + url);
+                log.debug(TAG, "Loading url: " + url);
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
                     loadDesktop(view,url);
@@ -128,7 +127,7 @@ public class HelpScreen extends ThemedActivity {
     }
 
     public void showMarkdownAsset(@NonNull WebView wv, @NonNull Context ctxt,  String name) {
-        log.debug("Loading asset " + name + " into " + wv + "(" + ctxt + ")");
+        log.debug(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")");
         String html = "";
         try {
             String markdown = readAsset(ctxt.getAssets(), name);
@@ -136,7 +135,7 @@ public class HelpScreen extends ThemedActivity {
             markdown = markdown.replaceAll("(\\s)(#)([0-9]+)", "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)");
             html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>";
         } catch (IOException e) {
-            log.error("Failed to load markdown asset: {}", name, e);
+            log.error(TAG, "Failed to load markdown asset: {}" +  name, e);
         }
         history.push(name);
         wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8","file:///android_asset/index." + getText(R.string.help_locale) + ".md");

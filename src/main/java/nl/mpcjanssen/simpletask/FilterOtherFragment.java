@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 
 public class FilterOtherFragment extends Fragment {
@@ -27,21 +28,21 @@ public class FilterOtherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = LoggerFactory.getLogger(this.getClass());
-        log.debug("onCreate() this:" + this);
+        log = Logger.INSTANCE;
+        log.debug(TAG, "onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        log.debug("onDestroy() this:" + this);
+        log.debug(TAG, "onDestroy() this:" + this);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        log.debug("onSaveInstanceState() this:" + this);
+        log.debug(TAG, "onSaveInstanceState() this:" + this);
         outState.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, getHideCompleted());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, getHideFuture());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, getHideLists());
@@ -52,11 +53,11 @@ public class FilterOtherFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        log.debug("onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
+        log.debug(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
         actionbar = getActivity().getActionBar();
-        log.debug("Fragment bundle:" + this + " arguments:" + arguments);
+        log.debug(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
                 container, false);
 

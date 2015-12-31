@@ -20,8 +20,6 @@ import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,9 +46,9 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
     ArrayList<Task> visibleTasks = new ArrayList<>();
 
     public AppWidgetRemoteViewsFactory(TodoApplication application,  Intent intent) {
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
         int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        log.debug("Creating view for widget: " + widgetId);
+        log.debug(TAG, "Creating view for widget: " + widgetId);
         mContext = TodoApplication.getAppContext();
         SharedPreferences preferences = mContext.getSharedPreferences("" + widgetId, 0);
         mFilter = new ActiveFilter();
@@ -70,10 +68,10 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
 
     void setFilteredTasks() {
-        // log.debug("Widget: setFilteredTasks called");
+        // log.debug(TAG, "Widget: setFilteredTasks called");
         visibleTasks = new ArrayList<>();
         if (application==null)  {
-            log.debug("application object was null");
+            log.debug(TAG, "application object was null");
             return;
         }
         if (!application.isAuthenticated()) {
@@ -257,13 +255,13 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate() {
-        // log.debug("Widget: OnCreate called in ViewFactory");
+        // log.debug(TAG, "Widget: OnCreate called in ViewFactory");
         setFilteredTasks();
     }
 
     @Override
     public void onDataSetChanged() {
-        // log.debug("Widget: Data set changed, refresh");
+        // log.debug(TAG, "Widget: Data set changed, refresh");
         setFilteredTasks();
     }
 

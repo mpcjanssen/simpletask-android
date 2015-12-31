@@ -10,8 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -21,9 +19,10 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     // Create unique numbers for every widget pendingintent
     // Otherwise the will overwrite each other
     final static int FROM_WIDGETS_START = 1;
+    private static final String TAG = "MyAppWidgetProvider" ;
 
     public static void putFilterExtras (Intent target , @NonNull SharedPreferences preferences,  int widgetId) {
-        // log.debug("putFilter extras  for appwidget " + widgetId);
+        // log.debug(TAG, "putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter();
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
@@ -95,9 +94,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager,
 			@NonNull int[] appWidgetIds) {
-        Logger log = LoggerFactory.getLogger(this.getClass());
+        Logger log = Logger.INSTANCE;
         for (int widgetId : appWidgetIds) {
-            log.debug("onUpdate " + widgetId);
+            log.debug(TAG, "onUpdate " + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
@@ -109,9 +108,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDeleted(@NonNull Context context, @NonNull int[] appWidgetIds) {
-        Logger log = LoggerFactory.getLogger(this.getClass());
+        Logger log = Logger.INSTANCE;
         for (int widgetId : appWidgetIds) {
-            log.debug("cleaning up widget configuration id:" + widgetId);
+            log.debug(TAG, "cleaning up widget configuration id:" + widgetId);
             // At least clear contents of the preferences file
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
             preferences.edit().clear().apply();
@@ -119,7 +118,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             File prefs_xml = new File(prefs_path, widgetId + ".xml");
             // Remove the XML file
             if (!prefs_xml.delete()) {
-                log.warn("File not deleted: " + prefs_xml.toString());
+                log.warn(TAG, "File not deleted: " + prefs_xml.toString());
             }
 
         }
@@ -127,8 +126,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
 
     public static void updateAppWidget(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId, String name) {
-        Logger log = LoggerFactory.getLogger(MyAppWidgetProvider.class);
-        log.debug("updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+        Logger log = Logger.INSTANCE;
+        log.debug(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our
         // package, but it needs this because on the other side it's the widget host inflating

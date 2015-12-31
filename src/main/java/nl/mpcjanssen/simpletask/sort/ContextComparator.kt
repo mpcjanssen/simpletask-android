@@ -2,7 +2,6 @@ package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
-import kotlin.collections.sort
 
 class ContextComparator(caseSensitive: Boolean) : Comparator<Task> {
 

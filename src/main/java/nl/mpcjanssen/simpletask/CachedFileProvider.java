@@ -6,26 +6,25 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
  
 public class CachedFileProvider extends ContentProvider {
  
-    private static final String CLASS_NAME = "CachedFileProvider";
+    private static final String TAG = "CachedFileProvider";
  
     // The authority is the symbolic name for the provider class
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
- 
+
     // UriMatcher used to match against incoming requests
     private UriMatcher uriMatcher;
     private Logger log;
 
     @Override
     public boolean onCreate() {
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
 
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         // Add a URI to the matcher which will match against the form
@@ -40,7 +39,7 @@ public class CachedFileProvider extends ContentProvider {
     public ParcelFileDescriptor openFile(Uri uri, String mode)
             throws FileNotFoundException {
  
-        log.debug("Called with uri: '" + uri + "'." + uri.getLastPathSegment());
+        log.debug(TAG, "Called with uri: '" + uri + "'." + uri.getLastPathSegment());
  
         // Check incoming Uri against the matcher
         switch (uriMatcher.match(uri)) {
@@ -64,7 +63,7 @@ public class CachedFileProvider extends ContentProvider {
  
             // Otherwise unrecognised Uri
         default:
-            log.debug("Unsupported uri: '" + uri + "'.");
+            log.debug(TAG, "Unsupported uri: '" + uri + "'.");
             throw new FileNotFoundException("Unsupported uri: "
                     + uri.toString());
         }

@@ -11,8 +11,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import org.luaj.vm2.*;
 import org.luaj.vm2.compiler.LuaC;
 import org.luaj.vm2.lib.jse.JsePlatform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -91,7 +90,7 @@ public class ActiveFilter {
     private String mName;
 
     public ActiveFilter() {
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
     }
 
     public void initFromIntent(@NonNull Intent intent) {
@@ -364,9 +363,9 @@ public class ActiveFilter {
                 matched.add(t);
             }
         } catch (LuaError e) {
-            log.debug("Lua execution failed " + e.getMessage());
+            log.debug(TAG, "Lua execution failed " + e.getMessage());
         } catch (IOException e) {
-            log.debug("Execution failed " + e.getMessage());
+            log.debug(TAG, "Execution failed " + e.getMessage());
         }
         return matched;
     }

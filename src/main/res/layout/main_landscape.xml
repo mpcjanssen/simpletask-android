@@ -24,12 +24,11 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tablet_drawer_layout"
-    android:layout_width="fill_parent"
-    android:orientation="horizontal"
-    android:layout_height="fill_parent"
-    android:baselineAligned="false">
+              android:id="@+id/tablet_drawer_layout"
+              android:layout_width="fill_parent"
+              android:orientation="horizontal"
+              android:layout_height="fill_parent"
+              android:baselineAligned="false">
 
     <!-- The navigation drawer -->
 

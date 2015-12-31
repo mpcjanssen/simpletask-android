@@ -1,12 +1,13 @@
 package nl.mpcjanssen.simpletask;
 
 import android.app.ActionBar;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,8 +17,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 import org.luaj.vm2.*;
 import org.luaj.vm2.compiler.LuaC;
 import org.luaj.vm2.lib.jse.JsePlatform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,20 +37,20 @@ public class FilterScriptFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = LoggerFactory.getLogger(this.getClass());
-        log.debug("onCreate() this:" + this);
+        log = Logger.INSTANCE;
+        log.debug(TAG, "onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        log.debug("onDestroy() this:" + this);
+        log.debug(TAG, "onDestroy() this:" + this);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        log.debug("onSaveInstanceState() this:" + this);
+        log.debug(TAG, "onSaveInstanceState() this:" + this);
         outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER,getScript());
         outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,getTestTask());
     }
@@ -58,11 +58,11 @@ public class FilterScriptFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        log.debug("onCreateView() this:" + this);
+        log.debug(TAG, "onCreateView() this:" + this);
 
         Bundle arguments = getArguments();
         actionbar = getActivity().getActionBar();
-        log.debug("Fragment bundle:" + this);
+        log.debug(TAG, "Fragment bundle:" + this);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.script_filter,
                 container, false);
 
@@ -93,11 +93,11 @@ public class FilterScriptFragment extends Fragment {
                         tvBooleanResult.setText("false");
                     }
                 } catch (LuaError e) {
-                    log.debug("Lua execution failed " + e.getMessage());
+                    log.debug(TAG, "Lua execution failed " + e.getMessage());
                     tvBooleanResult.setText("error");
                     tvResult.setText(e.getMessage());
                 } catch (IOException e) {
-                    log.debug("Execution failed " + e.getMessage());
+                    log.debug(TAG, "Execution failed " + e.getMessage());
                 }
             }
 

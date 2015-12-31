@@ -14,20 +14,15 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -42,44 +37,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.ActionMode;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.SearchView;
-import android.widget.TextView;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
-
-import nl.mpcjanssen.simpletask.util.InputDialogListener;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
-
+import android.widget.*;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -87,8 +47,12 @@ import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.task.token.Token;
+import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
+
+import java.io.File;
+import java.util.*;
 
 
 public class Simpletask extends ThemedActivity implements
@@ -104,6 +68,7 @@ public class Simpletask extends ThemedActivity implements
 
     public final static Uri URI_BASE = Uri.fromParts("simpletask", "", null);
     public final static Uri URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search");
+    private static final String TAG = "Simpletask";
 
     @Nullable
     Menu options_menu;
@@ -123,14 +88,14 @@ public class Simpletask extends ThemedActivity implements
     int m_scrollPosition = 0;
     private Dialog mOverlayDialog;
     private boolean mIgnoreScrollEvents = false;
-    private org.slf4j.Logger log;
+    private Logger log;
     private ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = LoggerFactory.getLogger(this.getClass());
-        log.info("onCreate");
+        log = Logger.INSTANCE;
+        log.info(TAG, "onCreate");
         m_app = (TodoApplication) getApplication();
         m_savedInstanceState = savedInstanceState;
         final IntentFilter intentFilter = new IntentFilter();
@@ -149,13 +114,13 @@ public class Simpletask extends ThemedActivity implements
                 if (intent.getAction().equals(Constants.BROADCAST_ACTION_ARCHIVE)) {
                     archiveTasks(null);
                 } else if (intent.getAction().equals(Constants.BROADCAST_ACTION_LOGOUT)) {
-                    log.info("Logging out from Dropbox");
+                    log.info(TAG, "Logging out from Dropbox");
                     getFileStore().logout();
                     Intent i = new Intent(context, LoginScreen.class);
                     startActivity(i);
                     finish();
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_UI)) {
-                    log.info("Updating UI because of broadcast");
+                    log.info(TAG, "Updating UI because of broadcast");
                     if (m_adapter==null) {
                         return;
                     }
@@ -272,7 +237,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void handleIntent() {
         if (!m_app.isAuthenticated()) {
-            log.info("handleIntent: not authenticated");
+            log.info(TAG, "handleIntent: not authenticated");
             startLogin();
             return;
         }
@@ -323,26 +288,26 @@ public class Simpletask extends ThemedActivity implements
         Intent intent = getIntent();
         if (Constants.INTENT_START_FILTER.equals(intent.getAction())) {
             mFilter.initFromIntent(intent);
-            log.info("handleIntent: launched with filter" + mFilter);
+            log.info(TAG, "handleIntent: launched with filter" + mFilter);
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 for (String key : extras.keySet()) {
                     Object value = extras.get(key);
                     if (value != null) {
-                        log.debug(String.format("%s %s (%s)", key,
+                        log.debug(TAG, String.format("%s %s (%s)", key,
                                 value.toString(), value.getClass().getName()));
                     } else {
-                        log.debug(String.format("%s %s)", key, "<null>"));
+                        log.debug(TAG, String.format("%s %s)", key, "<null>"));
                     }
 
                 }
 
             }
-            log.info("handleIntent: saving filter in prefs");
+            log.info(TAG, "handleIntent: saving filter in prefs");
             mFilter.saveInPrefs(TodoApplication.getPrefs());
         } else {
             // Set previous filters and sort
-            log.info("handleIntent: from m_prefs state");
+            log.info(TAG, "handleIntent: from m_prefs state");
             mFilter.initFromPrefs(TodoApplication.getPrefs());
         }
 
@@ -415,7 +380,7 @@ public class Simpletask extends ThemedActivity implements
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent;
                             String url = links.get(which);
-                            log.info("" + actions.get(which) + ": " + url);
+                            log.info(TAG, "" + actions.get(which) + ": " + url);
                             switch (actions.get(which)) {
                                 case ACTION_LINK:
                                     if (url.startsWith("todo://")) {
@@ -579,7 +544,7 @@ public class Simpletask extends ThemedActivity implements
     private void populateMainMenu(@Nullable final Menu menu) {
 
         if (menu==null) {
-            log.warn("Menu was null");
+            log.warn(TAG, "Menu was null");
             return;
         }
         menu.clear();
@@ -726,7 +691,7 @@ public class Simpletask extends ThemedActivity implements
             @Override
             public void onClick(@Nullable String selected) {
                 if (selected == null) {
-                    log.warn("Can't defer, selected is null. This should not happen");
+                    log.warn(TAG, "Can't defer, selected is null. This should not happen");
                     return;
                 }
                 if (selected.equals("pick")) {
@@ -796,7 +761,7 @@ public class Simpletask extends ThemedActivity implements
         if (m_drawerToggle != null && m_drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        log.info("onMenuItemSelected: " + item.getItemId());
+        log.info(TAG, "onMenuItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.search:
                 break;
@@ -833,7 +798,7 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void startAddTaskActivity(List<Task> tasks) {
-        log.info("Starting addTask activity");
+        log.info(TAG, "Starting addTask activity");
         getTodoList().setSelectedTasks(tasks);
         Intent intent = new Intent(this, AddTask.class);
         mFilter.saveInIntent(intent);
@@ -968,12 +933,12 @@ public class Simpletask extends ThemedActivity implements
 
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT.equals(intent.getAction())) {
             // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-            log.warn("Not implenented search");
+            log.warn(TAG, "Not implenented search");
         } else if (intent.getExtras() != null) {
             // Only change intent if it actually contains a filter
             setIntent(intent);
         }
-        log.info("onNewIntent: " + intent);
+        log.info(TAG, "onNewIntent: " + intent);
 
     }
 
@@ -1092,7 +1057,7 @@ public class Simpletask extends ThemedActivity implements
         File prefs_xml = new File(prefs_path, prefsName + ".xml");
         final boolean deleted = prefs_xml.delete();
         if (!deleted) {
-            log.warn("Failed to delete saved filter: " + deleted_filter.getName());
+            log.warn(TAG, "Failed to delete saved filter: " + deleted_filter.getName());
         }
         updateRightDrawer();
     }
@@ -1353,7 +1318,7 @@ public class Simpletask extends ThemedActivity implements
                 setTitle(R.string.app_label);
             }
             List<Task> visibleTasks;
-            log.info("setFilteredTasks called: " + getTodoList());
+            log.info(TAG, "setFilteredTasks called: " + getTodoList());
             ArrayList<String> sorts = mFilter.getSort(m_app.getDefaultSorts());
             visibleTasks = getTodoList().getSortedTasksCopy(mFilter, sorts, m_app.sortCaseSensitive());
             visibleLines.clear();
@@ -1646,7 +1611,7 @@ public class Simpletask extends ThemedActivity implements
                 tasktext.setHorizontallyScrolling(true);
                 tasktext.setEllipsize(truncateAt);
             } else {
-                log.warn("Unrecognized preference value for task text ellipsizing: {} !", ellipsizingPref);
+                log.warn(TAG, "Unrecognized preference value for task text ellipsizing: {} !" + ellipsizingPref);
             }
         }
     }

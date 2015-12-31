@@ -30,8 +30,7 @@ import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.*;
 import java.net.SocketTimeoutException;
@@ -69,7 +68,7 @@ public class FileStore implements FileStoreInterface {
     private Handler fileOperationsQueue;
 
     public FileStore(TodoApplication app, FileChangeListener fileChangedListener) {
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
         mPrefs = app.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
         mFileChangedListerer = fileChangedListener;
         // Set up the message queue
@@ -89,14 +88,14 @@ public class FileStore implements FileStoreInterface {
 
     private String loadContentsFromCache() {
         if (mPrefs == null) {
-            log.warn("Couldn't load cache from preferences, mPrefs == null");
+            log.warn(TAG, "Couldn't load cache from preferences, mPrefs == null");
             return "";
         }
        return  mPrefs.getString(LOCAL_CONTENTS, "");
     }
 
     public void queueRunnable(final String description, Runnable r) {
-        log.info("Handler: Queue " + description);
+        log.info(TAG, "Handler: Queue " + description);
         while (fileOperationsQueue==null) {
             try {
                 Thread.sleep(100);
@@ -115,7 +114,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     private void saveToCache(@NonNull String fileName, @Nullable String rev, @NonNull String contents) {
-        log.info("Storing file in cache rev: " + rev + " of file: " + fileName);
+        log.info(TAG, "Storing file in cache rev: " + rev + " of file: " + fileName);
         if (mPrefs == null) {
             return ;
         }
@@ -131,7 +130,7 @@ public class FileStore implements FileStoreInterface {
             return ;
         }
         if (pending) {
-            log.info("Changes are pending");
+            log.info(TAG, "Changes are pending");
         }
         SharedPreferences.Editor edit = mPrefs.edit();
         edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit();
@@ -191,7 +190,7 @@ public class FileStore implements FileStoreInterface {
                 long start_time = 0;
                 if (!continuePolling) return;
                 try {
-                    //log.info("Long polling");
+                    //log.info(TAG, "Long polling");
 
                     ArrayList<String> params = new ArrayList<>();
                     params.add("cursor");
@@ -199,7 +198,7 @@ public class FileStore implements FileStoreInterface {
                     params.add("timeout");
                     params.add("120");
                     if (backoffSeconds!=0) {
-                        log.info("Backing off for " + backoffSeconds + " seconds");
+                        log.info(TAG, "Backing off for " + backoffSeconds + " seconds");
                         try {
                             Thread.sleep(backoffSeconds*1000);
                         } catch (InterruptedException e) {
@@ -209,7 +208,7 @@ public class FileStore implements FileStoreInterface {
                     if (!continuePolling) return;
                     start_time = System.currentTimeMillis();
                     Object response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray(new String[params.size()]), mDBApi.getSession());
-                    log.info("Longpoll response: " + response.toString());
+                    log.info(TAG, "Longpoll response: " + response.toString());
                     JsonThing result = new JsonThing(response);
                     JsonMap resultMap = result.expectMap();
                     boolean changes = resultMap.get("changes").expectBoolean();
@@ -218,7 +217,7 @@ public class FileStore implements FileStoreInterface {
                     if (backoffThing!=null) {
                         newBackoffSeconds = backoffThing.expectInt32();
                     }
-                    log.info("Longpoll ended, changes " + changes + " backoff " + newBackoffSeconds);
+                    log.info(TAG, "Longpoll ended, changes " + changes + " backoff " + newBackoffSeconds);
                     if (changes) {
                         DropboxAPI.DeltaPage<DropboxAPI.Entry> delta = mDBApi.delta(latestCursor);
                         latestCursor = delta.cursor;
@@ -229,37 +228,37 @@ public class FileStore implements FileStoreInterface {
                                     throw new DropboxException("Metadata (or rev) in entry is null " + entry);
                                 }
                                 if (newMetaData.rev.equals(getLocalTodoRev())) {
-                                    log.info("Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " same as local rev, not reloading" );
+                                    log.info(TAG, "Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " same as local rev, not reloading" );
                                 } else {
-                                    log.info("Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " reloading" );
+                                    log.info(TAG, "Remote file " + polledFile + " changed, rev: " + newMetaData.rev  + " reloading" );
                                     mFileChangedListerer.fileChanged(null);
                                 }
                             }
                         }
                     }
                 } catch (DropboxUnlinkedException e) {
-                    log.info("Dropbox unlinked, no more polling");
+                    log.info(TAG, "Dropbox unlinked, no more polling");
                     continuePolling = false;
                 } catch (DropboxIOException e) {
                     if (SocketTimeoutException.class.isAssignableFrom(e.getCause().getClass())) {
-                        //log.info("Longpoll timed out, restarting");
+                        //log.info(TAG, "Longpoll timed out, restarting");
                         if (!isOnline()) {
-                            log.info("Device was not online, stopping polling");
+                            log.info(TAG, "Device was not online, stopping polling");
                             continuePolling = false;
                         }
                         if (System.currentTimeMillis()-start_time<30*1000) {
-                            log.info("Longpoll timed out to quick, backing off for 60 seconds");
+                            log.info(TAG, "Longpoll timed out to quick, backing off for 60 seconds");
                             newBackoffSeconds = 60;
                         }
                     } else {
-                        log.info("Longpoll IO exception, restarting backing of {} seconds", 30,  e);
+                        log.info(TAG, "Longpoll IO exception, restarting backing of {} seconds", 30,  e);
                         newBackoffSeconds = 30;
                     }
                 } catch (JsonExtractionException e) {
-                    log.info("Longpoll Json exception, restarting backing of {} seconds", 30, e);
+                    log.info(TAG, "Longpoll Json exception, restarting backing of {} seconds", 30, e);
                     newBackoffSeconds = 30;
                 }  catch (DropboxException e) {
-                    log.info("Longpoll Dropbox exception, restarting backing of {} seconds", 30, e);
+                    log.info(TAG, "Longpoll Dropbox exception, restarting backing of {} seconds", 30, e);
                     newBackoffSeconds = 30;
                 }
                 startLongPoll(polledFile,newBackoffSeconds);
@@ -284,7 +283,7 @@ public class FileStore implements FileStoreInterface {
                 mPrefs.edit().putString(OAUTH2_TOKEN, accessToken).commit();
                 return true;
             } catch (IllegalStateException e) {
-                log.info("Error authenticating", e);
+                log.info(TAG, "Error authenticating", e);
             }
         }
         return false;
@@ -308,11 +307,11 @@ public class FileStore implements FileStoreInterface {
         List<Task> tasks = new CopyOnWriteArrayList();
 
         if (!isOnline()) {
-            log.info("Device is offline loading from cache");
+            log.info(TAG, "Device is offline loading from cache");
             mIsLoading = false;
             tasks.addAll(tasksFromCache());
         } else if (changesPending()) {
-            log.info("Not loading, changes pending");
+            log.info(TAG, "Not loading, changes pending");
             Util.showToastLong(mApp,"Saving pending changes");
             mIsLoading = false;
             tasks.addAll(tasksFromCache());
@@ -325,11 +324,11 @@ public class FileStore implements FileStoreInterface {
                 try {
                     openFileStream = mDBApi.getFileStream(path, null);
                     fileInfo = openFileStream.getFileInfo();
-                    log.info("The file's rev is: " + fileInfo.getMetadata().rev);
+                    log.info(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
                 } catch (DropboxServerException e) {
-                    log.debug("Dropbox server exception", e);
+                    log.debug(TAG, "Dropbox server exception", e);
                     if (e.error == DropboxServerException._404_NOT_FOUND) {
-                        log.info("File not found, creating file instead");
+                        log.info(TAG, "File not found, creating file instead");
                         byte[] toStore = "".getBytes();
                         InputStream in = new ByteArrayInputStream(toStore);
                         mDBApi.putFile(path, in,
@@ -398,22 +397,22 @@ public class FileStore implements FileStoreInterface {
                 }
                 continuePolling = true;
                 if (pollingTask == null) {
-                    log.info("Initializing slow polling thread");
+                    log.info(TAG, "Initializing slow polling thread");
                     try {
-                        log.info("Finding latest cursor");
+                        log.info(TAG, "Finding latest cursor");
                         ArrayList<String> params = new ArrayList<>();
                         params.add("include_media_info");
                         params.add("false");
                         Object response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray(new String[params.size()]), mDBApi.getSession());
-                        log.info("Longpoll latestcursor response: " + response.toString());
+                        log.info(TAG, "Longpoll latestcursor response: " + response.toString());
                         JsonThing result = new JsonThing(response);
                         JsonMap resultMap = result.expectMap();
                         latestCursor = resultMap.get("cursor").expectString();
                     } catch (DropboxException | JsonExtractionException e) {
                         e.printStackTrace();
-                        log.error("Error reading polling cursor" + e);
+                        log.error(TAG, "Error reading polling cursor" + e);
                     }
-                    log.info("Starting slow polling");
+                    log.info(TAG, "Starting slow polling");
                     startLongPoll(path, 0);
                 }
             }
@@ -443,7 +442,7 @@ public class FileStore implements FileStoreInterface {
     public void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly) {
         if (!isOnline()) {
             Util.showToastLong(mApp, "Device is offline");
-            log.info("Device is offline, browse closed");
+            log.info(TAG, "Device is offline, browse closed");
             return;
         }
         FileDialog dialog = new FileDialog(act, path , true);
@@ -473,7 +472,7 @@ public class FileStore implements FileStoreInterface {
                 try {
                     byte[]  toStore = contents.getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);
-                    log.info("Saving to file " + path);
+                    log.info(TAG, "Saving to file " + path);
                     DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
                             toStore.length, rev, null);
                     rev = newEntry.rev;
@@ -494,7 +493,7 @@ public class FileStore implements FileStoreInterface {
                 if (!newName.equals(path)) {
                     // The file was written under another name
                     // Usually this means the was a conflict.
-                    log.info("Filename was changed remotely. New name is: " + newName);
+                    log.info(TAG, "Filename was changed remotely. New name is: " + newName);
                     Util.showToastLong(mApp, "Filename was changed remotely. New name is: " + newName);
                     mFileChangedListerer.fileChanged(newName);
                 }
@@ -611,7 +610,7 @@ public class FileStore implements FileStoreInterface {
                     @Override
                     public void run() {
                         // Check if we are still online
-                        log.info("Device went online, reloading in 5 seconds");
+                        log.info(TAG, "Device went online, reloading in 5 seconds");
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -621,7 +620,7 @@ public class FileStore implements FileStoreInterface {
                             continuePolling = true;
                             mFileChangedListerer.fileChanged(null);
                         } else {
-                            log.info("Device no longer online skipping reload");
+                            log.info(TAG, "Device no longer online skipping reload");
                         }
                     }
                 });
@@ -631,7 +630,7 @@ public class FileStore implements FileStoreInterface {
             stopWatching();
         }
         if (prevOnline && !mOnline) {
-            log.info("Device went offline");
+            log.info(TAG, "Device went offline");
         }
     }
 
@@ -654,7 +653,7 @@ public class FileStore implements FileStoreInterface {
          * @param pathName
          */
         public FileDialog(Activity activity, String pathName, boolean txtOnly) {
-            log = LoggerFactory.getLogger(this.getClass());
+            log = Logger.INSTANCE;
             this.activity = activity;
             this.txtOnly=txtOnly;
             currentPath = new File(pathName);
@@ -693,7 +692,7 @@ public class FileStore implements FileStoreInterface {
                                         return;
                                     }
                                     File chosenFile = getChosenFile(fileChosen);
-                                    log.warn("Selected file " + chosenFile.getName());
+                                    log.warn(TAG, "Selected file " + chosenFile.getName());
                                     DropboxAPI.Entry entry = entryHash.get(fileChosen);
                                     if (entry.isDir) {
                                         currentPath = chosenFile;
@@ -765,7 +764,7 @@ public class FileStore implements FileStoreInterface {
                     entryHash.put(entry.fileName(), entry);
                 }
             } catch (DropboxException e) {
-                log.warn("Couldn't load list from " + path.getName() + " loading root instead.");
+                log.warn(TAG, "Couldn't load list from " + path.getName() + " loading root instead.");
                 loadFileList(act, api, null);
                 return;
             }
