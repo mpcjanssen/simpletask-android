@@ -27,11 +27,8 @@ package nl.mpcjanssen.simpletask.util
 
 
 import android.app.Activity
-
-
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -41,7 +38,6 @@ import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.SparseBooleanArray
 import android.view.Window
 import android.widget.ListView
 import android.widget.ProgressBar
@@ -51,21 +47,13 @@ import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import org.luaj.vm2.*
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
-import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.collections.joinToString
-import kotlin.collections.length
-import kotlin.text.indexOf
-import kotlin.text.toLowerCase
 
-
-    val log = LoggerFactory.getLogger("Util")
+val TAG = "Util"
+val log = Logger;
     val todayAsString: String
         get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
 
@@ -106,7 +94,7 @@ import kotlin.text.toLowerCase
 
     @Throws(TodoException::class)
     fun createParentDirectory(dest: File?) {
-        val log = LoggerFactory.getLogger("Util")
+        val log = Logger;
         if (dest == null) {
             throw TodoException("createParentDirectory: dest is null")
         }
@@ -115,7 +103,7 @@ import kotlin.text.toLowerCase
             createParentDirectory(dir)
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
-                    log.error("Could not create dirs: " + dir.absolutePath)
+                    log.error(TAG, "Could not create dirs: " + dir.absolutePath)
                     throw TodoException("Could not create dirs: " + dir.absolutePath)
                 }
             }
@@ -356,7 +344,7 @@ import kotlin.text.toLowerCase
     fun copyFile(sourceFile: File, destFile: File) {
 
         if (destFile.createNewFile()) {
-            log.debug("Destination file created {}", destFile.absolutePath)
+            log.debug(TAG, "Destination file created {}"+  destFile.absolutePath)
         }
 
         var source: FileChannel? = null
@@ -417,7 +405,7 @@ import kotlin.text.toLowerCase
                 val fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + Constants.SHARE_FILE_NAME)
                 shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri)
             } catch (e: Exception) {
-                log.warn("Failed to create file for sharing")
+                log.warn(TAG, "Failed to create file for sharing")
             }
 
         }

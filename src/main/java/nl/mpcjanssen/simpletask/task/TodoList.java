@@ -29,24 +29,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.Constants;
-import nl.mpcjanssen.simpletask.R;
-import nl.mpcjanssen.simpletask.TodoApplication;
+import nl.mpcjanssen.simpletask.*;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.TimeZone;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -95,7 +86,7 @@ public class TodoList {
             });
             t.start();
         }
-        log = LoggerFactory.getLogger(this.getClass());
+        log = Logger.INSTANCE;
         this.mTodoListChanged = todoListChanged;
 
 
@@ -103,7 +94,7 @@ public class TodoList {
 
 
     public void queueRunnable(final String description, Runnable r) {
-        log.info("Handler: Queue " + description);
+        log.info(TAG, "Handler: Queue " + description);
         while (todolistQueue==null && startLooper ) {
             try {
                 Thread.sleep(100);
@@ -127,7 +118,7 @@ public class TodoList {
         queueRunnable("Add task", new Runnable() {
             @Override
             public void run() {
-                log.debug("Adding task of length {} into {} atEnd", t.inFileFormat().length(), TodoList.this, atEnd);
+                log.debug(TAG, "Adding task of length {} into {} atEnd " + t.inFileFormat().length() + " " + atEnd);
                 if (atEnd) {
                     mTasks.add(t);
                 } else {
@@ -287,23 +278,23 @@ public class TodoList {
 
 
     public void notifyChanged(final FileStoreInterface filestore, final String todoname, final String eol, final BackupInterface backup, final boolean save) {
-        log.info("Handler: Queue notifychanged");
+        log.info(TAG, "Handler: Queue notifychanged");
         todolistQueue.post(new Runnable() {
             @Override
             public void run() {
                 if (save) {
-                    log.info("Handler: Handle notifychanged");
-                    log.info("Saving todo list, size {}", mTasks.size());
+                    log.info(TAG, "Handler: Handle notifychanged");
+                    log.info(TAG, "Saving todo list, size {}" + mTasks.size());
                     save(filestore, todoname, backup, eol);
                 }
                 clearSelectedTasks();
                 if (mTodoListChanged != null) {
-                    log.info("TodoList changed, notifying listener and invalidating cached values");
+                    log.info(TAG, "TodoList changed, notifying listener and invalidating cached values");
                     mTags = null;
                     mLists = null;
                     mTodoListChanged.todoListChanged();
                 } else {
-                    log.info("TodoList changed, but nobody is listening");
+                    log.info(TAG, "TodoList changed, but nobody is listening");
                 }
             }
         });
@@ -345,7 +336,7 @@ public class TodoList {
 
     public void reload(final FileStoreInterface fileStore, final String filename, final BackupInterface backup, final LocalBroadcastManager lbm, final boolean background, final String eol) {
         if (TodoList.this.loadQueued()) {
-            log.info("Todolist reload is already queued waiting");
+            log.info(TAG, "Todolist reload is already queued waiting");
             return;
         }
         lbm.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_START));
@@ -357,19 +348,19 @@ public class TodoList {
                 try {
                     mTasks = fileStore.loadTasksFromFile(filename, backup, eol);
                 } catch (IOException e) {
-                    log.error("Todolist load failed: {}", filename, e);
+                    log.error(TAG, "Todolist load failed: {}" + filename, e);
                     Util.showToastShort(TodoApplication.getAppContext(), "Loading of todo file failed");
                 }
                 loadQueued = false;
-                log.info("Todolist loaded, refresh UI");
+                log.info(TAG, "Todolist loaded, refresh UI");
                 notifyChanged(fileStore,filename,eol,backup, false);
             }};
         if (background ) {
-            log.info("Loading todolist asynchronously into {}", this);
+            log.info(TAG, "Loading todolist asynchronously");
             queueRunnable("Reload", r);
 
         } else {
-            log.info("Loading todolist synchronously into {}", this);
+            log.info(TAG, "Loading todolist synchronously");
             r.run();
         }
     }
@@ -437,7 +428,7 @@ public class TodoList {
         private final Runnable runnable;
 
         LoggingRunnable(String description, Runnable r) {
-            log.info("Creating action " + description);
+            log.info(TAG, "Creating action " + description);
             this.description = description;
             this.runnable = r;
         }
@@ -449,7 +440,7 @@ public class TodoList {
 
         @Override
         public void run() {
-            log.info("Execution action " + description);
+            log.info(TAG, "Execution action " + description);
             runnable.run();
         }
 

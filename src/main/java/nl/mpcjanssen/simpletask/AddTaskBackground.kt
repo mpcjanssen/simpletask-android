@@ -27,37 +27,25 @@
  */
 package nl.mpcjanssen.simpletask
 
-import android.app.*
-import android.content.*
+
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Task
-
-
 import nl.mpcjanssen.simpletask.util.showToastShort
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
-import java.io.*
+import java.io.IOException
 import java.util.*
-import kotlin.collections.dropLastWhile
-import kotlin.collections.toTypedArray
-import kotlin.text.isEmpty
-import kotlin.text.split
-import kotlin.text.toRegex
-import kotlin.text.trim
 
 
 class AddTaskBackground : Activity() {
-
-
-    private var log: Logger? = null
+    private var log = Logger
+    val TAG = "AddTaskBackground"
 
     public override fun onCreate(instance: Bundle?) {
-        log = LoggerFactory.getLogger(this.javaClass)
-        log!!.debug("onCreate()")
+        log = Logger;
+        log!!.debug(TAG, "onCreate()")
         super.onCreate(instance)
         val m_app = this.application as TodoApplication
 
@@ -66,7 +54,7 @@ class AddTaskBackground : Activity() {
 
         val append_text = m_app.shareAppendText
         if (Intent.ACTION_SEND == action) {
-            log!!.debug("Share")
+            log!!.debug(TAG, "Share")
             var share_text = ""
             if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
@@ -90,18 +78,18 @@ class AddTaskBackground : Activity() {
             noteToSelf(intent, append_text)
 
         } else if (Constants.INTENT_BACKGROUND_TASK == action) {
-            log!!.debug("Adding background task")
+            log!!.debug(TAG, "Adding background task")
             if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
                 addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
             } else {
-                log!!.warn("Task was not in extras")
+                log!!.warn(TAG, "Task was not in extras")
             }
 
         }
     }
 
     private fun startAddTaskActivity(tasks: List<Task>) {
-        log!!.info("Starting addTask activity")
+        log!!.info(TAG, "Starting addTask activity")
         val m_app = this.application as TodoApplication
         m_app!!.todoList.selectedTasks = tasks
         val intent = Intent(this, AddTask::class.java)
@@ -111,7 +99,7 @@ class AddTaskBackground : Activity() {
     private fun noteToSelf(intent: Intent, append_text: String) {
         val task = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            log!!.debug("Voice note added.")
+            log!!.debug(TAG, "Voice note added.")
         }
         addBackgroundTask(task, append_text)
     }
@@ -120,7 +108,7 @@ class AddTaskBackground : Activity() {
         val m_app = this.application as TodoApplication
         val todoList = m_app!!.todoList
         val addedTasks = ArrayList<Task>()
-        log!!.debug("Adding background tasks to todolist {} ", todoList)
+        log!!.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
             if (taskText.trim({ it <= ' ' }).isEmpty()) {

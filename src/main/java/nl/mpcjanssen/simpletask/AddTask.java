@@ -28,11 +28,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,45 +38,24 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import nl.mpcjanssen.simpletask.util.InputDialogListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
-import java.util.regex.Pattern;
-
+import android.widget.*;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
+import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import nl.mpcjanssen.simpletask.util.Util;
+
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 public class AddTask extends ThemedActivity {
 
+    private static final String TAG = "AddTask";
     private TodoApplication m_app;
 
     private String share_text;
@@ -94,8 +69,8 @@ public class AddTask extends ThemedActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        log = LoggerFactory.getLogger(this.getClass());
-        log.debug("onCreate()");
+        log = Logger.INSTANCE;
+        log.debug(TAG, "onCreate()");
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         m_app = (TodoApplication) getApplication();
@@ -695,7 +670,7 @@ public class AddTask extends ThemedActivity {
         // save current selection and length
         int start = textInputField.getSelectionStart();
         int end = textInputField.getSelectionEnd();
-        log.debug("Current selection: " + start + "-" + end);
+        log.debug(TAG, "Current selection: " + start + "-" + end);
         int length = textInputField.getText().length();
         int sizeDelta;
         ArrayList<String> lines = new ArrayList<>();
@@ -709,7 +684,7 @@ public class AddTask extends ThemedActivity {
         }
         if (currentLine != -1) {
             Task t = new Task(lines.get(currentLine));
-            log.debug("Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString());
+            log.debug(TAG, "Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString());
             t.setPriority(Priority.toPriority(newPrio.toString()));
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));

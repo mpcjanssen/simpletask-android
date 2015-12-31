@@ -1,23 +1,18 @@
 package nl.mpcjanssen.simpletask.sort
 
+
 import nl.mpcjanssen.simpletask.ActiveFilter
+import nl.mpcjanssen.simpletask.Logger
+
 import nl.mpcjanssen.simpletask.task.Task
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
-
-import kotlin.collections.dropLastWhile
-import kotlin.collections.toTypedArray
-import kotlin.text.isEmpty
-import kotlin.text.split
-import kotlin.text.toRegex
 import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList: List<Task>) : Comparator<Task> {
     var comparators : Comparator<Task>? = null
     val defaultComparator = FileOrderComparator(taskList)
+    val TAG = "MultiComparator"
     init {
-        val log = LoggerFactory.getLogger(this.javaClass)
+        val log = Logger
 
         label@ for (sort in sorts) {
             val parts = sort.split(ActiveFilter.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
@@ -46,7 +41,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList:
                 "by_due_date" -> comp = DueDateComparator()
                 "by_threshold_date" -> comp = ThresholdDateComparator()
                 else -> {
-                    log.warn("Unknown sort: " + sort)
+                    log.warn(TAG, "Unknown sort: " + sort)
                     continue@label
                 }
             }

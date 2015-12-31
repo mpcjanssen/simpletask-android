@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
 import java.util.*
-import kotlin.text.toUpperCase
 
 
 class AlphabeticalStringComparator(caseSensitive: Boolean) : Comparator<String> {
