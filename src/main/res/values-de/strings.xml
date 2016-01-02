@@ -72,7 +72,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="insert_due">Fälligkeitsdatum einfügen</string>
     <string name="insert_threshold">Anfangsdatum einfügen</string>
     <string name="share">Teilen</string>
-    <string name="unComplete">Fertig rückgängig machen</string>
+    <string name="unComplete">Fertigstellen rückgängig machen</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="clear_filter">Filter löschen</string>
@@ -125,13 +125,12 @@ You should have received a copy of the GNU General Public License along with Tod
         Deaktivieren um das neue Datum relativ zu heute zu setzen.</string>
     <string name="swipe_complete_pref_title">Wischen zum Fertigstellen</string>
     <string name="swipe_complete_pref_summary">Wische über eine Aufgabe zum Fertigstellen.</string>
-    <string name="manual_sync_pref_title">Manueller sync</string>
+    <string name="manual_sync_pref_title">Manuelle Synchronisation.</string>
     <string name="manual_sync_pref_summary">Nicht jede Änderung automatisch zu Dropbox hochladen.</string>
     <string name="resume_sync_pref_title">Sync wiederaufnehmen</string>
     <string name="resume_sync_pref_summary">Sync mit Dropbox wenn die App geöffnet wird.</string>
-    <string name="font_size_delta_pref_title">Fontgröße ändern</string>
-    <string name="font_size_delta_pref_summary">Fontgröße in sp Einheiten ändern.
-        Verwende negative Einheiten um die Fontgröße zu verringern</string>
+    <string name="font_size_delta_pref_title">Schriftgröße ändern</string>
+    <string name="font_size_delta_pref_summary">Schriftgröße ändern. Verwende negative Einheiten um die Fontgröße zu verringern</string>
     <string name="theme_pref_title">Anwendungs-Theme</string>
     <string name="theme_pref_summary">Anwendungs-Theme ändern</string>
 
@@ -366,4 +365,21 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_write_error">Fehler: Kann Kalender nicht schrieben</string>
 
  <string name="click_to_copy">Tippen, um in die Zwischenablage zu kopieren.</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="append_tasks_at_end_summary">Neue Aufgaben am Ende der todo.txt einfügen. Wenn diese Option deaktiviert ist, werden neue Aufgaben am Anfang der Datei eingefügt.</string>
+    <string name="append_tasks_at_end_title">Neue Aufgaben anhängen</string>
+    <string name="by_project_todotxt">Nach Projekten</string>
+    <string name="by_context_todotxt">Nach Kontext</string>
+    <string name="context_prompt_todotxt">Kontext</string>
+    <string name="date">Datum</string>
+    <string name="filter_show_create_date">Zeige Alter einer Aufgabe</string>
+    <string name="input_new">Neue Eingabe</string>
+    <string name="login_folder_screen_button">Bei Dropbox einloggen.\n(Zugang zum App-Verzeichnis)</string>
+    <string name="name">Name</string>
+    <string name="project_prompt_todotxt">Projekt</string>
+    <string name="share_database">Datenbank durchsuchen</string>
+    <string name="share_history">Anzeigen und weitergeben der internen Datenbank zur Wiedererstellung.</string>
+    <string name="share_history_title">Todo-Verlauf</string>
+    <string name="task_action">Aktion</string>
+    <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert!</string>
 </resources>
