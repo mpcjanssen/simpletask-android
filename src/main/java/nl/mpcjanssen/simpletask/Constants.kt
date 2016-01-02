@@ -26,39 +26,40 @@ package nl.mpcjanssen.simpletask
 
 object Constants {
 
-    val DATE_FORMAT = "YYYY-MM-DD"
+    const val DATE_FORMAT = "YYYY-MM-DD"
 
     // Constants for creating shortcuts
-    val INTENT_SELECTED_TASK_POSITION = "SELECTED_TASK_POSITION"
+    const val INTENT_SELECTED_TASK_POSITION = "SELECTED_TASK_POSITION"
 
-    val BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE"
-    val BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT"
-    val BROADCAST_UPDATE_UI = "UPDATE_UI"
-    val BROADCAST_FILE_WRITE_FAILED = "FILE_WRITE_FAILED"
-    val BROADCAST_SYNC_START = "SYNC_START"
-    val BROADCAST_SYNC_DONE = "SYNC_DONE"
+    const val BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE"
+    const val BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT"
+    const val BROADCAST_UPDATE_UI = "UPDATE_UI"
+    const val BROADCAST_FILE_WRITE_FAILED = "FILE_WRITE_FAILED"
+    const val BROADCAST_SYNC_START = "SYNC_START"
+    const val BROADCAST_SYNC_DONE = "SYNC_DONE"
 
     // Sharing constants
-    val SHARE_FILE_NAME = "simpletask.txt"
+    const val SHARE_FILE_NAME = "simpletask.txt"
 
     // Public intents
-    val INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER"
-    val INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK"
+    const val INTENT_NEW_DAY = "nl.mpcjanssen.simpletask.ALARM_NEW_DAY"
+    const val INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER"
+    const val INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK"
 
 
     // Intent extras
-    val EXTRA_BACKGROUND_TASK = "task"
-    val EXTRA_HELP_PAGE = "page"
+    const val EXTRA_BACKGROUND_TASK = "task"
+    const val EXTRA_HELP_PAGE = "page"
 
     // Android OS specific constants
-    val ANDROID_EVENT = "vnd.android.cursor.item/event"
+    const val ANDROID_EVENT = "vnd.android.cursor.item/event"
 
     // Supported backends
-    val STORE_DROPBOX = 0
-    val STORE_SDCARD = 1
+    const val STORE_DROPBOX = 0
+    const val STORE_SDCARD = 1
 
     // Help pages
-    val HELP_INDEX = "index.en.md"
-    val HELP_ADD_TASK = "addtask.en.md"
+    const val HELP_INDEX = "index.en.md"
+    const val HELP_ADD_TASK = "addtask.en.md"
 
 }

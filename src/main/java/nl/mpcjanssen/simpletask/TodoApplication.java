@@ -26,9 +26,7 @@
 package nl.mpcjanssen.simpletask;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
-import android.app.Dialog;
+import android.app.*;
 import android.appwidget.AppWidgetManager;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,10 +48,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 
 public class TodoApplication extends Application implements
@@ -111,6 +106,7 @@ public class TodoApplication extends Application implements
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
+
         intentFilter.addAction(Constants.BROADCAST_FILE_WRITE_FAILED);
         m_broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -131,6 +127,25 @@ public class TodoApplication extends Application implements
         log.info(TAG, "Created todolist {}" + m_todoList);
         loadTodoList(true);
         m_calSync = new CalendarSync(this, isSyncDues(), isSyncThresholds());
+        scheduleOnNewDay();
+    }
+
+    private void scheduleOnNewDay () {
+        // Schedules activities to run on a new day
+        // Refresh widgets and UI
+        // - Cleans up logging
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 10);
+
+        Logger.INSTANCE.info(TAG, "Scheduling alarm for " + calendar.getTime());
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0,
+                new Intent(Constants.INTENT_NEW_DAY),PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_HOUR,pi);
     }
 
     public void prefsChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
@@ -524,11 +539,16 @@ public class TodoApplication extends Application implements
     @Override
     public void backup(String name, String contents) {
 
-        // Gets the data repository in write mode
-
         Date now = new Date();
         TodoFile fileToBackup = new TodoFile(contents, name, now);
         backupDao.insertOrReplace(fileToBackup);
+        // Clean up old files
+        Date removeBefore = new Date(now.getTime()-2*24*60*60*1000);
+
+        backupDao.queryBuilder()
+                .where(TodoFileDao.Properties.Date.lt(removeBefore))
+                .buildDelete()
+                .executeDeleteWithoutDetachingEntities();
 
     }
 
