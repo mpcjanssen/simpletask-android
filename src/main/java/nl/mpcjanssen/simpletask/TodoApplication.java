@@ -145,7 +145,7 @@ public class TodoApplication extends Application implements
                 new Intent(Constants.INTENT_NEW_DAY),PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_HOUR,pi);
+                AlarmManager.INTERVAL_DAY,pi);
     }
 
     public void prefsChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
