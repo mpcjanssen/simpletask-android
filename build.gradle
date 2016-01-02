@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
-	classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -29,7 +29,7 @@ android {
         versionName '6.3.4'
         versionCode 3006
 	    minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 22
 	dexOptions {
         	incremental true
 	}
