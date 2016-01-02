@@ -252,7 +252,7 @@ val log = Logger;
         val oneMonth = "1m"
         val values = arrayOf("", today, tomorrow, oneWeek, twoWeeks, oneMonth, "pick")
         if (!showNone) {
-            keys = Arrays.copyOfRange(keys, 1, keys.size())
+            keys = Arrays.copyOfRange(keys, 1, keys.size)
         }
         val titleId: Int
         if (dateType == Task.DUE_DATE) {
