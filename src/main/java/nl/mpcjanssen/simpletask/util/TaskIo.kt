@@ -32,9 +32,6 @@ package nl.mpcjanssen.simpletask.util
 
 import java.io.*
 
-
-private val TAG = "TaskIo"
-
 @Throws(IOException::class)
 fun loadFromFile(file: File): List<String> {
     return file.readLines()
@@ -42,7 +39,12 @@ fun loadFromFile(file: File): List<String> {
 
 @Throws(IOException::class)
 fun writeToFile(contents: String, file: File, append: Boolean) {
-    createParentDirectory(file)
+    try {
+        createParentDirectory(file)
+    } catch (e: IOException) {
+        nl.mpcjanssen.simpletask.Logger.warn("TaskIO", "Couldn't create directory of ${file.absolutePath}", e)
+        throw e
+    }
     val str = FileOutputStream(file, append)
 
     val fw = BufferedWriter(OutputStreamWriter(

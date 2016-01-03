@@ -30,10 +30,6 @@ android {
         versionCode 3006
 	    minSdkVersion 14
         targetSdkVersion 22
-	dexOptions {
-        	incremental true
-	}
-
     }
 
     productFlavors {
