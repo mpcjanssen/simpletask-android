@@ -3,8 +3,7 @@ package nl.mpcjanssen.simpletask;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import nl.mpcjanssen.simpletask.dao.LogItem;
-import nl.mpcjanssen.simpletask.dao.LogItemDao;
+import nl.mpcjanssen.simpletask.dao.gen.LogItemDao;
 
 
 import java.util.Date;

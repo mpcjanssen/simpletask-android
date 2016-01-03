@@ -28,8 +28,6 @@ public interface FileStoreInterface {
 
     boolean isLoading();
 
-    boolean changesPending();
-
     interface FileSelectedListener {
         void fileSelected(String file);
     }

@@ -4,8 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import nl.mpcjanssen.simpletask.dao.LogItem
-import nl.mpcjanssen.simpletask.dao.LogItemDao
+import nl.mpcjanssen.simpletask.dao.gen.LogItem
+import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
 import java.util.*
 
 /*
@@ -22,7 +22,7 @@ object Logger {
     }
 
     fun logInDB(severity: String, tag: String, s: String, ex: Exception? = null) {
-        val item = LogItem(Date(),severity, tag,s,ex?.message?:"")
+        val item = LogItem(Date(), severity, tag, s, ex?.message ?: "")
         dao?.insert(item)
     }
 
