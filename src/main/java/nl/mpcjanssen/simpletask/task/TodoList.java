@@ -30,6 +30,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.*;
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
+import nl.mpcjanssen.simpletask.dao.gen.TodoListStatus;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
@@ -38,6 +40,7 @@ import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -50,7 +53,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TodoList {
     final static String TAG = TodoList.class.getSimpleName();
     private final Logger log;
-    private final boolean startLooper;
+    private final TodoApplication app;
 
     @NonNull
     private List<Task> mTasks = new CopyOnWriteArrayList();
@@ -66,26 +69,21 @@ public class TodoList {
     private boolean loadQueued = false;
 
 
-    public TodoList(TodoListChanged todoListChanged) {
-        this(todoListChanged, true);
-    }
 
-
-    public TodoList(TodoListChanged todoListChanged,
-                    boolean startLooper) {
-        this.startLooper = startLooper;
+    public TodoList(TodoApplication app, TodoListChanged todoListChanged) {
+        this.app = app;
         // Set up the message queue
-        if (startLooper) {
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    todolistQueue = new Handler();
-                    Looper.loop();
-                }
-            });
-            t.start();
-        }
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                todolistQueue = new Handler();
+                Looper.loop();
+            }
+        });
+        t.start();
+
         log = Logger.INSTANCE;
         this.mTodoListChanged = todoListChanged;
 
@@ -95,7 +93,7 @@ public class TodoList {
 
     public void queueRunnable(final String description, Runnable r) {
         log.info(TAG, "Handler: Queue " + description);
-        while (todolistQueue==null && startLooper ) {
+        while (todolistQueue==null ) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -347,6 +345,28 @@ public class TodoList {
                 clearSelectedTasks();
                 try {
                     mTasks = fileStore.loadTasksFromFile(filename, backup, eol);
+                    try {
+                        app.todoListItemDao.getSession().callInTx(new Callable<Object>() {
+                            @Override
+                            public Object call() throws Exception {
+                                app.todoListItemDao.deleteAll();
+                                app.todoListStatusDao.deleteAll();
+                                app.todoListStatusDao.insert(new TodoListStatus("filename", filename));
+                                app.todoListStatusDao.insert(new TodoListStatus("savePending", "false"));
+                                long line = 0;
+                                for (Task t: mTasks ) {
+                                    app.todoListItemDao.insert(
+                                            new TodoListItem(line,t,false)
+                                    );
+                                    line ++;
+                                }
+                                return null;
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 } catch (IOException e) {
                     log.error(TAG, "Todolist load failed: {}" + filename, e);
                     Util.showToastShort(TodoApplication.getAppContext(), "Loading of todo file failed");

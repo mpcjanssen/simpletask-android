@@ -39,6 +39,7 @@ import android.widget.EditText;
 import de.greenrobot.dao.AbstractDao;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.dao.*;
+import nl.mpcjanssen.simpletask.dao.gen.*;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
@@ -74,6 +75,8 @@ public class TodoApplication extends Application implements
     private DaoMaster.DevOpenHelper helper;
     private SQLiteDatabase todoDb;
     private DaoMaster daoMaster;
+    public TodoListItemDao todoListItemDao;
+    public TodoListStatusDao todoListStatusDao;
     public LogItemDao logDao;
     TodoFileDao backupDao;
 
@@ -93,6 +96,8 @@ public class TodoApplication extends Application implements
         todoDb = helper.getWritableDatabase();
         daoMaster = new DaoMaster(todoDb);
         daoSession = daoMaster.newSession();
+        todoListItemDao = daoSession.getTodoListItemDao();
+        todoListStatusDao = daoSession.getTodoListStatusDao();
         logDao = daoSession.getLogItemDao();
         backupDao = daoSession.getTodoFileDao();
         log = Logger.INSTANCE;
@@ -122,7 +127,7 @@ public class TodoApplication extends Application implements
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
         prefsChangeListener(this);
-        m_todoList = new TodoList(this);
+        m_todoList = new TodoList(this, this);
         this.mFileStore = new FileStore(this, this);
         log.info(TAG, "Created todolist {}" + m_todoList);
         loadTodoList(true);

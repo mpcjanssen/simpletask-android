@@ -134,11 +134,6 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public boolean changesPending() {
-        return false;
-    }
-
-    @Override
     public void startLogin(Activity caller, int i) {
 
     }

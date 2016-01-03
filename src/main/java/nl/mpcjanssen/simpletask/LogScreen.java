@@ -3,8 +3,6 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,14 +10,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import nl.mpcjanssen.simpletask.dao.LogItem;
-import nl.mpcjanssen.simpletask.dao.LogItemDao;
-import nl.mpcjanssen.simpletask.util.TaskIo;
+import nl.mpcjanssen.simpletask.dao.gen.LogItem;
+import nl.mpcjanssen.simpletask.dao.gen.LogItemDao;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 

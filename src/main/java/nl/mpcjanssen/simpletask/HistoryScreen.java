@@ -5,7 +5,6 @@ package nl.mpcjanssen.simpletask;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import de.greenrobot.dao.query.QueryBuilder;
-import nl.mpcjanssen.simpletask.dao.TodoFile;
+import nl.mpcjanssen.simpletask.dao.gen.TodoFile;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
