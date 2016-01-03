@@ -14,6 +14,7 @@ interface VisibleLine {
 data class TaskLine(override val task: Task) : VisibleLine {
     override val title  = null
     override val header = false
+
 }
 
 data class HeaderLine(override val title: String) : VisibleLine {
