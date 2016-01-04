@@ -221,6 +221,12 @@ public class TodoApplication extends Application implements
     public boolean useFastScroll() {
         return m_prefs.getBoolean(getString(R.string.ui_fast_scroll), true);
     }
+
+    // Use create date as backup for threshold date
+    public boolean useCreateBackup() {
+        return m_prefs.getBoolean(getString(R.string.use_create_backup), false);
+    }
+
     public boolean showTxtOnly() {
         return m_prefs.getBoolean(getString(R.string.show_txt_only), false);
     }

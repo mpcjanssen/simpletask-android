@@ -306,7 +306,7 @@ public class TodoList {
         List<Task> filteredTasks = filter.apply(mTasks);
         List<Task> originalOrder = new ArrayList<>();
         originalOrder.addAll(filteredTasks);
-        MultiComparator comp = new MultiComparator(sorts, caseSensitive, originalOrder);
+        MultiComparator comp = new MultiComparator(sorts, caseSensitive, originalOrder, app.useCreateBackup());
         Collections.sort(filteredTasks, comp);
         return filteredTasks;
     }
@@ -322,7 +322,7 @@ public class TodoList {
     }
 
     public void clearSelectedTasks() {
-        mSelectedTask = new CopyOnWriteArrayList();
+        mSelectedTask = new CopyOnWriteArrayList<Task>();
     }
 
     public void selectTask(int index) {
