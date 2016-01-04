@@ -198,7 +198,7 @@ public class FileStore implements FileStoreInterface {
                     params.add("cursor");
                     params.add(latestCursor);
                     params.add("timeout");
-                    params.add("120");
+                    params.add("480");
                     if (backoffSeconds!=0) {
                         log.info(TAG, "Backing off for " + backoffSeconds + " seconds");
                         try {
