@@ -1,5 +1,0 @@
--dontoptimize
--dontobfuscate
--dontpreverify
--dontwarn javax.**
--dontwarn org.apache.**
