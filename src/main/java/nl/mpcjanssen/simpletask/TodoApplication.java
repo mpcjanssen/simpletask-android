@@ -142,15 +142,16 @@ public class TodoApplication extends Application implements
 
         Calendar calendar = Calendar.getInstance();
 
+
+
+        // Prevent alarm from triggering for today when setting it
+        calendar.add(Calendar.DATE, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 2);
         calendar.set(Calendar.SECOND, 0);
 
-        // Prevent alarm from triggering for today when setting it
-        calendar.set(Calendar.MILLISECOND, 0);
 
-
-        Logger.INSTANCE.info(TAG, "Scheduling daily UI update alarm");
+        Logger.INSTANCE.info(TAG, "Scheduling daily UI update alarm, first at " + calendar.getTime());
         PendingIntent pi = PendingIntent.getBroadcast(this, 0,
                 new Intent(Constants.INTENT_NEW_DAY),PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
