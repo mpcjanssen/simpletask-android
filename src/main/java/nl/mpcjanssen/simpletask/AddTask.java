@@ -353,30 +353,28 @@ public class AddTask extends ThemedActivity {
 
         // Update the TodoList with changes
         TodoList todoList = m_app.getTodoList();
-        ArrayList<Task> updated = new ArrayList<>();
         // Create new tasks
         for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
-
-            if(m_app.hasPrependDate()) {
-                updated.add(new Task(line,DateTime.now(TimeZone.getDefault())));
+            if (m_backup!=null && m_backup.size()>0) {
+                // Don't modify create date for updated tasks
+                m_backup.get(0).init(line, null);
+                m_backup.remove(0);
             } else {
-                updated.add(new Task(line));
+                Task t ;
+                if (m_app.hasPrependDate()) {
+                   t = new Task(line, DateTime.now(TimeZone.getDefault()));
+                } else {
+                   t=  new Task(line, null);
+                }
+                todoList.add(t, m_app.hasAppendAtEnd());
             }
         }
 
-        // Update tasks that where selected for update
+        // Remove remaining tasks that where selected for update
         if (m_backup!=null){
             for (Task t : m_backup) {
-                if (updated.size()>0) {
-                    todoList.replace(t,updated.get(0));
-                    updated.remove(0);
-                } else {
                     todoList.remove(t);
                 }
-            }
-        }
-        for (Task rest: updated) {
-            todoList.add(rest, m_app.hasAppendAtEnd());
         }
 
         // Save
