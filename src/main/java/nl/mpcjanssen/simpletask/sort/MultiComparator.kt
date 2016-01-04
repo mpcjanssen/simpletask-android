@@ -7,7 +7,7 @@ import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList: List<Task>) : Comparator<Task> {
+class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList: List<Task>, createAsBackup: Boolean) : Comparator<Task> {
     var comparators : Comparator<Task>? = null
     val defaultComparator = FileOrderComparator(taskList)
     val TAG = "MultiComparator"
@@ -39,7 +39,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList:
                 "by_creation_date" -> comp = CreationDateComparator()
                 "in_future" -> comp = FutureComparator()
                 "by_due_date" -> comp = DueDateComparator()
-                "by_threshold_date" -> comp = ThresholdDateComparator()
+                "by_threshold_date" -> comp = ThresholdDateComparator(createAsBackup)
                 else -> {
                     log.warn(TAG, "Unknown sort: " + sort)
                     continue@label
