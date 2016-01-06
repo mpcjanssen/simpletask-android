@@ -428,7 +428,7 @@ public class AddTask extends ThemedActivity {
     }
 
     private void replaceDate(int dateType, @NonNull String date) {
-           if (dateType==Task.DUE_DATE) {
+           if (dateType== Task.DUE_DATE) {
                replaceDueDate(date);
            } else {
                replaceThresholdDate(date);

@@ -400,7 +400,7 @@ public class TodoList {
 
     }
 
-    public void archive(final FileStoreInterface filestore, final String todoFilename, final String doneFileName,  final List<Task> tasks, final String eol) {
+    public void archive(final FileStoreInterface filestore, final String todoFilename, final String doneFileName, final List<Task> tasks, final String eol) {
         queueRunnable("Archive", new Runnable() {
             @Override
             public void run() {
