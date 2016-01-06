@@ -43,15 +43,13 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class TTask (rawText: String, defaultPrependedDate: DateTime? = null) {
+class TTask (text: String, defaultPrependedDate: DateTime? = null) {
 
-    var tokens: ArrayList<Token>
+    private var tokens: ArrayList<Token>
 
     init {
-        tokens = parse(rawText)
+        tokens = parse(text)
     }
-
-    internal fun getTokens() = tokens
 
     fun update(rawText: String) {
         tokens = parse(rawText)
@@ -66,8 +64,6 @@ class TTask (rawText: String, defaultPrependedDate: DateTime? = null) {
 
     var completionDate: String? =  null
             get() =  getFirstToken<COMPLETED_DATE>()?.value ?: null
-
-
 
 
 
