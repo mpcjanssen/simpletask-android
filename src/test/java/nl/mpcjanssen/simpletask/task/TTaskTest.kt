@@ -31,6 +31,7 @@ class TTaskTest : TestCase() {
         if (lexeme.isNotEmpty()) res.add(lexeme)
 
         assertEquals(listOf("ab", " ", "b", " ", " ", "d", " ", "s"),res)
+        assertEquals(listOf("ab", " ", "b", " ", " ", "d", " ", "s"), "ab b  d s".lex())
 
     }
 
