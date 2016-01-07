@@ -197,3 +197,23 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         }
     }
 }
+
+
+// Extension functions
+
+fun String.lex() : List<String> {
+    val res = ArrayList<String>()
+    var lexeme = ""
+    this.forEach { char ->
+        when (char) {
+            ' ' -> {
+                if (lexeme.isNotEmpty()) res.add(lexeme)
+                res.add(char.toString())
+                lexeme = ""
+            }
+            else -> lexeme += char
+        }
+    }
+    if (lexeme.isNotEmpty()) res.add(lexeme)
+    return res
+}
