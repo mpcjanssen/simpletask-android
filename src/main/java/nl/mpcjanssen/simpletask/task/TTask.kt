@@ -88,14 +88,14 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         private val COMPLETED_PREFIX = "x "
         // Synchronized access as matcher.reset is not thread safe
         @Synchronized internal fun parse(text: String) : ArrayList<Token> {
+            var lexemes = text.lex()
             val tokens = ArrayList<Token>()
-
-
             var m: Matcher
-            var remaining = text
-            if (remaining.startsWith(COMPLETED_PREFIX)) {
-                tokens.add(COMPLETED())
 
+            var remaining = text
+            if (lexemes.subList(0,2) == listOf("x", " ")) {
+                tokens.add(COMPLETED())
+                lexemes = lexemes.drop(2)
                 remaining = text.substring(2)
                 m = SINGLE_DATE_MATCHER.reset(remaining)
                 // read optional completion date (this 'violates' the format spec)
