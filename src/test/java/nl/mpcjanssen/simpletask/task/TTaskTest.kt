@@ -11,10 +11,17 @@ class TTaskTest : TestCase() {
         assertEquals(t, TTask(t).text)
         t = "x 2012-14-11 rec:12w mail@example.com"
         assertEquals(t, TTask(t).text)
+        t = "  2012-14-11 rec:12w mail@example.com  "
+        assertEquals(t, TTask(t).text)
     }
 
     fun testLexing() {
         assertEquals(listOf("ab", " ", "b", " ", " ", "d", " ", "s"), "ab b  d s".lex())
+    }
+
+    fun testEquals() {
+        assertTrue(TTask("a")==TTask("a"))
+        assertFalse(TTask("a")==TTask("A"))
     }
 
     fun testGetDueDate() {
