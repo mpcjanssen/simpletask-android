@@ -31,7 +31,8 @@ import android.text.SpannableString
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Constants
-import nl.mpcjanssen.simpletask.task.token.*
+
+import nl.mpcjanssen.simpletask.task.ttoken.*
 import nl.mpcjanssen.simpletask.util.RelativeDate
 import nl.mpcjanssen.simpletask.util.*
 import nl.mpcjanssen.simpletask.util.*
@@ -45,11 +46,13 @@ import java.util.regex.Pattern
 
 class TTask (text: String, defaultPrependedDate: DateTime? = null) {
 
-    private var tokens: ArrayList<Token>
+    public var tokens: ArrayList<TToken>
 
     init {
         tokens = parse(text)
     }
+
+    constructor (text: String) : this(text, null)
 
     fun update(rawText: String) {
         tokens = parse(rawText)
@@ -62,14 +65,21 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         return null
     }
 
+
+
     var completionDate: String? =  null
-            get() =  getFirstToken<COMPLETED_DATE>()?.value ?: null
+            get() =  getFirstToken<CompletedDateToken>()?.text ?: null
+
+
+    var dueDate: DateTime? =  null
+        get() =  getFirstToken<DueDateToken>()?.value ?: null
+
 
 
 
     val text: String
         get() {
-            return tokens.map {it.value}.joinToString("")
+            return tokens.map {it.text}.joinToString("")
         }
 
     companion object {
@@ -87,24 +97,21 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
-        private val COMPLETED_PREFIX = "x "
 
-        fun parse(text: String) : ArrayList<Token> {
+        fun parse(text: String) : ArrayList<TToken> {
             var lexemes = text.lex()
-            val tokens = ArrayList<Token>()
-            var m: Matcher
+            val tokens = ArrayList<TToken>()
 
-            var remaining = text
             if (lexemes.take(2) == listOf("x", " ")) {
-                tokens.add(COMPLETED())
+                tokens.add(CompletedToken(true))
                 lexemes = lexemes.drop(2)
                 var nextToken = lexemes.getOrElse(0, { "" })
                 MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(COMPLETED_DATE(lexemes.first()))
+                    tokens.add(CompletedDateToken(lexemes.first()))
                     lexemes = lexemes.drop(1)
                     nextToken = lexemes.getOrElse(0, { "" })
                     MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                        tokens.add(CREATION_DATE(lexemes.first()))
+                        tokens.add(CreatedDateToken(lexemes.first()))
                         lexemes = lexemes.drop(1)
                     }
                 }
@@ -112,62 +119,62 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
 
             var nextToken = lexemes.getOrElse(0, { "" })
             MATCH_PRIORITY.matchEntire(nextToken)?.let {
-                tokens.add(PRIO(it.groups.get(1)!!.value))
+                tokens.add(PriorityToken(nextToken))
                 lexemes.drop(1)
             }
 
             nextToken = lexemes.getOrElse(0, { "" })
             MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(COMPLETED_DATE(lexemes.first()))
+                tokens.add(CompletedDateToken(lexemes.first()))
                 lexemes = lexemes.drop(1)
                 nextToken = lexemes.getOrElse(0, { "" })
                 MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(CREATION_DATE(lexemes.first()))
+                    tokens.add(CreatedDateToken(lexemes.first()))
                     lexemes = lexemes.drop(1)
                 }
             }
 
             lexemes.forEach { lexeme ->
                 MATCH_LIST.matchEntire(lexeme)?.let {
-                    tokens.add(LIST(lexeme))
+                    tokens.add(ListToken(lexeme))
                     return@forEach
                 }
                 MATCH_TAG.matchEntire(lexeme)?.let {
-                    tokens.add(TTAG(lexeme))
+                    tokens.add(TagToken(lexeme))
                     return@forEach
                 }
                 MATCH_DUE.matchEntire(lexeme)?.let {
-                    tokens.add(DUE_DATE(lexeme))
+                    tokens.add(DueDateToken(lexeme))
                     return@forEach
                 }
                 MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(THRESHOLD_DATE(lexeme))
+                    tokens.add(ThresholdDateToken(lexeme))
                     return@forEach
                 }
                 MATCH_HIDDEN.matchEntire(lexeme)?.let {
-                    tokens.add(HIDDEN(it.groups.get(1)!!.value))
+                    tokens.add(HiddenToken(lexeme))
                     return@forEach
                 }
                 MATCH_RECURRURENE.matchEntire(lexeme)?.let {
-                    tokens.add(RECURRENCE(it.groups.get(1)!!.value))
+                    tokens.add(RecurrenceToken(lexeme))
                     return@forEach
                 }
                 MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
-                    tokens.add(PHONE(lexeme))
+                    tokens.add(PhoneToken(lexeme))
                     return@forEach
                 }
                 MATCH_LINK.matchEntire(lexeme)?.let {
-                    tokens.add(LINK(lexeme))
+                    tokens.add(LinkToken(lexeme))
                     return@forEach
                 }
                 MATCH_MAIL.matchEntire(lexeme)?.let {
-                    tokens.add(MAIL(lexeme))
+                    tokens.add(MailToken(lexeme))
                     return@forEach
                 }
                 if (lexeme.isBlank()) {
-                    tokens.add(WHITE_SPACE(lexeme))
+                    tokens.add(WhiteSpaceToken(lexeme))
                 } else {
-                    tokens.add(TEXT(lexeme))
+                    tokens.add(TextToken(lexeme))
                 }
 
             }
@@ -194,4 +201,16 @@ fun String.lex() : List<String> {
     }
     if (lexeme.isNotEmpty()) res.add(lexeme)
     return res
+}
+
+fun String.toDateTime(): DateTime? {
+    var date : DateTime? = null;
+    if (this != null && DateTime.isParseable(this)) {
+        date = DateTime(this)
+    } else if (this == null) {
+        date = DateTime.today(TimeZone.getDefault())
+    } else {
+        date = null
+    }
+    return date
 }
