@@ -34,13 +34,17 @@ import nl.mpcjanssen.simpletask.task.ttoken.*
 import java.util.*
 
 
-
-class TTask (text: String, defaultPrependedDate: DateTime? = null) {
+class TTask(text: String, defaultPrependedDate: DateTime? = null) {
 
     public var tokens: ArrayList<TToken>
 
     init {
         tokens = parse(text)
+        defaultPrependedDate?.let {
+            if (createdDate == null) {
+                // setCreatedDate
+            }
+        }
     }
 
     constructor (text: String) : this(text, null)
@@ -49,14 +53,14 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         tokens = parse(rawText)
     }
 
-    private inline fun <reified T>getFirstToken() : T? {
+    private inline fun <reified T> getFirstToken(): T? {
         tokens.filterIsInstance<T>().forEach {
             return it
         }
         return null
     }
 
-    override fun equals(other: Any?): Boolean{
+    override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
 
@@ -67,24 +71,24 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         return true
     }
 
-    override fun hashCode(): Int{
+    override fun hashCode(): Int {
         return tokens.hashCode()
     }
 
 
-    var completionDate: String? =  null
-            get() =  getFirstToken<CompletedDateToken>()?.text ?: null
+    var completionDate: String? = null
+        get() = getFirstToken<CompletedDateToken>()?.text ?: null
 
+    var createdDate: String? = null
+        get() = getFirstToken<CreatedDateToken>()?.text ?: null
 
-    var dueDate: DateTime? =  null
-        get() =  getFirstToken<DueDateToken>()?.value ?: null
-
-
+    var dueDate: DateTime? = null
+        get() = getFirstToken<DueDateToken>()?.value ?: null
 
 
     val text: String
         get() {
-            return tokens.map {it.text}.joinToString("")
+            return tokens.map { it.text }.joinToString(" ")
         }
 
     companion object {
@@ -103,13 +107,13 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
 
-        fun parse(text: String) : ArrayList<TToken> {
+        fun parse(text: String): ArrayList<TToken> {
             var lexemes = text.lex()
             val tokens = ArrayList<TToken>()
 
-            if (lexemes.take(2) == listOf("x", " ")) {
+            if (lexemes.take(1) == listOf("x")) {
                 tokens.add(CompletedToken(true))
-                lexemes = lexemes.drop(2)
+                lexemes = lexemes.drop(1)
                 var nextToken = lexemes.getOrElse(0, { "" })
                 MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
                     tokens.add(CompletedDateToken(lexemes.first()))
@@ -127,17 +131,13 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
                 tokens.add(PriorityToken(nextToken))
                 lexemes.drop(1)
             }
-
+            
             nextToken = lexemes.getOrElse(0, { "" })
             MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(CompletedDateToken(lexemes.first()))
+                tokens.add(CreatedDateToken(lexemes.first()))
                 lexemes = lexemes.drop(1)
-                nextToken = lexemes.getOrElse(0, { "" })
-                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(CreatedDateToken(lexemes.first()))
-                    lexemes = lexemes.drop(1)
-                }
             }
+
 
             lexemes.forEach { lexeme ->
                 MATCH_LIST.matchEntire(lexeme)?.let {
@@ -191,29 +191,12 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
 
 // Extension functions
 
-fun String.lex() : List<String> {
-    val res = ArrayList<String>()
-    var lexeme = ""
-    this.forEach { char ->
-        when (char) {
-            ' ' -> {
-                if (lexeme.isNotEmpty()) res.add(lexeme)
-                res.add(char.toString())
-                lexeme = ""
-            }
-            else -> lexeme += char
-        }
-    }
-    if (lexeme.isNotEmpty()) res.add(lexeme)
-    return res
-}
+fun String.lex(): List<String> = this.split(" ")
 
 fun String.toDateTime(): DateTime? {
-    var date : DateTime? = null;
-    if (this != null && DateTime.isParseable(this)) {
+    var date: DateTime?;
+    if ( DateTime.isParseable(this)) {
         date = DateTime(this)
-    } else if (this == null) {
-        date = DateTime.today(TimeZone.getDefault())
     } else {
         date = null
     }
