@@ -4,4 +4,4 @@
 # This file must *NOT* be checked into Version Control Systems,
 # as it contains information specific to your local configuration.
 
-sdk.dir=C:/Users/name/Documents/Android/adt-bundle/sdk
+sdk.dir=C\:/Users/name/Documents/Android/adt-bundle/sdk
