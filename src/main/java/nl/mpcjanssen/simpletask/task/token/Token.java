@@ -18,7 +18,26 @@ abstract public class Token {
     public static final int THRESHOLD_DATE = 0x1 << 8;
     public static final int DUE_DATE = 0x1 << 9;
     public static final int HIDDEN = 0x1 << 10;
-    public static final int SHOW_ALL = WHITE_SPACE + LIST + TTAG + COMPLETED + COMPLETED_DATE + CREATION_DATE + TEXT + PRIO + THRESHOLD_DATE + DUE_DATE + HIDDEN;
+    public static final int RECURRENCE = 0x1 << 11;
+    public static final int PHONE = 0x1 << 12;
+    public static final int LINK = 0x1 << 13;
+    public static final int MAIL = 0x1 << 14;
+    public static final int SHOW_ALL =
+                    WHITE_SPACE +
+                    LIST +
+                    TTAG +
+                    COMPLETED +
+                    COMPLETED_DATE +
+                    CREATION_DATE +
+                    TEXT +
+                    PRIO +
+                    THRESHOLD_DATE +
+                    DUE_DATE +
+                    HIDDEN +
+                    RECURRENCE +
+                    PHONE +
+                    LINK +
+                    MAIL;
     public int type;
     public String value;
 

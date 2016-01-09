@@ -74,124 +74,102 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
 
     companion object {
         var TAG = Task::class.java.name
-        val DUE_DATE = 0
-        val THRESHOLD_DATE = 1
-        private val serialVersionUID = 1L
-        private val LIST_MATCHER = Pattern.compile("^@(\\S*\\w)(.*)").matcher("")
-        private val TAG_MATCHER = Pattern.compile("^\\+(\\S*\\w)(.*)").matcher("")
-        private val HIDDEN_MATCHER = Pattern.compile("^[Hh]:([01])(.*)").matcher("")
-        private val DUE_MATCHER = Pattern.compile("^[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})(.*)").matcher("")
-        private val THRESHOLD_MATCHER = Pattern.compile("^[Tt]:(\\d{4}-\\d{2}-\\d{2})(.*)").matcher("")
-        private val RECURRENCE_MATCHER = Pattern.compile("(^||\\s)[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyY])").matcher("")
-        private val PRIORITY_MATCHER = Pattern.compile("^(\\(([A-Z])\\) )(.*)").matcher("")
-        private val SINGLE_DATE_MATCHER = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2} )(.*)").matcher("")
+        private val MATCH_LIST = Regex("@(\\S*)")
+        private val MATCH_TAG = Regex("\\+(\\S*)")
+        private val MATCH_HIDDEN = Regex("[Hh]:([01])")
+        private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
+        private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
+        private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyY])")
+        private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
+        private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
+        private val MATCH_PHONE_NUMBER = Regex("[0\\+]?[0-9,#]{4,}")
+        private val MATCH_LINK = Regex("(http|https|todo)://[\\w\\-_./]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-@?^=%&amp;/~\\+#])?")
+        private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
+                + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
+                + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
         private val COMPLETED_PREFIX = "x "
-        // Synchronized access as matcher.reset is not thread safe
-        @Synchronized internal fun parse(text: String) : ArrayList<Token> {
+
+        fun parse(text: String) : ArrayList<Token> {
             var lexemes = text.lex()
             val tokens = ArrayList<Token>()
             var m: Matcher
 
             var remaining = text
-            if (lexemes.subList(0,2) == listOf("x", " ")) {
+            if (lexemes.take(2) == listOf("x", " ")) {
                 tokens.add(COMPLETED())
                 lexemes = lexemes.drop(2)
-                remaining = text.substring(2)
-                m = SINGLE_DATE_MATCHER.reset(remaining)
-                // read optional completion date (this 'violates' the format spec)
-                // be liberal with date format errors
-                if (m.matches()) {
-
-                    remaining = m.group(2)
-                    tokens.add(COMPLETED_DATE(m.group(1)))
-                    m = SINGLE_DATE_MATCHER.reset(remaining)
-                    // read possible create date
-                    if (m.matches()) {
-
-                        remaining = m.group(2)
-                        tokens.add(CREATION_DATE(m.group(1)))
-
+                var nextToken = lexemes.getOrElse(0, { "" })
+                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                    tokens.add(COMPLETED_DATE(lexemes.first()))
+                    lexemes = lexemes.drop(1)
+                    nextToken = lexemes.getOrElse(0, { "" })
+                    MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                        tokens.add(CREATION_DATE(lexemes.first()))
+                        lexemes = lexemes.drop(1)
                     }
                 }
             }
 
-            // Check for optional priority
-            m = PRIORITY_MATCHER.reset(remaining)
-            if (m.matches()) {
-
-                remaining = m.group(3)
-                tokens.add(PRIO(m.group(1)))
-            }
-            // Check for optional creation date
-            m = SINGLE_DATE_MATCHER.reset(remaining)
-            if (m.matches()) {
-                remaining = m.group(2)
-                tokens.add(CREATION_DATE(m.group(1)))
+            var nextToken = lexemes.getOrElse(0, { "" })
+            MATCH_PRIORITY.matchEntire(nextToken)?.let {
+                tokens.add(PRIO(it.groups.get(1)!!.value))
+                lexemes.drop(1)
             }
 
-            while (remaining.length > 0) {
-                if (remaining.startsWith(" ")) {
-                    var leading = ""
-                    while (remaining.length > 0 && remaining.startsWith(" ")) {
-                        leading = leading + " "
-                        remaining = remaining.substring(1)
-                    }
-                    val ws = WHITE_SPACE(leading)
-                    tokens.add(ws)
-                    continue
+            nextToken = lexemes.getOrElse(0, { "" })
+            MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                tokens.add(COMPLETED_DATE(lexemes.first()))
+                lexemes = lexemes.drop(1)
+                nextToken = lexemes.getOrElse(0, { "" })
+                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                    tokens.add(CREATION_DATE(lexemes.first()))
+                    lexemes = lexemes.drop(1)
                 }
-                m = LIST_MATCHER.reset(remaining)
-                if (m.matches()) {
-                    val list = m.group(1)
-                    remaining = m.group(2)
-                    val listToken = LIST("@" + list)
-                    tokens.add(listToken)
+            }
 
-                    continue
+            lexemes.forEach { lexeme ->
+                MATCH_LIST.matchEntire(lexeme)?.let {
+                    tokens.add(LIST(lexeme))
+                    return@forEach
                 }
-                m = TAG_MATCHER.reset(remaining)
-                if (m.matches()) {
-                    val match = m.group(1)
-                    remaining = m.group(2)
-                    val listToken = TTAG("+" + match)
-                    tokens.add(listToken)
+                MATCH_TAG.matchEntire(lexeme)?.let {
+                    tokens.add(TTAG(lexeme))
+                    return@forEach
+                }
+                MATCH_DUE.matchEntire(lexeme)?.let {
+                    tokens.add(DUE_DATE(lexeme))
+                    return@forEach
+                }
+                MATCH_THRESHOLD.matchEntire(lexeme)?.let {
+                    tokens.add(THRESHOLD_DATE(lexeme))
+                    return@forEach
+                }
+                MATCH_HIDDEN.matchEntire(lexeme)?.let {
+                    tokens.add(HIDDEN(it.groups.get(1)!!.value))
+                    return@forEach
+                }
+                MATCH_RECURRURENE.matchEntire(lexeme)?.let {
+                    tokens.add(RECURRENCE(it.groups.get(1)!!.value))
+                    return@forEach
+                }
+                MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
+                    tokens.add(PHONE(lexeme))
+                    return@forEach
+                }
+                MATCH_LINK.matchEntire(lexeme)?.let {
+                    tokens.add(LINK(lexeme))
+                    return@forEach
+                }
+                MATCH_MAIL.matchEntire(lexeme)?.let {
+                    tokens.add(MAIL(lexeme))
+                    return@forEach
+                }
+                if (lexeme.isBlank()) {
+                    tokens.add(WHITE_SPACE(lexeme))
+                } else {
+                    tokens.add(TEXT(lexeme))
+                }
 
-                    continue
-                }
-                m = THRESHOLD_MATCHER.reset(remaining)
-                if (m.matches()) {
-                    val match = m.group(1)
-                    remaining = m.group(2)
-                    val tok = THRESHOLD_DATE(match)
-                    tokens.add(tok)
-
-                    continue
-                }
-                m = DUE_MATCHER.reset(remaining)
-                if (m.matches()) {
-                    val match = m.group(1)
-                    remaining = m.group(2)
-                    val tok = DUE_DATE(match)
-                    tokens.add(tok)
-
-                    continue
-                }
-                m = HIDDEN_MATCHER.reset(remaining)
-                if (m.matches()) {
-                    val match = m.group(1)
-                    remaining = m.group(2)
-                    val tok = HIDDEN(match)
-                    tokens.add(tok)
-
-                    continue
-                }
-                var leading = ""
-                while (remaining.length > 0 && !remaining.startsWith(" ")) {
-                    leading = leading + remaining.substring(0, 1)
-                    remaining = remaining.substring(1)
-                }
-                val txt = TEXT(leading)
-                tokens.add(txt)
             }
             return tokens
         }
