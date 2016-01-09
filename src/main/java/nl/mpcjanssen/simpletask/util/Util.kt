@@ -312,7 +312,11 @@ val log = Logger;
         globals.set("lists", javaListToLuaTable(t.lists))
     }
 
-    private fun javaListToLuaTable(javaList: List<String>): LuaValue {
+    public fun taskListToLuaTable(taskList: List<Task>): LuaValue {
+        return javaListToLuaTable(taskList.map {it.inFileFormat()})
+    }
+
+    public fun javaListToLuaTable(javaList: List<String>): LuaValue {
         val size = javaList.size
         if (size == 0) return LuaValue.NIL
         val luaArray = arrayOfNulls<LuaString>(javaList.size)
@@ -322,7 +326,6 @@ val log = Logger;
             i++
         }
         return LuaTable.listOf(luaArray)
-
     }
 
     @Throws(IOException::class)

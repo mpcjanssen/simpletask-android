@@ -5,14 +5,12 @@ import java.util.*
 
 class TTaskTest : TestCase() {
     fun testParseIdempotence() {
-        val t1 = "x 1231 2 123 312 +test"
-        assertEquals(t1, TTask(t1).text)
-        val s = "Test abcd "
-        val t = " "
-        val v = ""
-        assertEquals(s, TTask(s).text)
+        var t = "x 1231 2 123 312 +test"
         assertEquals(t, TTask(t).text)
-        assertEquals(v, TTask(v).text)
+        t = "Test abcd "
+        assertEquals(t, TTask(t).text)
+        t = "x 2012-14-11 rec:12w mail@example.com"
+        assertEquals(t, TTask(t).text)
     }
 
     fun testLexing() {
