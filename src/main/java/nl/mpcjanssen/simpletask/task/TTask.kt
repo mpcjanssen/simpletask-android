@@ -26,22 +26,13 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import android.content.Context
-import android.text.SpannableString
+
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.ActiveFilter
-import nl.mpcjanssen.simpletask.Constants
 
 import nl.mpcjanssen.simpletask.task.ttoken.*
-import nl.mpcjanssen.simpletask.util.RelativeDate
-import nl.mpcjanssen.simpletask.util.*
-import nl.mpcjanssen.simpletask.util.*
 
-import java.io.Serializable
 import java.util.*
 
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 
 class TTask (text: String, defaultPrependedDate: DateTime? = null) {
@@ -65,6 +56,20 @@ class TTask (text: String, defaultPrependedDate: DateTime? = null) {
         return null
     }
 
+    override fun equals(other: Any?): Boolean{
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as TTask
+
+        if (tokens != other.tokens) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int{
+        return tokens.hashCode()
+    }
 
 
     var completionDate: String? =  null
