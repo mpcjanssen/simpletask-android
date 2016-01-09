@@ -1,6 +1,8 @@
 package nl.mpcjanssen.simpletask.task
 
 import junit.framework.TestCase
+import nl.mpcjanssen.simpletask.task.ttoken.TextToken
+import nl.mpcjanssen.simpletask.task.ttoken.WhiteSpaceToken
 import java.util.*
 
 class TTaskTest : TestCase() {
@@ -45,5 +47,16 @@ class TTaskTest : TestCase() {
         assertEquals("2013-11-11", TTask(t).createdDate)
         t = "2013-11-11 due:2014-10-10 rec:12w mail@example.com"
         assertEquals("2013-11-11", TTask(t).createdDate)
+    }
+
+
+
+    fun testShow() {
+        var t = TTask("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com")
+
+        val text = t.tokens.filter {
+            it.type == "TextToken"
+        }.map{it.text}.joinToString(" ")
+        assertEquals("morgen", text)
     }
 }

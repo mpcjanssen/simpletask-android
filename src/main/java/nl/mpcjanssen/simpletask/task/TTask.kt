@@ -131,7 +131,7 @@ class TTask(text: String, defaultPrependedDate: DateTime? = null) {
                 tokens.add(PriorityToken(nextToken))
                 lexemes.drop(1)
             }
-            
+
             nextToken = lexemes.getOrElse(0, { "" })
             MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
                 tokens.add(CreatedDateToken(lexemes.first()))
