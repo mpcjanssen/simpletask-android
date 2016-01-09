@@ -28,6 +28,7 @@ package nl.mpcjanssen.simpletask.task
 
 
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.Constants
 
 import nl.mpcjanssen.simpletask.task.ttoken.*
 
@@ -145,6 +146,21 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                 upsertToken(ThresholdDateToken("t:${dateStr}"))
             }
         }
+
+
+    
+
+
+    public fun inFileFormat() = text
+
+    public fun inFuture() : Boolean {
+        val date = thresholdDate
+        date?.let {
+            return date.compareTo(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)) > 0
+        }
+        return false
+
+    }
 
     companion object {
         var TAG = Task::class.java.name
