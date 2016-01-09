@@ -28,6 +28,7 @@ import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.Logger;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoApplication;
+import nl.mpcjanssen.simpletask.task.TTask;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -345,6 +346,7 @@ public class FileStore implements FileStoreInterface {
                 String line;
                 ArrayList<String> readFile = new ArrayList<>();
                 while ((line = reader.readLine()) != null) {
+                    new TTask(line, null);
                     tasks.add(new Task(line));
                     readFile.add(line);
                 }
