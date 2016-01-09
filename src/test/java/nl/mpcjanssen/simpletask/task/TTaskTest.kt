@@ -16,7 +16,7 @@ class TTaskTest : TestCase() {
     }
 
     fun testLexing() {
-        assertEquals(listOf("ab", " ", "b", " ", " ", "d", " ", "s"), "ab b  d s".lex())
+        assertEquals(listOf("ab", "b", "", "d", "s"), "ab b  d s".lex())
     }
 
     fun testEquals() {
@@ -36,5 +36,14 @@ class TTaskTest : TestCase() {
     fun testGetCompletionDate() {
         var t = "x 2012-11-11 due:2014-10-10 rec:12w mail@example.com"
         assertEquals("2012-11-11", TTask(t).completionDate)
+    }
+
+    fun testGetCreatedDate() {
+        var t = "x 2012-11-11 due:2014-10-10 rec:12w mail@example.com"
+        assertNull(TTask(t).createdDate)
+        t = "x 2012-11-11 2013-11-11 due:2014-10-10 rec:12w mail@example.com"
+        assertEquals("2013-11-11", TTask(t).createdDate)
+        t = "2013-11-11 due:2014-10-10 rec:12w mail@example.com"
+        assertEquals("2013-11-11", TTask(t).createdDate)
     }
 }
