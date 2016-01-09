@@ -53,6 +53,9 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    dexOptions {
+        incremental true
+    }
 }
 
 repositories {
@@ -81,4 +84,8 @@ if (project.hasProperty('storeFile') &&
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
     android.buildTypes.release.signingConfig = null
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }

@@ -19,3 +19,5 @@ sourceSets {
         }
     }
 }
+
+mainClassName = "nl.mpcjanssen.simpletask.SimpletaskDaoGenerator"
