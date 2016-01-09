@@ -1,9 +1,6 @@
 package nl.mpcjanssen.simpletask.task
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.task.ttoken.TextToken
-import nl.mpcjanssen.simpletask.task.ttoken.WhiteSpaceToken
-import java.util.*
 
 class TTaskTest : TestCase() {
     fun testParseIdempotence() {
@@ -28,11 +25,37 @@ class TTaskTest : TestCase() {
 
     fun testGetDueDate() {
         var t = "x 2012-14-11 due:2014-10-10 rec:12w mail@example.com"
-        assertEquals("2014-10-10".toDateTime(), TTask(t).dueDate)
+        assertEquals("2014-10-10", TTask(t).dueDate)
         t = "x 2012-14-11 due:2014-99-99 rec:12w mail@example.com"
-        assertNull(TTask(t).dueDate)
+        assertEquals("2014-99-99", TTask(t).dueDate)
         t = "x 2012-14-11 rec:12w mail@example.com"
         assertEquals(null, TTask(t).dueDate)
+    }
+
+    fun testThresholdDate() {
+        var t = "x 2012-14-11 t:2014-10-10 rec:12w mail@example.com"
+        assertEquals("2014-10-10", TTask(t).thresholdDate)
+        t = "x 2012-14-11 t:2014-99-99 rec:12w mail@example.com"
+        assertEquals("2014-99-99", TTask(t).thresholdDate)
+        t = "x 2012-14-11 rec:12w mail@example.com"
+        assertEquals(null, TTask(t).thresholdDate)
+        val task = TTask("x t:2011-01-01")
+        assertEquals("2011-01-01", task.thresholdDate)
+        task.thresholdDate = null
+        assertEquals(null, task.thresholdDate)
+        assertEquals("x", task.text)
+        task.thresholdDate = "2000-01-01"
+        assertEquals("x t:2000-01-01", task.text)
+    }
+
+    fun testCreateDate() {
+        val t1 = TTask("2014-01-01 test")
+        assertEquals("2014-01-01", t1.createdDate)
+        val t2 = TTask("2014-01-01 test", "2010-01-01")
+        assertEquals("2014-01-01", t2.createdDate)
+        val t3 = TTask("test", "2010-01-01")
+        assertEquals("2010-01-01", t3.createdDate)
+        assertEquals("2010-01-01 test", t3.text)
     }
 
     fun testGetCompletionDate() {
@@ -48,8 +71,6 @@ class TTaskTest : TestCase() {
         t = "2013-11-11 due:2014-10-10 rec:12w mail@example.com"
         assertEquals("2013-11-11", TTask(t).createdDate)
     }
-
-
 
     fun testShow() {
         var t = TTask("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com")

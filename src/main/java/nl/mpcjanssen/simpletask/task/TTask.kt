@@ -34,15 +34,15 @@ import nl.mpcjanssen.simpletask.task.ttoken.*
 import java.util.*
 
 
-class TTask(text: String, defaultPrependedDate: DateTime? = null) {
+class TTask(text: String, defaultPrependedDate: String? = null) {
 
-    public var tokens: ArrayList<TToken>
+    public var tokens: List<TToken>
 
     init {
         tokens = parse(text)
         defaultPrependedDate?.let {
             if (createdDate == null) {
-                // setCreatedDate
+                createdDate = defaultPrependedDate
             }
         }
     }
@@ -60,6 +60,30 @@ class TTask(text: String, defaultPrependedDate: DateTime? = null) {
         return null
     }
 
+    private inline fun <reified T : TToken> upsertToken(newToken: T?) {
+        if (newToken == null) {
+            tokens = tokens.filter {
+                if (it is T) {
+                    false
+                } else {
+                    true
+                }
+            }
+        } else {
+            if (getFirstToken<T>() == null) {
+                tokens = tokens + newToken
+            } else {
+                tokens = tokens.map {
+                    if (it is T) {
+                        newToken
+                    } else {
+                        it
+                    }
+                }
+            }
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
@@ -75,20 +99,51 @@ class TTask(text: String, defaultPrependedDate: DateTime? = null) {
         return tokens.hashCode()
     }
 
-
-    var completionDate: String? = null
-        get() = getFirstToken<CompletedDateToken>()?.text ?: null
-
-    var createdDate: String? = null
-        get() = getFirstToken<CreatedDateToken>()?.text ?: null
-
-    var dueDate: DateTime? = null
-        get() = getFirstToken<DueDateToken>()?.value ?: null
-
-
     val text: String
         get() {
             return tokens.map { it.text }.joinToString(" ")
+        }
+
+    var completionDate: String? = null
+        get() = getFirstToken<CompletedDateToken>()?.value ?: null
+
+    var createdDate: String?
+        get() = getFirstToken<CreatedDateToken>()?.value ?: null
+        set(newDate: String?) {
+            val temp = ArrayList<TToken>()
+            if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
+                temp.add(tokens.get(0))
+                tokens.drop(1)
+                if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
+                    temp.add(tokens.first())
+                    tokens.drop(1)
+                }
+            }
+            if (tokens.size > 0 && tokens.get(0) is PriorityToken) {
+                temp.add(tokens.first())
+                tokens.drop(1)
+            }
+            if (tokens.size > 0 && tokens.get(0) is CreatedDateToken) {
+                tokens.drop(1)
+            }
+            newDate?.let {
+                temp.add(CreatedDateToken(newDate))
+            }
+            temp.addAll(tokens)
+            tokens = temp
+        }
+
+    var dueDate: String? = null
+        get() = getFirstToken<DueDateToken>()?.value ?: null
+
+    var thresholdDate: String?
+        get() = getFirstToken<ThresholdDateToken>()?.value ?: null
+        set(dateStr: String?) {
+            if (dateStr==null) {
+                upsertToken<ThresholdDateToken>(null)
+            } else {
+                upsertToken(ThresholdDateToken("t:${dateStr}"))
+            }
         }
 
     companion object {
@@ -187,7 +242,6 @@ class TTask(text: String, defaultPrependedDate: DateTime? = null) {
         }
     }
 }
-
 
 // Extension functions
 
