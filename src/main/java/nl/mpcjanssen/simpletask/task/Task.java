@@ -340,6 +340,7 @@ public class Task implements Serializable {
 
     @Nullable
     public Task markComplete(@NonNull DateTime date) {
+        // todo this seems to be very slow, will probaby have to do this smarter.
         Task newTask = null;
         if (!this.isCompleted()) {
             String completionDate = date.format(Constants.DATE_FORMAT);
