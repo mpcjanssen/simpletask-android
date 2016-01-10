@@ -152,6 +152,16 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<RecurrenceToken>()?.value
 
 
+    var tags: Set<String> = emptySet()
+        get() {
+            return tokens.filter { it is TagToken }.map {it -> (it as TagToken).value}.toSet()
+        }
+
+    var lists: Set<String> = emptySet()
+        get() {
+            return tokens.filter { it is ListToken }.map {it -> (it as ListToken).value}.toSet()
+        }
+
     public fun removeTag (tag: String) {
        tokens = tokens.filter {
            if (it is TagToken && it.value == tag) false else true
