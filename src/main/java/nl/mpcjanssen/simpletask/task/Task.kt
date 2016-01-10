@@ -33,15 +33,15 @@ import nl.mpcjanssen.simpletask.Constants
 import java.util.*
 
 
-class TTask(text: String, defaultPrependedDate: String? = null) {
+class Task(text: String, defaultPrependedDate: String? = null) {
 
     public var tokens: List<TToken>
 
     init {
         tokens = parse(text)
         defaultPrependedDate?.let {
-            if (createdDate == null) {
-                createdDate = defaultPrependedDate
+            if (createDate == null) {
+                createDate = defaultPrependedDate
             }
         }
     }
@@ -87,7 +87,7 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
 
-        other as TTask
+        other as Task
 
         if (tokens != other.tokens) return false
 
@@ -104,16 +104,16 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
         }
 
     var completionDate: String? = null
-        get() = getFirstToken<CompletedKeyValueToken>()?.value ?: null
+        get() = getFirstToken<CompletedDateToken>()?.value ?: null
 
-    var createdDate: String?
-        get() = getFirstToken<CreatedKeyValueToken>()?.value ?: null
+    var createDate: String?
+        get() = getFirstToken<CreateDateToken>()?.value ?: null
         set(newDate: String?) {
             val temp = ArrayList<TToken>()
             if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
                 temp.add(tokens.get(0))
                 tokens.drop(1)
-                if (tokens.size > 0 && tokens.first() is CompletedKeyValueToken) {
+                if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
                     temp.add(tokens.first())
                     tokens.drop(1)
                 }
@@ -122,11 +122,11 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                 temp.add(tokens.first())
                 tokens.drop(1)
             }
-            if (tokens.size > 0 && tokens.get(0) is CreatedKeyValueToken) {
+            if (tokens.size > 0 && tokens.get(0) is CreateDateToken) {
                 tokens.drop(1)
             }
             newDate?.let {
-                temp.add(CreatedKeyValueToken(newDate))
+                temp.add(CreateDateToken(newDate))
             }
             temp.addAll(tokens)
             tokens = temp
@@ -136,18 +136,27 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<DueDateToken>()?.value ?: null
 
     var thresholdDate: String?
-        get() = getFirstToken<ThresholdKeyValueToken>()?.value ?: null
+        get() = getFirstToken<ThresholdDateToken>()?.value ?: null
         set(dateStr: String?) {
             if (dateStr==null) {
-                upsertToken<ThresholdKeyValueToken>(null)
+                upsertToken<ThresholdDateToken>(null)
             } else {
-                upsertToken(ThresholdKeyValueToken("t:${dateStr}"))
+                upsertToken(ThresholdDateToken("t:${dateStr}"))
             }
         }
 
+    var priority: Priority = Priority.NONE
+        get() = getFirstToken<PriorityToken>()?.value ?: Priority.NONE
 
-    
+    var recurrencePattern: String? = null
+        get() = getFirstToken<RecurrenceToken>()?.value
 
+
+    public fun removeTag (tag: String) {
+       tokens = tokens.filter {
+           if (it is TagToken && it.value == tag) false else true
+       }
+    }
 
     public fun inFileFormat() = text
 
@@ -157,11 +166,23 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
             return date.compareTo(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)) > 0
         }
         return false
-
     }
 
+    public fun isHidden() : Boolean {
+        return getFirstToken<HiddenToken>()?.value ?: false
+    }
+
+    public fun isVisible() : Boolean {
+        return !isHidden()
+    }
+
+    public fun isCompleted() : Boolean {
+        return getFirstToken<CompletedToken>()!=null
+    }
+
+
     companion object {
-        var TAG = Task::class.java.name
+        var TAG = this.javaClass.simpleName
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
@@ -185,11 +206,11 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                 lexemes = lexemes.drop(1)
                 var nextToken = lexemes.getOrElse(0, { "" })
                 MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(CompletedKeyValueToken(lexemes.first()))
+                    tokens.add(CompletedDateToken(lexemes.first()))
                     lexemes = lexemes.drop(1)
                     nextToken = lexemes.getOrElse(0, { "" })
                     MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                        tokens.add(CreatedKeyValueToken(lexemes.first()))
+                        tokens.add(CreateDateToken(lexemes.first()))
                         lexemes = lexemes.drop(1)
                     }
                 }
@@ -203,7 +224,7 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
 
             nextToken = lexemes.getOrElse(0, { "" })
             MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(CreatedKeyValueToken(lexemes.first()))
+                tokens.add(CreateDateToken(lexemes.first()))
                 lexemes = lexemes.drop(1)
             }
 
@@ -222,7 +243,7 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                     return@forEach
                 }
                 MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(ThresholdKeyValueToken(lexeme))
+                    tokens.add(ThresholdDateToken(lexeme))
                     return@forEach
                 }
                 MATCH_HIDDEN.matchEntire(lexeme)?.let {
@@ -294,10 +315,10 @@ interface KeyValueToken : TToken {
     override val value: String
     get() = text.split(":").last()
 }
-data class CreatedKeyValueToken(override val text: String) : KeyValueToken
-data class CompletedKeyValueToken(override val text: String) : KeyValueToken
+data class CreateDateToken(override val text: String) : KeyValueToken
+data class CompletedDateToken(override val text: String) : KeyValueToken
 data class DueDateToken(override val text: String) : KeyValueToken
-data class ThresholdKeyValueToken(override val text: String) : KeyValueToken
+data class ThresholdDateToken(override val text: String) : KeyValueToken
 data class TextToken(override val text: String) : KeyValueToken
 data class WhiteSpaceToken(override val text: String) : KeyValueToken
 data class MailToken(override val text: String) : KeyValueToken
