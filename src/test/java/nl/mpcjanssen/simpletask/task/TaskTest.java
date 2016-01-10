@@ -145,7 +145,7 @@ public class TaskTest extends TestCase {
         assertEquals("Milk @@errands", t.inFileFormat());
         t.removeTag("@@errands");
         assertEquals("Milk", t.inFileFormat());
-        assertEquals("Milk", t.showParts(Token.SHOW_ALL));
+        assertEquals("Milk", t.getText());
         t = new Task( "Milk @@errands +supermarket");
         t.removeTag("@@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());
