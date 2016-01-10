@@ -29,7 +29,7 @@ android {
         versionName '6.3.4'
         versionCode 3006
 	    minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 
     productFlavors {
@@ -52,6 +52,9 @@ android {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
         }
+    }
+    dexOptions {
+        incremental true
     }
 }
 
@@ -81,4 +84,8 @@ if (project.hasProperty('storeFile') &&
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
     android.buildTypes.release.signingConfig = null
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }
