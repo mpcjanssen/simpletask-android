@@ -133,7 +133,7 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
         }
 
     var dueDate: String? = null
-        get() = getFirstToken<DueKeyValueToken>()?.value ?: null
+        get() = getFirstToken<DueDateToken>()?.value ?: null
 
     var thresholdDate: String?
         get() = getFirstToken<ThresholdKeyValueToken>()?.value ?: null
@@ -218,7 +218,7 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                     return@forEach
                 }
                 MATCH_DUE.matchEntire(lexeme)?.let {
-                    tokens.add(DueKeyValueToken(lexeme))
+                    tokens.add(DueDateToken(lexeme))
                     return@forEach
                 }
                 MATCH_THRESHOLD.matchEntire(lexeme)?.let {
@@ -296,7 +296,7 @@ interface KeyValueToken : TToken {
 }
 data class CreatedKeyValueToken(override val text: String) : KeyValueToken
 data class CompletedKeyValueToken(override val text: String) : KeyValueToken
-data class DueKeyValueToken(override val text: String) : KeyValueToken
+data class DueDateToken(override val text: String) : KeyValueToken
 data class ThresholdKeyValueToken(override val text: String) : KeyValueToken
 data class TextToken(override val text: String) : KeyValueToken
 data class WhiteSpaceToken(override val text: String) : KeyValueToken
