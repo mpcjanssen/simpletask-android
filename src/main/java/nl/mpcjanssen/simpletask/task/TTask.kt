@@ -30,8 +30,6 @@ package nl.mpcjanssen.simpletask.task
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.Constants
 
-import nl.mpcjanssen.simpletask.task.ttoken.*
-
 import java.util.*
 
 
@@ -106,16 +104,16 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
         }
 
     var completionDate: String? = null
-        get() = getFirstToken<CompletedDateToken>()?.value ?: null
+        get() = getFirstToken<CompletedKeyValueToken>()?.value ?: null
 
     var createdDate: String?
-        get() = getFirstToken<CreatedDateToken>()?.value ?: null
+        get() = getFirstToken<CreatedKeyValueToken>()?.value ?: null
         set(newDate: String?) {
             val temp = ArrayList<TToken>()
             if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
                 temp.add(tokens.get(0))
                 tokens.drop(1)
-                if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
+                if (tokens.size > 0 && tokens.first() is CompletedKeyValueToken) {
                     temp.add(tokens.first())
                     tokens.drop(1)
                 }
@@ -124,26 +122,26 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                 temp.add(tokens.first())
                 tokens.drop(1)
             }
-            if (tokens.size > 0 && tokens.get(0) is CreatedDateToken) {
+            if (tokens.size > 0 && tokens.get(0) is CreatedKeyValueToken) {
                 tokens.drop(1)
             }
             newDate?.let {
-                temp.add(CreatedDateToken(newDate))
+                temp.add(CreatedKeyValueToken(newDate))
             }
             temp.addAll(tokens)
             tokens = temp
         }
 
     var dueDate: String? = null
-        get() = getFirstToken<DueDateToken>()?.value ?: null
+        get() = getFirstToken<DueKeyValueToken>()?.value ?: null
 
     var thresholdDate: String?
-        get() = getFirstToken<ThresholdDateToken>()?.value ?: null
+        get() = getFirstToken<ThresholdKeyValueToken>()?.value ?: null
         set(dateStr: String?) {
             if (dateStr==null) {
-                upsertToken<ThresholdDateToken>(null)
+                upsertToken<ThresholdKeyValueToken>(null)
             } else {
-                upsertToken(ThresholdDateToken("t:${dateStr}"))
+                upsertToken(ThresholdKeyValueToken("t:${dateStr}"))
             }
         }
 
@@ -187,11 +185,11 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                 lexemes = lexemes.drop(1)
                 var nextToken = lexemes.getOrElse(0, { "" })
                 MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(CompletedDateToken(lexemes.first()))
+                    tokens.add(CompletedKeyValueToken(lexemes.first()))
                     lexemes = lexemes.drop(1)
                     nextToken = lexemes.getOrElse(0, { "" })
                     MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                        tokens.add(CreatedDateToken(lexemes.first()))
+                        tokens.add(CreatedKeyValueToken(lexemes.first()))
                         lexemes = lexemes.drop(1)
                     }
                 }
@@ -205,7 +203,7 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
 
             nextToken = lexemes.getOrElse(0, { "" })
             MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(CreatedDateToken(lexemes.first()))
+                tokens.add(CreatedKeyValueToken(lexemes.first()))
                 lexemes = lexemes.drop(1)
             }
 
@@ -220,11 +218,11 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
                     return@forEach
                 }
                 MATCH_DUE.matchEntire(lexeme)?.let {
-                    tokens.add(DueDateToken(lexeme))
+                    tokens.add(DueKeyValueToken(lexeme))
                     return@forEach
                 }
                 MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(ThresholdDateToken(lexeme))
+                    tokens.add(ThresholdKeyValueToken(lexeme))
                     return@forEach
                 }
                 MATCH_HIDDEN.matchEntire(lexeme)?.let {
@@ -258,6 +256,54 @@ class TTask(text: String, defaultPrependedDate: String? = null) {
         }
     }
 }
+
+abstract interface TToken {
+    val text: String
+    val value: Any?
+    val type: String
+      get() = this.javaClass.simpleName
+}
+
+data class CompletedToken(override val value: Boolean) :TToken {
+    override val text: String
+    get() = if (value) "x" else ""
+}
+
+data class HiddenToken(override val text: String) :TToken {
+    override val value: Boolean
+    get() = if (text == "h:1") true else false
+}
+data class PriorityToken(override val text: String) :TToken {
+    override val value: Priority
+    get() = Priority.valueOf(text)
+}
+
+data class ListToken(override val text: String) : TToken {
+    override val value: String
+        get() = text.substring(1)
+}
+
+data class TagToken(override val text: String) : TToken {
+    override val value: String
+        get() = text.substring(1)
+}
+
+// The value of this token is the val part in key:val
+// If there is no key: then val is returned as is.
+interface KeyValueToken : TToken {
+    override val value: String
+    get() = text.split(":").last()
+}
+data class CreatedKeyValueToken(override val text: String) : KeyValueToken
+data class CompletedKeyValueToken(override val text: String) : KeyValueToken
+data class DueKeyValueToken(override val text: String) : KeyValueToken
+data class ThresholdKeyValueToken(override val text: String) : KeyValueToken
+data class TextToken(override val text: String) : KeyValueToken
+data class WhiteSpaceToken(override val text: String) : KeyValueToken
+data class MailToken(override val text: String) : KeyValueToken
+data class LinkToken(override val text: String) : KeyValueToken
+data class PhoneToken(override val text: String) : KeyValueToken
+data class RecurrenceToken(override val text: String) : KeyValueToken
 
 // Extension functions
 
