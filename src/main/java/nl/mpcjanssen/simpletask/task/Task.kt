@@ -27,12 +27,16 @@
 package nl.mpcjanssen.simpletask.task
 
 
-import android.support.annotation.NonNull
+import android.content.Context
+
+import android.text.SpannableString
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Constants
-import nl.mpcjanssen.simpletask.task.token.Token
+import nl.mpcjanssen.simpletask.util.RelativeDate
 import nl.mpcjanssen.simpletask.util.addInterval
+import nl.mpcjanssen.simpletask.util.setColor
+import nl.mpcjanssen.simpletask.util.todayAsString
 
 import java.util.*
 
@@ -136,8 +140,15 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             tokens = temp
         }
 
-    var dueDate: String? = null
+    var dueDate: String?
         get() = getFirstToken<DueDateToken>()?.value ?: null
+        set(dateStr: String?) {
+            if (dateStr == null) {
+                upsertToken<DueDateToken>(null)
+            } else {
+                upsertToken(DueDateToken("due:${dateStr}"))
+            }
+        }
 
     var thresholdDate: String?
         get() = getFirstToken<ThresholdDateToken>()?.value ?: null
@@ -300,8 +311,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun showParts(parts: Int): String? {
         return tokens.filter {
-            it.type and parts == 1
-        }.joinToString("")
+            (it.type and parts) != 0
+        }.map {it.text}.joinToString(" ")
     }
 
     public fun getHeader(sort: String, empty: String): String {
@@ -333,6 +344,51 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun getThresholdDateDT() :DateTime? {
         return thresholdDate?.toDateTime()
+    }
+
+    public fun getRelativeDueDate(ctx : Context, dueTodayColor : Int, overDueColor: Int, useColor : Boolean) : SpannableString? {
+        val date = dueDate
+        if (date!=null) {
+            date.toDateTime()?.let {
+                val relativeDate = RelativeDate.getRelativeDate(ctx, it );
+                val ss = SpannableString("Due: " + relativeDate);
+                if (date == todayAsString && useColor) {
+                    setColor(ss, dueTodayColor);
+                } else if ((todayAsString.compareTo(date) > 0) && useColor) {
+                    setColor(ss, overDueColor);
+                }
+                return ss;
+            }
+        }
+        return null;
+    }
+
+    public fun getRelativeThresholdDate(ctx: Context): String? {
+        val date = thresholdDate
+        if (date!=null) {
+            date.toDateTime()?.let {
+                return "T: " + RelativeDate.getRelativeDate(ctx, it);
+            }
+        }
+        return null;
+    }
+
+    private fun calculateRelativeAge(ctx : Context, date : String) : String {
+        val result : String;
+        if (!DateTime.isParseable(date)) {
+            result = date;
+        } else {
+            result = RelativeDate.getRelativeDate(ctx, date.toDateTime());
+        }
+        return result;
+    }
+
+    public fun getRelativeAge(ctx : Context) : String? {
+        val date = createDate
+        date?.let {
+            return (calculateRelativeAge(ctx, date));
+        }
+        return null;
     }
 
     /* Adds the task to list Listname
@@ -367,8 +423,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
     companion object {
-        const val DUE_DATE = 1
-        const val THRESHOLD_DATE = 2
+        @JvmField val DUE_DATE = 1
+        @JvmField val THRESHOLD_DATE = 2
         var TAG = this.javaClass.simpleName
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")
@@ -471,21 +527,22 @@ abstract interface TToken {
     val value: Any?
     val type: Int
     companion object {
-        val WHITE_SPACE = 1
-        val LIST = 1 shl 1
-        val TTAG = 1 shl 2
-        val COMPLETED = 1 shl 3
-        val COMPLETED_DATE = 1 shl 4
-        val CREATION_DATE = 1 shl 5
-        val TEXT = 1 shl 6
-        val PRIO = 1 shl 7
-        val THRESHOLD_DATE = 1 shl 8
-        val DUE_DATE = 1 shl 9
-        val HIDDEN = 1 shl 10
-        val RECURRENCE = 1 shl 11
-        val PHONE = 1 shl 12
-        val LINK = 1 shl 13
-        val MAIL = 1 shl 14
+        const val WHITE_SPACE = 1
+        const val LIST = 1 shl 1
+        const val TTAG = 1 shl 2
+        const val COMPLETED = 1 shl 3
+        const val COMPLETED_DATE = 1 shl 4
+        const val CREATION_DATE = 1 shl 5
+        const val TEXT = 1 shl 6
+        const val PRIO = 1 shl 7
+        const val THRESHOLD_DATE = 1 shl 8
+        const val DUE_DATE = 1 shl 9
+        const val HIDDEN = 1 shl 10
+        const val RECURRENCE = 1 shl 11
+        const val PHONE = 1 shl 12
+        const val LINK = 1 shl 13
+        const val MAIL = 1 shl 14
+        const val ALL = 0b111111111111111
     }
 }
 

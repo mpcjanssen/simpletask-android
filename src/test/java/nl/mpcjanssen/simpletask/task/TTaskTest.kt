@@ -76,7 +76,7 @@ class TaskTest : TestCase() {
         var t = Task("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com")
 
         val text = t.tokens.filter {
-            it.type == "TextToken"
+            it.type == TToken.TEXT
         }.map{it.text}.joinToString(" ")
         assertEquals("morgen", text)
     }
