@@ -162,10 +162,31 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             return tokens.filter { it is ListToken }.map {it -> (it as ListToken).value}.toSet()
         }
 
+    var links: Set<String> = emptySet()
+        get() {
+            return tokens.filter { it is LinkToken }.map {it -> (it as LinkToken).value}.toSet()
+        }
+
+    var phoneNumbers: Set<String> = emptySet()
+        get() {
+            return tokens.filter { it is PhoneToken }.map {it -> (it as PhoneToken).value}.toSet()
+        }
+    var mailAddresses: Set<String> = emptySet()
+        get() {
+            return tokens.filter { it is MailToken }.map {it -> (it as MailToken).value}.toSet()
+        }
+
+
     public fun removeTag (tag: String) {
        tokens = tokens.filter {
            if (it is TagToken && it.value == tag) false else true
        }
+    }
+
+    public fun markComplete(dateStr: String)  {
+        if (!this.isCompleted()) {
+            tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
+        }
     }
 
     public fun inFileFormat() = text
