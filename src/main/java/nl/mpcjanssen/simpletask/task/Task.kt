@@ -175,16 +175,16 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     var links: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).value }.toSortedSet()
+            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSortedSet()
         }
 
     var phoneNumbers: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).value }.toSortedSet()
+            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSortedSet()
         }
     var mailAddresses: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).value }.toSortedSet()
+            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSortedSet()
         }
 
 
