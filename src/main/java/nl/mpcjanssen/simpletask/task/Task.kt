@@ -201,19 +201,16 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             val pattern = recurrencePattern
             if (pattern != null) {
                 var deferFromDate : String = "";
-                if (recurrencePattern?.contains("+") ?: false) {
+                if (!(recurrencePattern?.contains("+") ?: true)) {
                     deferFromDate = completionDate?:"";
                 }
                 val newTask = Task(textWithoutCompletedInfo);
-                if (newTask.dueDate == null && newTask.dueDate == null) {
+                if (newTask.dueDate == null && newTask.thresholdDate == null) {
                     newTask.deferDueDate(pattern, deferFromDate);
-                } else {
-                    if (newTask.dueDate != null) {
+                } else if (newTask.dueDate != null) {
                         newTask.deferDueDate(pattern, deferFromDate);
-                    }
-                    if (newTask.thresholdDate != null) {
-                        newTask.deferThresholdDate(pattern, deferFromDate);
-                    }
+                } else {
+                    newTask.deferThresholdDate(pattern, deferFromDate);
                 }
                 if (!createDate.isNullOrEmpty()) {
                     newTask.createDate = dateStr;
