@@ -80,4 +80,10 @@ class TaskTest : TestCase() {
         }.map{it.text}.joinToString(" ")
         assertEquals("morgen", text)
     }
+
+    fun testCompletion() {
+        var str = "test"
+        assertEquals("x 2010-12-12 ${str}", Task(str).markComplete("2010-12-12") )
+        assertEquals("x 2000-12-12 ${str}", Task("x 2000-12-12 ${str}").markComplete("2010-12-12") )
+    }
 }
