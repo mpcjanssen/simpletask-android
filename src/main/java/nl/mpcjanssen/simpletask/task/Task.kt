@@ -91,20 +91,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
 
-        other as Task
-
-        if (tokens != other.tokens) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return tokens.hashCode()
-    }
 
     val text: String
         get() {
@@ -194,7 +181,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     public fun removeTag(tag: String) {
         tokens = tokens.filter {
-            if (it is TagToken && it.value == tag) false else true
+            if ((it is TagToken || it is ListToken) && it.text == tag) false else true
         }
     }
 
