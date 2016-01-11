@@ -122,7 +122,7 @@ class AddTaskBackground : Activity() {
             }
             val t: Task
             if (m_app!!.hasPrependDate()) {
-                t = Task(text, DateTime.today(TimeZone.getDefault()))
+                t = Task(text, DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT))
             } else {
                 t = Task(text)
             }

@@ -142,8 +142,8 @@ public class AddTask extends ThemedActivity {
             }
 
             if (iniTask != null && iniTask.getTags().size() == 1) {
-                List<String> ps = iniTask.getTags();
-                String project = ps.get(0);
+                SortedSet<String> ps = iniTask.getTags();
+                String project = ps.first();
                 if (!project.equals("-")) {
                     textInputField.append(" +" + project);
                 }
@@ -151,8 +151,8 @@ public class AddTask extends ThemedActivity {
 
 
             if (iniTask != null && iniTask.getLists().size() == 1) {
-                List<String> cs = iniTask.getLists();
-                String context = cs.get(0);
+                SortedSet<String> cs = iniTask.getLists();
+                String context = cs.first();
                 if (!context.equals("-")) {
                     textInputField.append(" @" + context);
                 }
@@ -357,12 +357,12 @@ public class AddTask extends ThemedActivity {
         for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
             if (m_backup!=null && m_backup.size()>0) {
                 // Don't modify create date for updated tasks
-                m_backup.get(0).init(line, null);
+                m_backup.get(0).update(line);
                 m_backup.remove(0);
             } else {
                 Task t ;
                 if (m_app.hasPrependDate()) {
-                   t = new Task(line, DateTime.now(TimeZone.getDefault()));
+                   t = new Task(line, Util.getTodayAsString());
                 } else {
                    t=  new Task(line, null);
                 }
@@ -581,7 +581,7 @@ public class AddTask extends ThemedActivity {
         textInputField.setText(newText);
     }
 
-    private void initListViewSelection(ListView lv, ArrayAdapter<String> lvAdapter, List<String> selectedItems) {
+    private void initListViewSelection(ListView lv, ArrayAdapter<String> lvAdapter, Set<String> selectedItems) {
         for (int i = 0; i < lvAdapter.getCount(); i++) {
             for (String item : selectedItems) {
                 if (item.equals(lvAdapter.getItem(i))) {

@@ -20,8 +20,8 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<Task> {
         } else if (b == null) {
             return 1
         }
-        val projectsA = a.tags
-        val projectsB = b.tags
+        val projectsA = a.tags.toArrayList()
+        val projectsB = b.tags.toArrayList()
 
         if (projectsA.isEmpty() && projectsB.isEmpty()) {
             return 0
