@@ -44,9 +44,9 @@ import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.Priority;
+import nl.mpcjanssen.simpletask.task.TToken;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
-import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -1424,17 +1424,17 @@ public class Simpletask extends ThemedActivity implements
                 } else {
                     holder.cbCompleted.setVisibility(View.GONE);
                 }
-                int tokensToShow = Token.SHOW_ALL;
-                tokensToShow = tokensToShow & ~Token.CREATION_DATE;
-                tokensToShow = tokensToShow & ~Token.COMPLETED;
-                tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
-                tokensToShow = tokensToShow & ~Token.THRESHOLD_DATE;
-                tokensToShow = tokensToShow & ~Token.DUE_DATE;
+                int tokensToShow = TToken.ALL;
+                tokensToShow = tokensToShow & ~TToken.CREATION_DATE;
+                tokensToShow = tokensToShow & ~TToken.COMPLETED;
+                tokensToShow = tokensToShow & ~TToken.COMPLETED_DATE;
+                tokensToShow = tokensToShow & ~TToken.THRESHOLD_DATE;
+                tokensToShow = tokensToShow & ~TToken.DUE_DATE;
                 if (mFilter.getHideLists()) {
-                    tokensToShow = tokensToShow & ~Token.LIST;
+                    tokensToShow = tokensToShow & ~TToken.LIST;
                 }
                 if (mFilter.getHideTags()) {
-                    tokensToShow = tokensToShow & ~Token.TTAG;
+                    tokensToShow = tokensToShow & ~TToken.TTAG;
                 }
                 SpannableString ss = new SpannableString(
                         task.showParts(tokensToShow).trim());
