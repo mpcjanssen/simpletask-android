@@ -389,7 +389,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
  */
     fun addList(listName : String) {
         if (!lists.contains(listName)) {
-            tokens += ListToken(listName);
+            tokens += ListToken("@"+listName);
         }
     }
 
@@ -398,7 +398,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     */
     fun addTag(tagName : String) {
         if (!tags.contains(tagName)) {
-            tokens += ListToken(tagName);
+            tokens += TagToken("+"+tagName);
         }
     }
 
