@@ -143,7 +143,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var dueDate: String?
         get() = getFirstToken<DueDateToken>()?.value ?: null
         set(dateStr: String?) {
-            if (dateStr == null) {
+            if (dateStr.isNullOrEmpty()) {
                 upsertToken<DueDateToken>(null)
             } else {
                 upsertToken(DueDateToken("due:${dateStr}"))
@@ -153,7 +153,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var thresholdDate: String?
         get() = getFirstToken<ThresholdDateToken>()?.value ?: null
         set(dateStr: String?) {
-            if (dateStr == null) {
+            if (dateStr.isNullOrEmpty()) {
                 upsertToken<ThresholdDateToken>(null)
             } else {
                 upsertToken(ThresholdDateToken("t:${dateStr}"))
@@ -462,7 +462,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             var nextToken = lexemes.getOrElse(0, { "" })
             MATCH_PRIORITY.matchEntire(nextToken)?.let {
                 tokens.add(PriorityToken(nextToken))
-                lexemes.drop(1)
+                lexemes = lexemes.drop(1)
             }
 
             nextToken = lexemes.getOrElse(0, { "" })
@@ -559,7 +559,7 @@ data class HiddenToken(override val text: String) :TToken {
 }
 data class PriorityToken(override val text: String) :TToken {
     override val value: Priority
-    get() = Priority.valueOf(text)
+    get() = Priority.toPriority(text.removeSurrounding("(",")"))
     override val type = TToken.PRIO;
 }
 
