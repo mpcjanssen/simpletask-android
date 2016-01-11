@@ -107,18 +107,18 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             val temp = ArrayList<TToken>()
             if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
                 temp.add(tokens.get(0))
-                tokens.drop(1)
+                tokens = tokens.drop(1)
                 if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
                     temp.add(tokens.first())
-                    tokens.drop(1)
+                    tokens = tokens.drop(1)
                 }
             }
             if (tokens.size > 0 && tokens.get(0) is PriorityToken) {
                 temp.add(tokens.first())
-                tokens.drop(1)
+                tokens = tokens.drop(1)
             }
             if (tokens.size > 0 && tokens.get(0) is CreateDateToken) {
-                tokens.drop(1)
+                tokens = tokens.drop(1)
             }
             newDate?.let {
                 temp.add(CreateDateToken(newDate))
@@ -147,8 +147,17 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             }
         }
 
-    var priority: Priority = Priority.NONE
+    var priority: Priority
         get() = getFirstToken<PriorityToken>()?.value ?: Priority.NONE
+        set(prio: Priority) {
+            if (prio == Priority.NONE) {
+                tokens = tokens.filter { if (it is PriorityToken) false else true }
+            } else if (tokens.any { it is PriorityToken }) {
+                upsertToken(PriorityToken(prio.inFileFormat()))
+            } else {
+                tokens = listOf(PriorityToken(prio.inFileFormat())) + tokens
+            }
+        }
 
     var recurrencePattern: String? = null
         get() = getFirstToken<RecurrenceToken>()?.value
