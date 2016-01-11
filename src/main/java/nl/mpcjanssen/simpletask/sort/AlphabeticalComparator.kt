@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
+import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.token.Token
 import java.util.*
@@ -15,6 +16,6 @@ class AlphabeticalComparator(caseSensitive: Boolean) : Comparator<Task> {
         if (b == null) {
             b = Task("")
         }
-        return stringComp.compare(a.showParts(Token.TEXT),b.showParts(Token.TEXT))
+        return stringComp.compare(a.showParts(TToken.TEXT),b.showParts(TToken.TEXT))
     }
 }

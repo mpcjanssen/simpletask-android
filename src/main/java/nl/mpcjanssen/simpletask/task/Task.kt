@@ -27,8 +27,12 @@
 package nl.mpcjanssen.simpletask.task
 
 
+import android.support.annotation.NonNull
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Constants
+import nl.mpcjanssen.simpletask.task.token.Token
+import nl.mpcjanssen.simpletask.util.addInterval
 
 import java.util.*
 
@@ -138,7 +142,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var thresholdDate: String?
         get() = getFirstToken<ThresholdDateToken>()?.value ?: null
         set(dateStr: String?) {
-            if (dateStr==null) {
+            if (dateStr == null) {
                 upsertToken<ThresholdDateToken>(null)
             } else {
                 upsertToken(ThresholdDateToken("t:${dateStr}"))
@@ -152,46 +156,129 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<RecurrenceToken>()?.value
 
 
-    var tags: Set<String> = emptySet()
+    var tags: SortedSet<String> = emptySet<String>().toSortedSet()
         get() {
-            return tokens.filter { it is TagToken }.map {it -> (it as TagToken).value}.toSet()
+            return tokens.filter { it is TagToken }.map { it -> (it as TagToken).value }.toSortedSet()
         }
 
-    var lists: Set<String> = emptySet()
+    var lists: SortedSet<String> = emptySet<String>().toSortedSet()
         get() {
-            return tokens.filter { it is ListToken }.map {it -> (it as ListToken).value}.toSet()
+            return tokens.filter { it is ListToken }.map { it -> (it as ListToken).value }.toSortedSet()
         }
 
     var links: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is LinkToken }.map {it -> (it as LinkToken).value}.toSet()
+            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).value }.toSortedSet()
         }
 
     var phoneNumbers: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is PhoneToken }.map {it -> (it as PhoneToken).value}.toSet()
+            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).value }.toSortedSet()
         }
     var mailAddresses: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is MailToken }.map {it -> (it as MailToken).value}.toSet()
+            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).value }.toSortedSet()
         }
 
 
-    public fun removeTag (tag: String) {
-       tokens = tokens.filter {
-           if (it is TagToken && it.value == tag) false else true
-       }
+    public fun removeTag(tag: String) {
+        tokens = tokens.filter {
+            if (it is TagToken && it.value == tag) false else true
+        }
     }
 
-    public fun markComplete(dateStr: String)  {
+    public fun markComplete(dateStr: String) : Task? {
         if (!this.isCompleted()) {
+            val textWithoutCompletedInfo = text
             tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
+            val pattern = recurrencePattern
+            if (pattern != null) {
+                var deferFromDate : String = "";
+                if (recurrencePattern?.contains("+") ?: false) {
+                    deferFromDate = completionDate?:"";
+                }
+                val newTask = Task(textWithoutCompletedInfo);
+                if (newTask.dueDate == null && newTask.dueDate == null) {
+                    newTask.deferDueDate(pattern, deferFromDate);
+                } else {
+                    if (newTask.dueDate != null) {
+                        newTask.deferDueDate(pattern, deferFromDate);
+                    }
+                    if (newTask.thresholdDate != null) {
+                        newTask.deferThresholdDate(pattern, deferFromDate);
+                    }
+                }
+                if (!createDate.isNullOrEmpty()) {
+                    newTask.createDate = dateStr;
+                }
+                return newTask
+            }
+        }
+        return null
+    }
+
+    public fun markIncomplete() {
+        tokens = tokens.filter {
+             when (it) {
+                is CompletedDateToken -> false
+                is CompletedToken -> false
+                else -> true
+            }
         }
     }
+
+    fun deferThresholdDate(deferString:String, deferFromDate:String) {
+        if (DateTime.isParseable(deferString))
+        {
+            thresholdDate = deferString
+            return
+        }
+        if (deferString == "")
+        {
+            thresholdDate = null
+            return
+        }
+        val olddate: String?
+        if (deferFromDate.isNullOrEmpty())
+        {
+            olddate = thresholdDate
+        }
+        else
+        {
+            olddate = deferFromDate
+        }
+        val newDate = addInterval(olddate?.toDateTime(), deferString)
+        thresholdDate = newDate?.format(Constants.DATE_FORMAT)
+    }
+
+    fun deferDueDate(deferString:String, deferFromDate:String) {
+        if (DateTime.isParseable(deferString))
+        {
+            dueDate = deferString
+            return
+        }
+        if (deferString == "")
+        {
+            dueDate = null
+            return
+        }
+        val olddate: String?
+        if (deferFromDate.isNullOrEmpty())
+        {
+            olddate = dueDate
+        }
+        else
+        {
+            olddate = deferFromDate
+        }
+        val newDate = addInterval(olddate?.toDateTime(), deferString)
+        dueDate = newDate?.format(Constants.DATE_FORMAT)
+    }
+
 
     public fun inFileFormat() = text
 
-    public fun inFuture() : Boolean {
+    public fun inFuture(): Boolean {
         val date = thresholdDate
         date?.let {
             return date.compareTo(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)) > 0
@@ -199,20 +286,81 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return false
     }
 
-    public fun isHidden() : Boolean {
+    public fun isHidden(): Boolean {
         return getFirstToken<HiddenToken>()?.value ?: false
     }
 
-    public fun isVisible() : Boolean {
+    public fun isVisible(): Boolean {
         return !isHidden()
     }
 
-    public fun isCompleted() : Boolean {
-        return getFirstToken<CompletedToken>()!=null
+    public fun isCompleted(): Boolean {
+        return getFirstToken<CompletedToken>() != null
+    }
+
+    fun showParts(parts: Int): String? {
+        return tokens.filter {
+            it.type and parts == 1
+        }.joinToString("")
+    }
+
+    public fun getHeader(sort: String, empty: String): String {
+        if (sort.contains("by_context")) {
+            if (lists.size > 0) {
+                return lists.first();
+            } else {
+                return empty;
+            }
+        } else if (sort.contains("by_project")) {
+            if (tags.size > 0) {
+                return tags.first();
+            } else {
+                return empty;
+            }
+        } else if (sort.contains("by_threshold_date")) {
+            return thresholdDate?:empty;
+        } else if (sort.contains("by_prio")) {
+            return priority.getCode();
+        } else if (sort.contains("by_due_date")) {
+            return dueDate?:empty;
+        }
+        return "";
+    }
+
+    /* Adds the task to list Listname
+** If the task is already on that list, it does nothing
+ */
+    fun addList(listName : String) {
+        if (!lists.contains(listName)) {
+            tokens += ListToken(listName);
+        }
+    }
+
+    /* Tags the task with tag
+    ** If the task already has te tag, it does nothing
+    */
+    fun addTag(tagName : String) {
+        if (!tags.contains(tagName)) {
+            tokens += ListToken(tagName);
+        }
+    }
+
+
+
+    fun initWithFilter(mFilter : ActiveFilter) {
+        if (!mFilter.getContextsNot() && mFilter.getContexts().size()==1) {
+            addList(mFilter.getContexts().get(0));
+        }
+
+        if (!mFilter.getProjectsNot() && mFilter.getProjects().size()==1) {
+            addTag(mFilter.getProjects().get(0));
+        }
     }
 
 
     companion object {
+        val DUE_DATE = 1
+        val THRESHOLD_DATE = 2
         var TAG = this.javaClass.simpleName
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")
@@ -309,35 +457,57 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 }
 
+
 abstract interface TToken {
     val text: String
     val value: Any?
-    val type: String
-      get() = this.javaClass.simpleName
+    val type: Int
+    companion object {
+        val WHITE_SPACE = 1
+        val LIST = 1 shl 1
+        val TTAG = 1 shl 2
+        val COMPLETED = 1 shl 3
+        val COMPLETED_DATE = 1 shl 4
+        val CREATION_DATE = 1 shl 5
+        val TEXT = 1 shl 6
+        val PRIO = 1 shl 7
+        val THRESHOLD_DATE = 1 shl 8
+        val DUE_DATE = 1 shl 9
+        val HIDDEN = 1 shl 10
+        val RECURRENCE = 1 shl 11
+        val PHONE = 1 shl 12
+        val LINK = 1 shl 13
+        val MAIL = 1 shl 14
+    }
 }
 
 data class CompletedToken(override val value: Boolean) :TToken {
     override val text: String
     get() = if (value) "x" else ""
+    override val type = TToken.COMPLETED;
 }
 
 data class HiddenToken(override val text: String) :TToken {
     override val value: Boolean
     get() = if (text == "h:1") true else false
+    override val type = TToken.HIDDEN;
 }
 data class PriorityToken(override val text: String) :TToken {
     override val value: Priority
     get() = Priority.valueOf(text)
+    override val type = TToken.PRIO;
 }
 
 data class ListToken(override val text: String) : TToken {
     override val value: String
         get() = text.substring(1)
+    override val type = TToken.LIST;
 }
 
 data class TagToken(override val text: String) : TToken {
     override val value: String
         get() = text.substring(1)
+    override val type = TToken.TTAG;
 }
 
 // The value of this token is the val part in key:val
@@ -346,16 +516,36 @@ interface KeyValueToken : TToken {
     override val value: String
     get() = text.split(":").last()
 }
-data class CreateDateToken(override val text: String) : KeyValueToken
-data class CompletedDateToken(override val text: String) : KeyValueToken
-data class DueDateToken(override val text: String) : KeyValueToken
-data class ThresholdDateToken(override val text: String) : KeyValueToken
-data class TextToken(override val text: String) : KeyValueToken
-data class WhiteSpaceToken(override val text: String) : KeyValueToken
-data class MailToken(override val text: String) : KeyValueToken
-data class LinkToken(override val text: String) : KeyValueToken
-data class PhoneToken(override val text: String) : KeyValueToken
-data class RecurrenceToken(override val text: String) : KeyValueToken
+data class CreateDateToken(override val text: String) : KeyValueToken {
+    override val type = TToken.CREATION_DATE;
+}
+data class CompletedDateToken(override val text: String) : KeyValueToken {
+    override val type = TToken.COMPLETED_DATE;
+}
+data class DueDateToken(override val text: String) : KeyValueToken {
+    override val type = TToken.DUE_DATE;
+}
+data class ThresholdDateToken(override val text: String) : KeyValueToken {
+    override val type = TToken.THRESHOLD_DATE;
+}
+data class TextToken(override val text: String) : KeyValueToken {
+    override val type = TToken.TEXT;
+}
+data class WhiteSpaceToken(override val text: String) : KeyValueToken {
+    override val type = TToken.WHITE_SPACE;
+}
+data class MailToken(override val text: String) : KeyValueToken {
+    override val type = TToken.MAIL;
+}
+data class LinkToken(override val text: String) : KeyValueToken {
+    override val type = TToken.LINK;
+}
+data class PhoneToken(override val text: String) : KeyValueToken {
+    override val type = TToken.PHONE;
+}
+data class RecurrenceToken(override val text: String) : KeyValueToken {
+    override val type = TToken.RECURRENCE;
+}
 
 // Extension functions
 

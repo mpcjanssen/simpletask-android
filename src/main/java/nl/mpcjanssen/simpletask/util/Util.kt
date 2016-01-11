@@ -46,6 +46,7 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.toDateTime
 import org.luaj.vm2.*
 import java.io.*
 import java.nio.channels.FileChannel
@@ -128,7 +129,7 @@ val log = Logger;
                 header = newHeader
             }
 
-            if (t.isVisible || showHidden) {
+            if (t.isVisible() || showHidden) {
                 // enduring tasks should not be displayed
                 val taskLine = TaskLine(t)
                 result.add(taskLine)
@@ -278,34 +279,12 @@ val log = Logger;
     fun initGlobals(globals: Globals, t: Task) {
         globals.set("task", t.inFileFormat())
 
-        if (t.dueDate != null) {
-            globals.set("due", (t.dueDate!!.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("due", LuaValue.NIL)
-        }
+        globals.set("due", dateStringToLuaLong(t.dueDate))
+        globals.set("threshold", dateStringToLuaLong(t.thresholdDate))
+        globals.set("createdate", dateStringToLuaLong(t.createDate))
+        globals.set("completiondate", dateStringToLuaLong(t.completionDate))
 
-
-        if (t.thresholdDate != null) {
-            globals.set("threshold", (t.thresholdDate!!.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("threshold", LuaValue.NIL)
-        }
-
-
-        if (t.createDate != null) {
-            globals.set("createdate", (DateTime(t.createDate).getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("createdate", LuaValue.NIL)
-        }
-
-
-        if (t.completionDate != null) {
-            globals.set("completiondate", (DateTime(t.completionDate).getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("completiondate", LuaValue.NIL)
-        }
-
-        globals.set("completed", LuaBoolean.valueOf(t.isCompleted))
+        globals.set("completed", LuaBoolean.valueOf(t.isCompleted()))
         globals.set("priority", t.priority.code)
 
         globals.set("tags", javaListToLuaTable(t.tags))
@@ -316,10 +295,17 @@ val log = Logger;
         return javaListToLuaTable(taskList.map {it.inFileFormat()})
     }
 
-    public fun javaListToLuaTable(javaList: List<String>): LuaValue {
-        val size = javaList.size
+    public fun dateStringToLuaLong(dateString: String?): LuaValue {
+        dateString?.toDateTime()?.let {
+            return LuaValue.valueOf((it.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
+        }
+        return LuaValue.NIL
+    }
+
+    public fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
+        val size = javaList.count()
         if (size == 0) return LuaValue.NIL
-        val luaArray = arrayOfNulls<LuaString>(javaList.size)
+        val luaArray = arrayOfNulls<LuaString>(javaList.count())
         var i = 0
         for (item in javaList) {
             luaArray[i] = LuaString.valueOf(item)

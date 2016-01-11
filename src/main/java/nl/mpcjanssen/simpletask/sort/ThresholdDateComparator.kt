@@ -23,8 +23,8 @@ class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<Task> {
         // Use create date as threshold date
         // if configured in the settings.
         if (createAsBackup) {
-            dateA = dateA ?: a.stringToDateTime(a.createDate)
-            dateB = dateB ?: b.stringToDateTime(b.createDate)
+            dateA = dateA ?: a.createDate
+            dateB = dateB ?: b.createDate
         }
         if (dateA == null && dateB == null) {
             result = 0

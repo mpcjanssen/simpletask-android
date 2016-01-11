@@ -223,7 +223,7 @@ public class TodoList {
             @Override
             public void run() {
 
-                Task extra = task.markComplete(DateTime.now(TimeZone.getDefault()));
+                Task extra = task.markComplete(Util.getTodayAsString());
                 if (extra != null) {
                     mTasks.add(extra);
                 }
