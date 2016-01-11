@@ -176,7 +176,7 @@ public class CalendarSync {
 
             // Check due date:
             if ((m_sync_type & SYNC_TYPE_DUES) != 0) {
-                dt = task.getDueDate();
+                dt = task.getDueDateDT();
                 if (dt != null) {
                     text = task.getText();
                     insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_due));
@@ -185,7 +185,7 @@ public class CalendarSync {
 
             // Check threshold date:
             if ((m_sync_type & SYNC_TYPE_THRESHOLDS) != 0) {
-                dt = task.getThresholdDate();
+                dt = task.getThresholdDateDT();
                 if (dt != null) {
                     if (text == null) text = task.getText();
                     insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_thre));

@@ -327,6 +327,14 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return "";
     }
 
+    fun getDueDateDT() :DateTime? {
+        return dueDate?.toDateTime()
+    }
+
+    fun getThresholdDateDT() :DateTime? {
+        return thresholdDate?.toDateTime()
+    }
+
     /* Adds the task to list Listname
 ** If the task is already on that list, it does nothing
  */
@@ -359,8 +367,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
     companion object {
-        val DUE_DATE = 1
-        val THRESHOLD_DATE = 2
+        const val DUE_DATE = 1
+        const val THRESHOLD_DATE = 2
         var TAG = this.javaClass.simpleName
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")
