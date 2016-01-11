@@ -12,6 +12,9 @@ class TaskTest : TestCase() {
         assertEquals(t, Task(t).text)
         t = "  2012-14-11 rec:12w mail@example.com  "
         assertEquals(t, Task(t).text)
+
+        t = "(B) 2012-14-11 rec:12w mail@example.com  "
+        assertEquals(t, Task(t).text)
     }
 
     fun testLexing() {
@@ -83,7 +86,11 @@ class TaskTest : TestCase() {
 
     fun testCompletion() {
         var str = "test"
-        assertEquals("x 2010-12-12 ${str}", Task(str).markComplete("2010-12-12") )
-        assertEquals("x 2000-12-12 ${str}", Task("x 2000-12-12 ${str}").markComplete("2010-12-12") )
+        val t1 =  Task(str)
+        t1.markComplete("2010-12-12")
+        assertEquals("x 2010-12-12 ${str}", t1.text )
+        val tc =  Task("x 2000-12-12 ${str}")
+        tc.markComplete("2010-12-12")
+        assertEquals("x 2000-12-12 ${str}", tc.text )
     }
 }

@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask.task;
 import junit.framework.TestCase;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
-import nl.mpcjanssen.simpletask.task.token.Token;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class BugsTest extends TestCase {
 
     public void testBug50() {
         Task t = new Task("2012-01-01 @list test");
-        assertEquals("test",t.showParts(~Token.LIST & ~Token.CREATION_DATE).trim());
+        assertEquals("test",t.showParts(~TToken.LIST & ~TToken.CREATION_DATE).trim());
         
     }
 }
