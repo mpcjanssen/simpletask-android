@@ -129,6 +129,11 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
+    public boolean changesPending() {
+        return false;
+    }
+
+    @Override
     public boolean isLoading() {
         return mIsLoading;
     }
