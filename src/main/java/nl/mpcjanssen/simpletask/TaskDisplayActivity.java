@@ -12,7 +12,10 @@ public class TaskDisplayActivity extends ThemedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_display);
+        // setContentView(R.layout.activity_task_display);
+        // Directly select all for now
+        setResult(Activity.RESULT_FIRST_USER + Token.SHOW_ALL);
+        finish();
     }
 
 
