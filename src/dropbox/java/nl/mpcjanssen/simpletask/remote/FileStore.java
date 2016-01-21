@@ -108,8 +108,10 @@ public class FileStore implements FileStoreInterface {
         fileOperationsQueue.post(r);
     }
 
+    @Override
     public boolean changesPending() {
         if (mPrefs == null) {
+            log.error(TAG, "Couldn't read pending changes state, mPrefs == null");
             return false;
         }
         return  mPrefs.getBoolean(LOCAL_CHANGES_PENDING, false);
@@ -128,7 +130,11 @@ public class FileStore implements FileStoreInterface {
     }
 
     private void setChangesPending(boolean pending) {
+        if (pending && (mApp != null)) {
+            Util.showToastLong(mApp, R.string.write_failed);
+        }
         if (mPrefs == null) {
+            log.error(TAG, "Couldn't save pending changes, mPrefs == null");
             return ;
         }
         if (pending) {
@@ -136,6 +142,7 @@ public class FileStore implements FileStoreInterface {
         }
         SharedPreferences.Editor edit = mPrefs.edit();
         edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit();
+        mApp.getLocalBroadCastManager().sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES));
     }
 
     private boolean isOnline() {
@@ -307,14 +314,9 @@ public class FileStore implements FileStoreInterface {
         }
 
         List<Task> tasks = new CopyOnWriteArrayList();
-
-        if (!isOnline()) {
-            log.info(TAG, "Device is offline loading from cache");
-            mIsLoading = false;
-            tasks.addAll(tasksFromCache());
-        } else if (changesPending()) {
+        if (changesPending()) {
             log.info(TAG, "Not loading, changes pending");
-            Util.showToastLong(mApp,"Saving pending changes");
+            Util.showToastLong(mApp, "Saving pending changes");
             mIsLoading = false;
             tasks.addAll(tasksFromCache());
             saveTasksToFile(path, tasks, backup, eol);
@@ -393,10 +395,6 @@ public class FileStore implements FileStoreInterface {
         queueRunnable("startWatching", new Runnable() {
             @Override
             public void run() {
-
-                if (!isOnline()) {
-                    return;
-                }
                 continuePolling = true;
                 if (pollingTask == null) {
                     log.info(TAG, "Initializing slow polling thread");
@@ -459,12 +457,6 @@ public class FileStore implements FileStoreInterface {
         }
         List<String> lines = Util.tasksToString(tasks);
         final String contents = Util.join(lines, eol) + eol;
-
-        if (!isOnline()) {
-            saveToCache(path, getLocalTodoRev(), contents);
-            setChangesPending(true);
-            throw new IOException("Device is offline");
-        }
         Runnable r = new Runnable() {
 
             @Override
@@ -478,8 +470,8 @@ public class FileStore implements FileStoreInterface {
                     DropboxAPI.Entry newEntry = mDBApi.putFile(path, in,
                             toStore.length, rev, null);
                     rev = newEntry.rev;
-
                     newName = newEntry.path;
+                    setChangesPending(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                     // Changes are pending
@@ -489,8 +481,6 @@ public class FileStore implements FileStoreInterface {
                     // if actual save fails (e.g. when the device is offline)
                     saveToCache(path, rev, contents);
                 }
-                // Saved success, nothing pending
-                setChangesPending(false);
 
                 if (!newName.equals(path)) {
                     // The file was written under another name
@@ -547,16 +537,12 @@ public class FileStore implements FileStoreInterface {
 
     @Override
     public void sync() {
-        if (!isOnline()) {
-            Util.showToastLong(mApp, "Device is offline");
-            return;
-        }
         mFileChangedListerer.fileChanged(null);
     }
 
     @Override
     public String readFile(String path, @Nullable FileReadListener fileRead) throws IOException {
-        if (!isAuthenticated() || !isOnline()) {
+        if (!isAuthenticated()) {
             return "";
         }
         mIsLoading = true;

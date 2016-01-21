@@ -37,6 +37,14 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+
+        <View
+            android:id="@+id/pendingchanges"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="#FF0000"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/actionbar"
             android:showDividers="middle"
