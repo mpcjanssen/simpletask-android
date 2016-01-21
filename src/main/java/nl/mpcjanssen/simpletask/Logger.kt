@@ -1,8 +1,5 @@
 package nl.mpcjanssen.simpletask
 
-import android.content.ContentValues
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import nl.mpcjanssen.simpletask.dao.gen.LogItem
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao

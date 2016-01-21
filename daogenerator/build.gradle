@@ -12,6 +12,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
+//noinspection GroovyAssignabilityCheck
 sourceSets {
     main {
         java {

@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.sort
 
-import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 

@@ -61,7 +61,7 @@ public class LogScreen extends ThemedActivity {
     private void sendLog() {
         StringBuilder logContents = new StringBuilder();
         for (LogItem item : m_app.logDao.loadAll()){
-            logContents.append(logItemToString(item) + "\n");
+            logContents.append(logItemToString(item)).append("\n");
         }
         Util.shareText(LogScreen.this, logContents.toString() );
     }
