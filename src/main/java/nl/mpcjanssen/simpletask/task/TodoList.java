@@ -28,7 +28,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.*;
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.dao.gen.TodoListStatus;
@@ -36,7 +35,6 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
-
 
 import java.io.IOException;
 import java.util.*;
