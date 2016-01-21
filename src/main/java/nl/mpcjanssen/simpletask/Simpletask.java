@@ -16,7 +16,6 @@ import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.*;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -26,7 +25,9 @@ import android.provider.CalendarContract.Events;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.widget.DrawerLayout;
@@ -77,8 +78,7 @@ public class Simpletask extends ThemedActivity implements
     TaskAdapter m_adapter;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
-    @Nullable
-    private ActionMode actionMode;
+
     // Drawer vars
     private ListView m_leftDrawerList;
     private ListView m_rightDrawerList;
@@ -89,7 +89,6 @@ public class Simpletask extends ThemedActivity implements
     private Dialog mOverlayDialog;
     private boolean mIgnoreScrollEvents = false;
     private Logger log;
-    private ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -215,8 +214,6 @@ public class Simpletask extends ThemedActivity implements
 
     private void selectAllTasks() {
         ArrayList<Task> selectedTasks = new ArrayList<>();
-        ListView lv = getListView();
-        int itemCount = m_adapter.visibleLines.size();
         for (VisibleLine vline : m_adapter.visibleLines ) {
             // Only check tasks that are not checked yet
             // and skip headers
@@ -361,7 +358,7 @@ public class Simpletask extends ThemedActivity implements
                     onItemLongClick(parent, view, position, id);
                 } else {
                     // Decorate the links array
-                    ArrayList<String> titles = new ArrayList<String>();
+                    ArrayList<String> titles = new ArrayList<>();
                     for (int i = 0 ; i < links.size() ; i ++) {
                         switch (actions.get(i)) {
                             case ACTION_SMS:
@@ -434,7 +431,7 @@ public class Simpletask extends ThemedActivity implements
         List<Task> selection = getTodoList().getSelectedTasks();
         int pos = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
         if (pos!= -1 && getTodoList().get(pos)!=null) {
-            selection = new ArrayList();
+            selection = new ArrayList<>();
             Task selectedTask = getTodoList().get(pos);
             selection.add(selectedTask);
             m_scrollPosition = m_adapter.getPosition(selectedTask);
@@ -703,9 +700,13 @@ public class Simpletask extends ThemedActivity implements
         getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
     }
 
-    private void deferTasks(List<Task> tasks, final int dateType) {
+    private void deferTasks(List<Task> tasks, final DateType dateType) {
         final List<Task> tasksToDefer = tasks;
-        Dialog d = Util.createDeferDialog(this, dateType, true, new InputDialogListener() {
+        int titleId = R.id.defer_due;
+        if (dateType == DateType.THRESHOLD) {
+            titleId = R.id.defer_threshold;
+        }
+        Dialog d = Util.createDeferDialog(this, titleId, true, new InputDialogListener() {
             @Override
             public void onClick(@Nullable String selected) {
                 if (selected == null) {
@@ -902,12 +903,12 @@ public class Simpletask extends ThemedActivity implements
     @Override
     public void onBackPressed() {
         if (m_drawerLayout != null) {
-            if (m_drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-                m_drawerLayout.closeDrawer(Gravity.LEFT);
+            if (m_drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                m_drawerLayout.closeDrawer(GravityCompat.START);
                 return;
             }
-            if (m_drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                m_drawerLayout.closeDrawer(Gravity.RIGHT);
+            if (m_drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                m_drawerLayout.closeDrawer(GravityCompat.END);
                 return;
             }
         }
@@ -1002,7 +1003,7 @@ public class Simpletask extends ThemedActivity implements
                 mFilter.saveInPrefs(TodoApplication.getPrefs());
                 m_adapter.setFilteredTasks();
                 if (m_drawerLayout != null) {
-                    m_drawerLayout.closeDrawer(Gravity.RIGHT);
+                    m_drawerLayout.closeDrawer(GravityCompat.END);
                 }
                 updateDrawers();
             }
@@ -1236,10 +1237,10 @@ public class Simpletask extends ThemedActivity implements
                         archiveTasks(checkedTasks);
                         break;
                     case R.id.defer_due:
-                        deferTasks(checkedTasks, Task.DUE_DATE);
+                        deferTasks(checkedTasks, DateType.DUE);
                         break;
                     case R.id.defer_threshold:
-                        deferTasks(checkedTasks, Task.THRESHOLD_DATE);
+                        deferTasks(checkedTasks, DateType.THRESHOLD);
                         break;
                     case R.id.priority:
                         prioritizeTasks(checkedTasks);
@@ -1454,44 +1455,63 @@ public class Simpletask extends ThemedActivity implements
                 if (mFilter.getHideTags()) {
                     tokensToShow = tokensToShow & ~TToken.TTAG;
                 }
-                SpannableString ss = new SpannableString(
-                        task.showParts(tokensToShow).trim());
+                String txt = "";
+                if (task!=null ) {
+                    txt = task.showParts(tokensToShow).trim();
+                }
+                SpannableString ss = new SpannableString(txt);
+
                 ArrayList<String> colorizeStrings = new ArrayList<>();
-                for (String context : task.getLists()) {
+                Set<String> contexts = new TreeSet<>();
+                if (task!=null) {
+                    contexts = task.getLists();
+                }
+                for (String context : contexts) {
                     colorizeStrings.add("@" + context);
                 }
                 Util.setColor(ss, Color.GRAY, colorizeStrings);
                 colorizeStrings.clear();
-                for (String project : task.getTags()) {
+                Set<String> projects = new TreeSet<>();
+                if (task!=null) {
+                    projects = task.getTags();
+                }
+                for (String project : projects) {
                     colorizeStrings.add("+" + project);
                 }
                 Util.setColor(ss, Color.GRAY, colorizeStrings);
 
-                Resources res = getResources();
                 int prioColor;
-                switch (task.getPriority()) {
+                Priority prio  = Priority.NONE;
+                if (task != null) {
+                    prio = task.getPriority();
+                }
+                switch (prio) {
                     case A:
-                        prioColor = res.getColor(android.R.color.holo_red_dark);
+                        prioColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark);
                         break;
                     case B:
-                        prioColor = res.getColor(android.R.color.holo_orange_dark);
+                        prioColor = ContextCompat.getColor(m_app, android.R.color.holo_orange_dark);
                         break;
                     case C:
-                        prioColor = res.getColor(android.R.color.holo_green_dark);
+                        prioColor = ContextCompat.getColor(m_app, android.R.color.holo_green_dark);
                         break;
                     case D:
-                        prioColor = res.getColor(android.R.color.holo_blue_dark);
+                        prioColor = ContextCompat.getColor(m_app, android.R.color.holo_blue_dark);
                         break;
                     default:
-                        prioColor = res.getColor(android.R.color.darker_gray);
+                        prioColor = ContextCompat.getColor(m_app, android.R.color.darker_gray);
                 }
-                Util.setColor(ss, prioColor, task.getPriority()
+                Util.setColor(ss, prioColor, prio
                         .inFileFormat());
                 holder.tasktext.setText(ss);
 
                 handleEllipsizing(holder.tasktext);
 
-                if (task.isCompleted()) {
+                boolean completed = false;
+                if (task!=null) {
+                    completed = task.isCompleted();
+                }
+                if (completed) {
                     // log.info( "Striking through " + task.getText());
                     holder.tasktext.setPaintFlags(holder.tasktext
                             .getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -1515,21 +1535,23 @@ public class Simpletask extends ThemedActivity implements
                             .setPaintFlags(holder.taskage.getPaintFlags()
                                     & ~Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.cbCompleted.setChecked(false);
-                    holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            completeTasks(task);
-                            closeSelectionMode();
-                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
-                        }
-                    });
+                    if (task!=null) {
+                        holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                completeTasks(task);
+                                closeSelectionMode();
+                                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
+                            }
+                        });
+                    }
                 }
 
                 Context mContext = TodoApplication.getAppContext();
 
                 String relAge = task.getRelativeAge(mContext);
-                SpannableString relDue = task.getRelativeDueDate(mContext, res.getColor(android.R.color.holo_green_light),
-                        res.getColor(android.R.color.holo_red_light),
+                SpannableString relDue = task.getRelativeDueDate(mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
+                        ContextCompat.getColor(m_app, android.R.color.holo_red_light),
                         m_app.hasColorDueDates());
                 String relThres = task.getRelativeThresholdDate(mContext);
                 if (!Strings.isEmptyOrNull(relAge) && !mFilter.getHideCreateDate()) {
@@ -1591,7 +1613,7 @@ public class Simpletask extends ThemedActivity implements
                 return false;
             }
 
-            if (visibleLines == null || visibleLines.size() < position+1) {
+            if (visibleLines.size() < position+1) {
                 return false;
             }
             VisibleLine line = visibleLines.get(position);
