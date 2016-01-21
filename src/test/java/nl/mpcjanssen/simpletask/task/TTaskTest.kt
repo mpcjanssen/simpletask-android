@@ -88,9 +88,9 @@ class TaskTest : TestCase() {
         var str = "test"
         val t1 =  Task(str)
         t1.markComplete("2010-12-12")
-        assertEquals("x 2010-12-12 ${str}", t1.text )
-        val tc =  Task("x 2000-12-12 ${str}")
+        assertEquals("x 2010-12-12 $str", t1.text )
+        val tc =  Task("x 2000-12-12 $str")
         tc.markComplete("2010-12-12")
-        assertEquals("x 2000-12-12 ${str}", tc.text )
+        assertEquals("x 2000-12-12 $str", tc.text )
     }
 }

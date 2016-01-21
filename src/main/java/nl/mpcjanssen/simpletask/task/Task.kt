@@ -106,18 +106,18 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         set(newDate: String?) {
             val temp = ArrayList<TToken>()
             if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
-                temp.add(tokens.get(0))
+                temp.add(tokens[0])
                 tokens = tokens.drop(1)
                 if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
                     temp.add(tokens.first())
                     tokens = tokens.drop(1)
                 }
             }
-            if (tokens.size > 0 && tokens.get(0) is PriorityToken) {
+            if (tokens.size > 0 && tokens[0] is PriorityToken) {
                 temp.add(tokens.first())
                 tokens = tokens.drop(1)
             }
-            if (tokens.size > 0 && tokens.get(0) is CreateDateToken) {
+            if (tokens.size > 0 && tokens[0] is CreateDateToken) {
                 tokens = tokens.drop(1)
             }
             newDate?.let {
@@ -133,7 +133,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             if (dateStr.isNullOrEmpty()) {
                 upsertToken<DueDateToken>(null)
             } else {
-                upsertToken(DueDateToken("due:${dateStr}"))
+                upsertToken(DueDateToken("due:$dateStr"))
             }
         }
 
@@ -143,7 +143,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             if (dateStr.isNullOrEmpty()) {
                 upsertToken<ThresholdDateToken>(null)
             } else {
-                upsertToken(ThresholdDateToken("t:${dateStr}"))
+                upsertToken(ThresholdDateToken("t:$dateStr"))
             }
         }
 
@@ -324,7 +324,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         } else if (sort.contains("by_threshold_date")) {
             return thresholdDate?:empty;
         } else if (sort.contains("by_prio")) {
-            return priority.getCode();
+            return priority.code;
         } else if (sort.contains("by_due_date")) {
             return dueDate?:empty;
         }
@@ -405,12 +405,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
     fun initWithFilter(mFilter : ActiveFilter) {
-        if (!mFilter.getContextsNot() && mFilter.getContexts().size == 1) {
-            addList(mFilter.getContexts().get(0));
+        if (!mFilter.contextsNot && mFilter.contexts.size == 1) {
+            addList(mFilter.contexts[0]);
         }
 
-        if (!mFilter.getProjectsNot() && mFilter.getProjects().size == 1) {
-            addTag(mFilter.getProjects().get(0));
+        if (!mFilter.projectsNot && mFilter.projects.size == 1) {
+            addTag(mFilter.projects[0]);
         }
     }
 
