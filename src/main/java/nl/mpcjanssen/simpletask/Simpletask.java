@@ -104,6 +104,7 @@ public class Simpletask extends ThemedActivity implements
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI);
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
+        intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES);
 
 
         localBroadcastManager = m_app.getLocalBroadCastManager();
@@ -130,6 +131,8 @@ public class Simpletask extends ThemedActivity implements
                     mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, true);
                 } else if (intent.getAction().equals(Constants.BROADCAST_SYNC_DONE)) {
                     mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, false);
+                } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_PENDING_CHANGES)) {
+                    updatePendingChanges();
                 }
             }
         };
@@ -453,6 +456,21 @@ public class Simpletask extends ThemedActivity implements
         } 
         updateDrawers();
         mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
+        updatePendingChanges();
+
+
+    }
+
+    private void updatePendingChanges() {
+        // Show pending changes indicator
+        View pendingChanges = findViewById(R.id.pendingchanges);
+        if (pendingChanges!=null) {
+            if (getFileStore().changesPending()) {
+                pendingChanges.setVisibility(View.VISIBLE);
+            } else {
+                pendingChanges.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void setSelectedTasks(List<Task> tasks) {
