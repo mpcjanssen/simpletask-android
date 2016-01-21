@@ -1,6 +1,19 @@
 ﻿Changelog
 =========
 
+6.3.5
+-----
+
+- Fix bug in pending changes handling for Dropbox, which could lead to data loss.
+- Show a small red bar if there are unsaved changes.
+- Name both versions Simpletask. Simpletask Cloudless looks ugly in a launcher.
+- Add a setting to use the `created date` when sorting by threshold date and the threshold date is empty.
+- Extend Dropbox polling timeout. Should reduce battery usage.
+- Don't change create date on updated tasks, fixes #337.
+- Refresh views and clear logs at midnight. Fixes #93.
+- Merged: Completed German translation (twckr #335).
+
+
 6.3.4
 -----
 
