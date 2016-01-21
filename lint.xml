@@ -4,4 +4,6 @@
     <!-- Disable this given check in this project -->
     <issue id="InvalidPackage" severity="warning"/>
     <issue id="MissingTranslation" severity="warning"/>
+    <!-- SharedPrefs lint is fubar -->
+    <issue id="CommitPrefEdits" severity="ignore"/>
 </lint>

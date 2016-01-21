@@ -45,7 +45,7 @@ class AddTaskBackground : Activity() {
 
     public override fun onCreate(instance: Bundle?) {
         log = Logger;
-        log!!.debug(TAG, "onCreate()")
+        log.debug(TAG, "onCreate()")
         super.onCreate(instance)
         val m_app = this.application as TodoApplication
 
@@ -54,7 +54,7 @@ class AddTaskBackground : Activity() {
 
         val append_text = m_app.shareAppendText
         if (Intent.ACTION_SEND == action) {
-            log!!.debug(TAG, "Share")
+            log.debug(TAG, "Share")
             var share_text = ""
             if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                 val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
@@ -78,20 +78,20 @@ class AddTaskBackground : Activity() {
             noteToSelf(intent, append_text)
 
         } else if (Constants.INTENT_BACKGROUND_TASK == action) {
-            log!!.debug(TAG, "Adding background task")
+            log.debug(TAG, "Adding background task")
             if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
                 addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
             } else {
-                log!!.warn(TAG, "Task was not in extras")
+                log.warn(TAG, "Task was not in extras")
             }
 
         }
     }
 
     private fun startAddTaskActivity(tasks: List<Task>) {
-        log!!.info(TAG, "Starting addTask activity")
+        log.info(TAG, "Starting addTask activity")
         val m_app = this.application as TodoApplication
-        m_app!!.todoList.selectedTasks = tasks
+        m_app.todoList.selectedTasks = tasks
         val intent = Intent(this, AddTask::class.java)
         startActivity(intent)
     }
@@ -99,16 +99,16 @@ class AddTaskBackground : Activity() {
     private fun noteToSelf(intent: Intent, append_text: String) {
         val task = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            log!!.debug(TAG, "Voice note added.")
+            log.debug(TAG, "Voice note added.")
         }
         addBackgroundTask(task, append_text)
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val m_app = this.application as TodoApplication
-        val todoList = m_app!!.todoList
+        val todoList = m_app.todoList
         val addedTasks = ArrayList<Task>()
-        log!!.debug(TAG, "Adding background tasks to todolist {} " + todoList)
+        log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
             if (taskText.trim({ it <= ' ' }).isEmpty()) {
@@ -121,18 +121,18 @@ class AddTaskBackground : Activity() {
                 text = taskText
             }
             val t: Task
-            if (m_app!!.hasPrependDate()) {
+            if (m_app.hasPrependDate()) {
                 t = Task(text, DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT))
             } else {
                 t = Task(text)
             }
-            todoList.add(t, m_app!!.hasAppendAtEnd())
+            todoList.add(t, m_app.hasAppendAtEnd())
             addedTasks.add(t)
         }
-        todoList.notifyChanged(m_app!!.fileStore, m_app!!.todoFileName, m_app!!.eol, m_app, true)
+        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
         finish()
         showToastShort(m_app, R.string.task_added)
-        if (m_app!!.hasShareTaskShowsEdit()) {
+        if (m_app.hasShareTaskShowsEdit()) {
             startAddTaskActivity(addedTasks)
         }
     }

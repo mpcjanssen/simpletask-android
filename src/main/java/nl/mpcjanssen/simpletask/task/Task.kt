@@ -78,7 +78,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             }
         } else {
             if (getFirstToken<T>() == null) {
-                tokens = tokens + newToken
+                tokens += newToken
             } else {
                 tokens = tokens.map {
                     if (it is T) {
@@ -405,11 +405,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
     fun initWithFilter(mFilter : ActiveFilter) {
-        if (!mFilter.getContextsNot() && mFilter.getContexts().size()==1) {
+        if (!mFilter.getContextsNot() && mFilter.getContexts().size == 1) {
             addList(mFilter.getContexts().get(0));
         }
 
-        if (!mFilter.getProjectsNot() && mFilter.getProjects().size()==1) {
+        if (!mFilter.getProjectsNot() && mFilter.getProjects().size == 1) {
             addTag(mFilter.getProjects().get(0));
         }
     }
@@ -418,7 +418,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     companion object {
         @JvmField val DUE_DATE = 1
         @JvmField val THRESHOLD_DATE = 2
-        var TAG = this.javaClass.simpleName
+        var TAG = Task::class.java.simpleName
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
@@ -515,7 +515,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 }
 
 
-abstract interface TToken {
+interface TToken {
     val text: String
     val value: Any?
     val type: Int
