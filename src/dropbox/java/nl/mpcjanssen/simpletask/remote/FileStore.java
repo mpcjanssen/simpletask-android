@@ -108,6 +108,7 @@ public class FileStore implements FileStoreInterface {
         fileOperationsQueue.post(r);
     }
 
+    @Override
     public boolean changesPending() {
         if (mPrefs == null) {
             log.error(TAG, "Couldn't read pending changes state, mPrefs == null");
@@ -129,6 +130,9 @@ public class FileStore implements FileStoreInterface {
     }
 
     private void setChangesPending(boolean pending) {
+        if (pending && (mApp != null)) {
+            Util.showToastLong(mApp, R.string.write_failed);
+        }
         if (mPrefs == null) {
             log.error(TAG, "Couldn't save pending changes, mPrefs == null");
             return ;
@@ -138,6 +142,7 @@ public class FileStore implements FileStoreInterface {
         }
         SharedPreferences.Editor edit = mPrefs.edit();
         edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit();
+        mApp.getLocalBroadCastManager().sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES));
     }
 
     private boolean isOnline() {

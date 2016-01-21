@@ -25,6 +25,7 @@ public interface FileStoreInterface {
     void sync();
     String readFile(String file, FileReadListener fileRead) throws IOException;
     boolean supportsSync();
+    boolean changesPending();
 
     boolean isLoading();
 
