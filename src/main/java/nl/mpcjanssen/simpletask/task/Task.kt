@@ -302,7 +302,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return getFirstToken<CompletedToken>() != null
     }
 
-    fun showParts(parts: Int): String? {
+    fun showParts(parts: Int): String {
         return tokens.filter {
             (it.type and parts) != 0
         }.map {it.text}.joinToString(" ")
@@ -416,8 +416,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
     companion object {
-        @JvmField val DUE_DATE = 1
-        @JvmField val THRESHOLD_DATE = 2
         var TAG = Task::class.java.simpleName
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")

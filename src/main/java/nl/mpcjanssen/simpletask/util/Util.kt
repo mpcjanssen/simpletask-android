@@ -244,7 +244,7 @@ val log = Logger;
         return items
     }
 
-    fun createDeferDialog(act: Activity, dateType: Int, showNone: Boolean, listener: InputDialogListener): AlertDialog {
+    fun createDeferDialog(act: Activity, titleId: Int, showNone: Boolean, listener: InputDialogListener): AlertDialog {
         var keys = act.resources.getStringArray(R.array.deferOptions)
         val today = "0d"
         val tomorrow = "1d"
@@ -254,12 +254,6 @@ val log = Logger;
         val values = arrayOf("", today, tomorrow, oneWeek, twoWeeks, oneMonth, "pick")
         if (!showNone) {
             keys = Arrays.copyOfRange(keys, 1, keys.size)
-        }
-        val titleId: Int
-        if (dateType == Task.DUE_DATE) {
-            titleId = R.string.defer_due
-        } else {
-            titleId = R.string.defer_threshold
         }
 
         val builder = AlertDialog.Builder(act)

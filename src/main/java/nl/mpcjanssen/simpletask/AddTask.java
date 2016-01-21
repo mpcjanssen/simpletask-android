@@ -256,13 +256,13 @@ public class AddTask extends ThemedActivity {
         findViewById(R.id.btnDue).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertDate(Task.DUE_DATE);
+                insertDate(DateType.DUE);
             }
         });
         findViewById(R.id.btnThreshold).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertDate(Task.THRESHOLD_DATE);
+                insertDate(DateType.THRESHOLD);
             }
         });
 
@@ -390,8 +390,12 @@ public class AddTask extends ThemedActivity {
         super.onBackPressed();
     }
 
-    private void insertDate(final int dateType) {
-        Dialog d = Util.createDeferDialog(this, dateType, false, new InputDialogListener() {
+    private void insertDate(final DateType dateType) {
+        int titleId = R.id.defer_due;
+        if (dateType == DateType.THRESHOLD) {
+          titleId = R.id.defer_threshold;
+        }
+        Dialog d = Util.createDeferDialog(this, titleId, false, new InputDialogListener() {
             @Override
             public void onClick(@NonNull String selected) {
                 if (selected.equals("pick")) {
@@ -427,15 +431,15 @@ public class AddTask extends ThemedActivity {
         d.show();
     }
 
-    private void replaceDate(int dateType, @NonNull String date) {
-           if (dateType== Task.DUE_DATE) {
+    private void replaceDate(DateType dateType, @NonNull String date) {
+           if (dateType == DateType.DUE) {
                replaceDueDate(date);
            } else {
                replaceThresholdDate(date);
            }
     }
 
-    private void insertDateAtSelection(int dateType, @NonNull DateTime date) {
+    private void insertDateAtSelection(DateType dateType, @NonNull DateTime date) {
         replaceDate(dateType, date.format("YYYY-MM-DD"));
     }
 

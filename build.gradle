@@ -16,6 +16,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 
+
 android {
     buildToolsVersion "23.0.2"
     compileSdkVersion 23
@@ -90,4 +91,12 @@ if (project.hasProperty('storeFile') &&
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }

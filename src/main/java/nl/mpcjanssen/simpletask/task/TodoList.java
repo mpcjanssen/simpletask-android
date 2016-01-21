@@ -56,9 +56,9 @@ public class TodoList {
     private final TodoApplication app;
 
     @NonNull
-    private List<Task> mTasks = new CopyOnWriteArrayList();
+    private CopyOnWriteArrayList<Task> mTasks = new CopyOnWriteArrayList<>();
     @NonNull
-    private List<Task> mSelectedTask = new CopyOnWriteArrayList();
+    private CopyOnWriteArrayList<Task> mSelectedTask = new CopyOnWriteArrayList<>();
     @Nullable
     private ArrayList<String> mLists = null;
     @Nullable
@@ -246,15 +246,16 @@ public class TodoList {
         });
     }
 
-    public void defer(@NonNull final String deferString, @NonNull final Task tasksToDefer, final int dateType) {
+    public void defer(@NonNull final String deferString, @NonNull final Task tasksToDefer, final DateType dateType) {
         queueRunnable("Defer", new Runnable() {
+
             @Override
             public void run() {
                 switch (dateType) {
-                    case Task.DUE_DATE:
+                    case DUE:
                         tasksToDefer.deferDueDate(deferString, Util.getTodayAsString());
                         break;
-                    case Task.THRESHOLD_DATE:
+                    case THRESHOLD:
                         tasksToDefer.deferThresholdDate(deferString, Util.getTodayAsString());
                         break;
                 }
@@ -265,13 +266,14 @@ public class TodoList {
     @NonNull
     public List<Task> getSelectedTasks() {
         if (mSelectedTask==null) {
-            mSelectedTask = new CopyOnWriteArrayList();
+            mSelectedTask = new CopyOnWriteArrayList<>();
         }
         return mSelectedTask;
     }
 
     public void setSelectedTasks(List<Task> selectedTasks) {
-        this.mSelectedTask = selectedTasks;
+        this.mSelectedTask.clear();
+        this.mSelectedTask.addAll(selectedTasks);
     }
 
 
@@ -344,7 +346,8 @@ public class TodoList {
             public void run() {
                 clearSelectedTasks();
                 try {
-                    mTasks = fileStore.loadTasksFromFile(filename, backup, eol);
+                    mTasks.clear();
+                    mTasks.addAll(fileStore.loadTasksFromFile(filename, backup, eol));
                     try {
                         app.todoListItemDao.getSession().callInTx(new Callable<Object>() {
                             @Override
