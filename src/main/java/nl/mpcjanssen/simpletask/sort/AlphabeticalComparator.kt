@@ -6,9 +6,9 @@ import java.util.*
 
 class AlphabeticalComparator(caseSensitive: Boolean) : Comparator<Task> {
     val stringComp = AlphabeticalStringComparator(caseSensitive)
-    override fun compare(a: Task?, b: Task?): Int {
-        var a = a
-        var b = b
+    override fun compare(t1: Task?, t2: Task?): Int {
+        var a = t1
+        var b = t2
         if (a == null) {
             a = Task("")
         }

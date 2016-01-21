@@ -193,33 +193,33 @@ val log = Logger;
     }
 
     fun addInterval(date: DateTime?, interval: String): DateTime? {
-        var date = date
+        var newDate = date
         val p = Pattern.compile("(\\d+)([dwmy])")
         val m = p.matcher(interval.toLowerCase(Locale.getDefault()))
         val amount: Int
         val type: String
-        if (date == null) {
-            date = DateTime.today(TimeZone.getDefault())
+        if (newDate == null) {
+            newDate = DateTime.today(TimeZone.getDefault())
         }
         if (!m.find()) {
             //If the interval is invalid, just return the original date
-            return date
+            return newDate
         }
         if (m.groupCount() == 2) {
             amount = Integer.parseInt(m.group(1))
             type = m.group(2).toLowerCase(Locale.getDefault())
         } else {
-            return date
+            return newDate
         }
         when (type) {
-            "d" -> date = date!!.plusDays(amount)
-            "w" -> date = date!!.plusDays(7 * amount)
-            "m" -> date = date!!.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
-            "y" -> date = date!!.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
+            "d" -> newDate = newDate!!.plusDays(amount)
+            "w" -> newDate = newDate!!.plusDays(7 * amount)
+            "m" -> newDate = newDate!!.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
+            "y" -> newDate = newDate!!.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
             else -> {
             }
         }// Dont add anything
-        return date
+        return newDate
     }
 
     fun prefixItems(prefix: String, items: ArrayList<String>): ArrayList<String> {
@@ -265,11 +265,11 @@ val log = Logger;
         val builder = AlertDialog.Builder(act)
         builder.setTitle(titleId)
         builder.setItems(keys) { dialog, whichButton ->
-            var whichButton = whichButton
+            var which = whichButton
             if (!showNone) {
-                whichButton++
+                which++
             }
-            val selected = values[whichButton]
+            val selected = values[which]
             listener.onClick(selected)
         }
         return builder.create()
