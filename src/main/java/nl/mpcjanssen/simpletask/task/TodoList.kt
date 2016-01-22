@@ -348,9 +348,21 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun archive(filestore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
         queueRunnable("Archive", Runnable {
-            val tasksToArchive: List<Task>
+            val tasksToArchive: List<TodoListItem>
+            if (tasks == null) {
+                tasksToArchive = dao.queryBuilder().where(Properties.Task.like("x %")).list();
+            } else {
+                tasksToArchive = tasks.filter { it.task.isCompleted() };
+            }
+            try {
+                filestore.appendTaskToFile(doneFileName, tasksToArchive.map {it.task}, eol);
+                dao.deleteInTx(tasksToArchive)
 
-            showToastShort(TodoApplication.getAppContext(), "Task archiving failed")
+                notifyChanged(filestore, todoFilename, eol, null, true);
+            } catch (e : IOException) {
+                e.printStackTrace();
+                showToastShort(TodoApplication.getAppContext(), "Task archiving failed");
+            }
         })
     }
 
