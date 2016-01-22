@@ -14,9 +14,10 @@ class SortTest : TestCase() {
         val t2 = Task("2012-01-01 A")
         tasks.add(t1)
         tasks.add(t2)
-        assertSame(t1, tasks[0])
-        Collections.sort(tasks.map {it -> TodoListItem(0, it, false) }, AlphabeticalComparator(true))
-        assertSame(t2, tasks[0])
+        val items = tasks.map {it -> TodoListItem(0, it, false) }
+        assertEquals(t1, items[0].task)
+        Collections.sort(items , AlphabeticalComparator(true))
+        assertEquals(t2, items[0].task)
     }
 
     fun testAlphabeticalSort2() {
@@ -25,8 +26,9 @@ class SortTest : TestCase() {
         val t2 = Task("(B) A")
         tasks.add(t1)
         tasks.add(t2)
-        assertSame(t1, tasks[0])
-        Collections.sort(tasks.map {it -> TodoListItem(0,it,false)}, AlphabeticalComparator(true))
-        assertSame(t2, tasks[0])
+        val items = tasks.map {it -> TodoListItem(0, it, false) }
+        assertEquals(t1, items[0].task)
+        Collections.sort(items, AlphabeticalComparator(true))
+        assertEquals(t2, items[0].task)
     }
 }
