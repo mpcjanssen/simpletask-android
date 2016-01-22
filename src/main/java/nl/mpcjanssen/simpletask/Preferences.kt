@@ -132,7 +132,7 @@ class Preferences : ThemedActivity() {
                             Manifest.permission.WRITE_CALENDAR)
 
                     if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                        ActivityCompat.requestPermissions(getActivity(),
+                        ActivityCompat.requestPermissions(activity,
                                 arrayOf(Manifest.permission.WRITE_CALENDAR), 0);
                     }
                 }
@@ -146,7 +146,7 @@ class Preferences : ThemedActivity() {
             when (key) {
                 "archive_now" -> {
                     log.info(TAG, "Archiving completed items from preferences")
-                    m_app.showConfirmationDialog(this.activity, R.string.delete_task_message, { dialogInterface, i ->
+                    m_app.showConfirmationDialog(activity, R.string.delete_task_message, { dialogInterface, i ->
                         (activity as Preferences).broadcastIntentAndClose(
                                 Constants.BROADCAST_ACTION_ARCHIVE,
                                 Preferences.RESULT_ARCHIVE)
@@ -154,13 +154,13 @@ class Preferences : ThemedActivity() {
                 }
                 "logout_dropbox" -> {
                     log.info(TAG, "Logging out from Dropbox")
-                    m_app.showConfirmationDialog(this.activity, R.string.logout_message, { dialogInterface, i ->
+                    m_app.showConfirmationDialog(activity, R.string.logout_message, { dialogInterface, i ->
                         (activity as Preferences).broadcastIntentAndClose(
                                 Constants.BROADCAST_ACTION_LOGOUT,
                                 Preferences.RESULT_LOGOUT)
                     }, R.string.dropbox_logout_pref_title)
                 }
-                "send_log" -> startActivity(Intent(this.activity, LogScreen::class.java))
+                "send_log" -> startActivity(Intent(activity, LogScreen::class.java))
                 "share_history" -> startActivity(Intent(this.activity, HistoryScreen::class.java))
                 "app_version" -> {
                     val clipboard = m_app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
