@@ -44,6 +44,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.toDateTime
@@ -111,11 +112,12 @@ val log = Logger;
         }
     }
 
-    fun addHeaderLines(visibleTasks: List<Task>, firstSort: String, no_header: String, showHidden: Boolean, showEmptyLists: Boolean): List<VisibleLine> {
+    fun addHeaderLines(visibleTasks: List<TodoListItem>, firstSort: String, no_header: String, showHidden: Boolean, showEmptyLists: Boolean): List<VisibleLine> {
         var header = ""
         var newHeader: String
         val result = ArrayList<VisibleLine>()
-        for (t in visibleTasks) {
+        for (item in visibleTasks) {
+            val t = item.task
             newHeader = t.getHeader(firstSort, no_header)
             if (header != newHeader) {
                 val headerLine = HeaderLine(newHeader)
@@ -131,7 +133,7 @@ val log = Logger;
 
             if (t.isVisible() || showHidden) {
                 // enduring tasks should not be displayed
-                val taskLine = TaskLine(t)
+                val taskLine = TaskLine(item)
                 result.add(taskLine)
             }
         }
@@ -285,8 +287,8 @@ val log = Logger;
         globals.set("lists", javaListToLuaTable(t.lists))
     }
 
-    public fun taskListToLuaTable(taskList: List<Task>): LuaValue {
-        return javaListToLuaTable(taskList.map {it.inFileFormat()})
+    public fun taskListToLuaTable(taskList: List<TodoListItem>): LuaValue {
+        return javaListToLuaTable(taskList.map {it.task.inFileFormat()})
     }
 
     public fun dateStringToLuaLong(dateString: String?): LuaValue {

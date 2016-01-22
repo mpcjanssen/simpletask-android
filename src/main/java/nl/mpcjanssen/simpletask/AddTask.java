@@ -42,6 +42,7 @@ import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
@@ -63,7 +64,7 @@ public class AddTask extends ThemedActivity {
     private EditText textInputField;
     private BroadcastReceiver m_broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
-    private List<Task> m_backup = new ArrayList<>();
+    private List<TodoListItem> m_backup = new ArrayList<>();
     private Logger log;
 
 
@@ -129,8 +130,8 @@ public class AddTask extends ThemedActivity {
 
         if (m_backup!=null && m_backup.size()>0) {
             ArrayList<String> prefill = new ArrayList<>();
-            for (Task t : m_backup) {
-                prefill.add(t.inFileFormat());
+            for (TodoListItem t : m_backup) {
+                prefill.add(t.getTask().inFileFormat());
             }
             String sPrefill = Util.join(prefill,"\n");
             textInputField.setText(sPrefill);
@@ -357,7 +358,8 @@ public class AddTask extends ThemedActivity {
         for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
             if (m_backup!=null && m_backup.size()>0) {
                 // Don't modify create date for updated tasks
-                m_backup.get(0).update(line);
+                m_backup.get(0).getTask().update(line);
+                todoList.updateItem(m_backup.get(0));
                 m_backup.remove(0);
             } else {
                 Task t ;
@@ -372,7 +374,7 @@ public class AddTask extends ThemedActivity {
 
         // Remove remaining tasks that where selected for update
         if (m_backup!=null){
-            for (Task t : m_backup) {
+            for (TodoListItem t : m_backup) {
                     todoList.remove(t);
                 }
         }

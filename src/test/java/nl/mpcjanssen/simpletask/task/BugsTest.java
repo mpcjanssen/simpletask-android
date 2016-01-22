@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 import nl.mpcjanssen.simpletask.ActiveFilter;
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class BugsTest extends TestCase {
 
     public void testActiveSortNullCrash() {
         ActiveFilter f = new ActiveFilter();
-        MultiComparator mc =  new MultiComparator(f.getSort(null),true, new ArrayList<Task>(), false);
+        MultiComparator mc =  new MultiComparator(f.getSort(null),true, new ArrayList<TodoListItem>(), false);
         assertNotNull(mc);
     }
 
