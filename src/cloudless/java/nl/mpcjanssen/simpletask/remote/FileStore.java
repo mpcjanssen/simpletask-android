@@ -77,7 +77,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
+    synchronized public List<String> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
         log.info(TAG, "Loading tasks from file: {}" + path);
         final CopyOnWriteArrayList<Task> result= new CopyOnWriteArrayList<>();
         mIsLoading = true;

@@ -124,7 +124,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun add(t: Task, atEnd: Boolean) {
-        add(TodoListItem(0,t,false),atEnd)
+        add(TodoListItem(0,t.text,false),atEnd)
     }
 
 
@@ -336,7 +336,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     fun save(filestore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         queueRunnable("Save", Runnable {
             try {
-                val tasks = dao.queryBuilder().orderAsc(Properties.Line).list().map { it.task }
+                val tasks = dao.queryBuilder().orderAsc(Properties.Line).list().map { it.text }
                 filestore.saveTasksToFile(todoFileName, tasks, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -350,12 +350,12 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         queueRunnable("Archive", Runnable {
             val tasksToArchive: List<TodoListItem>
             if (tasks == null) {
-                tasksToArchive = dao.queryBuilder().where(Properties.Task.like("x %")).list();
+                tasksToArchive = dao.queryBuilder().where(Properties.Text.like("x %")).list();
             } else {
                 tasksToArchive = tasks.filter { it.task.isCompleted() };
             }
             try {
-                filestore.appendTaskToFile(doneFileName, tasksToArchive.map {it.task}, eol);
+                filestore.appendTaskToFile(doneFileName, tasksToArchive.map {it.text}, eol);
                 dao.deleteInTx(tasksToArchive)
 
                 notifyChanged(filestore, todoFilename, eol, null, true);
@@ -394,7 +394,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     fun selectTasks(items: List<Task>) {
         dao.session.callInTx {
             items.forEach {
-                val entities = dao.queryBuilder().where(Properties.Task.eq(it.text)).listLazy()
+                val entities = dao.queryBuilder().where(Properties.Text.eq(it.text)).listLazy()
                 if (entities.size > 0) {
                     entities[0].selected = true
                     dao.update(entities[0])
