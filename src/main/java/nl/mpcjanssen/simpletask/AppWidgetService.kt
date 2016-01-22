@@ -149,7 +149,7 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
                 setColor(ss, prioColor, task.priority.inFileFormat())
             }
             if (task.isCompleted()) {
-                ss.setSpan(StrikethroughSpan(), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                ss.setSpan(StrikethroughSpan(), 0, ss.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             rv.setTextViewText(R.id.tasktext, ss)
 

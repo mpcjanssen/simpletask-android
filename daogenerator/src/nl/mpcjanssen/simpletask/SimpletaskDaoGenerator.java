@@ -41,9 +41,9 @@ public class SimpletaskDaoGenerator {
     private static void todoListSchema(Schema schema) {
         Entity list = schema.addEntity("TodoListItem");
         list.addLongProperty("line").notNull().primaryKey();
-        list.addStringProperty("task").notNull()
-                .customType("nl.mpcjanssen.simpletask.task.Task", "nl.mpcjanssen.simpletask.dao.TaskDaoConverter");
+        list.addStringProperty("text").notNull();
         list.addBooleanProperty("selected").notNull();
+        list.setSuperclass("nl.mpcjanssen.simpletask.dao.CachedTask");
     }
 
     private static void logSchema(Schema schema) {
