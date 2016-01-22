@@ -19,8 +19,8 @@ class ContextComparator(caseSensitive: Boolean) : Comparator<Task> {
         } else if (b == null) {
             return 1
         }
-        val contextsA = a.lists
-        val contextsB = b.lists
+        val contextsA = a.lists.toArrayList()
+        val contextsB = b.lists.toArrayList()
 
         if (contextsA.isEmpty() && contextsB.isEmpty()) {
             return 0

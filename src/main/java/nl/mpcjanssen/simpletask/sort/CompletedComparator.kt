@@ -11,8 +11,8 @@ class CompletedComparator : Comparator<Task> {
         if (a == null) return 1
         if (b == null) return -1
 
-        val completeA = if (a.isCompleted) 1 else 0
-        val completeB = if (b.isCompleted) 1 else 0
+        val completeA = if (a.isCompleted()) 1 else 0
+        val completeB = if (b.isCompleted()) 1 else 0
         return (completeA - completeB)
     }
 }

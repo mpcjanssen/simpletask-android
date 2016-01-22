@@ -1,6 +1,6 @@
 buildscript {
 
-    ext.kotlin_version = '1.0.0-beta-4584'
+    ext.kotlin_version = '1.0.0-beta-4589'
     ext.android_support_version = '23.1.1'
     repositories {
         jcenter()
@@ -15,6 +15,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+
 
 android {
     buildToolsVersion "23.0.2"
@@ -31,7 +32,7 @@ android {
         versionName '6.3.5'
         versionCode 3007
 	    minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 
     productFlavors {
@@ -90,4 +91,12 @@ if (project.hasProperty('storeFile') &&
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }

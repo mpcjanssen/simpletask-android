@@ -1,10 +1,8 @@
 package nl.mpcjanssen.simpletask.util;
 
-import hirondelle.date4j.DateTime;
 import junit.framework.TestCase;
 
 import nl.mpcjanssen.simpletask.task.Task;
-import nl.mpcjanssen.simpletask.util.Util;
 
 import java.util.ArrayList;
 

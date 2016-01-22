@@ -28,7 +28,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.*;
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.dao.gen.TodoListStatus;
@@ -36,7 +35,6 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
 import nl.mpcjanssen.simpletask.util.Util;
-
 
 import java.io.IOException;
 import java.util.*;
@@ -56,9 +54,9 @@ public class TodoList {
     private final TodoApplication app;
 
     @NonNull
-    private List<Task> mTasks = new CopyOnWriteArrayList();
+    private CopyOnWriteArrayList<Task> mTasks = new CopyOnWriteArrayList<>();
     @NonNull
-    private List<Task> mSelectedTask = new CopyOnWriteArrayList();
+    private CopyOnWriteArrayList<Task> mSelectedTask = new CopyOnWriteArrayList<>();
     @Nullable
     private ArrayList<String> mLists = null;
     @Nullable
@@ -223,7 +221,7 @@ public class TodoList {
             @Override
             public void run() {
 
-                Task extra = task.markComplete(DateTime.now(TimeZone.getDefault()));
+                Task extra = task.markComplete(Util.getTodayAsString());
                 if (extra != null) {
                     mTasks.add(extra);
                 }
@@ -246,15 +244,16 @@ public class TodoList {
         });
     }
 
-    public void defer(@NonNull final String deferString, @NonNull final Task tasksToDefer, final int dateType) {
+    public void defer(@NonNull final String deferString, @NonNull final Task tasksToDefer, final DateType dateType) {
         queueRunnable("Defer", new Runnable() {
+
             @Override
             public void run() {
                 switch (dateType) {
-                    case Task.DUE_DATE:
+                    case DUE:
                         tasksToDefer.deferDueDate(deferString, Util.getTodayAsString());
                         break;
-                    case Task.THRESHOLD_DATE:
+                    case THRESHOLD:
                         tasksToDefer.deferThresholdDate(deferString, Util.getTodayAsString());
                         break;
                 }
@@ -265,13 +264,14 @@ public class TodoList {
     @NonNull
     public List<Task> getSelectedTasks() {
         if (mSelectedTask==null) {
-            mSelectedTask = new CopyOnWriteArrayList();
+            mSelectedTask = new CopyOnWriteArrayList<>();
         }
         return mSelectedTask;
     }
 
     public void setSelectedTasks(List<Task> selectedTasks) {
-        this.mSelectedTask = selectedTasks;
+        this.mSelectedTask.clear();
+        this.mSelectedTask.addAll(selectedTasks);
     }
 
 
@@ -344,7 +344,8 @@ public class TodoList {
             public void run() {
                 clearSelectedTasks();
                 try {
-                    mTasks = fileStore.loadTasksFromFile(filename, backup, eol);
+                    mTasks.clear();
+                    mTasks.addAll(fileStore.loadTasksFromFile(filename, backup, eol));
                     try {
                         app.todoListItemDao.getSession().callInTx(new Callable<Object>() {
                             @Override
@@ -400,7 +401,7 @@ public class TodoList {
 
     }
 
-    public void archive(final FileStoreInterface filestore, final String todoFilename, final String doneFileName,  final List<Task> tasks, final String eol) {
+    public void archive(final FileStoreInterface filestore, final String todoFilename, final String doneFileName, final List<Task> tasks, final String eol) {
         queueRunnable("Archive", new Runnable() {
             @Override
             public void run() {
