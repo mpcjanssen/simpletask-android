@@ -54,6 +54,7 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -430,18 +431,28 @@ public class Simpletask extends ThemedActivity implements
         lv.setFastScrollEnabled(m_app.useFastScroll());
 
 
-        // If we were started with a single selected task,
-        // scroll to its position
-        List<TodoListItem> selection = getTodoList().getSelectedTasks();
-        int pos = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_POSITION,-1);
-        if (pos!= -1 && getTodoList().get(pos)!=null) {
-            selection = new ArrayList<>();
-            TodoListItem selectedTask = getTodoList().get(pos);
-            selection.add(selectedTask);
-            m_scrollPosition = m_adapter.getPosition(selectedTask);
-            intent.removeExtra(Constants.INTENT_SELECTED_TASK_POSITION);
+        // If we were started from the widget, select the pushed task
+        // and scroll to its position
+        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK)) {
+            String line = intent.getStringExtra(Constants.INTENT_SELECTED_TASK);
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK);
             setIntent(intent);
+            if (line!=null) {
+                getTodoList().clearSelection();
+                ArrayList<Task> tasks = new ArrayList<>();
+                tasks.add(new Task(line));
+                getTodoList().selectTasks(tasks);
+            }
         }
+        List<TodoListItem>  selection = getTodoList().getSelectedTasks();
+        if (selection.size()>0) {
+            TodoListItem selectedTask = selection.get(0);
+            m_scrollPosition = m_adapter.getPosition(selectedTask);
+            openSelectionMode();
+        }  else {
+            closeSelectionMode();
+        }
+        // Check the selected items in the listview
         setSelectedTasks(selection);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         lv.setSelectionFromTop(m_scrollPosition, 0);
@@ -451,9 +462,7 @@ public class Simpletask extends ThemedActivity implements
                 startAddTaskActivity(null);
             }
         });
-        if(getTodoList().getSelectedTasks().size()==0) {
-            closeSelectionMode();
-        } 
+
         updateDrawers();
         mOverlayDialog = Util.showLoadingOverlay(this, mOverlayDialog, m_app.isLoading());
         updatePendingChanges();
