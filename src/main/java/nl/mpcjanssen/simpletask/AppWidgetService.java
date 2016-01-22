@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
+import nl.mpcjanssen.simpletask.task.TToken;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
-import nl.mpcjanssen.simpletask.task.token.Token;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -117,17 +117,17 @@ class AppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
         boolean extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true);
 
         if (task != null) {
-            int tokensToShow = Token.SHOW_ALL;
-            tokensToShow = tokensToShow & ~Token.CREATION_DATE;
-            tokensToShow = tokensToShow & ~Token.COMPLETED;
-            tokensToShow = tokensToShow & ~Token.COMPLETED_DATE;
-            tokensToShow = tokensToShow & ~Token.THRESHOLD_DATE;
-            tokensToShow = tokensToShow & ~Token.DUE_DATE;
+            int tokensToShow = TToken.ALL;
+            tokensToShow = tokensToShow & ~TToken.CREATION_DATE;
+            tokensToShow = tokensToShow & ~TToken.COMPLETED;
+            tokensToShow = tokensToShow & ~TToken.COMPLETED_DATE;
+            tokensToShow = tokensToShow & ~TToken.THRESHOLD_DATE;
+            tokensToShow = tokensToShow & ~TToken.DUE_DATE;
             if (mFilter.getHideLists()) {
-                tokensToShow = tokensToShow & ~ Token.LIST;
+                tokensToShow = tokensToShow & ~ TToken.LIST;
             }
             if (mFilter.getHideTags()) {
-                tokensToShow = tokensToShow & ~ Token.TTAG;
+                tokensToShow = tokensToShow & ~ TToken.TTAG;
             }
             SpannableString ss = new SpannableString(
                     task.showParts(tokensToShow).trim());

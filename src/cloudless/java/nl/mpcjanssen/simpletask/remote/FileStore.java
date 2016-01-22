@@ -79,7 +79,7 @@ public class FileStore implements FileStoreInterface {
     @Override
     synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
         log.info(TAG, "Loading tasks from file: {}" + path);
-        final List<Task> result= new CopyOnWriteArrayList();
+        final CopyOnWriteArrayList<Task> result= new CopyOnWriteArrayList<>();
         mIsLoading = true;
         try {
             ArrayList<String> completeFile = new ArrayList<>();
@@ -231,7 +231,7 @@ public class FileStore implements FileStoreInterface {
         private String[] fileList;
         private File currentPath;
 
-        private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<FileSelectedListener>();
+        private ListenerList<FileSelectedListener> fileListenerList = new ListenerList<>();
         private final Activity activity;
         private boolean txtOnly;
 

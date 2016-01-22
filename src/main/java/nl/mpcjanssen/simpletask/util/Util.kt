@@ -46,6 +46,7 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.toDateTime
 import org.luaj.vm2.*
 import java.io.*
 import java.nio.channels.FileChannel
@@ -128,7 +129,7 @@ val log = Logger;
                 header = newHeader
             }
 
-            if (t.isVisible || showHidden) {
+            if (t.isVisible() || showHidden) {
                 // enduring tasks should not be displayed
                 val taskLine = TaskLine(t)
                 result.add(taskLine)
@@ -192,33 +193,33 @@ val log = Logger;
     }
 
     fun addInterval(date: DateTime?, interval: String): DateTime? {
-        var date = date
+        var newDate = date
         val p = Pattern.compile("(\\d+)([dwmy])")
         val m = p.matcher(interval.toLowerCase(Locale.getDefault()))
         val amount: Int
         val type: String
-        if (date == null) {
-            date = DateTime.today(TimeZone.getDefault())
+        if (newDate == null) {
+            newDate = DateTime.today(TimeZone.getDefault())
         }
         if (!m.find()) {
             //If the interval is invalid, just return the original date
-            return date
+            return newDate
         }
         if (m.groupCount() == 2) {
             amount = Integer.parseInt(m.group(1))
             type = m.group(2).toLowerCase(Locale.getDefault())
         } else {
-            return date
+            return newDate
         }
         when (type) {
-            "d" -> date = date!!.plusDays(amount)
-            "w" -> date = date!!.plusDays(7 * amount)
-            "m" -> date = date!!.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
-            "y" -> date = date!!.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
+            "d" -> newDate = newDate!!.plusDays(amount)
+            "w" -> newDate = newDate!!.plusDays(7 * amount)
+            "m" -> newDate = newDate!!.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
+            "y" -> newDate = newDate!!.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
             else -> {
             }
         }// Dont add anything
-        return date
+        return newDate
     }
 
     fun prefixItems(prefix: String, items: ArrayList<String>): ArrayList<String> {
@@ -243,7 +244,7 @@ val log = Logger;
         return items
     }
 
-    fun createDeferDialog(act: Activity, dateType: Int, showNone: Boolean, listener: InputDialogListener): AlertDialog {
+    fun createDeferDialog(act: Activity, titleId: Int, showNone: Boolean, listener: InputDialogListener): AlertDialog {
         var keys = act.resources.getStringArray(R.array.deferOptions)
         val today = "0d"
         val tomorrow = "1d"
@@ -254,21 +255,15 @@ val log = Logger;
         if (!showNone) {
             keys = Arrays.copyOfRange(keys, 1, keys.size)
         }
-        val titleId: Int
-        if (dateType == Task.DUE_DATE) {
-            titleId = R.string.defer_due
-        } else {
-            titleId = R.string.defer_threshold
-        }
 
         val builder = AlertDialog.Builder(act)
         builder.setTitle(titleId)
         builder.setItems(keys) { dialog, whichButton ->
-            var whichButton = whichButton
+            var which = whichButton
             if (!showNone) {
-                whichButton++
+                which++
             }
-            val selected = values[whichButton]
+            val selected = values[which]
             listener.onClick(selected)
         }
         return builder.create()
@@ -278,51 +273,39 @@ val log = Logger;
     fun initGlobals(globals: Globals, t: Task) {
         globals.set("task", t.inFileFormat())
 
-        if (t.dueDate != null) {
-            globals.set("due", (t.dueDate!!.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("due", LuaValue.NIL)
-        }
+        globals.set("due", dateStringToLuaLong(t.dueDate))
+        globals.set("threshold", dateStringToLuaLong(t.thresholdDate))
+        globals.set("createdate", dateStringToLuaLong(t.createDate))
+        globals.set("completiondate", dateStringToLuaLong(t.completionDate))
 
-
-        if (t.thresholdDate != null) {
-            globals.set("threshold", (t.thresholdDate!!.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("threshold", LuaValue.NIL)
-        }
-
-
-        if (t.createDate != null) {
-            globals.set("createdate", (DateTime(t.createDate).getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("createdate", LuaValue.NIL)
-        }
-
-
-        if (t.completionDate != null) {
-            globals.set("completiondate", (DateTime(t.completionDate).getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-        } else {
-            globals.set("completiondate", LuaValue.NIL)
-        }
-
-        globals.set("completed", LuaBoolean.valueOf(t.isCompleted))
+        globals.set("completed", LuaBoolean.valueOf(t.isCompleted()))
         globals.set("priority", t.priority.code)
 
         globals.set("tags", javaListToLuaTable(t.tags))
         globals.set("lists", javaListToLuaTable(t.lists))
     }
 
-    private fun javaListToLuaTable(javaList: List<String>): LuaValue {
-        val size = javaList.size
+    public fun taskListToLuaTable(taskList: List<Task>): LuaValue {
+        return javaListToLuaTable(taskList.map {it.inFileFormat()})
+    }
+
+    public fun dateStringToLuaLong(dateString: String?): LuaValue {
+        dateString?.toDateTime()?.let {
+            return LuaValue.valueOf((it.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
+        }
+        return LuaValue.NIL
+    }
+
+    public fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
+        val size = javaList.count()
         if (size == 0) return LuaValue.NIL
-        val luaArray = arrayOfNulls<LuaString>(javaList.size)
+        val luaArray = arrayOfNulls<LuaString>(javaList.count())
         var i = 0
         for (item in javaList) {
             luaArray[i] = LuaString.valueOf(item)
             i++
         }
         return LuaTable.listOf(luaArray)
-
     }
 
     @Throws(IOException::class)

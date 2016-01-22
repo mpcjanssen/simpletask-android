@@ -18,7 +18,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList:
             val parts = sort.split(ActiveFilter.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
             var reverse = false
             val sortType: String
-            if (parts.size() == 1) {
+            if (parts.size == 1) {
                 // support older shortcuts and widgets
                 reverse = false
                 sortType = parts[0]

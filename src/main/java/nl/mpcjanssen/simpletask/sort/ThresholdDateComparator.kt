@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.sort
 
-import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
@@ -23,8 +22,8 @@ class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<Task> {
         // Use create date as threshold date
         // if configured in the settings.
         if (createAsBackup) {
-            dateA = dateA ?: a.stringToDateTime(a.createDate)
-            dateB = dateB ?: b.stringToDateTime(b.createDate)
+            dateA = dateA ?: a.createDate
+            dateB = dateB ?: b.createDate
         }
         if (dateA == null && dateB == null) {
             result = 0

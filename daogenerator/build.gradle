@@ -12,6 +12,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
+//noinspection GroovyAssignabilityCheck
 sourceSets {
     main {
         java {
@@ -21,3 +22,4 @@ sourceSets {
 }
 
 mainClassName = "nl.mpcjanssen.simpletask.SimpletaskDaoGenerator"
+

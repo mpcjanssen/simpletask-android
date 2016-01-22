@@ -331,15 +331,22 @@ public class ActiveFilter {
     public ArrayList<Task> apply(@NonNull List<Task> tasks) {
         AndFilter filter = new AndFilter();
         ArrayList<Task> matched = new ArrayList<>();
+        Prototype prototype = null;
+        Globals globals = null;
 
         try {
             String script = getScript();
             if (script == null) script = "";
-            InputStream input = new ByteArrayInputStream(script.getBytes());
-            Prototype prototype = LuaC.instance.compile(input, "script");
-            Globals globals = JsePlatform.standardGlobals();
-
+            script = script.trim();
+            if (!script.isEmpty()) {
+                InputStream input = new ByteArrayInputStream(script.getBytes());
+                prototype = LuaC.instance.compile(input, "script");
+                globals = JsePlatform.standardGlobals();
+                globals.set("tasks", Util.taskListToLuaTable(tasks));
+            }
+            int idx = -1;
             for (Task t : tasks) {
+                idx++;
                 if ("".equals(t.inFileFormat().trim())) {
                     continue;
                 }
@@ -352,8 +359,9 @@ public class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue;
                 }
-                if  (m_script!=null && !m_script.trim().isEmpty()) {
+                if  (!script.isEmpty()) {
                     Util.initGlobals(globals,t);
+                    globals.set("idx", idx);
                     LuaClosure closure = new LuaClosure(prototype, globals);
                     LuaValue result = closure.call(); 
                     if (!result.toboolean()) {

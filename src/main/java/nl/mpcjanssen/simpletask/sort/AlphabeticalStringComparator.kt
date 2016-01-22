@@ -10,9 +10,9 @@ class AlphabeticalStringComparator(caseSensitive: Boolean) : Comparator<String> 
         this.bCaseSensitive = caseSensitive
     }
 
-    override fun compare(a: String?, b: String?): Int {
-        var a = a
-        var b = b
+    override fun compare(t1: String?, t2: String?): Int {
+        var a = t1
+        var b = t2
         if (a == null) {
             a = ""
         }

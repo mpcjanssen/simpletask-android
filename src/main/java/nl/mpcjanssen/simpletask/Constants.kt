@@ -64,3 +64,7 @@ object Constants {
     const val HELP_ADD_TASK = "addtask.en.md"
 
 }
+
+enum class DateType {
+    DUE, THRESHOLD
+}
