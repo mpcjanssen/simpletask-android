@@ -16,10 +16,11 @@ class ContextComparatorTest : TestCase() {
         tasks.add(Task("Test @a"))
         tasks.add(Task("Test"))
         tasks.add(Task("Loop @a"))
-        Collections.sort(tasks.map {it -> TodoListItem(0,it,false)}, ContextComparator(true))
-        assertEquals("Test", tasks[0].inFileFormat())
-        assertEquals("Test @a", tasks[1].inFileFormat())
-        assertEquals("Loop @a", tasks[2].inFileFormat())
-        assertEquals("Test @b", tasks[3].inFileFormat())
+        val items = tasks.map {it -> TodoListItem(0,it,false)}
+        Collections.sort(items , ContextComparator(true))
+        assertEquals("Test", items[0].task.inFileFormat())
+        assertEquals("Test @a", items[1].task.inFileFormat())
+        assertEquals("Loop @a", items[2].task.inFileFormat())
+        assertEquals("Test @b", items[3].task.inFileFormat())
     }
 }
