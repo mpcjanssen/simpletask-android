@@ -12,6 +12,7 @@
 - Don't change create date on updated tasks, fixes #337.
 - Refresh views and clear logs at midnight. Fixes #93.
 - Merged: Completed German translation (twckr #335).
+- Remove partial `Select parts` functionality when sharing tasks for now.
 
 
 6.3.4
