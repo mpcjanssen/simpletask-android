@@ -105,7 +105,11 @@ public class CalendarSync {
                 Manifest.permission.WRITE_CALENDAR);
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            throw new IllegalStateException("no calendar access");
+            if (m_sync_type == 0) {
+                return -1;
+            } else {
+                throw new IllegalStateException("no calendar access");
+            }
         }
 
         Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);

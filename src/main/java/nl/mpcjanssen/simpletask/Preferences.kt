@@ -27,15 +27,19 @@
  */
 package nl.mpcjanssen.simpletask
 
+import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceCategory
 import android.preference.PreferenceFragment
 import android.preference.PreferenceScreen
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.util.*
 
@@ -119,6 +123,19 @@ class Preferences : ThemedActivity() {
             if ("theme" == key || "fontsize" == key) {
                 activity.setResult(RESULT_RECREATE_ACTIVITY)
                 activity.finish()
+            }
+            if (key.equals(getString(R.string.calendar_sync_dues)) ||
+                key.equals(getString(R.string.calendar_sync_thresholds))) {
+                if (m_app.isSyncDues || m_app.isSyncThresholds) {
+                    /* Check for calendar permission */
+                    val permissionCheck = ContextCompat.checkSelfPermission(m_app,
+                            Manifest.permission.WRITE_CALENDAR)
+
+                    if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                arrayOf(Manifest.permission.WRITE_CALENDAR), 0);
+                    }
+                }
             }
         }
 
