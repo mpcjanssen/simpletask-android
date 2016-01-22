@@ -60,6 +60,7 @@ public class TimePreference extends DialogPreference {
         return m_picker;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onBindDialogView(@NonNull View v) {
         super.onBindDialogView(v);
@@ -67,6 +68,7 @@ public class TimePreference extends DialogPreference {
         m_picker.setCurrentMinute(m_minutes % 60);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
