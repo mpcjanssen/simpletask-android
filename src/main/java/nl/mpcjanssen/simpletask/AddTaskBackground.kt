@@ -92,6 +92,7 @@ class AddTaskBackground : Activity() {
         log.info(TAG, "Starting addTask activity")
         val m_app = this.application as TodoApplication
         val intent = Intent(this, AddTask::class.java)
+        m_app.todoList.clearSelection()
         m_app.todoList.selectTasks(addedTasks)
         startActivity(intent)
     }
