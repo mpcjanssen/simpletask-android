@@ -22,8 +22,10 @@
 
 package nl.mpcjanssen.simpletask;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -31,6 +33,7 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.support.v4.content.ContextCompat;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.task.Task;
@@ -96,6 +99,15 @@ public class CalendarSync {
         final String[] projection = {Calendars._ID, Calendars.NAME};
         final String selection = Calendars.NAME+" = ?";
         final String[] args = {CAL_NAME};
+
+        /* Check for calendar permission */
+        int permissionCheck = ContextCompat.checkSelfPermission(m_app,
+                Manifest.permission.WRITE_CALENDAR);
+
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            throw new IllegalStateException("no calendar access");
+        }
+
         Cursor cursor = m_cr.query(CAL_URI, projection, selection, args, null);
         if (cursor == null) throw new IllegalArgumentException("null cursor");
         if (cursor.getCount() == 0) return -1;
@@ -231,8 +243,10 @@ public class CalendarSync {
             log.debug(TAG, "Syncing due/threshold calendar reminders...");
             purgeEvts(calID);
             insertEvts(calID, tasks);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             calendarError(e);
+        } catch (IllegalStateException e) {
+            log.warn(TAG, "No calendar access");
         }
     }
 
