@@ -54,7 +54,6 @@ import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -511,7 +510,7 @@ public class Simpletask extends ThemedActivity implements
         } else {
             actionbar.setVisibility(View.GONE);
         }
-        int count = m_adapter != null ? m_adapter.getCountVisbleTasks() : 0;
+        int count = m_adapter != null ? m_adapter.getCountVisbleTodoItems() : 0;
         long total = getTodoList().size();
 
         filterText.setText(mFilter.getTitle(
@@ -1378,8 +1377,18 @@ public class Simpletask extends ThemedActivity implements
 
 
 
-        public int getCountVisbleTasks() {
+        public int getCountVisbleLines() {
             return visibleLines.size();
+        }
+
+        public int getCountVisbleTodoItems() {
+            int count = 0;
+            for (VisibleLine line : visibleLines) {
+                if (!line.getHeader()) {
+                    count++;
+                }
+            }
+            return count;
         }
 
         /*
