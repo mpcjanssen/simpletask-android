@@ -56,10 +56,8 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
 
     private fun createSelectedIntent(t: TodoListItem): Intent {
         val target = Intent()
-        val tl = application!!.todoList
-        tl.clearSelection()
-        tl.selectTodoItems(listOf(t))
         mFilter.saveInIntent(target)
+        target.putExtra(Constants.INTENT_SELECTED_TASK, t.task.inFileFormat())
         return target
     }
 

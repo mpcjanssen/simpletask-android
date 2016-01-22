@@ -414,6 +414,21 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
     }
 
+    override fun equals(other: Any?): Boolean{
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as Task
+
+        if (text != other.text) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int{
+        return text.hashCode()
+    }
+
 
     companion object {
         var TAG = Task::class.java.simpleName

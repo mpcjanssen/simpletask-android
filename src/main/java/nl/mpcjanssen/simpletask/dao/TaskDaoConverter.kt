@@ -12,6 +12,6 @@ class TaskDaoConverter : PropertyConverter<Task, String> {
     }
 
     override fun convertToDatabaseValue(entityProperty: Task?): String? {
-        return entityProperty?.inFileFormat()
+        return entityProperty?.text
     }
 }

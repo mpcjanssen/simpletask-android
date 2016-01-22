@@ -385,11 +385,20 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     fun selectTasks(items: List<Task>) {
         dao.session.callInTx {
             items.forEach {
-                val entity = dao.queryBuilder().where(Properties.Task.eq(it)).listLazy()[0]
-                entity.selected = true
-                dao.update(entity)
+                val entities = dao.queryBuilder().where(Properties.Task.eq(it.text)).listLazy()
+                if (entities.size > 0) {
+                    entities[0].selected = true
+                    dao.update(entities[0])
+                }
             }
         }
+    }
+
+    fun selectLine(line: Long) {
+        val items = dao.queryBuilder().where(Properties.Line.eq(line)).list()
+        if (items.size < 1) return
+        items[0].selected = true
+        dao.update(items[0])
     }
 
     fun selectTodoItem(item: TodoListItem) {
