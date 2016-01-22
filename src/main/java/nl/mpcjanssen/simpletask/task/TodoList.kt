@@ -130,10 +130,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun remove(item: TodoListItem) {
         queueRunnable("Remove", Runnable {
-            dao.queryBuilder()
-                    .where(Properties.Line.eq(item.line))
-                    .where(Properties.Task.eq(item.task))
-                    .buildDelete().executeDeleteWithoutDetachingEntities()
+            dao.delete(item)
         })
     }
 
