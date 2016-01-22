@@ -32,6 +32,7 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -167,8 +168,9 @@ public class CalendarSync {
         }
     }
 
-    private void insertEvts(long calID, final List<Task> tasks) {
-        for (Task task: tasks) {
+    private void insertEvts(long calID, final List<TodoListItem> tasks) {
+        for (TodoListItem item: tasks) {
+            Task task = item.getTask();
             if (task.isCompleted()) continue;
 
             DateTime dt;
@@ -222,7 +224,7 @@ public class CalendarSync {
 
             TodoList tl = m_app.getTodoList();
 
-            final List<Task> tasks = tl.getTasks();
+            final List<TodoListItem> tasks = tl.getTodoItems();
             setReminderDays(m_app.getReminderDays());
             setReminderTime(m_app.getReminderTime());
 

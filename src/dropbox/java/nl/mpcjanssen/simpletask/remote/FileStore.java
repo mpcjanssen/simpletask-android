@@ -313,7 +313,7 @@ public class FileStore implements FileStoreInterface {
             throw new IOException("Not authenticated");
         }
 
-        List<Task> tasks = new CopyOnWriteArrayList();
+        CopyOnWriteArrayList<Task> tasks = new CopyOnWriteArrayList<Task>();
         if (changesPending()) {
             log.info(TAG, "Not loading, changes pending");
             Util.showToastLong(mApp, "Saving pending changes");
@@ -373,7 +373,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     private List<Task> tasksFromCache() {
-        List <Task> result = new CopyOnWriteArrayList();
+        CopyOnWriteArrayList <Task> result = new CopyOnWriteArrayList();
         String contents = loadContentsFromCache();
         for (String line : contents.split("(\r\n|\r|\n)")) {
             result.add(new Task(line));
