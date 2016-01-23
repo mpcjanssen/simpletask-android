@@ -1,10 +1,6 @@
 org.gradle.daemon=true
 storeFile = /path/to/google/key/file
 deployPath = /path/to/put/apks/for/deploy/task
-org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
-org.gradle.parallel=true
-org.gradle.configureondemand=true
-
 
 # put the storefile passwords in ~/.gradle/gradle.properties
 # ensure this is not version controlled
