@@ -67,6 +67,7 @@ public class TodoApplication extends Application implements
     private BroadcastReceiver m_broadcastReceiver;
 
     public static final boolean ATLEAST_API16 = android.os.Build.VERSION.SDK_INT >= 16;
+    public static final boolean ATLEAST_API19 = android.os.Build.VERSION.SDK_INT >= 19;
     private int m_Theme = -1;
     private Logger log;
     private FileStore mFileStore;
