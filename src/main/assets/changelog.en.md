@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+6.3.6
+-----
+
+- Don't crash with cloudless on older Android versions.
+
 6.3.5
 -----
 
