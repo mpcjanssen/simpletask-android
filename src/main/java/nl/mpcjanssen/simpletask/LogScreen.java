@@ -17,25 +17,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class LogScreen extends ThemedActivity {
 
-    private String TAG ="LogScreen";
-    private Logger log;
-
-    private ArrayList<String> myDataset;
     private TodoApplication m_app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = Logger.INSTANCE;
         setContentView(R.layout.log);
         ListView mListView = (ListView) findViewById(R.id.listView);
 
         mListView.setFastScrollEnabled(true);
 
-        myDataset = new ArrayList<>();
+        ArrayList<String> myDataset = new ArrayList<>();
         m_app = (TodoApplication) getApplication();
         for (LogItem entry : m_app.logDao.queryBuilder().orderDesc(LogItemDao.Properties.Timestamp).list()) {
             String line = logItemToString(entry);
@@ -43,14 +39,14 @@ public class LogScreen extends ThemedActivity {
         }
 
         // specify an adapter (see also next example)
-        ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.log_item, myDataset);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, R.layout.log_item, myDataset);
         mListView.setAdapter(mAdapter);
 
     }
 
     @NotNull
     private String logItemToString(LogItem entry) {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.S");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.S", Locale.US);
         return format.format(entry.getTimestamp()) + "\t"
                         + entry.getSeverity() + "\t"
                         + entry.getTag() + "\t"
