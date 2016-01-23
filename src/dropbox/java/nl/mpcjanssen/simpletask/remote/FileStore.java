@@ -300,7 +300,7 @@ public class FileStore implements FileStoreInterface {
 
 
     @Override
-    synchronized public List<Task> loadTasksFromFile(String path, final @Nullable BackupInterface backup, String eol) throws IOException {
+    synchronized public List<String> loadTasksFromFile(String path, final @Nullable BackupInterface backup, String eol) throws IOException {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -312,15 +312,14 @@ public class FileStore implements FileStoreInterface {
             mIsLoading = false;
             throw new IOException("Not authenticated");
         }
-
-        List<Task> tasks = new CopyOnWriteArrayList();
+        ArrayList<String> readFile = new ArrayList<>();
         if (changesPending()) {
             log.info(TAG, "Not loading, changes pending");
             Util.showToastLong(mApp, "Saving pending changes");
             mIsLoading = false;
-            tasks.addAll(tasksFromCache());
-            saveTasksToFile(path, tasks, backup, eol);
+            saveTasksToFile(path, tasksFromCache(), backup, eol);
             startWatching(path);
+            return tasksFromCache();
         } else {
             try {
                 DropboxAPI.DropboxInputStream openFileStream;
@@ -345,9 +344,9 @@ public class FileStore implements FileStoreInterface {
                 }
                 BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
                 String line;
-                ArrayList<String> readFile = new ArrayList<>();
+
+
                 while ((line = reader.readLine()) != null) {
-                    tasks.add(new Task(line));
                     readFile.add(line);
                 }
                 openFileStream.close();
@@ -360,8 +359,8 @@ public class FileStore implements FileStoreInterface {
             } catch (DropboxException e) {
                 // Couldn't download file use cached version
                 e.printStackTrace();
-                tasks.clear();
-                tasks.addAll(tasksFromCache());
+                readFile.clear();
+                readFile.addAll(tasksFromCache());
                 Util.showToastLong(mApp, "Drobox error, loading from cache");
             } catch (IOException e) {
                 mIsLoading = false;
@@ -369,14 +368,14 @@ public class FileStore implements FileStoreInterface {
             }
         }
         mIsLoading = false;
-        return tasks;
+        return readFile;
     }
 
-    private List<Task> tasksFromCache() {
-        List <Task> result = new CopyOnWriteArrayList();
+    private List<String> tasksFromCache() {
+        CopyOnWriteArrayList <String> result = new CopyOnWriteArrayList();
         String contents = loadContentsFromCache();
         for (String line : contents.split("(\r\n|\r|\n)")) {
-            result.add(new Task(line));
+            result.add(line);
         }
         return result;
     }
@@ -451,11 +450,10 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(final String path, final List<Task> tasks, @Nullable final BackupInterface backup, String eol) throws IOException {
+    synchronized public void saveTasksToFile(final String path, final List<String> lines, @Nullable final BackupInterface backup, String eol) throws IOException {
         if (backup != null) {
-            backup.backup(path, Util.joinTasks(tasks, "\n"));
+            backup.backup(path, Util.join(lines, "\n"));
         }
-        List<String> lines = Util.tasksToString(tasks);
         final String contents = Util.join(lines, eol) + eol;
         Runnable r = new Runnable() {
 
@@ -495,7 +493,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void appendTaskToFile(final String path, final List<Task> tasks, final String eol) throws IOException {
+    public void appendTaskToFile(final String path, final List<String> tasks, final String eol) throws IOException {
         if (!isOnline()) {
             throw new IOException("Device is offline");
         }
@@ -518,8 +516,8 @@ public class FileStore implements FileStoreInterface {
                     openFileStream.close();
 
                     // Then append
-                    for (Task t : tasks) {
-                        doneContents.add(t.inFileFormat());
+                    for (String t : tasks) {
+                        doneContents.add(t);
                     }
                     byte[] toStore = (Util.join(doneContents, eol) + eol).getBytes("UTF-8");
                     InputStream in = new ByteArrayInputStream(toStore);

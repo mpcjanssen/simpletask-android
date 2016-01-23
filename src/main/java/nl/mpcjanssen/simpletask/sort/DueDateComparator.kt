@@ -1,11 +1,12 @@
 package nl.mpcjanssen.simpletask.sort
 
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class DueDateComparator : Comparator<Task> {
+class DueDateComparator : Comparator<TodoListItem> {
 
-    override fun compare(a: Task?, b: Task?): Int {
+    override fun compare(a: TodoListItem?, b: TodoListItem?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {
@@ -13,8 +14,8 @@ class DueDateComparator : Comparator<Task> {
         } else if (b == null) {
             return 1
         }
-        val aDate = a.dueDate
-        val bDate =  b.dueDate
+        val aDate = a.task.dueDate
+        val bDate =  b.task.dueDate
         if ( aDate == null && bDate == null) {
             return 0
         } else if (aDate == null) {

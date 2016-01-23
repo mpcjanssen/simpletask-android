@@ -1,9 +1,10 @@
 package nl.mpcjanssen.simpletask.sort
 
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class ContextComparator(caseSensitive: Boolean) : Comparator<Task> {
+class ContextComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
 
     private val mStringComparator: AlphabeticalStringComparator
 
@@ -11,7 +12,7 @@ class ContextComparator(caseSensitive: Boolean) : Comparator<Task> {
         this.mStringComparator = AlphabeticalStringComparator(caseSensitive)
     }
 
-    override fun compare(a: Task?, b: Task?): Int {
+    override fun compare(a: TodoListItem?, b: TodoListItem?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {
@@ -19,8 +20,8 @@ class ContextComparator(caseSensitive: Boolean) : Comparator<Task> {
         } else if (b == null) {
             return 1
         }
-        val contextsA = a.lists.toArrayList()
-        val contextsB = b.lists.toArrayList()
+        val contextsA = a.task.lists.toArrayList()
+        val contextsB = b.task.lists.toArrayList()
 
         if (contextsA.isEmpty() && contextsB.isEmpty()) {
             return 0

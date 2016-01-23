@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -170,7 +171,7 @@ public class ActiveFilter {
                 || !Strings.isEmptyOrNull(m_search) || !Strings.isEmptyOrNull(m_script);
     }
 
-    public String getTitle (int visible, int total, CharSequence prio, CharSequence tag, CharSequence list, CharSequence search, CharSequence script, CharSequence filterApplied, CharSequence noFilter) {
+    public String getTitle (int visible, long total, CharSequence prio, CharSequence tag, CharSequence list, CharSequence search, CharSequence script, CharSequence filterApplied, CharSequence noFilter) {
         String filterTitle = "" + filterApplied ;
         if (hasFilter()) {
             filterTitle = "(" + visible + "/" + total +  ") " + filterTitle;
@@ -328,9 +329,9 @@ public class ActiveFilter {
     }
 
     @NonNull
-    public ArrayList<Task> apply(@NonNull List<Task> tasks) {
+    public ArrayList<TodoListItem> apply(@NonNull List<TodoListItem> items) {
         AndFilter filter = new AndFilter();
-        ArrayList<Task> matched = new ArrayList<>();
+        ArrayList<TodoListItem> matched = new ArrayList<>();
         Prototype prototype = null;
         Globals globals = null;
 
@@ -342,11 +343,12 @@ public class ActiveFilter {
                 InputStream input = new ByteArrayInputStream(script.getBytes());
                 prototype = LuaC.instance.compile(input, "script");
                 globals = JsePlatform.standardGlobals();
-                globals.set("tasks", Util.taskListToLuaTable(tasks));
+                globals.set("tasks", Util.taskListToLuaTable(items));
             }
             int idx = -1;
-            for (Task t : tasks) {
+            for (TodoListItem item : items) {
                 idx++;
+                Task t = item.getTask();
                 if ("".equals(t.inFileFormat().trim())) {
                     continue;
                 }
@@ -368,7 +370,7 @@ public class ActiveFilter {
                         continue;
                     }
                 }
-                matched.add(t);
+                matched.add(item);
             }
         } catch (LuaError e) {
             log.debug(TAG, "Lua execution failed " + e.getMessage());

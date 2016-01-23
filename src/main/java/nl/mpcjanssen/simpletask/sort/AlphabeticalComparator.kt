@@ -1,20 +1,16 @@
 package nl.mpcjanssen.simpletask.sort
 
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoList
 import java.util.*
 
-class AlphabeticalComparator(caseSensitive: Boolean) : Comparator<Task> {
+class AlphabeticalComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
     val stringComp = AlphabeticalStringComparator(caseSensitive)
-    override fun compare(t1: Task?, t2: Task?): Int {
-        var a = t1
-        var b = t2
-        if (a == null) {
-            a = Task("")
-        }
-        if (b == null) {
-            b = Task("")
-        }
+    override fun compare(t1: TodoListItem?, t2: TodoListItem?): Int {
+        var a = t1?.task ?: Task("")
+        var b = t2?.task ?: Task("")
         return stringComp.compare(a.showParts(TToken.TEXT),b.showParts(TToken.TEXT))
     }
 }
