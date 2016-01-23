@@ -271,7 +271,9 @@ public class TodoList {
 
     public void setSelectedTasks(List<Task> selectedTasks) {
         this.mSelectedTask.clear();
-        this.mSelectedTask.addAll(selectedTasks);
+        if (selectedTasks!=null) {
+            this.mSelectedTask.addAll(selectedTasks);
+        }
     }
 
 
