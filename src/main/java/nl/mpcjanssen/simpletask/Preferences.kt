@@ -27,15 +27,19 @@
  */
 package nl.mpcjanssen.simpletask
 
+import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceCategory
 import android.preference.PreferenceFragment
 import android.preference.PreferenceScreen
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.util.*
 
@@ -120,6 +124,19 @@ class Preferences : ThemedActivity() {
                 activity.setResult(RESULT_RECREATE_ACTIVITY)
                 activity.finish()
             }
+            if (key.equals(getString(R.string.calendar_sync_dues)) ||
+                key.equals(getString(R.string.calendar_sync_thresholds))) {
+                if (m_app.isSyncDues || m_app.isSyncThresholds) {
+                    /* Check for calendar permission */
+                    val permissionCheck = ContextCompat.checkSelfPermission(m_app,
+                            Manifest.permission.WRITE_CALENDAR)
+
+                    if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                        ActivityCompat.requestPermissions(activity,
+                                arrayOf(Manifest.permission.WRITE_CALENDAR), 0);
+                    }
+                }
+            }
         }
 
         override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen,
@@ -129,7 +146,7 @@ class Preferences : ThemedActivity() {
             when (key) {
                 "archive_now" -> {
                     log.info(TAG, "Archiving completed items from preferences")
-                    m_app.showConfirmationDialog(this.activity, R.string.delete_task_message, { dialogInterface, i ->
+                    m_app.showConfirmationDialog(activity, R.string.delete_task_message, { dialogInterface, i ->
                         (activity as Preferences).broadcastIntentAndClose(
                                 Constants.BROADCAST_ACTION_ARCHIVE,
                                 Preferences.RESULT_ARCHIVE)
@@ -137,13 +154,13 @@ class Preferences : ThemedActivity() {
                 }
                 "logout_dropbox" -> {
                     log.info(TAG, "Logging out from Dropbox")
-                    m_app.showConfirmationDialog(this.activity, R.string.logout_message, { dialogInterface, i ->
+                    m_app.showConfirmationDialog(activity, R.string.logout_message, { dialogInterface, i ->
                         (activity as Preferences).broadcastIntentAndClose(
                                 Constants.BROADCAST_ACTION_LOGOUT,
                                 Preferences.RESULT_LOGOUT)
                     }, R.string.dropbox_logout_pref_title)
                 }
-                "send_log" -> startActivity(Intent(this.activity, LogScreen::class.java))
+                "send_log" -> startActivity(Intent(activity, LogScreen::class.java))
                 "share_history" -> startActivity(Intent(this.activity, HistoryScreen::class.java))
                 "app_version" -> {
                     val clipboard = m_app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

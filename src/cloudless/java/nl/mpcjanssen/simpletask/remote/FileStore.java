@@ -77,15 +77,15 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public List<Task> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
+    synchronized public List<String> loadTasksFromFile(final String path,  @Nullable BackupInterface backup, String eol) {
         log.info(TAG, "Loading tasks from file: {}" + path);
-        final CopyOnWriteArrayList<Task> result= new CopyOnWriteArrayList<>();
+        final CopyOnWriteArrayList<String> result= new CopyOnWriteArrayList<>();
         mIsLoading = true;
         try {
             ArrayList<String> completeFile = new ArrayList<>();
             for (String line : TaskIo.loadFromFile(new File(path))) {
                 completeFile.add(line);
-                result.add(new Task(line));
+                result.add(line);
             }
             if (backup != null) {
                 backup.backup(path, Util.join(completeFile, "\n"));
@@ -171,11 +171,10 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    synchronized public void saveTasksToFile(final String path, List<Task> tasks, @Nullable final BackupInterface backup, final String eol) {
+    synchronized public void saveTasksToFile(final String path, final List<String> lines, @Nullable final BackupInterface backup, final String eol) {
         log.info(TAG, "Saving tasks to file: {}" + path);
-        final List<String> output = Util.tasksToString(tasks);
         if (backup != null) {
-            backup.backup(path, Util.join(output, "\n"));
+            backup.backup(path, Util.join(lines, "\n"));
         }
         final TodoObserver obs = getObserver();
         obs.ignoreEvents(true);
@@ -184,7 +183,7 @@ public class FileStore implements FileStoreInterface {
             @Override
             public void run() {
                 try {
-                    TaskIo.writeToFile(Util.join(output, eol) + eol, new File(path), false);
+                    TaskIo.writeToFile(Util.join(lines, eol) + eol, new File(path), false);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));
@@ -199,15 +198,15 @@ public class FileStore implements FileStoreInterface {
     }
 
     @Override
-    public void appendTaskToFile(final String path, final List<Task> tasks, final String eol) {
+    public void appendTaskToFile(final String path, final List<String> lines, final String eol) {
         log.info(TAG, "Appending tasks to file: " + path);
-        final int size = tasks.size();
+        final int size = lines.size();
         queueRunnable("Appending " + size + " tasks to " + path, new Runnable() {
             @Override
             public void run() {
                 log.info(TAG, "Appending " + size + " tasks to " + path);
                 try {
-                    TaskIo.writeToFile(Util.joinTasks(tasks, eol) + eol, new File(path), true);
+                    TaskIo.writeToFile(Util.join(lines, eol) + eol, new File(path), true);
                 } catch (IOException e) {
                     e.printStackTrace();
                     bm.sendBroadcast(new Intent(Constants.BROADCAST_FILE_WRITE_FAILED));

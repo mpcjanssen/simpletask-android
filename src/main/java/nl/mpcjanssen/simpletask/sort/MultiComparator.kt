@@ -3,13 +3,14 @@ package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
+import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList: List<Task>, createAsBackup: Boolean) : Comparator<Task> {
-    var comparators : Comparator<Task>? = null
-    val defaultComparator = FileOrderComparator(taskList)
+class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
+    var comparators : Comparator<TodoListItem>? = null
+    val defaultComparator = FileOrderComparator()
     val TAG = "MultiComparator"
     init {
         val log = Logger
@@ -28,9 +29,9 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList:
                     reverse = true
                 }
             }
-            var comp : Comparator<Task>
+            var comp : Comparator<TodoListItem>
             when (sortType) {
-                "file_order" -> comp = FileOrderComparator(taskList)
+                "file_order" -> comp = FileOrderComparator()
                 "by_context" -> comp = ContextComparator(caseSensitve)
                 "by_project" -> comp = ProjectComparator(caseSensitve)
                 "alphabetical" -> comp = AlphabeticalComparator(caseSensitve)
@@ -53,7 +54,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, taskList:
         }
     }
 
-    override fun compare(o1: Task, o2: Task): Int {
+    override fun compare(o1: TodoListItem, o2: TodoListItem): Int {
         return comparators?.compare(o1, o2)?:defaultComparator.compare(o1,o2)
     }
 }

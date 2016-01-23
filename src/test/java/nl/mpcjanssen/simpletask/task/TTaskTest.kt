@@ -22,7 +22,7 @@ class TaskTest : TestCase() {
     }
 
     fun testEquals() {
-        assertFalse(Task("a")==Task("a"))
+        assertTrue(Task("a")==Task("a"))
         assertFalse(Task("a")==Task("A"))
     }
 
