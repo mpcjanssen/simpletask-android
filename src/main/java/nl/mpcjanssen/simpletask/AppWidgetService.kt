@@ -83,7 +83,6 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
         val comp = MultiComparator(mFilter.getSort(
                 application.defaultSorts),
                 application.sortCaseSensitive(),
-                visibleTasks,
                 application.useCreateBackup())
         Collections.sort(visibleTasks, comp)
     }

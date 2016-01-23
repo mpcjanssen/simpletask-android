@@ -282,9 +282,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun getSortedTasksCopy(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
         val filteredTasks = filter.apply(todoItems)
-        val originalOrder = ArrayList<TodoListItem>()
-        originalOrder.addAll(filteredTasks)
-        val comp = MultiComparator(sorts, caseSensitive, originalOrder, app.useCreateBackup())
+        val comp = MultiComparator(sorts, caseSensitive, app.useCreateBackup())
         Collections.sort(filteredTasks, comp)
         return filteredTasks
     }

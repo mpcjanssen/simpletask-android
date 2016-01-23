@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * Interface definition of the storage backend used.
  *
- * Uses events to communicate with the application. Currently supported are SYNC_START, SYNC_DONE and FILE_CHANGED.
  */
 public interface FileStoreInterface {
     boolean isAuthenticated();
@@ -18,8 +17,8 @@ public interface FileStoreInterface {
     void startLogin(Activity caller, int i);
     void logout();
     void browseForNewFile(Activity act, String path, FileSelectedListener listener, boolean txtOnly);
-    void saveTasksToFile(String path, List<String> tasks, @Nullable BackupInterface backup, String eol) throws IOException;
-    void appendTaskToFile(String path, List<String> tasks, String eol) throws IOException;
+    void saveTasksToFile(String path, List<String> lines, @Nullable BackupInterface backup, String eol) throws IOException;
+    void appendTaskToFile(String path, List<String> lines, String eol) throws IOException;
 
     int getType();
     void sync();
