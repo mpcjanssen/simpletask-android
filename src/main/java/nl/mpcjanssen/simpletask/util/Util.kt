@@ -78,6 +78,10 @@ val log = Logger;
         runOnMainThread(Runnable { Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show() })
     }
 
+    fun showToastLong(cxt: Context, msg: String) {
+        runOnMainThread(Runnable { Toast.makeText(cxt, msg, Toast.LENGTH_LONG).show() })
+    }
+
     interface InputDialogListener {
         fun onClick(input: String)
     }
