@@ -23,7 +23,7 @@ public class UtilTest extends TestCase {
         tasks.add(new Task("@College h:1"));
         ArrayList<TodoListItem> items = new ArrayList<>();
         for (Task t : tasks) {
-            items.add(new TodoListItem(0,t,false));
+            items.add(new TodoListItem(0,t.getText(),false));
         }
         assertEquals(0,Util.addHeaderLines(items, "by_context", "none", false, false).size());
 
