@@ -5,7 +5,6 @@ import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 
-import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {

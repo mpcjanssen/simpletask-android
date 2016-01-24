@@ -36,9 +36,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.widget.EditText;
-import de.greenrobot.dao.AbstractDao;
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.dao.*;
 import nl.mpcjanssen.simpletask.dao.gen.*;
 import nl.mpcjanssen.simpletask.remote.BackupInterface;
 import nl.mpcjanssen.simpletask.remote.FileStore;
@@ -46,10 +43,12 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.TodoList;
 import nl.mpcjanssen.simpletask.util.Util;
 
-
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
 public class TodoApplication extends Application implements
@@ -67,17 +66,13 @@ public class TodoApplication extends Application implements
     private BroadcastReceiver m_broadcastReceiver;
 
     public static final boolean ATLEAST_API16 = android.os.Build.VERSION.SDK_INT >= 16;
-    public static final boolean ATLEAST_API19 = android.os.Build.VERSION.SDK_INT >= 19;
+
     private int m_Theme = -1;
     private Logger log;
     private FileStore mFileStore;
 
     DaoSession daoSession;
-    private DaoMaster.DevOpenHelper helper;
-    private SQLiteDatabase todoDb;
-    private DaoMaster daoMaster;
     public TodoListItemDao todoListItemDao;
-    public TodoListStatusDao todoListStatusDao;
     public LogItemDao logDao;
     TodoFileDao backupDao;
 
@@ -93,12 +88,11 @@ public class TodoApplication extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
-        helper = new DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null);
-        todoDb = helper.getWritableDatabase();
-        daoMaster = new DaoMaster(todoDb);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null);
+        SQLiteDatabase todoDb = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(todoDb);
         daoSession = daoMaster.newSession();
         todoListItemDao = daoSession.getTodoListItemDao();
-        todoListStatusDao = daoSession.getTodoListStatusDao();
         logDao = daoSession.getLogItemDao();
         backupDao = daoSession.getTodoFileDao();
         log = Logger.INSTANCE;
@@ -448,11 +442,12 @@ public class TodoApplication extends Application implements
         return getPrefs().getString(getString(R.string.theme_pref_key), "light_darkactionbar");
     }
 
-    public boolean getFullDropboxAccess() {
+    @SuppressWarnings("unused")
+    public boolean getFullDropBoxAccess() {
         return getPrefs().getBoolean(getString(R.string.dropbox_full_access), true);
     }
 
-    public void setFullDropboxAccess(boolean full) {
+    public void setFullDropBoxAccess(boolean full) {
         getPrefs().edit().putBoolean(getString(R.string.dropbox_full_access), full).commit();
     }
 

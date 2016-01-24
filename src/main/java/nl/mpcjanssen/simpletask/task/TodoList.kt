@@ -37,7 +37,6 @@ import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItemDao
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItemDao.Properties
-import nl.mpcjanssen.simpletask.dao.gen.TodoListStatus
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
@@ -45,8 +44,6 @@ import nl.mpcjanssen.simpletask.util.*
 
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.Callable
-import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -113,7 +110,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     fun add(t: TodoListItem, atEnd: Boolean) {
         queueRunnable("Add task", Runnable {
             log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
-            val newLine: Long;
             if (atEnd) {
                 t.line = lastLine() + 1
             } else {
@@ -252,19 +248,19 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         })
     }
 
-    var selectedTasks: MutableList<TodoListItem>? = ArrayList<TodoListItem>()
+    var selectedTasks: List<TodoListItem>? = ArrayList()
         get() {
             return dao.queryBuilder().where(Properties.Selected.eq(true)).list()
         }
 
 
-    fun notifyChanged(filestore: FileStoreInterface, todoname: String, eol: String, backup: BackupInterface?, save: Boolean) {
+    fun notifyChanged(fileStore: FileStoreInterface, todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
         todolistQueue!!.post {
             if (save) {
-                log.info(TAG, "Handler: Handle notifychanged")
+                log.info(TAG, "Handler: Handle notifyChanged")
                 log.info(TAG, "Saving todo list, size {}" + dao.count())
-                save(filestore, todoname, backup, eol)
+                save(fileStore, todoName, backup, eol)
             }
             if (mTodoListChanged != null) {
                 log.info(TAG, "TodoList changed, notifying listener and invalidating cached values")
@@ -289,7 +285,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun reload(fileStore: FileStoreInterface, filename: String, backup: BackupInterface, lbm: LocalBroadcastManager, background: Boolean, eol: String) {
         if (this@TodoList.loadQueued()) {
-            log.info(TAG, "Todolist reload is already queued waiting")
+            log.info(TAG, "TodoList reload is already queued waiting")
             return
         }
         lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
@@ -298,9 +294,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             try {
                 app.todoListItemDao.session.callInTx {
                     app.todoListItemDao.deleteAll()
-                    app.todoListStatusDao.deleteAll()
-                    app.todoListStatusDao.insert(TodoListStatus("filename", filename))
-                    app.todoListStatusDao.insert(TodoListStatus("savePending", "false"))
                     var line: Long = 0
                     for (t in fileStore.loadTasksFromFile(filename, backup, eol)) {
                         app.todoListItemDao.insert(
@@ -313,29 +306,29 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 e.printStackTrace()
 
             } catch (e: IOException) {
-                log.error(TAG, "Todolist load failed: {}" + filename, e)
+                log.error(TAG, "TodoList load failed: {}" + filename, e)
                 showToastShort(TodoApplication.getAppContext(), "Loading of todo file failed")
             }
 
             loadQueued = false
-            log.info(TAG, "Todolist loaded, refresh UI")
+            log.info(TAG, "TodoList loaded, refresh UI")
             notifyChanged(fileStore, filename, eol, backup, false)
         }
         if (background) {
-            log.info(TAG, "Loading todolist asynchronously")
+            log.info(TAG, "Loading TodoList asynchronously")
             queueRunnable("Reload", r)
 
         } else {
-            log.info(TAG, "Loading todolist synchronously")
+            log.info(TAG, "Loading TodoList synchronously")
             r.run()
         }
     }
 
-    fun save(filestore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
+    fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         queueRunnable("Save", Runnable {
             try {
                 val tasks = dao.queryBuilder().orderAsc(Properties.Line).list().map { it.text }
-                filestore.saveTasksToFile(todoFileName, tasks, backup, eol)
+                fileStore.saveTasksToFile(todoFileName, tasks, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()
                 showToastLong(TodoApplication.getAppContext(), R.string.write_failed)
@@ -344,7 +337,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     }
 
-    fun archive(filestore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
+    fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
         queueRunnable("Archive", Runnable {
             val tasksToArchive: List<TodoListItem>
             if (tasks == null) {
@@ -353,10 +346,10 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 tasksToArchive = tasks.filter { it.task.isCompleted() };
             }
             try {
-                filestore.appendTaskToFile(doneFileName, tasksToArchive.map {it.text}, eol);
+                fileStore.appendTaskToFile(doneFileName, tasksToArchive.map {it.text}, eol);
                 dao.deleteInTx(tasksToArchive)
 
-                notifyChanged(filestore, todoFilename, eol, null, true);
+                notifyChanged(fileStore, todoFilename, eol, null, true);
             } catch (e : IOException) {
                 e.printStackTrace();
                 showToastShort(TodoApplication.getAppContext(), "Task archiving failed");
@@ -399,13 +392,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 }
             }
         }
-    }
-
-    fun selectLine(line: Long) {
-        val items = dao.queryBuilder().where(Properties.Line.eq(line)).list()
-        if (items.size < 1) return
-        items[0].selected = true
-        dao.update(items[0])
     }
 
     fun selectTodoItem(item: TodoListItem) {
