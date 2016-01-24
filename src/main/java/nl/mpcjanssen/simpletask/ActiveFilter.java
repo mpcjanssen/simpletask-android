@@ -362,12 +362,14 @@ public class ActiveFilter {
                     continue;
                 }
                 if  (!script.isEmpty()) {
-                    Util.initGlobals(globals,t);
-                    globals.set("idx", idx);
-                    LuaClosure closure = new LuaClosure(prototype, globals);
-                    LuaValue result = closure.call(); 
-                    if (!result.toboolean()) {
-                        continue;
+                    if (globals!=null && prototype!=null) {
+                        Util.initGlobals(globals, t);
+                        globals.set("idx", idx);
+                        LuaClosure closure = new LuaClosure(prototype, globals);
+                        LuaValue result = closure.call();
+                        if (!result.toboolean()) {
+                            continue;
+                        }
                     }
                 }
                 matched.add(item);
