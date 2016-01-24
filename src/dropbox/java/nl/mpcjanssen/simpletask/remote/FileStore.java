@@ -28,7 +28,6 @@ import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.Logger;
 import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoApplication;
-import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -165,7 +164,7 @@ public class FileStore implements FileStoreInterface {
         String app_key;
         if (mDBApi == null) {
             // Full access or folder access?
-            if (app.getFullDropboxAccess()) {
+            if (app.getFullDropBoxAccess()) {
                 app_secret = mApp.getString(R.string.dropbox_consumer_secret);
                 app_key = mApp.getString(R.string.dropbox_consumer_key);
             } else {
@@ -183,7 +182,7 @@ public class FileStore implements FileStoreInterface {
 
     @NonNull
     static public String getDefaultPath(TodoApplication app) {
-        if (app.getFullDropboxAccess()) {
+        if (app.getFullDropBoxAccess()) {
             return "/todo/todo.txt";
         } else {
             return "/todo.txt";

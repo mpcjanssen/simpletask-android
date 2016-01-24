@@ -78,18 +78,6 @@ val log = Logger;
         runOnMainThread(Runnable { Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show() })
     }
 
-    fun showToastLong(cxt: Context, msg: String) {
-        runOnMainThread(Runnable { Toast.makeText(cxt, msg, Toast.LENGTH_LONG).show() })
-    }
-
-    fun tasksToString(tasks: List<Task>): List<String>? {
-        val result = ArrayList<String>()
-        for (t in tasks) {
-            result.add(t.inFileFormat())
-        }
-        return result
-    }
-
     interface InputDialogListener {
         fun onClick(input: String)
     }
@@ -144,22 +132,6 @@ val log = Logger;
             result.removeAt(i - 1)
         }
         return result
-    }
-
-    fun joinTasks(s: Collection<Task>?, delimiter: String): String {
-        val builder = StringBuilder()
-        if (s == null) {
-            return ""
-        }
-        val iter = s.iterator()
-        while (iter.hasNext()) {
-            builder.append(iter.next().inFileFormat())
-            if (!iter.hasNext()) {
-                break
-            }
-            builder.append(delimiter)
-        }
-        return builder.toString()
     }
 
     fun join(s: Collection<String>?, delimiter: String): String {

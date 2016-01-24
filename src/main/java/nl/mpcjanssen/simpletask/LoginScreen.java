@@ -66,7 +66,7 @@ public class LoginScreen extends ThemedActivity {
         m_LoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                m_app.setFullDropboxAccess(true);
+                m_app.setFullDropBoxAccess(true);
                 startLogin();
             }
         });
@@ -75,7 +75,7 @@ public class LoginScreen extends ThemedActivity {
         m_LoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                m_app.setFullDropboxAccess(false);
+                m_app.setFullDropBoxAccess(false);
                 startLogin();
             }
         });

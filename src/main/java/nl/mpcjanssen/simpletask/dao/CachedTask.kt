@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask.dao
 import nl.mpcjanssen.simpletask.task.Task
 
 /**
- * Created by Mark on 22-1-2016.
+ * Superclass for the TodoListItems. Will parse the task on demand.
  */
 abstract class CachedTask {
     abstract var text: String
