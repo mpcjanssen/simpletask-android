@@ -223,11 +223,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     public static String getDefaultPath(TodoApplication app) {
-        if (TodoApplication.ATLEAST_API19) {
-            return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/todo.txt";
-        } else {
-            return Environment.getExternalStorageDirectory() + "/data/nl.mpcjanssen.simpletask/todo.txt";
-        }
+        return Environment.getExternalStorageDirectory() + "/data/nl.mpcjanssen.simpletask/todo.txt";
     }
 
     public static class FileDialog {
