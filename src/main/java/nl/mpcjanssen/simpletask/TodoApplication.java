@@ -250,7 +250,11 @@ public class TodoApplication extends Application implements
 
 
     public String getTodoFileName() {
-        String name =  m_prefs.getString(getString(R.string.todo_file_key), FileStore.getDefaultPath(this));
+        String name =  m_prefs.getString(getString(R.string.todo_file_key), null);
+        if (name == null) {
+            name =  FileStore.getDefaultPath(this);
+            setTodoFile(name);
+        }
         File todoFile = new File(name);
         try {
             return todoFile.getCanonicalPath();
