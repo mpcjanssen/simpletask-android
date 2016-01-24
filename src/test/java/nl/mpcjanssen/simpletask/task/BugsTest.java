@@ -22,7 +22,7 @@ public class BugsTest extends TestCase {
 
     public void testActiveSortNullCrash() {
         ActiveFilter f = new ActiveFilter();
-        MultiComparator mc =  new MultiComparator(f.getSort(null),true, new ArrayList<TodoListItem>(), false);
+        MultiComparator mc =  new MultiComparator(f.getSort(null),true, false);
         assertNotNull(mc);
     }
 
