@@ -2,8 +2,6 @@ package nl.mpcjanssen.simpletask.remote;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
-import nl.mpcjanssen.simpletask.task.Task;
-
 import java.io.IOException;
 import java.util.List;
 

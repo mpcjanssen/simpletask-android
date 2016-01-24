@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
-import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
 class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<TodoListItem> {
