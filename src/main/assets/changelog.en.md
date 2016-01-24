@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+6.3.7
+-----
+
+- Revert to old default location for Cloudless. People are losing their tasks.
+- Recert to old name for Cloudlesss. Renaming seems to give problems with Google Play updates.
+
 6.3.6
 -----
 
