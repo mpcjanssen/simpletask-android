@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.1
+-----
+
+- Save changes to tasks. Fixes #346.
+
 7.0.0
 -----
 
