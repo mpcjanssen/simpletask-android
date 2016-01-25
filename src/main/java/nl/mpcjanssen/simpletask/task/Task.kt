@@ -205,11 +205,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     deferFromDate = completionDate?:"";
                 }
                 val newTask = Task(textWithoutCompletedInfo);
-                if (newTask.dueDate == null && newTask.thresholdDate == null) {
+                if (newTask.dueDate != null) {
                     newTask.deferDueDate(pattern, deferFromDate);
-                } else if (newTask.dueDate != null) {
-                        newTask.deferDueDate(pattern, deferFromDate);
-                } else {
+
+                }
+                if (newTask.thresholdDate != null) {
                     newTask.deferThresholdDate(pattern, deferFromDate);
                 }
                 if (!createDate.isNullOrEmpty()) {
