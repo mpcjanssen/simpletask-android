@@ -690,7 +690,7 @@ public class Simpletask extends ThemedActivity implements
 
     private void completeTasks(@NonNull List<TodoListItem> tasks) {
         for (TodoListItem t : tasks) {
-            getTodoList().complete(t.getTask(), m_app.hasKeepPrio(), m_app.hasAppendAtEnd());
+            getTodoList().complete(t, m_app.hasKeepPrio(), m_app.hasAppendAtEnd());
         }
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
@@ -734,11 +734,13 @@ public class Simpletask extends ThemedActivity implements
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            for (TodoListItem t : tasksToDefer) {
-                                m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT), t.getTask(), dateType);
+                            for (TodoListItem item : tasksToDefer) {
+                                Task t = item.getTask();
+                                m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT),t, dateType);
+                                item.setText(t.getText());
                             }
                             closeSelectionMode();
-                            getTodoList().updateItems(tasks);
+                            getTodoList().updateItems(tasksToDefer);
                             getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
                         }
@@ -753,10 +755,12 @@ public class Simpletask extends ThemedActivity implements
                     dialog.getDatePicker().setSpinnersShown(!showCalendar);
                     dialog.show();
                 } else {
-                    for (TodoListItem t : tasksToDefer) {
-                        m_app.getTodoList().defer(selected, t.getTask(), dateType);
+                    for (TodoListItem item : tasksToDefer) {
+                        Task t = item.getTask();
+                        m_app.getTodoList().defer(selected, t, dateType);
+                        item.setText(t.inFileFormat());
                     }
-                    getTodoList().updateItems(tasks);
+                    getTodoList().updateItems(tasksToDefer);
                     closeSelectionMode();
                     getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app,true );
 
@@ -1686,8 +1690,8 @@ public class Simpletask extends ThemedActivity implements
         Set<String> selectedContexts = new HashSet<>();
         final TodoList todoList = getTodoList();
         contexts.addAll(Util.sortWithPrefix(todoList.getContexts(), m_app.sortCaseSensitive(), null));
-        for (TodoListItem t : checkedTasks) {
-            selectedContexts.addAll(t.getTask().getLists());
+        for (TodoListItem item : checkedTasks) {
+            selectedContexts.addAll(item.getTask().getLists());
         }
 
 
@@ -1721,13 +1725,17 @@ public class Simpletask extends ThemedActivity implements
                     items.add(ed.getText().toString());
                 }
                 for (String item : items) {
-                    for (TodoListItem t : checkedTasks) {
-                        t.getTask().addList(item);
+                    for (TodoListItem i : checkedTasks) {
+                        Task t = i.getTask();
+                        t.addList(item);
+                        i.setText(t.getText());
                     }
                 }
                 for (String item : uncheckedItems) {
-                    for (TodoListItem t : checkedTasks) {
-                        t.getTask().removeTag("@" + item);
+                    for (TodoListItem i : checkedTasks) {
+                        Task t = i.getTask();
+                        t.removeTag("@" + item);
+                        i.setText(t.getText());
                     }
                 }
                 getTodoList().updateItems(checkedTasks);
@@ -1786,12 +1794,16 @@ public class Simpletask extends ThemedActivity implements
                 }
                 for (String item : items) {
                     for (TodoListItem t : checkedTasks) {
-                        t.getTask().addTag(item);
+                        Task task = t.getTask();
+                        task.addTag(item);
+                        t.setText(task.getText());
                     }
                 }
                 for (String item : uncheckedItems) {
                     for (TodoListItem t : checkedTasks) {
-                        t.getTask().removeTag("+" + item);
+                        Task task = t.getTask();
+                        task.removeTag("+" + item);
+                        t.setText(task.getText());
                     }
                 }
                 getTodoList().updateItems(checkedTasks);

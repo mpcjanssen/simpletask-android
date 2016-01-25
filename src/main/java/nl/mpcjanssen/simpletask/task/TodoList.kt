@@ -206,20 +206,24 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         get() = prefixItems("+", projects)
 
 
-    fun undoComplete(tasks: List<TodoListItem>) {
+    fun undoComplete(items: List<TodoListItem>) {
         queueRunnable("Uncomplete", Runnable {
-            for (t in tasks) {
-                t.task.markIncomplete()
+            items.forEach {
+                val task = it.task
+                task.markIncomplete()
+                it.text = task.text
             }
         })
     }
 
-    fun complete(task: Task,
+    fun complete(item: TodoListItem,
                  keepPrio: Boolean,
                  extraAtEnd: Boolean) {
 
         queueRunnable("Complete", Runnable {
+            val task  = item.task
             val extra = task.markComplete(todayAsString)
+            item.text = task.text
             if (extra != null) {
                 add(extra, extraAtEnd)
             }
@@ -230,12 +234,15 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
 
-    fun prioritize(tasks: List<TodoListItem>, prio: Priority) {
+    fun prioritize(items: List<TodoListItem>, prio: Priority) {
         queueRunnable("Complete", Runnable {
-            for (t in tasks) {
-                t.task.priority = prio
+            for (item in items) {
+                val task = item.task
+                task.priority = prio
+                item.text = task.text
+
             }
-            dao.updateInTx(tasks)
+            dao.updateInTx(items)
         })
     }
 
@@ -327,8 +334,11 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         queueRunnable("Save", Runnable {
             try {
-                val tasks = dao.queryBuilder().orderAsc(Properties.Line).list().map { it.text }
-                fileStore.saveTasksToFile(todoFileName, tasks, backup, eol)
+                val tasks = dao.queryBuilder().orderAsc(Properties.Line).listLazyUncached()
+                val lines = tasks.map {
+                    it.text
+                }
+                fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()
                 showToastLong(TodoApplication.getAppContext(), R.string.write_failed)
