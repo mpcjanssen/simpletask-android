@@ -75,6 +75,9 @@ public class TodoApplication extends Application implements
     public TodoListItemDao todoListItemDao;
     public LogItemDao logDao;
     TodoFileDao backupDao;
+    private DaoMaster.DevOpenHelper helper;
+    private SQLiteDatabase todoDb;
+    private DaoMaster daoMaster;
 
 
     public static Context getAppContext() {
@@ -88,9 +91,9 @@ public class TodoApplication extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null);
-        SQLiteDatabase todoDb = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(todoDb);
+        helper = new DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null);
+        todoDb = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(todoDb);
         daoSession = daoMaster.newSession();
         todoListItemDao = daoSession.getTodoListItemDao();
         logDao = daoSession.getLogItemDao();
