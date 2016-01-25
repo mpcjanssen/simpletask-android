@@ -692,11 +692,11 @@ public class Simpletask extends ThemedActivity implements
         for (TodoListItem t : tasks) {
             getTodoList().complete(t, m_app.hasKeepPrio(), m_app.hasAppendAtEnd());
         }
+        getTodoList().updateItems(tasks);
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
         closeSelectionMode();
-        getTodoList().updateItems(tasks);
         getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
     }
 
