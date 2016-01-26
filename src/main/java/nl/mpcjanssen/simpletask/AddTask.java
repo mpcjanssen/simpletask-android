@@ -358,6 +358,7 @@ public class AddTask extends ThemedActivity {
         for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
             if (m_backup!=null && m_backup.size()>0) {
                 // Don't modify create date for updated tasks
+                m_backup.get(0).setText(line);
                 m_backup.get(0).getTask().update(line);
                 todoList.updateItem(m_backup.get(0));
                 m_backup.remove(0);
