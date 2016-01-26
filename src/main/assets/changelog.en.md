@@ -6,6 +6,7 @@
 
 - Complete task before auto-archiving. Fixes #347.
 - Defer both due and threshold date when recurring.
+- Fix ArrayOutOfBounds if list is empty.
 
 7.0.1
 -----
