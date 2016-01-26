@@ -178,8 +178,8 @@ class Preferences : ThemedActivity() {
 
     companion object {
         internal val TAG = Preferences::class.java.simpleName
-        val RESULT_LOGOUT = Activity.RESULT_FIRST_USER + 1
-        val RESULT_ARCHIVE = Activity.RESULT_FIRST_USER + 2
-        val RESULT_RECREATE_ACTIVITY = Activity.RESULT_FIRST_USER + 3
+        const val RESULT_LOGOUT = Activity.RESULT_FIRST_USER + 1
+        const val RESULT_ARCHIVE = Activity.RESULT_FIRST_USER + 2
+        const val RESULT_RECREATE_ACTIVITY = Activity.RESULT_FIRST_USER + 3
     }
 }
