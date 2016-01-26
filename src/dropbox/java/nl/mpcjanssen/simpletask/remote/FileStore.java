@@ -371,7 +371,7 @@ public class FileStore implements FileStoreInterface {
     }
 
     private List<String> tasksFromCache() {
-        CopyOnWriteArrayList <String> result = new CopyOnWriteArrayList();
+        CopyOnWriteArrayList<String> result = new CopyOnWriteArrayList<>();
         String contents = loadContentsFromCache();
         for (String line : contents.split("(\r\n|\r|\n)")) {
             result.add(line);
