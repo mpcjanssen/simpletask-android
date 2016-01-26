@@ -100,11 +100,21 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun firstLine(): Long {
-        return dao.queryBuilder().orderAsc(Properties.Line).listLazy()[0].line
+        val items =  dao.queryBuilder().orderAsc(Properties.Line).listLazy()
+        if (items.size > 0) {
+            return items[0].line
+        } else {
+            return -1
+        }
     }
 
     fun lastLine(): Long {
-        return dao.queryBuilder().orderDesc(Properties.Line).listLazy()[0].line
+        val items = dao.queryBuilder().orderDesc(Properties.Line).listLazy()
+        if (items.size > 0) {
+            return items[0].line
+        } else {
+            return 1
+        }
     }
 
     fun add(t: TodoListItem, atEnd: Boolean) {
