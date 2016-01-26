@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.4
+-----
+
+- Save changes made when editing tasks.
+
 7.0.3
 -----
 
