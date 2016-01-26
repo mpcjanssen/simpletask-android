@@ -1,12 +1,16 @@
 ﻿Changelog
 =========
 
+7.0.3
+-----
+
+- Fix ArrayOutOfBounds if list is empty.
+
 7.0.2
 -----
 
 - Complete task before auto-archiving. Fixes #347.
 - Defer both due and threshold date when recurring.
-- Fix ArrayOutOfBounds if list is empty.
 
 7.0.1
 -----
