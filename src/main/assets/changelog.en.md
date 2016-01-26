@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+7.0.2
+-----
+
+- Complete task before auto-archiving. Fixes #347.
+- Defer both due and threshold date when recurring.
+
 7.0.1
 -----
 
