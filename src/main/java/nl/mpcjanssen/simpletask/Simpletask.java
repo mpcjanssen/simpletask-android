@@ -715,9 +715,9 @@ public class Simpletask extends ThemedActivity implements
 
     private void deferTasks(final List<TodoListItem> tasks, final DateType dateType) {
         final List<TodoListItem> tasksToDefer = tasks;
-        int titleId = R.id.defer_due;
+        int titleId = R.string.defer_due;
         if (dateType == DateType.THRESHOLD) {
-            titleId = R.id.defer_threshold;
+            titleId = R.string.defer_threshold;
         }
         Dialog d = Util.createDeferDialog(this, titleId, true, new InputDialogListener() {
             @Override
