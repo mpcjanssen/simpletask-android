@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+7.0.6
+-----
+
+- Fix off by one errors when editing priority from the edit screen. Fixes #352.
+- Don't show cancel button in Edit task screen to prevent accidental data loss. Cancel is now in the menu.
+
 7.0.5
 -----
 
