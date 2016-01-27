@@ -6,7 +6,7 @@
     <item
         android:id="@+id/menu_cancel_task"
         android:orderInCategory="100"
-        app:showAsAction="always"
+        app:showAsAction="never"
         android:title="@string/cancel"
         android:icon="@drawable/cancel" />
     <item
