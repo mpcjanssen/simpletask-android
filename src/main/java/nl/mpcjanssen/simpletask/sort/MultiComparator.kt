@@ -10,7 +10,7 @@ import java.util.*
 class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
     var comparators : Comparator<TodoListItem>? = null
     val defaultComparator = FileOrderComparator()
-    val TAG = "MultiComparator"
+    val TAG = MultiComparator::class.java.simpleName
     init {
         val log = Logger
 
