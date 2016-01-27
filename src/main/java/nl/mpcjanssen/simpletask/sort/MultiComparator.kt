@@ -40,6 +40,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsB
                 "in_future" -> comp = FutureComparator()
                 "by_due_date" -> comp = DueDateComparator()
                 "by_threshold_date" -> comp = ThresholdDateComparator(createAsBackup)
+                "by_completion_date" -> comp = CompletionDateComparator()
                 else -> {
                     log.warn(TAG, "Unknown sort: " + sort)
                     continue@label

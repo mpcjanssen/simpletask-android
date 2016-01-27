@@ -10,18 +10,22 @@ import java.util.*
 class CreationDateComparator : Comparator<TodoListItem> {
 
     override fun compare(a: TodoListItem?, b: TodoListItem?): Int {
-        val result: Int
-        if (isEmptyOrNull(a!!.task.createDate) && isEmptyOrNull(b!!.task.createDate)) {
-            result = 0
-        } else if (isEmptyOrNull(a.task.createDate)) {
-            result = 1
-        } else if (isEmptyOrNull(b!!.task.createDate)) {
-            result = -1
-        } else {
-            val dateA = DateTime(a.task.createDate)
-            val dateB = DateTime(b.task.createDate)
-            result = dateA.compareTo(dateB)
+        if (a === b) {
+            return 0
+        } else if (a == null) {
+            return -1
+        } else if (b == null) {
+            return 1
         }
-        return result
+        val aDate = a.task.createDate
+        val bDate =  b.task.createDate
+        if ( aDate == null && bDate == null) {
+            return 0
+        } else if (aDate == null) {
+            return 1
+        } else if (bDate == null) {
+            return  -1
+        }
+        return aDate.compareTo(bDate)
     }
 }
