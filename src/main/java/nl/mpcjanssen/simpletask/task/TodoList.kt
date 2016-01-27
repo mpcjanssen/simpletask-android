@@ -257,12 +257,10 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun defer(deferString: String, tasksToDefer: Task, dateType: DateType) {
-        queueRunnable("Defer", Runnable {
-            when (dateType) {
-                DateType.DUE -> tasksToDefer.deferDueDate(deferString, todayAsString)
-                DateType.THRESHOLD -> tasksToDefer.deferThresholdDate(deferString, todayAsString)
-            }
-        })
+        when (dateType) {
+            DateType.DUE -> tasksToDefer.deferDueDate(deferString, todayAsString)
+            DateType.THRESHOLD -> tasksToDefer.deferThresholdDate(deferString, todayAsString)
+        }
     }
 
     var selectedTasks: List<TodoListItem>? = ArrayList()

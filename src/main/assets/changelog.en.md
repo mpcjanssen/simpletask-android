@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.5
+-----
+
+- Save changes in threshold and due date.
+
 7.0.4
 -----
 

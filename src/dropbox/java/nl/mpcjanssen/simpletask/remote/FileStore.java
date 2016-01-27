@@ -634,8 +634,8 @@ public class FileStore implements FileStoreInterface {
 
 
         /**
-         * @param activity
-         * @param pathName
+         * @param activity activity to display the file dialog.
+         * @param pathName intial path shown in the file dialog
          */
         public FileDialog(Activity activity, String pathName, boolean txtOnly) {
             log = Logger.INSTANCE;
