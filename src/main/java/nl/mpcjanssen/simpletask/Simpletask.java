@@ -734,13 +734,8 @@ public class Simpletask extends ThemedActivity implements
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            for (TodoListItem item : tasksToDefer) {
-                                Task t = item.getTask();
-                                m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT),t, dateType);
-                                item.setText(t.getText());
-                            }
+                            m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT),tasksToDefer, dateType);
                             closeSelectionMode();
-                            getTodoList().updateItems(tasksToDefer);
                             getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
                         }
@@ -755,12 +750,8 @@ public class Simpletask extends ThemedActivity implements
                     dialog.getDatePicker().setSpinnersShown(!showCalendar);
                     dialog.show();
                 } else {
-                    for (TodoListItem item : tasksToDefer) {
-                        Task t = item.getTask();
-                        m_app.getTodoList().defer(selected, t, dateType);
-                        item.setText(t.inFileFormat());
-                    }
-                    getTodoList().updateItems(tasksToDefer);
+
+                    m_app.getTodoList().defer(selected, tasksToDefer, dateType);
                     closeSelectionMode();
                     getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app,true );
 
