@@ -280,6 +280,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="in_future">Threshold date in future</string>
     <string name="by_due_date">By Due Date</string>
     <string name="by_threshold_date">By Threshold Date</string>
+    <string name="by_completion_date">By Completion Date</string>
 	
     <!-- filter -->
     <string name="filter_select_all">Select all</string>
