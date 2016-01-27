@@ -600,14 +600,18 @@ public class AddTask extends ThemedActivity {
     }
 
     public int getCurrentCursorLine(@NonNull EditText editText) {
-        int selectionStart = Selection.getSelectionStart(editText.getText());
-        Layout layout = editText.getLayout();
-
-        if (selectionStart != -1) {
-            return layout.getLineForOffset(selectionStart);
+        int selectionStart = editText.getSelectionStart();
+        if (selectionStart == -1) {
+            return -1;
         }
 
-        return -1;
+        CharSequence chars = editText.getText().subSequence(0, selectionStart);
+        int line = 0;
+        for (int i = 0 ;  i < chars.length(); i++) {
+            if (chars.charAt(i) == '\n') line++;
+
+        }
+        return line;
     }
 
     private void replaceDueDate(@NonNull CharSequence newDueDate) {
@@ -667,7 +671,7 @@ public class AddTask extends ThemedActivity {
         }
 
         // Don't go out of bounds
-        location = Math.min(location, newLength-1);
+        location = Math.min(location, newLength );
         location = Math.max(0, location);
         textInputField.setSelection(location, location);
     }
@@ -678,7 +682,6 @@ public class AddTask extends ThemedActivity {
         int end = textInputField.getSelectionEnd();
         log.debug(TAG, "Current selection: " + start + "-" + end);
         int length = textInputField.getText().length();
-        int sizeDelta;
         ArrayList<String> lines = new ArrayList<>();
         Collections.addAll(lines, textInputField.getText().toString().split("\\n", -1));
 
