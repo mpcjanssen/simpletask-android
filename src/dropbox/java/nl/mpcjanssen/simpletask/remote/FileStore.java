@@ -30,6 +30,7 @@ import nl.mpcjanssen.simpletask.R;
 import nl.mpcjanssen.simpletask.TodoApplication;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.io.*;
@@ -624,6 +625,11 @@ public class FileStore implements FileStoreInterface {
         if (prevOnline && !mOnline) {
             log.info(TAG, "Device went offline");
         }
+    }
+
+    @Override
+    public boolean getWritePermission(@NotNull Activity act, int activtyResult) {
+        return true;
     }
 
     public static class FileDialog {

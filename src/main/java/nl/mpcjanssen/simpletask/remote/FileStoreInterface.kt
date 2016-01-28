@@ -29,6 +29,8 @@ interface FileStoreInterface {
     fun supportsSync(): Boolean
     fun changesPending(): Boolean
 
+    fun getWritePermission(act : Activity, activityResult: Int): Boolean
+
     val isLoading: Boolean
 
     interface FileSelectedListener {
