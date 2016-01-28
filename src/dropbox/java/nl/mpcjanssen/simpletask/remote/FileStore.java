@@ -502,18 +502,25 @@ public class FileStore implements FileStoreInterface {
             public void run() {
                 try {
 
-                    // First read file to append to
-                    DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
-                    DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
-                    log.info(TAG,  "The file's rev is: " + fileInfo.getMetadata().rev);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
-                    String line;
                     ArrayList<String> doneContents = new ArrayList<>();
-                    while ((line = reader.readLine()) != null) {
-                        doneContents.add(line);
-                    }
-                    openFileStream.close();
+                    String rev = null;
+                    // First read file to append to
+                    try {
+                        DropboxAPI.DropboxInputStream openFileStream = mDBApi.getFileStream(path, null);
+                        DropboxAPI.DropboxFileInfo fileInfo = openFileStream.getFileInfo();
+                        rev = fileInfo.getMetadata().rev;
+                        log.info(TAG, "The file's rev is: " + fileInfo.getMetadata().rev);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(openFileStream, "UTF-8"));
+                        String line;
 
+                        while ((line = reader.readLine()) != null) {
+                            doneContents.add(line);
+                        }
+                        openFileStream.close();
+
+                    } catch (DropboxException e) {
+                        log.info(TAG, "Couldn't read " + path);
+                    }
                     // Then append
                     for (String t : tasks) {
                         doneContents.add(t);
@@ -522,7 +529,7 @@ public class FileStore implements FileStoreInterface {
                     InputStream in = new ByteArrayInputStream(toStore);
 
                     mDBApi.putFile(path, in,
-                            toStore.length, fileInfo.getMetadata().rev, null);
+                            toStore.length, rev, null);
                     in.close();
                 } catch (Exception e) {
                     e.printStackTrace();
