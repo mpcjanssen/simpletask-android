@@ -1,16 +1,20 @@
 package nl.mpcjanssen.simpletask.remote;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import nl.mpcjanssen.simpletask.Constants;
 import nl.mpcjanssen.simpletask.Logger;
@@ -19,6 +23,7 @@ import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.ListenerList;
 import nl.mpcjanssen.simpletask.util.TaskIo;
 import nl.mpcjanssen.simpletask.util.Util;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.io.File;
@@ -223,6 +228,19 @@ public class FileStore implements FileStoreInterface {
 
     public static String getDefaultPath(TodoApplication app) {
         return Environment.getExternalStorageDirectory() + "/data/nl.mpcjanssen.simpletask/todo.txt";
+    }
+
+    @Override
+    public boolean getWritePermission(@NotNull Activity act, int activityResult) {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(act,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(act,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, activityResult);
+        }
+        return permissionCheck == PackageManager.PERMISSION_GRANTED;
     }
 
     public static class FileDialog {

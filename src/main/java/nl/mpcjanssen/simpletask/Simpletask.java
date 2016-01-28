@@ -62,6 +62,7 @@ public class Simpletask extends ThemedActivity implements
 
     private final static int REQUEST_SHARE_PARTS = 1;
     private final static int REQUEST_PREFERENCES = 2;
+    private final static int REQUEST_PERMISSION = 3;
 
     private final static String ACTION_LINK = "link";
     private final static String ACTION_SMS = "sms";
@@ -138,6 +139,7 @@ public class Simpletask extends ThemedActivity implements
         };
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter);
 
+
         // Set the proper theme
         setTheme(m_app.getActiveTheme());
         if (m_app.hasLandscapeDrawers()) {
@@ -178,6 +180,15 @@ public class Simpletask extends ThemedActivity implements
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_PERMISSION:
+                m_app.switchTodoFile(m_app.getTodoFileName(),false);
+                break;
+        }
+    }
 
     private void showHelp() {
         Intent i = new Intent(this, HelpScreen.class);
@@ -242,6 +253,10 @@ public class Simpletask extends ThemedActivity implements
         if (!m_app.isAuthenticated()) {
             log.info(TAG, "handleIntent: not authenticated");
             startLogin();
+            return;
+        }
+        // Check if we have SDCard permision for cloudless
+        if (!m_app.getFileStore().getWritePermission(this, REQUEST_PERMISSION)) {
             return;
         }
 
@@ -458,7 +473,7 @@ public class Simpletask extends ThemedActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAddTaskActivity(null);
+                startAddTaskActivity();
             }
         });
 
@@ -510,7 +525,7 @@ public class Simpletask extends ThemedActivity implements
         } else {
             actionbar.setVisibility(View.GONE);
         }
-        int count = m_adapter != null ? m_adapter.getCountVisbleTodoItems() : 0;
+        int count = m_adapter != null ? m_adapter.getCountVisibleTodoItems() : 0;
         long total = getTodoList().size();
 
         filterText.setText(mFilter.getTitle(
@@ -714,7 +729,6 @@ public class Simpletask extends ThemedActivity implements
     }
 
     private void deferTasks(final List<TodoListItem> tasks, final DateType dateType) {
-        final List<TodoListItem> tasksToDefer = tasks;
         int titleId = R.string.defer_due;
         if (dateType == DateType.THRESHOLD) {
             titleId = R.string.defer_threshold;
@@ -734,7 +748,7 @@ public class Simpletask extends ThemedActivity implements
                             month++;
 
                             DateTime date = DateTime.forDateOnly(year, month, day);
-                            m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT),tasksToDefer, dateType);
+                            m_app.getTodoList().defer(date.format(Constants.DATE_FORMAT),tasks, dateType);
                             closeSelectionMode();
                             getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
@@ -751,7 +765,7 @@ public class Simpletask extends ThemedActivity implements
                     dialog.show();
                 } else {
 
-                    m_app.getTodoList().defer(selected, tasksToDefer, dateType);
+                    m_app.getTodoList().defer(selected, tasks, dateType);
                     closeSelectionMode();
                     getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app,true );
 
@@ -819,6 +833,7 @@ public class Simpletask extends ThemedActivity implements
                 break;
             case R.id.open_file:
                 m_app.browseForNewFile(this);
+                m_app.browseForNewFile(this);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -826,9 +841,8 @@ public class Simpletask extends ThemedActivity implements
         return true;
     }
 
-    private void startAddTaskActivity(List<TodoListItem> tasks) {
+    private void startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity");
-        getTodoList().setSelectedTasks(tasks);
         Intent intent = new Intent(this, AddTask.class);
         mFilter.saveInIntent(intent);
         startActivity(intent);
@@ -1194,6 +1208,9 @@ public class Simpletask extends ThemedActivity implements
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         TodoListItem t = getTaskAt(position);
+        if (t==null) {
+            return false;
+        }
         boolean selected = !getListView().isItemChecked(position);
         if (selected) {
             getTodoList().selectTodoItem(t);
@@ -1238,7 +1255,7 @@ public class Simpletask extends ThemedActivity implements
                         undoCompleteTasks(checkedTasks);
                         break;
                     case R.id.update:
-                        startAddTaskActivity(checkedTasks);
+                        startAddTaskActivity();
                         break;
                     case R.id.delete:
                         deleteTasks(checkedTasks);
@@ -1370,13 +1387,7 @@ public class Simpletask extends ThemedActivity implements
             updateFilterBar();
         }
 
-
-
-        public int getCountVisbleLines() {
-            return visibleLines.size();
-        }
-
-        public int getCountVisbleTodoItems() {
+        public int getCountVisibleTodoItems() {
             int count = 0;
             for (VisibleLine line : visibleLines) {
                 if (!line.getHeader()) {
@@ -1573,7 +1584,7 @@ public class Simpletask extends ThemedActivity implements
                 SpannableString relDue = task.getTask().getRelativeDueDate(mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
                         ContextCompat.getColor(m_app, android.R.color.holo_red_light),
                         m_app.hasColorDueDates());
-                String relThres = task.getTask().getRelativeThresholdDate(mContext);
+                String relativeThresholdDate = task.getTask().getRelativeThresholdDate(mContext);
                 if (!Strings.isEmptyOrNull(relAge) && !mFilter.getHideCreateDate()) {
                     holder.taskage.setText(relAge);
                     holder.taskage.setVisibility(View.VISIBLE);
@@ -1588,8 +1599,8 @@ public class Simpletask extends ThemedActivity implements
                     holder.taskdue.setText("");
                     holder.taskdue.setVisibility(View.GONE);
                 }
-                if (!Strings.isEmptyOrNull(relThres)) {
-                    holder.taskthreshold.setText(relThres);
+                if (!Strings.isEmptyOrNull(relativeThresholdDate)) {
+                    holder.taskthreshold.setText(relativeThresholdDate);
                     holder.taskthreshold.setVisibility(View.VISIBLE);
                 } else {
                     holder.taskthreshold.setText("");

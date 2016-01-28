@@ -268,7 +268,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         updateItems(items)
     }
 
-    var selectedTasks: List<TodoListItem>? = ArrayList()
+    var selectedTasks: List<TodoListItem> = ArrayList()
         get() {
             return dao.queryBuilder().where(Properties.Selected.eq(true)).list()
         }
