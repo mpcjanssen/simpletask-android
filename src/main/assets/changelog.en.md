@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.7
+-----
+
+- Don't fail archive if done.txt doesn't exist yet. Fixes #353.
+
 7.0.6
 -----
 
