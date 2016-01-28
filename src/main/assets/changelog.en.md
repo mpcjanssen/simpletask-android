@@ -5,6 +5,7 @@
 -----
 
 - Don't fail archive if done.txt doesn't exist yet. Fixes #353.
+- Ask for Storage permission on M. Fixes #340.
 
 7.0.6
 -----
