@@ -366,14 +366,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return null;
     }
 
-    private fun calculateRelativeAge(ctx : Context, date : String) : String {
-        val result : String;
-        if (!DateTime.isParseable(date)) {
-            result = date;
-        } else {
-            result = RelativeDate.getRelativeDate(ctx, date.toDateTime());
+    private fun calculateRelativeAge(ctx : Context, dateString : String) : String {
+        val date = dateString.toDateTime()
+        date?.let {
+            return  RelativeDate.getRelativeDate(ctx, date);
         }
-        return result;
+        return dateString;
     }
 
     public fun getRelativeAge(ctx : Context) : String? {
