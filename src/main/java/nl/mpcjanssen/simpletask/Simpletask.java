@@ -1468,7 +1468,12 @@ public class Simpletask extends ThemedActivity implements
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
-                final TodoListItem task = line.getTask();
+                final TodoListItem item = line.getTask();
+                if (item==null) {
+                    return null;
+                }
+                final Task task = item.getTask();
+
                 if (m_app.showCompleteCheckbox()) {
                     holder.cbCompleted.setVisibility(View.VISIBLE);
                 } else {
@@ -1486,36 +1491,25 @@ public class Simpletask extends ThemedActivity implements
                 if (mFilter.getHideTags()) {
                     tokensToShow = tokensToShow & ~TToken.TTAG;
                 }
-                String txt = "";
-                if (task!=null ) {
-                    txt = task.getTask().showParts(tokensToShow).trim();
-                }
+                String txt = task.showParts(tokensToShow).trim();
+
                 SpannableString ss = new SpannableString(txt);
 
                 ArrayList<String> colorizeStrings = new ArrayList<>();
-                Set<String> contexts = new TreeSet<>();
-                if (task!=null) {
-                    contexts = task.getTask().getLists();
-                }
+                Set<String> contexts = task.getLists();
                 for (String context : contexts) {
                     colorizeStrings.add("@" + context);
                 }
                 Util.setColor(ss, Color.GRAY, colorizeStrings);
                 colorizeStrings.clear();
-                Set<String> projects = new TreeSet<>();
-                if (task!=null) {
-                    projects = task.getTask().getTags();
-                }
+                Set<String> projects = task.getTags();
                 for (String project : projects) {
                     colorizeStrings.add("+" + project);
                 }
                 Util.setColor(ss, Color.GRAY, colorizeStrings);
 
                 int prioColor;
-                Priority prio  = Priority.NONE;
-                if (task != null) {
-                    prio = task.getTask().getPriority();
-                }
+                Priority prio = task.getPriority();
                 switch (prio) {
                     case A:
                         prioColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark);
@@ -1538,10 +1532,7 @@ public class Simpletask extends ThemedActivity implements
 
                 handleEllipsizing(holder.tasktext);
 
-                boolean completed = false;
-                if (task!=null) {
-                    completed = task.getTask().isCompleted();
-                }
+                boolean completed = task.isCompleted();
                 if (completed) {
                     // log.info( "Striking through " + task.getText());
                     holder.tasktext.setPaintFlags(holder.tasktext
@@ -1552,7 +1543,7 @@ public class Simpletask extends ThemedActivity implements
                     holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            undoCompleteTasks(task);
+                            undoCompleteTasks(item);
                             closeSelectionMode();
                             getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
 
@@ -1566,25 +1557,25 @@ public class Simpletask extends ThemedActivity implements
                             .setPaintFlags(holder.taskage.getPaintFlags()
                                     & ~Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.cbCompleted.setChecked(false);
-                    if (task!=null) {
-                        holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                completeTasks(task);
-                                closeSelectionMode();
-                                getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
-                            }
-                        });
-                    }
+
+                    holder.cbCompleted.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            completeTasks(item);
+                            closeSelectionMode();
+                            getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
+                        }
+                    });
+
                 }
 
                 Context mContext = TodoApplication.getAppContext();
 
-                String relAge = task.getTask().getRelativeAge(mContext);
-                SpannableString relDue = task.getTask().getRelativeDueDate(mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
+                String relAge = task.getRelativeAge(mContext);
+                SpannableString relDue = task.getRelativeDueDate(mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
                         ContextCompat.getColor(m_app, android.R.color.holo_red_light),
                         m_app.hasColorDueDates());
-                String relativeThresholdDate = task.getTask().getRelativeThresholdDate(mContext);
+                String relativeThresholdDate = task.getRelativeThresholdDate(mContext);
                 if (!Strings.isEmptyOrNull(relAge) && !mFilter.getHideCreateDate()) {
                     holder.taskage.setText(relAge);
                     holder.taskage.setVisibility(View.VISIBLE);
