@@ -99,7 +99,7 @@ class Preferences : ThemedActivity() {
             }
             aboutCategory.removePreference(toHide)
 
-            if (!TodoApplication.ATLEAST_API16) {
+            if (!TodoApplication.atLeastAPI(16)) {
                 val calSyncPref = findPreference(getString(R.string.calendar_sync_screen))
                 val behaviorCategory = findPreference(getString(R.string.experimental_cat_key)) as PreferenceCategory
                 behaviorCategory.removePreference(calSyncPref)
