@@ -327,7 +327,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
             } catch (e: IOException) {
                 log.error(TAG, "TodoList load failed: {}" + filename, e)
-                showToastShort(TodoApplication.getAppContext(), "Loading of todo file failed")
+                showToastShort(TodoApplication.appContext, "Loading of todo file failed")
             }
 
             loadQueued = false
@@ -354,7 +354,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()
-                showToastLong(TodoApplication.getAppContext(), R.string.write_failed)
+                showToastLong(TodoApplication.appContext, R.string.write_failed)
             }
         })
 
@@ -375,7 +375,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 notifyChanged(fileStore, todoFilename, eol, null, true);
             } catch (e : IOException) {
                 e.printStackTrace();
-                showToastShort(TodoApplication.getAppContext(), "Task archiving failed");
+                showToastShort(TodoApplication.appContext, "Task archiving failed");
             }
         })
     }

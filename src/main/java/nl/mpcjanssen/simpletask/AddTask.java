@@ -36,8 +36,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.text.Layout;
-import android.text.Selection;
+
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
@@ -694,7 +693,7 @@ public class AddTask extends ThemedActivity {
         if (currentLine != -1) {
             Task t = new Task(lines.get(currentLine));
             log.debug(TAG, "Changing prio from " + t.getPriority().toString() + " to " + newPrio.toString());
-            t.setPriority(Priority.toPriority(newPrio.toString()));
+            t.setPriority(Priority.Companion.toPriority(newPrio.toString()));
             lines.set(currentLine, t.inFileFormat());
             textInputField.setText(Util.join(lines, "\n"));
         }

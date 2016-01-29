@@ -73,7 +73,7 @@ public class FilterActivity extends ThemedActivity {
         log = Logger.INSTANCE;
         log.info(TAG, "Called with intent: " + getIntent().toString());
         m_app = (TodoApplication) getApplication();
-        prefs = TodoApplication.getPrefs();
+        prefs = TodoApplication.Companion.getPrefs();
 
         setContentView(R.layout.filter);
 
@@ -121,8 +121,8 @@ public class FilterActivity extends ThemedActivity {
 
         // Fill arguments for fragment
         arguments = new Bundle();
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.getTodoList().getPriorities()));
-        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.getPriorities()));
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.Companion.inCode(m_app.getTodoList().getPriorities()));
+        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.Companion.inCode(mFilter.getPriorities()));
         arguments.putBoolean(INITIAL_NOT, mFilter.getPrioritiesNot());
         arguments.putString(TAB_TYPE, PRIO_TAB);
         Fragment prioTab = new FilterListFragment();
@@ -311,7 +311,7 @@ public class FilterActivity extends ThemedActivity {
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
 
-            Context context = TodoApplication.getAppContext();
+            Context context = TodoApplication.Companion.getAppContext();
 
             // Store widget filter
             SharedPreferences preferences = context.getSharedPreferences("" + mAppWidgetId, MODE_PRIVATE);

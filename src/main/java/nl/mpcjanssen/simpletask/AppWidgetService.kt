@@ -43,7 +43,7 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
         log = Logger
         val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
         log.debug(TAG, "Creating view for widget: " + widgetId)
-        m_app = TodoApplication.getAppContext()
+        m_app = TodoApplication.appContext
         val preferences = m_app.getSharedPreferences("" + widgetId, 0)
         mFilter = ActiveFilter()
         mFilter.initFromPrefs(preferences)
@@ -98,7 +98,7 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
 
     private fun getExtendedView(item: TodoListItem): RemoteViews {
         val rv = RemoteViews(m_app.packageName, R.layout.widget_list_item)
-        val extended_widget = TodoApplication.getPrefs().getBoolean("widget_extended", true)
+        val extended_widget = TodoApplication.prefs.getBoolean("widget_extended", true)
         val task = item.task
 
         var tokensToShow = TToken.ALL

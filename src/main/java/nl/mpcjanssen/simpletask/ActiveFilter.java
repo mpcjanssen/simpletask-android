@@ -130,7 +130,7 @@ public class ActiveFilter {
                     Arrays.asList(sorts.split(INTENT_EXTRA_DELIMITERS)));
         }
         if (prios != null && !prios.equals("")) {
-            m_prios = Priority.toPriority(Arrays.asList(prios.split(INTENT_EXTRA_DELIMITERS)));
+            m_prios = Priority.Companion.toPriority(Arrays.asList(prios.split(INTENT_EXTRA_DELIMITERS)));
         }
         if (projects != null && !projects.equals("")) {
             m_projects = new ArrayList<>(Arrays.asList(projects
@@ -148,7 +148,7 @@ public class ActiveFilter {
                 .split(INTENT_EXTRA_DELIMITERS)));
         m_contexts = new ArrayList<>(prefs.getStringSet(
                 INTENT_CONTEXTS_FILTER, Collections.<String>emptySet()));
-        m_prios = Priority.toPriority(new ArrayList<>(prefs
+        m_prios = Priority.Companion.toPriority(new ArrayList<>(prefs
                 .getStringSet(INTENT_PRIORITIES_FILTER, Collections.<String>emptySet())));
         m_projects = new ArrayList<>(prefs.getStringSet(
                 INTENT_PROJECTS_FILTER, Collections.<String>emptySet()));
@@ -204,7 +204,7 @@ public class ActiveFilter {
         ArrayList<String> appliedFilters = new ArrayList<>();
         appliedFilters.addAll(m_contexts);
         appliedFilters.remove("-");
-        appliedFilters.addAll(Priority.inCode(m_prios));
+        appliedFilters.addAll(Priority.Companion.inCode(m_prios));
         appliedFilters.addAll(m_projects);
         appliedFilters.remove("-");
         if (appliedFilters.size() == 1) {
@@ -235,7 +235,7 @@ public class ActiveFilter {
             target.putExtra(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
             target.putExtra(INTENT_PROJECTS_FILTER, Util.join(m_projects, "\n"));
             target.putExtra(INTENT_PROJECTS_FILTER_NOT, m_projectsNot);
-            target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(Priority.inCode(m_prios), "\n"));
+            target.putExtra(INTENT_PRIORITIES_FILTER, Util.join(Priority.Companion.inCode(m_prios), "\n"));
             target.putExtra(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
             target.putExtra(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
             target.putExtra(INTENT_HIDE_COMPLETED_FILTER, m_hideCompleted);
@@ -255,7 +255,7 @@ public class ActiveFilter {
             editor.putString(INTENT_SORT_ORDER, Util.join(m_sorts, "\n"));
             editor.putStringSet(INTENT_CONTEXTS_FILTER, new HashSet<>(m_contexts));
             editor.putStringSet(INTENT_PRIORITIES_FILTER,
-                    new HashSet<>(Priority.inCode(m_prios)));
+                    new HashSet<>(Priority.Companion.inCode(m_prios)));
             editor.putStringSet(INTENT_PROJECTS_FILTER, new HashSet<>(m_projects));
             editor.putBoolean(INTENT_CONTEXTS_FILTER_NOT, m_contextsNot);
             editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, m_priosNot);
@@ -387,7 +387,7 @@ public class ActiveFilter {
     }
 
     public void setPriorities(ArrayList<String> prios) {
-        m_prios = Priority.toPriority(prios);
+        m_prios = Priority.Companion.toPriority(prios);
     }
 
     public void setPrioritiesNot(boolean prioritiesNot) {

@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class CalendarSync {
-    private static final String PACKAGE = TodoApplication.getAppContext().getPackageName();
+    private static final String PACKAGE = TodoApplication.Companion.getAppContext().getPackageName();
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
     private static final String ACCOUNT_NAME = "Simpletask Calendar";
@@ -92,7 +92,7 @@ public class CalendarSync {
             log.error(TAG, "Error writing calendar");
         }
         m_sync_type = 0;
-        Util.showToastShort(TodoApplication.getAppContext(), R.string.calendar_write_error);
+        Util.showToastShort(TodoApplication.Companion.getAppContext(), R.string.calendar_write_error);
     }
 
     private long getCalID() {
