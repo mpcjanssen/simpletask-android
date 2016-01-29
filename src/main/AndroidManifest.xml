@@ -37,12 +37,12 @@ You should have received a copy of the GNU General Public License along with Sim
         android:xlargeScreens="true" />
 
     <application
-        android:name=".TodoApplication"
-        android:allowBackup="true"
-        android:fullBackupContent="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_label"
-        android:theme="@style/AppTheme.Light.DarkActionBar" >
+            android:name=".TodoApplication"
+            android:allowBackup="true"
+            android:fullBackupContent="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_label"
+            android:theme="@style/AppTheme.Light.DarkActionBar" tools:ignore="UnusedAttribute">
         <activity
             android:name=".LoginScreen"
             android:label="@string/app_label" >
@@ -174,11 +174,7 @@ You should have received a copy of the GNU General Public License along with Sim
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <receiver android:name="nl.mpcjanssen.simpletask.AlarmReceiver">
-            <intent-filter>
-                <action android:name="nl.mpcjanssen.simpletask.ALARM_NEW_DAY" />
-            </intent-filter>
-        </receiver>
+        <receiver android:name="nl.mpcjanssen.simpletask.AlarmReceiver"/>
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
