@@ -322,11 +322,11 @@ public class Simpletask extends ThemedActivity implements
 
             }
             log.info(TAG, "handleIntent: saving filter in prefs");
-            mFilter.saveInPrefs(TodoApplication.getPrefs());
+            mFilter.saveInPrefs(TodoApplication.Companion.getPrefs());
         } else {
             // Set previous filters and sort
             log.info(TAG, "handleIntent: from m_prefs state");
-            mFilter.initFromPrefs(TodoApplication.getPrefs());
+            mFilter.initFromPrefs(TodoApplication.Companion.getPrefs());
         }
 
         // Initialize Adapter
@@ -643,7 +643,7 @@ public class Simpletask extends ThemedActivity implements
                         mFilter = new ActiveFilter();
                     }
                     mFilter.setSearch(newText);
-                    mFilter.saveInPrefs(TodoApplication.getPrefs());
+                    mFilter.saveInPrefs(TodoApplication.Companion.getPrefs());
                     if (m_adapter != null) {
                         m_adapter.setFilteredTasks();
                     }
@@ -674,7 +674,7 @@ public class Simpletask extends ThemedActivity implements
 
 
     private void prioritizeTasks(@NonNull final List<TodoListItem> tasks) {
-        List<String> strings = Priority.rangeInCode(Priority.NONE, Priority.Z);
+        List<String> strings = Priority.Companion.rangeInCode(Priority.NONE, Priority.Z);
         final String[] prioArr = strings.toArray(new String[strings.size()]);
 
         int prioIdx = 0;
@@ -687,7 +687,7 @@ public class Simpletask extends ThemedActivity implements
             @Override
             public void onClick(@NonNull DialogInterface dialog, final int which) {
                 dialog.dismiss();
-                Priority prio = Priority.toPriority(prioArr[which]);
+                Priority prio = Priority.Companion.toPriority(prioArr[which]);
                 getTodoList().prioritize(tasks, prio);
                 getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                 closeSelectionMode();
@@ -991,7 +991,7 @@ public class Simpletask extends ThemedActivity implements
         Intent intent = new Intent();
         mFilter.clear();
         mFilter.saveInIntent(intent);
-        mFilter.saveInPrefs(TodoApplication.getPrefs());
+        mFilter.saveInPrefs(TodoApplication.Companion.getPrefs());
         setIntent(intent);
         closeSelectionMode();
         updateDrawers();
@@ -1024,7 +1024,7 @@ public class Simpletask extends ThemedActivity implements
                 Intent intent = getIntent();
                 mFilter.saveInIntent(intent);
                 setIntent(intent);
-                mFilter.saveInPrefs(TodoApplication.getPrefs());
+                mFilter.saveInPrefs(TodoApplication.Companion.getPrefs());
                 m_adapter.setFilteredTasks();
                 if (m_drawerLayout != null) {
                     m_drawerLayout.closeDrawer(GravityCompat.END);
@@ -1569,7 +1569,7 @@ public class Simpletask extends ThemedActivity implements
 
                 }
 
-                Context mContext = TodoApplication.getAppContext();
+                Context mContext = TodoApplication.Companion.getAppContext();
 
                 String relAge = task.getRelativeAge(mContext);
                 SpannableString relDue = task.getRelativeDueDate(mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
@@ -1645,8 +1645,8 @@ public class Simpletask extends ThemedActivity implements
 
     private void handleEllipsizing(TextView tasktext) {
         final String noEllipsizeValue = "no_ellipsize";
-        final String ellipsizingKey = TodoApplication.getAppContext().getString(R.string.task_text_ellipsizing_pref_key);
-        final String ellipsizingPref = TodoApplication.getPrefs().getString(ellipsizingKey, noEllipsizeValue);
+        final String ellipsizingKey = TodoApplication.Companion.getAppContext().getString(R.string.task_text_ellipsizing_pref_key);
+        final String ellipsizingPref = TodoApplication.Companion.getPrefs().getString(ellipsizingKey, noEllipsizeValue);
 
         if (!noEllipsizeValue.equals(ellipsizingPref)) {
             final TextUtils.TruncateAt truncateAt;
@@ -1848,7 +1848,7 @@ public class Simpletask extends ThemedActivity implements
             }
             Intent intent = getIntent();
             mFilter.saveInIntent(intent);
-            mFilter.saveInPrefs(TodoApplication.getPrefs());
+            mFilter.saveInPrefs(TodoApplication.Companion.getPrefs());
             setIntent(intent);
             closeSelectionMode();
             m_adapter.setFilteredTasks();

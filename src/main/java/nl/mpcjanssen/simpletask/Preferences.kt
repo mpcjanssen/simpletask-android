@@ -146,18 +146,19 @@ class Preferences : ThemedActivity() {
             when (key) {
                 "archive_now" -> {
                     log.info(TAG, "Archiving completed items from preferences")
-                    m_app.showConfirmationDialog(activity, R.string.delete_task_message, { dialogInterface, i ->
-                        (activity as Preferences).broadcastIntentAndClose(
+                    m_app.showConfirmationDialog(activity, R.string.delete_task_message,
+                        DialogInterface.OnClickListener() {dialogInterface, i -> (activity as Preferences).broadcastIntentAndClose(
                                 Constants.BROADCAST_ACTION_ARCHIVE,
                                 Preferences.RESULT_ARCHIVE)
                     }, R.string.archive_task_title)
                 }
                 "logout_dropbox" -> {
                     log.info(TAG, "Logging out from Dropbox")
-                    m_app.showConfirmationDialog(activity, R.string.logout_message, { dialogInterface, i ->
+                    m_app.showConfirmationDialog(activity, R.string.logout_message,
+                            DialogInterface.OnClickListener() { dialogInterface, i ->
                         (activity as Preferences).broadcastIntentAndClose(
                                 Constants.BROADCAST_ACTION_LOGOUT,
-                                Preferences.RESULT_LOGOUT)
+                                RESULT_LOGOUT)
                     }, R.string.dropbox_logout_pref_title)
                 }
                 "send_log" -> startActivity(Intent(activity, LogScreen::class.java))
