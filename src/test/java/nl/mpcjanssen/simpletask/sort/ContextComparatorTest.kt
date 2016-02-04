@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.sort
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.task.Task
 
 import java.util.ArrayList

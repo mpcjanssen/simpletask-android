@@ -36,7 +36,7 @@ import android.provider.CalendarContract.Events
 import android.provider.CalendarContract.Reminders
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.*
 
 
@@ -173,7 +173,10 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
         }
     }
 
-    private fun insertEvts(calID: Long, tasks: List<TodoListItem>) {
+    private fun insertEvts(calID: Long, tasks: List<TodoListItem>?) {
+        if (tasks == null) {
+            return
+        }
         for (item in tasks) {
             val task = item.task
             if (task.isCompleted()) continue

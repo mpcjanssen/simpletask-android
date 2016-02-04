@@ -41,10 +41,10 @@ import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
+import nl.mpcjanssen.simpletask.task.TodoListItem;
 import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import nl.mpcjanssen.simpletask.util.Util;
 
@@ -357,9 +357,7 @@ public class AddTask extends ThemedActivity {
         for (String line : Arrays.asList(input.split("\r\n|\r|\n"))) {
             if (m_backup!=null && m_backup.size()>0) {
                 // Don't modify create date for updated tasks
-                m_backup.get(0).setText(line);
                 m_backup.get(0).getTask().update(line);
-                todoList.updateItem(m_backup.get(0));
                 m_backup.remove(0);
             } else {
                 Task t ;

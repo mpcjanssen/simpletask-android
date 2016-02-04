@@ -2,10 +2,7 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 import nl.mpcjanssen.simpletask.ActiveFilter;
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
-
-import java.util.ArrayList;
 
 /**
  * Tests to guard against bug regressions.

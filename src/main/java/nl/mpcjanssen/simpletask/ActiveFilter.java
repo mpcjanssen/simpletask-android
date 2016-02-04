@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
+
 import nl.mpcjanssen.simpletask.task.*;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -329,11 +329,14 @@ public class ActiveFilter {
     }
 
     @NonNull
-    public ArrayList<TodoListItem> apply(@NonNull List<TodoListItem> items) {
+    public ArrayList<TodoListItem> apply(@Nullable List<TodoListItem> items) {
         AndFilter filter = new AndFilter();
         ArrayList<TodoListItem> matched = new ArrayList<>();
         Prototype prototype = null;
         Globals globals = null;
+        if (items == null) {
+            return new ArrayList<TodoListItem>();
+        }
 
         try {
             String script = getScript();

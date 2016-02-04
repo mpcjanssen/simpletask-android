@@ -43,12 +43,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import hirondelle.date4j.DateTime;
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter;
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface;
 import nl.mpcjanssen.simpletask.task.Priority;
 import nl.mpcjanssen.simpletask.task.TToken;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.task.TodoList;
+import nl.mpcjanssen.simpletask.task.TodoListItem;
 import nl.mpcjanssen.simpletask.util.InputDialogListener;
 import nl.mpcjanssen.simpletask.util.Strings;
 import nl.mpcjanssen.simpletask.util.Util;
@@ -707,7 +707,6 @@ public class Simpletask extends ThemedActivity implements
         for (TodoListItem t : tasks) {
             getTodoList().complete(t, m_app.hasKeepPrio(), m_app.hasAppendAtEnd());
         }
-        getTodoList().updateItems(tasks);
         if (m_app.isAutoArchive()) {
             archiveTasks(null);
         }
@@ -724,7 +723,6 @@ public class Simpletask extends ThemedActivity implements
     private void undoCompleteTasks(@NonNull List<TodoListItem> tasks) {
         getTodoList().undoComplete(tasks);
         closeSelectionMode();
-        getTodoList().updateItems(tasks);
         getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
     }
 
@@ -1721,17 +1719,14 @@ public class Simpletask extends ThemedActivity implements
                     for (TodoListItem i : checkedTasks) {
                         Task t = i.getTask();
                         t.addList(item);
-                        i.setText(t.getText());
                     }
                 }
                 for (String item : uncheckedItems) {
                     for (TodoListItem i : checkedTasks) {
                         Task t = i.getTask();
                         t.removeTag("@" + item);
-                        i.setText(t.getText());
                     }
                 }
-                getTodoList().updateItems(checkedTasks);
                 getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                 closeSelectionMode();
             }
@@ -1789,17 +1784,14 @@ public class Simpletask extends ThemedActivity implements
                     for (TodoListItem t : checkedTasks) {
                         Task task = t.getTask();
                         task.addTag(item);
-                        t.setText(task.getText());
                     }
                 }
                 for (String item : uncheckedItems) {
                     for (TodoListItem t : checkedTasks) {
                         Task task = t.getTask();
                         task.removeTag("+" + item);
-                        t.setText(task.getText());
                     }
                 }
-                getTodoList().updateItems(checkedTasks);
                 getTodoList().notifyChanged(m_app.getFileStore(), m_app.getTodoFileName(), m_app.getEol(), m_app, true);
                 closeSelectionMode();
             }

@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.sort
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.task.Task
 
 import java.util.ArrayList
@@ -14,7 +14,7 @@ class SortTest : TestCase() {
         val t2 = Task("2012-01-01 A")
         tasks.add(t1)
         tasks.add(t2)
-        val items = tasks.map {it -> TodoListItem(0, it.text, false) }
+        val items = tasks.map {it -> TodoListItem(0, it, false) }
         assertEquals(t1, items[0].task)
         Collections.sort(items , AlphabeticalComparator(true))
         assertEquals(t2, items[0].task)
@@ -26,7 +26,7 @@ class SortTest : TestCase() {
         val t2 = Task("(B) A")
         tasks.add(t1)
         tasks.add(t2)
-        val items = tasks.map {it -> TodoListItem(0, it.text, false) }
+        val items = tasks.map {it -> TodoListItem(0, it, false) }
         assertEquals(t1, items[0].task)
         Collections.sort(items, AlphabeticalComparator(true))
         assertEquals(t2, items[0].task)

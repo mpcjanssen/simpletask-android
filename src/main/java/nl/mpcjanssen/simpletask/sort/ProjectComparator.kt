@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import java.util.*
 
 class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {

@@ -66,7 +66,6 @@ class TodoApplication : Application(),
     private lateinit var mFileStore: FileStoreInterface;
 
     internal lateinit var daoSession: DaoSession
-    lateinit var todoListItemDao: TodoListItemDao
     lateinit var  logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
 
@@ -79,7 +78,6 @@ class TodoApplication : Application(),
         val todoDb = helper.writableDatabase
         val daoMaster = DaoMaster(todoDb)
         daoSession = daoMaster.newSession()
-        todoListItemDao = daoSession.todoListItemDao
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
         log.setDao(logDao)

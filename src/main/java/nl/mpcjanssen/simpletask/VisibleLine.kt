@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 
 /**
  * Created by Mark on 2015-08-05.
