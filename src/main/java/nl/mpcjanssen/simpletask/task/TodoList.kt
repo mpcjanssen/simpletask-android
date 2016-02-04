@@ -34,9 +34,6 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItemDao
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItemDao.Properties
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
@@ -60,10 +57,10 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     private var todolistQueue: Handler? = null
     private var loadQueued = false
 
-    private var dao: TodoListItemDao
+
+    var todoItems: ArrayList<TodoListItem>? = null
 
     init {
-        dao = app.todoListItemDao;
         // Set up the message queue
         val t = Thread(Runnable {
             Looper.prepare()
@@ -71,10 +68,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             Looper.loop()
         })
         t.start()
-
         log = Logger
-
-
     }
 
 
@@ -99,8 +93,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         return loadQueued
     }
 
-    fun firstLine(): Long {
-        val items =  dao.queryBuilder().orderAsc(Properties.Line).listLazy()
+    fun firstLine(): Int {
+        val items = todoItems ?: ArrayList<TodoListItem>()
         if (items.size > 0) {
             return items[0].line
         } else {
@@ -108,8 +102,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         }
     }
 
-    fun lastLine(): Long {
-        val items = dao.queryBuilder().orderDesc(Properties.Line).listLazy()
+    fun lastLine(): Int {
+        val items = todoItems ?: ArrayList<TodoListItem>()
         if (items.size > 0) {
             return items[0].line
         } else {
@@ -125,51 +119,36 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             } else {
                 t.line = firstLine() - 1
             }
-            dao.insert(t)
+            todoItems?.add(t) ?: log.warn(TAG, "Adding while todolist was not loaded")
         })
     }
 
     fun add(t: Task, atEnd: Boolean) {
-        add(TodoListItem(0,t.text,false),atEnd)
+        add(TodoListItem(0,t,false),atEnd)
     }
 
 
     fun remove(item: TodoListItem) {
         queueRunnable("Remove", Runnable {
-            dao.delete(item)
-        })
+            todoItems?.remove(item) ?: log.warn(TAG, "Tried to remove an item from a null todo list")
+         })
     }
 
 
-    fun size(): Long {
-        return dao.queryBuilder().count()
+    fun size(): Int {
+        return todoItems?.size ?: 0
     }
 
-    fun updateItems(items: List<TodoListItem>) {
-        queueRunnable("Update items", Runnable {
-            dao.updateInTx(items)
-        })
-    }
-
-    fun updateItem(item: TodoListItem) {
-        queueRunnable("Update item", Runnable {
-            dao.updateInTx(item)
-        })
-    }
 
     operator fun get(position: Int): TodoListItem? {
-        if (position < dao.count()) {
-            return dao.queryBuilder().orderAsc(Properties.Line).offset(position).listLazy()[0]
-        } else {
-            return null
-        }
+        return todoItems?.getOrNull(position)
     }
 
     val priorities: ArrayList<Priority>
         get() {
             val res = HashSet<Priority>()
-            for (item in dao.loadAll()) {
-                res.add(item.task.priority)
+            todoItems?.forEach {
+                res.add(it.task.priority)
             }
             val ret = ArrayList(res)
             Collections.sort(ret)
@@ -183,8 +162,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 return lists
             }
             val res = HashSet<String>()
-            for (item in dao.loadAll()) {
-                res.addAll(item.task.lists)
+            todoItems?.forEach {
+                res.addAll(it.task.lists)
             }
             val newLists = ArrayList<String>()
             newLists.addAll(res)
@@ -199,8 +178,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 return tags
             }
             val res = HashSet<String>()
-            for (item in dao.loadAll()) {
-                res.addAll(item.task.tags)
+            todoItems?.forEach {
+            res.addAll(it.task.tags)
             }
             val newTags = ArrayList<String>()
             newTags.addAll(res)
@@ -219,9 +198,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     fun undoComplete(items: List<TodoListItem>) {
         queueRunnable("Uncomplete", Runnable {
             items.forEach {
-                val task = it.task
-                task.markIncomplete()
-                it.text = task.text
+                it.task.markIncomplete()
             }
         })
     }
@@ -233,7 +210,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         queueRunnable("Complete", Runnable {
             val task  = item.task
             val extra = task.markComplete(todayAsString)
-            item.text = task.text
             if (extra != null) {
                 add(extra, extraAtEnd)
             }
@@ -249,10 +225,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             for (item in items) {
                 val task = item.task
                 task.priority = prio
-                item.text = task.text
 
             }
-            dao.updateInTx(items)
         })
     }
 
@@ -263,14 +237,12 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 DateType.DUE -> taskToDefer.deferDueDate(deferString, todayAsString)
                 DateType.THRESHOLD -> taskToDefer.deferThresholdDate(deferString, todayAsString)
             }
-            it.text = taskToDefer.text
         }
-        updateItems(items)
     }
 
     var selectedTasks: List<TodoListItem> = ArrayList()
         get() {
-            return dao.queryBuilder().where(Properties.Selected.eq(true)).list()
+            return todoItems?.filter { it.selected } ?: emptyList()
         }
 
 
@@ -279,7 +251,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         todolistQueue!!.post {
             if (save) {
                 log.info(TAG, "Handler: Handle notifyChanged")
-                log.info(TAG, "Saving todo list, size {}" + dao.count())
+                log.info(TAG, "Saving todo list, size ${size()}")
                 save(fileStore, todoName, backup, eol)
             }
             if (mTodoListChanged != null) {
@@ -293,8 +265,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         }
     }
 
-    val todoItems: List<TodoListItem>
-        get() = dao.queryBuilder().orderAsc(Properties.Line).listLazy()
+
 
     fun getSortedTasksCopy(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
         val filteredTasks = filter.apply(todoItems)
@@ -312,16 +283,9 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         loadQueued = true
         val r = Runnable {
             try {
-                app.todoListItemDao.session.callInTx {
-                    app.todoListItemDao.deleteAll()
-                    var line: Long = 0
-                    for (t in fileStore.loadTasksFromFile(filename, backup, eol)) {
-                        app.todoListItemDao.insert(
-                                TodoListItem(line, t, false))
-                        line++
-                    }
-                    null
-                }
+                todoItems = fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
+                    TodoListItem(line,Task(text))
+                }.toArrayList()
             } catch (e: Exception) {
                 e.printStackTrace()
 
@@ -346,10 +310,14 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         queueRunnable("Save", Runnable {
+            val items = todoItems
+            if (items==null) {
+                log.error(TAG, "Trying to save null todo list")
+                return@Runnable
+            }
             try {
-                val tasks = dao.queryBuilder().orderAsc(Properties.Line).listLazyUncached()
-                val lines = tasks.map {
-                    it.text
+                val lines = items.map {
+                    it.task.text
                 }
                 fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
             } catch (e: IOException) {
@@ -362,15 +330,19 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
         queueRunnable("Archive", Runnable {
-            val tasksToArchive: List<TodoListItem>
-            if (tasks == null) {
-                tasksToArchive = dao.queryBuilder().where(Properties.Text.like("x %")).list();
-            } else {
-                tasksToArchive = tasks.filter { it.task.isCompleted() };
+            val items = todoItems
+            if (items==null) {
+                log.error(TAG, "Trying to archive null todo list")
+                return@Runnable
             }
+            val tasksToArchive = tasks ?: items
+
+            val completedTasks = tasksToArchive.filter { it.task.isCompleted() };
             try {
-                fileStore.appendTaskToFile(doneFileName, tasksToArchive.map {it.text}, eol);
-                dao.deleteInTx(tasksToArchive)
+                fileStore.appendTaskToFile(doneFileName, completedTasks.map {it.task.text}, eol);
+                completedTasks.forEach {
+                    todoItems?.remove(it)
+                }
 
                 notifyChanged(fileStore, todoFilename, eol, null, true);
             } catch (e : IOException) {
@@ -406,15 +378,12 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun selectTasks(items: List<Task>) {
-        dao.session.callInTx {
-            items.forEach {
-                val entities = dao.queryBuilder().where(Properties.Text.eq(it.text)).listLazy()
-                if (entities.size > 0) {
-                    entities[0].selected = true
-                    dao.update(entities[0])
+            todoItems?.forEach {
+                if (it.task in items) {
+                    it.selected = true
                 }
             }
-        }
+
     }
 
     fun selectTodoItem(item: TodoListItem) {
@@ -425,7 +394,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             items.forEach {
                 it.selected = true
             }
-            dao.updateInTx(items)
     }
 
     fun unSelectTodoItem(item: TodoListItem) {
@@ -436,12 +404,13 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         items.forEach {
             it.selected = false
         }
-        dao.updateInTx(items)
     }
 
     fun clearSelection() {
-        val selectedItems = dao.queryBuilder().where(Properties.Selected.eq(true)).list()
-        selectedItems.map {it.selected = false}
-        dao.updateInTx(selectedItems)
+       todoItems?.forEach {
+           it.selected = false
+       }
     }
 }
+
+data class TodoListItem(var line: Int, var task: Task, var selected: Boolean = false)

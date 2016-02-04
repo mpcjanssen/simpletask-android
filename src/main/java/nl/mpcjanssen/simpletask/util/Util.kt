@@ -44,7 +44,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.toDateTime

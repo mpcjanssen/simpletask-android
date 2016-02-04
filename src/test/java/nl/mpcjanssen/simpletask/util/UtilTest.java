@@ -2,8 +2,6 @@ package nl.mpcjanssen.simpletask.util;
 
 import junit.framework.TestCase;
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItemDao;
 import nl.mpcjanssen.simpletask.task.Task;
 
 import java.util.ArrayList;
