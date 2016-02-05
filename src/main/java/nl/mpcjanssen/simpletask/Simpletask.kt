@@ -142,7 +142,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SHARE_PARTS -> if (resultCode != Activity.RESULT_CANCELED) {
