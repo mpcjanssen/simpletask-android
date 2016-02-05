@@ -339,9 +339,9 @@ class ActiveFilter {
 
     companion object {
         internal val TAG = ActiveFilter::class.java.simpleName
-        val NORMAL_SORT = "+"
-        val REVERSED_SORT = "-"
-        val SORT_SEPARATOR = "!"
+        const val NORMAL_SORT = "+"
+        const val REVERSED_SORT = "-"
+        const val SORT_SEPARATOR = "!"
 
         /* Strings used in intent extras and preferences
      * Do NOT modify this without good reason.
