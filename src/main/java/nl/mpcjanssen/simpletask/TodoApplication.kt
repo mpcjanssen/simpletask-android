@@ -326,8 +326,10 @@ class TodoApplication : Application(),
     }
 
 
-    override fun fileChanged(newName: String) {
-        setTodoFile(newName)
+    override fun fileChanged(newName: String?) {
+        newName?.let {
+            setTodoFile(newName)
+        }
         loadTodoList(true)
     }
 
