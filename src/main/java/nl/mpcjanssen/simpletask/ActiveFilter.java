@@ -337,7 +337,7 @@ public class ActiveFilter {
         if (items == null) {
             return new ArrayList<TodoListItem>();
         }
-
+        String today = Util.getTodayAsString();
         try {
             String script = getScript();
             if (script == null) script = "";
@@ -355,10 +355,10 @@ public class ActiveFilter {
                 if ("".equals(t.inFileFormat().trim())) {
                     continue;
                 }
-                if (t.isCompleted() && this.getHideCompleted()) {
+                if (this.getHideCompleted() && t.isCompleted()) {
                     continue;
                 }
-                if (t.inFuture() && this.getHideFuture()) {
+                if (this.getHideFuture() && t.inFuture(today)) {
                     continue;
                 }
                 if (!filter.apply(t)) {
