@@ -34,11 +34,9 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
-import android.text.Editable
 import android.text.SpannableString
 import android.text.TextUtils
 import android.view.*
@@ -53,7 +51,6 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.InputDialogListener
-import nl.mpcjanssen.simpletask.util.*
 import nl.mpcjanssen.simpletask.util.*
 
 import java.io.File
@@ -140,14 +137,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         // Replace drawables if the theme is dark
         if (m_app.isDarkTheme) {
-            val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView
+            val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
             actionBarClear?.setImageResource(R.drawable.cancel)
         }
-    }
-
-    private fun highlightSelection() {
-        log!!.info(TAG, "Highlighting selection")
-        setSelectedTasks(todoList.selectedTasks)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -410,7 +402,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             m_scrollPosition = m_savedInstanceState!!.getInt("position")
         }
 
-        lv.setFastScrollEnabled(m_app.useFastScroll())
+        lv.isFastScrollEnabled = m_app.useFastScroll()
 
 
         // If we were started from the widget, select the pushed task
@@ -632,7 +624,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
-        builder.setSingleChoiceItems(prioArr, prioIdx, DialogInterface.OnClickListener { dialog, which ->
+        builder.setSingleChoiceItems(prioArr, prioIdx, { dialog, which ->
             dialog.dismiss()
             val prio = Priority.toPriority(prioArr[which])
             todoList.prioritize(tasks, prio)
@@ -678,17 +670,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, true, object : InputDialogListener {
-            override fun onClick(selected: String) {
-                if (selected == null) {
-                    log!!.warn(TAG, "Can't defer, selected is null. This should not happen")
-                    return
-                }
-                if (selected == "pick") {
+            override fun onClick(input: String) {
+                if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
                     val dialog = DatePickerDialog(this@Simpletask, DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                         var month = month
                         month++
-
                         val date = DateTime.forDateOnly(year, month, day)
                         m_app.todoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
                         closeSelectionMode()
@@ -704,7 +691,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     dialog.show()
                 } else {
 
-                    m_app.todoList.defer(selected, tasks, dateType)
+                    m_app.todoList.defer(input, tasks, dateType)
                     closeSelectionMode()
                     todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
 
@@ -1371,14 +1358,14 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     })
                 } else {
                     tasktext.paintFlags = tasktext.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    taskage!!.paintFlags = taskage.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    taskage.paintFlags = taskage.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                     cb.isChecked = false
 
-                    cb.setOnClickListener(View.OnClickListener {
+                    cb.setOnClickListener {
                         completeTasks(item)
                         closeSelectionMode()
                         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
-                    })
+                    }
 
                 }
 
