@@ -1,6 +1,8 @@
 package nl.mpcjanssen.simpletask.task;
 
 import hirondelle.date4j.DateTime;
+import nl.mpcjanssen.simpletask.util.Util;
+
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -190,7 +192,7 @@ public class TaskTestOld extends TestCase {
 
     public void testInvalidThresholdDate() {
         Task t1 = new Task( "Test t:2013-11-31");
-        assertFalse(t1.inFuture());
+        assertFalse(t1.inFuture("2015-01-01"));
     }
 
     public void testInvalidDueDate() {
