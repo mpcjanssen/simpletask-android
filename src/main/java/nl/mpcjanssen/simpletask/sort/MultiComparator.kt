@@ -4,6 +4,8 @@ package nl.mpcjanssen.simpletask.sort
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.util.todayAsString
+
 
 import java.util.*
 
@@ -37,7 +39,7 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsB
                 "by_prio" -> comp = PriorityComparator()
                 "completed" -> comp = CompletedComparator()
                 "by_creation_date" -> comp = CreationDateComparator()
-                "in_future" -> comp = FutureComparator()
+                "in_future" -> comp = FutureComparator(todayAsString)
                 "by_due_date" -> comp = DueDateComparator()
                 "by_threshold_date" -> comp = ThresholdDateComparator(createAsBackup)
                 "by_completion_date" -> comp = CompletionDateComparator()
