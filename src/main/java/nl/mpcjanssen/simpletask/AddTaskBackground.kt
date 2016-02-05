@@ -93,7 +93,7 @@ class AddTaskBackground : Activity() {
         val m_app = this.application as TodoApplication
         val intent = Intent(this, AddTask::class.java)
         m_app.todoList.clearSelection()
-        m_app.todoList.selectTasks(addedTasks)
+        m_app.todoList.selectTasks(addedTasks,null)
         startActivity(intent)
     }
 
