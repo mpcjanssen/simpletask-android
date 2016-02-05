@@ -25,6 +25,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.pm.PackageManager
@@ -133,8 +134,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
 
     }
 
-    @SuppressWarnings("NewApi")
-    private fun insertEvt(calID: Long, date: DateTime, title: String, description: String) {
+    @TargetApi(16) private fun insertEvt(calID: Long, date: DateTime, title: String, description: String) {
         val values = ContentValues()
 
         val localZone = Calendar.getInstance().timeZone
