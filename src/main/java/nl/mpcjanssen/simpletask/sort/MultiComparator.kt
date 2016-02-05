@@ -8,6 +8,8 @@ import nl.mpcjanssen.simpletask.util.todayAsString
 
 
 import java.util.*
+import kotlin.comparisons.reversed
+import kotlin.comparisons.then
 
 class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
     var comparators : Comparator<TodoListItem>? = null

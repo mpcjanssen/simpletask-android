@@ -7,6 +7,7 @@ package nl.mpcjanssen.simpletask.util
 
 import android.content.Context
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.R
 
 import java.util.TimeZone
@@ -35,7 +36,10 @@ object RelativeDate {
      * @return String representing the relative date
      */
 
-    fun computeRelativeDate(context: Context, now: DateTime, `when`: DateTime): String {
+    fun computeRelativeDate(context: Context?, now: DateTime, `when`: DateTime): String {
+        if (context==null) {
+            return now.format(Constants.DATE_FORMAT);
+        }
         if (`when`.lteq(now)) {
             val period = `when`.numDaysFrom(now)
 

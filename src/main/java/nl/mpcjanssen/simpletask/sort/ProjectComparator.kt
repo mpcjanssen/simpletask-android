@@ -20,8 +20,8 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
         } else if (b == null) {
             return 1
         }
-        val projectsA = a.task.tags.toArrayList()
-        val projectsB = b.task.tags.toArrayList()
+        val projectsA = a.task.tags.toMutableList()
+        val projectsB = b.task.tags.toMutableList()
 
         if (projectsA.isEmpty() && projectsB.isEmpty()) {
             return 0

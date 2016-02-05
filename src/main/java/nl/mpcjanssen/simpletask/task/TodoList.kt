@@ -58,7 +58,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     private var loadQueued = false
 
 
-    var todoItems: ArrayList<TodoListItem>? = null
+    var todoItems: MutableList<TodoListItem>? = null
 
     init {
         // Set up the message queue
@@ -285,7 +285,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             try {
                 todoItems = fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
                     TodoListItem(line,Task(text))
-                }.toArrayList()
+                }.toMutableList()
             } catch (e: Exception) {
                 e.printStackTrace()
 
