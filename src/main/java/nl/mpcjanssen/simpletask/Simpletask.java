@@ -840,7 +840,6 @@ public class Simpletask extends ThemedActivity implements
                 break;
             case R.id.open_file:
                 m_app.browseForNewFile(this);
-                m_app.browseForNewFile(this);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
