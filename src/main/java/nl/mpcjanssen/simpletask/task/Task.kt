@@ -282,10 +282,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     public fun inFileFormat() = text
 
-    public fun inFuture(): Boolean {
+    public fun inFuture(today: String): Boolean {
         val date = thresholdDate
         date?.let {
-            return date.compareTo(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)) > 0
+            return date.compareTo(today) > 0
         }
         return false
     }
