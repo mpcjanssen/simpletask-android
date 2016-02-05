@@ -38,7 +38,7 @@ interface FileStoreInterface {
     }
 
     interface FileChangeListener {
-        fun fileChanged(newName: String)
+        fun fileChanged(newName: String?)
     }
 
     interface FileReadListener {

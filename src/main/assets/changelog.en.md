@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.9
+-----
+
+- Fix crash with manual refresh.
+
 7.0.8
 -----
 
