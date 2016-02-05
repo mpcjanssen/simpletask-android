@@ -334,6 +334,7 @@ public class ActiveFilter {
         ArrayList<TodoListItem> matched = new ArrayList<>();
         Prototype prototype = null;
         Globals globals = null;
+        String today = Util.getTodayAsString();
 
         try {
             String script = getScript();
@@ -352,10 +353,10 @@ public class ActiveFilter {
                 if ("".equals(t.inFileFormat().trim())) {
                     continue;
                 }
-                if (t.isCompleted() && this.getHideCompleted()) {
+                if (this.getHideCompleted() && t.isCompleted()) {
                     continue;
                 }
-                if (t.inFuture() && this.getHideFuture()) {
+                if (this.getHideFuture() && t.inFuture(today)) {
                     continue;
                 }
                 if (!filter.apply(t)) {
