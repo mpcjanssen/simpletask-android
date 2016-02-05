@@ -1,6 +1,14 @@
 ﻿Changelog
 =========
 
+7.0.8
+-----
+
+- Merged: Updated German translation (twckr #356).
+- Don't calculate the current date for every tasks. Greatly improves performance. Fixes #359.
+- Several Kotlin transition related bug fixes. 
+
+
 7.0.7
 -----
 
