@@ -377,13 +377,24 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         internal val TAG = TodoList::class.java.simpleName
     }
 
-    fun selectTasks(items: List<Task>) {
+    fun selectTasks(items: List<Task>, lbm: LocalBroadcastManager?) {
+        if (todoItems == null) {
+            var selection = items
+            log.info(TAG, "todoItems is null, queuing selection of ${items.size} items")
+            queueRunnable("Selection", Runnable {
+                selectTasks(selection,lbm)
+                log.info(TAG, "Queued selection update, lbm = $lbm")
+                lbm?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
+            })
+            return
+        } else {
             todoItems?.forEach {
                 if (it.task in items) {
                     it.selected = true
                 }
             }
 
+        }
     }
 
     fun selectTodoItem(item: TodoListItem) {

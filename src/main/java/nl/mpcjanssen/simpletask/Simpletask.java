@@ -106,6 +106,8 @@ public class Simpletask extends ThemedActivity implements
         intentFilter.addAction(Constants.BROADCAST_SYNC_START);
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE);
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES);
+        intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION);
+
 
 
         localBroadcastManager = m_app.getLocalBroadCastManager();
@@ -134,6 +136,8 @@ public class Simpletask extends ThemedActivity implements
                     mOverlayDialog = Util.showLoadingOverlay(Simpletask.this, mOverlayDialog, false);
                 } else if (intent.getAction().equals(Constants.BROADCAST_UPDATE_PENDING_CHANGES)) {
                     updatePendingChanges();
+                } else if (intent.getAction().equals(Constants.BROADCAST_HIGHLIGHT_SELECTION)) {
+                    handleIntent();
                 }
             }
         };
@@ -155,6 +159,11 @@ public class Simpletask extends ThemedActivity implements
                 actionBarClear.setImageResource(R.drawable.cancel);
             }
         }
+    }
+
+    private void highlightSelection() {
+        log.info(TAG, "Highlighting selection");
+        setSelectedTasks(getTodoList().getSelectedTasks());
     }
 
     @Override
@@ -455,7 +464,7 @@ public class Simpletask extends ThemedActivity implements
                 getTodoList().clearSelection();
                 ArrayList<Task> tasks = new ArrayList<>();
                 tasks.add(new Task(line));
-                getTodoList().selectTasks(tasks);
+                getTodoList().selectTasks(tasks, localBroadcastManager);
             }
         }
         List<TodoListItem>  selection = getTodoList().getSelectedTasks();
