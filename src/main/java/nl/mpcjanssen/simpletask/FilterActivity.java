@@ -271,7 +271,7 @@ public class FilterActivity extends ThemedActivity {
                     break;
                 case PRIO_TAB:
                     FilterListFragment prf = (FilterListFragment) f;
-                    mFilter.setPriorities(prf.getSelectedItems());
+                    mFilter.setPriorities(Priority.Companion.toPriority(prf.getSelectedItems()));
                     mFilter.setPrioritiesNot(prf.getNot());
                     break;
                 case SORT_TAB:
