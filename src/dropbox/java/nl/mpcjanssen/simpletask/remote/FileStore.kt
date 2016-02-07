@@ -331,7 +331,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 e.printStackTrace()
                 readFile.clear()
                 readFile.addAll(tasksFromCache())
-                showToastLong(mApp, "Drobox error, loading from cache")
+                showToastLong(mApp, "Dropbox error, loading from cache")
             } catch (e: IOException) {
                 isLoading = false
                 throw IOException(e)
