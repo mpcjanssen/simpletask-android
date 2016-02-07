@@ -123,6 +123,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_key">widget_theme</string>
     <string name="task_text_ellipsizing_pref_key">task_text_ellipsizing</string>
     <string name="widget_extended_pref_key">widget_extended</string>
+    <string name="taskview_extended_pref_key">taskview_extended</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="behavior_cat_key">behavior_category</string>
     <string name="experimental_cat_key">experimental</string>

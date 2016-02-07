@@ -522,6 +522,10 @@ class TodoApplication : Application(),
         return prefs.getBoolean(getString(R.string.share_task_show_edit), false)
     }
 
+    fun hasExtendedTaskView(): Boolean {
+        return prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
+    }
+
     companion object {
 
         private val TAG = TodoApplication::class.java.simpleName

@@ -173,8 +173,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_header_transparency_title">Widget header transparency</string>
     <string name="widget_background_transparency_title">Widget background transparency</string>
 
-    <string name="widget_extended_pref_title">Extended widget</string>
-    <string name="widget_extended_pref_summary">Show tasks in widget with separate dates line.</string>
+    <string name="widget_extended_pref_title">Datebar in widget</string>
+    <string name="widget_extended_pref_summary">Show tasks in widget with separate date bar.</string>
+
+    <string name="taskview_extended_pref_title">Datebar in main view</string>
+    <string name="taskview_extended_pref_summary">Show tasks in the main view with separate date bar.</string>
 
     <string name="append_tasks_at_end_title">Append new tasks</string>
     <string name="append_tasks_at_end_summary">Append new tasks at the end of the todo file. When disabled, new tasks are inserted at the beginning.</string>

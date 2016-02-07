@@ -1298,12 +1298,20 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 } else {
                     holder.cbCompleted!!.visibility = View.GONE
                 }
+                if (!m_app.hasExtendedTaskView()) {
+                    val taskbar = convertView.findViewById(R.id.datebar)
+                    taskbar.visibility = View.GONE
+                }
                 var tokensToShow = TToken.ALL
+                // Hide dates if we have a date bar
+                if (m_app.hasExtendedTaskView()) {
+                    tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
+                    tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
+                    tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+                }
                 tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
                 tokensToShow = tokensToShow and TToken.COMPLETED.inv()
-                tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-                tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-                tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+
                 if (mFilter!!.hideLists) {
                     tokensToShow = tokensToShow and TToken.LIST.inv()
                 }
