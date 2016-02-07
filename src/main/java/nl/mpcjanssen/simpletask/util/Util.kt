@@ -108,22 +108,27 @@ val log = Logger;
         var header = ""
         var newHeader: String
         val result = ArrayList<VisibleLine>()
+        var count = 0
+        var headerLine : HeaderLine? = null
         for (item in visibleTasks) {
             val t = item.task
             newHeader = t.getHeader(firstSort, no_header)
             if (header != newHeader) {
-                val headerLine = HeaderLine(newHeader)
-                val last = result.size - 1
-                if (last != -1 && result[last].header) {
-                    // replace empty preceding header
-                    result[last] = headerLine
-                } else {
-                    result.add(headerLine)
+                if (headerLine!=null) {
+                    headerLine.title += " ($count)"
                 }
+                headerLine = HeaderLine(newHeader)
+                count = 0;
+                result.add(headerLine)
                 header = newHeader
             }
+            count++
             val taskLine = TaskLine(item)
             result.add(taskLine)
+        }
+        // Add count to last header
+        if (headerLine!=null) {
+            headerLine.title += " ($count)"
         }
 
         // Clean up possible last empty list header that should be hidden

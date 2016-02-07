@@ -17,7 +17,7 @@ data class TaskLine(override val task: TodoListItem) : VisibleLine {
 
 }
 
-data class HeaderLine(override val title: String) : VisibleLine {
+data class HeaderLine(override var title: String) : VisibleLine {
     override val task  = null
     override val header = true
 }
