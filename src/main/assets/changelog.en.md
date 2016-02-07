@@ -1,6 +1,15 @@
 ﻿Changelog
 =========
 
+7.0.10
+------
+
+- Fix toast typo, fixes #360.
+- Fix tablet mode crash.
+- Move `show hidden` option to filter. As a result `show empty headers` is removed. Fixes #190.
+- Add item count to headers. Fixes #30.
+- Add setting to remove date bar from main view. Workaround for #331.
+
 7.0.9
 -----
 
