@@ -1215,7 +1215,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
 
             val firstSort = sorts[firstGroupSortIndex]
-            visibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header), m_app.showHidden(), m_app.showEmptyLists()))
+            visibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
             notifyDataSetChanged()
             updateFilterBar()
         }

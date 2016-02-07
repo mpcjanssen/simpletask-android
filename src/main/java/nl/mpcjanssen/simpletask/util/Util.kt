@@ -104,7 +104,7 @@ val log = Logger;
         }
     }
 
-    fun addHeaderLines(visibleTasks: List<TodoListItem>, firstSort: String, no_header: String, showHidden: Boolean, showEmptyLists: Boolean): List<VisibleLine> {
+    fun addHeaderLines(visibleTasks: List<TodoListItem>, firstSort: String, no_header: String): List<VisibleLine> {
         var header = ""
         var newHeader: String
         val result = ArrayList<VisibleLine>()
@@ -114,7 +114,7 @@ val log = Logger;
             if (header != newHeader) {
                 val headerLine = HeaderLine(newHeader)
                 val last = result.size - 1
-                if (last != -1 && result[last].header && !showEmptyLists) {
+                if (last != -1 && result[last].header) {
                     // replace empty preceding header
                     result[last] = headerLine
                 } else {
@@ -122,17 +122,13 @@ val log = Logger;
                 }
                 header = newHeader
             }
-
-            if (t.isVisible() || showHidden) {
-                // enduring tasks should not be displayed
-                val taskLine = TaskLine(item)
-                result.add(taskLine)
-            }
+            val taskLine = TaskLine(item)
+            result.add(taskLine)
         }
 
         // Clean up possible last empty list header that should be hidden
         val i = result.size
-        if (i > 0 && result[i - 1].header && !showEmptyLists) {
+        if (i > 0 && result[i - 1].header) {
             result.removeAt(i - 1)
         }
         return result

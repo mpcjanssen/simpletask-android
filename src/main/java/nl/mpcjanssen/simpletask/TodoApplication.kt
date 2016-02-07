@@ -156,14 +156,6 @@ class TodoApplication : Application(),
         return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
     }
 
-    fun showHidden(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_hidden), false)
-    }
-
-    fun showEmptyLists(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_empty_lists), true)
-    }
-
     val listTerm: String
         get() {
             if (useTodoTxtTerms()) {

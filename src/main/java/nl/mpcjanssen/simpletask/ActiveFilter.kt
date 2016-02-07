@@ -33,6 +33,7 @@ class ActiveFilter {
     var contextsNot = false
     var hideCompleted = false
     var hideFuture = false
+    var hideHidden = true
     var hideLists = false
     var hideTags = false
     var hideCreateDate = false
@@ -82,6 +83,8 @@ class ActiveFilter {
                 INTENT_HIDE_TAGS_FILTER, false)
         hideCreateDate = intent.getBooleanExtra(
                 INTENT_HIDE_CREATE_DATE_FILTER, false)
+        hideHidden = intent.getBooleanExtra(
+                INTENT_HIDE_HIDDEN_FILTER, true)
         search = intent.getStringExtra(SearchManager.QUERY)
         if (sorts != null && sorts != "") {
             m_sorts = ArrayList(
@@ -114,6 +117,7 @@ class ActiveFilter {
         hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false)
         hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false)
         hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false)
+        hideHidden = prefs.getBoolean(INTENT_HIDE_HIDDEN_FILTER, true)
         name = prefs.getString(INTENT_TITLE, "Simpletask")
         search = prefs.getString(SearchManager.QUERY, null)
         script = prefs.getString(INTENT_SCRIPT_FILTER, null)
@@ -199,6 +203,7 @@ class ActiveFilter {
             target.putExtra(INTENT_HIDE_LISTS_FILTER, hideLists)
             target.putExtra(INTENT_HIDE_TAGS_FILTER, hideTags)
             target.putExtra(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
+            target.putExtra(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
             target.putExtra(INTENT_SCRIPT_FILTER, script)
             target.putExtra(SearchManager.QUERY, search)
         }
@@ -221,6 +226,7 @@ class ActiveFilter {
             editor.putBoolean(INTENT_HIDE_LISTS_FILTER, hideLists)
             editor.putBoolean(INTENT_HIDE_TAGS_FILTER, hideTags)
             editor.putBoolean(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
+            editor.putBoolean(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
             editor.putString(INTENT_SCRIPT_FILTER, script)
             editor.putString(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
             editor.putString(SearchManager.QUERY, search)
@@ -270,6 +276,9 @@ class ActiveFilter {
                     continue
                 }
                 if (this.hideFuture && t.inFuture(today)) {
+                    continue
+                }
+                if (this.hideHidden && t.isHidden()) {
                     continue
                 }
                 if (!filter.apply(t)) {
@@ -360,6 +369,7 @@ class ActiveFilter {
         const val INTENT_HIDE_FUTURE_FILTER = "HIDEFUTURE"
         const val INTENT_HIDE_LISTS_FILTER = "HIDELISTS"
         const val INTENT_HIDE_TAGS_FILTER = "HIDETAGS"
+        const val INTENT_HIDE_HIDDEN_FILTER = "HIDEHIDDEN"
         const val INTENT_HIDE_CREATE_DATE_FILTER = "HIDECREATEDATE"
 
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
