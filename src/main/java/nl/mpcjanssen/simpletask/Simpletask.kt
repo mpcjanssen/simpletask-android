@@ -238,7 +238,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         m_leftDrawerList = findViewById(R.id.left_drawer) as ListView
         m_rightDrawerList = findViewById(R.id.right_drawer_list) as ListView
 
-        m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
+        m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout?
 
         // Set the list's click listener
         m_leftDrawerList!!.onItemClickListener = DrawerItemClickListener()
