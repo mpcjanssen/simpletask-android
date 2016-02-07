@@ -140,8 +140,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_background_transparency">widget_background_transparency</string>
     <string name="last_open_filter_tab">last_open_filter_tab</string>
     <string name="capitalize_tasks">capitalize_tasks</string>
-    <string name="show_hidden">show_hidden</string>
-    <string name="show_empty_lists">show_empty_lists</string>
     <string name="show_txt_only">show_txt_only</string>
     <string name="calendar_sync_screen">calendar_sync_screen</string>
     <string name="calendar_sync_dues">calendar_sync_dues</string>

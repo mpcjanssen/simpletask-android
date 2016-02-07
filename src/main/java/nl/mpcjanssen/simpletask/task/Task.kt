@@ -294,10 +294,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return getFirstToken<HiddenToken>()?.value ?: false
     }
 
-    public fun isVisible(): Boolean {
-        return !isHidden()
-    }
-
     public fun isCompleted(): Boolean {
         return getFirstToken<CompletedToken>() != null
     }

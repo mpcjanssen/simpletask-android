@@ -74,9 +74,7 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
         val tl = application.todoList
         val items = tl.todoItems
         for (t in mFilter.apply(items)) {
-            if (t.task.isVisible()) {
-                visibleTasks.add(t)
-            }
+            visibleTasks.add(t)
         }
         val comp = MultiComparator(mFilter.getSort(
                 application.defaultSorts),
