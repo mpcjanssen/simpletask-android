@@ -24,7 +24,7 @@ public class UtilTest extends TestCase {
         for (Task t : tasks) {
             items.add(new TodoListItem(0,t,false));
         }
-        assertEquals(0,Util.addHeaderLines(items, "by_context", "none", false, false).size());
+        assertEquals(6,Util.addHeaderLines(items, "by_context", "none").size());
 
     }
 }
