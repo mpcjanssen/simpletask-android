@@ -38,9 +38,9 @@ public class TaskTestOld extends TestCase {
     }
 
     public void testHidden() {
-        assertTrue(!new Task("Test h:1").isVisible());
-        assertFalse(!new Task("Test").isVisible());
-        assertTrue(!new Task("h:1").isVisible());
+        assertTrue(new Task("Test h:1").isHidden());
+        assertFalse(new Task("Test").isHidden());
+        assertTrue(new Task("h:1").isHidden());
     }
 
     public void testCompletion() {

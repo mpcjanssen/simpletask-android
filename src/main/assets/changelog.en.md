@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+7.0.12
+------
+
+- Log uncaught exceptions in database before crashing.
+- Fix crash when adding tags/lists in empty addtask edit box. Fixes #361
+
+7.0.11
+------
+
+- New version to replace corrupt 7.0.10 google play upload.
+
 7.0.10
 ------
 
