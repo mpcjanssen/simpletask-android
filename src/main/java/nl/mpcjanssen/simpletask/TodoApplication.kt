@@ -56,6 +56,7 @@ class TodoApplication : Application(),
 
         SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
 
+    lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
     lateinit var  todoList: TodoList
     private lateinit var m_calSync: CalendarSync
@@ -70,6 +71,7 @@ class TodoApplication : Application(),
     internal lateinit var backupDao: TodoFileDao
 
     override fun onCreate() {
+        log.debug(TAG, "onCreate()")
         super.onCreate()
         appContext = applicationContext
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
@@ -82,11 +84,7 @@ class TodoApplication : Application(),
         backupDao = daoSession.todoFileDao
         log.setDao(logDao)
 
-        log.debug(TAG, "onCreate()")
-
-
-
-
+        setupUncaughtExceptionHandler()
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
 
@@ -110,6 +108,17 @@ class TodoApplication : Application(),
         loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
+    }
+
+    private fun setupUncaughtExceptionHandler() {
+        // save original Uncaught exception handler
+        androidUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        // Handle all uncaught exceptions for logging.
+        // After that call the default uncaught exception handler
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            log.error(TAG, "Uncaught exception", throwable)
+            androidUncaughtExceptionHandler.uncaughtException(thread, throwable)
+        }
     }
 
     private fun scheduleOnNewDay() {

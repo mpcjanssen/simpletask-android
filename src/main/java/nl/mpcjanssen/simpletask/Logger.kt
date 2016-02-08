@@ -18,8 +18,13 @@ object Logger {
         this.dao = dao
     }
 
-    fun logInDB(severity: String, tag: String, s: String, ex: Exception? = null) {
-        val item = LogItem(Date(), severity, tag, s, ex?.message ?: "")
+
+    fun logInDB(severity: String, tag: String, s: String, throwable: Throwable? = null) {
+        var throwableMessage : String = ""
+        throwable?.let {
+            throwableMessage = Log.getStackTraceString(throwable)
+        }
+        val item = LogItem(Date(), severity, tag, s, throwableMessage)
         dao?.insert(item)
     }
 
@@ -41,21 +46,23 @@ object Logger {
         Log.d(tag,s)
     }
 
-    fun error(tag: String, s: String, ex: Exception) {
-        Log.e(tag,s,ex)
-        logInDB("e", tag,s,ex)
-    }
-    fun warn(tag: String, s: String, ex: Exception) {
-        Log.w(tag,s,ex)
-        logInDB("w", tag,s,ex)
+
+    fun error(tag: String, s: String, throwable: Throwable) {
+        Log.e(tag,s,throwable)
+        logInDB("e", tag,s,throwable)
     }
 
-    fun info(tag: String, s: String, ex: Exception) {
+    fun warn(tag: String, s: String, throwable: Throwable) {
+        Log.w(tag,s, throwable)
+        logInDB("w", tag,s, throwable)
+    }
+
+    fun info(tag: String, s: String, ex: Throwable) {
         Log.i(tag,s,ex)
         logInDB("i", tag,s,ex)
     }
 
-    fun debug(tag: String, s: String, ex: Exception) {
+    fun debug(tag: String, s: String, ex: Throwable) {
         Log.d(tag,s,ex)
     }
 }
