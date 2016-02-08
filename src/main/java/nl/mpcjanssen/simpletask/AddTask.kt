@@ -411,6 +411,9 @@ class AddTask : ThemedActivity() {
         items.addAll(todoList.projects)
         // Also display contexts in tasks being added
         val tasks = getTasks()
+        if (tasks.size == 0) {
+            tasks.add(Task(""))
+        }
         tasks.forEach {
             items.addAll(it.tags)
         }
@@ -491,6 +494,9 @@ class AddTask : ThemedActivity() {
         items.addAll(todoList.contexts)
         // Also display contexts in tasks being added
         val tasks = getTasks()
+        if (tasks.size == 0) {
+            tasks.add(Task(""))
+        }
         tasks.forEach {
             items.addAll(it.lists)
         }
