@@ -2,9 +2,6 @@ package nl.mpcjanssen.simpletask
 
 import nl.mpcjanssen.simpletask.task.TodoListItem
 
-/**
- * Created by Mark on 2015-08-05.
- */
 interface VisibleLine {
     val header: Boolean
     val task : TodoListItem?
