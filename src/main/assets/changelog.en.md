@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.13
+------
+
+- Don't make full task list available in Lua as an array. Improves performance.
+
 7.0.12
 ------
 
