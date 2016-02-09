@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
-import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.jse.JsePlatform
@@ -14,7 +13,6 @@ import org.luaj.vm2.lib.jse.JsePlatform
 
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStream
 import java.util.*
 
 /**
@@ -263,7 +261,6 @@ class ActiveFilter {
                 val input = ByteArrayInputStream(script.toByteArray())
                 prototype = LuaC.instance.compile(input, "script")
                 globals = JsePlatform.standardGlobals()
-                globals!!.set("tasks", taskListToLuaTable(items))
             }
             var idx = -1
             for (item in items) {

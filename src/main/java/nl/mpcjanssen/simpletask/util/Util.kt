@@ -264,11 +264,7 @@ val log = Logger;
         globals.set("lists", javaListToLuaTable(t.lists))
     }
 
-    public fun taskListToLuaTable(taskList: List<TodoListItem>): LuaValue {
-        return javaListToLuaTable(taskList.map {it.task.inFileFormat()})
-    }
-
-    public fun dateStringToLuaLong(dateString: String?): LuaValue {
+    fun dateStringToLuaLong(dateString: String?): LuaValue {
         dateString?.toDateTime()?.let {
             return LuaValue.valueOf((it.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
         }
