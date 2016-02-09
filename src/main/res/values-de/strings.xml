@@ -385,4 +385,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="clear_database">Datenbank leeren</string>
     <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
     <string name="none">kein</string>
+    <string name="taskview_extended_pref_summary">Aufgaben im Hauptfenster mit separater Zeile für Datum zeigen.</string>
+    <string name="taskview_extended_pref_title">Datumszeile im Hauptfenster</string>
+    <string name="use_create_backup_summary">Beim Sortieren Erstellungsdatum der Aufgabe verwenden, wenn kein Fälligkeitsdatum angegeben.</string>
+    <string name="use_create_backup_title">Erstellungsdatum als Fälligkeit</string>
 </resources>
