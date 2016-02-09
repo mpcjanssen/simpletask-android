@@ -123,6 +123,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_key">widget_theme</string>
     <string name="task_text_ellipsizing_pref_key">task_text_ellipsizing</string>
     <string name="widget_extended_pref_key">widget_extended</string>
+    <string name="taskview_extended_pref_key">taskview_extended</string>
     <string name="dropbox_cat_key">dropbox_category</string>
     <string name="behavior_cat_key">behavior_category</string>
     <string name="experimental_cat_key">experimental</string>
@@ -139,8 +140,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_background_transparency">widget_background_transparency</string>
     <string name="last_open_filter_tab">last_open_filter_tab</string>
     <string name="capitalize_tasks">capitalize_tasks</string>
-    <string name="show_hidden">show_hidden</string>
-    <string name="show_empty_lists">show_empty_lists</string>
     <string name="show_txt_only">show_txt_only</string>
     <string name="calendar_sync_screen">calendar_sync_screen</string>
     <string name="calendar_sync_dues">calendar_sync_dues</string>

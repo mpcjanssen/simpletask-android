@@ -136,6 +136,7 @@ public class FilterActivity extends ThemedActivity {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, mFilter.getHideLists());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.getHideTags());
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.getHideCreateDate());
+        arguments.putBoolean(ActiveFilter.INTENT_HIDE_HIDDEN_FILTER, mFilter.getHideHidden());
         arguments.putString(TAB_TYPE, OTHER_TAB);
         Fragment otherTab = new FilterOtherFragment();
         otherTab.setArguments(arguments);
@@ -258,6 +259,7 @@ public class FilterActivity extends ThemedActivity {
                     mFilter.setHideLists(of.getHideLists());
                     mFilter.setHideTags(of.getHideTags());
                     mFilter.setHideCreateDate(of.getHideCreateDate());
+                    mFilter.setHideHidden(of.getHideHidden());
                     break;
                 case CONTEXT_TAB:
                     FilterListFragment lf = (FilterListFragment) f;
@@ -271,7 +273,7 @@ public class FilterActivity extends ThemedActivity {
                     break;
                 case PRIO_TAB:
                     FilterListFragment prf = (FilterListFragment) f;
-                    mFilter.setPriorities(prf.getSelectedItems());
+                    mFilter.setPriorities(Priority.Companion.toPriority(prf.getSelectedItems()));
                     mFilter.setPrioritiesNot(prf.getNot());
                     break;
                 case SORT_TAB:

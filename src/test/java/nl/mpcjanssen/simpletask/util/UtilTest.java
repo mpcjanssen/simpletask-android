@@ -2,9 +2,8 @@ package nl.mpcjanssen.simpletask.util;
 
 import junit.framework.TestCase;
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem;
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItemDao;
 import nl.mpcjanssen.simpletask.task.Task;
+import nl.mpcjanssen.simpletask.task.TodoListItem;
 
 import java.util.ArrayList;
 
@@ -23,9 +22,9 @@ public class UtilTest extends TestCase {
         tasks.add(new Task("@College h:1"));
         ArrayList<TodoListItem> items = new ArrayList<>();
         for (Task t : tasks) {
-            items.add(new TodoListItem(0,t.getText(),false));
+            items.add(new TodoListItem(0,t,false));
         }
-        assertEquals(0,Util.addHeaderLines(items, "by_context", "none", false, false).size());
+        assertEquals(6,Util.addHeaderLines(items, "by_context", "none").size());
 
     }
 }

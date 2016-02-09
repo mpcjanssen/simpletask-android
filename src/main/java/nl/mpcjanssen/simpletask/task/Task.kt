@@ -282,20 +282,16 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     public fun inFileFormat() = text
 
-    public fun inFuture(): Boolean {
+    public fun inFuture(today: String): Boolean {
         val date = thresholdDate
         date?.let {
-            return date.compareTo(DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)) > 0
+            return date.compareTo(today) > 0
         }
         return false
     }
 
     public fun isHidden(): Boolean {
         return getFirstToken<HiddenToken>()?.value ?: false
-    }
-
-    public fun isVisible(): Boolean {
-        return !isHidden()
     }
 
     public fun isCompleted(): Boolean {
@@ -366,14 +362,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return null;
     }
 
-    private fun calculateRelativeAge(ctx : Context, date : String) : String {
-        val result : String;
-        if (!DateTime.isParseable(date)) {
-            result = date;
-        } else {
-            result = RelativeDate.getRelativeDate(ctx, date.toDateTime());
+    private fun calculateRelativeAge(ctx : Context, dateString : String) : String {
+        val date = dateString.toDateTime()
+        date?.let {
+            return  RelativeDate.getRelativeDate(ctx, date);
         }
-        return result;
+        return dateString;
     }
 
     public fun getRelativeAge(ctx : Context) : String? {

@@ -30,12 +30,11 @@ import android.preference.DialogPreference
 import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.View
-import android.widget.TimePicker
 
 
 class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet?, defStyle: Int = android.R.attr.dialogPreferenceStyle) : DialogPreference(ctx, attrs, defStyle) {
     private var m_minutes = 0
-    private var m_picker: TimePicker? = null
+    private var m_picker: android.widget.TimePicker? = null
 
     // Constructor is used from preferences.xml
     @SuppressWarnings("unused")
@@ -43,26 +42,23 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
     }
 
     init {
-
         setPositiveButtonText(R.string.ok)
         setNegativeButtonText(R.string.cancel)
     }
 
     override fun onCreateDialogView(): View {
-        val picker = TimePicker(context)
+        val picker = android.widget.TimePicker(context)
         picker.setIs24HourView(DateFormat.is24HourFormat(context))
         m_picker = picker
         return picker
     }
 
-    @SuppressWarnings("deprecation")
     override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
         m_picker!!.currentHour = m_minutes / 60
         m_picker!!.currentMinute = m_minutes % 60
     }
 
-    @SuppressWarnings("deprecation")
     override fun onDialogClosed(positiveResult: Boolean) {
         super.onDialogClosed(positiveResult)
 

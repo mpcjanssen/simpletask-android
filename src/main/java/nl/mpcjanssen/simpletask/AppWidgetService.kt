@@ -11,10 +11,11 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.setColor
 
@@ -73,9 +74,7 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
         val tl = application.todoList
         val items = tl.todoItems
         for (t in mFilter.apply(items)) {
-            if (t.task.isVisible()) {
-                visibleTasks.add(t)
-            }
+            visibleTasks.add(t)
         }
         val comp = MultiComparator(mFilter.getSort(
                 application.defaultSorts),

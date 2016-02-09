@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import java.util.*
 
 class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
@@ -20,8 +20,8 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
         } else if (b == null) {
             return 1
         }
-        val projectsA = a.task.tags.toArrayList()
-        val projectsB = b.task.tags.toArrayList()
+        val projectsA = a.task.tags.toMutableList()
+        val projectsB = b.task.tags.toMutableList()
 
         if (projectsA.isEmpty() && projectsB.isEmpty()) {
             return 0
