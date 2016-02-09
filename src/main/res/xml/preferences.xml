@@ -82,6 +82,11 @@
                                          robobunny:unitsRight="%"/>
         <CheckBoxPreference
                 android:defaultValue="true"
+                android:key="@string/taskview_extended_pref_key"
+                android:summary="@string/taskview_extended_pref_summary"
+                android:title="@string/taskview_extended_pref_title"/>
+        <CheckBoxPreference
+                android:defaultValue="true"
                 android:key="@string/widget_extended_pref_key"
                 android:summary="@string/widget_extended_pref_summary"
                 android:title="@string/widget_extended_pref_title"/>
@@ -160,16 +165,6 @@
                 android:key="@string/line_breaks_pref_key"
                 android:summary="@string/line_breaks_pref_summary"
                 android:title="@string/line_breaks_pref_title"/>
-        <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="@string/show_hidden"
-                android:summary="@string/show_hidden_summary"
-                android:title="@string/show_hidden_title"/>
-        <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="@string/show_empty_lists"
-                android:summary="@string/show_empty_lists_summary"
-                android:title="@string/show_empty_lists_title"/>
         <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/share_task_show_edit"

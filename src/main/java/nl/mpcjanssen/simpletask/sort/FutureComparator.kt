@@ -1,11 +1,11 @@
 package nl.mpcjanssen.simpletask.sort
 
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class FutureComparator : Comparator<TodoListItem> {
+class FutureComparator(val today: String) : Comparator<TodoListItem> {
 
     override fun compare(a: TodoListItem?, b: TodoListItem?): Int {
         if (a === b) {
@@ -15,8 +15,8 @@ class FutureComparator : Comparator<TodoListItem> {
         } else if (b == null) {
             return 1
         }
-        val futureA = if (a.task.inFuture()) 1 else 0
-        val futureB = if (b.task.inFuture()) 1 else 0
+        val futureA = if (a.task.inFuture(today)) 1 else 0
+        val futureB = if (b.task.inFuture(today)) 1 else 0
         return (futureA - futureB)
     }
 }

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import nl.mpcjanssen.simpletask.dao.gen.LogItem;
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao;
 import nl.mpcjanssen.simpletask.util.Util;

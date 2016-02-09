@@ -24,7 +24,7 @@ interface FileStoreInterface {
     val type: Int
     fun sync()
     @Throws(IOException::class)
-    fun readFile(file: String, fileRead: FileReadListener): String
+    fun readFile(file: String, fileRead: FileReadListener?): String
 
     fun supportsSync(): Boolean
     fun changesPending(): Boolean
@@ -38,10 +38,10 @@ interface FileStoreInterface {
     }
 
     interface FileChangeListener {
-        fun fileChanged(newName: String)
+        fun fileChanged(newName: String?)
     }
 
     interface FileReadListener {
-        fun fileRead(contents: String)
+        fun fileRead(contents: String?)
     }
 }

@@ -56,6 +56,7 @@ class TodoApplication : Application(),
 
         SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
 
+    lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
     lateinit var  todoList: TodoList
     private lateinit var m_calSync: CalendarSync
@@ -66,11 +67,11 @@ class TodoApplication : Application(),
     private lateinit var mFileStore: FileStoreInterface;
 
     internal lateinit var daoSession: DaoSession
-    lateinit var todoListItemDao: TodoListItemDao
     lateinit var  logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
 
     override fun onCreate() {
+        log.debug(TAG, "onCreate()")
         super.onCreate()
         appContext = applicationContext
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
@@ -79,16 +80,11 @@ class TodoApplication : Application(),
         val todoDb = helper.writableDatabase
         val daoMaster = DaoMaster(todoDb)
         daoSession = daoMaster.newSession()
-        todoListItemDao = daoSession.todoListItemDao
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
         log.setDao(logDao)
 
-        log.debug(TAG, "onCreate()")
-
-
-
-
+        setupUncaughtExceptionHandler()
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
 
@@ -112,6 +108,17 @@ class TodoApplication : Application(),
         loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
+    }
+
+    private fun setupUncaughtExceptionHandler() {
+        // save original Uncaught exception handler
+        androidUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        // Handle all uncaught exceptions for logging.
+        // After that call the default uncaught exception handler
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            log.error(TAG, "Uncaught exception", throwable)
+            androidUncaughtExceptionHandler.uncaughtException(thread, throwable)
+        }
     }
 
     private fun scheduleOnNewDay() {
@@ -156,14 +163,6 @@ class TodoApplication : Application(),
 
     fun showCalendar(): Boolean {
         return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
-    }
-
-    fun showHidden(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_hidden), false)
-    }
-
-    fun showEmptyLists(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_empty_lists), true)
     }
 
     val listTerm: String
@@ -328,8 +327,10 @@ class TodoApplication : Application(),
     }
 
 
-    override fun fileChanged(newName: String) {
-        setTodoFile(newName)
+    override fun fileChanged(newName: String?) {
+        newName?.let {
+            setTodoFile(newName)
+        }
         loadTodoList(true)
     }
 
@@ -520,6 +521,10 @@ class TodoApplication : Application(),
 
     fun hasShareTaskShowsEdit(): Boolean {
         return prefs.getBoolean(getString(R.string.share_task_show_edit), false)
+    }
+
+    fun hasExtendedTaskView(): Boolean {
+        return prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
     }
 
     companion object {
