@@ -28,9 +28,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
-import android.app.ActionBar
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.content.*
 import android.os.Bundle
 import android.support.v4.app.NavUtils
@@ -52,7 +50,6 @@ import nl.mpcjanssen.simpletask.util.*
 
 
 import java.util.*
-import java.util.regex.Pattern
 
 
 class AddTask : ThemedActivity() {
@@ -112,7 +109,7 @@ class AddTask : ThemedActivity() {
         m_app!!.setEditTextHint(textInputField, R.string.tasktexthint)
 
         if (share_text != null) {
-            textInputField!!.setText(share_text)
+            textInputField.setText(share_text)
         }
 
         var iniTask: Task? = null
@@ -128,10 +125,10 @@ class AddTask : ThemedActivity() {
                 prefill.add(t.task.inFileFormat())
             }
             val sPrefill = join(prefill, "\n")
-            textInputField!!.setText(sPrefill)
+            textInputField.setText(sPrefill)
             setTitle(R.string.updatetask)
         } else {
-            if (textInputField!!.text.length == 0) {
+            if (textInputField.text.length == 0) {
                 iniTask = Task("")
                 initTaskWithFilter(iniTask, mFilter)
             }
@@ -140,7 +137,7 @@ class AddTask : ThemedActivity() {
                 val ps = iniTask.tags
                 val project = ps.first()
                 if (project != "-") {
-                    textInputField!!.append(" +" + project)
+                    textInputField.append(" +" + project)
                 }
             }
 
@@ -149,7 +146,7 @@ class AddTask : ThemedActivity() {
                 val cs = iniTask.lists
                 val context = cs.first()
                 if (context != "-") {
-                    textInputField!!.append(" @" + context)
+                    textInputField.append(" @" + context)
                 }
             }
         }
@@ -161,9 +158,9 @@ class AddTask : ThemedActivity() {
         if (m_app!!.hasCapitalizeTasks()) {
             inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }
-        textInputField!!.setRawInputType(inputFlags)
-        textInputField!!.imeOptions = EditorInfo.IME_ACTION_NEXT
-        textInputField!!.setOnEditorActionListener { textView, actionId, keyEvent ->
+        textInputField.setRawInputType(inputFlags)
+        textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
+        textInputField.setOnEditorActionListener { textView, actionId, keyEvent ->
             val hardwareEnterUp = keyEvent != null &&
                     keyEvent.action == KeyEvent.ACTION_UP &&
                     keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
@@ -174,20 +171,20 @@ class AddTask : ThemedActivity() {
 
             if (imeActionNext || hardwareEnterUp) {
                 // Move cursor to end of line
-                val position = textInputField!!.selectionStart
-                val remainingText = textInputField!!.text.toString().substring(position)
+                val position = textInputField.selectionStart
+                val remainingText = textInputField.text.toString().substring(position)
                 val endOfLineDistance = remainingText.indexOf('\n')
                 var endOfLine: Int
                 if (endOfLineDistance == -1) {
-                    endOfLine = textInputField!!.length()
+                    endOfLine = textInputField.length()
                 } else {
                     endOfLine = position + endOfLineDistance
                 }
-                textInputField!!.setSelection(endOfLine)
+                textInputField.setSelection(endOfLine)
                 replaceTextAtSelection("\n", false)
 
                 if (hasCloneTags()) {
-                    val precedingText = textInputField!!.text.toString().substring(0, endOfLine)
+                    val precedingText = textInputField.text.toString().substring(0, endOfLine)
                     val lineStart = precedingText.lastIndexOf('\n')
                     val line: String
                     if (lineStart != -1) {
@@ -206,7 +203,7 @@ class AddTask : ThemedActivity() {
                     replaceTextAtSelection(join(tags, " "), true)
                 }
                 endOfLine++
-                textInputField!!.setSelection(endOfLine)
+                textInputField.setSelection(endOfLine)
             }
             imeActionNext || hardwareEnterDown || hardwareEnterUp
         }
@@ -217,7 +214,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.cb_wrap).setOnClickListener { setWordWrap(hasWordWrap()) }
 
         val textIndex = 0
-        textInputField!!.setSelection(textIndex)
+        textInputField.setSelection(textIndex)
 
         // Set button callbacks
         findViewById(R.id.btnContext).setOnClickListener { showListMenu() }
@@ -228,7 +225,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.btnThreshold).setOnClickListener { insertDate(DateType.THRESHOLD) }
 
         if (m_backup != null && m_backup!!.size > 0) {
-            textInputField!!.setSelection(textInputField!!.text.length)
+            textInputField.setSelection(textInputField.text.length)
         }
     }
 
@@ -238,9 +235,7 @@ class AddTask : ThemedActivity() {
 
     fun setWordWrap(bool: Boolean) {
         (findViewById(R.id.cb_wrap) as CheckBox).isChecked = bool
-        if (textInputField != null) {
-            textInputField!!.setHorizontallyScrolling(!bool)
-        }
+        textInputField.setHorizontallyScrolling(!bool)
     }
 
     fun hasCloneTags(): Boolean {
@@ -302,11 +297,7 @@ class AddTask : ThemedActivity() {
         // strip line breaks
         textInputField = findViewById(R.id.taskText) as EditText
         val input: String
-        if (textInputField != null) {
-            input = textInputField!!.text.toString()
-        } else {
-            input = ""
-        }
+        input = textInputField.text.toString()
 
         // Don't add empty tasks
         if (input.trim { it <= ' ' }.isEmpty()) {
@@ -359,8 +350,8 @@ class AddTask : ThemedActivity() {
             titleId = R.id.defer_threshold
         }
         val d = createDeferDialog(this, titleId, false, object : InputDialogListener {
-            override fun onClick(selected: String) {
-                if (selected == "pick") {
+            override fun onClick(input: String) {
+                if (input == "pick") {
                     /* Note on some Android versions the OnDateSetListener can fire twice
                      * https://code.google.com/p/android/issues/detail?id=34860
                      * With the current implementation which replaces the dates this is not an
@@ -368,10 +359,7 @@ class AddTask : ThemedActivity() {
                      */
                     val today = DateTime.today(TimeZone.getDefault())
                     val dialog = DatePickerDialog(this@AddTask, DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                        var month = month
-                        month++
-
-                        val date = DateTime.forDateOnly(year, month, day)
+                        val date = DateTime.forDateOnly(year, month+1, day)
                         insertDateAtSelection(dateType, date)
                     },
                             today.year!!,
@@ -384,7 +372,7 @@ class AddTask : ThemedActivity() {
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
-                    insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), selected))
+                    insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
                 }
             }
         })
@@ -572,12 +560,12 @@ class AddTask : ThemedActivity() {
 
     private fun replaceDueDate(newDueDate: CharSequence) {
         // save current selection and length
-        val start = textInputField!!.selectionStart
-        val end = textInputField!!.selectionEnd
-        val length = textInputField!!.text.length
+        val start = textInputField.selectionStart
+        val end = textInputField.selectionEnd
+        val length = textInputField.text.length
         val sizeDelta: Int
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *textInputField!!.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -589,18 +577,18 @@ class AddTask : ThemedActivity() {
             val t = Task(lines[currentLine])
             t.dueDate = newDueDate.toString()
             lines[currentLine] = t.inFileFormat()
-            textInputField!!.setText(join(lines, "\n"))
+            textInputField.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
     }
 
     private fun replaceThresholdDate(newThresholdDate: CharSequence) {
         // save current selection and length
-        val start = textInputField!!.selectionStart
-        val length = textInputField!!.text.length
+        val start = textInputField.selectionStart
+        val length = textInputField.text.length
         val sizeDelta: Int
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *textInputField!!.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -612,14 +600,14 @@ class AddTask : ThemedActivity() {
             val t = Task(lines[currentLine])
             t.thresholdDate = newThresholdDate.toString()
             lines[currentLine] = t.inFileFormat()
-            textInputField!!.setText(join(lines, "\n"))
+            textInputField.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
     }
 
     private fun restoreSelection(location: Int, oldLenght: Int, moveCursor: Boolean) {
         var location = location
-        val newLength = textInputField!!.text.length
+        val newLength = textInputField.text.length
         val deltaLength = newLength - oldLenght
         // Check if we want the cursor to move by delta (for prio changes)
         // or not (for due and threshold changes
@@ -630,17 +618,17 @@ class AddTask : ThemedActivity() {
         // Don't go out of bounds
         location = Math.min(location, newLength)
         location = Math.max(0, location)
-        textInputField!!.setSelection(location, location)
+        textInputField.setSelection(location, location)
     }
 
     private fun replacePriority(newPrio: CharSequence) {
         // save current selection and length
-        val start = textInputField!!.selectionStart
-        val end = textInputField!!.selectionEnd
+        val start = textInputField.selectionStart
+        val end = textInputField.selectionEnd
         log!!.debug(TAG, "Current selection: $start-$end")
-        val length = textInputField!!.text.length
+        val length = textInputField.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *textInputField!!.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -653,22 +641,22 @@ class AddTask : ThemedActivity() {
             log!!.debug(TAG, "Changing prio from " + t.priority.toString() + " to " + newPrio.toString())
             t.priority = Priority.toPriority(newPrio.toString())
             lines[currentLine] = t.inFileFormat()
-            textInputField!!.setText(join(lines, "\n"))
+            textInputField.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, true)
     }
 
     private fun replaceTextAtSelection(title: CharSequence, spaces: Boolean) {
         var title = title
-        val start = textInputField!!.selectionStart
-        val end = textInputField!!.selectionEnd
+        val start = textInputField.selectionStart
+        val end = textInputField.selectionEnd
         if (start == end && start != 0 && spaces) {
             // no selection prefix with space if needed
-            if (textInputField!!.text[start - 1] != ' ') {
+            if (textInputField.text[start - 1] != ' ') {
                 title = " " + title
             }
         }
-        textInputField!!.text.replace(Math.min(start, end), Math.max(start, end),
+        textInputField.text.replace(Math.min(start, end), Math.max(start, end),
                 title, 0, title.length)
     }
 
