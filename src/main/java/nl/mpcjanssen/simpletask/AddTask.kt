@@ -133,7 +133,7 @@ class AddTask : ThemedActivity() {
         } else {
             if (textInputField!!.text.length == 0) {
                 iniTask = Task("")
-                iniTask.initWithFilter(mFilter)
+                initTaskWithFilter(iniTask, mFilter)
             }
 
             if (iniTask != null && iniTask.tags.size == 1) {

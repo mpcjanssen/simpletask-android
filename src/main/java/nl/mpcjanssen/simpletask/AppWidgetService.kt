@@ -16,8 +16,7 @@ import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.isEmptyOrNull
-import nl.mpcjanssen.simpletask.util.setColor
+import nl.mpcjanssen.simpletask.util.*
 
 
 import java.util.ArrayList
@@ -147,11 +146,11 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
         }
         rv.setTextViewText(R.id.tasktext, ss)
 
-        val relAge = task.getRelativeAge(m_app)
-        val relDue = task.getRelativeDueDate(m_app, ContextCompat.getColor(m_app,android.R.color.holo_green_light),
+        val relAge = getRelativeAge(task, m_app)
+        val relDue = getRelativeDueDate(task ,m_app, ContextCompat.getColor(m_app,android.R.color.holo_green_light),
                 ContextCompat.getColor(m_app,android.R.color.holo_red_light),
                 true)
-        val relThres = task.getRelativeThresholdDate(m_app)
+        val relThres = getRelativeThresholdDate(task, m_app)
         var anyDateShown = false
         if (!isEmptyOrNull(relAge) && !mFilter.hideCreateDate) {
             rv.setTextViewText(R.id.taskage, relAge)

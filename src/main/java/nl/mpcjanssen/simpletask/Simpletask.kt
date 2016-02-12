@@ -1379,11 +1379,11 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
                 val mContext = TodoApplication.appContext
 
-                val relAge = task.getRelativeAge(mContext)
-                val relDue = task.getRelativeDueDate(mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
+                val relAge = getRelativeAge(task, mContext)
+                val relDue = getRelativeDueDate(task, mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
                         ContextCompat.getColor(m_app, android.R.color.holo_red_light),
                         m_app.hasColorDueDates())
-                val relativeThresholdDate = task.getRelativeThresholdDate(mContext)
+                val relativeThresholdDate = getRelativeThresholdDate(task, mContext)
                 if (!isEmptyOrNull(relAge) && !mFilter!!.hideCreateDate) {
                     taskage.text = relAge
                     taskage.visibility = View.VISIBLE

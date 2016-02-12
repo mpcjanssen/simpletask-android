@@ -186,16 +186,16 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
 
             // Check due date:
             if (m_sync_type and SYNC_TYPE_DUES != 0) {
-                dt = task.getDueDateDT()
+                dt = task.dueDate?.toDateTime()
                 if (dt != null) {
                     text = task.text
                     insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_due))
                 }
             }
-
+            task.dueDate?.toDateTime()
             // Check threshold date:
             if (m_sync_type and SYNC_TYPE_THRESHOLDS != 0) {
-                dt = task.getThresholdDateDT()
+                dt = task.thresholdDate?.toDateTime()
                 if (dt != null) {
                     if (text == null) text = task.text
                     insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_thre))

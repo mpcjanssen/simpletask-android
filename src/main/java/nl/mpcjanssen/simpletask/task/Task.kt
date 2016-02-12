@@ -26,17 +26,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-
-import android.content.Context
-
-import android.text.SpannableString
-import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.ActiveFilter
-import nl.mpcjanssen.simpletask.Constants
-import nl.mpcjanssen.simpletask.util.RelativeDate
 import nl.mpcjanssen.simpletask.util.addInterval
-import nl.mpcjanssen.simpletask.util.setColor
-import nl.mpcjanssen.simpletask.util.todayAsString
 
 import java.util.*
 
@@ -232,7 +222,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun deferThresholdDate(deferString:String, deferFromDate:String) {
-        if (DateTime.isParseable(deferString))
+        if (deferString.matches(MATCH_SINGLE_DATE))
         {
             thresholdDate = deferString
             return
@@ -251,12 +241,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         {
             olddate = deferFromDate
         }
-        val newDate = addInterval(olddate?.toDateTime(), deferString)
-        thresholdDate = newDate?.format(Constants.DATE_FORMAT)
+        val newDate = addInterval(olddate, deferString)
+        thresholdDate = newDate?.format(DATE_FORMAT)
     }
 
     fun deferDueDate(deferString:String, deferFromDate:String) {
-        if (DateTime.isParseable(deferString))
+        if (deferString.matches(MATCH_SINGLE_DATE))
         {
             dueDate = deferString
             return
@@ -275,8 +265,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         {
             olddate = deferFromDate
         }
-        val newDate = addInterval(olddate?.toDateTime(), deferString)
-        dueDate = newDate?.format(Constants.DATE_FORMAT)
+        val newDate = addInterval(olddate, deferString)
+        dueDate = newDate?.format(DATE_FORMAT)
     }
 
 
@@ -327,57 +317,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return "";
     }
 
-    fun getDueDateDT() :DateTime? {
-        return dueDate?.toDateTime()
-    }
-
-    fun getThresholdDateDT() :DateTime? {
-        return thresholdDate?.toDateTime()
-    }
-
-    public fun getRelativeDueDate(ctx : Context, dueTodayColor : Int, overDueColor: Int, useColor : Boolean) : SpannableString? {
-        val date = dueDate
-        if (date!=null) {
-            date.toDateTime()?.let {
-                val relativeDate = RelativeDate.getRelativeDate(ctx, it );
-                val ss = SpannableString("Due: " + relativeDate);
-                if (date == todayAsString && useColor) {
-                    setColor(ss, dueTodayColor);
-                } else if ((todayAsString.compareTo(date) > 0) && useColor) {
-                    setColor(ss, overDueColor);
-                }
-                return ss;
-            }
-        }
-        return null;
-    }
-
-    public fun getRelativeThresholdDate(ctx: Context): String? {
-        val date = thresholdDate
-        if (date!=null) {
-            date.toDateTime()?.let {
-                return "T: " + RelativeDate.getRelativeDate(ctx, it);
-            }
-        }
-        return null;
-    }
-
-    private fun calculateRelativeAge(ctx : Context, dateString : String) : String {
-        val date = dateString.toDateTime()
-        date?.let {
-            return  RelativeDate.getRelativeDate(ctx, date);
-        }
-        return dateString;
-    }
-
-    public fun getRelativeAge(ctx : Context) : String? {
-        val date = createDate
-        date?.let {
-            return (calculateRelativeAge(ctx, date));
-        }
-        return null;
-    }
-
     /* Adds the task to list Listname
 ** If the task is already on that list, it does nothing
  */
@@ -398,16 +337,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
 
-    fun initWithFilter(mFilter : ActiveFilter) {
-        if (!mFilter.contextsNot && mFilter.contexts.size == 1) {
-            addList(mFilter.contexts[0]);
-        }
-
-        if (!mFilter.projectsNot && mFilter.projects.size == 1) {
-            addTag(mFilter.projects[0]);
-        }
-    }
-
     override fun equals(other: Any?): Boolean{
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
@@ -426,6 +355,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     companion object {
         var TAG = Task::class.java.simpleName
+        const val DATE_FORMAT = "YYYY-MM-DD"
         private val MATCH_LIST = Regex("@(\\S*)")
         private val MATCH_TAG = Regex("\\+(\\S*)")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
@@ -616,12 +546,3 @@ data class RecurrenceToken(override val text: String) : KeyValueToken {
 
 fun String.lex(): List<String> = this.split(" ")
 
-fun String.toDateTime(): DateTime? {
-    var date: DateTime?;
-    if ( DateTime.isParseable(this)) {
-        date = DateTime(this)
-    } else {
-        date = null
-    }
-    return date
-}
