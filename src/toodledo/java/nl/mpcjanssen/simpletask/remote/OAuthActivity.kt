@@ -7,14 +7,7 @@ import android.support.annotation.NonNull
 import android.util.Base64
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.github.scribejava.core.builder.ServiceBuilder
-import com.github.scribejava.core.builder.api.DefaultApi20
-import com.github.scribejava.core.model.OAuthConfig
-import com.github.scribejava.core.model.Verifier
-import nl.mpcjanssen.simpletask.HelpScreen
-import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.ThemedActivity
+import nl.mpcjanssen.simpletask.*
 import java.net.HttpURLConnection
 import java.util.*
 
@@ -57,6 +50,7 @@ class OAuthActivity : ThemedActivity() {
                         log.error(TAG, "OAuth State changed from $state to $newState, aborting authentication")
                     }
 
+                    switchToTodolist()
                     finish()
                     return false
                 }
@@ -66,6 +60,12 @@ class OAuthActivity : ThemedActivity() {
         view?.loadUrl(authorizationUrl)
 
         log.info(TAG, "Authenticated with ${intent.data}")
+    }
+
+    private fun switchToTodolist() {
+        val intent = Intent(this, Simpletask::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

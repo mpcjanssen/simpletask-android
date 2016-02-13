@@ -22,7 +22,7 @@
  * *
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
  */
-package nl.mpcjanssen.simpletask
+package nl.mpcjanssen.simpletask.remote
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -32,6 +32,14 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 
 import android.widget.Button
+import com.dropbox.client2.DropboxAPI
+import com.dropbox.client2.android.AndroidAuthSession
+import com.dropbox.client2.session.AppKeyPair
+import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.Simpletask
+import nl.mpcjanssen.simpletask.ThemedActivity
+import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.remote.FileStore
 
 
 class LoginScreen : ThemedActivity() {
@@ -75,6 +83,27 @@ class LoginScreen : ThemedActivity() {
         if (m_app.isAuthenticated) {
             switchToTodolist()
         }
+
+    }
+    fun getMdbApi(mApp: TodoApplication) : DropboxAPI<AndroidAuthSession> {
+        val app_secret: String
+        var app_key: String
+
+            // Full access or folder access?
+            if (mApp.fullDropBoxAccess) {
+                app_secret = mApp.getString(R.string.dropbox_consumer_secret)
+                app_key = mApp.getString(R.string.dropbox_consumer_key)
+            } else {
+                app_secret = mApp.getString(R.string.dropbox_folder_consumer_secret)
+                app_key = mApp.getString(R.string.dropbox_folder_consumer_key)
+            }
+            app_key = app_key.replaceFirst("^db-".toRegex(), "")
+            // And later in some initialization function:
+            val appKeys = AppKeyPair(app_key, app_secret)
+            val savedAuth : String? = null
+            val session = AndroidAuthSession(appKeys, savedAuth)
+            return DropboxAPI(session)
+
     }
 
     private fun switchToTodolist() {
@@ -101,12 +130,14 @@ class LoginScreen : ThemedActivity() {
     }
 
     internal fun startLogin() {
-        m_app.startLogin(this, 0)
+        getMdbApi(m_app).session.startOAuth2Authentication(this)
     }
+
 
     companion object {
 
         internal val TAG = LoginScreen::class.java.simpleName
     }
+
 
 }

@@ -21,10 +21,7 @@ import com.dropbox.client2.exception.DropboxUnlinkedException
 import com.dropbox.client2.jsonextract.JsonExtractionException
 import com.dropbox.client2.jsonextract.JsonThing
 import com.dropbox.client2.session.AppKeyPair
-import nl.mpcjanssen.simpletask.Constants
-import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
 import java.net.SocketTimeoutException
@@ -344,11 +341,10 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         return result
     }
 
-    override fun startLogin(caller: Activity, i: Int) {
+    override fun startLogin(caller: Activity) {
         // MyActivity below should be your activity class name
-        mDBApi = null
-        setMDBApi(mApp)
-        mDBApi!!.session.startOAuth2Authentication(caller)
+       val intent = Intent(caller, LoginScreen::class.java)
+        caller.startActivity(intent)
     }
 
 

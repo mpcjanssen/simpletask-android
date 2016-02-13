@@ -15,11 +15,6 @@ import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import com.github.scribejava.core.builder.ServiceBuilder
-import com.github.scribejava.core.builder.api.DefaultApi20
-import com.github.scribejava.core.model.OAuthConfig
-import com.github.scribejava.core.model.Verifier
-import com.github.scribejava.core.oauth.OAuthService
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
@@ -122,7 +117,7 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
         return false
     }
 
-    override fun startLogin(caller: Activity, i: Int) {
+    override fun startLogin(caller: Activity) {
         caller.startActivity(Intent(caller, OAuthActivity::class.java))
     }
 
