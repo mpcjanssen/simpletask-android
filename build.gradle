@@ -42,6 +42,9 @@ android {
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
         }
+        toodledo {
+            applicationId 'nl.mpcjanssen.simpletask.toodledo'
+        }
     }
 
     signingConfigs {
@@ -67,6 +70,7 @@ repositories {
 
 dependencies {
     dropboxCompile fileTree(dir: 'libs', include: '*.jar')
+    toodledoCompile "com.github.scribejava:scribejava-core:2.2.2"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.android.support:support-v4:$android_support_version"
     compile "com.android.support:design:$android_support_version"
