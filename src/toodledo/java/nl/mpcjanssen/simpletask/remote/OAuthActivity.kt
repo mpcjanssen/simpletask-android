@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.annotation.NonNull
+import android.util.Base64
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.github.scribejava.core.builder.ServiceBuilder
@@ -14,48 +15,48 @@ import nl.mpcjanssen.simpletask.HelpScreen
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.ThemedActivity
+import java.net.HttpURLConnection
+import java.util.*
+
 
 class OAuthActivity : ThemedActivity() {
     private val TAG = javaClass.simpleName
     val log = Logger
+
+    private lateinit var apiKey: String
+    private lateinit var apiSecret: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logintoodledo)
-        val service = ServiceBuilder()
-                .apiKey(getString(R.string.toodledo_api_client_id))
-                .state("${System.currentTimeMillis()}")
-                .scope("basic tasks")
-                .callback("simpletask://oauth")
-                .apiSecret(getString(R.string.toodledo_api_secret))
-                .build(object : DefaultApi20() {
-                    override fun getAuthorizationUrl(p0: OAuthConfig?): String? {
-                        return "https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=${p0?.apiKey}&state=${p0?.state}&scope=${p0?.scope}"
-                    }
+        apiKey = getString(R.string.toodledo_api_client_id)
+        apiSecret = getString(R.string.toodledo_api_secret)
 
-                    override fun getAccessTokenEndpoint(): String? {
-                        return "https://api.toodledo.com/3/account/token.php"
-                    }
-                } );
-        val authorizationUrl = service.authorizationUrl;
+        val state = "${System.currentTimeMillis()}"
+        val getParams = ArrayList<Pair<String, String>>()
+        getParams.add(Pair("response_type", "code"))
+        getParams.add(Pair("client_id", apiKey))
+        getParams.add(Pair("state", state))
+        getParams.add(Pair("scope", "basic tasks"))
+
+        val authorizationUrl = RestClient.getUrl("https://api.toodledo.com/3/account/authorize.php", getParams)
+
+
         log.info(TAG, "Authorizing toodledo from ${authorizationUrl}")
 
         val view = findViewById(R.id.web) as WebView?
 
         view?.setWebViewClient(object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view : WebView, url : String) : Boolean {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 log.debug(TAG, "Loading url: " + url);
                 val uri = Uri.parse(url);
                 if (uri.scheme.equals("simpletask") && uri.host.equals("oauth")) {
                     val code = uri.getQueryParameter("code")
-                    val state = uri.getQueryParameter("state")
-                    if (state != service.config.state) {
-                        log.error(TAG, "OAuth State changed from ${service.config.state} to $state, aborting authentication")
+                    val newState = uri.getQueryParameter("state")
+                    if (state != newState) {
+                        log.error(TAG, "OAuth State changed from $state to $newState, aborting authentication")
                     }
 
-                    log.debug(TAG, "OAuth response received code = $code")
-                    val verifier = Verifier(code)
-                    val token  = service.getAccessToken(verifier)
-                    log.info(TAG, "Got token ${token}")
                     finish()
                     return false
                 }
@@ -66,4 +67,6 @@ class OAuthActivity : ThemedActivity() {
 
         log.info(TAG, "Authenticated with ${intent.data}")
     }
+
 }
+
