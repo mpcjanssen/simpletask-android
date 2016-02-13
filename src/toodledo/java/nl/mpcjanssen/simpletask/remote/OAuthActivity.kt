@@ -48,18 +48,34 @@ class OAuthActivity : ThemedActivity() {
                     val newState = uri.getQueryParameter("state")
                     if (state != newState) {
                         log.error(TAG, "OAuth State changed from $state to $newState, aborting authentication")
+                        switchToTodolist()
+                        finish()
+                        return false
                     }
+                    val params = ArrayList<Pair<String, String>>()
+                    val headers = ArrayList<Pair<String, String>>()
+                    headers.add(Pair("Authorization",RestClient.basicAuthorizationString(apiKey, apiSecret)))
+                    params.add(Pair("grant_type","authorization_code"))
+                    params.add(Pair("code",code))
+                    val t = object : Thread() {
+                        override fun run() {
+                            val result = RestClient.performPostCall("https://api.toodledo.com/3/account/token.php",
+                                    params,
+                                    headers)
+                            log.debug(TAG, "get token result ${result}")
+                            switchToTodolist()
+                            finish()
+                        }
+                    }
+                    t.start()
+                    return true
 
-                    switchToTodolist()
-                    finish()
-                    return false
                 }
-                return true
+                return false
             }
         });
         view?.loadUrl(authorizationUrl)
 
-        log.info(TAG, "Authenticated with ${intent.data}")
     }
 
     private fun switchToTodolist() {

@@ -16,8 +16,8 @@ import javax.net.ssl.HttpsURLConnection
 
 object RestClient {
     fun performPostCall(requestURL: String,
-                        headers:  List<Pair<String, String>>?,
-                        postDataParams: List<Pair<String, String>>?): String {
+                        postDataParams: List<Pair<String, String>>?,
+                        headers:  List<Pair<String, String>>?): String {
 
         val url: URL
         var response = ""
@@ -102,8 +102,9 @@ object RestClient {
 
     fun getUrl( requestURL: String, getDataParams: List<Pair<String, String>>?): String {
         val getRequest = getDataParams?.map { pair ->
-            "${URLEncoder.encode(pair.first, "UTF-8")}=${URLEncoder.encode(pair.second, "UTF-8")}"
-        }?.joinToString("&", "?") ?: ""
+                    "${URLEncoder.encode(pair.first, "UTF-8")}=" +
+                    "${URLEncoder.encode(pair.second, "UTF-8")}"
+            }?.joinToString("&", prefix="?") ?: ""
         return requestURL + getRequest
     }
 
