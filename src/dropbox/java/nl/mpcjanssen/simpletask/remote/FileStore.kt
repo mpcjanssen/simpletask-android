@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.remote
 
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -8,7 +9,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Handler
 import android.os.Looper
 import com.dropbox.client2.DropboxAPI
@@ -19,22 +19,16 @@ import com.dropbox.client2.exception.DropboxIOException
 import com.dropbox.client2.exception.DropboxServerException
 import com.dropbox.client2.exception.DropboxUnlinkedException
 import com.dropbox.client2.jsonextract.JsonExtractionException
-import com.dropbox.client2.jsonextract.JsonMap
 import com.dropbox.client2.jsonextract.JsonThing
 import com.dropbox.client2.session.AppKeyPair
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.ListenerList
 import nl.mpcjanssen.simpletask.util.*
-
-
 import java.io.*
 import java.net.SocketTimeoutException
-import java.util.ArrayList
-import java.util.Collections
-import java.util.HashMap
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 
@@ -110,7 +104,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
     private fun setChangesPending(pending: Boolean) {
-        if (pending && mApp != null) {
+        if (pending) {
             showToastLong(mApp, R.string.write_failed)
         }
         if (mPrefs == null) {
@@ -122,12 +116,12 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         }
         val edit = mPrefs.edit()
         edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit()
-        mApp!!.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
+        mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
     }
 
     private val isOnline: Boolean
         get() {
-            val cm = mApp!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm = mApp.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return netInfo != null && netInfo.isConnected
         }
@@ -146,10 +140,10 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         if (mDBApi == null) {
             // Full access or folder access?
             if (app.fullDropBoxAccess) {
-                app_secret = mApp!!.getString(R.string.dropbox_consumer_secret)
+                app_secret = mApp.getString(R.string.dropbox_consumer_secret)
                 app_key = mApp.getString(R.string.dropbox_consumer_key)
             } else {
-                app_secret = mApp!!.getString(R.string.dropbox_folder_consumer_secret)
+                app_secret = mApp.getString(R.string.dropbox_folder_consumer_secret)
                 app_key = mApp.getString(R.string.dropbox_folder_consumer_key)
             }
             app_key = app_key.replaceFirst("^db-".toRegex(), "")
@@ -164,8 +158,9 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     private fun startLongPoll(polledFile: String, backoffSeconds: Int) {
         pollingTask = Thread(Runnable {
+            val longpoll_timeout = 480
             var newBackoffSeconds = 0
-            var start_time: Long = 0
+            var start_time = System.currentTimeMillis()
             if (!continuePolling) return@Runnable
             try {
                 //log.info(TAG, "Long polling");
@@ -176,7 +171,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                     params.add(it)
                 }
                 params.add("timeout")
-                params.add("480")
+                params.add("$longpoll_timeout")
                 if (backoffSeconds != 0) {
                     log.info(TAG, "Backing off for $backoffSeconds seconds")
                     try {
@@ -187,7 +182,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
                 }
                 if (!continuePolling) return@Runnable
-                start_time = System.currentTimeMillis()
                 val response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray<String>(arrayOfNulls<String>(params.size)), mDBApi!!.session)
                 log.info(TAG, "Longpoll response: " + response.toString())
                 val result = JsonThing(response)
@@ -226,7 +220,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                         log.info(TAG, "Device was not online, stopping polling")
                         continuePolling = false
                     }
-                    if (System.currentTimeMillis() - start_time < 30 * 1000) {
+                    if (System.currentTimeMillis() - start_time < longpoll_timeout * 1000) {
                         log.info(TAG, "Longpoll timed out to quick, backing off for 60 seconds")
                         newBackoffSeconds = 60
                     }
@@ -247,8 +241,8 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         pollingTask!!.start()
     }
 
-    override // Required to complete auth, sets the access token on the session
-    val isAuthenticated: Boolean
+    // Required to complete auth, sets the access token on the session
+    override val isAuthenticated: Boolean
         get() {
             if (mDBApi == null) {
                 return false
@@ -316,7 +310,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 }
 
                 val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
-                var line: String
 
                 reader.forEachLine { line ->
                     readFile.add(line)
@@ -452,7 +445,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
     @Throws(IOException::class)
-    override fun appendTaskToFile(path: String, tasks: List<String>, eol: String) {
+    override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
         if (!isOnline) {
             throw IOException("Device is offline")
         }
@@ -468,7 +461,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                     rev = fileInfo.metadata.rev
                     log.info(TAG, "The file's rev is: " + fileInfo.metadata.rev)
                     val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
-                    var line: String
 
                     reader.forEachLine { line ->
                         doneContents.add(line)
@@ -480,7 +472,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 }
 
                 // Then append
-                for (t in tasks) {
+                for (t in lines) {
                     doneContents.add(t)
                 }
                 val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
@@ -501,18 +493,17 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
     @Throws(IOException::class)
-    override fun readFile(path: String, fileRead: FileStoreInterface.FileReadListener?): String {
+    override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
         if (!isAuthenticated) {
             return ""
         }
         isLoading = true
         try {
-            val openFileStream = mDBApi!!.getFileStream(path, null)
+            val openFileStream = mDBApi!!.getFileStream(file, null)
             val fileInfo = openFileStream.fileInfo
             log.info(TAG, "The file's rev is: " + fileInfo.metadata.rev)
 
             val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
-            var line: String
             val readFile = ArrayList<String>()
             reader.forEachLine { line ->
                 readFile.add(line)
@@ -570,17 +561,16 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         }
     }
 
-    override fun getWritePermission(act: Activity, activtyResult: Int): Boolean {
+    override fun getWritePermission(act: Activity, activityResult: Int): Boolean {
         return true
     }
 
-    class FileDialog
     /**
      * @param activity activity to display the file dialog.
      * *
      * @param pathName intial path shown in the file dialog
      */
-    (private val activity: Activity, pathName: String, private val txtOnly: Boolean) {
+    class FileDialog (private val activity: Activity, pathName: String, private val txtOnly: Boolean) {
         private val log: Logger
         private var fileList: Array<String>? = null
         private val entryHash = HashMap<String, DropboxAPI.Entry>()
@@ -694,6 +684,11 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                     if (entry.isDir) {
                         d.add(entry.fileName())
                     } else {
+                        if (txtOnly) {
+                            if (!File(entry.fileName()).extension.equals("txt")) {
+                                continue
+                            }
+                        }
                         f.add(entry.fileName())
                     }
                     entryHash.put(entry.fileName(), entry)

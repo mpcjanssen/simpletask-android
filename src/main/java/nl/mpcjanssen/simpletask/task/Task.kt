@@ -33,7 +33,7 @@ import java.util.*
 
 class Task(text: String, defaultPrependedDate: String? = null) {
 
-    public var tokens: List<TToken>
+    var tokens: List<TToken>
 
     init {
         tokens = parse(text)
@@ -178,13 +178,13 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
 
-    public fun removeTag(tag: String) {
+    fun removeTag(tag: String) {
         tokens = tokens.filter {
             if ((it is TagToken || it is ListToken) && it.text == tag) false else true
         }
     }
 
-    public fun markComplete(dateStr: String) : Task? {
+    fun markComplete(dateStr: String) : Task? {
         if (!this.isCompleted()) {
             val textWithoutCompletedInfo = text
             tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
@@ -211,7 +211,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return null
     }
 
-    public fun markIncomplete() {
+    fun markIncomplete() {
         tokens = tokens.filter {
              when (it) {
                 is CompletedDateToken -> false
@@ -270,9 +270,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
 
-    public fun inFileFormat() = text
+    fun inFileFormat() = text
 
-    public fun inFuture(today: String): Boolean {
+    fun inFuture(today: String): Boolean {
         val date = thresholdDate
         date?.let {
             return date.compareTo(today) > 0
@@ -280,11 +280,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return false
     }
 
-    public fun isHidden(): Boolean {
+    fun isHidden(): Boolean {
         return getFirstToken<HiddenToken>()?.value ?: false
     }
 
-    public fun isCompleted(): Boolean {
+    fun isCompleted(): Boolean {
         return getFirstToken<CompletedToken>() != null
     }
 
@@ -294,7 +294,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }.map {it.text}.joinToString(" ")
     }
 
-    public fun getHeader(sort: String, empty: String): String {
+    fun getHeader(sort: String, empty: String): String {
         if (sort.contains("by_context")) {
             if (lists.size > 0) {
                 return lists.first();
