@@ -45,6 +45,10 @@ You should have received a copy of the GNU General Public License along with Sim
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
+            android:label="@string/app_label" >
+        </activity>
         <receiver android:name="nl.mpcjanssen.simpletask.remote.ConnectivityReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

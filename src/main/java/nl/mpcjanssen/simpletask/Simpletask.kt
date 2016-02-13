@@ -103,9 +103,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 } else if (intent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                     log!!.info(TAG, "Logging out from Dropbox")
                     fileStore.logout()
-                    val i = Intent(context, LoginScreen::class.java)
-                    startActivity(i)
                     finish()
+                    startActivity(getIntent())
                 } else if (intent.action == Constants.BROADCAST_UPDATE_UI) {
                     log!!.info(TAG, "Updating UI because of broadcast")
                     if (m_adapter == null) {
@@ -494,8 +493,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     }
 
     private fun startLogin() {
-        val intent = Intent(this, LoginScreen::class.java)
-        startActivity(intent)
+        m_app.startLogin(this)
         finish()
     }
 

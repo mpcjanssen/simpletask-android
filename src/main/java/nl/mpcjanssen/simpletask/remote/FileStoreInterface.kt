@@ -12,7 +12,7 @@ interface FileStoreInterface {
     @Throws(IOException::class)
     fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String>
 
-    fun startLogin(caller: Activity, i: Int)
+    fun startLogin(caller: Activity)
     fun logout()
     fun browseForNewFile(act: Activity, path: String, listener: FileSelectedListener, txtOnly: Boolean)
     @Throws(IOException::class)

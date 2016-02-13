@@ -465,8 +465,8 @@ class TodoApplication : Application(),
             return fs.isAuthenticated
         }
 
-    fun startLogin(loginScreen: LoginScreen, i: Int) {
-        fileStore.startLogin(loginScreen, i)
+    fun startLogin(caller: Activity) {
+        fileStore.startLogin(caller)
     }
 
     fun storeType(): Int {
