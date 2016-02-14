@@ -195,15 +195,6 @@
                 android:summary="@string/append_tasks_at_end_summary"
                 android:title="@string/append_tasks_at_end_title"/>
     </PreferenceCategory>
-    <PreferenceCategory
-            android:title="@string/DROPBOX_settings_header"
-            android:key="@string/dropbox_cat_key">
-
-        <Preference
-                android:key="logout_dropbox"
-                android:summary="@string/dropbox_logout_pref_summary"
-                android:title="@string/dropbox_logout_pref_title"/>
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/ARCHIVE_settings_header">
         <CheckBoxPreference
                 android:key="@string/auto_archive_pref_key"

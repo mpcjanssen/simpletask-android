@@ -119,7 +119,8 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
         return false
     }
 
-    override fun startLogin(caller: Activity, i: Int) {
+    override fun startLogin(caller: Activity) {
+        // FIXME possible add permission retrieval on Lollipop here
 
     }
 

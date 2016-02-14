@@ -56,8 +56,7 @@ class OAuthActivity : ThemedActivity() {
                         return false
                     }
                     val params = ArrayList<Pair<String, String>>()
-                    val headers = ArrayList<Pair<String, String>>()
-                    headers.add(Pair("Authorization",RestClient.basicAuthorizationString(apiKey, apiSecret)))
+                    val headers = getHeaderWithAuthorization()
                     params.add(Pair("grant_type","authorization_code"))
                     params.add(Pair("code",code))
                     val t = object : Thread() {
