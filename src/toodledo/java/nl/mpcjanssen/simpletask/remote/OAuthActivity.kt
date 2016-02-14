@@ -5,10 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.annotation.NonNull
 import android.util.Base64
+import android.util.JsonReader
 import android.webkit.WebView
 import android.webkit.WebViewClient
+
 import nl.mpcjanssen.simpletask.*
-import java.net.HttpURLConnection
+import org.json.JSONObject
+
 import java.util.*
 
 
@@ -62,7 +65,10 @@ class OAuthActivity : ThemedActivity() {
                             val result = RestClient.performPostCall("https://api.toodledo.com/3/account/token.php",
                                     params,
                                     headers)
-                            log.debug(TAG, "get token result ${result}")
+                            val json = JSONObject(result)
+                            val access_token = json.getString("access_token")
+                            log.debug(TAG, "get token result ${result}, access_token = ${access_token}" )
+                            log.debug(TAG, "account info " + getAccountInfo(access_token))
                             switchToTodolist()
                             finish()
                         }
@@ -84,5 +90,18 @@ class OAuthActivity : ThemedActivity() {
         finish()
     }
 
+   fun getHeaderWithAuthorization(): ArrayList<Pair<String, String>> {
+       val headers = ArrayList<Pair<String, String>>()
+       headers.add(Pair("Authorization", RestClient.basicAuthorizationString(apiKey, apiSecret)))
+       return headers
+   }
+
+   fun getAccountInfo(accesToken : String ): String {
+       val params = ArrayList<Pair<String,String>>()
+       params.add(Pair("access_token", accesToken))
+       return RestClient.performGetCall(
+               "https://api.toodledo.com/3/account/get.php",
+               params)
+   }
 }
 

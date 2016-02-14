@@ -46,13 +46,15 @@ object RestClient {
             val responseCode = conn.responseCode
 
             if (responseCode == HttpsURLConnection.HTTP_OK) {
-                var line: String
                 val br = BufferedReader(InputStreamReader(conn.inputStream))
                 br.forEachLine {
                     response += it
                 }
             } else {
-                response = ""
+                val br = BufferedReader(InputStreamReader(conn.inputStream))
+                br.forEachLine {
+                    response += it
+                }
 
             }
         } catch (e: Exception) {
