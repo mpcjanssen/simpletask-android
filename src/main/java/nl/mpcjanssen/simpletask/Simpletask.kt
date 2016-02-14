@@ -228,6 +228,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             return
         }
         // Check if we have SDCard permision for cloudless
+        // FIXME should be moved into the filestore isAuthenticated and login logic
         if (!m_app.fileStore.getWritePermission(this, REQUEST_PERMISSION)) {
             return
         }

@@ -75,6 +75,7 @@ class Preferences : ThemedActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.preferences)
+            addPreferencesFromResource(R.xml.flavourpreferences)
             val packageInfo: PackageInfo
             val versionPref = findPreference("app_version")
             try {
@@ -86,10 +87,6 @@ class Preferences : ThemedActivity() {
             }
 
             m_app = activity.application as TodoApplication
-            if (m_app.storeType() != Constants.STORE_DROPBOX) {
-                val dropboxCategory = findPreference(getString(R.string.dropbox_cat_key)) as PreferenceCategory
-                preferenceScreen.removePreference(dropboxCategory)
-            }
             val toHide: Preference
             val aboutCategory = findPreference("about") as PreferenceCategory
             if (m_app.hasDonated()) {
