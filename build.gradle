@@ -1,6 +1,6 @@
 buildscript {
 
-    ext.kotlin_version = '1.0.0-rc-1036'
+    ext.kotlin_version = '1.0.0'
     ext.android_support_version = '23.1.0'
     repositories {
         jcenter()
@@ -29,8 +29,8 @@ android {
 
 
     defaultConfig {
-        versionName '7.0.12'
-        versionCode 3022
+        versionName '7.0.13'
+        versionCode 3023
 	    minSdkVersion 14
         targetSdkVersion 23
     }
