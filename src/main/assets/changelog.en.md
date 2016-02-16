@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+7.0.14
+------
+
+- Fix bug with threshold and due date dialog in Add Task screen. Fixes #367.
+
+
 7.0.13
 ------
 

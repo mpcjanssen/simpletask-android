@@ -345,11 +345,11 @@ class AddTask : ThemedActivity() {
     }
 
     private fun insertDate(dateType: DateType) {
-        var titleId = R.id.defer_due
+        var titleId = R.string.defer_due
         if (dateType === DateType.THRESHOLD) {
-            titleId = R.id.defer_threshold
+            titleId = R.string.defer_threshold
         }
-        val d = createDeferDialog(this, titleId, false, object : InputDialogListener {
+        val d = createDeferDialog(this, titleId, object : InputDialogListener {
             override fun onClick(input: String) {
                 if (input == "pick") {
                     /* Note on some Android versions the OnDateSetListener can fire twice
@@ -372,7 +372,11 @@ class AddTask : ThemedActivity() {
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
-                    insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
+                    if (!input.isNullOrEmpty()) {
+                        insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
+                    } else {
+                        replaceDate(dateType,input)
+                    }
                 }
             }
         })
@@ -668,7 +672,6 @@ class AddTask : ThemedActivity() {
     }
 
     companion object {
-
         private val TAG = "AddTask"
     }
 }

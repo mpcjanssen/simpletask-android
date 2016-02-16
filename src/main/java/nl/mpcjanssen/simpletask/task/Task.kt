@@ -57,16 +57,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return null
     }
 
-    private inline fun <reified T : TToken> upsertToken(newToken: T?) {
-        if (newToken == null) {
-            tokens = tokens.filter {
-                if (it is T) {
-                    false
-                } else {
-                    true
-                }
-            }
-        } else {
+    private inline fun <reified T : TToken> upsertToken(newToken: T) {
+
             if (getFirstToken<T>() == null) {
                 tokens += newToken
             } else {
@@ -78,7 +70,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     }
                 }
             }
-        }
+
     }
 
 
@@ -121,7 +113,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<DueDateToken>()?.value ?: null
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
-                upsertToken<DueDateToken>(null)
+                tokens = tokens.filter { !(it is DueDateToken) }
             } else {
                 upsertToken(DueDateToken("due:$dateStr"))
             }
@@ -131,7 +123,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<ThresholdDateToken>()?.value ?: null
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
-                upsertToken<ThresholdDateToken>(null)
+                tokens = tokens.filter { !(it is ThresholdDateToken) }
             } else {
                 upsertToken(ThresholdDateToken("t:$dateStr"))
             }
