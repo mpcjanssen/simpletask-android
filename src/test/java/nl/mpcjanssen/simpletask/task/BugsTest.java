@@ -28,4 +28,13 @@ public class BugsTest extends TestCase {
         assertEquals("test",t.showParts(~TToken.LIST & ~TToken.CREATION_DATE).trim());
         
     }
+
+    // https://github.com/mpcjanssen/simpletask-android/issues/367
+    public void testBug367() {
+        Task t = new Task("Test due:2010-10-10 t:2010-11-11" );
+        t.setDueDate("");
+        t.setThresholdDate("");
+        assertEquals(null, t.getDueDate());
+        assertEquals(null, t.getThresholdDate());
+    }
 }
