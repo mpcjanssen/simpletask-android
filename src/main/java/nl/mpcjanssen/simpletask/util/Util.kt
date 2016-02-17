@@ -227,7 +227,7 @@ fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     return items
 }
 
-fun createDeferDialog(act: Activity, titleId: Int, showNone: Boolean, listener: InputDialogListener): AlertDialog {
+fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListener): AlertDialog {
     var keys = act.resources.getStringArray(R.array.deferOptions)
     val today = "0d"
     val tomorrow = "1d"
@@ -235,17 +235,11 @@ fun createDeferDialog(act: Activity, titleId: Int, showNone: Boolean, listener: 
     val twoWeeks = "2w"
     val oneMonth = "1m"
     val values = arrayOf("", today, tomorrow, oneWeek, twoWeeks, oneMonth, "pick")
-    if (!showNone) {
-        keys = Arrays.copyOfRange(keys, 1, keys.size)
-    }
 
     val builder = AlertDialog.Builder(act)
     builder.setTitle(titleId)
     builder.setItems(keys) { dialog, whichButton ->
         var which = whichButton
-        if (!showNone) {
-            which++
-        }
         val selected = values[which]
         listener.onClick(selected)
     }

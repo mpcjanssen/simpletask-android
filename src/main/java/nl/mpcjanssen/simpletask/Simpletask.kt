@@ -668,7 +668,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         if (dateType === DateType.THRESHOLD) {
             titleId = R.string.defer_threshold
         }
-        val d = createDeferDialog(this, titleId, true, object : InputDialogListener {
+        val d = createDeferDialog(this, titleId, object : InputDialogListener {
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())

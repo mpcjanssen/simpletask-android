@@ -5,6 +5,7 @@
 ------
 
 - Don't make full task list available in Lua as an array. Improves performance.
+- Fix bug with threshold and due date dialog in Add Task screen. Fixes #367.
 
 7.0.12
 ------
