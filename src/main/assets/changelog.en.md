@@ -5,6 +5,7 @@
 ------
 
 - Add support for `rec:..b` to recur by weekdays.
+- Fill `recurrence` variable in Lua as documented. Fixes #371.
 
 7.0.13
 ------
