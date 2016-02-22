@@ -4,7 +4,7 @@
 7.0.14
 ------
 
-- Add support for `rec:..b` to recur by business days.
+- Add support for `rec:..b` to recur by weekdays.
 
 7.0.13
 ------
