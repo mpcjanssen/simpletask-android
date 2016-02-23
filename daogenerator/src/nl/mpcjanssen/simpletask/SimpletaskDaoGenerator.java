@@ -16,19 +16,27 @@ import de.greenrobot.daogenerator.Schema;
 public class SimpletaskDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1010, "nl.mpcjanssen.simpletask.dao.gen");
+        Schema schema = new Schema(1011, "nl.mpcjanssen.simpletask.dao.gen");
 
         addEntities(schema);
-
         new DaoGenerator().generateAll(schema, "src/main/java");
     }
 
     private static void addEntities(Schema schema) {
-
         backupSchema(schema);
         logSchema(schema);
+        todoModificationLog(schema);
     }
 
+    private static void todoModificationLog(Schema schema) {
+        Entity entity = schema.addEntity("TodoModificationItem");
+        entity.addIdProperty().autoincrement();
+        entity.addDateProperty("timestamp").notNull();
+        entity.addStringProperty("file").notNull();
+        entity.addStringProperty("action").notNull();
+        entity.addStringProperty("from");
+        entity.addStringProperty("to");
+    }
 
     private static void logSchema(Schema schema) {
         Entity log = schema.addEntity("LogItem");

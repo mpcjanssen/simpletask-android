@@ -54,6 +54,10 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:label="@string/help">
         </activity>
         <activity
+            android:name=".ModificationScreen"
+            android:parentActivityName=".Preferences"
+            android:label="@string/modification"/>
+        <activity
                 android:name=".LogScreen"
                 android:parentActivityName=".Preferences"
                 android:label="@string/log"/>

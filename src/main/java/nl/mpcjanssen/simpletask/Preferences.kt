@@ -163,6 +163,7 @@ class Preferences : ThemedActivity() {
                 }
                 "send_log" -> startActivity(Intent(activity, LogScreen::class.java))
                 "share_history" -> startActivity(Intent(this.activity, HistoryScreen::class.java))
+                "share_modification" -> startActivity(Intent(this.activity, ModificationScreen::class.java))
                 "app_version" -> {
                     val clipboard = m_app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val versionPref = findPreference("app_version")

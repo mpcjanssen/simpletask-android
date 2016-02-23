@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--suppress ALL -->
+<resources>
+        <string translatable="false" name="toodledo_api_client_id">simpletask30</string>
+        <string translatable="false" name="toodledo_api_secret">api56bf191f424d9</string>
+</resources>

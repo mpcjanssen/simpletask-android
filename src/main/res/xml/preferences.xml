@@ -226,6 +226,10 @@
                 android:title="@string/share_history_title"
                 android:summary="@string/share_history"/>
         <Preference
+            android:key="share_modification"
+            android:title="@string/share_modification_title"
+            android:summary="@string/share_modification"/>
+        <Preference
                 android:title="@string/donate_title"
                 android:key="donate"
                 android:summary="@string/donate_summary">

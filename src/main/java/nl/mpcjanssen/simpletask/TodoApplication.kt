@@ -66,9 +66,10 @@ class TodoApplication : Application(),
     private val log = Logger
     private lateinit var mFileStore: FileStoreInterface;
 
-    internal lateinit var daoSession: DaoSession
+    lateinit var daoSession: DaoSession
     lateinit var  logDao: LogItemDao
-    internal lateinit var backupDao: TodoFileDao
+    lateinit var backupDao: TodoFileDao
+    lateinit var todoModificationDao: TodoModificationItemDao
 
     override fun onCreate() {
         log.debug(TAG, "onCreate()")
@@ -82,6 +83,7 @@ class TodoApplication : Application(),
         daoSession = daoMaster.newSession()
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
+        todoModificationDao = daoSession.todoModificationItemDao
         log.setDao(logDao)
 
         setupUncaughtExceptionHandler()

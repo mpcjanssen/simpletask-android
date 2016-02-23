@@ -34,6 +34,7 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.dao.gen.TodoModificationItem
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
@@ -70,6 +71,12 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         t.start()
         log = Logger
     }
+
+    fun logModification (action: String, from: String?, to: String?) {
+        val item = TodoModificationItem(null, Date(), app.todoFileName, action, from, to)
+        app.todoModificationDao.insert(item)
+    }
+
 
 
     fun queueRunnable(description: String, r: Runnable) {
@@ -113,7 +120,9 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun add(t: TodoListItem, atEnd: Boolean) {
         queueRunnable("Add task", Runnable {
-            log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
+            val text = t.task.inFileFormat()
+            log.debug(TAG, "Adding task of length {} into {} atEnd " + text.length + " " + atEnd)
+            logModification("add", null, text)
             if (atEnd) {
                 t.line = lastLine() + 1
             } else {
@@ -130,7 +139,9 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun remove(item: TodoListItem) {
         queueRunnable("Remove", Runnable {
+            logModification("remove", item.task.text,null)
             todoItems?.remove(item) ?: log.warn(TAG, "Tried to remove an item from a null todo list")
+
          })
     }
 
@@ -221,7 +232,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
 
     fun prioritize(items: List<TodoListItem>, prio: Priority) {
-        queueRunnable("Complete", Runnable {
+        queueRunnable("Prioritize", Runnable {
             for (item in items) {
                 val task = item.task
                 task.priority = prio
