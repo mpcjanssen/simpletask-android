@@ -224,10 +224,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         queueRunnable("Complete", Runnable {
             for (item in items) {
                 val task = item.task
-                val before = task.text
                 task.priority = prio
-                val after = task.text
-                logModification("update", before, after)
             }
         })
     }

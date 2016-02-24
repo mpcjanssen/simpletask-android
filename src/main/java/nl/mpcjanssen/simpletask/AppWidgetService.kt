@@ -14,7 +14,6 @@ import android.widget.RemoteViewsService
 
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.*
 
@@ -99,20 +98,20 @@ internal class AppWidgetRemoteViewsFactory(private val application: TodoApplicat
         val extended_widget = TodoApplication.prefs.getBoolean("widget_extended", true)
         val task = item.task
 
-        var tokensToShow = TToken.ALL
-        tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-        tokensToShow = tokensToShow and TToken.COMPLETED.inv()
-        tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-        tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-        tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+//        var tokensToShow = TToken.ALL
+//        tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
+//        tokensToShow = tokensToShow and TToken.COMPLETED.inv()
+//        tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
+//        tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
+//        tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
         if (mFilter.hideLists) {
-            tokensToShow = tokensToShow and TToken.LIST.inv()
+//            tokensToShow = tokensToShow and TToken.LIST.inv()
         }
         if (mFilter.hideTags) {
-            tokensToShow = tokensToShow and TToken.TTAG.inv()
+//            tokensToShow = tokensToShow and TToken.TTAG.inv()
         }
         val ss = SpannableString(
-                task.showParts(tokensToShow).trim { it <= ' ' })
+                task.showParts(0).trim { it <= ' ' })
 
         if (application!!.isDarkWidgetTheme) {
             itemForDarkTheme(rv)

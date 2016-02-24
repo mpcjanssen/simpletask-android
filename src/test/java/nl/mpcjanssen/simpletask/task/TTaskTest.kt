@@ -17,10 +17,6 @@ class TaskTest : TestCase() {
         assertEquals(t, Task(t).text)
     }
 
-    fun testLexing() {
-        assertEquals(listOf("ab", "b", "", "d", "s"), "ab b  d s".lex())
-    }
-
     fun testEquals() {
         assertTrue(Task("a")==Task("a"))
         assertFalse(Task("a")==Task("A"))
@@ -75,14 +71,6 @@ class TaskTest : TestCase() {
         assertEquals("2013-11-11", Task(t).createDate)
     }
 
-    fun testShow() {
-        var t = Task("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com")
-
-        val text = t.tokens.filter {
-            it.type == TToken.TEXT
-        }.map{it.text}.joinToString(" ")
-        assertEquals("morgen", text)
-    }
 
     fun testCompletion() {
         var str = "test"
@@ -92,5 +80,10 @@ class TaskTest : TestCase() {
         val tc =  Task("x 2000-12-12 $str")
         tc.markComplete("2010-12-12")
         assertEquals("x 2000-12-12 $str", tc.text )
+    }
+
+    fun testWhitepace() {
+        val t1 = Task("\t+test")
+        assertTrue("test" in t1.tags)
     }
 }
