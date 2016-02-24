@@ -369,6 +369,11 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                             val todoFolder = m_app.todoFile.parentFile
                             val newName = File(todoFolder, url.substring(7))
                             m_app.switchTodoFile(newName.absolutePath, true)
+                        } else if (url.startsWith("file://")) {
+                            val rootFolder = m_app.localFileRoot
+                            val file = File(rootFolder, url.substring(7))
+                            intent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
+                            startActivity(intent)
                         } else {
                             intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             startActivity(intent)

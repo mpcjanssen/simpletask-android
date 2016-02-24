@@ -171,6 +171,11 @@
                 android:summary="@string/share_task_show_edit_summary"
                 android:title="@string/share_task_show_edit_pref_title"/>
         <EditTextPreference
+            android:defaultValue="/sdcard/"
+            android:key="@string/local_file_root"
+            android:summary="@string/local_file_root_summary"
+            android:title="@string/local_file_root_title"/>
+        <EditTextPreference
                 android:defaultValue=""
                 android:key="@string/share_task_append_text"
                 android:summary="@string/share_task_append_text_summary"
