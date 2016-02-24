@@ -254,6 +254,9 @@ class TodoApplication : Application(),
     val shareAppendText: String
         get() = prefs.getString(getString(R.string.share_task_append_text), "")
 
+    val localFileRoot: String
+        get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
+
     fun hasCapitalizeTasks(): Boolean {
         return prefs.getBoolean(getString(R.string.capitalize_tasks), false)
     }

@@ -144,6 +144,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_append_text_title">Background tag</string>
     <string name="share_task_append_text_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
+    <string name="local_file_root_title">File link root</string>
+    <string name="local_file_root_summary">Root path from where to resolve file://.... links.</string>
+
+
     <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
     <string name="back_saves_pref_title">Back button</string>
     <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
