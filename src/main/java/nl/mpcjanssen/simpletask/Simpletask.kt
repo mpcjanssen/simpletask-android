@@ -1323,7 +1323,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 if (mFilter!!.hideTags) {
                     tokensToShow = tokensToShow and TToken.TTAG.inv()
                 }
-                val txt = task.showParts(tokensToShow).trim { it <= ' ' }
+                val txt = task.showParts(tokensToShow)
 
                 val ss = SpannableString(txt)
 
