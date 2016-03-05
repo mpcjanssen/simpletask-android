@@ -117,7 +117,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_summary">Zawsze wyświetlaj zakończone zadania na końcu listy
     </string>
     <string name="keep_prio_header">Pior w zakończonych zadaniach</string>
-    <string name="keep_prio_summary">Zachowaj priorytety w zakończonych zadaniach. dezaktywuj to aby odtworzyć zachowanie aplikacji todo.txt, co usuwa piorytet w momencie zakończenia zadania.</string>
+    <string name="keep_prio_summary">Zachowaj priorytety w zakończonych zadaniach. dezaktywuj to aby odtworzyć zachowanie aplikacji todo.txt, co usuwa priorytet w momencie zakończenia zadania.</string>
     <string name="prepend_date_pref_title">Data nowych zadań</string>
     <string name="prepend_date_pref_summary">Automatyczne dodawanie daty utworzenia do nowych zadań.</string>
     <string name="line_breaks_pref_title">Łamanie linii Windows</string>
@@ -148,8 +148,8 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="capitalize_tasks_pref_title">Nowe zadania pisane wielką literą</string>
-    <string name="back_saves_pref_title">Przycik powrotu</string>
-    <string name="back_saves_summary">Zapisz wprowadzone zadania lub zastosuj filtr po naciśnieciu przycisku z powrotem.</string>
+    <string name="back_saves_pref_title">Przycisk powrotu</string>
+    <string name="back_saves_summary">Zapisz wprowadzone zadania lub zastosuj filtr po naciśnięciu przycisku z powrotem.</string>
 
     <string name="show_txt_only_pref_title">Pokaż tylko pliki txt</string>
     <string name="show_txt_only_summary">Pokaż tylko pliki .txt w oknie wyboru pliku.</string>
@@ -171,7 +171,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_summary">Zmień motyw wykorzystywany przez widżety.</string>
 
     <string name="task_text_ellipsizing_pref_title">Skróć treść zadania</string>
-    <string name="task_text_ellipsizing_pref_summary">Skróć treść zadania w głownym oknie, jeżeli zajmuje ono więcej jak 2 linie.</string>
+    <string name="task_text_ellipsizing_pref_summary">Skróć treść zadania w głównym oknie, jeżeli zajmuje ono więcej jak 2 linie.</string>
 
     <string name="widget_header_transparency_title">Przezroczysty nagłówek widżetu</string>
     <string name="widget_background_transparency_title">Przezroczyste tło widżetu</string>
@@ -206,8 +206,8 @@ You should have received a copy of the GNU General Public License along with Tod
         Odznacz do ustawienie, jeżeli będzie je Ciebie irytowało. Zostałeś chociaż ostrzeżony.</string>
 
 
-    <string name="show_todo_path_title">Pokaż ścieżke do pliku todo</string>
-    <string name="show_todo_path_summary">Pokaż scieżkę do pliku todo. Nazwy katalogów zostały skrócone do pierwszej litery. Na przykład /todo/home/todo.txt stanie się /t/h/todo.txt.</string>
+    <string name="show_todo_path_title">Pokaż ścieżkę do pliku todo</string>
+    <string name="show_todo_path_summary">Pokaż ścieżkę do pliku todo. Nazwy katalogów zostały skrócone do pierwszej litery. Na przykład /todo/home/todo.txt stanie się /t/h/todo.txt.</string>
 
     <string name="show_fast_scroll_title">Szybkie przewijanie</string>
     <string name="show_fast_scroll_summary">Użyj szybkiego przewijania, jeżeli lista zadań todo stanie się dłuższa.</string>
