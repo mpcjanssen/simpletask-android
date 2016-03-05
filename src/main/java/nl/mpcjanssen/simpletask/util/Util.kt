@@ -277,8 +277,12 @@ fun initGlobals(globals: Globals, t: Task) {
     globals.set("createdate", dateStringToLuaLong(t.createDate))
     globals.set("completiondate", dateStringToLuaLong(t.completionDate))
 
-    globals.set("recurrence", t.recurrencePattern)
-
+    val recPat = t.recurrencePattern
+    if (recPat == null) {
+        globals.set("recurrence", LuaValue.NIL)
+    } else {
+        globals.set("recurrence", t.recurrencePattern)
+    }
     globals.set("completed", LuaBoolean.valueOf(t.isCompleted()))
     globals.set("priority", t.priority.code)
 
