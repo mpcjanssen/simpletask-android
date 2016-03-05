@@ -6,6 +6,12 @@
 
 - Add support for `rec:..b` to recur by weekdays.
 - Fill `recurrence` variable in Lua as documented. Fixes #371.
+- Added support for local `file://` links. Fixes #376.
+- Merged: Updated German translation (twckr #375).
+- Don't trim whitespace of tasks to retain indentation.
+- Hopefully fixed crashes on some Samsung 4.2.2 devices.
+- Fix crash when adding tags or list to an empty task in the AddTask screen.
+- Merged: Initial Polish translation (GarciaPL #377).
 
 7.0.13
 ------
