@@ -308,7 +308,8 @@ class AddTask : ThemedActivity() {
         // Update the TodoList with changes
         val todoList = m_app!!.todoList
         // Create new tasks
-        for (task in getTasks()) {
+        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
+        for (task in enteredTasks) {
             if (m_backup != null && m_backup!!.size > 0) {
                 // Don't modify create date for updated tasks
                 m_backup!![0].task.update(task.text)
@@ -427,7 +428,6 @@ class AddTask : ThemedActivity() {
         initListViewSelection(lv, lvAdapter, task.tags)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-
             val newText = ed.text.toString()
             if (!newText.isEmpty()) {
                 task.addTag(newText)
@@ -476,7 +476,7 @@ class AddTask : ThemedActivity() {
 
     private fun getTasks() : MutableList<Task> {
         val input = textInputField.text.toString()
-        return input.split("\r\n|\r|\n".toRegex()).dropLastWhile { it.isEmpty() }.map{Task(it)}.toMutableList()
+        return input.split("\r\n|\r|\n".toRegex()).map{Task(it)}.toMutableList()
     }
 
     private fun showListMenu() {
