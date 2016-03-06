@@ -248,8 +248,8 @@
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="Experimental"
-            android:summary="Enable experimental features"
+            android:title="@string/experimental_title"
+            android:summary="@string/experimental_summary"
             android:key="experimental">
         <PreferenceScreen
                 android:key="@string/calendar_sync_screen"
@@ -279,8 +279,8 @@
         <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/back_clears_filter"
-                android:summary="If enabled, the first press of the back button clears the active filter and only the second press exits the app."
-                android:title="Back clears filter"/>
+                android:summary="@string/back_clears_filter_summary"
+                android:title="@string/back_clears_filter_title"/>
         <Preference
                 android:title="View log"
                 android:key="send_log"
