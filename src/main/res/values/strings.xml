@@ -405,7 +405,10 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="name">Name</string>
     <string name="date">Date</string>
-
+    <string name="back_clears_filter_title">Back clears filter</string>
+    <string name="back_clears_filter_summary">If enabled, the first press of the back button clears the active filter and only the second press exits the app.</string>
+    <string name="experimental_title">Experimental</string>
+    <string name="experimental_summary">Enable experimental features</string>
 
 
 </resources>
