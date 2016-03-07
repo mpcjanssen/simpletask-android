@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.0.15
+------
+
+- Copy the todo item collection when modifying to prevent `ConcurrentModification` exceptions.
+
 7.0.14
 ------
 
