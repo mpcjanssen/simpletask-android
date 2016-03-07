@@ -348,8 +348,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     companion object {
         var TAG = Task::class.java.simpleName
         const val DATE_FORMAT = "YYYY-MM-DD"
-        private val MATCH_LIST = Regex("@(\\S*)")
-        private val MATCH_TAG = Regex("\\+(\\S*)")
+        private val MATCH_LIST = Regex("@(\\S+)")
+        private val MATCH_TAG = Regex("\\+(\\S+)")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
         private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
