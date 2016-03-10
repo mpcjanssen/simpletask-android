@@ -118,6 +118,7 @@ class AddTask : ThemedActivity() {
         val todoList = m_app!!.todoList
 
         m_backup = todoList.selectedTasks.toMutableList()
+        todoList.clearSelection()
 
         if (m_backup != null && m_backup!!.size > 0) {
             val prefill = ArrayList<String>()
@@ -333,7 +334,6 @@ class AddTask : ThemedActivity() {
         }
 
         // Save
-        todoList.clearSelection()
         todoList.notifyChanged(m_app!!.fileStore, m_app!!.todoFileName, m_app!!.eol, m_app, true)
         finish()
     }
