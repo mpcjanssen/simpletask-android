@@ -607,19 +607,19 @@ class AddTask : ThemedActivity() {
     }
 
     private fun restoreSelection(location: Int, oldLenght: Int, moveCursor: Boolean) {
-        var location = location
+        var newLocation = location
         val newLength = textInputField.text.length
         val deltaLength = newLength - oldLenght
         // Check if we want the cursor to move by delta (for prio changes)
         // or not (for due and threshold changes
         if (moveCursor) {
-            location = location + deltaLength
+            newLocation = newLocation + deltaLength
         }
 
         // Don't go out of bounds
-        location = Math.min(location, newLength)
-        location = Math.max(0, location)
-        textInputField.setSelection(location, location)
+        newLocation = Math.min(newLocation, newLength)
+        newLocation = Math.max(0, newLocation)
+        textInputField.setSelection(newLocation, newLocation)
     }
 
     private fun replacePriority(newPrio: CharSequence) {
@@ -647,18 +647,18 @@ class AddTask : ThemedActivity() {
         restoreSelection(start, length, true)
     }
 
-    private fun replaceTextAtSelection(title: CharSequence, spaces: Boolean) {
-        var title = title
+    private fun replaceTextAtSelection(newText: CharSequence, spaces: Boolean) {
+        var text = newText
         val start = textInputField.selectionStart
         val end = textInputField.selectionEnd
         if (start == end && start != 0 && spaces) {
             // no selection prefix with space if needed
             if (textInputField.text[start - 1] != ' ') {
-                title = " " + title
+                text = " " + text
             }
         }
         textInputField.text.replace(Math.min(start, end), Math.max(start, end),
-                title, 0, title.length)
+                text, 0, text.length)
     }
 
     public override fun onDestroy() {

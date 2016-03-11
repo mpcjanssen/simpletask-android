@@ -156,7 +156,6 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
                 writeToFile(join(lines, eol) + eol, File(path), false)
             } catch (e: IOException) {
                 e.printStackTrace()
-                bm.sendBroadcast(Intent(Constants.BROADCAST_FILE_WRITE_FAILED))
             } finally {
                 obs?.delayedStartListen(1000)
             }
@@ -173,7 +172,6 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
                 writeToFile(join(lines, eol) + eol, File(path), true)
             } catch (e: IOException) {
                 e.printStackTrace()
-                bm.sendBroadcast(Intent(Constants.BROADCAST_FILE_WRITE_FAILED))
             }
 
             bm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))

@@ -279,9 +279,10 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         if (changesPending()) {
             log.info(TAG, "Not loading, changes pending")
             isLoading = false
-            saveTasksToFile(path, tasksFromCache(), backup, eol)
+            val tasks = tasksFromCache()
+            saveTasksToFile(path, tasks, backup, eol)
             startWatching(path)
-            return tasksFromCache()
+            return tasks
         } else {
             try {
                 val openFileStream: DropboxAPI.DropboxInputStream
@@ -522,7 +523,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         get() = Constants.STORE_DROPBOX
 
 
-    fun changedConnectionState(intent: Intent) {
+    fun changedConnectionState() {
         val prevOnline = mOnline
         mOnline = isOnline
         if (!prevOnline && mOnline) {
@@ -594,7 +595,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
             // Use an asynctask because we need to manage the UI
             Thread(Runnable {
-                loadFileList(act, api, currentPath)
+                loadFileList(act, api, currentPath?:File("/"))
                 loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
                 runOnMainThread(Runnable {
                     val builder = AlertDialog.Builder(activity)
@@ -656,12 +657,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
             }
         }
 
-        private fun loadFileList(act: Activity, api: DropboxAPI<AndroidAuthSession>, path: File?) {
-            var path = path
-            if (path == null) {
-                path = File("/")
-            }
-
+        private fun loadFileList(act: Activity, api: DropboxAPI<AndroidAuthSession>, path: File) {
             this.currentPath = path
             val f = ArrayList<String>()
             val d = ArrayList<String>()
@@ -692,7 +688,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 }
             } catch (e: DropboxException) {
                 log.warn(TAG, "Couldn't load list from " + path.name + " loading root instead.")
-                loadFileList(act, api, null)
+                loadFileList(act, api, File("/"))
                 return
             }
 

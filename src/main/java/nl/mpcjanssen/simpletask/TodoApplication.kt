@@ -88,18 +88,16 @@ class TodoApplication : Application(),
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
 
-        intentFilter.addAction(Constants.BROADCAST_FILE_WRITE_FAILED)
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
                     m_calSync.syncLater()
                     redrawWidgets()
                     updateWidgets()
-                } else if (intent.action == Constants.BROADCAST_FILE_WRITE_FAILED) {
-                    showToastLong(applicationContext, R.string.write_failed)
                 }
             }
         }
+
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         prefsChangeListener(this)
         todoList = TodoList(this, this)
@@ -316,9 +314,7 @@ class TodoApplication : Application(),
         } catch (e: IllegalArgumentException) {
             return false
         }
-
     }
-
 
     val isLoading: Boolean
         get() = fileStore.isLoading

@@ -361,7 +361,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 build.setTitle(R.string.task_action)
                 val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
                 build.setItems(titleArray) { dialog, which ->
-                    val intent: Intent
+                    val actionInent: Intent
                     val url = links[which]
                     log!!.info(TAG, "" + actions[which] + ": " + url)
                     when (actions[which]) {
@@ -372,26 +372,26 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                         } else if (url.startsWith("file://")) {
                             val rootFolder = m_app.localFileRoot
                             val file = File(rootFolder, url.substring(7))
-                            intent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
-                            startActivity(intent)
+                            actionInent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
+                            startActivity(actionInent)
                         } else {
-                            intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            startActivity(intent)
+                            actionInent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            startActivity(actionInent)
                         }
                         ACTION_PHONE -> {
-                            intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
-                            startActivity(intent)
+                            actionInent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
+                            startActivity(actionInent)
                         }
                         ACTION_SMS -> {
-                            intent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
-                            startActivity(intent)
+                            actionInent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
+                            startActivity(actionInent)
                         }
                         ACTION_MAIL -> {
-                            intent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                            intent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                            actionInent = Intent(Intent.ACTION_SEND, Uri.parse(url))
+                            actionInent.putExtra(android.content.Intent.EXTRA_EMAIL,
                                     arrayOf(url))
-                            intent.setType("text/plain")
-                            startActivity(intent)
+                            actionInent.setType("text/plain")
+                            startActivity(actionInent)
                         }
                     }
                 }
@@ -682,9 +682,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
                     val dialog = DatePickerDialog(this@Simpletask, DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                        var month = month
-                        month++
-                        val date = DateTime.forDateOnly(year, month, day)
+                        var startMonth = month
+                        startMonth++
+                        val date = DateTime.forDateOnly(year, startMonth, day)
                         m_app.todoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
                         closeSelectionMode()
                         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
@@ -1270,34 +1270,35 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-            var convertView = convertView
+            var view = convertView
             if (position == visibleLines.size) {
-                if (convertView == null) {
-                    convertView = m_inflater.inflate(R.layout.empty_list_item, parent, false)
+                if (view == null) {
+                    view = m_inflater.inflate(R.layout.empty_list_item, parent, false)
                 }
-                return convertView
+                return view
             }
+
             val line = visibleLines[position]
             if (line.header) {
-                if (convertView == null) {
-                    convertView = m_inflater.inflate(R.layout.list_header, parent, false)
+                if (view == null) {
+                    view = m_inflater.inflate(R.layout.list_header, parent, false)
                 }
-                val t = convertView!!.findViewById(R.id.list_header_title) as TextView
+                val t = view!!.findViewById(R.id.list_header_title) as TextView
                 t.text = line.title
 
             } else {
                 var holder: ViewHolder
-                if (convertView == null) {
-                    convertView = m_inflater.inflate(R.layout.list_item, parent, false)
+                if (view == null) {
+                    view = m_inflater.inflate(R.layout.list_item, parent, false)
                     holder = ViewHolder()
-                    holder.tasktext = convertView!!.findViewById(R.id.tasktext) as TextView
-                    holder.taskage = convertView.findViewById(R.id.taskage) as TextView
-                    holder.taskdue = convertView.findViewById(R.id.taskdue) as TextView
-                    holder.taskthreshold = convertView.findViewById(R.id.taskthreshold) as TextView
-                    holder.cbCompleted = convertView.findViewById(R.id.checkBox) as CheckBox
-                    convertView.tag = holder
+                    holder.tasktext = view!!.findViewById(R.id.tasktext) as TextView
+                    holder.taskage = view.findViewById(R.id.taskage) as TextView
+                    holder.taskdue = view.findViewById(R.id.taskdue) as TextView
+                    holder.taskthreshold = view.findViewById(R.id.taskthreshold) as TextView
+                    holder.cbCompleted = view.findViewById(R.id.checkBox) as CheckBox
+                    view.tag = holder
                 } else {
-                    holder = convertView.tag as ViewHolder
+                    holder = view.tag as ViewHolder
                 }
                 val item = line.task ?: return null
                 val task = item.task
@@ -1308,7 +1309,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     holder.cbCompleted!!.visibility = View.GONE
                 }
                 if (!m_app.hasExtendedTaskView()) {
-                    val taskbar = convertView.findViewById(R.id.datebar)
+                    val taskbar = view.findViewById(R.id.datebar)
                     taskbar.visibility = View.GONE
                 }
                 var tokensToShow = TToken.ALL
@@ -1417,7 +1418,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     taskThreshold.visibility = View.GONE
                 }
             }
-            return convertView
+            return view
         }
 
         override fun getItemViewType(position: Int): Int {
