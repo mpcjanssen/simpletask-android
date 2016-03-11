@@ -104,9 +104,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
     private fun setChangesPending(pending: Boolean) {
-        if (pending) {
-            showToastLong(mApp, R.string.write_failed)
-        }
         if (mPrefs == null) {
             log.error(TAG, "Couldn't save pending changes, mPrefs == null")
             return
@@ -119,7 +116,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
     }
 
-    private val isOnline: Boolean
+    override val isOnline: Boolean
         get() {
             val cm = mApp.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
@@ -281,7 +278,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         val readFile = ArrayList<String>()
         if (changesPending()) {
             log.info(TAG, "Not loading, changes pending")
-            showToastLong(mApp, "Saving pending changes")
             isLoading = false
             saveTasksToFile(path, tasksFromCache(), backup, eol)
             startWatching(path)
@@ -324,7 +320,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 e.printStackTrace()
                 readFile.clear()
                 readFile.addAll(tasksFromCache())
-                showToastLong(mApp, "Dropbox error, loading from cache")
             } catch (e: IOException) {
                 isLoading = false
                 throw IOException(e)
@@ -548,6 +543,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                         continuePolling = true
                         mFileChangedListerer.fileChanged(null)
                     } else {
+
                         log.info(TAG, "Device no longer online skipping reload")
                     }
                 })
@@ -557,6 +553,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
             stopWatching()
         }
         if (prevOnline && !mOnline) {
+            mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
             log.info(TAG, "Device went offline")
         }
     }

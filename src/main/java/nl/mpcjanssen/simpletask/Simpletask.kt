@@ -118,7 +118,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 } else if (intent.action == Constants.BROADCAST_SYNC_DONE) {
                     mOverlayDialog = showLoadingOverlay(this@Simpletask, mOverlayDialog, false)
                 } else if (intent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
-                    updatePendingChanges()
+                    updateConnectiviyIndicator()
                 } else if (intent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     handleIntent()
                 }
@@ -439,20 +439,23 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         updateDrawers()
         mOverlayDialog = showLoadingOverlay(this, mOverlayDialog, m_app.isLoading)
-        updatePendingChanges()
-
-
     }
 
-    private fun updatePendingChanges() {
-        // Show pending changes indicator
-        val pendingChanges = findViewById(R.id.pendingchanges)
-        if (pendingChanges != null) {
-            if (fileStore.changesPending()) {
-                pendingChanges.visibility = View.VISIBLE
-            } else {
-                pendingChanges.visibility = View.GONE
-            }
+    private fun updateConnectiviyIndicator() {
+        // Show connectivity status indicator
+        // Red -> changes pending
+        // Yellow -> offline
+        val pendingChangesIndicator = findViewById(R.id.pendingchanges)
+        val offlineIndicator = findViewById(R.id.offline)
+        if (fileStore.changesPending()) {
+            pendingChangesIndicator?.visibility = View.VISIBLE
+            offlineIndicator?.visibility = View.GONE
+        } else if (!fileStore.isOnline){
+            pendingChangesIndicator?.visibility = View.GONE
+            offlineIndicator?.visibility = View.VISIBLE
+        } else {
+            pendingChangesIndicator?.visibility = View.GONE
+            offlineIndicator?.visibility = View.GONE
         }
     }
 
@@ -1201,6 +1204,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             } else {
                 setTitle(R.string.app_label)
             }
+            updateConnectiviyIndicator();
             val visibleTasks: List<TodoListItem>
             log!!.info(TAG, "setFilteredTasks called: " + todoList)
             val activeFilter = mFilter
