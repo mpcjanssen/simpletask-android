@@ -31,6 +31,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.NavUtils
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
@@ -96,13 +97,13 @@ class AddTask : ThemedActivity() {
             }
         }
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
-
-
-
-
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
-
         setContentView(R.layout.add_task)
+
+        val fab = findViewById(R.id.fab) as FloatingActionButton?
+        fab?.setOnClickListener {
+            saveTasksAndClose()
+        }
 
         // text
         textInputField = findViewById(R.id.taskText) as EditText
@@ -265,10 +266,6 @@ class AddTask : ThemedActivity() {
                 val upIntent = NavUtils.getParentActivityIntent(this)
                 finish()
                 startActivity(upIntent)
-                return true
-            }
-            R.id.menu_save_task -> {
-                saveTasksAndClose()
                 return true
             }
             R.id.menu_cancel_task -> {
