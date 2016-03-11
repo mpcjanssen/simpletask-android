@@ -33,6 +33,8 @@ interface FileStoreInterface {
 
     val isLoading: Boolean
 
+    val isOnline: Boolean
+
     interface FileSelectedListener {
         fun fileSelected(file: String)
     }

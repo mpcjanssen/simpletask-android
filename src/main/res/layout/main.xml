@@ -45,6 +45,13 @@ You should have received a copy of the GNU General Public License along with Tod
             android:background="#FF0000"
             android:visibility="gone"/>
 
+        <View
+            android:id="@+id/offline"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="@android:color/holo_orange_light"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/actionbar"
             android:showDividers="middle"

@@ -323,7 +323,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()
-                showToastLong(TodoApplication.appContext, R.string.write_failed)
             }
         })
 

@@ -30,7 +30,7 @@ import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
 class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterface.FileChangeListener) : FileStoreInterface {
-
+    override val isOnline = true
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
     private val log: Logger
