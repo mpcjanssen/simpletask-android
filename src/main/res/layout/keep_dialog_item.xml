@@ -15,17 +15,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio_none"
-            android:background="@android:color/holo_red_dark" />
+            android:buttonTint="@android:color/holo_red_dark" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio_keep"
-            android:background="@android:color/holo_orange_light" />
+            android:buttonTint="@android:color/holo_orange_light" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio_all"
-            android:background="@android:color/holo_green_dark" />
+            android:buttonTint="@android:color/holo_green_dark" />
     </RadioGroup>
 
     <TextView

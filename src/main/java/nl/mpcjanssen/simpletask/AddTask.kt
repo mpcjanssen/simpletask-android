@@ -413,7 +413,7 @@ class AddTask : ThemedActivity() {
         val projects = sortWithPrefix(items, m_app!!.sortCaseSensitive(), null)
 
         val builder = AlertDialog.Builder(this)
-        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.tag_dialog, null, false)
+        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
         builder.setView(view)
         val lv = view.findViewById(R.id.listView) as ListView
         val ed = view.findViewById(R.id.editText) as EditText
@@ -495,7 +495,7 @@ class AddTask : ThemedActivity() {
         val lists = sortWithPrefix(items, m_app!!.sortCaseSensitive(), null)
 
         val builder = AlertDialog.Builder(this)
-        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.tag_dialog, null, false)
+        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
         builder.setView(view)
         val lv = view.findViewById(R.id.listView) as ListView
         val ed = view.findViewById(R.id.editText) as EditText
