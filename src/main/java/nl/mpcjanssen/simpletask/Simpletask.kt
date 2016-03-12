@@ -1518,18 +1518,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     t.addList(newText)
                 }
             }
-            val spinners = itemAdapter.spinners
-            for (i in 0..spinners.size()-1) {
-                val spinner = spinners.get(i,null)
-                val selectedString = spinner.getItemAtPosition(spinner.getSelectedItemPosition()).toString();
-                when (selectedString ) {
-                    getString(R.string.none) -> {
+            val radio_groups = itemAdapter.radio_groups
+            for (i in 0..radio_groups.size()-1) {
+                val radio_group = radio_groups.get(i,null)
+                val selectedActionId = radio_group?.checkedRadioButtonId ?: R.id.radio_keep;
+                when (selectedActionId ) {
+                    R.id.radio_none -> {
                         for (task in checkedTasks) {
                             val t = task.task
                             t.removeList(contexts[i])
                         }
                     }
-                    getString(R.string.all) -> {
+                    R.id.radio_all -> {
                         for (task in checkedTasks) {
                             val t = task.task
                             t.addList(contexts[i])
