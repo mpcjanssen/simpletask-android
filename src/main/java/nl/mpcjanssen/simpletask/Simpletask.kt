@@ -1497,7 +1497,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
 
         @SuppressLint("InflateParams")
-        val view = layoutInflater.inflate(R.layout.tag_dialog, null, false)
+        val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
         val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
@@ -1548,26 +1548,22 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     }
 
     private fun updateTags(checkedTasks: List<TodoListItem>) {
-        val projects = ArrayList<String>()
-        val selectedProjects = HashSet<String>()
-        val taskbag = todoList
-        projects.addAll(sortWithPrefix(taskbag.projects, m_app.sortCaseSensitive(), null))
-        for (t in checkedTasks) {
-            selectedProjects.addAll(t.task.tags)
+        val items = ArrayList<String>()
+        val selectedItems = HashSet<String>()
+        val todoList = todoList
+        items.addAll(sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null))
+        for (item in checkedTasks) {
+            selectedItems.addAll(item.task.tags)
         }
 
-
-        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.tag_dialog, null, false)
-        val lv = view.findViewById(R.id.listView) as ListView
-        lv.adapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice,
-                projects.toArray<String>(arrayOfNulls<String>(projects.size)))
-        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-        for (context in selectedProjects) {
-            val position = projects.indexOf(context)
-            if (position != -1) {
-                lv.setItemChecked(position, true)
-            }
-        }
+        @SuppressLint("InflateParams")
+        val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
+        val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
+        rcv.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(this);
+        rcv.setLayoutManager(layoutManager);
+        val itemAdapter = DialogAdapter(items, selectedItems)
+        rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
 
@@ -1575,24 +1571,30 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         builder.setView(view)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            val items = ArrayList<String>()
-            val uncheckedItems = ArrayList<String>()
-            uncheckedItems.addAll(getCheckedItems(lv, false))
-            items.addAll(getCheckedItems(lv, true))
             val newText = ed.text.toString()
-            if (newText != "") {
-                items.add(ed.text.toString())
-            }
-            for (item in items) {
-                for (t in checkedTasks) {
-                    val task = t.task
-                    task.addTag(item)
+            if (newText.isNotEmpty()) {
+                for (i in checkedTasks) {
+                    val t = i.task
+                    t.addTag(newText)
                 }
             }
-            for (item in uncheckedItems) {
-                for (t in checkedTasks) {
-                    val task = t.task
-                    task.removeTag("+" + item)
+            val radio_groups = itemAdapter.radio_groups
+            for (i in 0..radio_groups.size()-1) {
+                val radio_group = radio_groups.get(i,null)
+                val selectedActionId = radio_group?.checkedRadioButtonId ?: R.id.radio_keep;
+                when (selectedActionId ) {
+                    R.id.radio_none -> {
+                        for (task in checkedTasks) {
+                            val t = task.task
+                            t.removeTag(items[i])
+                        }
+                    }
+                    R.id.radio_all -> {
+                        for (task in checkedTasks) {
+                            val t = task.task
+                            t.addTag(items[i])
+                        }
+                    }
                 }
             }
             todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
