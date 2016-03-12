@@ -5,6 +5,7 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.TextView
@@ -15,7 +16,10 @@ import java.util.HashSet
 import nl.mpcjanssen.simpletask.R
 
 class DialogAdapter// Provide a suitable constructor (depends on the kind of dataset)
-(private val mItems: ArrayList<String>, private val mSelected: HashSet<String>) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
+(private val mItems: ArrayList<String>,
+ private val onAll: HashSet<String>,
+ private val onSome: HashSet<String>
+ ) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
 
     val radio_groups = SparseArray<RadioGroup>()
 
@@ -50,8 +54,12 @@ class DialogAdapter// Provide a suitable constructor (depends on the kind of dat
         // - replace the contents of the view with that element
         val viewItem = mItems[position]
         holder.mTextView.text = viewItem
-        if (viewItem in mSelected) {
+        if (viewItem in onAll) {
+            holder.mRadioGroup.check(R.id.radio_all)
+        } else if (viewItem in onSome) {
             holder.mRadioGroup.check(R.id.radio_keep)
+            val button = holder.mRadioGroup.findViewById(R.id.radio_keep) as RadioButton
+            button.isEnabled = true
         } else {
             holder.mRadioGroup.check(R.id.radio_none)
         }

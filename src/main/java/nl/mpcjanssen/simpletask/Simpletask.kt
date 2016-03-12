@@ -1487,14 +1487,27 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     }
 
     private fun updateLists(checkedTasks: List<TodoListItem>) {
-        val contexts = ArrayList<String>()
-        val selectedContexts = HashSet<String>()
+        val items = ArrayList<String>()
+        val allTags = HashSet<ArrayList<String>>()
         val todoList = todoList
-        contexts.addAll(sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null))
+        items.addAll(sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null))
         for (item in checkedTasks) {
-            selectedContexts.addAll(item.task.lists)
+            val tags = ArrayList<String>()
+            tags.addAll(item.task.lists)
+            allTags.add(tags)
         }
-
+        val onAllItems = allTags.reduce {
+            left,right ->
+            val intersection = ArrayList<String>()
+            intersection.addAll(left.intersect(right))
+            intersection
+        }
+        val onSomeItems = allTags.reduce {
+            left,right ->
+            val intersection = ArrayList<String>()
+            intersection.addAll(left.union(right))
+            intersection
+        }
 
         @SuppressLint("InflateParams")
         val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
@@ -1502,7 +1515,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
         rcv.setLayoutManager(layoutManager);
-        val itemAdapter = DialogAdapter(contexts, selectedContexts)
+        val itemAdapter = DialogAdapter(items, onAllItems.toHashSet(), onSomeItems.toHashSet())
         rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
@@ -1526,13 +1539,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     R.id.radio_none -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            t.removeList(contexts[i])
+                            t.removeList(items[i])
                         }
                     }
                     R.id.radio_all -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            t.addList(contexts[i])
+                            t.addList(items[i])
                         }
                     }
                 }
@@ -1549,11 +1562,25 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun updateTags(checkedTasks: List<TodoListItem>) {
         val items = ArrayList<String>()
-        val selectedItems = HashSet<String>()
+        val allTags = HashSet<ArrayList<String>>()
         val todoList = todoList
         items.addAll(sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null))
         for (item in checkedTasks) {
-            selectedItems.addAll(item.task.tags)
+            val tags = ArrayList<String>()
+            tags.addAll(item.task.tags)
+            allTags.add(tags)
+        }
+        val onAllItems = allTags.reduce {
+            left,right ->
+            val intersection = ArrayList<String>()
+            intersection.addAll(left.intersect(right))
+            intersection
+        }
+        val onSomeItems = allTags.reduce {
+            left,right ->
+            val intersection = ArrayList<String>()
+            intersection.addAll(left.union(right))
+            intersection
         }
 
         @SuppressLint("InflateParams")
@@ -1562,7 +1589,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
         rcv.setLayoutManager(layoutManager);
-        val itemAdapter = DialogAdapter(items, selectedItems)
+        val itemAdapter = DialogAdapter(items, onAllItems.toHashSet(), onSomeItems.toHashSet())
         rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
