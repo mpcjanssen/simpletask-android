@@ -434,7 +434,7 @@ class AddTask : ThemedActivity() {
                 if (lv.isItemChecked(i)) {
                     task.addTag(tag)
                 } else {
-                    task.removeTag("+" + tag)
+                    task.removeTag(tag)
                 }
             }
 
@@ -517,7 +517,7 @@ class AddTask : ThemedActivity() {
                 if (lv.isItemChecked(i)) {
                     task.addList(list)
                 } else {
-                    task.removeTag("@" + list)
+                    task.removeList(list)
                 }
             }
             if (idx != -1) {

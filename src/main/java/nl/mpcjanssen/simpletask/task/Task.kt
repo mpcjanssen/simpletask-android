@@ -172,7 +172,13 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun removeTag(tag: String) {
         tokens = tokens.filter {
-            if ((it is TagToken || it is ListToken) && it.text == tag) false else true
+            if ((it is TagToken) && it.value == tag) false else true
+        }
+    }
+
+    fun removeList(list: String) {
+        tokens = tokens.filter {
+            if ((it is ListToken) && (it.value == list)) false else true
         }
     }
 

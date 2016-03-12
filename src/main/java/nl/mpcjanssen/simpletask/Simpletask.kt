@@ -36,6 +36,8 @@ import android.support.v4.view.MenuItemCompat.OnActionExpandListener
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.TextUtils
@@ -43,6 +45,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.adapters.DialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
@@ -1495,16 +1498,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         @SuppressLint("InflateParams")
         val view = layoutInflater.inflate(R.layout.tag_dialog, null, false)
-        val lv = view.findViewById(R.id.listView) as ListView
-        lv.adapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice,
-                contexts.toArray<String>(arrayOfNulls<String>(contexts.size)))
-        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-        for (context in selectedContexts) {
-            val position = contexts.indexOf(context)
-            if (position != -1) {
-                lv.setItemChecked(position, true)
-            }
-        }
+        val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
+        rcv.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(this);
+        rcv.setLayoutManager(layoutManager);
+        val itemAdapter = DialogAdapter(contexts, selectedContexts)
+        rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
 
@@ -1512,24 +1511,30 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         builder.setView(view)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            val items = ArrayList<String>()
-            val uncheckedItems = ArrayList<String>()
-            uncheckedItems.addAll(getCheckedItems(lv, false))
-            items.addAll(getCheckedItems(lv, true))
             val newText = ed.text.toString()
-            if (newText != "") {
-                items.add(ed.text.toString())
-            }
-            for (item in items) {
+            if (newText.isNotEmpty()) {
                 for (i in checkedTasks) {
                     val t = i.task
-                    t.addList(item)
+                    t.addList(newText)
                 }
             }
-            for (item in uncheckedItems) {
-                for (i in checkedTasks) {
-                    val t = i.task
-                    t.removeTag("@" + item)
+            val spinners = itemAdapter.spinners
+            for (i in 0..spinners.size()-1) {
+                val spinner = spinners.get(i,null)
+                val selectedString = spinner.getItemAtPosition(spinner.getSelectedItemPosition()).toString();
+                when (selectedString ) {
+                    getString(R.string.none) -> {
+                        for (task in checkedTasks) {
+                            val t = task.task
+                            t.removeList(contexts[i])
+                        }
+                    }
+                    getString(R.string.all) -> {
+                        for (task in checkedTasks) {
+                            val t = task.task
+                            t.addList(contexts[i])
+                        }
+                    }
                 }
             }
             todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
