@@ -17,7 +17,7 @@ import nl.mpcjanssen.simpletask.R
 class DialogAdapter// Provide a suitable constructor (depends on the kind of dataset)
 (private val mItems: ArrayList<String>, private val mSelected: HashSet<String>) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
 
-    val spinners = SparseArray<Spinner>()
+    val radio_groups = SparseArray<RadioGroup>()
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -25,11 +25,11 @@ class DialogAdapter// Provide a suitable constructor (depends on the kind of dat
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case
         var mTextView: TextView
-        var mSpinner: Spinner
+        var mRadioGroup: RadioGroup
 
         init {
             mTextView = v.findViewById(R.id.itemName) as TextView
-            mSpinner = v.findViewById(R.id.action_spinner) as Spinner
+            mRadioGroup = v.findViewById(R.id.radio_group) as RadioGroup
         }
     }
 
@@ -51,9 +51,11 @@ class DialogAdapter// Provide a suitable constructor (depends on the kind of dat
         val viewItem = mItems[position]
         holder.mTextView.text = viewItem
         if (viewItem in mSelected) {
-            holder.mSpinner.setSelection(1)
+            holder.mRadioGroup.check(R.id.radio_keep)
+        } else {
+            holder.mRadioGroup.check(R.id.radio_none)
         }
-        spinners.put(position, holder.mSpinner)
+        radio_groups.put(position, holder.mRadioGroup)
     }
 
     // Return the size of your dataset (invoked by the layout manager)
