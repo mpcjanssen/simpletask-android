@@ -363,7 +363,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
         private val MATCH_PHONE_NUMBER = Regex("[0\\+]?[0-9,#]{4,}")
-        private val MATCH_LINK = Regex("(file|http|https|todo)://[\\w\\-_./]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-@?^=%&amp;/~\\+#])?")
+        private val MATCH_LINK = Regex("(root|content|file|http|https|todo)://(\\S+)")
         private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
