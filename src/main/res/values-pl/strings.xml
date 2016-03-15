@@ -144,7 +144,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_append_text_title">Tag w tle</string>
     <string name="share_task_append_text_summary">Dodaj skonfigurowany tekst to zadań dodanych w tle. Na przykład ustawienie \"+tło\" pozwoli łatwo filtrować w celu edycji/przeglądu dodanych zadań w tle.</string>
     <string name="local_file_root_title">Link pliku root</string>
-    <string name="local_file_root_summary">Główna ścieżka rozwiązania pliku file://.... linków.</string>
+    <string name="local_file_root_summary">Główna ścieżka rozwiązania pliku root://.... linków.</string>
 
 
     <string name="capitalize_tasks_pref_title">Nowe zadania pisane wielką literą</string>
