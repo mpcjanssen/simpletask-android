@@ -364,7 +364,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 build.setTitle(R.string.task_action)
                 val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
                 build.setItems(titleArray) { dialog, which ->
-                    val actionInent: Intent
+                    val actionIntent: Intent
                     val url = links[which]
                     log!!.info(TAG, "" + actions[which] + ": " + url)
                     when (actions[which]) {
@@ -375,26 +375,26 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                         } else if (url.startsWith("root://")) {
                             val rootFolder = m_app.localFileRoot
                             val file = File(rootFolder, url.substring(7))
-                            actionInent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
-                            startActivity(actionInent)
+                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
+                            startActivity(actionIntent)
                         } else {
-                            actionInent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            startActivity(actionInent)
+                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            startActivity(actionIntent)
                         }
                         ACTION_PHONE -> {
-                            actionInent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
-                            startActivity(actionInent)
+                            actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
+                            startActivity(actionIntent)
                         }
                         ACTION_SMS -> {
-                            actionInent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
-                            startActivity(actionInent)
+                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
+                            startActivity(actionIntent)
                         }
                         ACTION_MAIL -> {
-                            actionInent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                            actionInent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                            actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
+                            actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                                     arrayOf(url))
-                            actionInent.setType("text/plain")
-                            startActivity(actionInent)
+                            actionIntent.setType("text/plain")
+                            startActivity(actionIntent)
                         }
                     }
                 }
