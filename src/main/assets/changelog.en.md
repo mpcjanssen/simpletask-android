@@ -1,6 +1,14 @@
 ﻿Changelog
 =========
 
+7.0.16
+------
+
+- Add tristate buttons for lists and tags selection. Fixes #149.
+- Indicate connectivity and Dropbox pending changes with UI elements instead of chatty toasts. Implements #388.
+- Add a task with a Floating Action Button. Implements #385.
+- Allow linking to any shareable content. Implements #393.
+
 7.0.15
 ------
 
