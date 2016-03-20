@@ -1,114 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/home_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:divider="?android:attr/dividerVertical"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
-
-    <LinearLayout
-        android:id="@+id/home_root"
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:divider="?android:attr/dividerVertical"
-        android:orientation="vertical"
-        android:showDividers="middle">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top">
 
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="top">
+        <EditText
+            android:id="@+id/taskText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:inputType="textCapSentences|textMultiLine" />
 
-            <EditText
-                android:id="@+id/taskText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="top"
-                android:gravity="top"
-                android:inputType="textCapSentences|textMultiLine" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="16dp"
-                android:baselineAlignBottom="false"
-                android:clickable="true"
-                android:cropToPadding="false"
-                android:src="@drawable/ic_action_navigation_accept"
-                app:layout_anchor="@id/taskText"
-                app:layout_anchorGravity="right|end|bottom" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/addbar"
-            android:layout_width="fill_parent"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:padding="3sp"
-            android:showDividers="middle">
-
-
-            <Button
-                android:id="@+id/btnContext"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="\@…" />
-
-            <Button
-                android:id="@+id/btnProject"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="+…" />
-
-            <Button
-                android:id="@+id/btnPrio"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="(.)" />
-
-            <Button
-                android:id="@+id/btnDue"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="due:…" />
-
-            <Button
-                android:id="@+id/btnThreshold"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="t:…" />
-        </LinearLayout>
-
-    </LinearLayout>
-
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_action_content_send"
+            app:layout_anchor="@id/taskText"
+            app:layout_anchorGravity="right|end|bottom" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/cbbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:background="#111"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="3sp">
 
         <CheckBox
@@ -125,4 +58,64 @@
             android:layout_gravity="center_vertical"
             android:text="@string/word_wrap" />
     </LinearLayout>
-</android.support.v4.widget.DrawerLayout>
+
+    <LinearLayout
+        android:id="@+id/addbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="3sp"
+        android:showDividers="middle">
+
+
+        <Button
+            android:id="@+id/btnContext"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="\@…" />
+
+        <Button
+            android:id="@+id/btnProject"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="+…" />
+
+        <Button
+            android:id="@+id/btnPrio"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="(.)" />
+
+        <Button
+            android:id="@+id/btnDue"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="due:…" />
+
+        <Button
+            android:id="@+id/btnThreshold"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="t:…" />
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
