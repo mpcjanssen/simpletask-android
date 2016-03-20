@@ -49,14 +49,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/clone_tags" />
+            android:text="@string/clone_tags"
+            android:layout_weight="1" />
 
         <CheckBox
             android:id="@+id/cb_wrap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/word_wrap" />
+            android:text="@string/word_wrap"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
