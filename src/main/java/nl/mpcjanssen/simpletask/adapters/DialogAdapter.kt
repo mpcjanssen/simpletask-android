@@ -9,6 +9,8 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.TextView
+import com.buildware.widget.indeterm.IndeterminateCheckBox
+import com.buildware.widget.indeterm.IndeterminateRadioButton
 
 import java.util.ArrayList
 import java.util.HashSet
@@ -21,19 +23,17 @@ class DialogAdapter// Provide a suitable constructor (depends on the kind of dat
  private val onSome: HashSet<String>
  ) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
 
-    val radio_groups = SparseArray<RadioGroup>()
+    val checkboxes = SparseArray<IndeterminateCheckBox>()
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case
-        var mTextView: TextView
-        var mRadioGroup: RadioGroup
+        var mCheckBox: IndeterminateCheckBox
 
         init {
-            mTextView = v.findViewById(R.id.itemName) as TextView
-            mRadioGroup = v.findViewById(R.id.radio_group) as RadioGroup
+            mCheckBox = v.findViewById(R.id.indeterm_checkbox) as IndeterminateCheckBox
         }
     }
 
@@ -53,17 +53,15 @@ class DialogAdapter// Provide a suitable constructor (depends on the kind of dat
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         val viewItem = mItems[position]
-        holder.mTextView.text = viewItem
+        holder.mCheckBox.text = viewItem
         if (viewItem in onAll) {
-            holder.mRadioGroup.check(R.id.radio_all)
+            holder.mCheckBox.state = true
         } else if (viewItem in onSome) {
-            holder.mRadioGroup.check(R.id.radio_keep)
-            val button = holder.mRadioGroup.findViewById(R.id.radio_keep) as RadioButton
-            button.isEnabled = true
+            holder.mCheckBox.state = null
         } else {
-            holder.mRadioGroup.check(R.id.radio_none)
+            holder.mCheckBox.state = false
         }
-        radio_groups.put(position, holder.mRadioGroup)
+        checkboxes.put(position, holder.mCheckBox)
     }
 
     // Return the size of your dataset (invoked by the layout manager)

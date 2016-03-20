@@ -1531,18 +1531,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     t.addList(newText)
                 }
             }
-            val radio_groups = itemAdapter.radio_groups
-            for (i in 0..radio_groups.size()-1) {
-                val radio_group = radio_groups.get(i,null)
-                val selectedActionId = radio_group?.checkedRadioButtonId ?: R.id.radio_keep;
-                when (selectedActionId ) {
-                    R.id.radio_none -> {
+            val checkboxes = itemAdapter.checkboxes
+            for (i in 0..checkboxes.size()-1) {
+                val checkbox = checkboxes.get(i,null)
+                val selected = checkbox.state;
+                when (selected ) {
+                    false -> {
                         for (task in checkedTasks) {
                             val t = task.task
                             t.removeList(items[i])
                         }
                     }
-                    R.id.radio_all -> {
+                    true -> {
                         for (task in checkedTasks) {
                             val t = task.task
                             t.addList(items[i])
@@ -1605,18 +1605,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     t.addTag(newText)
                 }
             }
-            val radio_groups = itemAdapter.radio_groups
-            for (i in 0..radio_groups.size()-1) {
-                val radio_group = radio_groups.get(i,null)
-                val selectedActionId = radio_group?.checkedRadioButtonId ?: R.id.radio_keep;
-                when (selectedActionId ) {
-                    R.id.radio_none -> {
+            val checkboxes = itemAdapter.checkboxes
+            for (i in 0..checkboxes.size()-1) {
+                val checkbox = checkboxes.get(i,null)
+                val selected = checkbox.state;
+                when (selected ) {
+                    false -> {
                         for (task in checkedTasks) {
                             val t = task.task
                             t.removeTag(items[i])
                         }
                     }
-                    R.id.radio_all -> {
+                    true -> {
                         for (task in checkedTasks) {
                             val t = task.task
                             t.addTag(items[i])
