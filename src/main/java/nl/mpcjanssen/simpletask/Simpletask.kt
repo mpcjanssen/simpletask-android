@@ -1490,26 +1490,28 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun updateItemsDialog(title: String,
                             checkedTasks: List<TodoListItem>,
-                            items: ArrayList<String>,
+                            allItems: ArrayList<String>,
                             retrieveFromTask: (Task) -> SortedSet<String>,
                             addToTask: (Task, String) -> Unit,
                             removeFromTask: (Task, String) -> Unit
     ) {
-
-        val allTags = HashSet<ArrayList<String>>()
-        for (item in checkedTasks) {
-            val tags = ArrayList<String>()
-            tags.addAll(retrieveFromTask.invoke(item.task))
-            allTags.add(tags)
+        val checkedTaskItems = HashSet<ArrayList<String>>()
+        for (task in checkedTasks) {
+            val items = ArrayList<String>()
+            items.addAll(retrieveFromTask.invoke(task.task))
+            checkedTaskItems.add(items)
         }
 
-        val onAllItems = allTags.reduce {
+        // Determine items on all tasks (intersection of the sets)
+        val onAllTasks = checkedTaskItems.reduce {
             left,right ->
             val intersection = ArrayList<String>()
             intersection.addAll(left.intersect(right))
             intersection
         }
-        val onSomeItems = allTags.reduce {
+
+        // Determine items on some tasks (union of the sets)
+        val onSomeTasks = checkedTaskItems.reduce {
             left,right ->
             val intersection = ArrayList<String>()
             intersection.addAll(left.union(right))
@@ -1522,7 +1524,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
         rcv.setLayoutManager(layoutManager);
-        val itemAdapter = ItemDialogAdapter(items, onAllItems.toHashSet(), onSomeItems.toHashSet())
+        val itemAdapter = ItemDialogAdapter(allItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
         rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
@@ -1546,13 +1548,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     false -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            removeFromTask.invoke(t,items[i])
+                            removeFromTask.invoke(t,allItems[i])
                         }
                     }
                     true -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            addToTask.invoke(t,items[i])
+                            addToTask.invoke(t,allItems[i])
                         }
                     }
                 }
