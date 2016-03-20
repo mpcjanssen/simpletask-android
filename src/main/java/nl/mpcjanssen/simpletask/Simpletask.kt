@@ -45,7 +45,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.adapters.DialogAdapter
+import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
@@ -1486,16 +1486,23 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
     }
 
-    private fun updateLists(checkedTasks: List<TodoListItem>) {
-        val items = ArrayList<String>()
+
+
+    private fun updateItemsDialog(title: String,
+                            checkedTasks: List<TodoListItem>,
+                            items: ArrayList<String>,
+                            retrieveFromTask: (Task) -> SortedSet<String>,
+                            addToTask: (Task, String) -> Unit,
+                            removeFromTask: (Task, String) -> Unit
+    ) {
+
         val allTags = HashSet<ArrayList<String>>()
-        val todoList = todoList
-        items.addAll(sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null))
         for (item in checkedTasks) {
             val tags = ArrayList<String>()
-            tags.addAll(item.task.lists)
+            tags.addAll(retrieveFromTask.invoke(item.task))
             allTags.add(tags)
         }
+
         val onAllItems = allTags.reduce {
             left,right ->
             val intersection = ArrayList<String>()
@@ -1515,7 +1522,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
         rcv.setLayoutManager(layoutManager);
-        val itemAdapter = DialogAdapter(items, onAllItems.toHashSet(), onSomeItems.toHashSet())
+        val itemAdapter = ItemDialogAdapter(items, onAllItems.toHashSet(), onSomeItems.toHashSet())
         rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
@@ -1528,7 +1535,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             if (newText.isNotEmpty()) {
                 for (i in checkedTasks) {
                     val t = i.task
-                    t.addList(newText)
+                    addToTask.invoke(t,newText)
                 }
             }
             val checkboxes = itemAdapter.checkboxes
@@ -1539,13 +1546,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     false -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            t.removeList(items[i])
+                            removeFromTask.invoke(t,items[i])
                         }
                     }
                     true -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            t.addList(items[i])
+                            addToTask.invoke(t,items[i])
                         }
                     }
                 }
@@ -1556,82 +1563,30 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
         val dialog = builder.create()
-        dialog.setTitle(m_app.listTerm)
+        dialog.setTitle(title)
         dialog.show()
     }
 
+    private fun updateLists(checkedTasks: List<TodoListItem>) {
+        updateItemsDialog(
+                m_app.listTerm,
+                checkedTasks,
+                sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null),
+                {task -> task.lists},
+                {task, list -> task.addList(list)},
+                {task, list -> task.removeList(list)}
+        )
+    }
+
     private fun updateTags(checkedTasks: List<TodoListItem>) {
-        val items = ArrayList<String>()
-        val allTags = HashSet<ArrayList<String>>()
-        val todoList = todoList
-        items.addAll(sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null))
-        for (item in checkedTasks) {
-            val tags = ArrayList<String>()
-            tags.addAll(item.task.tags)
-            allTags.add(tags)
-        }
-        val onAllItems = allTags.reduce {
-            left,right ->
-            val intersection = ArrayList<String>()
-            intersection.addAll(left.intersect(right))
-            intersection
-        }
-        val onSomeItems = allTags.reduce {
-            left,right ->
-            val intersection = ArrayList<String>()
-            intersection.addAll(left.union(right))
-            intersection
-        }
-
-        @SuppressLint("InflateParams")
-        val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
-        val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
-        rcv.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(this);
-        rcv.setLayoutManager(layoutManager);
-        val itemAdapter = DialogAdapter(items, onAllItems.toHashSet(), onSomeItems.toHashSet())
-        rcv.adapter = itemAdapter
-
-        val ed = view.findViewById(R.id.editText) as EditText
-
-        val builder = AlertDialog.Builder(this)
-        builder.setView(view)
-
-        builder.setPositiveButton(R.string.ok) { dialog, which ->
-            val newText = ed.text.toString()
-            if (newText.isNotEmpty()) {
-                for (i in checkedTasks) {
-                    val t = i.task
-                    t.addTag(newText)
-                }
-            }
-            val checkboxes = itemAdapter.checkboxes
-            for (i in 0..checkboxes.size()-1) {
-                val checkbox = checkboxes.get(i,null)
-                val selected = checkbox.state;
-                when (selected ) {
-                    false -> {
-                        for (task in checkedTasks) {
-                            val t = task.task
-                            t.removeTag(items[i])
-                        }
-                    }
-                    true -> {
-                        for (task in checkedTasks) {
-                            val t = task.task
-                            t.addTag(items[i])
-                        }
-                    }
-                }
-            }
-            todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
-            closeSelectionMode()
-        }
-        builder.setNegativeButton(R.string.cancel) { dialog, id -> }
-        // Create the AlertDialog
-        val dialog = builder.create()
-        dialog.setTitle(m_app.tagTerm)
-        dialog.show()
+        updateItemsDialog(
+                m_app.tagTerm,
+                checkedTasks,
+                sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null),
+                {task -> task.tags},
+                {task, tag -> task.addTag(tag)},
+                {task, tag -> task.removeTag(tag)}
+        )
     }
 
     private inner class DrawerItemClickListener : AdapterView.OnItemClickListener {
