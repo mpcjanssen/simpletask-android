@@ -66,7 +66,8 @@
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:padding="3sp"
-        android:showDividers="middle">
+        android:showDividers="middle"
+        android:background="#0099CC">
 
 
         <Button
@@ -76,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="\@…" />
+            android:text="\@…"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnProject"
@@ -85,7 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="+…" />
+            android:text="+…"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnPrio"
@@ -94,7 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="(.)" />
+            android:text="(.)"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnDue"
@@ -103,7 +107,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="due:…" />
+            android:text="due:…"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnThreshold"
@@ -112,7 +117,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="t:…" />
+            android:text="t:…"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </LinearLayout>
