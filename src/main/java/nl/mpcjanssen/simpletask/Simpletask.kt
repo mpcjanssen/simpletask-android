@@ -1,14 +1,11 @@
 /**
- * @author Todo.txt contributors @yahoogroups.com>
- * *
  * @author Mark Janssen
+ * @author Vojtech Kral
  * *
  * @license http://www.gnu.org/licenses/gpl.html
  * *
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
- * *
  * @copyright 2013- Mark Janssen
- * *
  * @copyright 2015 Vojtech Kral
  */
 
@@ -121,7 +118,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 } else if (intent.action == Constants.BROADCAST_SYNC_DONE) {
                     mOverlayDialog = showLoadingOverlay(this@Simpletask, mOverlayDialog, false)
                 } else if (intent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
-                    updateConnectiviyIndicator()
+                    updateConnectivityIndicator()
                 } else if (intent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     handleIntent()
                 }
@@ -154,7 +151,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             }
             REQUEST_PREFERENCES -> if (resultCode == Preferences.RESULT_RECREATE_ACTIVITY) {
                 val i = Intent(applicationContext, Simpletask::class.java)
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 finish()
                 m_app.reloadTheme()
@@ -203,12 +200,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun selectAllTasks() {
         val selectedTasks = ArrayList<TodoListItem>()
-        for (vline in m_adapter!!.visibleLines) {
+        for (visibleLine in m_adapter!!.visibleLines) {
             // Only check tasks that are not checked yet
             // and skip headers
             // This prevents double counting in the CAB title
-            if (!vline.header) {
-                selectedTasks.add(vline.task!!)
+            if (!visibleLine.header) {
+                selectedTasks.add(visibleLine.task!!)
             }
         }
         val tl = todoList
@@ -231,7 +228,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             startLogin()
             return
         }
-        // Check if we have SDCard permision for cloudless
+        // Check if we have SDCard permission for cloudless
         if (!m_app.fileStore.getWritePermission(this, REQUEST_PERMISSION)) {
             return
         }
@@ -309,12 +306,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
         m_adapter!!.setFilteredTasks()
 
-        listView!!.adapter = this.m_adapter
+        listView.adapter = this.m_adapter
 
         val lv = listView
-        if (lv == null) {
-            return
-        }
         lv.isTextFilterEnabled = true
         lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
         lv.isClickable = true
@@ -393,7 +387,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                             actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
                             actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                                     arrayOf(url))
-                            actionIntent.setType("text/plain")
+                            actionIntent.type = "text/plain"
                             startActivity(actionIntent)
                         }
                     }
@@ -434,7 +428,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         } else {
             closeSelectionMode()
         }
-        // Check the selected items in the listview
+        // Check the selected items in the listView
         setSelectedTasks(selection)
         val fab = findViewById(R.id.fab) as FloatingActionButton
         lv.setSelectionFromTop(m_scrollPosition, 0)
@@ -444,7 +438,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         mOverlayDialog = showLoadingOverlay(this, mOverlayDialog, m_app.isLoading)
     }
 
-    private fun updateConnectiviyIndicator() {
+    private fun updateConnectivityIndicator() {
         // Show connectivity status indicator
         // Red -> changes pending
         // Yellow -> offline
@@ -465,7 +459,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     private fun setSelectedTasks(items: List<TodoListItem>?) {
         if (items == null) return
         val lv = listView
-        if (lv == null) return
         for (t in items) {
             val position = m_adapter!!.getPosition(t)
             if (position != -1) {
@@ -476,7 +469,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     }
 
     private fun updateFilterBar() {
-        val lv = listView ?: return
+        val lv = listView
         val index = lv.firstVisiblePosition
         val v = lv.getChildAt(0)
         val top = if (v == null) 0 else v.top
@@ -517,7 +510,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("position", listView!!.firstVisiblePosition)
+        outState.putInt("position", listView.firstVisiblePosition)
     }
 
     override fun onResume() {
@@ -552,7 +545,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         if (!fileStore.supportsSync()) {
             val mItem = menu.findItem(R.id.sync)
-            mItem.setVisible(false)
+            mItem.isVisible = false
         }
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchMenu = menu.findItem(R.id.search)
@@ -581,8 +574,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             var m_ignoreSearchChangeCallback: Boolean = false
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                // Stupid searchview code will call onQueryTextChange callback
-                // When the actionView collapse and the textview is reset
+                // Stupid searchView code will call onQueryTextChange callback
+                // When the actionView collapse and the textView is reset
                 // ugly global hack around this
                 m_ignoreSearchChangeCallback = true
                 menu.findItem(R.id.search).collapseActionView()
@@ -627,18 +620,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun prioritizeTasks(tasks: List<TodoListItem>) {
         val strings = Priority.rangeInCode(Priority.NONE, Priority.Z)
-        val prioArr = strings.toTypedArray()
+        val priorityArr = strings.toTypedArray()
 
-        var prioIdx = 0
+        var priorityIdx = 0
         if (tasks.size == 1) {
-            prioIdx = strings.indexOf(tasks[0].task.priority.code)
+            priorityIdx = strings.indexOf(tasks[0].task.priority.code)
         }
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
-        builder.setSingleChoiceItems(prioArr, prioIdx, { dialog, which ->
+        builder.setSingleChoiceItems(priorityArr, priorityIdx, { dialog, which ->
             dialog.dismiss()
-            val prio = Priority.toPriority(prioArr[which])
-            todoList.prioritize(tasks, prio)
+            val priority = Priority.toPriority(priorityArr[which])
+            todoList.prioritize(tasks, priority)
             todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
             closeSelectionMode()
         })
@@ -854,7 +847,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun closeSelectionMode() {
         todoList.clearSelection()
-        listView!!.clearChoices()
+        listView.clearChoices()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
@@ -878,7 +871,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action) {
             // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-            log!!.warn(TAG, "Not implenented search")
+            log!!.warn(TAG, "Not implemented search")
         } else if (intent.extras != null) {
             // Only change intent if it actually contains a filter
             setIntent(intent)
@@ -915,27 +908,25 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         m_rightDrawerList!!.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
         m_rightDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_NONE
         m_rightDrawerList!!.isLongClickable = true
-        m_rightDrawerList!!.onItemClickListener = object : AdapterView.OnItemClickListener {
-            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mFilter = filters[position]
-                val intent = intent
-                mFilter!!.saveInIntent(intent)
-                setIntent(intent)
-                mFilter!!.saveInPrefs(TodoApplication.prefs)
-                m_adapter!!.setFilteredTasks()
-                if (m_drawerLayout != null) {
-                    m_drawerLayout!!.closeDrawer(GravityCompat.END)
-                }
-                updateDrawers()
+        m_rightDrawerList!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            mFilter = filters[position]
+            val intent = intent
+            mFilter!!.saveInIntent(intent)
+            setIntent(intent)
+            mFilter!!.saveInPrefs(TodoApplication.prefs)
+            m_adapter!!.setFilteredTasks()
+            if (m_drawerLayout != null) {
+                m_drawerLayout!!.closeDrawer(GravityCompat.END)
             }
+            updateDrawers()
         }
         m_rightDrawerList!!.onItemLongClickListener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
             val filter = filters[position]
             val prefsName = filter.prefName!!
             val popupMenu = PopupMenu(this@Simpletask, view)
             popupMenu.setOnMenuItemClickListener { item ->
-                val menuid = item.itemId
-                when (menuid) {
+                val menuId = item.itemId
+                when (menuId) {
                     R.id.menu_saved_filter_delete -> deleteSavedFilter(prefsName)
                     R.id.menu_saved_filter_shortcut -> createFilterShortcut(filter)
                     R.id.menu_saved_filter_rename -> renameSavedFilter(prefsName)
@@ -1081,13 +1072,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
         val t = getTaskAt(position) ?: return false
-        val selected = !listView!!.isItemChecked(position)
+        val selected = !listView.isItemChecked(position)
         if (selected) {
             todoList.selectTodoItem(t)
         } else {
             todoList.unSelectTodoItem(t)
         }
-        listView!!.setItemChecked(position, selected)
+        listView.setItemChecked(position, selected)
         val numSelected = todoList.selectedTasks.size
         if (numSelected == 0) {
             closeSelectionMode()
@@ -1110,9 +1101,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
             val checkedTasks = todoList.selectedTasks
-            val menuid = item.itemId
+            val menuId = item.itemId
             val intent: Intent
-            when (menuid) {
+            when (menuId) {
                 R.id.complete -> completeTasks(checkedTasks)
                 R.id.select_all -> {
                     selectAllTasks()
@@ -1183,18 +1174,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
     }
 
-    val listView: ListView?
+    val listView: ListView
         get() {
             val lv = findViewById(android.R.id.list)
             return lv as ListView
         }
 
 
-    data class ViewHolder (var tasktext: TextView? = null,
-        var taskage: TextView? = null,
-        var taskdue: TextView? = null,
-        var taskthreshold: TextView? = null,
-        var cbCompleted: CheckBox? = null)
+    data class ViewHolder (var taskText: TextView? = null,
+                           var taskAge: TextView? = null,
+                           var taskDue: TextView? = null,
+                           var taskThreshold: TextView? = null,
+                           var cbCompleted: CheckBox? = null)
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater) : BaseAdapter(), ListAdapter {
 
@@ -1207,11 +1198,10 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             } else {
                 setTitle(R.string.app_label)
             }
-            updateConnectiviyIndicator();
+            updateConnectivityIndicator();
             val visibleTasks: List<TodoListItem>
             log!!.info(TAG, "setFilteredTasks called: " + todoList)
-            val activeFilter = mFilter
-            if (activeFilter==null) return
+            val activeFilter = mFilter ?: return
             val sorts = activeFilter.getSort(m_app.defaultSorts)
             visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
             visibleLines.clear()
@@ -1294,10 +1284,10 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 if (view == null) {
                     view = m_inflater.inflate(R.layout.list_item, parent, false)
                     holder = ViewHolder()
-                    holder.tasktext = view!!.findViewById(R.id.tasktext) as TextView
-                    holder.taskage = view.findViewById(R.id.taskage) as TextView
-                    holder.taskdue = view.findViewById(R.id.taskdue) as TextView
-                    holder.taskthreshold = view.findViewById(R.id.taskthreshold) as TextView
+                    holder.taskText = view!!.findViewById(R.id.tasktext) as TextView
+                    holder.taskAge = view.findViewById(R.id.taskage) as TextView
+                    holder.taskDue = view.findViewById(R.id.taskdue) as TextView
+                    holder.taskThreshold = view.findViewById(R.id.taskthreshold) as TextView
                     holder.cbCompleted = view.findViewById(R.id.checkBox) as CheckBox
                     view.tag = holder
                 } else {
@@ -1312,8 +1302,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     holder.cbCompleted!!.visibility = View.GONE
                 }
                 if (!m_app.hasExtendedTaskView()) {
-                    val taskbar = view.findViewById(R.id.datebar)
-                    taskbar.visibility = View.GONE
+                    val taskBar = view.findViewById(R.id.datebar)
+                    taskBar.visibility = View.GONE
                 }
                 var tokensToShow = TToken.ALL
                 // Hide dates if we have a date bar
@@ -1348,38 +1338,38 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 }
                 setColor(ss, Color.GRAY, colorizeStrings)
 
-                val prioColor: Int
-                val prio = task.priority
-                when (prio) {
-                    Priority.A -> prioColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark)
-                    Priority.B -> prioColor = ContextCompat.getColor(m_app, android.R.color.holo_orange_dark)
-                    Priority.C -> prioColor = ContextCompat.getColor(m_app, android.R.color.holo_green_dark)
-                    Priority.D -> prioColor = ContextCompat.getColor(m_app, android.R.color.holo_blue_dark)
-                    else -> prioColor = ContextCompat.getColor(m_app, android.R.color.darker_gray)
+                val priorityColor: Int
+                val priority = task.priority
+                when (priority) {
+                    Priority.A -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark)
+                    Priority.B -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_orange_dark)
+                    Priority.C -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_green_dark)
+                    Priority.D -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_blue_dark)
+                    else -> priorityColor = ContextCompat.getColor(m_app, android.R.color.darker_gray)
                 }
-                setColor(ss, prioColor, prio.inFileFormat())
+                setColor(ss, priorityColor, priority.inFileFormat())
                 val completed = task.isCompleted()
-                val tasktext = holder.tasktext!!
-                val taskage = holder.taskage!!
+                val taskText = holder.taskText!!
+                val taskAge = holder.taskAge!!
                 val cb = holder.cbCompleted!!
-                tasktext.text = ss
+                taskText.text = ss
 
-                handleEllipsizing(holder.tasktext as TextView)
+                handleEllipsis(holder.taskText as TextView)
 
 
                 if (completed) {
                     // log.info( "Striking through " + task.getText());
-                    tasktext.paintFlags = tasktext.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    holder.taskage!!.paintFlags = taskage.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    holder.taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     cb.isChecked = true
-                   cb.setOnClickListener(View.OnClickListener {
+                   cb.setOnClickListener({
                         undoCompleteTasks(item)
                         closeSelectionMode()
                         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
                     })
                 } else {
-                    tasktext.paintFlags = tasktext.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    taskage.paintFlags = taskage.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                     cb.isChecked = false
 
                     cb.setOnClickListener {
@@ -1398,14 +1388,14 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                         m_app.hasColorDueDates())
                 val relativeThresholdDate = getRelativeThresholdDate(task, mContext)
                 if (!isEmptyOrNull(relAge) && !mFilter!!.hideCreateDate) {
-                    taskage.text = relAge
-                    taskage.visibility = View.VISIBLE
+                    taskAge.text = relAge
+                    taskAge.visibility = View.VISIBLE
                 } else {
-                    taskage.text = ""
-                    taskage.visibility = View.GONE
+                    taskAge.text = ""
+                    taskAge.visibility = View.GONE
                 }
-                val taskDue = holder.taskdue!!
-                val taskThreshold = holder.taskthreshold!!
+                val taskDue = holder.taskDue!!
+                val taskThreshold = holder.taskThreshold!!
                 if (relDue != null) {
                     taskDue.text = relDue
                     taskDue.visibility = View.VISIBLE
@@ -1461,14 +1451,14 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         }
     }
 
-    private fun handleEllipsizing(tasktext: TextView) {
+    private fun handleEllipsis(taskText: TextView) {
         val noEllipsizeValue = "no_ellipsize"
-        val ellipsizingKey = TodoApplication.appContext.getString(R.string.task_text_ellipsizing_pref_key)
-        val ellipsizingPref = TodoApplication.prefs.getString(ellipsizingKey, noEllipsizeValue)
+        val ellipsizeKey = TodoApplication.appContext.getString(R.string.task_text_ellipsizing_pref_key)
+        val ellipsizePref = TodoApplication.prefs.getString(ellipsizeKey, noEllipsizeValue)
 
-        if (noEllipsizeValue != ellipsizingPref) {
+        if (noEllipsizeValue != ellipsizePref) {
             val truncateAt: TextUtils.TruncateAt?
-            when (ellipsizingPref) {
+            when (ellipsizePref) {
                 "start" -> truncateAt = TextUtils.TruncateAt.START
                 "end" -> truncateAt = TextUtils.TruncateAt.END
                 "middle" -> truncateAt = TextUtils.TruncateAt.MIDDLE
@@ -1477,11 +1467,11 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             }
 
             if (truncateAt != null) {
-                tasktext.maxLines = 1
-                tasktext.setHorizontallyScrolling(true)
-                tasktext.ellipsize = truncateAt
+                taskText.maxLines = 1
+                taskText.setHorizontallyScrolling(true)
+                taskText.ellipsize = truncateAt
             } else {
-                log!!.warn(TAG, "Unrecognized preference value for task text ellipsizing: {} !" + ellipsizingPref)
+                log!!.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
             }
         }
     }
@@ -1523,7 +1513,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
-        rcv.setLayoutManager(layoutManager);
+        rcv.layoutManager = layoutManager;
         val itemAdapter = ItemDialogAdapter(allItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
         rcv.adapter = itemAdapter
 
@@ -1640,7 +1630,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         private val ACTION_PHONE = "phone"
         private val ACTION_MAIL = "mail"
 
-        val URI_BASE = Uri.fromParts("simpletask", "", null)
+        val URI_BASE = Uri.fromParts("Simpletask", "", null)
         val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")
         private val TAG = "Simpletask"
     }
