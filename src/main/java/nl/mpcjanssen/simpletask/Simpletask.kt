@@ -1537,7 +1537,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             if (newText.isNotEmpty()) {
                 for (i in checkedTasks) {
                     val t = i.task
-                    addToTask.invoke(t,newText)
+                    addToTask(t,newText)
                 }
             }
             val checkboxes = itemAdapter.checkboxes
@@ -1548,13 +1548,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     false -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            removeFromTask.invoke(t,allItems[i])
+                            removeFromTask(t,allItems[i])
                         }
                     }
                     true -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            addToTask.invoke(t,allItems[i])
+                            addToTask(t,allItems[i])
                         }
                     }
                 }
