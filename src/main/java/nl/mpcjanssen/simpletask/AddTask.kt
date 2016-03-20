@@ -30,10 +30,14 @@ package nl.mpcjanssen.simpletask
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.*
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.NavUtils
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.text.InputType
 
@@ -58,12 +62,26 @@ class AddTask : ThemedActivity() {
 
     private val share_text: String? = null
 
+    private var m_drawerToggle: ActionBarDrawerToggle? = null
     private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
     private var m_backup: MutableList<TodoListItem>? = null
     private var log: Logger? = null
 
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        m_drawerToggle?.onConfigurationChanged(newConfig)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        m_drawerToggle?.syncState()
+    }
+
+    private var m_drawerLayout: DrawerLayout? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         log = Logger
@@ -75,10 +93,6 @@ class AddTask : ThemedActivity() {
         val intent = intent
         val mFilter = ActiveFilter()
         mFilter.initFromIntent(intent)
-
-
-        val actionBar = actionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
@@ -104,6 +118,38 @@ class AddTask : ThemedActivity() {
         fab?.setOnClickListener {
             saveTasksAndClose()
         }
+
+        m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout?
+
+        if (m_drawerLayout != null) {
+            m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
+                    m_drawerLayout, /* DrawerLayout object */
+                    R.string.changelist, /* "open drawer" description */
+                    R.string.app_label /* "close drawer" description */) {
+
+                /**
+                 * Called when a drawer has settled in a completely closed
+                 * state.
+                 */
+                override fun onDrawerClosed(view: View?) {
+                    // setTitle(R.string.app_label);
+                }
+
+                /** Called when a drawer has settled in a completely open state.  */
+                override fun onDrawerOpened(drawerView: View?) {
+                    // setTitle(R.string.changelist);
+                }
+            }
+        }
+        // Set the drawer toggle as the DrawerListener
+        m_drawerLayout?.setDrawerListener(m_drawerToggle)
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            actionBar.setHomeButtonEnabled(true)
+            m_drawerToggle!!.isDrawerIndicatorEnabled = true
+        }
+        m_drawerToggle!!.syncState()
 
         // text
         textInputField = findViewById(R.id.taskText) as EditText
@@ -257,17 +303,10 @@ class AddTask : ThemedActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (m_drawerToggle != null && m_drawerToggle!!.onOptionsItemSelected(item)) {
+            return true
+        }
         when (item.itemId) {
-        // Respond to the action bar's Up/Home button
-            android.R.id.home -> {
-                if (m_app!!.isBackSaving) {
-                    saveTasksAndClose()
-                }
-                val upIntent = NavUtils.getParentActivityIntent(this)
-                finish()
-                startActivity(upIntent)
-                return true
-            }
             R.id.menu_cancel_task -> {
                 finish()
                 return true
@@ -336,6 +375,12 @@ class AddTask : ThemedActivity() {
     }
 
     override fun onBackPressed() {
+        if (m_drawerLayout != null) {
+            if (m_drawerLayout!!.isDrawerOpen(GravityCompat.START)) {
+                m_drawerLayout!!.closeDrawer(GravityCompat.START)
+                return
+            }
+        }
         if (m_app!!.isBackSaving) {
             saveTasksAndClose()
         }
