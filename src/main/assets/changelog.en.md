@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.1.0
+-----
+
+- Use proper tri-state checkbox instead of colored radiobuttons. Fixes #395.
+
 7.0.16
 ------
 
