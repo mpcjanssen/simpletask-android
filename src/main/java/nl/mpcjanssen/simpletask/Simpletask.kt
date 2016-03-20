@@ -768,9 +768,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     /**
      * Handle clear filter click *
      */
-    fun onClearClick(v: View) {
-        clearFilter()
-    }
+    @Suppress("UNUSED")
+    fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
     val savedFilter: ArrayList<ActiveFilter>
         get() {
@@ -790,7 +789,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     /**
      * Handle add filter click *
      */
-    fun onAddFilterClick(v: View) {
+    @Suppress("UNUSED")
+    fun onAddFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
         val alert = AlertDialog.Builder(this)
 
         alert.setTitle(R.string.save_filter)
