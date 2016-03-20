@@ -1,28 +1,6 @@
 /**
  * This file is part of Simpletask.
-
- * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
- * Copyright (c) 2013- Mark Janssen
-
- * LICENSE:
-
- * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
-
- * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
-
- * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
- * //www.gnu.org/licenses/>.
-
- * @author Mark Janssen
- * *
- * @license http://www.gnu.org/licenses/gpl.html
- * *
- * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
- * *
+ *
  * @copyright 2013- Mark Janssen
  */
 package nl.mpcjanssen.simpletask
@@ -122,12 +100,12 @@ class AddTask : ThemedActivity() {
         todoList.clearSelection()
 
         if (m_backup != null && m_backup!!.size > 0) {
-            val prefill = ArrayList<String>()
+            val preFill = ArrayList<String>()
             for (t in m_backup!!) {
-                prefill.add(t.task.inFileFormat())
+                preFill.add(t.task.inFileFormat())
             }
-            val sPrefill = join(prefill, "\n")
-            textInputField.setText(sPrefill)
+            val preFillString = join(preFill, "\n")
+            textInputField.setText(preFillString)
             setTitle(R.string.updatetask)
         } else {
             if (textInputField.text.length == 0) {
@@ -221,7 +199,7 @@ class AddTask : ThemedActivity() {
         // Set button callbacks
         findViewById(R.id.btnContext).setOnClickListener { showListMenu() }
         findViewById(R.id.btnProject).setOnClickListener { showTagMenu() }
-        findViewById(R.id.btnPrio).setOnClickListener { showPrioMenu() }
+        findViewById(R.id.btnPrio).setOnClickListener { showPriorityMenu() }
 
         findViewById(R.id.btnDue).setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold).setOnClickListener { insertDate(DateType.THRESHOLD) }
@@ -439,7 +417,7 @@ class AddTask : ThemedActivity() {
             }
 
             if (idx != -1) {
-                tasks.set(idx, task )
+                tasks[idx] = task
             } else {
                 tasks.add(task)
             }
@@ -452,13 +430,13 @@ class AddTask : ThemedActivity() {
         dialog.show()
     }
 
-    private fun showPrioMenu() {
+    private fun showPriorityMenu() {
         val builder = AlertDialog.Builder(this)
         val priorities = Priority.values()
         val priorityCodes = ArrayList<String>()
 
-        for (prio in priorities) {
-            priorityCodes.add(prio.code)
+        for (priority in priorities) {
+            priorityCodes.add(priority.code)
         }
 
         builder.setItems(priorityCodes.toArray<String>(arrayOfNulls<String>(priorityCodes.size))
@@ -521,7 +499,7 @@ class AddTask : ThemedActivity() {
                 }
             }
             if (idx != -1) {
-                tasks.set(idx, task )
+                tasks[idx] = task
             } else {
                 tasks.add(task)
             }
@@ -562,9 +540,7 @@ class AddTask : ThemedActivity() {
     private fun replaceDueDate(newDueDate: CharSequence) {
         // save current selection and length
         val start = textInputField.selectionStart
-        val end = textInputField.selectionEnd
         val length = textInputField.text.length
-        val sizeDelta: Int
         val lines = ArrayList<String>()
         Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 
@@ -587,7 +563,6 @@ class AddTask : ThemedActivity() {
         // save current selection and length
         val start = textInputField.selectionStart
         val length = textInputField.text.length
-        val sizeDelta: Int
         val lines = ArrayList<String>()
         Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 
@@ -606,14 +581,14 @@ class AddTask : ThemedActivity() {
         restoreSelection(start, length, false)
     }
 
-    private fun restoreSelection(location: Int, oldLenght: Int, moveCursor: Boolean) {
+    private fun restoreSelection(location: Int, oldLength: Int, moveCursor: Boolean) {
         var newLocation = location
         val newLength = textInputField.text.length
-        val deltaLength = newLength - oldLenght
-        // Check if we want the cursor to move by delta (for prio changes)
+        val deltaLength = newLength - oldLength
+        // Check if we want the cursor to move by delta (for priority changes)
         // or not (for due and threshold changes
         if (moveCursor) {
-            newLocation = newLocation + deltaLength
+            newLocation += deltaLength
         }
 
         // Don't go out of bounds
@@ -622,7 +597,7 @@ class AddTask : ThemedActivity() {
         textInputField.setSelection(newLocation, newLocation)
     }
 
-    private fun replacePriority(newPrio: CharSequence) {
+    private fun replacePriority(newPriority: CharSequence) {
         // save current selection and length
         val start = textInputField.selectionStart
         val end = textInputField.selectionEnd
@@ -639,8 +614,8 @@ class AddTask : ThemedActivity() {
         }
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
-            log!!.debug(TAG, "Changing prio from " + t.priority.toString() + " to " + newPrio.toString())
-            t.priority = Priority.toPriority(newPrio.toString())
+            log!!.debug(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
+            t.priority = Priority.toPriority(newPriority.toString())
             lines[currentLine] = t.inFileFormat()
             textInputField.setText(join(lines, "\n"))
         }
