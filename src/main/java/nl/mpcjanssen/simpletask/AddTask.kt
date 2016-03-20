@@ -562,9 +562,7 @@ class AddTask : ThemedActivity() {
     private fun replaceDueDate(newDueDate: CharSequence) {
         // save current selection and length
         val start = textInputField.selectionStart
-        val end = textInputField.selectionEnd
         val length = textInputField.text.length
-        val sizeDelta: Int
         val lines = ArrayList<String>()
         Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 
@@ -587,7 +585,6 @@ class AddTask : ThemedActivity() {
         // save current selection and length
         val start = textInputField.selectionStart
         val length = textInputField.text.length
-        val sizeDelta: Int
         val lines = ArrayList<String>()
         Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
 

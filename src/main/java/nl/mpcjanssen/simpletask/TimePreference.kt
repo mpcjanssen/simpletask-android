@@ -53,12 +53,14 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
         return picker
     }
 
+    @Suppress("DEPRECATION")
     override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
         m_picker!!.currentHour = m_minutes / 60
         m_picker!!.currentMinute = m_minutes % 60
     }
 
+    @Suppress("DEPRECATION")
     override fun onDialogClosed(positiveResult: Boolean) {
         super.onDialogClosed(positiveResult)
 
