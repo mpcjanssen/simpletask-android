@@ -3,39 +3,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
-    <RadioGroup
-        android:layout_width="wrap_content"
+    <com.buildware.widget.indeterm.IndeterminateCheckBox
+        android:id="@+id/indeterm_checkbox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/radio_group"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio_none"
-            android:buttonTint="@android:color/holo_red_dark" />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio_keep"
-            android:buttonTint="@android:color/holo_orange_light"
-            android:enabled="false" />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio_all"
-            android:buttonTint="@android:color/holo_green_dark" />
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/itemName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:paddingLeft="6dip"
-        android:paddingRight="6dip"/>
+        android:paddingRight="6dip"
+        app:indeterminate="true"/>
+
 </LinearLayout>
 
