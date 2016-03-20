@@ -17,11 +17,11 @@ import java.util.HashSet
 
 import nl.mpcjanssen.simpletask.R
 
-class DialogAdapter// Provide a suitable constructor (depends on the kind of dataset)
+class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of dataset)
 (private val mItems: ArrayList<String>,
  private val onAll: HashSet<String>,
  private val onSome: HashSet<String>
- ) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
+ ) : RecyclerView.Adapter<ItemDialogAdapter.ViewHolder>() {
 
     val checkboxes = SparseArray<IndeterminateCheckBox>()
 
@@ -39,7 +39,7 @@ class DialogAdapter// Provide a suitable constructor (depends on the kind of dat
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): DialogAdapter.ViewHolder {
+                                    viewType: Int): ItemDialogAdapter.ViewHolder {
         // create a new view
         val v = LayoutInflater.from(parent.context).inflate(R.layout.keep_dialog_item, parent, false)
         // set the view's size, margins, paddings and layout parameters
