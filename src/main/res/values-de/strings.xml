@@ -139,8 +139,8 @@ You should have received a copy of the GNU General Public License along with Tod
         Deaktiere dies für die Speicherung einer geteilten Aufgabe ohne Veränderung.</string>
 
     <string name="capitalize_tasks_pref_title">Beginne neue Aufgaben mit Großbuchstaben</string>
-    <string name="back_saves_pref_title">Zurück Schaltfläche</string>
-    <string name="back_saves_summary">Beim Betätigen von Zurück, speichere die eingebenen todos oder wende den Filter an.</string>
+    <string name="back_saves_pref_title">Zurück-Schaltfläche</string>
+    <string name="back_saves_summary">Beim Betätigen von Zurück, werden eingegeben Aufgaben und Filter gespeichert.</string>
 
     <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
@@ -165,8 +165,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_theme_pref_title">Widget Theme</string>
     <string name="widget_theme_pref_summary">Ändere das Widget Theme</string>
 
-    <string name="widget_header_transparency_title">Widget Kopfleiste Transparenz</string>
-    <string name="widget_background_transparency_title">Widget Hintergrundtransparenz</string>
+    <string name="widget_header_transparency_title">Widget: Transparenz der Kopfleiste</string>
+    <string name="widget_background_transparency_title">Widget: Hintergrundtransparenz</string>
 
     <string name="widget_extended_pref_title">Erweitertes Widget</string>
     <string name="widget_extended_pref_summary">Zeige Aufgaben im Widget mit Trennlinien.</string>
@@ -352,7 +352,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="save_filter_message">Gib den Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird</string>
 
     <string name="donate_title">Spenden</string>
-    <string name="donate_summary">Spende wenn Dir Simpletask gefällt. Hinweis: Spenden ist freiwillig, Simpletask wird immer kostenlos verfügbar sein. </string>
+    <string name="donate_summary">Spenden Sie, wenn Ihnen Simpletask gefällt.\nHinweis: Spenden sind freiwillig, Simpletask wird immer kostenlos verfügbar bleiben. </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Umgekehrte Sortierung</string>
 
@@ -389,4 +389,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="taskview_extended_pref_title">Datumszeile im Hauptfenster</string>
     <string name="use_create_backup_summary">Beim Sortieren Erstellungsdatum der Aufgabe verwenden, wenn kein Fälligkeitsdatum angegeben.</string>
     <string name="use_create_backup_title">Erstellungsdatum als Fälligkeit</string>
+    <string name="local_file_root_summary">Stammverzeichnis, von dem aus root:// Links aufgelöst werden</string>
+    <string name="local_file_root_title">Datei-Link Stammverzeichnis</string>
 </resources>

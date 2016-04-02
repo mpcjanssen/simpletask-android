@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item format="float" name="disabledAlpha" type="dimen">0.30</item>
+</resources>

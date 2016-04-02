@@ -1,127 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
-Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
 
-LICENSE:
-
-Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
-License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
-later version.
-
-Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-details.
-
-You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
-<http://www.gnu.org/licenses/>.
-
-@author Todo.txt contributors <todotxt@yahoogroups.com>
-@license http://www.gnu.org/licenses/gpl.html
-@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
--->
-
-<!--suppress ALL -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                 android:id="@+id/home_root"
-                                 android:layout_width="fill_parent"
-                                 android:layout_height="fill_parent"
-                                 android:divider="?android:attr/dividerVertical"
-                                 android:showDividers="middle"
-                                 android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:divider="?android:attr/dividerVertical"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
-    <EditText
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top">
+
+        <EditText
             android:id="@+id/taskText"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
             android:gravity="top"
-            android:inputType="textCapSentences|textMultiLine"/>
+            android:inputType="textCapSentences|textMultiLine" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_action_content_send"
+            app:layout_anchor="@id/taskText"
+            app:layout_anchorGravity="right|end|bottom" />
+    </FrameLayout>
 
     <LinearLayout
-        android:padding="3sp"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    <CheckBox
+        android:id="@+id/cbbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_clone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:id="@+id/cb_clone"/>
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="@string/clone_tags"/>
-    <CheckBox
+            android:text="@string/clone_tags"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/cb_wrap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:id="@+id/cb_wrap"/>
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="@string/word_wrap"/>
+            android:text="@string/word_wrap"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
-        android:padding="3sp"
-        android:orientation="horizontal"
+        android:id="@+id/addbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:showDividers="middle">
+        android:orientation="horizontal"
+        android:padding="3sp"
+        android:showDividers="middle"
+        android:background="#0099CC">
 
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/btnContext"
-            android:text="\@…"
-            android:maxLines="1"
             style="?android:attr/borderlessButtonStyle"
-            />
-
-        <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="+…"
-        android:id="@+id/btnProject"
-        android:maxLines="1"
-        style="?android:attr/borderlessButtonStyle" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="(.)"
             android:maxLines="1"
+            android:text="\@…"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnProject"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="+…"
+            android:textColor="#FFFFFF" />
+
+        <Button
             android:id="@+id/btnPrio"
-            style="?android:attr/borderlessButtonStyle" />
-
-        <Button
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="due:…"
+            android:maxLines="1"
+            android:text="(.)"
+            android:textColor="#FFFFFF" />
+
+        <Button
             android:id="@+id/btnDue"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:maxLines="1"
-            style="?android:attr/borderlessButtonStyle" />
+            android:text="due:…"
+            android:textColor="#FFFFFF" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="t:…"
-            android:maxLines="1"
             android:id="@+id/btnThreshold"
-            style="?android:attr/borderlessButtonStyle" />
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="t:…"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </LinearLayout>
+
+
+

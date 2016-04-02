@@ -127,13 +127,13 @@ public class TaskTestOld extends TestCase {
 
     public void testRemoveTag() {
         Task t = new Task( "Milk @@errands");
-        t.removeTag("@errands");
+        t.removeList("errands");
         assertEquals("Milk @@errands", t.inFileFormat());
-        t.removeTag("@@errands");
+        t.removeList("@errands");
         assertEquals("Milk", t.inFileFormat());
         assertEquals("Milk", t.getText());
         t = new Task( "Milk @@errands +supermarket");
-        t.removeTag("@@errands");
+        t.removeList("@errands");
         assertEquals("Milk +supermarket", t.inFileFormat());
     }
 

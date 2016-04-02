@@ -99,7 +99,7 @@ You should have received a copy of the GNU General Public License along with Sim
                 <action android:name="nl.mpcjanssen.simpletask.BACKGROUND_TASK" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="com.google.android.gm.action.AUTO_SEND" />
-                <data android:mimeType="text/*" />
+                <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
 

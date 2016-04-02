@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License along with Sim
 <!-- suppress ALL -->
 <!-- package name and version codes are overwritten by Gradle -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="nl.mpcjanssen.simpletask.toodledo" >
+          xmlns:tools="http://schemas.android.com/tools" package="nl.mpcjanssen.simpletask" >
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <application>

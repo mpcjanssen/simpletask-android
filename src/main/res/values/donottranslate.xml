@@ -66,6 +66,12 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>@string/date_pick</item>
     </string-array>
 
+    <string-array name="dialogActions">
+        <item>@string/none</item>
+        <item>@string/keep</item>
+        <item>@string/all</item>
+    </string-array>
+
     <!-- Defined themes -->
     <string-array name="themes">
         <item>Light</item>
@@ -135,6 +141,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_drawer_fixed_landscape" translatable="false">ui_drawer_fixed_landscape</string>
     <string name="ui_show_edittext_hints" translatable="false">ui_show_edittext_hints</string>
     <string name="share_task_append_text" translatable="false">share_task_append_task</string>
+    <string name="local_file_root" translatable="false">local_file_root</string>
     <string name="ui_show_confirmation_dialogs" translatable="false">ui_show_confirmation_dialogs</string>
     <string name="widget_header_transparency" translatable="false">widget_header_transparency</string>
     <string name="widget_background_transparency" translatable="false">widget_background_transparency</string>

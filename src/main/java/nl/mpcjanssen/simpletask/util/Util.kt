@@ -175,9 +175,30 @@ fun addInterval(dateTimeStr: String?, interval: String): DateTime? {
     return addInterval(dateTimeStr?.toDateTime(), interval)
 }
 
+fun addBusinessDays(originalDate : DateTime, days: Int): DateTime {
+    var date = originalDate
+    var amount = days
+    while (amount > 0) {
+        when (date.weekDay) {
+            6 -> { // Friday
+                date = date.plusDays(3)
+            }
+            7 -> { // Saturdau
+                date = date.plusDays(2)
+            }
+            else -> {
+                date = date.plusDays(1)
+            }
+
+        }
+        amount -= 1
+    }
+    return date
+}
+
 fun addInterval(date: DateTime?, interval: String): DateTime? {
     var newDate = date
-    val p = Pattern.compile("(\\d+)([dwmy])")
+    val p = Pattern.compile("(\\d+)([dDwWmMyYbB])")
     val m = p.matcher(interval.toLowerCase(Locale.getDefault()))
     val amount: Int
     val type: String
@@ -199,6 +220,7 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
         "w" -> newDate = newDate!!.plusDays(7 * amount)
         "m" -> newDate = newDate!!.plus(0, amount, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
         "y" -> newDate = newDate!!.plus(amount, 0, 0, 0, 0, 0, 0, DateTime.DayOverflow.LastDay)
+        "b" -> newDate = addBusinessDays(newDate!!, amount)
         else -> {
         }
     }// Dont add anything
@@ -255,6 +277,12 @@ fun initGlobals(globals: Globals, t: Task) {
     globals.set("createdate", dateStringToLuaLong(t.createDate))
     globals.set("completiondate", dateStringToLuaLong(t.completionDate))
 
+    val recPat = t.recurrencePattern
+    if (recPat == null) {
+        globals.set("recurrence", LuaValue.NIL)
+    } else {
+        globals.set("recurrence", t.recurrencePattern)
+    }
     globals.set("completed", LuaBoolean.valueOf(t.isCompleted()))
     globals.set("priority", t.priority.code)
 

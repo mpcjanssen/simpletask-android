@@ -6,7 +6,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Environment
 import android.os.FileObserver
@@ -28,7 +30,7 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
-class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreInterface.FileChangeListener) : FileStoreInterface {
+class FileStore(private val mApp: TodoApplication, private val m_fileChangedListener: FileStoreInterface.FileChangeListener) : FileStoreInterface {
 
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
@@ -39,11 +41,15 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
 
     private var fileOperationsQueue: Handler? = null
 
+
+    private lateinit var  mPrefs: SharedPreferences
+
     init {
         log = Logger
         log.info(TAG, "onCreate")
+        mPrefs = mApp.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
         observer = null
-        this.bm = LocalBroadcastManager.getInstance(ctx)
+        this.bm = LocalBroadcastManager.getInstance(mApp)
 
         // Set up the message queue
         val t = Thread(Runnable {
@@ -53,6 +59,13 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
         })
         t.start()
     }
+
+    override val isOnline: Boolean
+        get() {
+            val cm = mApp.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val netInfo = cm.activeNetworkInfo
+            return netInfo != null && netInfo.isConnected
+        }
 
     override var isAuthenticated: Boolean = false
 
@@ -143,6 +156,19 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
         dialog.createFileDialog(act, this)
     }
 
+    private fun setChangesPending(pending: Boolean) {
+        if (mPrefs == null) {
+            log.error(TAG, "Couldn't save pending changes, mPrefs == null")
+            return
+        }
+        if (pending) {
+            log.info(TAG, "Changes are pending")
+        }
+        val edit = mPrefs.edit()
+        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit()
+        mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
+    }
+
     @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String) {
         log.info(TAG, "Saving tasks to file: {}" + path)
         backup?.backup(path, join(lines, "\n"))
@@ -154,13 +180,15 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
                 writeToFile(join(lines, eol) + eol, File(path), false)
             } catch (e: IOException) {
                 e.printStackTrace()
-                bm.sendBroadcast(Intent(Constants.BROADCAST_FILE_WRITE_FAILED))
+                setChangesPending(true)
             } finally {
                 obs?.delayedStartListen(1000)
             }
         })
 
     }
+
+
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
         log.info(TAG, "Appending tasks to file: " + path)
@@ -171,7 +199,7 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
                 writeToFile(join(lines, eol) + eol, File(path), true)
             } catch (e: IOException) {
                 e.printStackTrace()
-                bm.sendBroadcast(Intent(Constants.BROADCAST_FILE_WRITE_FAILED))
+                setChangesPending(true)
             }
 
             bm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
@@ -353,6 +381,8 @@ class FileStore(val ctx: Context, private val m_fileChangedListener: FileStoreIn
 
     companion object {
 
+        private val CACHE_PREFS = "toodledoMeta"
+        private val LOCAL_CHANGES_PENDING = "localChangesPending"
         fun getDefaultPath(app: TodoApplication): String {
             return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
         }

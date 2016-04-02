@@ -30,7 +30,7 @@ import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
 class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterface.FileChangeListener) : FileStoreInterface {
-
+    override val isOnline = true
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
     private val log: Logger
@@ -157,7 +157,6 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
                 writeToFile(join(lines, eol) + eol, File(path), false)
             } catch (e: IOException) {
                 e.printStackTrace()
-                bm.sendBroadcast(Intent(Constants.BROADCAST_FILE_WRITE_FAILED))
             } finally {
                 obs?.delayedStartListen(1000)
             }
@@ -174,7 +173,6 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
                 writeToFile(join(lines, eol) + eol, File(path), true)
             } catch (e: IOException) {
                 e.printStackTrace()
-                bm.sendBroadcast(Intent(Constants.BROADCAST_FILE_WRITE_FAILED))
             }
 
             bm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))

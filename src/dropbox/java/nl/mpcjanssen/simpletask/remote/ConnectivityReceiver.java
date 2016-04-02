@@ -18,6 +18,6 @@ public class ConnectivityReceiver extends BroadcastReceiver {
         TodoApplication mApp = ((TodoApplication) context.getApplicationContext());
         FileStore store =  (FileStore) mApp.getFileStore();
         log.debug(TAG, "Connectivity changed {}" + intent);
-        store.changedConnectionState(intent);
+        store.changedConnectionState();
     }
 }

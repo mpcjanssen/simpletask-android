@@ -41,6 +41,7 @@ import nl.mpcjanssen.simpletask.util.*
 
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -58,7 +59,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     private var loadQueued = false
 
 
-    var todoItems: MutableList<TodoListItem>? = null
+    var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
 
     init {
         // Set up the message queue
@@ -94,7 +95,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun firstLine(): Int {
-        val items = todoItems ?: ArrayList<TodoListItem>()
+        val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
         if (items.size > 0) {
             return items[0].line
         } else {
@@ -103,7 +104,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun lastLine(): Int {
-        val items = todoItems ?: ArrayList<TodoListItem>()
+        val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
         if (items.size > 0) {
             return items[0].line
         } else {
@@ -225,7 +226,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             for (item in items) {
                 val task = item.task
                 task.priority = prio
-
             }
         })
     }
@@ -283,9 +283,10 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         loadQueued = true
         val r = Runnable {
             try {
-                todoItems = fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
+                todoItems = CopyOnWriteArrayList<TodoListItem>(
+                fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
                     TodoListItem(line,Task(text))
-                }.toMutableList()
+                })
             } catch (e: Exception) {
                 e.printStackTrace()
 
@@ -322,7 +323,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()
-                showToastLong(TodoApplication.appContext, R.string.write_failed)
             }
         })
 
