@@ -53,38 +53,44 @@ class AddTaskBackground : Activity() {
         val action = intent.action
 
         val append_text = m_app.shareAppendText
-        if (Intent.ACTION_SEND == action) {
-            log.debug(TAG, "Share")
-            var share_text = ""
-            if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-                val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
-                try {
-                    val `is` = contentResolver.openInputStream(uri)
-                    share_text = `is`.reader().readText()
-                    `is`.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
+        if (intent.type.startsWith("text/")) {
+            if (Intent.ACTION_SEND == action) {
+                log.debug(TAG, "Share")
+                var share_text = ""
+                if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+                    val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
+                    try {
+                        val `is` = contentResolver.openInputStream(uri)
+                        share_text = `is`.reader().readText()
+                        `is`.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+                    val text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+                    if (text != null) {
+                        share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString()
+                    }
+                }
+                addBackgroundTask(share_text, append_text)
+            } else if ("com.google.android.gm.action.AUTO_SEND" == action) {
+                // Called as note to self from google search/now
+                noteToSelf(intent, append_text)
+
+            } else if (Constants.INTENT_BACKGROUND_TASK == action) {
+                log.debug(TAG, "Adding background task")
+                if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
+                    addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
+                } else {
+                    log.warn(TAG, "Task was not in extras")
                 }
 
-            } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-                val text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-                if (text != null) {
-                    share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString()
-                }
             }
-            addBackgroundTask(share_text, append_text)
-        } else if ("com.google.android.gm.action.AUTO_SEND" == action) {
-            // Called as note to self from google search/now
-            noteToSelf(intent, append_text)
-
-        } else if (Constants.INTENT_BACKGROUND_TASK == action) {
-            log.debug(TAG, "Adding background task")
-            if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
-                addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
-            } else {
-                log.warn(TAG, "Task was not in extras")
-            }
-
+        } else {
+            val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            log.info(TAG, "Added link to content: ${imageUri.toString()}")
+            addBackgroundTask(imageUri.toString(), append_text)
         }
     }
 

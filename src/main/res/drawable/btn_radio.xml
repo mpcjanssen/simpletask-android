@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          android:constantSize="true">
+
+    <item app:state_indeterminate="true" android:drawable="@drawable/ic_radio_indeterminate" />
+    <item android:state_checked="true" android:drawable="@drawable/btn_radio_to_off_mtrl_000" />
+    <item android:drawable="@drawable/btn_radio_to_on_mtrl_000" />
+</selector>

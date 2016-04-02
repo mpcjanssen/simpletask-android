@@ -144,6 +144,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_append_text_title">Background tag</string>
     <string name="share_task_append_text_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
+    <string name="local_file_root_title">File link root</string>
+    <string name="local_file_root_summary">Root path from where to resolve root://.... links.</string>
+
+
     <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
     <string name="back_saves_pref_title">Back button</string>
     <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
@@ -329,6 +333,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_addtask_name">Add to Simpletask</string>
 
     <string name="none">none</string>
+    <string name="keep">keep</string>
+    <string name="all">all</string>
+
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d days ago</string>
     <string name="dates_one_day_ago">1 day ago</string>
@@ -401,7 +408,10 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="name">Name</string>
     <string name="date">Date</string>
-
+    <string name="back_clears_filter_title">Back clears filter</string>
+    <string name="back_clears_filter_summary">If enabled, the first press of the back button clears the active filter and only the second press exits the app.</string>
+    <string name="experimental_title">Experimental</string>
+    <string name="experimental_summary">Enable experimental features</string>
 
 
 </resources>

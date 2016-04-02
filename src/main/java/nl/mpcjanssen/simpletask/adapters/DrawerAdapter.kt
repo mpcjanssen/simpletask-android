@@ -55,11 +55,11 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+        var view = convertView
         val tv: TextView
         if (isHeader(position)) {
-            convertView = m_inflater.inflate(R.layout.drawer_list_header, parent, false)
-            tv = convertView as TextView
+            view = m_inflater.inflate(R.layout.drawer_list_header, parent, false)
+            tv = view as TextView
             val lv = parent as ListView
             if (lv.isItemChecked(position)) {
                 tv.text = items[position] + " inverted"
@@ -68,14 +68,14 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
             }
 
         } else {
-            if (convertView == null) {
-                convertView = m_inflater.inflate(R.layout.drawer_list_item_checked, parent, false)
+            if (view == null) {
+                view = m_inflater.inflate(R.layout.drawer_list_item_checked, parent, false)
             }
-            tv = convertView as TextView
+            tv = view as TextView
             tv.text = items[position].substring(1)
         }
 
-        return convertView
+        return view
     }
 
     override fun getItemViewType(position: Int): Int {

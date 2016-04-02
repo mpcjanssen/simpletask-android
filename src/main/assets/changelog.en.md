@@ -1,6 +1,36 @@
 ﻿Changelog
 =========
 
+7.1.0
+-----
+
+- Use proper tri-state checkbox instead of colored radiobuttons. Fixes #395.
+
+7.0.16
+------
+
+- Add tristate buttons for lists and tags selection. Fixes #149.
+- Indicate connectivity and Dropbox pending changes with UI elements instead of chatty toasts. Implements #388.
+- Add a task with a Floating Action Button. Implements #385.
+- Allow linking to any shareable content. Implements #393.
+
+7.0.15
+------
+
+- Copy the todo item collection when modifying to prevent `ConcurrentModification` exceptions.
+
+7.0.14
+------
+
+- Add support for `rec:..b` to recur by weekdays.
+- Fill `recurrence` variable in Lua as documented. Fixes #371.
+- Added support for local `file://` links. Fixes #376.
+- Merged: Updated German translation (twckr #375).
+- Don't trim whitespace of tasks to retain indentation.
+- Hopefully fixed crashes on some Samsung 4.2.2 devices.
+- Fix crash when adding tags or list to an empty task in the AddTask screen.
+- Merged: Initial Polish translation (GarciaPL #377).
+
 7.0.13
 ------
 

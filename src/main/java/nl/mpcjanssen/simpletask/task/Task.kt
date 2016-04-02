@@ -172,7 +172,13 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun removeTag(tag: String) {
         tokens = tokens.filter {
-            if ((it is TagToken || it is ListToken) && it.text == tag) false else true
+            if ((it is TagToken) && it.value == tag) false else true
+        }
+    }
+
+    fun removeList(list: String) {
+        tokens = tokens.filter {
+            if ((it is ListToken) && (it.value == list)) false else true
         }
     }
 
@@ -348,16 +354,16 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     companion object {
         var TAG = Task::class.java.simpleName
         const val DATE_FORMAT = "YYYY-MM-DD"
-        private val MATCH_LIST = Regex("@(\\S*)")
-        private val MATCH_TAG = Regex("\\+(\\S*)")
+        private val MATCH_LIST = Regex("@(\\S+)")
+        private val MATCH_TAG = Regex("\\+(\\S+)")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
         private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyY])")
+        private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
         private val MATCH_PHONE_NUMBER = Regex("[0\\+]?[0-9,#]{4,}")
-        private val MATCH_LINK = Regex("(http|https|todo)://[\\w\\-_./]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-@?^=%&amp;/~\\+#])?")
+        private val MATCH_URI = Regex("[a-z]+://(\\S+)")
         private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
@@ -423,7 +429,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     tokens.add(PhoneToken(lexeme))
                     return@forEach
                 }
-                MATCH_LINK.matchEntire(lexeme)?.let {
+                MATCH_URI.matchEntire(lexeme)?.let {
                     tokens.add(LinkToken(lexeme))
                     return@forEach
                 }
