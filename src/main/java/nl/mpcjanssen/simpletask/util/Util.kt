@@ -382,7 +382,7 @@ fun restartToIntent(context: Context, restartIntent: Intent): Unit {
     //val restartIntent = context.packageManager.getLaunchIntentForPackage(context.packageName);
     val pendingIntent = PendingIntent.getActivity(
             context, 0,
-            restartIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            restartIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
     manager.set(AlarmManager.RTC, System.currentTimeMillis() + 10, pendingIntent);
     System.exit(2);
