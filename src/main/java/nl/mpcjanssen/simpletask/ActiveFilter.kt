@@ -414,7 +414,7 @@ class ActiveFilter {
         const val REVERSED_SORT = "-"
         const val SORT_SEPARATOR = "!"
 
-        /* Strings used in intent extras and preferences
+        /* Strings used in intent extras and other_preferences
      * Do NOT modify this without good reason.
      * Changing this will break existing shortcuts and widgets
      */

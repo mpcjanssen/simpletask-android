@@ -59,7 +59,7 @@
         일정은 여러개의 목록에 오르거나 아무 숫자의 태그를 포함할 수 있음.
     </string>
 
-    <!-- preferences -->
+    <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">기록</string>
     <string name="ARCHIVE_settings_summary">완료된 일정을 done.txt에 기록하도록 설정</string>
     <string name="auto_archive_pref_title">자동 기록</string>

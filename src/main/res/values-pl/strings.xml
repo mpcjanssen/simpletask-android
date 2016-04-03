@@ -95,7 +95,7 @@ You should have received a copy of the GNU General Public License along with Tod
         listach.
     </string>
 
-    <!-- preferences -->
+    <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">Archiwum</string>
     <string name="ARCHIVE_settings_summary">Ustawienia archiwizacji zakończonych zadań w done.txt</string>
     <string name="auto_archive_pref_title">Auto archiwizacja</string>

@@ -33,6 +33,8 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.*
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 
 import nl.mpcjanssen.simpletask.util.*
@@ -42,14 +44,31 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
     private var prefs: SharedPreferences
 
+    private var app: TodoApplication
+
     init {
+        app = TodoApplication.appContext as TodoApplication
         prefs = TodoApplication.prefs
     }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
             prefs.edit().commit()
             restartToIntent(application, Intent(application, nl.mpcjanssen.simpletask.Preferences::class.java));
+        }
+        if (key.equals(getString(R.string.calendar_sync_dues)) ||
+                key.equals(getString(R.string.calendar_sync_thresholds))) {
+            if (app.isSyncDues || app.isSyncThresholds) {
+                /* Check for calendar permission */
+                val permissionCheck = ContextCompat.checkSelfPermission(app,
+                        Manifest.permission.WRITE_CALENDAR)
+
+                if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(this,
+                            arrayOf(Manifest.permission.WRITE_CALENDAR), 0);
+                }
+            }
         }
     }
 
@@ -98,6 +117,17 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
     class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
     class AboutPrefFragment : PrefFragment(R.xml.about_preferences)
+    class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
+    class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
+        override  fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            val debugPref = findPreference("debug_info")
+            debugPref.setOnPreferenceClickListener {
+                startActivity(Intent(activity, DebugInfoScreen::class.java))
+                true
+            }
+        }
+    }
 
     companion object {
         internal val TAG = Preferences::class.java.simpleName
