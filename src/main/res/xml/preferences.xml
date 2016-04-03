@@ -38,14 +38,14 @@
             android:key="@string/theme_pref_key"
             android:entries="@array/themes"
             android:entryValues="@array/theme_values"
-            android:summary="@string/theme_pref_summary"
+            android:summary="%s"
             android:title="@string/theme_pref_title"/>
         <ListPreference
             android:defaultValue="medium"
             android:entries="@array/fontsize"
             android:entryValues="@array/fontsize_values"
             android:key="fontsize"
-            android:summary="@string/font_size_delta_pref_summary"
+            android:summary="%s"
             android:title="@string/font_size_delta_pref_title"/>
         <CheckBoxPreference
             android:defaultValue="true"
