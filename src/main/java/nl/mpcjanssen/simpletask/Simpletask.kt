@@ -42,6 +42,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import hirondelle.date4j.DateTime
+
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
@@ -763,7 +764,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     @Suppress("UNUSED")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    val savedFilter: ArrayList<ActiveFilter>
+    val savedFilters: ArrayList<ActiveFilter>
         get() {
             val saved_filters = ArrayList<ActiveFilter>()
             val saved_filter_ids = getSharedPreferences("filters", Context.MODE_PRIVATE)
@@ -778,6 +779,21 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             return saved_filters
         }
 
+    /**
+     * Handle filter import and export
+     */
+
+    @Suppress("UNUSED")
+    fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+        savedFilters.forEach {
+            val filter_pref = getSharedPreferences(it.prefName, Context.MODE_PRIVATE)
+            val build = AlertDialog.Builder(this)
+            build.setTitle("${it.name}: ${it.prefName}")
+            build.setMessage(filter_pref.all.values.joinToString ("\n"))
+            build.show()
+        }
+
+    }
     /**
      * Handle add filter click *
      */
@@ -804,20 +820,24 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             if (value == "") {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
-                val saved_filters = getSharedPreferences("filters", Context.MODE_PRIVATE)
-                val newId = saved_filters.getInt("max_id", 1) + 1
-                val filters = saved_filters.getStringSet("ids", HashSet<String>())
-                filters.add("filter_" + newId)
-                saved_filters.edit().putStringSet("ids", filters).putInt("max_id", newId).apply()
-                val test_filter_prefs = getSharedPreferences("filter_" + newId, Context.MODE_PRIVATE)
-                mFilter!!.name = value
-                mFilter!!.saveInPrefs(test_filter_prefs)
+                saveFilterInPrefs(value, mFilter!!)
                 updateRightDrawer()
             }
         }
 
         alert.setNegativeButton("Cancel") { dialog, whichButton -> }
         alert.show()
+    }
+
+    private fun saveFilterInPrefs(name: String, filter: ActiveFilter) {
+        val saved_filters = getSharedPreferences("filters", Context.MODE_PRIVATE)
+        val newId = saved_filters.getInt("max_id", 1) + 1
+        val filters = saved_filters.getStringSet("ids", HashSet<String>())
+        filters.add("filter_" + newId)
+        saved_filters.edit().putStringSet("ids", filters).putInt("max_id", newId).apply()
+        val test_filter_prefs = getSharedPreferences("filter_" + newId, Context.MODE_PRIVATE)
+        filter.name = name
+        filter.saveInPrefs(test_filter_prefs)
     }
 
     override fun onBackPressed() {
@@ -899,7 +919,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun updateRightDrawer() {
         val names = ArrayList<String>()
-        val filters = savedFilter
+        val filters = savedFilters
         Collections.sort(filters) { f1, f2 -> f1.name!!.compareTo(f2.name!!, ignoreCase = true) }
         for (f in filters) {
             names.add(f.name!!)

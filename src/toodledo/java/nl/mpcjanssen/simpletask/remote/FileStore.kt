@@ -67,7 +67,10 @@ class FileStore(private val mApp: TodoApplication, private val m_fileChangedList
             return netInfo != null && netInfo.isConnected
         }
 
-    override var isAuthenticated: Boolean = false
+    override val isAuthenticated: Boolean
+    get() {
+        return false
+    }
 
     fun queueRunnable(description: String, r: Runnable) {
         log.info(TAG, "Handler: Queue " + description)
