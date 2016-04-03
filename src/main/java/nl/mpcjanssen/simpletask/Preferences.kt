@@ -48,7 +48,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
-            finish()
+            prefs.edit().commit()
             restartToIntent(application, Intent(application, nl.mpcjanssen.simpletask.Preferences.javaClass));
         }
     }
