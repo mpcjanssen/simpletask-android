@@ -101,10 +101,16 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         }
     }
 
+    class WidgetPrefFragment : PreferenceFragment() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.widget_preferences)
+        }
+    }
+
     companion object {
         internal val TAG = Preferences::class.java.simpleName
-        const val RESULT_LOGOUT = Activity.RESULT_FIRST_USER + 1
-        const val RESULT_ARCHIVE = Activity.RESULT_FIRST_USER + 2
+
         const val RESULT_RECREATE_ACTIVITY = Activity.RESULT_FIRST_USER + 3
     }
 }
