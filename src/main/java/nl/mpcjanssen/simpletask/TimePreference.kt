@@ -36,7 +36,7 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
     private var m_minutes = 0
     private var m_picker: android.widget.TimePicker? = null
 
-    // Constructor is used from preferences.xml
+    // Constructor is used from other_preferences.xmles.xml
     @SuppressWarnings("unused")
     constructor(ctx: Context) : this(ctx, null) {
     }

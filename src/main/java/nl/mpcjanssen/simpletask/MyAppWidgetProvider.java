@@ -111,7 +111,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         Logger log = Logger.INSTANCE;
         for (int widgetId : appWidgetIds) {
             log.debug(TAG, "cleaning up widget configuration id:" + widgetId);
-            // At least clear contents of the preferences file
+            // At least clear contents of the other_preferences file
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
             preferences.edit().clear().apply();
             File prefs_path = new File(context.getFilesDir(), "../shared_prefs");

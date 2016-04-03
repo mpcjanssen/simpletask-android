@@ -63,7 +63,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     private fun loadContentsFromCache(): String {
         if (mPrefs == null) {
-            log.warn(TAG, "Couldn't load cache from preferences, mPrefs == null")
+            log.warn(TAG, "Couldn't load cache from other_preferences, mPrefs == null")
             return ""
         }
         return mPrefs.getString(LOCAL_CONTENTS, "")

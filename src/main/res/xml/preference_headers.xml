@@ -10,8 +10,15 @@
         android:fragment="nl.mpcjanssen.simpletask.Preferences$WidgetPrefFragment"
         android:title="@string/preference_widget" />
     <header
+        android:fragment="nl.mpcjanssen.simpletask.Preferences$CalendarPrefFragment"
+        android:title="@string/calendar_sync_screen_title" />
+    <header
+        android:fragment="nl.mpcjanssen.simpletask.Preferences$OtherPrefFragment"
+        android:title="Other" />
+    <header
         android:fragment="nl.mpcjanssen.simpletask.FlavourPrefFragment"
         android:title="@string/flavour_settings_label" />
+
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$AboutPrefFragment"
         android:title="@string/about_settings_header" />
