@@ -94,6 +94,13 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         }
     }
 
+    class InterfacePrefFragment : PreferenceFragment() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.interface_preferences)
+        }
+    }
+
     companion object {
         internal val TAG = Preferences::class.java.simpleName
         const val RESULT_LOGOUT = Activity.RESULT_FIRST_USER + 1
