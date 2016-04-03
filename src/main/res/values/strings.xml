@@ -294,6 +294,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_clear_all">Clear filter</string>
     <string name="filter_invert">Invert filter</string>
     <string name="add_filter_shortcut">To homescreen</string>
+    <string name="export_filter">Export</string>
+    <string name="import_filter">Import</string>
     <string name="rename_filter">Rename</string>
     <string name="rename_filter_message">Enter new name of the saved filter:</string>
     <string name="update_filter">Update</string>

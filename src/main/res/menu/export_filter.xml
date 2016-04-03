@@ -1,0 +1,16 @@
+<!--suppress ALL -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_export_filter_import"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/import_filter"/>
+    <item
+        android:id="@+id/menu_export_filter_export"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/export_filter"/>
+</menu>

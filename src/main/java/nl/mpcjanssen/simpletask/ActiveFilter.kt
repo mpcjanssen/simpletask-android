@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
+import org.json.JSONObject
 import org.luaj.vm2.*
 import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.jse.JsePlatform
@@ -49,6 +50,50 @@ class ActiveFilter {
 
     init {
         log = Logger
+    }
+
+    fun initFromJSON(json: JSONObject) {
+        val prios: String?
+        val projects: String?
+        val contexts: String?
+        val sorts: String?
+
+        prios = json.optString(INTENT_PRIORITIES_FILTER)
+        projects = json.optString(INTENT_PROJECTS_FILTER)
+        contexts = json.optString(INTENT_CONTEXTS_FILTER)
+        sorts = json.optString(INTENT_SORT_ORDER)
+
+        script = json.optString(INTENT_SCRIPT_FILTER)
+        scriptTestTask = json.optString(INTENT_SCRIPT_TEST_TASK_FILTER)
+
+        prioritiesNot = json.optBoolean(INTENT_PRIORITIES_FILTER_NOT)
+        projectsNot = json.optBoolean(INTENT_PROJECTS_FILTER_NOT)
+        contextsNot = json.optBoolean(INTENT_CONTEXTS_FILTER_NOT)
+        hideCompleted = json.optBoolean(INTENT_HIDE_COMPLETED_FILTER)
+        hideFuture = json.optBoolean(
+                INTENT_HIDE_FUTURE_FILTER)
+        hideLists = json.optBoolean(
+                INTENT_HIDE_LISTS_FILTER)
+        hideTags = json.optBoolean(
+                INTENT_HIDE_TAGS_FILTER)
+        hideCreateDate = json.optBoolean(
+                INTENT_HIDE_CREATE_DATE_FILTER)
+        hideHidden = json.optBoolean(
+                INTENT_HIDE_HIDDEN_FILTER)
+        search = json.optString(SearchManager.QUERY)
+        if (sorts != null && sorts != "") {
+            m_sorts = ArrayList(
+                    Arrays.asList(*sorts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+        }
+        if (prios != null && prios != "") {
+            priorities = Priority.toPriority(Arrays.asList(*prios.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+        }
+        if (projects != null && projects != "") {
+            this.projects = ArrayList(Arrays.asList(*projects.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+        }
+        if (contexts != null && contexts != "") {
+            this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+        }
     }
 
     fun initFromIntent(intent: Intent) {
@@ -205,6 +250,26 @@ class ActiveFilter {
             target.putExtra(INTENT_SCRIPT_FILTER, script)
             target.putExtra(SearchManager.QUERY, search)
         }
+    }
+
+    fun saveInJSON(json: JSONObject) {
+        json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
+        json.put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
+        json.put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
+        json.put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
+        json.put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
+        json.put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
+        json.put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
+        json.put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
+        json.put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
+        json.put(INTENT_HIDE_LISTS_FILTER, hideLists)
+        json.put(INTENT_HIDE_TAGS_FILTER, hideTags)
+        json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
+        json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
+        json.put(INTENT_SCRIPT_FILTER, script)
+
+
+        json.put(SearchManager.QUERY, search)
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {

@@ -104,14 +104,8 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
         log.info(TAG, "Reading file: {}" + file)
         isLoading = true
         var contents : String
-        try {
-            contents = join(loadFromFile(File(file)), "\n")
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return ""
-        } finally {
-            isLoading = false
-        }
+        contents = join(loadFromFile(File(file)), "\n")
+        isLoading = false
         fileRead?.fileRead(contents)
         return contents
     }

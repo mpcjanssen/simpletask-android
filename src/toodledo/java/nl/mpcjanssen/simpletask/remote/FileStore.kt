@@ -31,6 +31,9 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 class FileStore(private val mApp: TodoApplication, private val m_fileChangedListener: FileStoreInterface.FileChangeListener) : FileStoreInterface {
+    override fun writeFile(file: File, contents: String) {
+        throw UnsupportedOperationException()
+    }
 
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
