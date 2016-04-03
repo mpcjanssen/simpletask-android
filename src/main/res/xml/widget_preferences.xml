@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="light_darkactionbar"
+        android:entries="@array/themes"
+        android:entryValues="@array/theme_values"
+        android:key="@string/widget_theme_pref_key"
+        android:summary="%s"
+        android:title="@string/widget_theme_pref_title"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/widget_extended_pref_key"
+        android:summary="@string/widget_extended_pref_summary"
+        android:title="@string/widget_extended_pref_title"/>
+    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+        android:key="@string/widget_header_transparency"
+        android:title="@string/widget_header_transparency_title"
+        android:summary=""
+        android:defaultValue="0"
+        android:max="100"
+        robobunny:min="0"
+        robobunny:unitsLeft=""
+        robobunny:unitsRight="%"/>
+    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+        android:key="@string/widget_background_transparency"
+        android:title="@string/widget_background_transparency_title"
+        android:summary=""
+        android:defaultValue="0"
+        android:max="100"
+        robobunny:min="0"
+        robobunny:unitsLeft=""
+        robobunny:unitsRight="%"/>
+    </PreferenceScreen>

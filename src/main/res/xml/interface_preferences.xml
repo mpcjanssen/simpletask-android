@@ -6,20 +6,20 @@
         android:entryValues="@array/task_text_ellipsizing_values"
         android:key="@string/task_text_ellipsizing_pref_key"
         android:summary="%s"
-        android:title="@string/task_text_ellipsizing_pref_title"/>
-        <CheckBoxPreference
+        android:title="@string/task_text_ellipsizing_pref_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/show_todo_path"
+        android:summary="@string/show_todo_path_summary"
+        android:title="@string/show_todo_path_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/show_txt_only"
+        android:summary="@string/show_txt_only_summary"
+        android:title="@string/show_txt_only_pref_title" />
+    <CheckBoxPreference
         android:defaultValue="true"
-        android:key="@string/widget_extended_pref_key"
-        android:summary="@string/widget_extended_pref_summary"
-        android:title="@string/widget_extended_pref_title"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/show_todo_path"
-            android:summary="@string/show_todo_path_summary"
-            android:title="@string/show_todo_path_title"/>
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/taskview_extended_pref_key"
-            android:summary="@string/taskview_extended_pref_summary"
-            android:title="@string/taskview_extended_pref_title"/>
-    </PreferenceScreen>
+        android:key="@string/taskview_extended_pref_key"
+        android:summary="@string/taskview_extended_pref_summary"
+        android:title="@string/taskview_extended_pref_title" />
+</PreferenceScreen>
