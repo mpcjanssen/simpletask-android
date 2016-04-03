@@ -53,6 +53,7 @@ import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
+import org.json.JSONObject
 
 import java.io.File
 import java.util.*
@@ -785,13 +786,16 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     @Suppress("UNUSED")
     fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+        val jsonFilters = JSONObject()
         savedFilters.forEach {
             val filter_pref = getSharedPreferences(it.prefName, Context.MODE_PRIVATE)
-            val build = AlertDialog.Builder(this)
-            build.setTitle("${it.name}: ${it.prefName}")
-            build.setMessage(filter_pref.all.values.joinToString ("\n"))
-            build.show()
+            val jsonItem = JSONObject(filter_pref.all)
+            jsonFilters.put(it.name,jsonItem)
         }
+        val build = AlertDialog.Builder(this)
+        build.setTitle("Saved filters JSON")
+        build.setMessage(jsonFilters.toString(2))
+        build.show()
 
     }
     /**
