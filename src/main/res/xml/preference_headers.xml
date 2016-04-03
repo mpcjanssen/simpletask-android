@@ -12,4 +12,7 @@
     <header
         android:fragment="nl.mpcjanssen.simpletask.FlavourPrefFragment"
         android:title="@string/flavour_settings_label" />
+    <header
+        android:fragment="nl.mpcjanssen.simpletask.Preferences$AboutPrefFragment"
+        android:title="@string/about_settings_header" />
 </preference-headers>

@@ -135,30 +135,7 @@
                 android:summary="@string/archive_now_pref_summary"
                 android:title="@string/archive_now_pref_title"/>
     </PreferenceCategory>
-    <PreferenceCategory
-            android:title="@string/about_settings_header"
-            android:key="about">
-        <Preference
-                android:key="share_history"
-                android:title="@string/share_history_title"
-                android:summary="@string/share_history"/>
-        <Preference
-                android:title="@string/donate_title"
-                android:key="donate"
-                android:summary="@string/donate_summary">
-            <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"/>
-        </Preference>
-        <Preference
-                android:title="@string/donate_title"
-                android:key="donated"
-                android:summary="@string/donated_summary">
-            <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"/>
-        </Preference>
-    </PreferenceCategory>
+
     <PreferenceCategory
             android:title="@string/experimental_title"
             android:summary="@string/experimental_summary"
