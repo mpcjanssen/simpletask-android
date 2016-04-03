@@ -3,4 +3,7 @@
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$AppearancePrefFragment"
         android:title="@string/preference_appearance" />
+    <header
+        android:fragment="nl.mpcjanssen.simpletask.Preferences$InterfacePrefFragment"
+        android:title="@string/todotxt_ui_settings_header" />
 </preference-headers>
