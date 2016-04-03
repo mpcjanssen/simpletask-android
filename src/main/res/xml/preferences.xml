@@ -215,9 +215,6 @@
             android:title="@string/about_settings_header"
             android:key="about">
         <Preference
-                android:key="app_version"
-                android:summary="@string/click_to_copy"/>
-        <Preference
                 android:key="share_history"
                 android:title="@string/share_history_title"
                 android:summary="@string/share_history"/>
@@ -273,9 +270,9 @@
                 android:summary="@string/back_clears_filter_summary"
                 android:title="@string/back_clears_filter_title"/>
         <Preference
-                android:title="View log"
-                android:key="send_log"
-                android:summary="View and share the application log for debugging purposes.">
+                android:title="View Debug Information"
+                android:key="debug_ingo"
+                android:summary="View and share the application version and log for debugging purposes.">
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

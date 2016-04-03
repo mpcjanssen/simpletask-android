@@ -112,7 +112,7 @@ public class HistoryScreen extends ThemedActivity {
                         if (cursor.getCount()==0) {
                             Util.showToastShort(HistoryScreen.this, "Nothing to share");
                         } else {
-                            Util.shareText(HistoryScreen.this, getCurrentFileContents());
+                            Util.shareText(HistoryScreen.this, "Old todo version", getCurrentFileContents());
                         }
                         return true;
                     case R.id.menu_share_database:

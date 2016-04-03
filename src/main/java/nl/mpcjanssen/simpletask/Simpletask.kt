@@ -84,6 +84,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         super.onCreate(savedInstanceState)
         log = Logger
         log!!.info(TAG, "onCreate")
+        log!!.info(TAG, "Started ${appVersion(this)}")
         m_app = application as TodoApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
@@ -616,7 +617,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 text.append(task.task.showParts(format)).append("\n")
             }
         }
-        shareText(this, text.toString())
+        shareText(this, "Simpletask list", text.toString())
     }
 
 
@@ -1178,7 +1179,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 }
                 R.id.share -> {
                     val shareText = selectedTasksAsString()
-                    shareText(this@Simpletask, shareText)
+                    shareText(this@Simpletask, "Simpletask tasks", shareText)
                 }
                 R.id.calendar -> {
                     var calendarTitle = getString(R.string.calendar_title)
