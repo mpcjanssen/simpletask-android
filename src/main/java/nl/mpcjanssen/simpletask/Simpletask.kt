@@ -56,6 +56,7 @@ import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 
 import java.io.File
+import java.io.IOException
 import java.util.*
 
 
@@ -786,13 +787,50 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     @Suppress("UNUSED")
     fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+        val popupMenu = PopupMenu(this@Simpletask, v)
+        popupMenu.setOnMenuItemClickListener { item ->
+            val menuId = item.itemId
+            when (menuId) {
+                R.id.menu_export_filter_export -> exportFilters(File(m_app.todoFile.parent, "saved_filters.txt"))
+                R.id.menu_export_filter_import -> importFilters(File(m_app.todoFile.parent, "saved_filters.txt"))
+                else -> {
+                }
+            }
+            true
+        }
+        val inflater = popupMenu.menuInflater
+        inflater.inflate(R.menu.export_filter, popupMenu.menu)
+        popupMenu.show()
+
+
+    }
+    fun importFilters (importFile: File) {
+        val r = Runnable() {
+            try {
+                val contents = fileStore.readFile(importFile.canonicalPath, null)
+                val jsonFilters = JSONObject(contents)
+                jsonFilters.keys().forEach {
+                    val filter = ActiveFilter()
+                    filter.initFromJSON(jsonFilters.getJSONObject(it))
+                    saveFilterInPrefs(it,filter)
+                }
+                localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+            } catch (e: IOException) {
+                log!!.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
+                showToastLong(this, "Error reading file ${importFile.canonicalPath}")
+            }
+        }
+        Thread(r).start()
+    }
+
+    fun exportFilters (exportFile: File) {
         val jsonFilters = JSONObject()
         savedFilters.forEach {
-            val filter_pref = getSharedPreferences(it.prefName, Context.MODE_PRIVATE)
-            val jsonItem = JSONObject(filter_pref.all)
+            val jsonItem = JSONObject()
+            it.saveInJSON(jsonItem)
             jsonFilters.put(it.name,jsonItem)
         }
-        fileStore.writeFile(File(m_app.todoFile.parent, "saved_filters.txt"),jsonFilters.toString(2))
+        fileStore.writeFile(exportFile,jsonFilters.toString(2))
     }
     /**
      * Handle add filter click *
