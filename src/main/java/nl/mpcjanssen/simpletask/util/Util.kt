@@ -28,7 +28,9 @@ package nl.mpcjanssen.simpletask.util
 
 
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -374,6 +376,16 @@ fun appVersion (ctx: Context) :String {
     val packageInfo = ctx.packageManager.getPackageInfo(
             ctx.packageName, 0)
     return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
+}
+
+fun restartToIntent(context: Context, restartIntent: Intent): Unit {
+    //val restartIntent = context.packageManager.getLaunchIntentForPackage(context.packageName);
+    val pendingIntent = PendingIntent.getActivity(
+            context, 0,
+            restartIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
+    manager.set(AlarmManager.RTC, System.currentTimeMillis() + 1, pendingIntent);
+    System.exit(2);
 }
 
 fun shareText(act: Activity, subject: String,  text: String) {
