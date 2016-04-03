@@ -33,7 +33,7 @@ class OAuthActivity : ThemedActivity() {
         getParams.add(Pair("response_type", "code"))
         getParams.add(Pair("client_id", apiKey))
         getParams.add(Pair("state", state))
-        getParams.add(Pair("scope", "basic tasks"))
+        getParams.add(Pair("scope", "basic tasks write"))
 
         val authorizationUrl = RestClient.getUrl("https://api.toodledo.com/3/account/authorize.php", getParams)
 
