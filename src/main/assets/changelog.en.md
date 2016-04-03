@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+7.1.1
+
+- Updated to Kotlin 1.0.1.
+- Export and import saved filters in `saved_filters.txt` in the same directory as the `todo.txt` file. Fixes #101.
+- Move Floating Action Button in AddTask to fix #397.
+
 7.1.0
 -----
 

@@ -30,9 +30,7 @@ package nl.mpcjanssen.simpletask
 import android.Manifest
 import android.app.Activity
 import android.content.*
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceCategory
@@ -76,15 +74,6 @@ class Preferences : ThemedActivity() {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.preferences)
             addPreferencesFromResource(R.xml.flavourpreferences)
-            val packageInfo: PackageInfo
-            val versionPref = findPreference("app_version")
-            try {
-                packageInfo = activity.packageManager.getPackageInfo(
-                        activity.packageName, 0)
-                versionPref.title = "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
-            } catch (e: NameNotFoundException) {
-                e.printStackTrace()
-            }
 
             m_app = activity.application as TodoApplication
             val toHide: Preference
@@ -158,7 +147,7 @@ class Preferences : ThemedActivity() {
                                 RESULT_LOGOUT)
                     }, R.string.dropbox_logout_pref_title)
                 }
-                "send_log" -> startActivity(Intent(activity, LogScreen::class.java))
+                "send_log" -> startActivity(Intent(activity, DebugInfoScreen::class.java))
                 "share_history" -> startActivity(Intent(this.activity, HistoryScreen::class.java))
                 "app_version" -> {
                     val clipboard = m_app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

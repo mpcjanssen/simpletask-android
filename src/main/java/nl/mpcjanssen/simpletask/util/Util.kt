@@ -370,12 +370,18 @@ fun sortWithPrefix(items: Set<String>, caseSensitive: Boolean, prefix: String?):
     return sortWithPrefix(temp, caseSensitive, prefix)
 }
 
-fun shareText(act: Activity, text: String) {
+fun appVersion (ctx: Context) :String {
+    val packageInfo = ctx.packageManager.getPackageInfo(
+            ctx.packageName, 0)
+    return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
+}
+
+fun shareText(act: Activity, subject: String,  text: String) {
 
     val shareIntent = Intent(android.content.Intent.ACTION_SEND)
     shareIntent.setType("text/plain")
     shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-            "Simpletask list")
+            subject)
 
     // If text is small enough SEND it directly
     if (text.length < 50000) {
