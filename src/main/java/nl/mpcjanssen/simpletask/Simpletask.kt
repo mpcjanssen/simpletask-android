@@ -792,11 +792,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             val jsonItem = JSONObject(filter_pref.all)
             jsonFilters.put(it.name,jsonItem)
         }
-        val build = AlertDialog.Builder(this)
-        build.setTitle("Saved filters JSON")
-        build.setMessage(jsonFilters.toString(2))
-        build.show()
-
+        fileStore.writeFile(File(m_app.todoFile.parent, "saved_filters.txt"),jsonFilters.toString(2))
     }
     /**
      * Handle add filter click *

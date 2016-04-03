@@ -95,6 +95,11 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
 
     }
 
+    override fun writeFile(file: File, contents: String ) {
+        log.info(TAG, "Writing file to  ${file.canonicalPath}")
+        file.writeText(contents)
+    }
+
     override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
         log.info(TAG, "Reading file: {}" + file)
         isLoading = true
