@@ -33,6 +33,8 @@ import java.util.concurrent.CopyOnWriteArrayList
  * FileStore implementation backed by Dropbox
  */
 class FileStore(private val mApp: TodoApplication, private val mFileChangedListerer: FileStoreInterface.FileChangeListener) : FileStoreInterface {
+
+
     private val log: Logger
     private val mPrefs: SharedPreferences?
     // In the class declaration section:
@@ -482,6 +484,20 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     override fun sync() {
         mFileChangedListerer.fileChanged(null)
+    }
+
+    override fun writeFile(file: File, contents: String) {
+        if (!isAuthenticated) {
+            log.error(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
+            return
+        }
+        val toStore = contents.toByteArray(charset("UTF-8"))
+        val r = Runnable {
+            val inStream = ByteArrayInputStream(toStore)
+            mDBApi?.putFileOverwrite(file.canonicalPath, inStream, toStore.size.toLong(), null)
+            inStream.close()
+        }
+        queueRunnable("Write to file ${file.canonicalPath}", r)
     }
 
     @Throws(IOException::class)
