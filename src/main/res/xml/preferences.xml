@@ -271,7 +271,7 @@
                 android:title="@string/back_clears_filter_title"/>
         <Preference
                 android:title="View Debug Information"
-                android:key="debug_ingo"
+                android:key="debug_info"
                 android:summary="View and share the application version and log for debugging purposes.">
         </Preference>
     </PreferenceCategory>
