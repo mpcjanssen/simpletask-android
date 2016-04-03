@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
+import java.io.File
 import java.io.IOException
 
 /**
@@ -25,6 +26,7 @@ interface FileStoreInterface {
     fun sync()
     @Throws(IOException::class)
     fun readFile(file: String, fileRead: FileReadListener?): String
+    fun writeFile(file: File, contents: String)
 
     fun supportsSync(): Boolean
     fun changesPending(): Boolean
