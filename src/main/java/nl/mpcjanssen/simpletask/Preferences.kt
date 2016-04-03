@@ -49,7 +49,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
             prefs.edit().commit()
-            restartToIntent(application, Intent(application, nl.mpcjanssen.simpletask.Preferences.javaClass));
+            restartToIntent(application, Intent(application, nl.mpcjanssen.simpletask.Preferences::class.java));
         }
     }
 
@@ -86,31 +86,20 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         }
     }
 
-
-    class AppearancePrefFragment : PreferenceFragment() {
+    abstract class PrefFragment(val xmlId: Int) : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            addPreferencesFromResource(R.xml.appearance_preferences)
+            addPreferencesFromResource(xmlId)
         }
+
     }
 
-    class InterfacePrefFragment : PreferenceFragment() {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            addPreferencesFromResource(R.xml.interface_preferences)
-        }
-    }
-
-    class WidgetPrefFragment : PreferenceFragment() {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            addPreferencesFromResource(R.xml.widget_preferences)
-        }
-    }
+    class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences)
+    class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
+    class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
+    class AboutPrefFragment : PrefFragment(R.xml.about_preferences)
 
     companion object {
         internal val TAG = Preferences::class.java.simpleName
-
-        const val RESULT_RECREATE_ACTIVITY = Activity.RESULT_FIRST_USER + 3
     }
 }

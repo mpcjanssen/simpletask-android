@@ -152,14 +152,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 val flags = resultCode - Activity.RESULT_FIRST_USER
                 shareTodoList(flags)
             }
-            REQUEST_PREFERENCES -> if (resultCode == Preferences.RESULT_RECREATE_ACTIVITY) {
-                val i = Intent(applicationContext, Simpletask::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                finish()
-                m_app.reloadTheme()
-                m_app.startActivity(i)
-            }
         }
     }
 
