@@ -33,81 +33,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <PreferenceCategory android:title="@string/todotxt_ui_settings_header">
-
-
-
-
-
-
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/ui_sort_case_sensitive"
-            android:summary="@string/sort_case_sensitive_summary"
-            android:title="@string/sort_case_sensitive_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/use_create_backup"
-            android:summary="@string/use_create_backup_summary"
-            android:title="@string/use_create_backup_title" />
-
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="@string/behavior_cat_key"
-        android:title="@string/todotxt_behavior_settings_header">
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/prepend_date_pref_key"
-            android:summary="@string/prepend_date_pref_summary"
-            android:title="@string/prepend_date_pref_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/back_key_saves_key"
-            android:summary="@string/back_saves_summary"
-            android:title="@string/back_saves_pref_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/line_breaks_pref_key"
-            android:summary="@string/line_breaks_pref_summary"
-            android:title="@string/line_breaks_pref_title" />
-
-        <EditTextPreference
-            android:defaultValue="/sdcard/"
-            android:key="@string/local_file_root"
-            android:summary="@string/local_file_root_summary"
-            android:title="@string/local_file_root_title" />
-        <EditTextPreference
-            android:defaultValue=""
-            android:key="@string/share_task_append_text"
-            android:summary="@string/share_task_append_text_summary"
-            android:title="@string/share_task_append_text_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/capitalize_tasks"
-            android:title="@string/capitalize_tasks_pref_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/keep_prio"
-            android:summary="@string/keep_prio_summary"
-            android:title="@string/keep_prio_header" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/append_tasks_at_end"
-            android:summary="@string/append_tasks_at_end_summary"
-            android:title="@string/append_tasks_at_end_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/ARCHIVE_settings_header">
-        <CheckBoxPreference
-            android:key="@string/auto_archive_pref_key"
-            android:summary="@string/auto_archive_pref_summary"
-            android:title="@string/auto_archive_pref_title" />
-    </PreferenceCategory>
-
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/ui_sort_case_sensitive"
+        android:summary="@string/sort_case_sensitive_summary"
+        android:title="@string/sort_case_sensitive_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/use_create_backup"
+        android:summary="@string/use_create_backup_summary"
+        android:title="@string/use_create_backup_title" />
 
 
     <Preference
@@ -118,10 +53,5 @@
         android:key="debug_info"
         android:summary="View and share the application version and log for debugging purposes."
         android:title="View Debug Information"></Preference>
-    <PreferenceCategory
-        android:key="experimental"
-        android:summary="@string/experimental_summary"
-        android:title="@string/experimental_title">
 
-    </PreferenceCategory>
 </PreferenceScreen>

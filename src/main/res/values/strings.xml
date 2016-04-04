@@ -117,8 +117,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
 
-    <string name="todotxt_featurs_settings_header">Features</string>
+    <string name="todotxt_features_settings_header">Features</string>
     <string name="todotxt_features_settings_summary">Enable or disable features</string>
+
+    <string name="todotxt_configuration_settings_header">Configuration</string>
+    <string name="todotxt_configuration_settings_summary">Configure app behavior</string>
+
+    <string name="todotxt_creation_settings_header">Task Creation</string>
 
     <string name="todotxt_ui_settings_header">User Interface</string>
     <string name="todotxt_ui_settings_summary">Control what is being displayed</string>
@@ -153,10 +158,10 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="share_task_append_text_title">Background tag</string>
-    <string name="share_task_append_text_summary">Append the configured text to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
+    <string name="share_task_append_text_summary">Append text \"%s\" to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
     <string name="local_file_root_title">File link root</string>
-    <string name="local_file_root_summary">Root path from where to resolve root://.... links.</string>
+    <string name="local_file_root_summary">Resolve root://.... links from %s.</string>
 
 
     <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
