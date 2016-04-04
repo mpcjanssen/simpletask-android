@@ -44,7 +44,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
     private var prefs: SharedPreferences
 
-    private var app: TodoApplication
+    public var app: TodoApplication
 
     init {
         app = TodoApplication.appContext as TodoApplication
@@ -116,7 +116,21 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences)
     class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
     class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
-    class AboutPrefFragment : PrefFragment(R.xml.about_preferences)
+    class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
+        var app = TodoApplication.appContext as TodoApplication
+        override  fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            val screen = preferenceScreen;
+            val toHide: Preference
+            if (app.hasDonated()) {
+                toHide = screen.findPreference("donate")
+            } else {
+                toHide = screen.findPreference("donated")
+            }
+            screen.removePreference(toHide)
+        }
+    }
+    
     class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
     class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
         override  fun onCreate(savedInstanceState: Bundle?) {
