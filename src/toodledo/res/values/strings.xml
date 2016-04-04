@@ -26,5 +26,6 @@ You should have received a copy of the GNU General Public License along with Tod
 <resources>
 
     <string name="app_label">Simpletask TD</string>
+    <string name="flavour_settings_label">Toodledo</string>
 
 </resources>
