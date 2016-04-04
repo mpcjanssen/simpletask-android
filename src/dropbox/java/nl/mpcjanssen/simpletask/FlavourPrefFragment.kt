@@ -6,7 +6,7 @@ import nl.mpcjanssen.simpletask.R
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceFragment
-import nl.mpcjanssen.simpletask.util.restartToIntent
+import android.support.v4.content.LocalBroadcastManager
 
 class FlavourPrefFragment : PreferenceFragment() {
     private val log = Logger
@@ -24,7 +24,7 @@ class FlavourPrefFragment : PreferenceFragment() {
                     DialogInterface.OnClickListener() { dialogInterface, i ->
                         app.fileStore.logout()
                         activity.finish();
-                        restartToIntent(activity, Intent(activity, Simpletask::class.java));
+                        LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_RESTART_ACTIVITY))
                     }, R.string.dropbox_logout_pref_title)
             true
         }

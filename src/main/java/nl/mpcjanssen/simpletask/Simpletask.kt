@@ -92,7 +92,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
-        intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
+        intentFilter.addAction(Constants.BROADCAST_RESTART_ACTIVITY)
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
@@ -125,7 +125,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     updateConnectivityIndicator()
                 } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     handleIntent()
-                } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
+                } else if (receivedIntent.action == Constants.BROADCAST_RESTART_ACTIVITY) {
                     val i = intent
                     i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     finish()
