@@ -26,7 +26,6 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.IntentCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
@@ -110,7 +109,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     log!!.info(TAG, "Logging out from Dropbox")
                     fileStore.logout()
                     finish()
-                    startActivity(getIntent())
+                    startActivity(intent)
                 } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                     log!!.info(TAG, "Updating UI because of broadcast")
                     if (m_adapter == null) {
@@ -128,8 +127,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     handleIntent()
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
                     val i = intent
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     finish()
                     m_app.reloadTheme()
                     m_app.startActivity(i)
