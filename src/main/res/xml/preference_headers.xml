@@ -21,6 +21,6 @@
         android:title="@string/flavour_settings_label" />
 
     <header
-        android:fragment="nl.mpcjanssen.simpletask.Preferences$AboutPrefFragment"
-        android:title="@string/about_settings_header" />
+        android:fragment="nl.mpcjanssen.simpletask.Preferences$DonatePrefFragment"
+        android:title="@string/donate_title" />
 </preference-headers>
