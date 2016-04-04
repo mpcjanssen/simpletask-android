@@ -58,9 +58,8 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
-            val intent = getIntent()
             finish();
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_THEME_CHANGED))
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_RESTART_ACTIVITY))
         }
         if (key.equals(getString(R.string.calendar_sync_dues)) ||
                 key.equals(getString(R.string.calendar_sync_thresholds))) {
