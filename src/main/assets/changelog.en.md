@@ -1,7 +1,18 @@
 ﻿Changelog
 =========
 
+7.1.2
+-----
+
+- Reorganized settings thanks to smichel17. Fixes #401.
+- Updated icons to new material colors and sizes.
+- Removed FAB in AddTask, back saves now.
+- Removed `Back saves` setting. Back always saves. The new left corner icon can be used to cancel. Fixes #389.
+- Show current selected values in settings. Fixes #404.
+
+
 7.1.1
+-----
 
 - Updated to Kotlin 1.0.1.
 - Export and import saved filters in `saved_filters.txt` in the same directory as the `todo.txt` file. Fixes #101.
