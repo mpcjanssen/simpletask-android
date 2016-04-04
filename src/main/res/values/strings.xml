@@ -101,6 +101,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preference_appearance">Appearance</string>
     <string name="preference_interface">Interface</string>
     <string name="preference_widget">Widget</string>
+    <string name="preference_other">Other</string>
 
     <string name="ARCHIVE_settings_header">Archive</string>
     <string name="ARCHIVE_settings_summary">Settings for archiving completed tasks in done.txt</string>
