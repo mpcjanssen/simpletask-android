@@ -127,6 +127,30 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
     class FeaturesPrefFragment : PrefFragment(R.xml.features_prefences)
     class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
+    class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
+
+
+
+    class ConfigurationPrefFragment : PrefFragment(R.xml.configuration_preferences) {
+        override  fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            val rootPref = findPreference(getString(R.string.local_file_root)) as EditTextPreference
+            rootPref.valueInSummary()
+            rootPref.setOnPreferenceChangeListener { preference, any ->
+                preference.summary = getString(R.string.local_file_root_summary)
+                preference.valueInSummary(any)
+                true
+            }
+            val appendTextPref = findPreference(getString(R.string.share_task_append_text)) as EditTextPreference
+            appendTextPref.valueInSummary()
+            appendTextPref.setOnPreferenceChangeListener { preference, any ->
+                preference.summary = getString(R.string.share_task_append_text_summary)
+                preference.valueInSummary(any)
+                true
+            }
+        }
+    }
+
     class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
         var app = TodoApplication.appContext as TodoApplication
         override  fun onCreate(savedInstanceState: Bundle?) {
@@ -141,8 +165,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
             screen.removePreference(toHide)
         }
     }
-    
-    class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
+
     class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
         override  fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -162,4 +185,9 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     companion object {
         internal val TAG = Preferences::class.java.simpleName
     }
+}
+
+// Helper to replace %s in all setting summaries not only ListPrefences
+fun Preference.valueInSummary(any: Any? = null) {
+    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?:  this.sharedPreferences.getString(this.key,null))
 }
