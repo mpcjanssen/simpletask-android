@@ -117,6 +117,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
 
+    <string name="todotxt_featurs_settings_header">Features</string>
+    <string name="todotxt_features_settings_summary">Enable or disable features</string>
+
     <string name="todotxt_ui_settings_header">User Interface</string>
     <string name="todotxt_ui_settings_summary">Control what is being displayed</string>
     <string name="todotxt_behavior_settings_header">Behavior</string>
