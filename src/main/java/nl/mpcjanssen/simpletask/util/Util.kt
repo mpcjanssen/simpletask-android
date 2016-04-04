@@ -378,16 +378,6 @@ fun appVersion (ctx: Context) :String {
     return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
 }
 
-fun restartToIntent(context: Context, restartIntent: Intent): Unit {
-    //val restartIntent = context.packageManager.getLaunchIntentForPackage(context.packageName);
-    val pendingIntent = PendingIntent.getActivity(
-            context, 0,
-            restartIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-    val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
-    manager.set(AlarmManager.RTC, System.currentTimeMillis() + 10, pendingIntent);
-    System.exit(2);
-}
-
 fun shareText(act: Activity, subject: String,  text: String) {
 
     val shareIntent = Intent(android.content.Intent.ACTION_SEND)
