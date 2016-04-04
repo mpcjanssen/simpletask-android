@@ -129,11 +129,6 @@
             android:key="@string/auto_archive_pref_key"
             android:summary="@string/auto_archive_pref_summary"
             android:title="@string/auto_archive_pref_title" />
-
-        <Preference
-            android:key="archive_now"
-            android:summary="@string/archive_now_pref_summary"
-            android:title="@string/archive_now_pref_title" />
     </PreferenceCategory>
 
 
