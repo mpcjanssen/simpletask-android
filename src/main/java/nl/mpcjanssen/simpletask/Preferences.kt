@@ -126,6 +126,11 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
                 startActivity(Intent(activity, DebugInfoScreen::class.java))
                 true
             }
+            val historyPref = findPreference("share_history")
+            historyPref.setOnPreferenceClickListener {
+                startActivity(Intent(activity, HistoryScreen::class.java))
+                true
+            }
         }
     }
 
