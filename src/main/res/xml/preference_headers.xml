@@ -5,7 +5,8 @@
         android:title="@string/preference_appearance" />
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$InterfacePrefFragment"
-        android:title="@string/todotxt_ui_settings_header" />
+        android:title="@string/todotxt_ui_settings_header"
+        android:summary="@string/todotxt_ui_settings_summary"/>
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$WidgetPrefFragment"
         android:title="@string/preference_widget" />

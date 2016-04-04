@@ -118,6 +118,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="DROPBOX_settings_summary">Settings for Dropbox synchronisation</string>
 
     <string name="todotxt_ui_settings_header">User Interface</string>
+    <string name="todotxt_ui_settings_summary">Control what is being displayed</string>
     <string name="todotxt_behavior_settings_header">Behavior</string>
     <string name="todotxt_settings_summary">Application wide settings</string>
     <string name="sort_complete_last_pref_title">Show completed last</string>
