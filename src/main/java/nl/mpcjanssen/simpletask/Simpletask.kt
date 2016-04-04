@@ -141,7 +141,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         // Replace drawables if the theme is dark
         if (m_app.isDarkTheme) {
             val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
-            actionBarClear?.setImageResource(R.drawable.cancel)
+            actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
         }
     }
 
