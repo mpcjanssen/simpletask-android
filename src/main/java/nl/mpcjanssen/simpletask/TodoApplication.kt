@@ -238,9 +238,6 @@ class TodoApplication : Application(),
     val isAutoArchive: Boolean
         get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
 
-    val isBackSaving: Boolean
-        get() = prefs.getBoolean(getString(R.string.back_key_saves_key), false)
-
     fun hasPrependDate(): Boolean {
         return prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
     }
