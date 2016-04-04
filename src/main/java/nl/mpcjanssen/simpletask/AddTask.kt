@@ -54,10 +54,6 @@ class AddTask : ThemedActivity() {
         val mFilter = ActiveFilter()
         mFilter.initFromIntent(intent)
 
-
-        val actionBar = actionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
@@ -77,11 +73,7 @@ class AddTask : ThemedActivity() {
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
-
-        val fab = findViewById(R.id.fab) as FloatingActionButton?
-        fab?.setOnClickListener {
-            saveTasksAndClose()
-        }
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear);
 
         // text
         textInputField = findViewById(R.id.taskText) as EditText
@@ -238,16 +230,11 @@ class AddTask : ThemedActivity() {
         when (item.itemId) {
         // Respond to the action bar's Up/Home button
             android.R.id.home -> {
-                if (m_app!!.isBackSaving) {
-                    saveTasksAndClose()
-                }
-                val upIntent = NavUtils.getParentActivityIntent(this)
                 finish()
-                startActivity(upIntent)
                 return true
             }
-            R.id.menu_cancel_task -> {
-                finish()
+            R.id.menu_add_task -> {
+                saveTasksAndClose()
                 return true
             }
             R.id.menu_help -> {
@@ -314,9 +301,7 @@ class AddTask : ThemedActivity() {
     }
 
     override fun onBackPressed() {
-        if (m_app!!.isBackSaving) {
-            saveTasksAndClose()
-        }
+        saveTasksAndClose()
         super.onBackPressed()
     }
 

@@ -17,11 +17,6 @@
         android:title="@string/show_confirmation_dialogs_title" />
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="@string/back_key_saves_key"
-        android:summary="@string/back_saves_summary"
-        android:title="@string/back_saves_pref_title" />
-    <CheckBoxPreference
-        android:defaultValue="false"
         android:key="@string/share_task_show_edit"
         android:summary="@string/share_task_show_edit_summary"
         android:title="@string/share_task_show_edit_pref_title" />
