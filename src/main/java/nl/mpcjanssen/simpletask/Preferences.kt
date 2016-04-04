@@ -37,7 +37,9 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 
+
 import nl.mpcjanssen.simpletask.util.*
+import java.util.*
 
 
 class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPreferenceChangeListener {
@@ -84,8 +86,16 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         prefs.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onBuildHeaders(target: List<PreferenceActivity.Header> ) {
-        loadHeadersFromResource(R.xml.preference_headers, target);
+    override fun onBuildHeaders(target: MutableList<Header> ) {
+        val allHeaders = ArrayList<Header>()
+        loadHeadersFromResource(R.xml.preference_headers, allHeaders);
+
+        // Remove calendar preferences for older devices
+        if (!TodoApplication.atLeastAPI(16)) {
+            target.addAll(allHeaders.filter { !it.fragment.equals(CalendarPrefFragment::class.java.name) })
+        } else {
+            target.addAll(allHeaders)
+        }
     }
 
     override fun isValidFragment(fragmentName: String) : Boolean {

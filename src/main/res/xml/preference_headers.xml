@@ -11,6 +11,7 @@
         android:fragment="nl.mpcjanssen.simpletask.Preferences$WidgetPrefFragment"
         android:title="@string/preference_widget" />
     <header
+        android:id = "@string/calendar_header_id"
         android:fragment="nl.mpcjanssen.simpletask.Preferences$CalendarPrefFragment"
         android:title="@string/calendar_sync_screen_title" />
     <header
