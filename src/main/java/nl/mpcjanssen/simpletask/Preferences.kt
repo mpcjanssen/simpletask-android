@@ -35,6 +35,8 @@ import android.os.Bundle
 import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.IntentCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.view.MenuItem
 
 
@@ -56,8 +58,9 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
-            prefs.edit().commit()
-            restartToIntent(application, Intent(application, nl.mpcjanssen.simpletask.Preferences::class.java));
+            val intent = getIntent()
+            finish();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_THEME_CHANGED))
         }
         if (key.equals(getString(R.string.calendar_sync_dues)) ||
                 key.equals(getString(R.string.calendar_sync_thresholds))) {

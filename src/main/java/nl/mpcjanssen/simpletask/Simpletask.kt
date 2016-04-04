@@ -26,6 +26,7 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.IntentCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
@@ -92,6 +93,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
+        intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
@@ -101,29 +103,36 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         localBroadcastManager = m_app.localBroadCastManager
 
         m_broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
+            override fun onReceive(context: Context, receivedIntent: Intent) {
+                if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
                     archiveTasks(null)
-                } else if (intent.action == Constants.BROADCAST_ACTION_LOGOUT) {
+                } else if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                     log!!.info(TAG, "Logging out from Dropbox")
                     fileStore.logout()
                     finish()
                     startActivity(getIntent())
-                } else if (intent.action == Constants.BROADCAST_UPDATE_UI) {
+                } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                     log!!.info(TAG, "Updating UI because of broadcast")
                     if (m_adapter == null) {
                         return
                     }
                     m_adapter!!.setFilteredTasks()
                     updateDrawers()
-                } else if (intent.action == Constants.BROADCAST_SYNC_START) {
+                } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
                     mOverlayDialog = showLoadingOverlay(this@Simpletask, mOverlayDialog, true)
-                } else if (intent.action == Constants.BROADCAST_SYNC_DONE) {
+                } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
                     mOverlayDialog = showLoadingOverlay(this@Simpletask, mOverlayDialog, false)
-                } else if (intent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
+                } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
                     updateConnectivityIndicator()
-                } else if (intent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     handleIntent()
+                } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
+                    val i = intent
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    finish()
+                    m_app.reloadTheme()
+                    m_app.startActivity(i)
                 }
             }
         }
