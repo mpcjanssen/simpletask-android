@@ -286,10 +286,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_confirm">Delete</string>
     <!-- search -->
 
-    <string name="clone_tags">Prefill next</string>
-    <string name="word_wrap">Word wrap</string>
-    <string name="no_clone_tags">Don\'t prefill next</string>
-    <string name="no_word_wrap">No word wrap</string>
+    <string name="clone_tags">Enable pre-fill</string>
+    <string name="word_wrap">Enable wordwrap</string>
+    <string name="no_clone_tags">Disable pre-fill</string>
+    <string name="no_word_wrap">Disable wordwrap</string>
 
     <string name="search_hint">Search todo.txt</string>
     <!-- sort -->

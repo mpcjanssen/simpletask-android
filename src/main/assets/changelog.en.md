@@ -6,7 +6,7 @@
 
 - Reorganized settings thanks to smichel17. Fixes #401.
 - Updated icons to new material colors and sizes.
-- Removed FAB in AddTask, back saves now.
+- Moved checkboxes in AddTask to overflow menu. Fixes #409.
 - Removed `Back saves` setting. Back always saves. The new left corner icon can be used to cancel. Fixes #389.
 - Show current selected values in settings. Fixes #404.
 
