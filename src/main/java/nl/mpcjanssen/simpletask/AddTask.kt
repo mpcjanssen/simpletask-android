@@ -213,17 +213,9 @@ class AddTask : ThemedActivity() {
         inflater.inflate(R.menu.add_task, menu)
         // Set checkboxes
         val mnuWordWrap = menu.findItem(R.id.menu_word_wrap)
-        if(m_app!!.isWordWrap) {
-            mnuWordWrap.setTitle(R.string.no_word_wrap)
-        } else {
-            mnuWordWrap.setTitle(R.string.word_wrap)
-        }
+        mnuWordWrap.isChecked = m_app!!.isWordWrap
         val mnuPrefill = menu.findItem(R.id.menu_prefill_next)
-        if(m_app!!.isAddTagsCloneTags) {
-            mnuPrefill.setTitle(R.string.no_clone_tags)
-        } else {
-            mnuPrefill.setTitle(R.string.clone_tags)
-        }
+        mnuPrefill.isChecked = m_app!!.isAddTagsCloneTags
         return true
     }
 
@@ -236,14 +228,14 @@ class AddTask : ThemedActivity() {
             }
             R.id.menu_prefill_next -> {
                 m_app!!.isAddTagsCloneTags =  !m_app!!.isAddTagsCloneTags
-                supportInvalidateOptionsMenu()
+                item.isChecked = !item.isChecked
                 return true
             }
             R.id.menu_word_wrap -> {
                 val newVal = !m_app!!.isWordWrap
                 m_app!!.isWordWrap = newVal
                 setWordWrap(newVal)
-                supportInvalidateOptionsMenu()
+                item.isChecked = !item.isChecked
                 return true
             }
             R.id.menu_help -> {
