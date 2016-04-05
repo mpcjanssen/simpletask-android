@@ -2,10 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_add_task"
-        android:icon="@drawable/ic_action_content_send"
-        android:title="@string/save_task"
-        app:showAsAction="always" />
+        android:id="@+id/menu_prefill_next"
+        android:title="@string/clone_tags"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_word_wrap"
+        android:title="@string/word_wrap"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_help"
         android:title="@string/help"

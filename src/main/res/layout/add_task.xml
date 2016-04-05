@@ -10,38 +10,32 @@
     android:orientation="vertical"
     android:showDividers="middle">
 
-    <EditText
-        android:id="@+id/taskText"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_gravity="top"
-        android:gravity="top"
-        android:inputType="textCapSentences|textMultiLine" />
+        android:gravity="top">
 
-    <LinearLayout
-        android:id="@+id/cbbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/taskText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:inputType="textCapSentences|textMultiLine" />
 
-        <CheckBox
-            android:id="@+id/cb_clone"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="@string/clone_tags" />
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_action_content_send"
+            app:layout_anchor="@id/taskText"
+            app:layout_anchorGravity="right|end|bottom" />
+    </FrameLayout>
 
-        <CheckBox
-            android:id="@+id/cb_wrap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="@string/word_wrap" />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/addbar"
