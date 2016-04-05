@@ -10,7 +10,6 @@ import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.NavUtils
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.InputType
@@ -74,6 +73,11 @@ class AddTask : ThemedActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear);
+
+        val fab = findViewById(R.id.fab) as FloatingActionButton?
+        fab?.setOnClickListener {
+            saveTasksAndClose()
+        }
 
         // text
         textInputField = findViewById(R.id.taskText) as EditText
@@ -155,7 +159,7 @@ class AddTask : ThemedActivity() {
                 textInputField.setSelection(endOfLine)
                 replaceTextAtSelection("\n", false)
 
-                if (hasCloneTags()) {
+                if (m_app!!.isAddTagsCloneTags) {
                     val precedingText = textInputField.text.toString().substring(0, endOfLine)
                     val lineStart = precedingText.lastIndexOf('\n')
                     val line: String
@@ -180,10 +184,7 @@ class AddTask : ThemedActivity() {
             imeActionNext || hardwareEnterDown || hardwareEnterUp
         }
 
-        setCloneTags(m_app!!.isAddTagsCloneTags)
         setWordWrap(m_app!!.isWordWrap)
-
-        findViewById(R.id.cb_wrap).setOnClickListener { setWordWrap(hasWordWrap()) }
 
         val textIndex = 0
         textInputField.setSelection(textIndex)
@@ -201,28 +202,28 @@ class AddTask : ThemedActivity() {
         }
     }
 
-    fun hasWordWrap(): Boolean {
-        return (findViewById(R.id.cb_wrap) as CheckBox).isChecked
-    }
 
     fun setWordWrap(bool: Boolean) {
-        (findViewById(R.id.cb_wrap) as CheckBox).isChecked = bool
         textInputField.setHorizontallyScrolling(!bool)
-    }
-
-    fun hasCloneTags(): Boolean {
-        return (findViewById(R.id.cb_clone) as CheckBox).isChecked
-    }
-
-    fun setCloneTags(bool: Boolean) {
-        (findViewById(R.id.cb_clone) as CheckBox).isChecked = bool
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         val inflater = menuInflater
         inflater.inflate(R.menu.add_task, menu)
-
+        // Set checkboxes
+        val mnuWordWrap = menu.findItem(R.id.menu_word_wrap)
+        if(m_app!!.isWordWrap) {
+            mnuWordWrap.setTitle(R.string.no_word_wrap)
+        } else {
+            mnuWordWrap.setTitle(R.string.word_wrap)
+        }
+        val mnuPrefill = menu.findItem(R.id.menu_prefill_next)
+        if(m_app!!.isAddTagsCloneTags) {
+            mnuPrefill.setTitle(R.string.no_clone_tags)
+        } else {
+            mnuPrefill.setTitle(R.string.clone_tags)
+        }
         return true
     }
 
@@ -233,8 +234,16 @@ class AddTask : ThemedActivity() {
                 finish()
                 return true
             }
-            R.id.menu_add_task -> {
-                saveTasksAndClose()
+            R.id.menu_prefill_next -> {
+                m_app!!.isAddTagsCloneTags =  !m_app!!.isAddTagsCloneTags
+                supportInvalidateOptionsMenu()
+                return true
+            }
+            R.id.menu_word_wrap -> {
+                val newVal = !m_app!!.isWordWrap
+                m_app!!.isWordWrap = newVal
+                setWordWrap(newVal)
+                supportInvalidateOptionsMenu()
                 return true
             }
             R.id.menu_help -> {
@@ -253,10 +262,6 @@ class AddTask : ThemedActivity() {
 
 
     private fun saveTasksAndClose() {
-        // save clone CheckBox state
-        m_app!!.isAddTagsCloneTags = hasCloneTags()
-        m_app!!.isWordWrap = hasWordWrap()
-
         // strip line breaks
         textInputField = findViewById(R.id.taskText) as EditText
         val input: String
