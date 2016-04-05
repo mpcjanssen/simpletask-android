@@ -7,8 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:divider="?android:attr/dividerVertical"
-    android:orientation="vertical"
-    android:showDividers="middle">
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -21,7 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top"
+            android:padding="6dp"
             android:gravity="top"
+            android:background="@android:color/transparent"
             android:inputType="textCapSentences|textMultiLine" />
 
         <android.support.design.widget.FloatingActionButton

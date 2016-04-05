@@ -229,14 +229,14 @@ class AddTask : ThemedActivity() {
             R.id.menu_prefill_next -> {
                 m_app!!.isAddTagsCloneTags =  !m_app!!.isAddTagsCloneTags
                 item.isChecked = !item.isChecked
-                return true
+                return false
             }
             R.id.menu_word_wrap -> {
                 val newVal = !m_app!!.isWordWrap
                 m_app!!.isWordWrap = newVal
                 setWordWrap(newVal)
                 item.isChecked = !item.isChecked
-                return true
+                return false
             }
             R.id.menu_help -> {
                 showHelp()
