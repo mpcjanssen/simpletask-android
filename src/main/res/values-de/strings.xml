@@ -114,8 +114,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste
     </string>
     <string name="keep_prio_header">Priorität in abgeschlossenen Aufgaben</string>
-    <string name="keep_prio_summary">
-    Behalten Prioritäten in abgeschlossenen Aufgaben. Deaktiviere dies um die todo.txt App Verhalten wiederherzustellen.</string>
+    <string name="keep_prio_summary">Behalte Prioritäten in abgeschlossenen Aufgaben. Deaktiviere dies um die todo.txt App Verhalten wiederherzustellen.</string>
     <string name="prepend_date_pref_title">Zeitstempel für neue Aufgaben</string>
     <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
@@ -391,4 +390,24 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="use_create_backup_title">Erstellungsdatum als Fälligkeit</string>
     <string name="local_file_root_summary">Stammverzeichnis, von dem aus root:// Links aufgelöst werden</string>
     <string name="local_file_root_title">Datei-Link Stammverzeichnis</string>
+    <string name="all">alle</string>
+    <string name="back_clears_filter_summary">Erste Betätigung der Zurück-Schaltfläche löscht den Filter; die zweite Betätigung schließt die App.</string>
+    <string name="back_clears_filter_title">Zurück-Schaltfläche löscht den Filter</string>
+    <string name="debug_info">Informationen zur Fehlerbehebung</string>
+    <string name="experimental_summary">Experimentelle Funktionen aktivieren</string>
+    <string name="experimental_title">Experimentell</string>
+    <string name="export_filter">Export</string>
+    <string name="hello_world">Hallo Welt!</string>
+    <string name="import_filter">Import</string>
+    <string name="keep">behalten</string>
+    <string name="preference_appearance">Aussehen</string>
+    <string name="preference_interface">Schnittstelle</string>
+    <string name="preference_other">Andere</string>
+    <string name="preference_widget">Widget</string>
+    <string name="todotxt_configuration_settings_header">Konfiguration</string>
+    <string name="todotxt_configuration_settings_summary">Verhalten der App konfigurieren</string>
+    <string name="todotxt_creation_settings_header">Aufgabenerstellung</string>
+    <string name="todotxt_features_settings_header">Eigenschaften</string>
+    <string name="todotxt_features_settings_summary">Eigenschaften ein- und ausschalten</string>
+    <string name="todotxt_ui_settings_summary">Festlegen, was angezeigt wird</string>
 </resources>
