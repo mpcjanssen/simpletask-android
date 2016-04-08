@@ -165,6 +165,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_show_edit" translatable="false">share_task_show_edit</string>
     <string name="append_tasks_at_end" translatable="false">append_tasks_at_end</string>
     <string name="use_create_backup" translatable="false">use_create_backup</string>
+    <string name="dropbox_refresh_period" translatable="false">dropbox_refresh_period</string>
 </resources>
 
 

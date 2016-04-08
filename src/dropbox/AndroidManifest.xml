@@ -54,6 +54,7 @@ You should have received a copy of the GNU General Public License along with Sim
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <receiver android:name="nl.mpcjanssen.simpletask.remote.RefreshAlarm"/>
         <provider 
             android:exported="true"
             android:name="nl.mpcjanssen.simpletask.CachedFileProvider" 
@@ -61,5 +62,6 @@ You should have received a copy of the GNU General Public License along with Sim
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
     </application>
+
 
 </manifest>

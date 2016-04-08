@@ -26,6 +26,13 @@ class FlavourPrefFragment : PreferenceFragment() {
                     }, R.string.dropbox_logout_pref_title)
             true
         }
+        val sync_sec_pref = findPreference(getString(R.string.dropbox_refresh_period))
+        sync_sec_pref.valueInSummary()
+        sync_sec_pref.setOnPreferenceChangeListener { preference, any ->
+            preference.summary = getString(R.string.dropbox_sync_interval_title_summary)
+            preference.valueInSummary(any)
+            true
+        }
     }
 
 }

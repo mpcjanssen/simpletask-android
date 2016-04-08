@@ -1,16 +1,12 @@
 package nl.mpcjanssen.simpletask.remote
 
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
+import android.app.*
+import android.content.*
 import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import com.dropbox.client2.DropboxAPI
 import com.dropbox.client2.RESTUtility
 import com.dropbox.client2.android.AndroidAuthSession
@@ -34,14 +30,11 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 class FileStore(private val mApp: TodoApplication, private val mFileChangedListerer: FileStoreInterface.FileChangeListener) : FileStoreInterface {
 
-
     private val log: Logger
     private val mPrefs: SharedPreferences?
     // In the class declaration section:
     private var mDBApi: DropboxAPI<AndroidAuthSession>? = null
-    private var latestCursor: String? = null
-    private var pollingTask: Thread? = null
-    internal var continuePolling = true
+
     internal var onOnline: Thread? = null
     override var isLoading = false
     private var mOnline: Boolean = false
@@ -59,6 +52,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         t.start()
         mOnline = isOnline
         setMDBApi(mApp)
+        RefreshAlarm.scheduleRefresh(mApp)
     }
 
     private fun loadContentsFromCache(): String {
@@ -152,91 +146,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
 
-    private fun startLongPoll(polledFile: String, backoffSeconds: Int) {
-        pollingTask = Thread(Runnable {
-            val longpoll_timeout = 480
-            var newBackoffSeconds = 0
-            var start_time = System.currentTimeMillis()
-            if (!continuePolling) return@Runnable
-            try {
-                //log.info(TAG, "Long polling");
-
-                val params = ArrayList<String>()
-                latestCursor?.let {
-                    params.add("cursor")
-                    params.add(it)
-                }
-                params.add("timeout")
-                params.add("$longpoll_timeout")
-                if (backoffSeconds != 0) {
-                    log.info(TAG, "Backing off for $backoffSeconds seconds")
-                    try {
-                        Thread.sleep((backoffSeconds * 1000).toLong())
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-
-                }
-                if (!continuePolling) return@Runnable
-                val response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray<String>(arrayOfNulls<String>(params.size)), mDBApi!!.session)
-                log.info(TAG, "Longpoll response: " + response.toString())
-                val result = JsonThing(response)
-                val resultMap = result.expectMap()
-                val changes = resultMap.get("changes").expectBoolean()
-                val backoffThing = resultMap.getOrNull("backoff")
-
-                if (backoffThing != null) {
-                    newBackoffSeconds = backoffThing.expectInt32()
-                }
-                log.info(TAG, "Longpoll ended, changes $changes backoff $newBackoffSeconds")
-                if (changes) {
-                    val delta = mDBApi!!.delta(latestCursor)
-                    latestCursor = delta.cursor
-                    for (entry in delta.entries) {
-                        if (entry.lcPath.equals(polledFile, ignoreCase = true)) {
-                            if (entry.metadata == null || entry.metadata.rev == null) {
-                                throw DropboxException("Metadata (or rev) in entry is null " + entry)
-                            }
-                            if (entry.metadata.rev == localTodoRev) {
-                                log.info(TAG, "Remote file " + polledFile + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
-                            } else {
-                                log.info(TAG, "Remote file " + polledFile + " changed, rev: " + entry.metadata.rev + " reloading")
-                                mFileChangedListerer.fileChanged(null)
-                            }
-                        }
-                    }
-                }
-            } catch (e: DropboxUnlinkedException) {
-                log.info(TAG, "Dropbox unlinked, no more polling")
-                continuePolling = false
-            } catch (e: DropboxIOException) {
-                if (e is SocketTimeoutException) {
-                    //log.info(TAG, "Longpoll timed out, restarting");
-                    if (!isOnline) {
-                        log.info(TAG, "Device was not online, stopping polling")
-                        continuePolling = false
-                    }
-                    if (System.currentTimeMillis() - start_time < longpoll_timeout * 1000) {
-                        log.info(TAG, "Longpoll timed out to quick, backing off for 60 seconds")
-                        newBackoffSeconds = 60
-                    }
-                } else {
-                    log.info(TAG, "Longpoll IO exception, restarting backing of {} seconds" + 30, e)
-                    newBackoffSeconds = 30
-                }
-            } catch (e: JsonExtractionException) {
-                log.info(TAG, "Longpoll Json exception, restarting backing of {} seconds" + 30, e)
-                newBackoffSeconds = 30
-            } catch (e: DropboxException) {
-                log.info(TAG, "Longpoll Dropbox exception, restarting backing of {} seconds" + 30, e)
-                newBackoffSeconds = 30
-            }
-
-            startLongPoll(polledFile, newBackoffSeconds)
-        })
-        pollingTask!!.start()
-    }
-
     // Required to complete auth, sets the access token on the session
     override val isAuthenticated: Boolean
         get() {
@@ -280,7 +189,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
             isLoading = false
             val tasks = tasksFromCache()
             saveTasksToFile(path, tasks, backup, eol)
-            startWatching(path)
             return tasks
         } else {
             try {
@@ -314,7 +222,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 val contents = join(readFile, "\n")
                 backup?.backup(path, contents)
                 saveToCache(fileInfo.metadata.fileName(), fileInfo.metadata.rev, contents)
-                startWatching(path)
             } catch (e: DropboxException) {
                 // Couldn't download file use cached version
                 e.printStackTrace()
@@ -341,46 +248,8 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     override fun startLogin(caller: Activity) {
         // MyActivity below should be your activity class name
-       val intent = Intent(caller, LoginScreen::class.java)
+        val intent = Intent(caller, LoginScreen::class.java)
         caller.startActivity(intent)
-    }
-
-
-    private fun startWatching(path: String) {
-        queueRunnable("startWatching", Runnable {
-            continuePolling = true
-            if (pollingTask == null) {
-                log.info(TAG, "Initializing slow polling thread")
-                try {
-                    log.info(TAG, "Finding latest cursor")
-                    val params = ArrayList<String>()
-                    params.add("include_media_info")
-                    params.add("false")
-                    val response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray<String>(arrayOfNulls<String>(params.size)), mDBApi!!.session)
-                    log.info(TAG, "Longpoll latestcursor response: " + response.toString())
-                    val result = JsonThing(response)
-                    val resultMap = result.expectMap()
-                    latestCursor = resultMap.get("cursor").expectString()
-                } catch (e: DropboxException) {
-                    e.printStackTrace()
-                    log.error(TAG, "Error reading polling cursor" + e)
-                } catch (e: JsonExtractionException) {
-                    e.printStackTrace()
-                    log.error(TAG, "Error reading polling cursor" + e)
-                }
-
-                log.info(TAG, "Starting slow polling")
-                startLongPoll(path, 0)
-            }
-        })
-    }
-
-
-    private fun stopWatching() {
-        queueRunnable("stopWatching", Runnable {
-            continuePolling = false
-            pollingTask = null
-        })
     }
 
     override fun logout() {
@@ -553,7 +422,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                     }
 
                     if (isOnline) {
-                        continuePolling = true
                         mFileChangedListerer.fileChanged(null)
                     } else {
 
@@ -562,8 +430,6 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 })
             }
 
-        } else if (!mOnline) {
-            stopWatching()
         }
         if (prevOnline && !mOnline) {
             mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
@@ -724,7 +590,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     companion object {
 
-        private val TAG = "FileStoreDB"
+        val TAG = "FileStoreDB"
 
         private val LOCAL_CONTENTS = "localContents"
         private val LOCAL_NAME = "localName"
@@ -738,6 +604,30 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 return "/todo/todo.txt"
             } else {
                 return "/todo.txt"
+            }
+        }
+    }
+}
+
+class RefreshAlarm () : BroadcastReceiver() {
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        val m_app = context?.applicationContext as TodoApplication
+        log.info("RefreshAlarm", "Scheduled update from dropbox.")
+        m_app?.fileStore.sync()
+        scheduleRefresh(m_app)
+    }
+
+    companion object {
+        // Schedule refreshes
+        fun scheduleRefresh(app: TodoApplication) {
+            val interval = TodoApplication.prefs.getLong(app.getString(R.string.dropbox_refresh_period), 5*60)
+            Logger.info(FileStore.TAG, "Scheduling next tasklist refresh after $interval seconds")
+            val intent = Intent(app, RefreshAlarm::class.java)
+            val pi = PendingIntent.getBroadcast(app, 0, intent, 0)
+            val am = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (interval>0) {
+                am.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + interval * 1000, pi)
             }
         }
     }

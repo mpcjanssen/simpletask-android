@@ -111,6 +111,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="archive_now_pref_summary">Move completed tasks from todo.txt to done.txt.</string>
     <string name="dropbox_logout_pref_title">Log out</string>
     <string name="dropbox_logout_pref_summary">Log out of Dropbox.</string>
+
+    <string name="dropbox_sync_interval_title">Background sync interval</string>
+    <string name="dropbox_sync_interval_title_summary">Synchronize the todo file with Dropbox every %s seconds. Setting this to 0 disables automatic sync.</string>
+
     <string name="TODOTXTPATH_title">File location</string>
     <string name="TODOTXTPATH_summary">The Dropbox folder where todo.txt is stored.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>

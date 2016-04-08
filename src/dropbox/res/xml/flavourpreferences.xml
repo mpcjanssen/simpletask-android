@@ -2,7 +2,13 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <Preference
-                android:key="logout_dropbox"
-                android:summary="@string/dropbox_logout_pref_summary"
-                android:title="@string/dropbox_logout_pref_title"/>
+             android:key="logout_dropbox"
+             android:summary="@string/dropbox_logout_pref_summary"
+             android:title="@string/dropbox_logout_pref_title"/>
+        <EditTextPreference
+            android:key="@string/dropbox_refresh_period"
+            android:summary="@string/dropbox_sync_interval_title_summary"
+            android:defaultValue="300"
+            android:numeric="integer"
+            android:title="@string/dropbox_sync_interval_title"/>
 </PreferenceScreen>
