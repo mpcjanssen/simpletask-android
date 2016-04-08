@@ -3,7 +3,6 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_complete_checkbox"
-        android:summary="@string/show_complete_checkbox_summary"
         android:title="@string/show_complete_checkbox_title" />
     <CheckBoxPreference
         android:defaultValue="false"
