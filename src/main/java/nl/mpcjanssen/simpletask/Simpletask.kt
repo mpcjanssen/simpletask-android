@@ -178,11 +178,19 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         if (options_menu == null) {
             return false
         }
-        val searchMenuItem = options_menu!!.findItem(R.id.search)
-        MenuItemCompat.expandActionView(searchMenuItem)
-
+        expandSearchMenu(true)
         return true
     }
+
+    private fun expandSearchMenu(expand: Boolean) {
+        val searchMenuItem = options_menu?.findItem(R.id.search) ?: return
+        if (expand) {
+            MenuItemCompat.expandActionView(searchMenuItem)
+        } else {
+            MenuItemCompat.collapseActionView(searchMenuItem)
+        }
+    }
+
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -1223,6 +1231,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
 
     override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
+        if (mFilter?.search.isNullOrEmpty()) {
+            expandSearchMenu(false)
+        }
     }
 
     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
