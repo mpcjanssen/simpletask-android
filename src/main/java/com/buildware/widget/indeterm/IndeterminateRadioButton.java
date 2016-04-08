@@ -14,6 +14,7 @@ import nl.mpcjanssen.simpletask.R;
 /**
  * A RadioButton with additional 3rd "indeterminate" state.
  * By default it is in "determinate" (checked or unchecked) state.
+ *
  * @author Svetlozar Kostadinov (sevarbg@gmail.com)
  */
 public class IndeterminateRadioButton extends AppCompatRadioButton
@@ -35,10 +36,10 @@ public class IndeterminateRadioButton extends AppCompatRadioButton
          * Called when the indeterminate state has changed.
          *
          * @param radioButton The RadioButton whose state has changed.
-         * @param state The state of buttonView. Value meanings:
-         *              null = indeterminate state
-         *              true = checked state
-         *              false = unchecked state
+         * @param state       The state of buttonView. Value meanings:
+         *                    null = indeterminate state
+         *                    true = checked state
+         *                    false = unchecked state
          */
         void onStateChanged(IndeterminateRadioButton radioButton, @Nullable Boolean state);
     }
@@ -117,6 +118,11 @@ public class IndeterminateRadioButton extends AppCompatRadioButton
     }
 
     @Override
+    public void setIndeterminateUsed(Boolean bool) {
+
+    }
+
+    @Override
     public void setState(Boolean state) {
         if (state != null) {
             setChecked(state);
@@ -178,7 +184,7 @@ public class IndeterminateRadioButton extends AppCompatRadioButton
          */
         private SavedState(Parcel in) {
             super(in);
-            indeterminate = (Boolean)in.readValue(null);
+            indeterminate = (Boolean) in.readValue(null);
         }
 
         @Override

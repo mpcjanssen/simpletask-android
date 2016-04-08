@@ -190,12 +190,12 @@ class AddTask : ThemedActivity() {
         textInputField.setSelection(textIndex)
 
         // Set button callbacks
-        findViewById(R.id.btnContext).setOnClickListener { showListMenu() }
-        findViewById(R.id.btnProject).setOnClickListener { showTagMenu() }
-        findViewById(R.id.btnPrio).setOnClickListener { showPriorityMenu() }
+        findViewById(R.id.btnContext)?.setOnClickListener { showListMenu() }
+        findViewById(R.id.btnProject)?.setOnClickListener { showTagMenu() }
+        findViewById(R.id.btnPrio)?.setOnClickListener { showPriorityMenu() }
 
-        findViewById(R.id.btnDue).setOnClickListener { insertDate(DateType.DUE) }
-        findViewById(R.id.btnThreshold).setOnClickListener { insertDate(DateType.THRESHOLD) }
+        findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
+        findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
 
         if (m_backup != null && m_backup!!.size > 0) {
             textInputField.setSelection(textInputField.text.length)
@@ -229,14 +229,14 @@ class AddTask : ThemedActivity() {
             R.id.menu_prefill_next -> {
                 m_app!!.isAddTagsCloneTags =  !m_app!!.isAddTagsCloneTags
                 item.isChecked = !item.isChecked
-                return false
+                return true
             }
             R.id.menu_word_wrap -> {
                 val newVal = !m_app!!.isWordWrap
                 m_app!!.isWordWrap = newVal
                 setWordWrap(newVal)
                 item.isChecked = !item.isChecked
-                return false
+                return true
             }
             R.id.menu_help -> {
                 showHelp()

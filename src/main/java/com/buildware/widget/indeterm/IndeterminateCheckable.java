@@ -10,7 +10,7 @@ import android.widget.Checkable;
  *   false = unchecked state
  */
 public interface IndeterminateCheckable extends Checkable {
-
+    void setIndeterminateUsed(Boolean bool);
     void setState(Boolean state);
     Boolean getState();
 }
