@@ -27,20 +27,19 @@
  */
 package nl.mpcjanssen.simpletask
 
+
 import android.Manifest
-import android.app.Activity
-import android.content.*
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.preference.*
+import android.preference.EditTextPreference
+import android.preference.Preference
+import android.preference.PreferenceFragment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.IntentCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.MenuItem
-
-
-import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
 
@@ -48,7 +47,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
     private var prefs: SharedPreferences
 
-    public var app: TodoApplication
+    var app: TodoApplication
 
     init {
         app = TodoApplication.appContext as TodoApplication
@@ -59,7 +58,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
             finish();
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_RESTART_ACTIVITY))
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_THEME_CHANGED))
         }
         if (key.equals(getString(R.string.calendar_sync_dues)) ||
                 key.equals(getString(R.string.calendar_sync_thresholds))) {
@@ -189,7 +188,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     }
 }
 
-// Helper to replace %s in all setting summaries not only ListPrefences
+// Helper to replace %s in all setting summaries not only ListPreferences
 fun Preference.valueInSummary(any: Any? = null) {
     this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?:  this.sharedPreferences.getString(this.key,null))
 }

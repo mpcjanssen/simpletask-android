@@ -2,9 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.content.DialogInterface
 import android.content.Intent
-import nl.mpcjanssen.simpletask.R
 import android.os.Bundle
-import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.support.v4.content.LocalBroadcastManager
 
@@ -24,7 +22,7 @@ class FlavourPrefFragment : PreferenceFragment() {
                     DialogInterface.OnClickListener() { dialogInterface, i ->
                         app.fileStore.logout()
                         activity.finish();
-                        LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_RESTART_ACTIVITY))
+                        LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_ACTION_LOGOUT))
                     }, R.string.dropbox_logout_pref_title)
             true
         }

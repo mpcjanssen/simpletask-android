@@ -28,9 +28,7 @@ package nl.mpcjanssen.simpletask.util
 
 
 import android.app.Activity
-import android.app.AlarmManager
 import android.app.Dialog
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -47,9 +45,9 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import org.luaj.vm2.*
 import java.io.*
 import java.nio.channels.FileChannel
@@ -299,7 +297,7 @@ fun dateStringToLuaLong(dateString: String?): LuaValue {
     return LuaValue.NIL
 }
 
-public fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
+fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
     val size = javaList.count()
     if (size == 0) return LuaValue.NIL
     val luaArray = arrayOfNulls<LuaString>(javaList.count())
@@ -381,7 +379,7 @@ fun appVersion (ctx: Context) :String {
 fun shareText(act: Activity, subject: String,  text: String) {
 
     val shareIntent = Intent(android.content.Intent.ACTION_SEND)
-    shareIntent.setType("text/plain")
+    shareIntent.type = "text/plain"
     shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
             subject)
 
@@ -421,7 +419,7 @@ fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Di
     return null
 }
 
-public fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
+fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     val date = task.thresholdDate
     if (date != null) {
         date.toDateTime()?.let {
@@ -431,7 +429,7 @@ public fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     return null;
 }
 
-public fun getRelativeDueDate(task: Task, ctx: Context, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
+fun getRelativeDueDate(task: Task, ctx: Context, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
     val date = task.dueDate
     if (date != null) {
         date.toDateTime()?.let {
@@ -457,7 +455,7 @@ private fun calculateRelativeAge(ctx: Context, dateString: String): String {
     return dateString;
 }
 
-public fun getRelativeAge(task: Task, ctx: Context): String? {
+fun getRelativeAge(task: Task, ctx: Context): String? {
     val date = task.createDate
     date?.let {
         return (calculateRelativeAge(ctx, date));

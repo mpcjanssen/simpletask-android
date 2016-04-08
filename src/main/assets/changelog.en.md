@@ -4,6 +4,7 @@
 7.1.2
 -----
 
+- Allow toggle back to indeterminate state when changing tags or lists. Fixes #405.
 - Reorganized settings thanks to smichel17. Fixes #401.
 - Updated icons to new material colors and sizes.
 - Moved checkboxes in AddTask to overflow menu. Fixes #409.
@@ -27,6 +28,7 @@
 7.0.16
 ------
 
+- Merged: Updated German translation (twckr #422).
 - Add tristate buttons for lists and tags selection. Fixes #149.
 - Indicate connectivity and Dropbox pending changes with UI elements instead of chatty toasts. Implements #388.
 - Add a task with a Floating Action Button. Implements #385.
