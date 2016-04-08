@@ -25,6 +25,7 @@ public class IndeterminateCheckBox extends AppCompatCheckBox
     };
 
     private boolean mIndeterminate;
+    private boolean mIndeterminateUsed;
     private boolean mBroadcasting;
     private OnStateChangedListener mOnStateChangedListener;
 
@@ -79,8 +80,18 @@ public class IndeterminateCheckBox extends AppCompatCheckBox
     public void toggle() {
         if (mIndeterminate) {
             setChecked(true);
-        } else {
-            super.toggle();
+            return;
+        }
+        if (getState()) {
+            setChecked(false);
+            return;
+        }
+        if (!getState() && mIndeterminateUsed) {
+            setIndeterminate(true);
+            return;
+        }
+        if (!getState()) {
+            setChecked(true);
         }
     }
 
@@ -119,6 +130,11 @@ public class IndeterminateCheckBox extends AppCompatCheckBox
     @ViewDebug.ExportedProperty
     public Boolean getState() {
         return mIndeterminate ? null : isChecked();
+    }
+
+    @Override
+    public void setIndeterminateUsed(Boolean bool) {
+        mIndeterminateUsed = bool;
     }
 
     @Override

@@ -54,10 +54,12 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
         // - replace the contents of the view with that element
         val viewItem = mItems[position]
         holder.mCheckBox.text = viewItem
+        holder.mCheckBox.setIndeterminateUsed(false)
         if (viewItem in onAll) {
             holder.mCheckBox.state = true
         } else if (viewItem in onSome) {
             holder.mCheckBox.state = null
+            holder.mCheckBox.setIndeterminateUsed(true)
         } else {
             holder.mCheckBox.state = false
         }
