@@ -30,7 +30,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
-
 import android.widget.Button
 import com.dropbox.client2.DropboxAPI
 import com.dropbox.client2.android.AndroidAuthSession
@@ -39,7 +38,6 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedActivity
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.remote.FileStore
 
 
 class LoginScreen : ThemedActivity() {

@@ -1,8 +1,6 @@
 package nl.mpcjanssen.simpletask
 
 import android.os.Bundle
-import android.preference.PreferenceActivity
-import android.support.v7.app.AppCompatActivity
 
 abstract class ThemedPreferenceActivity : AppCompatPreferenceActivity() {
 

@@ -113,7 +113,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<DueDateToken>()?.value ?: null
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
-                tokens = tokens.filter { !(it is DueDateToken) }
+                tokens = tokens.filter { it !is DueDateToken }
             } else {
                 upsertToken(DueDateToken("due:$dateStr"))
             }
@@ -123,7 +123,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<ThresholdDateToken>()?.value ?: null
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
-                tokens = tokens.filter { !(it is ThresholdDateToken) }
+                tokens = tokens.filter { it !is ThresholdDateToken }
             } else {
                 upsertToken(ThresholdDateToken("t:$dateStr"))
             }

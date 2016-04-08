@@ -32,7 +32,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:clickable="true"
-            android:src="@drawable/ic_action_content_send"
+            android:src="@drawable/content_new"
             app:layout_anchor="@id/taskText"
             app:layout_anchorGravity="right|end|bottom" />
     </FrameLayout>

@@ -30,26 +30,24 @@
 package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Activity
+import android.app.AlarmManager
+import android.app.Application
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
-
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.dao.gen.*
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.*
-
 import java.io.File
 import java.io.IOException
-import java.util.Arrays
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 
 class TodoApplication : Application(),
@@ -62,7 +60,6 @@ class TodoApplication : Application(),
     private lateinit var m_calSync: CalendarSync
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
-    private var m_Theme = -1
     private val log = Logger
     private lateinit var mFileStore: FileStoreInterface;
 
@@ -357,18 +354,9 @@ class TodoApplication : Application(),
 
     }
 
-    fun reloadTheme() {
-        m_Theme = -1
-    }
-
     val activeTheme: Int
         get() {
-            if (m_Theme != -1) {
-                return m_Theme
-            }
-            m_Theme = themeStringToId(prefs.getString(getString(R.string.theme_pref_key), ""))
-            return m_Theme
-
+            return themeStringToId(prefs.getString(getString(R.string.theme_pref_key), ""))
         }
 
     val isDarkTheme: Boolean

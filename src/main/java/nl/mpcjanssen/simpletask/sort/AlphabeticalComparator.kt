@@ -1,9 +1,8 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import java.util.*
 
 class AlphabeticalComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {

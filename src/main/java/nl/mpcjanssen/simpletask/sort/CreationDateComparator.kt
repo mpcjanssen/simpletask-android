@@ -1,10 +1,7 @@
 package nl.mpcjanssen.simpletask.sort
 
-import hirondelle.date4j.DateTime
+
 import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.isEmptyOrNull
-
-
 import java.util.*
 
 class CreationDateComparator : Comparator<TodoListItem> {

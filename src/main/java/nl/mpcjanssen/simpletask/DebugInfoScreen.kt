@@ -6,19 +6,15 @@ package nl.mpcjanssen.simpletask
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-
 import nl.mpcjanssen.simpletask.dao.gen.LogItem
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
-import nl.mpcjanssen.simpletask.util.*
-
+import nl.mpcjanssen.simpletask.util.appVersion
+import nl.mpcjanssen.simpletask.util.shareText
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 class DebugInfoScreen : ThemedActivity() {
 
