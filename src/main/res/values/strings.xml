@@ -133,7 +133,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
     <string name="keep_prio_header">Prio in completed tasks</string>
-    <string name="keep_prio_summary">Keep priorities in completed tasks. disable this to restore the todo.txt app behavior, which removes the priority when completing a task.</string>
+    <string name="keep_prio_summary">Keep priorities in completed tasks. todo.txt removes priority on completion</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date</string>
     <string name="line_breaks_pref_title">Windows compatibility</string>
@@ -177,9 +177,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_dues_title">Due dates</string>
     <string name="calendar_sync_thresholds_title">Threshold dates</string>
     <string name="calendar_reminder_days_title">Remind in advance</string>
-    <string name="calendar_reminder_days_summary">How many days before the due/threshold date should the reminder be set.</string>
-    <string name="calendar_reminder_time_title">Reminders time</string>
-    <string name="calendar_reminder_time_summary">At what time of day should the reminder be set.</string>
+    <string name="calendar_reminder_days_summary">How many days in advance should the reminder be set</string>
+    <string name="calendar_reminder_time_title">Remind at time</string>
+    <string name="calendar_reminder_time_summary">At what time of day should the reminder be set</string>
 
     <string name="drawer_fixed_landscape_title">Open landscape drawers</string>
     <string name="drawer_fixed_landscape_summary">Always open the drawers in landscape mode.</string>
@@ -201,7 +201,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="taskview_extended_pref_summary">Display dates on a separate line</string>
 
     <string name="append_tasks_at_end_title">Append to list</string>
-    <string name="append_tasks_at_end_summary">Insert new tasks at the start of the file. Otherwise, new tasks are inserted at the end</string>
+    <string name="append_tasks_at_end_summary">Insert new tasks at the start of the file instead of the end</string>
 
     <string name="color_due_pref_title">Color due dates</string>
     <string name="color_due_pref_summary">Color due and threshold dates</string>
@@ -241,7 +241,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="use_create_backup_summary">When sorting, use the task creation date as threshold date if no threshold date is set.</string>
 
     <string name="todotxt_terms_title">Use todo.txt terms</string>
-    <string name="todotxt_terms_summary">Use context and project instead of tag and list to match the terms in todo.txt.</string>
+    <string name="todotxt_terms_summary">Use context and project instead of tag and list</string>
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -427,7 +427,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="back_clears_filter_title">Back clears filter</string>
-    <string name="back_clears_filter_summary">If enabled, the first press of the back button clears the active filter and only the second press exits the app.</string>
+    <string name="back_clears_filter_summary">Back button clears the filter before exiting the app</string>
     <string name="experimental_title">Experimental</string>
     <string name="experimental_summary">Enable experimental features</string>
 

@@ -14,11 +14,23 @@
             android:key="fontsize"
             android:summary="%s"
             android:title="@string/font_size_delta_pref_title"/>
+        <ListPreference
+            android:defaultValue="no_ellipsize"
+            android:entries="@array/task_text_ellipsizing"
+            android:entryValues="@array/task_text_ellipsizing_values"
+            android:key="@string/task_text_ellipsizing_pref_key"
+            android:summary="%s"
+            android:title="@string/task_text_ellipsizing_pref_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/color_due_date_key"
             android:summary="@string/color_due_pref_summary"
             android:title="@string/color_due_pref_title"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/ui_todotxt_terms"
+            android:title="@string/todotxt_terms_title"
+            android:summary="@string/todotxt_terms_summary"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/ui_show_edittext_hints"
@@ -26,7 +38,7 @@
             android:title="@string/show_edittext_hints_title"/>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="@string/ui_todotxt_terms"
-            android:title="@string/todotxt_terms_title"
-            android:summary="@string/todotxt_terms_summary"/>
+            android:key="@string/show_todo_path"
+            android:summary="@string/show_todo_path_summary"
+            android:title="@string/show_todo_path_title" />
     </PreferenceScreen>

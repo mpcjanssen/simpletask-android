@@ -127,7 +127,6 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
     class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences)
     class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
-    class FeaturesPrefFragment : PrefFragment(R.xml.features_prefences)
     class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
     class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
 
