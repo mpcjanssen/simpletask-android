@@ -62,7 +62,8 @@ android {
         }
     }
     dexOptions {
-        incremental true
+        incremental = false
+        preDexLibraries = false
     }
 }
 
