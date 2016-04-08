@@ -4,7 +4,6 @@ package nl.mpcjanssen.simpletask
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,18 +14,17 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.util.*
-
-
+import nl.mpcjanssen.simpletask.util.runOnMainThread
+import nl.mpcjanssen.simpletask.util.showToastShort
+import nl.mpcjanssen.simpletask.util.sortWithPrefix
 import java.io.File
 import java.io.IOException
-import java.util.ArrayList
+import java.util.*
 
 class FilterActivity : ThemedActivity() {
 

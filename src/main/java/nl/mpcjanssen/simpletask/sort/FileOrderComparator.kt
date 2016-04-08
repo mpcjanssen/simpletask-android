@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
 

@@ -5,17 +5,9 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
-import android.widget.TextView
 import com.buildware.widget.indeterm.IndeterminateCheckBox
-import com.buildware.widget.indeterm.IndeterminateRadioButton
-
-import java.util.ArrayList
-import java.util.HashSet
-
 import nl.mpcjanssen.simpletask.R
+import java.util.*
 
 class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of dataset)
 (private val mItems: ArrayList<String>,
@@ -54,10 +46,12 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
         // - replace the contents of the view with that element
         val viewItem = mItems[position]
         holder.mCheckBox.text = viewItem
+        holder.mCheckBox.setIndeterminateUsed(false)
         if (viewItem in onAll) {
             holder.mCheckBox.state = true
         } else if (viewItem in onSome) {
             holder.mCheckBox.state = null
+            holder.mCheckBox.setIndeterminateUsed(true)
         } else {
             holder.mCheckBox.state = false
         }

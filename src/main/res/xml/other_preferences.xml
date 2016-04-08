@@ -31,8 +31,6 @@
 	@copyright 2015 Vojtech Kral
 --><!-- suppress ALL -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_sort_case_sensitive"
@@ -47,8 +45,6 @@
         android:key="@string/show_txt_only"
         android:summary="@string/show_txt_only_summary"
         android:title="@string/show_txt_only_pref_title" />
-
-
     <Preference
         android:key="share_history"
         android:summary="@string/share_history"
@@ -56,6 +52,6 @@
     <Preference
         android:key="debug_info"
         android:summary="View and share the application version and log for debugging purposes."
-        android:title="View Debug Information"></Preference>
+        android:title="View Debug Information"/>
 
 </PreferenceScreen>
