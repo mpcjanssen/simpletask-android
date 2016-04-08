@@ -621,7 +621,7 @@ class RefreshAlarm () : BroadcastReceiver() {
     companion object {
         // Schedule refreshes
         fun scheduleRefresh(app: TodoApplication) {
-            val interval = TodoApplication.prefs.getLong(app.getString(R.string.dropbox_refresh_period), 5*60)
+            val interval = TodoApplication.prefs.getString(app.getString(R.string.dropbox_refresh_period), "300").toInt()
             Logger.info(FileStore.TAG, "Scheduling next tasklist refresh after $interval seconds")
             val intent = Intent(app, RefreshAlarm::class.java)
             val pi = PendingIntent.getBroadcast(app, 0, intent, 0)
