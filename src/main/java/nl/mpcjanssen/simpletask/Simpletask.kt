@@ -516,10 +516,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     override fun onResume() {
         super.onResume()
+        m_app.fileStore.pause(false, m_app.todoFileName)
         handleIntent()
     }
 
     override fun onPause() {
+        m_app.fileStore.pause(true,m_app.todoFileName)
         super.onPause()
     }
 

@@ -48,4 +48,6 @@ interface FileStoreInterface {
     interface FileReadListener {
         fun fileRead(contents: String?)
     }
+
+    fun pause(pause: Boolean, path: String)
 }
