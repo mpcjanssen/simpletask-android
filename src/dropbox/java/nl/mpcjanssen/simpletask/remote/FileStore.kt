@@ -33,13 +33,13 @@ import java.util.concurrent.CopyOnWriteArrayList
  * FileStore implementation backed by Dropbox
  */
 class FileStore(private val mApp: TodoApplication, private val mFileChangedListerer: FileStoreInterface.FileChangeListener) : FileStoreInterface {
-    override fun pause(pause: Boolean, path: String) {
+    override fun pause(pause: Boolean) {
         if (pause) {
             log.info(TAG, "App went to background stop watching")
             stopWatching()
         } else {
-            log.info(TAG, "App came to foreground continue watching $path")
-            continueWatching(path)
+            log.info(TAG, "App came to foreground continue watching ${mApp?.todoFileName}")
+            continueWatching(mApp?.todoFileName)
         }
     }
 
@@ -162,7 +162,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     private var pollFailures: Int = 0
 
-    private fun startLongPoll(polledFile: String, backoffSeconds: Int) {
+    private fun startLongPoll(backoffSeconds: Int) {
         val backoffFactor = 30.0
         val polltag = "LongPoll"
         pollingTask = Thread(Runnable {
@@ -213,14 +213,14 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                     val delta = mDBApi!!.delta(getLatestCursor())
                     saveLatestCursor(delta.cursor)
                     for (entry in delta.entries) {
-                        if (entry.lcPath.equals(polledFile, ignoreCase = true)) {
+                        if (entry.lcPath.equals(mApp.todoFileName, ignoreCase = true)) {
                             if (entry.metadata == null || entry.metadata.rev == null) {
                                 throw DropboxException("Metadata (or rev) in entry is null " + entry)
                             }
                             if (entry.metadata.rev == localTodoRev) {
-                                log.info(TAG, "Remote file " + polledFile + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
+                                log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
                             } else {
-                                log.info(TAG, "Remote file " + polledFile + " changed, rev: " + entry.metadata.rev + " reloading")
+                                log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " reloading")
                                 mFileChangedListerer.fileChanged(null)
                             }
                         }
@@ -252,7 +252,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 pollFailures++
             }
             newBackoffSeconds = (backoffFactor*(Math.pow(2.0, pollFailures.toDouble())-1.0)).toInt()
-            startLongPoll(polledFile, newBackoffSeconds)
+            startLongPoll(newBackoffSeconds)
         })
         pollingTask!!.start()
     }
@@ -408,7 +408,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     private fun startWatching(path: String) {
         queueRunnable("startWatching", Runnable {
             if (pollingTask == null) {
-                log.info("LongPoll", "Initializing slow polling thread")
+                log.info("LongPoll", "Initializing long polling thread")
                 continueWatching(path)
             }
         })
@@ -418,7 +418,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         log.info(TAG, "Continue watching $path")
         continuePolling = true
         pollFailures = 0
-        startLongPoll(path, 0)
+        startLongPoll(0)
     }
 
 

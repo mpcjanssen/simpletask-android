@@ -31,7 +31,7 @@ import java.util.*
 
 
 class AddTask : ThemedActivity() {
-    private var m_app: TodoApplication? = null
+    private lateinit var  m_app: TodoApplication
 
     private val share_text: String? = null
 
@@ -48,6 +48,8 @@ class AddTask : ThemedActivity() {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         m_app = application as TodoApplication
+        val todoList = m_app!!.todoList
+        m_app.loadTodoList(true)
 
         val intent = intent
         val mFilter = ActiveFilter()
@@ -89,8 +91,6 @@ class AddTask : ThemedActivity() {
 
         var iniTask: Task? = null
         setTitle(R.string.addtask)
-
-        val todoList = m_app!!.todoList
 
         m_backup = todoList.selectedTasks.toMutableList()
         todoList.clearSelection()
