@@ -4,6 +4,7 @@
 7.1.2
 -----
 
+- Don't update filter when renaming. Fixes #425.
 - Allow toggle back to indeterminate state when changing tags or lists. Fixes #405.
 - Reorganized settings thanks to smichel17. Fixes #401.
 - Updated icons to new material colors and sizes.
