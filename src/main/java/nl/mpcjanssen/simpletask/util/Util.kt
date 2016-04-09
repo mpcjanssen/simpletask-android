@@ -35,6 +35,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
 import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
