@@ -50,7 +50,7 @@ interface FileStoreInterface {
     }
 
     // Called when the main screen goes to the background and when it comes back
-    fun pause(pause: Boolean, path: String) {
+    fun pause(pause: Boolean) {
         // Do nothing by default
     }
 }
