@@ -1,10 +1,10 @@
 ﻿Changelog
 =========
 
-7.1.2
+7.2.0
 -----
 
-- Don't poll Dropbox when app is in background. Should improve battery usage.'
+- Don't poll Dropbox when app is in background. Improves battery usage and fixes #424.
 - Don't update filter when renaming. Fixes #425.
 - Allow toggle back to indeterminate state when changing tags or lists. Fixes #405.
 - Reorganized settings thanks to smichel17. Fixes #401.
