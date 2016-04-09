@@ -49,5 +49,8 @@ interface FileStoreInterface {
         fun fileRead(contents: String?)
     }
 
-    fun pause(pause: Boolean, path: String)
+    // Called when the main screen goes to the background and when it comes back
+    fun pause(pause: Boolean, path: String) {
+        // Do nothing by default
+    }
 }
