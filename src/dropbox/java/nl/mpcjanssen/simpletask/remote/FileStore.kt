@@ -152,10 +152,13 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
 
+    private var pollFailures: Int = 0
+
     private fun startLongPoll(polledFile: String, backoffSeconds: Int) {
         pollingTask = Thread(Runnable {
             val longpoll_timeout = 480
             var newBackoffSeconds = 0
+            pollFailures = 0
             var start_time = System.currentTimeMillis()
             if (!continuePolling) return@Runnable
             try {
@@ -217,21 +220,21 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                         continuePolling = false
                     }
                     if (System.currentTimeMillis() - start_time < longpoll_timeout * 1000) {
-                        log.info(TAG, "Longpoll timed out to quick, backing off for 60 seconds")
-                        newBackoffSeconds = 60
+                        pollFailures++
+                        log.info(TAG, "Longpoll timed out to quick")
                     }
                 } else {
-                    log.info(TAG, "Longpoll IO exception, restarting backing of {} seconds" + 30, e)
-                    newBackoffSeconds = 30
+                    log.info(TAG, "Longpoll IO exception", e)
+                    pollFailures++
                 }
             } catch (e: JsonExtractionException) {
                 log.info(TAG, "Longpoll Json exception, restarting backing of {} seconds" + 30, e)
-                newBackoffSeconds = 30
+                pollFailures++
             } catch (e: DropboxException) {
-                log.info(TAG, "Longpoll Dropbox exception, restarting backing of {} seconds" + 30, e)
-                newBackoffSeconds = 30
+                log.info(TAG, "Longpoll Dropbox exception" , e)
+                pollFailures++
             }
-
+            newBackoffSeconds = (60.0*(Math.pow(2.0, pollFailures.toDouble())-1.0)).toInt()
             startLongPoll(polledFile, newBackoffSeconds)
         })
         pollingTask!!.start()
