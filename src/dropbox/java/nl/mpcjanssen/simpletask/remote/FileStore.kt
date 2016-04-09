@@ -33,6 +33,15 @@ import java.util.concurrent.CopyOnWriteArrayList
  * FileStore implementation backed by Dropbox
  */
 class FileStore(private val mApp: TodoApplication, private val mFileChangedListerer: FileStoreInterface.FileChangeListener) : FileStoreInterface {
+    override fun pause(pause: Boolean, path: String) {
+        if (pause) {
+            log.info(TAG, "App went to background stop watching")
+            stopWatching()
+        } else {
+            log.info(TAG, "App came to foreground continue watching $path")
+            continueWatching(path)
+        }
+    }
 
 
     private val log: Logger
@@ -155,12 +164,17 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     private var pollFailures: Int = 0
 
     private fun startLongPoll(polledFile: String, backoffSeconds: Int) {
+        val backoffFactor = 30.0
+        val polltag = "LongPoll"
         pollingTask = Thread(Runnable {
-            val longpoll_timeout = 480
+            val longpoll_timeout = backoffFactor.toInt()
             var newBackoffSeconds = 0
-            pollFailures = 0
+            log.info(polltag, "Longpoll backoffSeconds: $backoffSeconds, pollFailures: $pollFailures")
             var start_time = System.currentTimeMillis()
-            if (!continuePolling) return@Runnable
+            if (!continuePolling) {
+                log.info(polltag, "Longpoll stopping continue == false")
+                return@Runnable
+            }
             try {
                 //log.info(TAG, "Long polling");
 
@@ -172,17 +186,21 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 params.add("timeout")
                 params.add("$longpoll_timeout")
                 if (backoffSeconds != 0) {
-                    log.info(TAG, "Backing off for $backoffSeconds seconds")
+                    log.info(polltag, "Longpoll backing off for $backoffSeconds seconds")
                     try {
                         Thread.sleep((backoffSeconds * 1000).toLong())
                     } catch (e: InterruptedException) {
                         e.printStackTrace()
                     }
-
+                    log.info(polltag, "Longpoll restarting after backoff")
+                    if (!continuePolling) {
+                        log.info(polltag, "Longpoll stopping continue == false")
+                        return@Runnable
+                    }
                 }
-                if (!continuePolling) return@Runnable
                 val response = RESTUtility.request(RESTUtility.RequestMethod.GET, "api-notify.dropbox.com", "longpoll_delta", 1, params.toArray<String>(arrayOfNulls<String>(params.size)), mDBApi!!.session)
-                log.info(TAG, "Longpoll response: " + response.toString())
+                pollFailures = 0
+                log.info(polltag, "Longpoll response: " + response.toString())
                 val result = JsonThing(response)
                 val resultMap = result.expectMap()
                 val changes = resultMap.get("changes").expectBoolean()
@@ -191,7 +209,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 if (backoffThing != null) {
                     newBackoffSeconds = backoffThing.expectInt32()
                 }
-                log.info(TAG, "Longpoll ended, changes $changes backoff $newBackoffSeconds")
+                log.info(polltag, "Longpoll ended, changes $changes backoff $newBackoffSeconds")
                 if (changes) {
                     val delta = mDBApi!!.delta(latestCursor)
                     latestCursor = delta.cursor
@@ -210,31 +228,31 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                     }
                 }
             } catch (e: DropboxUnlinkedException) {
-                log.info(TAG, "Dropbox unlinked, no more polling")
+                log.info(polltag, "Dropbox unlinked, no more polling")
                 continuePolling = false
             } catch (e: DropboxIOException) {
                 if (e is SocketTimeoutException) {
                     //log.info(TAG, "Longpoll timed out, restarting");
                     if (!isOnline) {
-                        log.info(TAG, "Device was not online, stopping polling")
+                        log.info(polltag, "Device was not online, stopping polling")
                         continuePolling = false
                     }
                     if (System.currentTimeMillis() - start_time < longpoll_timeout * 1000) {
                         pollFailures++
-                        log.info(TAG, "Longpoll timed out to quick")
+                        log.info(polltag, "Longpoll timed out to quick")
                     }
                 } else {
-                    log.info(TAG, "Longpoll IO exception", e)
+                    log.info(polltag, "Longpoll IO exception")
                     pollFailures++
                 }
             } catch (e: JsonExtractionException) {
-                log.info(TAG, "Longpoll Json exception, restarting backing of {} seconds" + 30, e)
+                log.info(polltag, "Longpoll Json exception, restarting backing of {} seconds" + 30, e)
                 pollFailures++
             } catch (e: DropboxException) {
-                log.info(TAG, "Longpoll Dropbox exception" , e)
+                log.info(polltag, "Longpoll Dropbox exception" , e)
                 pollFailures++
             }
-            newBackoffSeconds = (60.0*(Math.pow(2.0, pollFailures.toDouble())-1.0)).toInt()
+            newBackoffSeconds = (backoffFactor*(Math.pow(2.0, pollFailures.toDouble())-1.0)).toInt()
             startLongPoll(polledFile, newBackoffSeconds)
         })
         pollingTask!!.start()
@@ -351,31 +369,35 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
     private fun startWatching(path: String) {
         queueRunnable("startWatching", Runnable {
-            continuePolling = true
             if (pollingTask == null) {
-                log.info(TAG, "Initializing slow polling thread")
+                log.info("LongPoll", "Initializing slow polling thread")
                 try {
                     log.info(TAG, "Finding latest cursor")
                     val params = ArrayList<String>()
                     params.add("include_media_info")
                     params.add("false")
                     val response = RESTUtility.request(RESTUtility.RequestMethod.POST, "api.dropbox.com", "delta/latest_cursor", 1, params.toArray<String>(arrayOfNulls<String>(params.size)), mDBApi!!.session)
-                    log.info(TAG, "Longpoll latestcursor response: " + response.toString())
+                    log.info("LongPoll", "Longpoll latestcursor response: " + response.toString())
                     val result = JsonThing(response)
                     val resultMap = result.expectMap()
                     latestCursor = resultMap.get("cursor").expectString()
                 } catch (e: DropboxException) {
                     e.printStackTrace()
-                    log.error(TAG, "Error reading polling cursor" + e)
+                    log.error("LongPoll", "Error reading polling cursor" + e)
                 } catch (e: JsonExtractionException) {
                     e.printStackTrace()
-                    log.error(TAG, "Error reading polling cursor" + e)
+                    log.error("LongPoll", "Error reading polling cursor" + e)
                 }
-
-                log.info(TAG, "Starting slow polling")
-                startLongPoll(path, 0)
+                continueWatching(path)
             }
         })
+    }
+
+    private fun continueWatching(path: String) {
+        log.info(TAG, "Continue watching $path")
+        continuePolling = true
+        pollFailures = 0
+        startLongPoll(path, 0)
     }
 
 
