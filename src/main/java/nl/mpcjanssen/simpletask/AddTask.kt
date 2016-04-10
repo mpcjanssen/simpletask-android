@@ -39,17 +39,16 @@ class AddTask : ThemedActivity() {
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
     private var m_backup: MutableList<TodoListItem>? = null
-    private var log: Logger? = null
+    private val log = Logger
 
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        log = Logger
-        log!!.debug(TAG, "onCreate()")
+        log.debug(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         m_app = application as TodoApplication
         val todoList = m_app.todoList
-        m_app.loadTodoList(true)
+        // m_app.loadTodoList(true)
 
         val intent = intent
         val mFilter = ActiveFilter()
@@ -261,6 +260,7 @@ class AddTask : ThemedActivity() {
 
         // Don't add empty tasks
         if (input.trim { it <= ' ' }.isEmpty()) {
+            log.info(TAG, "Not adding empty line")
             finish()
             return
         }
@@ -269,6 +269,7 @@ class AddTask : ThemedActivity() {
         val todoList = m_app.todoList
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
+        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup?.size ?: 0} tasks" )
         for (task in enteredTasks) {
             if (m_backup != null && m_backup!!.size > 0) {
                 // Don't modify create date for updated tasks
