@@ -516,10 +516,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     override fun onResume() {
         super.onResume()
+        m_app.fileStore.pause(false)
         handleIntent()
     }
 
     override fun onPause() {
+        m_app.fileStore.pause(true)
         super.onPause()
     }
 
@@ -1071,8 +1073,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             if (value == "") {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
-                mFilter!!.name = value
-                mFilter!!.saveInPrefs(filter_pref)
+                old_filter.name = value
+                old_filter.saveInPrefs(filter_pref)
                 updateRightDrawer()
             }
         }

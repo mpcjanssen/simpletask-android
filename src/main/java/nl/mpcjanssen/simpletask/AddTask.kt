@@ -31,7 +31,7 @@ import java.util.*
 
 
 class AddTask : ThemedActivity() {
-    private var m_app: TodoApplication? = null
+    private lateinit var  m_app: TodoApplication
 
     private val share_text: String? = null
 
@@ -48,6 +48,8 @@ class AddTask : ThemedActivity() {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         m_app = application as TodoApplication
+        val todoList = m_app.todoList
+        m_app.loadTodoList(true)
 
         val intent = intent
         val mFilter = ActiveFilter()
@@ -58,7 +60,7 @@ class AddTask : ThemedActivity() {
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
 
-        localBroadcastManager = m_app!!.localBroadCastManager
+        localBroadcastManager = m_app.localBroadCastManager
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -81,7 +83,7 @@ class AddTask : ThemedActivity() {
 
         // text
         textInputField = findViewById(R.id.taskText) as EditText
-        m_app!!.setEditTextHint(textInputField, R.string.tasktexthint)
+        m_app.setEditTextHint(textInputField, R.string.tasktexthint)
 
         if (share_text != null) {
             textInputField.setText(share_text)
@@ -89,8 +91,6 @@ class AddTask : ThemedActivity() {
 
         var iniTask: Task? = null
         setTitle(R.string.addtask)
-
-        val todoList = m_app!!.todoList
 
         m_backup = todoList.selectedTasks.toMutableList()
         todoList.clearSelection()
@@ -131,7 +131,7 @@ class AddTask : ThemedActivity() {
 
         var inputFlags = InputType.TYPE_CLASS_TEXT
 
-        if (m_app!!.hasCapitalizeTasks()) {
+        if (m_app.hasCapitalizeTasks()) {
             inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }
         textInputField.setRawInputType(inputFlags)
@@ -159,7 +159,7 @@ class AddTask : ThemedActivity() {
                 textInputField.setSelection(endOfLine)
                 replaceTextAtSelection("\n", false)
 
-                if (m_app!!.isAddTagsCloneTags) {
+                if (m_app.isAddTagsCloneTags) {
                     val precedingText = textInputField.text.toString().substring(0, endOfLine)
                     val lineStart = precedingText.lastIndexOf('\n')
                     val line: String
@@ -184,7 +184,7 @@ class AddTask : ThemedActivity() {
             imeActionNext || hardwareEnterDown || hardwareEnterUp
         }
 
-        setWordWrap(m_app!!.isWordWrap)
+        setWordWrap(m_app.isWordWrap)
 
         val textIndex = 0
         textInputField.setSelection(textIndex)
@@ -213,9 +213,9 @@ class AddTask : ThemedActivity() {
         inflater.inflate(R.menu.add_task, menu)
         // Set checkboxes
         val mnuWordWrap = menu.findItem(R.id.menu_word_wrap)
-        mnuWordWrap.isChecked = m_app!!.isWordWrap
-        val mnuPrefill = menu.findItem(R.id.menu_prefill_next)
-        mnuPrefill.isChecked = m_app!!.isAddTagsCloneTags
+        mnuWordWrap.isChecked = m_app.isWordWrap
+        val mnuPreFill = menu.findItem(R.id.menu_prefill_next)
+        mnuPreFill.isChecked = m_app.isAddTagsCloneTags
         return true
     }
 
@@ -227,13 +227,13 @@ class AddTask : ThemedActivity() {
                 return true
             }
             R.id.menu_prefill_next -> {
-                m_app!!.isAddTagsCloneTags =  !m_app!!.isAddTagsCloneTags
+                m_app.isAddTagsCloneTags =  !m_app.isAddTagsCloneTags
                 item.isChecked = !item.isChecked
                 return true
             }
             R.id.menu_word_wrap -> {
-                val newVal = !m_app!!.isWordWrap
-                m_app!!.isWordWrap = newVal
+                val newVal = !m_app.isWordWrap
+                m_app.isWordWrap = newVal
                 setWordWrap(newVal)
                 item.isChecked = !item.isChecked
                 return true
@@ -266,7 +266,7 @@ class AddTask : ThemedActivity() {
         }
 
         // Update the TodoList with changes
-        val todoList = m_app!!.todoList
+        val todoList = m_app.todoList
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
         for (task in enteredTasks) {
@@ -276,12 +276,12 @@ class AddTask : ThemedActivity() {
                 m_backup!!.removeAt(0)
             } else {
                 val t: Task
-                if (m_app!!.hasPrependDate()) {
+                if (m_app.hasPrependDate()) {
                     t = Task(task.text, todayAsString)
                 } else {
                     t = task
                 }
-                todoList.add(t, m_app!!.hasAppendAtEnd())
+                todoList.add(t, m_app.hasAppendAtEnd())
             }
         }
 
@@ -293,7 +293,7 @@ class AddTask : ThemedActivity() {
         }
 
         // Save
-        todoList.notifyChanged(m_app!!.fileStore, m_app!!.todoFileName, m_app!!.eol, m_app, true)
+        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
         finish()
     }
 
@@ -324,7 +324,7 @@ class AddTask : ThemedActivity() {
                             today.month!! - 1,
                             today.day!!)
 
-                    val showCalendar = m_app!!.showCalendar()
+                    val showCalendar = m_app.showCalendar()
 
                     dialog.datePicker.calendarViewShown = showCalendar
                     dialog.datePicker.spinnersShown = !showCalendar
@@ -357,7 +357,7 @@ class AddTask : ThemedActivity() {
 
     private fun showTagMenu() {
         val items = TreeSet<String>()
-        val todoList = m_app!!.todoList
+        val todoList = m_app.todoList
         items.addAll(todoList.projects)
         // Also display contexts in tasks being added
         val tasks = getTasks()
@@ -370,7 +370,7 @@ class AddTask : ThemedActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = sortWithPrefix(items, m_app!!.sortCaseSensitive(), null)
+        val projects = sortWithPrefix(items, m_app.sortCaseSensitive(), null)
 
         val builder = AlertDialog.Builder(this)
         @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -408,7 +408,7 @@ class AddTask : ThemedActivity() {
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
         val dialog = builder.create()
-        dialog.setTitle(m_app!!.tagTerm)
+        dialog.setTitle(m_app.tagTerm)
         dialog.show()
     }
 
@@ -438,7 +438,7 @@ class AddTask : ThemedActivity() {
 
     private fun showListMenu() {
         val items = TreeSet<String>()
-        val todoList = m_app!!.todoList
+        val todoList = m_app.todoList
 
         items.addAll(todoList.contexts)
         // Also display contexts in tasks being added
@@ -452,7 +452,7 @@ class AddTask : ThemedActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = sortWithPrefix(items, m_app!!.sortCaseSensitive(), null)
+        val lists = sortWithPrefix(items, m_app.sortCaseSensitive(), null)
 
         val builder = AlertDialog.Builder(this)
         @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -490,7 +490,7 @@ class AddTask : ThemedActivity() {
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
         val dialog = builder.create()
-        dialog.setTitle(m_app!!.listTerm)
+        dialog.setTitle(m_app.listTerm)
         dialog.show()
     }
 

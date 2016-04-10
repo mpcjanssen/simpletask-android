@@ -29,8 +29,8 @@ android {
 
 
     defaultConfig {
-        versionName '7.1.1'
-        versionCode 3028
+        versionName '7.2.0'
+        versionCode 3029
 	    minSdkVersion 14
         targetSdkVersion 23
     }
