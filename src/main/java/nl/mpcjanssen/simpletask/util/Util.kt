@@ -494,14 +494,9 @@ fun ArrayList<HashSet<String>>.union() : HashSet<String> {
 }
 
 fun ArrayList<HashSet<String>>.intersection() : HashSet<String> {
-    if (this.size == 0) {
-        return HashSet<String>()
-    }
-    val result = this.reduce {
+    val result = this.fold (this.union()) {
         left,right ->
-        val intersection = java.util.HashSet<String>()
-        intersection.addAll(left.intersect(right))
-        intersection
+        left.intersect(right).toHashSet()
     }
     return result
 }
