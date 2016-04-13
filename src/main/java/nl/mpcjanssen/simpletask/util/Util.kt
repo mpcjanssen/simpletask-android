@@ -484,7 +484,7 @@ fun String.toDateTime(): DateTime? {
     return date
 }
 
-fun ArrayList<HashSet<String>>.union() : HashSet<String> {
+fun ArrayList<HashSet<String>>.union() : Set<String> {
     val result = this.fold  (HashSet<String>()) {
         left, right ->
         left.addAll(right)
@@ -493,10 +493,13 @@ fun ArrayList<HashSet<String>>.union() : HashSet<String> {
     return result
 }
 
-fun ArrayList<HashSet<String>>.intersection() : HashSet<String> {
-    val result = this.fold (this.union()) {
-        left,right ->
-        left.intersect(right).toHashSet()
+fun ArrayList<HashSet<String>>.intersection() : Set<String> {
+    val intersection = this.firstOrNull()?.toHashSet() ?: return emptySet()
+    for (i in 1..this.lastIndex) {
+        intersection.retainAll(this[i])
+        if (intersection.isEmpty()) {
+            break
+        }
     }
-    return result
+    return intersection
 }
