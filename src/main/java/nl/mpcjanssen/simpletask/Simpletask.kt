@@ -1543,28 +1543,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                             addToTask: (Task, String) -> Unit,
                             removeFromTask: (Task, String) -> Unit
     ) {
-        val checkedTaskItems = HashSet<ArrayList<String>>()
+        val checkedTaskItems = ArrayList<HashSet<String>>()
         for (task in checkedTasks) {
-            val items = ArrayList<String>()
+            val items = HashSet<String>()
             items.addAll(retrieveFromTask.invoke(task.task))
             checkedTaskItems.add(items)
         }
 
         // Determine items on all tasks (intersection of the sets)
-        val onAllTasks = checkedTaskItems.reduce {
-            left,right ->
-            val intersection = ArrayList<String>()
-            intersection.addAll(left.intersect(right))
-            intersection
-        }
+        val onAllTasks = checkedTaskItems.intersection()
 
         // Determine items on some tasks (union of the sets)
-        val onSomeTasks = checkedTaskItems.reduce {
-            left,right ->
-            val intersection = ArrayList<String>()
-            intersection.addAll(left.union(right))
-            intersection
-        }
+        val onSomeTasks = checkedTaskItems.union()
 
         @SuppressLint("InflateParams")
         val view = layoutInflater.inflate(R.layout.list_dialog, null, false)

@@ -483,3 +483,25 @@ fun String.toDateTime(): DateTime? {
     }
     return date
 }
+
+fun ArrayList<HashSet<String>>.union() : HashSet<String> {
+    val result = this.fold  (HashSet<String>()) {
+        left, right ->
+        left.addAll(right)
+        left
+    }
+    return result
+}
+
+fun ArrayList<HashSet<String>>.intersection() : HashSet<String> {
+    if (this.size == 0) {
+        return HashSet<String>()
+    }
+    val result = this.reduce {
+        left,right ->
+        val intersection = java.util.HashSet<String>()
+        intersection.addAll(left.intersect(right))
+        intersection
+    }
+    return result
+}
