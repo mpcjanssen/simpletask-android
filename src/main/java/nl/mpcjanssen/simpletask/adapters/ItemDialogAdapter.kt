@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.buildware.widget.indeterm.IndeterminateCheckBox
+import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 import java.util.*
 
@@ -15,7 +16,22 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
  private val onSome: HashSet<String>
  ) : RecyclerView.Adapter<ItemDialogAdapter.ViewHolder>() {
 
+    private val currentState = ArrayList<Boolean?>()
+    private val initialState = ArrayList<Boolean?>()
     val checkboxes = SparseArray<IndeterminateCheckBox>()
+
+    init {
+        mItems.forEach {
+            if (it in onAll) {
+                initialState.add(true)
+            } else if (it in onSome) {
+                initialState.add(null)
+            } else {
+                initialState.add(false)
+            }
+        }
+        currentState.addAll(initialState)
+    }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -44,16 +60,18 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        Logger.info("ItemAdapter", "onBinfViewHolder $position : ${mItems[position]}, ${currentState[position]}, ${initialState[position]}")
+        Logger.info("ItemAdapter", "onBinfViewHolder $position : ${mItems[holder.adapterPosition]}, ${currentState[holder.adapterPosition]}, ${initialState[holder.adapterPosition]}")
+
+        val adapterPosition = holder.adapterPosition
         val viewItem = mItems[position]
+        holder.mCheckBox.setOnStateChangedListener(null)
         holder.mCheckBox.text = viewItem
-        holder.mCheckBox.setIndeterminateUsed(false)
-        if (viewItem in onAll) {
-            holder.mCheckBox.state = true
-        } else if (viewItem in onSome) {
-            holder.mCheckBox.state = null
-            holder.mCheckBox.setIndeterminateUsed(true)
-        } else {
-            holder.mCheckBox.state = false
+        holder.mCheckBox.setIndeterminateUsed(initialState[adapterPosition]==null)
+        holder.mCheckBox.state = currentState[adapterPosition]
+        holder.mCheckBox.setOnStateChangedListener { indeterminateCheckBox, b ->
+            Logger.info("ItemAdapter", "state chaged $position, ${holder.adapterPosition}")
+            currentState[adapterPosition] = b
         }
         checkboxes.put(position, holder.mCheckBox)
     }
