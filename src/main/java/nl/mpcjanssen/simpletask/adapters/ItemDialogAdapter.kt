@@ -16,9 +16,8 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
  private val onSome: HashSet<String>
  ) : RecyclerView.Adapter<ItemDialogAdapter.ViewHolder>() {
 
-    private val currentState = ArrayList<Boolean?>()
+    val currentState = ArrayList<Boolean?>()
     private val initialState = ArrayList<Boolean?>()
-    val checkboxes = SparseArray<IndeterminateCheckBox>()
 
     init {
         mItems.forEach {
@@ -60,8 +59,7 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Logger.info("ItemAdapter", "onBinfViewHolder $position : ${mItems[position]}, ${currentState[position]}, ${initialState[position]}")
-        Logger.info("ItemAdapter", "onBinfViewHolder $position : ${mItems[holder.adapterPosition]}, ${currentState[holder.adapterPosition]}, ${initialState[holder.adapterPosition]}")
+        Logger.info("ItemAdapter", "onBindViewHolder $position : ${mItems[position]}, ${currentState[position]}, ${initialState[position]}")
 
         val adapterPosition = holder.adapterPosition
         val viewItem = mItems[position]
@@ -73,7 +71,6 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
             Logger.info("ItemAdapter", "state chaged $position, ${holder.adapterPosition}")
             currentState[adapterPosition] = b
         }
-        checkboxes.put(position, holder.mCheckBox)
     }
 
     // Return the size of your dataset (invoked by the layout manager)
