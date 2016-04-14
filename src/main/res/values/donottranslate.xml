@@ -140,6 +140,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="back_key_saves_key" translatable="false">back_saves</string>
     <string name="ui_drawer_fixed_landscape" translatable="false">ui_drawer_fixed_landscape</string>
     <string name="ui_show_edittext_hints" translatable="false">ui_show_edittext_hints</string>
+    <string name="share_task_toggle_append" translatable="false">share_task_toggle_append</string>
     <string name="share_task_append_text" translatable="false">share_task_append_task</string>
     <string name="local_file_root" translatable="false">local_file_root</string>
     <string name="ui_show_confirmation_dialogs" translatable="false">ui_show_confirmation_dialogs</string>
