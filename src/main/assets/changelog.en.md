@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+7.3.0
+-----
+
+- Re-use filter export format (JSON) to store active filter in preferences. This will reset the filter after the update.
+
 7.2.2
 -----
 
