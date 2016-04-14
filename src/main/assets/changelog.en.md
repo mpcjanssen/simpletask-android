@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+7.2.2
+-----
+
+- Fix completely broken update lists and tags when scrolling occurs. Fixes #426.
+
+7.2.1
+-----
+
+- Fix bug with updating tasks.
+
 7.2.0
 -----
 

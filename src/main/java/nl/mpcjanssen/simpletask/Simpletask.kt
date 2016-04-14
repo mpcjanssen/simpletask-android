@@ -1578,11 +1578,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     addToTask(t,newText)
                 }
             }
-            val checkboxes = itemAdapter.checkboxes
-            for (i in 0..checkboxes.size()-1) {
-                val checkbox = checkboxes.get(i,null)
-                val selected = checkbox.state;
-                when (selected ) {
+            val updatedValues = itemAdapter.currentState
+            for (i in 0..updatedValues.lastIndex) {
+                when (updatedValues[i] ) {
                     false -> {
                         for (task in checkedTasks) {
                             val t = task.task

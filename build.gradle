@@ -29,8 +29,8 @@ android {
 
 
     defaultConfig {
-        versionName '7.2.1'
-        versionCode 3030
+        versionName '7.2.2'
+        versionCode 3031
 	    minSdkVersion 14
         targetSdkVersion 23
     }
@@ -42,9 +42,9 @@ android {
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
         }
-        toodledo {
-            applicationId 'nl.mpcjanssen.simpletask.toodledo'
-        }
+        //toodledo {
+        //    applicationId 'nl.mpcjanssen.simpletask.toodledo'
+        //}
     }
 
     signingConfigs {
