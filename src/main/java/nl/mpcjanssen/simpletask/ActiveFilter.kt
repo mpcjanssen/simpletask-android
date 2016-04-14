@@ -52,12 +52,15 @@ class ActiveFilter {
         log = Logger
     }
 
-    fun initFromJSON(json: JSONObject) {
+    fun initFromJSON(json: JSONObject?) {
         val prios: String?
         val projects: String?
         val contexts: String?
         val sorts: String?
 
+        if (json==null) {
+            return
+        }
         prios = json.optString(INTENT_PRIORITIES_FILTER)
         projects = json.optString(INTENT_PROJECTS_FILTER)
         contexts = json.optString(INTENT_CONTEXTS_FILTER)
@@ -145,26 +148,10 @@ class ActiveFilter {
     }
 
     fun initFromPrefs(prefs: SharedPreferences) {
-        m_sorts = ArrayList<String>()
-        m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-        contexts = ArrayList(prefs.getStringSet(
-                INTENT_CONTEXTS_FILTER, emptySet<String>()))
-        priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, emptySet<String>())))
-        projects = ArrayList(prefs.getStringSet(
-                INTENT_PROJECTS_FILTER, emptySet<String>()))
-        contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false)
-        prioritiesNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false)
-        projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false)
-        hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false)
-        hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false)
-        hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false)
-        hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false)
-        hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false)
-        hideHidden = prefs.getBoolean(INTENT_HIDE_HIDDEN_FILTER, true)
-        name = prefs.getString(INTENT_TITLE, "Simpletask")
-        search = prefs.getString(SearchManager.QUERY, null)
-        script = prefs.getString(INTENT_SCRIPT_FILTER, null)
-        scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
+        val jsonFromPref = prefs.getString(INTENT_JSON,null)
+        jsonFromPref?.let {
+            initFromJSON(JSONObject(jsonFromPref))
+        }
     }
 
     fun hasFilter(): Boolean {
@@ -267,32 +254,15 @@ class ActiveFilter {
         json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
         json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
         json.put(INTENT_SCRIPT_FILTER, script)
-
-
         json.put(SearchManager.QUERY, search)
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
             val editor = prefs.edit()
-            editor.putString(INTENT_TITLE, name)
-            editor.putString(INTENT_SORT_ORDER, join(m_sorts, "\n"))
-            editor.putStringSet(INTENT_CONTEXTS_FILTER, HashSet(contexts))
-            editor.putStringSet(INTENT_PRIORITIES_FILTER,
-                    HashSet(Priority.inCode(priorities)))
-            editor.putStringSet(INTENT_PROJECTS_FILTER, HashSet(projects))
-            editor.putBoolean(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
-            editor.putBoolean(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
-            editor.putBoolean(INTENT_PROJECTS_FILTER_NOT, projectsNot)
-            editor.putBoolean(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
-            editor.putBoolean(INTENT_HIDE_FUTURE_FILTER, hideFuture)
-            editor.putBoolean(INTENT_HIDE_LISTS_FILTER, hideLists)
-            editor.putBoolean(INTENT_HIDE_TAGS_FILTER, hideTags)
-            editor.putBoolean(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
-            editor.putBoolean(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
-            editor.putString(INTENT_SCRIPT_FILTER, script)
-            editor.putString(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
-            editor.putString(SearchManager.QUERY, search)
+            val json = JSONObject()
+            this.saveInJSON(json)
+            editor.putString(INTENT_JSON, json.toString(2))
             editor.apply()
         }
     }
@@ -419,6 +389,7 @@ class ActiveFilter {
      * Changing this will break existing shortcuts and widgets
      */
         const val INTENT_TITLE = "TITLE"
+        const val INTENT_JSON = "JSON"
         const val INTENT_SORT_ORDER = "SORTS"
         const val INTENT_CONTEXTS_FILTER = "CONTEXTS"
         const val INTENT_PROJECTS_FILTER = "PROJECTS"
