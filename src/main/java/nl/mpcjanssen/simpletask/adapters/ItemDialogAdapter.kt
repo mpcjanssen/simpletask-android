@@ -68,7 +68,7 @@ class ItemDialogAdapter// Provide a suitable constructor (depends on the kind of
         holder.mCheckBox.setIndeterminateUsed(initialState[adapterPosition]==null)
         holder.mCheckBox.state = currentState[adapterPosition]
         holder.mCheckBox.setOnStateChangedListener { indeterminateCheckBox, b ->
-            Logger.info("ItemAdapter", "state chaged $position, ${holder.adapterPosition}")
+            Logger.info("ItemAdapter", "state chaged $position:$viewItem, new state: $b")
             currentState[adapterPosition] = b
         }
     }
