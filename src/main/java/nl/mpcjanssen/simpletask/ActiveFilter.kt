@@ -61,6 +61,7 @@ class ActiveFilter {
         if (json==null) {
             return
         }
+        name = json.optString(INTENT_TITLE, "No title")
         prios = json.optString(INTENT_PRIORITIES_FILTER)
         projects = json.optString(INTENT_PROJECTS_FILTER)
         contexts = json.optString(INTENT_CONTEXTS_FILTER)
@@ -148,8 +149,30 @@ class ActiveFilter {
     }
 
     fun initFromPrefs(prefs: SharedPreferences) {
-        val jsonFromPref = prefs.getString(INTENT_JSON,null)
-        jsonFromPref?.let {
+        val jsonFromPref = prefs.getString(INTENT_JSON, null)
+        if (jsonFromPref == null) {
+            // Older non JSON version of filter. Use legace loading
+            m_sorts = ArrayList<String>()
+            m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            contexts = ArrayList(prefs.getStringSet(
+                    INTENT_CONTEXTS_FILTER, emptySet<String>()))
+            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, emptySet<String>())))
+            projects = ArrayList(prefs.getStringSet(
+                    INTENT_PROJECTS_FILTER, emptySet<String>()))
+            contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false)
+            prioritiesNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false)
+            projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false)
+            hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false)
+            hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false)
+            hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false)
+            hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false)
+            hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false)
+            hideHidden = prefs.getBoolean(INTENT_HIDE_HIDDEN_FILTER, true)
+            name = prefs.getString(INTENT_TITLE, "Simpletask")
+            search = prefs.getString(SearchManager.QUERY, null)
+            script = prefs.getString(INTENT_SCRIPT_FILTER, null)
+            scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
+        } else {
             initFromJSON(JSONObject(jsonFromPref))
         }
     }
@@ -240,6 +263,7 @@ class ActiveFilter {
     }
 
     fun saveInJSON(json: JSONObject) {
+        json.put(INTENT_TITLE, name)
         json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
         json.put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
         json.put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
