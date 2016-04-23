@@ -38,6 +38,7 @@
             android:icon="@drawable/content_new"
             android:src="@drawable/content_new" />
 
+
     </LinearLayout>
     <ImageView
         android:layout_height="1sp"

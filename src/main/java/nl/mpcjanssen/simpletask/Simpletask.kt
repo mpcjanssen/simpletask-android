@@ -93,6 +93,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
         intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
+        intentFilter.addAction(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
@@ -125,7 +126,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     updateConnectivityIndicator()
                 } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     handleIntent()
-                } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
+                } else if ( receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
+                        receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                     recreate()
                 }
             }
@@ -1412,9 +1414,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 val taskDue = holder.taskDue!!
                 val taskThreshold = holder.taskThreshold!!
 
-                taskAge.textSize =  m_app.activeFontSize * 0.8f
-                taskDue.textSize = m_app.activeFontSize * 0.8f
-                taskThreshold.textSize = m_app.activeFontSize * 0.8f
+                taskAge.textSize =  m_app.activeFontSize *  m_app.dateBarRelativeSize
+                taskDue.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
+                taskThreshold.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
 
                 val cb = holder.cbCompleted!!
                 taskText.text = ss
