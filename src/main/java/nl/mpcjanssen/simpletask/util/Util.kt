@@ -284,22 +284,13 @@ fun initGlobals(i: Interp, t: Task) {
     }
     i.setVar("tags", tagsObj, TCL.GLOBAL_ONLY)
 
-/*    i.set("due", dateStringToLuaLong(t.dueDate))
-    i.set("threshold", dateStringToLuaLong(t.thresholdDate))
-    globals.set("createdate", dateStringToLuaLong(t.createDate))
-    globals.set("completiondate", dateStringToLuaLong(t.completionDate))
-
-    val recPat = t.recurrencePattern
-    if (recPat == null) {
-        globals.set("recurrence", LuaValue.NIL)
-    } else {
-        globals.set("recurrence", t.recurrencePattern)
-    }
-    globals.set("completed", LuaBoolean.valueOf(t.isCompleted()))
-    globals.set("priority", t.priority.code)
-
-    globals.set("tags", javaListToLuaTable(t.tags))
-    globals.set("lists", javaListToLuaTable(t.lists))*/
+    i.setVar("due", t.dueDate, TCL.GLOBAL_ONLY)
+    i.setVar("threshold", t.thresholdDate, TCL.GLOBAL_ONLY)
+    i.setVar("createdate", t.createDate, TCL.GLOBAL_ONLY)
+    i.setVar("completiondate", t.completionDate, TCL.GLOBAL_ONLY)
+    i.setVar("recurrence", t.recurrencePattern?:"", TCL.GLOBAL_ONLY)
+    i.setVar("priority", t.priority.code, TCL.GLOBAL_ONLY)
+    i.setVar("completed", if (t.isCompleted()) "true" else "false" , TCL.GLOBAL_ONLY)
 }
 
 @Throws(IOException::class)
