@@ -24,6 +24,10 @@
 
 package nl.mpcjanssen.simpletask
 
+import java.util.Calendar
+import java.util.TimeZone
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.ContentResolver
@@ -37,14 +41,11 @@ import android.provider.CalendarContract.Events
 import android.provider.CalendarContract.Reminders
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
+
 import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.*
 import nl.mpcjanssen.simpletask.task.TToken
 
-import java.util.Calendar
-import java.util.TimeZone
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 
 class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncThresholds: Boolean) {
@@ -68,40 +69,29 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
     private var m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0)
     private val m_stpe: ScheduledThreadPoolExecutor
 
-    private fun calendarError(e: Exception?) {
-        if (e != null) {
-            log.error(TAG, "Error writing calendar", e)
-        } else {
-            log.error(TAG, "Error writing calendar")
-        }
-        m_sync_type = 0
-        showToastShort(TodoApplication.appContext, R.string.calendar_write_error)
-    }
+    private fun findCalendar(): Long {
+        val projection = arrayOf(Calendars._ID, Calendars.NAME)
+        val selection = Calendars.NAME + " = ?"
+        val args = arrayOf(CAL_NAME)
+        /* Check for calendar permission */
+        val permissionCheck = ContextCompat.checkSelfPermission(m_app,
+                Manifest.permission.WRITE_CALENDAR)
 
-    private val calID: Long
-        get() {
-            val projection = arrayOf(Calendars._ID, Calendars.NAME)
-            val selection = Calendars.NAME + " = ?"
-            val args = arrayOf(CAL_NAME)
-            /* Check for calendar permission */
-            val permissionCheck = ContextCompat.checkSelfPermission(m_app,
-                    Manifest.permission.WRITE_CALENDAR)
-
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                if (m_sync_type == 0) {
-                    return -1
-                } else {
-                    throw IllegalStateException("no calendar access")
-                }
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            if (m_sync_type == 0) {
+                return -1
+            } else {
+                throw IllegalStateException("no calendar access")
             }
-
-            val cursor = m_cr.query(CAL_URI, projection, selection, args, null) ?: throw IllegalArgumentException("null cursor")
-            if (cursor.count == 0) return -1
-            cursor.moveToFirst()
-            val ret = cursor.getLong(0)
-            cursor.close()
-            return ret
         }
+
+        val cursor = m_cr.query(CAL_URI, projection, selection, args, null) ?: throw IllegalArgumentException("null cursor")
+        if (cursor.count == 0) return -1
+        cursor.moveToFirst()
+        val ret = cursor.getLong(0)
+        cursor.close()
+        return ret
+    }
 
     private fun addCalendar() {
         val cv = ContentValues()
@@ -124,14 +114,15 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
         val args = arrayOf(CAL_NAME)
         try {
             val ret = m_cr.delete(CAL_URI, selection, args)
-            if (ret == 1)
+            if (ret == 0)
+                log.debug(TAG, "No calendar to remove")
+            else if (ret == 1)
                 log.debug(TAG, "Calendar removed")
             else
                 log.error(TAG, "Unexpected return value while removing calendar: " + ret)
         } catch (e: Exception) {
-            log.error(TAG, "Exception while removing calendar", e)
+            log.error(TAG, "Error while removing calendar", e)
         }
-
     }
 
     @TargetApi(16) private fun insertEvt(calID: Long, date: DateTime, title: String, description: String) {
@@ -212,8 +203,9 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
     }
 
     private fun sync() {
-
         try {
+            var calID = findCalendar()
+
             if (m_sync_type == 0) {
                 if (calID >= 0) removeCalendar()
                 return
@@ -221,27 +213,30 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
 
             if (calID < 0) {
                 addCalendar()
+                calID = findCalendar()   // Re-find the calendar, this is needed to verify it has been added
                 if (calID < 0) {
-                    calendarError(null)
-                    return
+                    // This happens when CM privacy guard disallows to write calendar (1)
+                    // OR it allows to write calendar but disallows reading it (2).
+                    // Either way, we cannot continue, but before bailing,
+                    // try to remove Calendar in case we're here because of (2).
+                    removeCalendar()
+                    throw IllegalStateException("Calendar nor added")
                 }
             }
 
             val tl = m_app.todoList
-
             val tasks = tl.todoItems
+
             setReminderDays(m_app.reminderDays)
             setReminderTime(m_app.reminderTime)
 
             log.debug(TAG, "Syncing due/threshold calendar reminders...")
             purgeEvts(calID)
             insertEvts(calID, tasks)
-        } catch (e: IllegalArgumentException) {
-            calendarError(e)
-        } catch (e: IllegalStateException) {
-            log.warn(TAG, "No calendar access")
+        } catch (e: Exception) {
+            log.error(TAG, "Calendar error", e)
+            m_sync_type = 0
         }
-
     }
 
     private fun setSyncType(syncType: Int) {
