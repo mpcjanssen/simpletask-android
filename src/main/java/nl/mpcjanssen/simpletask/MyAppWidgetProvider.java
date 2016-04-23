@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
@@ -28,20 +29,20 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         filter.saveInIntent(target);
     }
 
-	public static RemoteViews updateView(int widgetId, @NonNull Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
+	public static RemoteViews updateView(int widgetId, @NonNull Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences("" + widgetId, 0);
         RemoteViews view ;
-        SharedPreferences appPreferences = TodoApplication.Companion.getPrefs();
+        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         ColorDrawable listColor;
         ColorDrawable headerColor;
         String theme = appPreferences.getString("widget_theme", "");
 
         if (theme.equals("dark")) {
-            view = new RemoteViews(context.getPackageName(), R.layout.appwidget_dark);
+            view = new RemoteViews(ctx.getPackageName(), R.layout.appwidget_dark);
             listColor = new ColorDrawable(0xFF000000);
             headerColor = new ColorDrawable(0xFF000000);
         } else {
-		    view = new RemoteViews(context.getPackageName(), R.layout.appwidget);
+		    view = new RemoteViews(ctx.getPackageName(), R.layout.appwidget);
             listColor = new ColorDrawable(0xFFFFFFFF);
             headerColor = new ColorDrawable(0xFF0099CC);
         }
@@ -57,7 +58,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         view.setInt(R.id.widgetlv,"setBackgroundColor",listColor.getColor());
         view.setInt(R.id.header,"setBackgroundColor",headerColor.getColor());
 
-        Intent intent = new Intent(context, AppWidgetService.class);
+        Intent intent = new Intent(ctx, AppWidgetService.class);
         // Add the app widget ID to the intent extras.
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
@@ -73,20 +74,20 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         
         Intent appIntent;
 
-        appIntent = new Intent(context,Simpletask.class);
+        appIntent = new Intent(ctx,Simpletask.class);
         appIntent.setAction(Constants.INTENT_START_FILTER);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, FROM_LISTVIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, FROM_LISTVIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
-        appIntent = new Intent(context,Simpletask.class);
+        appIntent = new Intent(ctx,Simpletask.class);
         appIntent.setAction(Constants.INTENT_START_FILTER);
         putFilterExtras(appIntent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
-        appIntent = new Intent(context,AddTask.class);
+        appIntent = new Intent(ctx,AddTask.class);
         putFilterExtras(appIntent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(context, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
         return view;
 	}

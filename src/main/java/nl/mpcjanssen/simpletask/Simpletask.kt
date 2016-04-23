@@ -294,16 +294,16 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
             }
             log!!.info(TAG, "handleIntent: saving filter in prefs")
-            mFilter!!.saveInPrefs(TodoApplication.prefs)
+            mFilter!!.saveInPrefs(m_app.prefs)
         } else {
             // Set previous filters and sort
             log!!.info(TAG, "handleIntent: from m_prefs state")
-            mFilter!!.initFromPrefs(TodoApplication.prefs)
+            mFilter!!.initFromPrefs(m_app.prefs)
         }
 
         // Initialize Adapter
         if (m_adapter == null) {
-            m_adapter = TaskAdapter(layoutInflater)
+            m_adapter = TaskAdapter(layoutInflater, application)
         }
         m_adapter!!.setFilteredTasks()
 
@@ -591,7 +591,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                         mFilter = ActiveFilter()
                     }
                     mFilter!!.search = newText
-                    mFilter!!.saveInPrefs(TodoApplication.prefs)
+                    mFilter!!.saveInPrefs(m_app.prefs)
                     if (m_adapter != null) {
                         m_adapter!!.setFilteredTasks()
                     }
@@ -943,7 +943,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         val intent = Intent()
         mFilter!!.clear()
         mFilter!!.saveInIntent(intent)
-        mFilter!!.saveInPrefs(TodoApplication.prefs)
+        mFilter!!.saveInPrefs(m_app.prefs)
         setIntent(intent)
         closeSelectionMode()
         updateDrawers()
@@ -970,7 +970,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             val intent = intent
             mFilter!!.saveInIntent(intent)
             setIntent(intent)
-            mFilter!!.saveInPrefs(TodoApplication.prefs)
+            mFilter!!.saveInPrefs(m_app.prefs)
             m_adapter!!.setFilteredTasks()
             if (m_drawerLayout != null) {
                 m_drawerLayout!!.closeDrawer(GravityCompat.END)
@@ -1244,7 +1244,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                            var taskThreshold: TextView? = null,
                            var cbCompleted: CheckBox? = null)
 
-    inner class TaskAdapter(private val m_inflater: LayoutInflater) : BaseAdapter(), ListAdapter {
+    inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
 
 
         internal var visibleLines = ArrayList<VisibleLine>()
@@ -1445,8 +1445,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
                 }
 
-                val mContext = TodoApplication.appContext
-
                 val relAge = getRelativeAge(task, mContext)
                 val relDue = getRelativeDueDate(task, mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
                         ContextCompat.getColor(m_app, android.R.color.holo_red_light),
@@ -1517,8 +1515,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     private fun handleEllipsis(taskText: TextView) {
         val noEllipsizeValue = "no_ellipsize"
-        val ellipsizeKey = TodoApplication.appContext.getString(R.string.task_text_ellipsizing_pref_key)
-        val ellipsizePref = TodoApplication.prefs.getString(ellipsizeKey, noEllipsizeValue)
+        val ellipsizeKey = m_app.getString(R.string.task_text_ellipsizing_pref_key)
+        val ellipsizePref = m_app.prefs.getString(ellipsizeKey, noEllipsizeValue)
 
         if (noEllipsizeValue != ellipsizePref) {
             val truncateAt: TextUtils.TruncateAt?
@@ -1675,7 +1673,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             }
             val intent = intent
             mFilter!!.saveInIntent(intent)
-            mFilter!!.saveInPrefs(TodoApplication.prefs)
+            mFilter!!.saveInPrefs(m_app.prefs)
             setIntent(intent)
             closeSelectionMode()
             m_adapter!!.setFilteredTasks()

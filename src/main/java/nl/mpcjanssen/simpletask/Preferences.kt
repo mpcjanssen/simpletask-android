@@ -32,10 +32,7 @@ import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.preference.EditTextPreference
-import android.preference.Preference
-import android.preference.PreferenceActivity
-import android.preference.PreferenceFragment
+import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -45,20 +42,16 @@ import java.util.*
 
 class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private var prefs: SharedPreferences
-
-    var app: TodoApplication
-
-    init {
-        app = TodoApplication.appContext as TodoApplication
-        prefs = TodoApplication.prefs
-    }
+    lateinit var prefs: SharedPreferences
+    lateinit var app: TodoApplication
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        app = application as TodoApplication
         localBroadcastManager = app.localBroadCastManager
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
@@ -179,11 +172,11 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
-        var app = TodoApplication.appContext as TodoApplication
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             val screen = preferenceScreen;
             val toHide: Preference
+            val app = activity.application as TodoApplication
             if (app.hasDonated()) {
                 toHide = screen.findPreference("donate")
             } else {
