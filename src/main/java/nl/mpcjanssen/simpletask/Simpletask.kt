@@ -1446,7 +1446,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 }
 
                 val relAge = getRelativeAge(task, mContext)
-                val relDue = getRelativeDueDate(task, mContext, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
+                val relDue = getRelativeDueDate(task, m_app, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
                         ContextCompat.getColor(m_app, android.R.color.holo_red_light),
                         m_app.hasColorDueDates())
                 val relativeThresholdDate = getRelativeThresholdDate(task, mContext)
