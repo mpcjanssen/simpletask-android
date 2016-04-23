@@ -413,13 +413,26 @@ class TodoApplication : Application(),
 
     val activeFont: Int
         get() {
-            val fontsize = prefs.getString("fontsize", "medium")
-            when (fontsize) {
-                "small" -> return R.style.FontSizeSmall
-                "large" -> return R.style.FontSizeLarge
-                "larger" -> return R.style.FontSizeLarger
-                "huge" -> return R.style.FontSizeHuge
-                else -> return R.style.FontSizeMedium
+            if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {
+                return R.style.FontSizeDefault
+            }
+
+            val font_size = prefs.getInt(getString(R.string.font_size), -1 )
+            when (font_size) {
+                12 -> return R.style.FontSize12sp
+                14 -> return R.style.FontSize14sp
+                16 -> return R.style.FontSize16sp
+                18 -> return R.style.FontSize18sp
+                20 -> return R.style.FontSize20sp
+                22 -> return R.style.FontSize22sp
+                24 -> return R.style.FontSize24sp
+                26 -> return R.style.FontSize26sp
+                28 -> return R.style.FontSize28sp
+                30 -> return R.style.FontSize30sp
+                32 -> return R.style.FontSize32sp
+                34 -> return R.style.FontSize34sp
+                36 -> return R.style.FontSize36sp
+                else -> return R.style.FontSizeDefault
             }
         }
 

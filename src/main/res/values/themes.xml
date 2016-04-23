@@ -1,18 +1,46 @@
 <resources>
-    <style name="FontSizeSmall">
+    <style name="FontSizeDefault">
+    </style>
+    <style name="FontSize12sp">
         <item name="android:textSize">12sp</item>
     </style>
-    <style name="FontSizeMedium">
+    <style name="FontSize14sp">
+        <item name="android:textSize">14sp</item>
     </style>
-    <style name="FontSizeLarge">
+    <style name="FontSize16sp">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="FontSize18sp">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="FontSize20sp">
         <item name="android:textSize">20sp</item>
     </style>
-    <style name="FontSizeLarger">
+    <style name="FontSize22sp">
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="FontSize24sp">
+        <item name="android:textSize">24sp</item>
+    </style>
+     <style name="FontSize26sp">
+        <item name="android:textSize">26sp</item>
+    </style>
+    <style name="FontSize28sp">
         <item name="android:textSize">28sp</item>
     </style>
-    <style name="FontSizeHuge">
+    <style name="FontSize30sp">
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="FontSize32sp">
+        <item name="android:textSize">32sp</item>
+    </style>
+    <style name="FontSize34sp">
+        <item name="android:textSize">34sp</item>
+    </style>
+    <style name="FontSize36sp">
         <item name="android:textSize">36sp</item>
     </style>
+
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">#22BBEE</item>
