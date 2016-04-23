@@ -38,7 +38,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.TextUtils
-import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -264,7 +263,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             }
 
             // Set the drawer toggle as the DrawerListener
-            m_drawerLayout!!.setDrawerListener(m_drawerToggle)
+            val toggle = m_drawerToggle as ActionBarDrawerToggle
+            m_drawerLayout!!.removeDrawerListener(toggle)
+            m_drawerLayout!!.addDrawerListener(toggle)
             val actionBar = supportActionBar
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true)
