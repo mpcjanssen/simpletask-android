@@ -38,6 +38,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -1333,6 +1334,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 }
                 val t = view!!.findViewById(R.id.list_header_title) as TextView
                 t.text = line.title
+                t.textSize = m_app.activeFontSize
 
             } else {
                 var holder: ViewHolder
@@ -1406,6 +1408,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 val completed = task.isCompleted()
                 val taskText = holder.taskText!!
                 val taskAge = holder.taskAge!!
+                val taskDue = holder.taskDue!!
+                val taskThreshold = holder.taskThreshold!!
+
+                taskAge.textSize =  m_app.activeFontSize * 0.8f
+                taskDue.textSize = m_app.activeFontSize * 0.8f
+                taskThreshold.textSize = m_app.activeFontSize * 0.8f
+
                 val cb = holder.cbCompleted!!
                 taskText.text = ss
 
@@ -1449,8 +1458,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     taskAge.text = ""
                     taskAge.visibility = View.GONE
                 }
-                val taskDue = holder.taskDue!!
-                val taskThreshold = holder.taskThreshold!!
+
                 if (relDue != null) {
                     taskDue.text = relDue
                     taskDue.visibility = View.VISIBLE
