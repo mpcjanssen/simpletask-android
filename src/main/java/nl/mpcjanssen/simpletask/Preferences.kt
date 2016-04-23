@@ -34,6 +34,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.EditTextPreference
 import android.preference.Preference
+import android.preference.PreferenceActivity
 import android.preference.PreferenceFragment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -42,7 +43,7 @@ import android.view.MenuItem
 import java.util.*
 
 
-class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPreferenceChangeListener {
+class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var prefs: SharedPreferences
 
@@ -64,19 +65,22 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
-            if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
+                if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
+                    Logger.info(TAG, "Reloading preference screen with fragment ${intent.getStringExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)}")
                     recreate()
                 }
             }
         }
+        Logger.info(TAG, "Registering broadcast receiver")
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
         if ("theme" == key || "fontsize" == key) {
-            finish();
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_THEME_CHANGED))
+            val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
+            intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, AppearancePrefFragment::class.java.name);
+            localBroadcastManager.sendBroadcast(broadcastIntent)
         }
         if (key.equals(getString(R.string.calendar_sync_dues)) ||
                 key.equals(getString(R.string.calendar_sync_thresholds))) {
@@ -110,7 +114,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         localBroadcastManager.unregisterReceiver(m_broadcastReceiver)
     }
 
-    override fun onBuildHeaders(target: MutableList<Header> ) {
+    override fun onBuildHeaders(target: MutableList<Header>) {
         val allHeaders = ArrayList<Header>()
         loadHeadersFromResource(R.xml.preference_headers, allHeaders);
 
@@ -122,7 +126,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         }
     }
 
-    override fun isValidFragment(fragmentName: String) : Boolean {
+    override fun isValidFragment(fragmentName: String): Boolean {
         return true;
     }
 
@@ -154,9 +158,8 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
 
 
-
     class ConfigurationPrefFragment : PrefFragment(R.xml.configuration_preferences) {
-        override  fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             val rootPref = findPreference(getString(R.string.local_file_root)) as EditTextPreference
             rootPref.valueInSummary()
@@ -177,7 +180,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
     class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
         var app = TodoApplication.appContext as TodoApplication
-        override  fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             val screen = preferenceScreen;
             val toHide: Preference
@@ -191,7 +194,7 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     }
 
     class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
-        override  fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             val debugPref = findPreference("debug_info")
             debugPref.setOnPreferenceClickListener {
@@ -213,5 +216,5 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
 
 // Helper to replace %s in all setting summaries not only ListPreferences
 fun Preference.valueInSummary(any: Any? = null) {
-    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?:  this.sharedPreferences.getString(this.key,null))
+    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?: this.sharedPreferences.getString(this.key, null))
 }
