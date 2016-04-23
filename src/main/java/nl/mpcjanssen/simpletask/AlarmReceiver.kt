@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
+import nl.mpcjanssen.simpletask.util.todayAsString
 
 
 import java.util.Date
@@ -18,6 +19,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val now = Date()
         val removeBefore = Date(now.time - 24 * 60 * 60 * 1000)
         val oldLogCount = m_app.logDao.count()
+        m_app.today = todayAsString
         m_app.logDao.queryBuilder().where(LogItemDao.Properties.Timestamp.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
         val logCount = m_app.logDao.count()
         Logger.info(TAG, "Cleared " + (oldLogCount - logCount) + " old log items")

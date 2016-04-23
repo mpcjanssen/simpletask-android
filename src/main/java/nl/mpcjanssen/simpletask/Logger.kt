@@ -1,9 +1,14 @@
 package nl.mpcjanssen.simpletask
 
+import android.app.IntentService
+import android.content.Intent
 import android.util.Log
 import nl.mpcjanssen.simpletask.dao.gen.LogItem
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
+import java.io.Serializable
 import java.util.*
+import java.util.concurrent.Executors
+import kotlin.concurrent.thread
 
 /*
  * Small logging wrapper to be able to swap loggers without
@@ -12,20 +17,22 @@ import java.util.*
 
 object Logger {
     private var dao: LogItemDao? = null
+    private var executor = Executors.newCachedThreadPool()
 
     fun setDao (dao: LogItemDao) {
-
         this.dao = dao
     }
 
 
     fun logInDB(severity: String, tag: String, s: String, throwable: Throwable? = null) {
-        var throwableMessage : String = ""
-        throwable?.let {
-            throwableMessage = Log.getStackTraceString(throwable)
+        executor.submit {
+            var throwableMessage: String = ""
+            throwable?.let {
+                throwableMessage = Log.getStackTraceString(throwable)
+            }
+            val item = LogItem(Date(), severity, tag, s, throwableMessage)
+            dao?.insert(item)
         }
-        val item = LogItem(Date(), severity, tag, s, throwableMessage)
-        dao?.insert(item)
     }
 
     fun error(tag: String, s: String) {

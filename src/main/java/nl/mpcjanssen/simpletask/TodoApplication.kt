@@ -45,6 +45,7 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -533,4 +534,6 @@ class TodoApplication : Application(),
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int) : Boolean =  android.os.Build.VERSION.SDK_INT >= api
     }
+
+    var today: String = todayAsString
 }

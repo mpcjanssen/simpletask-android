@@ -430,15 +430,15 @@ fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     return null;
 }
 
-fun getRelativeDueDate(task: Task, ctx: Context, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
+fun getRelativeDueDate(task: Task, application : TodoApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
     val date = task.dueDate
     if (date != null) {
         date.toDateTime()?.let {
-            val relativeDate = RelativeDate.getRelativeDate(ctx, it);
+            val relativeDate = RelativeDate.getRelativeDate(application, it);
             val ss = SpannableString("Due: " + relativeDate);
-            if (date == todayAsString && useColor) {
+            if (date == application.today && useColor) {
                 setColor(ss, dueTodayColor);
-            } else if ((todayAsString.compareTo(date) > 0) && useColor) {
+            } else if ((application.today.compareTo(date) > 0) && useColor) {
                 setColor(ss, overDueColor);
             }
             return ss;

@@ -11,10 +11,10 @@ import java.util.*
 import kotlin.comparisons.reversed
 import kotlin.comparisons.then
 
-class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
     var comparators : Comparator<TodoListItem>? = null
     val defaultComparator = FileOrderComparator()
-    val TAG = MultiComparator::class.java.simpleName
+
     init {
         val log = Logger
 
@@ -41,12 +41,12 @@ class MultiComparator(sorts: ArrayList<String>, caseSensitve: Boolean, createAsB
                 "by_prio" -> comp = PriorityComparator()
                 "completed" -> comp = CompletedComparator()
                 "by_creation_date" -> comp = CreationDateComparator()
-                "in_future" -> comp = FutureComparator(todayAsString)
+                "in_future" -> comp = FutureComparator(today)
                 "by_due_date" -> comp = DueDateComparator()
                 "by_threshold_date" -> comp = ThresholdDateComparator(createAsBackup)
                 "by_completion_date" -> comp = CompletionDateComparator()
                 else -> {
-                    log.warn(TAG, "Unknown sort: " + sort)
+                    log.warn("MultiComparator", "Unknown sort: " + sort)
                     continue@label
                 }
             }

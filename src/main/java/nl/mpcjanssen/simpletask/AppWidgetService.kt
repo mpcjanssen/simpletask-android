@@ -81,6 +81,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         }
         val comp = MultiComparator(mFilter.getSort(
                 application.defaultSorts),
+                application.today,
                 application.sortCaseSensitive(),
                 mFilter.createIsThreshold)
         Collections.sort(visibleTasks, comp)
@@ -151,7 +152,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         rv.setTextViewText(R.id.tasktext, ss)
 
         val relAge = getRelativeAge(task, application)
-        val relDue = getRelativeDueDate(task ,application, ContextCompat.getColor(application,android.R.color.holo_green_light),
+        val relDue = getRelativeDueDate(task , application, ContextCompat.getColor(application,android.R.color.holo_green_light),
                 ContextCompat.getColor(application,android.R.color.holo_red_light),
                 true)
         val relThres = getRelativeThresholdDate(task, application)

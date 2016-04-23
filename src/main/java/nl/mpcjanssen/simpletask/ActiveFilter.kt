@@ -243,9 +243,6 @@ class ActiveFilter {
             for (item in items) {
                 idx++
                 val t = item.task
-                if ("" == t.inFileFormat().trim { it <= ' ' }) {
-                    continue
-                }
                 if (this.hideCompleted && t.isCompleted()) {
                     continue
                 }
@@ -253,6 +250,9 @@ class ActiveFilter {
                     continue
                 }
                 if (this.hideHidden && t.isHidden()) {
+                    continue
+                }
+                if ("" == t.inFileFormat().trim { it <= ' ' }) {
                     continue
                 }
                 if (!filter.apply(t)) {
