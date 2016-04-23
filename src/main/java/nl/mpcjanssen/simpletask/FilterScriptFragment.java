@@ -17,18 +17,9 @@ import nl.mpcjanssen.simpletask.util.Util;
 import tcl.lang.Interp;
 import tcl.lang.TCL;
 import tcl.lang.TclBoolean;
-import tcl.lang.TclException;
 import tcl.lang.TclObject;
 import tcl.lang.TclString;
 
-import org.luaj.vm2.*;
-import org.luaj.vm2.compiler.LuaC;
-import org.luaj.vm2.lib.jse.JsePlatform;
-
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class FilterScriptFragment extends Fragment {
 
@@ -82,25 +73,36 @@ public class FilterScriptFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Task t = new Task(getTestTask());
+                Interp i = new Interp();
                 try {
-                    Interp i = new Interp();
                     TclObject script = TclString.newInstance(getScript());
-                    i.eval(script, TCL.GLOBAL_ONLY);
-                    TclObject result = i.getResult();
-                    boolean resultAsBoolean = TclBoolean.get(i,result);
-                    tvResult.setText(result.toString());
+                    Util.initGlobals(i, t);
+
+                    i.eval(script, TCL.EVAL_GLOBAL);
+                    String result;
+                    boolean resultAsBoolean;
+                    if (i.returnCode == TCL.ERROR) {
+                        result = i.errorInfo;
+                        resultAsBoolean = false;
+                    } else {
+                        TclObject obj = i.getResult();
+                        result = i.getResult().toString();
+                        resultAsBoolean = TclBoolean.get(i,obj);
+                    }
+                    tvResult.setText(result);
 
                     if (resultAsBoolean || getScript().trim().isEmpty()) {
                         tvBooleanResult.setText("true");
                     } else {
                         tvBooleanResult.setText("false");
                     }
-                    i.dispose();
-                } catch (TclException e) {
-                    log.debug(TAG, "Tcl execution failed " + e.getMessage());
+
+                } catch (Exception e) {
+                    log.debug(TAG, "Tcl execution failed " + i.getResult());
                     tvBooleanResult.setText("error");
-                    tvResult.setText(e.getMessage());
+                    tvResult.setText(i.getResult().toString());
                 }
+                i.dispose();
             }
 
         });

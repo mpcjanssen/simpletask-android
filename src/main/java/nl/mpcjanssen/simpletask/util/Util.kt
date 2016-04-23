@@ -49,7 +49,8 @@ import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoListItem
-import org.luaj.vm2.*
+
+import tcl.lang.*
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
@@ -270,11 +271,21 @@ fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListene
 }
 
 
-fun initGlobals(globals: Globals, t: Task) {
-    globals.set("task", t.inFileFormat())
+fun initGlobals(i: Interp, t: Task) {
+    i.setVar("task", t.inFileFormat(), TCL.GLOBAL_ONLY)
+    val listsObj = TclList.newInstance()
+    t.lists.forEach {
+        TclList.append(i,listsObj, TclString.newInstance(it))
+    }
+    i.setVar("lists", listsObj, TCL.GLOBAL_ONLY)
+    val tagsObj = TclList.newInstance()
+    t.tags.forEach {
+        TclList.append(i,tagsObj, TclString.newInstance(it))
+    }
+    i.setVar("tags", tagsObj, TCL.GLOBAL_ONLY)
 
-    globals.set("due", dateStringToLuaLong(t.dueDate))
-    globals.set("threshold", dateStringToLuaLong(t.thresholdDate))
+/*    i.set("due", dateStringToLuaLong(t.dueDate))
+    i.set("threshold", dateStringToLuaLong(t.thresholdDate))
     globals.set("createdate", dateStringToLuaLong(t.createDate))
     globals.set("completiondate", dateStringToLuaLong(t.completionDate))
 
@@ -288,26 +299,7 @@ fun initGlobals(globals: Globals, t: Task) {
     globals.set("priority", t.priority.code)
 
     globals.set("tags", javaListToLuaTable(t.tags))
-    globals.set("lists", javaListToLuaTable(t.lists))
-}
-
-fun dateStringToLuaLong(dateString: String?): LuaValue {
-    dateString?.toDateTime()?.let {
-        return LuaValue.valueOf((it.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-    }
-    return LuaValue.NIL
-}
-
-fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
-    val size = javaList.count()
-    if (size == 0) return LuaValue.NIL
-    val luaArray = arrayOfNulls<LuaString>(javaList.count())
-    var i = 0
-    for (item in javaList) {
-        luaArray[i] = LuaString.valueOf(item)
-        i++
-    }
-    return LuaTable.listOf(luaArray)
+    globals.set("lists", javaListToLuaTable(t.lists))*/
 }
 
 @Throws(IOException::class)

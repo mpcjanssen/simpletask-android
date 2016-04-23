@@ -518,6 +518,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     override fun onResume() {
         super.onResume()
         m_app.fileStore.pause(false)
+        if (!fileStore.isLoading && mOverlayDialog!=null) {
+            showLoadingOverlay(this,mOverlayDialog,false)
+        }
         handleIntent()
     }
 

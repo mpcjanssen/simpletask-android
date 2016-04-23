@@ -7,9 +7,10 @@ import android.content.SharedPreferences
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
-import org.luaj.vm2.*
-import org.luaj.vm2.compiler.LuaC
-import org.luaj.vm2.lib.jse.JsePlatform
+import tcl.lang.Interp
+import tcl.lang.TCL
+import tcl.lang.TclBoolean
+import tcl.lang.TclString
 
 
 import java.io.ByteArrayInputStream
@@ -80,7 +81,7 @@ class ActiveFilter {
         val contexts: String?
         val sorts: String?
 
-        if (json==null) {
+        if (json == null) {
             return
         }
         name = json.optString(INTENT_TITLE, "No title")
@@ -224,59 +225,57 @@ class ActiveFilter {
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
-        var prototype: Prototype? = null
-        var globals: Globals? = null
+        var interp: Interp? = null
+
         if (items == null) {
             return ArrayList()
         }
         val today = todayAsString
-        try {
-            var script: String? = script
-            if (script == null) script = ""
-            script = script.trim { it <= ' ' }
-            if (!script.isEmpty()) {
-                val input = ByteArrayInputStream(script.toByteArray())
-                prototype = LuaC.instance.compile(input, "script")
-                globals = JsePlatform.standardGlobals()
-            }
-            var idx = -1
-            for (item in items) {
-                idx++
-                val t = item.task
-                if (this.hideCompleted && t.isCompleted()) {
-                    continue
-                }
-                if (this.hideFuture && t.inFuture(today)) {
-                    continue
-                }
-                if (this.hideHidden && t.isHidden()) {
-                    continue
-                }
-                if ("" == t.inFileFormat().trim { it <= ' ' }) {
-                    continue
-                }
-                if (!filter.apply(t)) {
-                    continue
-                }
-                if (!script.isEmpty()) {
-                    if (globals != null && prototype != null) {
-                        initGlobals(globals, t)
-                        globals.set("idx", idx)
-                        val closure = LuaClosure(prototype, globals)
-                        val result = closure.call()
-                        if (!result.toboolean()) {
-                            continue
-                        }
-                    }
-                }
-                matched.add(item)
-            }
-        } catch (e: LuaError) {
-            log.debug(TAG, "Lua execution failed " + e.message)
-        } catch (e: IOException) {
-            log.debug(TAG, "Execution failed " + e.message)
+        if (script == null) script = ""
+        script = script?.trim { it <= ' ' }
+        if (!script.isNullOrEmpty()) {
+            interp = Interp()
+            val scriptObj = TclString.newInstance(script)
         }
-
+        var idx = -1
+        for (item in items) {
+            idx++
+            val t = item.task
+            if (this.hideCompleted && t.isCompleted()) {
+                continue
+            }
+            if (this.hideFuture && t.inFuture(today)) {
+                continue
+            }
+            if (this.hideHidden && t.isHidden()) {
+                continue
+            }
+            if ("" == t.inFileFormat().trim { it <= ' ' }) {
+                continue
+            }
+            if (!filter.apply(t)) {
+                continue
+            }
+            if (!script.isNullOrEmpty() && interp != null) {
+                try {
+                    initGlobals(interp, t)
+                    interp.eval(script, TCL.EVAL_GLOBAL)
+                    val result: String
+                    val resultAsBoolean: Boolean
+                    if (interp.returnCode == TCL.ERROR) {
+                        continue
+                    } else {
+                        val obj = interp.getResult()
+                        resultAsBoolean = TclBoolean.get(interp, obj)
+                        if (!resultAsBoolean) continue
+                    }
+                } catch (e: Exception) {
+                    continue
+                }
+            }
+            matched.add(item)
+        }
+        interp?.dispose()
         return matched
     }
 

@@ -80,7 +80,6 @@ dependencies {
     compile "de.greenrobot:greendao:2.1.0"
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-    compile 'org.luaj:luaj-jse:3.0.1'
     testCompile 'junit:junit:4.12'
 }
 
