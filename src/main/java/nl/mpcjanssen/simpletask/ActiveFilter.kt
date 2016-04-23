@@ -36,6 +36,7 @@ class ActiveFilter {
     var hideLists = false
     var hideTags = false
     var hideCreateDate = false
+    var createIsThreshold = false
     var script: String? = null
     var scriptTestTask: String? = null
 
@@ -50,6 +51,27 @@ class ActiveFilter {
 
     init {
         log = Logger
+    }
+
+
+    fun saveInJSON(json: JSONObject) {
+        json.put(INTENT_TITLE, name)
+        json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
+        json.put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
+        json.put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
+        json.put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
+        json.put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
+        json.put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
+        json.put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
+        json.put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
+        json.put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
+        json.put(INTENT_HIDE_LISTS_FILTER, hideLists)
+        json.put(INTENT_HIDE_TAGS_FILTER, hideTags)
+        json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
+        json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
+        json.put(INTENT_CREATE_IS_THRESHOLD, createIsThreshold)
+        json.put(INTENT_SCRIPT_FILTER, script)
+        json.put(SearchManager.QUERY, search)
     }
 
     fun initFromJSON(json: JSONObject?) {
@@ -84,6 +106,8 @@ class ActiveFilter {
                 INTENT_HIDE_CREATE_DATE_FILTER)
         hideHidden = json.optBoolean(
                 INTENT_HIDE_HIDDEN_FILTER)
+        createIsThreshold = json.optBoolean(
+                INTENT_CREATE_IS_THRESHOLD)
         search = json.optString(SearchManager.QUERY)
         if (sorts != null && sorts != "") {
             m_sorts = ArrayList(
@@ -100,88 +124,6 @@ class ActiveFilter {
         }
     }
 
-    fun initFromIntent(intent: Intent) {
-        if (intent.hasExtra(INTENT_JSON)) {
-            val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
-            initFromJSON(JSONObject(jsonFromIntent))
-        } else {
-            // Older non JSON version of filter. Use legacy loading
-            val prios: String?
-            val projects: String?
-            val contexts: String?
-            val sorts: String?
-
-            prios = intent.getStringExtra(INTENT_PRIORITIES_FILTER)
-            projects = intent.getStringExtra(INTENT_PROJECTS_FILTER)
-            contexts = intent.getStringExtra(INTENT_CONTEXTS_FILTER)
-            sorts = intent.getStringExtra(INTENT_SORT_ORDER)
-
-            script = intent.getStringExtra(INTENT_SCRIPT_FILTER)
-            scriptTestTask = intent.getStringExtra(INTENT_SCRIPT_TEST_TASK_FILTER)
-
-            prioritiesNot = intent.getBooleanExtra(
-                    INTENT_PRIORITIES_FILTER_NOT, false)
-            projectsNot = intent.getBooleanExtra(
-                    INTENT_PROJECTS_FILTER_NOT, false)
-            contextsNot = intent.getBooleanExtra(
-                    INTENT_CONTEXTS_FILTER_NOT, false)
-            hideCompleted = intent.getBooleanExtra(
-                    INTENT_HIDE_COMPLETED_FILTER, false)
-            hideFuture = intent.getBooleanExtra(
-                    INTENT_HIDE_FUTURE_FILTER, false)
-            hideLists = intent.getBooleanExtra(
-                    INTENT_HIDE_LISTS_FILTER, false)
-            hideTags = intent.getBooleanExtra(
-                    INTENT_HIDE_TAGS_FILTER, false)
-            hideCreateDate = intent.getBooleanExtra(
-                    INTENT_HIDE_CREATE_DATE_FILTER, false)
-            hideHidden = intent.getBooleanExtra(
-                    INTENT_HIDE_HIDDEN_FILTER, true)
-            search = intent.getStringExtra(SearchManager.QUERY)
-            if (sorts != null && sorts != "") {
-                m_sorts = ArrayList(
-                        Arrays.asList(*sorts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-            }
-            if (prios != null && prios != "") {
-                priorities = Priority.toPriority(Arrays.asList(*prios.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-            }
-            if (projects != null && projects != "") {
-                this.projects = ArrayList(Arrays.asList(*projects.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-            }
-            if (contexts != null && contexts != "") {
-                this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-            }
-        }
-    }
-
-    fun initFromPrefs(prefs: SharedPreferences) {
-        val jsonFromPref = prefs.getString(INTENT_JSON, null)
-        if (jsonFromPref != null) {
-            initFromJSON(JSONObject(jsonFromPref))
-        } else {
-            // Older non JSON version of filter. Use legacy loading
-            m_sorts = ArrayList<String>()
-            m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-            contexts = ArrayList(prefs.getStringSet(
-                    INTENT_CONTEXTS_FILTER, emptySet<String>()))
-            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, emptySet<String>())))
-            projects = ArrayList(prefs.getStringSet(
-                    INTENT_PROJECTS_FILTER, emptySet<String>()))
-            contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false)
-            prioritiesNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false)
-            projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false)
-            hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false)
-            hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false)
-            hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false)
-            hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false)
-            hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false)
-            hideHidden = prefs.getBoolean(INTENT_HIDE_HIDDEN_FILTER, true)
-            name = prefs.getString(INTENT_TITLE, "Simpletask")
-            search = prefs.getString(SearchManager.QUERY, null)
-            script = prefs.getString(INTENT_SCRIPT_FILTER, null)
-            scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
-        }
-    }
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
@@ -256,24 +198,6 @@ class ActiveFilter {
         }
     }
 
-    fun saveInJSON(json: JSONObject) {
-        json.put(INTENT_TITLE, name)
-        json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
-        json.put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
-        json.put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
-        json.put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
-        json.put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
-        json.put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
-        json.put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
-        json.put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
-        json.put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
-        json.put(INTENT_HIDE_LISTS_FILTER, hideLists)
-        json.put(INTENT_HIDE_TAGS_FILTER, hideTags)
-        json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
-        json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
-        json.put(INTENT_SCRIPT_FILTER, script)
-        json.put(SearchManager.QUERY, search)
-    }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
@@ -423,9 +347,95 @@ class ActiveFilter {
         const val INTENT_HIDE_HIDDEN_FILTER = "HIDEHIDDEN"
         const val INTENT_HIDE_CREATE_DATE_FILTER = "HIDECREATEDATE"
 
+        const val INTENT_CREATE_IS_THRESHOLD = "CREATEISTHRESHOLD"
+
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
 
         const val INTENT_EXTRA_DELIMITERS = "\n|,"
     }
+
+    fun initFromIntent(intent: Intent) {
+        if (intent.hasExtra(INTENT_JSON)) {
+            val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
+            initFromJSON(JSONObject(jsonFromIntent))
+        } else {
+            // Older non JSON version of filter. Use legacy loading
+            val prios: String?
+            val projects: String?
+            val contexts: String?
+            val sorts: String?
+
+            prios = intent.getStringExtra(INTENT_PRIORITIES_FILTER)
+            projects = intent.getStringExtra(INTENT_PROJECTS_FILTER)
+            contexts = intent.getStringExtra(INTENT_CONTEXTS_FILTER)
+            sorts = intent.getStringExtra(INTENT_SORT_ORDER)
+
+            script = intent.getStringExtra(INTENT_SCRIPT_FILTER)
+            scriptTestTask = intent.getStringExtra(INTENT_SCRIPT_TEST_TASK_FILTER)
+
+            prioritiesNot = intent.getBooleanExtra(
+                    INTENT_PRIORITIES_FILTER_NOT, false)
+            projectsNot = intent.getBooleanExtra(
+                    INTENT_PROJECTS_FILTER_NOT, false)
+            contextsNot = intent.getBooleanExtra(
+                    INTENT_CONTEXTS_FILTER_NOT, false)
+            hideCompleted = intent.getBooleanExtra(
+                    INTENT_HIDE_COMPLETED_FILTER, false)
+            hideFuture = intent.getBooleanExtra(
+                    INTENT_HIDE_FUTURE_FILTER, false)
+            hideLists = intent.getBooleanExtra(
+                    INTENT_HIDE_LISTS_FILTER, false)
+            hideTags = intent.getBooleanExtra(
+                    INTENT_HIDE_TAGS_FILTER, false)
+            hideCreateDate = intent.getBooleanExtra(
+                    INTENT_HIDE_CREATE_DATE_FILTER, false)
+            hideHidden = intent.getBooleanExtra(
+                    INTENT_HIDE_HIDDEN_FILTER, true)
+            search = intent.getStringExtra(SearchManager.QUERY)
+            if (sorts != null && sorts != "") {
+                m_sorts = ArrayList(
+                        Arrays.asList(*sorts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            }
+            if (prios != null && prios != "") {
+                priorities = Priority.toPriority(Arrays.asList(*prios.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            }
+            if (projects != null && projects != "") {
+                this.projects = ArrayList(Arrays.asList(*projects.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            }
+            if (contexts != null && contexts != "") {
+                this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            }
+        }
+    }
+
+    fun initFromPrefs(prefs: SharedPreferences) {
+        val jsonFromPref = prefs.getString(INTENT_JSON, null)
+        if (jsonFromPref != null) {
+            initFromJSON(JSONObject(jsonFromPref))
+        } else {
+            // Older non JSON version of filter. Use legacy loading
+            m_sorts = ArrayList<String>()
+            m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            contexts = ArrayList(prefs.getStringSet(
+                    INTENT_CONTEXTS_FILTER, emptySet<String>()))
+            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, emptySet<String>())))
+            projects = ArrayList(prefs.getStringSet(
+                    INTENT_PROJECTS_FILTER, emptySet<String>()))
+            contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false)
+            prioritiesNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false)
+            projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false)
+            hideCompleted = prefs.getBoolean(INTENT_HIDE_COMPLETED_FILTER, false)
+            hideFuture = prefs.getBoolean(INTENT_HIDE_FUTURE_FILTER, false)
+            hideLists = prefs.getBoolean(INTENT_HIDE_LISTS_FILTER, false)
+            hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false)
+            hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false)
+            hideHidden = prefs.getBoolean(INTENT_HIDE_HIDDEN_FILTER, true)
+            name = prefs.getString(INTENT_TITLE, "Simpletask")
+            search = prefs.getString(SearchManager.QUERY, null)
+            script = prefs.getString(INTENT_SCRIPT_FILTER, null)
+            scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
+        }
+    }
+
 }
