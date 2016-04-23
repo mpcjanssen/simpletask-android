@@ -1551,7 +1551,18 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         val onAllTasks = checkedTaskItems.intersection()
 
         // Determine items on some tasks (union of the sets)
-        val onSomeTasks = checkedTaskItems.union()
+        var onSomeTasks = checkedTaskItems.union()
+        onSomeTasks -= onAllTasks
+
+        allItems.removeAll(onAllTasks)
+        allItems.removeAll(onSomeTasks)
+
+        // TODO add setting for this
+
+        val sortedAllItems = ArrayList<String>()
+        sortedAllItems += onAllTasks.sorted()
+        sortedAllItems += onSomeTasks.sorted()
+        sortedAllItems += allItems.sorted()
 
         @SuppressLint("InflateParams")
         val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
@@ -1559,7 +1570,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
         rcv.layoutManager = layoutManager;
-        val itemAdapter = ItemDialogAdapter(allItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
+        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
         rcv.adapter = itemAdapter
 
         val ed = view.findViewById(R.id.editText) as EditText
@@ -1581,13 +1592,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     false -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            removeFromTask(t,allItems[i])
+                            removeFromTask(t,sortedAllItems[i])
                         }
                     }
                     true -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            addToTask(t,allItems[i])
+                            addToTask(t,sortedAllItems[i])
                         }
                     }
                 }
