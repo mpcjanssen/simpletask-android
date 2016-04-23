@@ -7,13 +7,19 @@
             android:entryValues="@array/theme_values"
             android:summary="%s"
             android:title="@string/theme_pref_title"/>
-        <ListPreference
-            android:defaultValue="medium"
-            android:entries="@array/fontsize"
-            android:entryValues="@array/fontsize_values"
-            android:key="fontsize"
-            android:summary="%s"
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/custom_font_size"
             android:title="@string/font_size_delta_pref_title"/>
+        <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+            android:dependency="@string/custom_font_size"
+            android:key="@string/font_size"
+            android:defaultValue="14"
+            android:max="36"
+            robobunny:min="12"
+            robobunny:interval="2"
+            robobunny:unitsLeft=""
+            robobunny:unitsRight="sp"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/color_due_date_key"
