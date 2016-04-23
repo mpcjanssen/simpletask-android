@@ -9,6 +9,7 @@ abstract class ThemedActivity : AppCompatActivity() {
         val app = application as TodoApplication
         setTheme(app.activeTheme)
         setTheme(app.activeFont)
+
         super.onCreate(savedInstanceState)
     }
 }

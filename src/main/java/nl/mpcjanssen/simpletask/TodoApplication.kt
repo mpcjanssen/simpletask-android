@@ -417,6 +417,7 @@ class TodoApplication : Application(),
             when (fontsize) {
                 "small" -> return R.style.FontSizeSmall
                 "large" -> return R.style.FontSizeLarge
+                "larger" -> return R.style.FontSizeLarger
                 "huge" -> return R.style.FontSizeHuge
                 else -> return R.style.FontSizeMedium
             }
