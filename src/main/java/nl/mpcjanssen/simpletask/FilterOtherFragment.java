@@ -22,6 +22,7 @@ public class FilterOtherFragment extends Fragment {
     private CheckBox cbHideTags;
     private CheckBox cbHideCreateDate;
     private CheckBox cbHideHidden;
+    private CheckBox cbCreateAsThreshold;
     @Nullable
     ActionBar actionbar;
     private Logger log;
@@ -49,6 +50,7 @@ public class FilterOtherFragment extends Fragment {
         outState.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, getHideLists());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, getHideTags());
         outState.putBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, getHideCreateDate());
+        outState.putBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, getCreateAsThreshold());
     }
 
     @Override
@@ -68,6 +70,7 @@ public class FilterOtherFragment extends Fragment {
         cbHideTags = (CheckBox) layout.findViewById(R.id.cb_show_tags);
         cbHideCreateDate = (CheckBox) layout.findViewById(R.id.cb_show_create_date);
         cbHideHidden = (CheckBox) layout.findViewById(R.id.cb_show_hidden);
+        cbCreateAsThreshold = (CheckBox) layout.findViewById(R.id.cb_create_is_threshold);
         if (savedInstanceState != null) {
             cbHideCompleted.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
@@ -75,6 +78,7 @@ public class FilterOtherFragment extends Fragment {
             cbHideTags.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
             cbHideCreateDate.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false));
             cbHideHidden.setChecked(!savedInstanceState.getBoolean(ActiveFilter.INTENT_HIDE_HIDDEN_FILTER, true));
+            cbCreateAsThreshold.setChecked(savedInstanceState.getBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, false));
         } else {
             cbHideCompleted.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, false));
@@ -82,6 +86,7 @@ public class FilterOtherFragment extends Fragment {
             cbHideTags.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, false));
             cbHideCreateDate.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false));
             cbHideHidden.setChecked(!arguments.getBoolean(ActiveFilter.INTENT_HIDE_HIDDEN_FILTER, true));
+            cbCreateAsThreshold.setChecked(arguments.getBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, true));
         }
 
         return layout;
@@ -136,6 +141,15 @@ public class FilterOtherFragment extends Fragment {
             return arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false);
         } else {
             return !cbHideCreateDate.isChecked();
+        }
+    }
+
+    public boolean getCreateAsThreshold() {
+        Bundle arguments = getArguments();
+        if (cbCreateAsThreshold == null) {
+            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false);
+        } else {
+            return cbCreateAsThreshold.isChecked();
         }
     }
 }

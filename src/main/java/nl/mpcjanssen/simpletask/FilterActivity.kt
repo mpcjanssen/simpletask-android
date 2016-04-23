@@ -118,6 +118,7 @@ class FilterActivity : ThemedActivity() {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.hideTags)
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.hideCreateDate)
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_HIDDEN_FILTER, mFilter.hideHidden)
+        arguments.putBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
         arguments.putString(TAB_TYPE, OTHER_TAB)
         val otherTab = FilterOtherFragment()
         otherTab.arguments = arguments
@@ -223,6 +224,7 @@ class FilterActivity : ThemedActivity() {
                     mFilter.hideTags = of.hideTags
                     mFilter.hideCreateDate = of.hideCreateDate
                     mFilter.hideHidden = of.hideHidden
+                    mFilter.createIsThreshold = of.createAsThreshold
                 }
                 CONTEXT_TAB -> {
                     val lf = f as FilterListFragment

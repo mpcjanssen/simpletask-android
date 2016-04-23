@@ -186,11 +186,6 @@ class TodoApplication : Application(),
         return prefs.getBoolean(getString(R.string.ui_fast_scroll), true)
     }
 
-    // Use create date as backup for threshold date
-    fun useCreateBackup(): Boolean {
-        return prefs.getBoolean(getString(R.string.use_create_backup), false)
-    }
-
     fun showTxtOnly(): Boolean {
         return prefs.getBoolean(getString(R.string.show_txt_only), false)
     }

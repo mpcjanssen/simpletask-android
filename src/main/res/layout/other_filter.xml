@@ -44,4 +44,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/filter_show_create_date" />
+
+    <CheckBox
+        android:id="@+id/cb_create_is_threshold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/use_create_as_threshold_title" />
 </LinearLayout>
