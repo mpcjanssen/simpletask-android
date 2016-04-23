@@ -69,7 +69,7 @@ class ActiveFilter {
         json.put(INTENT_HIDE_TAGS_FILTER, hideTags)
         json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
         json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
-        json.put(INTENT_CREATE_IS_THRESHOLD, createIsThreshold)
+        json.put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
         json.put(INTENT_SCRIPT_FILTER, script)
         json.put(SearchManager.QUERY, search)
     }
@@ -107,7 +107,7 @@ class ActiveFilter {
         hideHidden = json.optBoolean(
                 INTENT_HIDE_HIDDEN_FILTER)
         createIsThreshold = json.optBoolean(
-                INTENT_CREATE_IS_THRESHOLD)
+                INTENT_CREATE_AS_THRESHOLD)
         search = json.optString(SearchManager.QUERY)
         if (sorts != null && sorts != "") {
             m_sorts = ArrayList(
@@ -347,7 +347,7 @@ class ActiveFilter {
         const val INTENT_HIDE_HIDDEN_FILTER = "HIDEHIDDEN"
         const val INTENT_HIDE_CREATE_DATE_FILTER = "HIDECREATEDATE"
 
-        const val INTENT_CREATE_IS_THRESHOLD = "CREATEISTHRESHOLD"
+        const val INTENT_CREATE_AS_THRESHOLD = "CREATEISTHRESHOLD"
 
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
