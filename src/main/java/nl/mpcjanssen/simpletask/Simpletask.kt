@@ -126,10 +126,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     handleIntent()
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
-                    val i = intent ?: Intent(this@Simpletask,Simpletask::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    finish()
-                    m_app.startActivity(i)
+                    recreate()
                 }
             }
         }
