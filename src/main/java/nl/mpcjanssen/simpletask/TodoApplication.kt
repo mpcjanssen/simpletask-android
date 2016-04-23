@@ -416,7 +416,6 @@ class TodoApplication : Application(),
             if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {
                 return R.style.FontSizeDefault
             }
-
             val font_size = prefs.getInt(getString(R.string.font_size), -1 )
             when (font_size) {
                 12 -> return R.style.FontSize12sp
@@ -434,6 +433,15 @@ class TodoApplication : Application(),
                 36 -> return R.style.FontSize36sp
                 else -> return R.style.FontSizeDefault
             }
+        }
+
+    val activeFontSize: Float
+        get() {
+            if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {
+                return 14.0f
+            }
+            val font_size = prefs.getInt(getString(R.string.font_size), 14 )
+            return font_size.toFloat()
         }
 
     val fileStore: FileStoreInterface
