@@ -66,13 +66,13 @@ class TodoApplication : Application(),
     internal lateinit var daoSession: DaoSession
     lateinit var  logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate() {
         log.debug(TAG, "onCreate()")
         super.onCreate()
-        appContext = applicationContext
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
-        prefs  = PreferenceManager.getDefaultSharedPreferences(appContext);
+        prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
         val todoDb = helper.writableDatabase
         val daoMaster = DaoMaster(todoDb)
@@ -531,10 +531,6 @@ class TodoApplication : Application(),
     companion object {
 
         private val TAG = TodoApplication::class.java.simpleName
-        lateinit var prefs: SharedPreferences;
-
         fun atLeastAPI(api: Int) : Boolean =  android.os.Build.VERSION.SDK_INT >= api
-
-        lateinit var appContext: Context
     }
 }

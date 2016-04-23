@@ -51,7 +51,7 @@ class FilterActivity : ThemedActivity() {
         log = Logger
         log!!.info(TAG, "Called with intent: " + intent.toString())
         m_app = application as TodoApplication
-        prefs = TodoApplication.prefs
+        prefs = m_app.prefs
 
         setContentView(R.layout.filter)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -276,7 +276,7 @@ class FilterActivity : ThemedActivity() {
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID)
 
-            val context = TodoApplication.appContext
+            val context = applicationContext
 
             // Store widget filter
             val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)

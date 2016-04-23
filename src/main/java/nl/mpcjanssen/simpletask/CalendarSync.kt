@@ -142,7 +142,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
             put(Events.EVENT_TIMEZONE, UTC.id)
             put(Events.STATUS, Events.STATUS_CONFIRMED)
             put(Events.HAS_ATTENDEE_DATA, true)      // If this is not set, Calendar app is confused about Event.STATUS
-            put(Events.CUSTOM_APP_PACKAGE, PACKAGE)
+            put(Events.CUSTOM_APP_PACKAGE, m_app.packageName)
             put(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString())
         }
         val uri = m_cr.insert(Events.CONTENT_URI, values)
@@ -284,7 +284,6 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
     }
 
     companion object {
-        private val PACKAGE = TodoApplication.appContext.packageName
         private val UTC = TimeZone.getTimeZone("UTC")
 
         private val ACCOUNT_NAME = "Simpletask Calendar"
