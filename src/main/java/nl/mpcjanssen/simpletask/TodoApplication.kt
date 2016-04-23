@@ -407,6 +407,12 @@ class TodoApplication : Application(),
 
     }
 
+    val dateBarRelativeSize: Float
+        get() {
+            val def = 80
+            return prefs.getInt(getString(R.string.datebar_relative_size), def)/100.0f
+        }
+
     val activeFont: Int
         get() {
             if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {

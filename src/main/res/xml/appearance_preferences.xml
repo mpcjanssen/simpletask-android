@@ -20,6 +20,15 @@
             robobunny:interval="2"
             robobunny:unitsLeft=""
             robobunny:unitsRight="sp"/>
+        <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+            android:title="@string/datebar_relative_size_summary"
+            android:key="@string/datebar_relative_size"
+            android:defaultValue="80"
+            android:max="100"
+            robobunny:min="0"
+            robobunny:interval="1"
+            robobunny:unitsLeft=""
+            robobunny:unitsRight="%"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/color_due_date_key"

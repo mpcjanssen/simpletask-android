@@ -148,6 +148,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="resume_sync_pref_title">Resume sync</string>
     <string name="resume_sync_pref_summary">Sync with dropbox when opening app.</string>
     <string name="font_size_delta_pref_title">Custom font size</string>
+    <string name="datebar_relative_size_summary">Relative date bar size</string>
     <string name="font_size_delta_pref_summary">Change the font size.</string>
     <string name="theme_pref_title">Theme</string>
     <string name="theme_pref_summary">Change the theme used for the application.</string>
