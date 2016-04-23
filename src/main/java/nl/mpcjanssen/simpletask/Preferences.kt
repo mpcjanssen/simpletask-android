@@ -29,8 +29,7 @@ package nl.mpcjanssen.simpletask
 
 
 import android.Manifest
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.EditTextPreference
@@ -52,6 +51,25 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
     init {
         app = TodoApplication.appContext as TodoApplication
         prefs = TodoApplication.prefs
+    }
+
+    private lateinit var localBroadcastManager: LocalBroadcastManager
+    private lateinit var m_broadcastReceiver: BroadcastReceiver
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        localBroadcastManager = app.localBroadCastManager
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
+
+        m_broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, receivedIntent: Intent) {
+            if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
+                    recreate()
+                }
+            }
+        }
+        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -85,6 +103,11 @@ class Preferences : ThemedPreferenceActivity(),  SharedPreferences.OnSharedPrefe
         super.onPause()
         // Set up a listener whenever a key changes
         prefs.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        localBroadcastManager.unregisterReceiver(m_broadcastReceiver)
     }
 
     override fun onBuildHeaders(target: MutableList<Header> ) {
