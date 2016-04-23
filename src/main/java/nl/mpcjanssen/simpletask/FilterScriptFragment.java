@@ -14,6 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
+import tcl.lang.Interp;
+import tcl.lang.TCL;
+import tcl.lang.TclBoolean;
+import tcl.lang.TclException;
+import tcl.lang.TclObject;
+import tcl.lang.TclString;
+
 import org.luaj.vm2.*;
 import org.luaj.vm2.compiler.LuaC;
 import org.luaj.vm2.lib.jse.JsePlatform;
@@ -76,28 +83,23 @@ public class FilterScriptFragment extends Fragment {
             public void onClick(View v) {
                 Task t = new Task(getTestTask());
                 try {
-                    String script = getScript();
-                    InputStream input = new ByteArrayInputStream(script.getBytes());
-                    Prototype prototype = LuaC.instance.compile(input, "script");
-                    Globals globals = JsePlatform.standardGlobals();
-
-                    Util.initGlobals(globals, t);
-                    LuaClosure closure = new LuaClosure(prototype, globals);
-                    LuaValue result = closure.call();
-
+                    Interp i = new Interp();
+                    TclObject script = TclString.newInstance(getScript());
+                    i.eval(script, TCL.GLOBAL_ONLY);
+                    TclObject result = i.getResult();
+                    boolean resultAsBoolean = TclBoolean.get(i,result);
                     tvResult.setText(result.toString());
 
-                    if (result.toboolean() || script.trim().isEmpty()) {
+                    if (resultAsBoolean || getScript().trim().isEmpty()) {
                         tvBooleanResult.setText("true");
                     } else {
                         tvBooleanResult.setText("false");
                     }
-                } catch (LuaError e) {
-                    log.debug(TAG, "Lua execution failed " + e.getMessage());
+                    i.dispose();
+                } catch (TclException e) {
+                    log.debug(TAG, "Tcl execution failed " + e.getMessage());
                     tvBooleanResult.setText("error");
                     tvResult.setText(e.getMessage());
-                } catch (IOException e) {
-                    log.debug(TAG, "Execution failed " + e.getMessage());
                 }
             }
 
