@@ -13,8 +13,6 @@ import tcl.lang.TclBoolean
 import tcl.lang.TclString
 
 
-import java.io.ByteArrayInputStream
-import java.io.IOException
 import java.util.*
 
 /**
@@ -40,6 +38,7 @@ class ActiveFilter {
     var createIsThreshold = false
     var script: String? = null
     var scriptTestTask: String? = null
+    val interp = Interp()
 
     override fun toString(): String {
         return join(m_sorts, ",")
@@ -225,7 +224,7 @@ class ActiveFilter {
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
-        var interp: Interp? = null
+        var filterProcAvailable = false
 
         if (items == null) {
             return ArrayList()
@@ -234,8 +233,17 @@ class ActiveFilter {
         if (script == null) script = ""
         script = script?.trim { it <= ' ' }
         if (!script.isNullOrEmpty()) {
-            interp = Interp()
             val scriptObj = TclString.newInstance(script)
+            try {
+                interp.eval(scriptObj, TCL.EVAL_GLOBAL)
+                filterProcAvailable = interp.getCommand(Constants.TCL_FILTER_COMMAND) != null
+                if (!filterProcAvailable) {
+                    log.info(TAG, "Tcl script doesn't define a ${Constants.TCL_FILTER_COMMAND} command")
+                }
+            } catch (e: Exception) {
+                log.error(TAG, "Error in Tcl script: ${e.cause} -> ${interp.getResult()}")
+            }
+
         }
         var idx = -1
         for (item in items) {
@@ -256,11 +264,10 @@ class ActiveFilter {
             if (!filter.apply(t)) {
                 continue
             }
-            if (!script.isNullOrEmpty() && interp != null) {
+            if (filterProcAvailable) {
                 try {
-                    initGlobals(interp, t)
-                    interp.eval(script, TCL.EVAL_GLOBAL)
-                    val result: String
+                    // Call the filter proc
+                    interp.eval(buildFilterTclCommand(interp,  t), TCL.EVAL_GLOBAL)
                     val resultAsBoolean: Boolean
                     if (interp.returnCode == TCL.ERROR) {
                         continue
@@ -275,7 +282,6 @@ class ActiveFilter {
             }
             matched.add(item)
         }
-        interp?.dispose()
         return matched
     }
 

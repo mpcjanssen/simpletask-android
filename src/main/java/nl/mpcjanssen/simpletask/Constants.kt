@@ -64,6 +64,9 @@ object Constants {
     const val HELP_INDEX = "index.en.md"
     const val HELP_ADD_TASK = "addtask.en.md"
 
+    const val TCL_FILTER_COMMAND = "onFilter"
+    const val TCL_DISPLAY_COMMAND = "onDisplay"
+
 }
 
 enum class DateType {

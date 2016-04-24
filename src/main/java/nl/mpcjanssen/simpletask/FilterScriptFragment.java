@@ -76,9 +76,11 @@ public class FilterScriptFragment extends Fragment {
                 Interp i = new Interp();
                 try {
                     TclObject script = TclString.newInstance(getScript());
-                    Util.initGlobals(i, t);
-
+                    // Load the script
                     i.eval(script, TCL.EVAL_GLOBAL);
+
+                    // Call the filter proc
+                    i.eval(Util.buildFilterTclCommand(i,t), TCL.EVAL_GLOBAL);
                     String result;
                     boolean resultAsBoolean;
                     if (i.returnCode == TCL.ERROR) {
@@ -98,7 +100,7 @@ public class FilterScriptFragment extends Fragment {
                     }
 
                 } catch (Exception e) {
-                    log.debug(TAG, "Tcl execution failed " + i.getResult());
+                    log.debug(TAG, "Tcl execution failed " + e.getCause() + i.getResult());
                     tvBooleanResult.setText("error");
                     tvResult.setText(i.getResult().toString());
                 }

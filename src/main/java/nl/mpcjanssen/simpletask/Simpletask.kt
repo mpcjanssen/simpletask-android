@@ -54,6 +54,9 @@ import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
+import tcl.lang.Interp
+import tcl.lang.TCL
+import tcl.lang.TclString
 
 import java.io.File
 import java.io.IOException
@@ -78,13 +81,14 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     internal var m_scrollPosition = 0
     private var mOverlayDialog: Dialog? = null
     private var mIgnoreScrollEvents = false
-    private var log: Logger? = null
+    private lateinit var log: Logger
+    val interp: Interp = Interp()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log = Logger
-        log!!.info(TAG, "onCreate")
-        log!!.info(TAG, "Started ${appVersion(this)}")
+        log.info(TAG, "onCreate")
+        log.info(TAG, "Started ${appVersion(this)}")
         m_app = application as TodoApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
@@ -507,6 +511,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     override fun onDestroy() {
         super.onDestroy()
+        interp.dispose()
         localBroadcastManager!!.unregisterReceiver(m_broadcastReceiver)
     }
 
@@ -1251,8 +1256,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
 
-
         internal var visibleLines = ArrayList<VisibleLine>()
+
+        private var displayProcAvailable = false
 
         internal fun setFilteredTasks() {
             if (m_app.showTodoPath()) {
@@ -1260,9 +1266,23 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             } else {
                 setTitle(R.string.app_label)
             }
+            if (!mFilter?.script.isNullOrEmpty()) {
+                try {
+                    val scriptObj = TclString.newInstance(mFilter?.script)
+                    interp.eval(scriptObj, TCL.EVAL_GLOBAL)
+                    displayProcAvailable = interp.getCommand(Constants.TCL_DISPLAY_COMMAND) != null
+                    if (!displayProcAvailable) {
+                        log.info(ActiveFilter.TAG, "Tcl script doesn't define a ${Constants.TCL_DISPLAY_COMMAND} command")
+                    }
+                } catch (e: Exception) {
+                    log.error(ActiveFilter.TAG, "Error in Tcl script: ${e.cause} -> ${interp.getResult()}")
+                }
+            }
+
+
             updateConnectivityIndicator();
             val visibleTasks: List<TodoListItem>
-            log!!.info(TAG, "setFilteredTasks called: " + todoList)
+            log.info(TAG, "setFilteredTasks called: " + todoList)
             val activeFilter = mFilter ?: return
             val sorts = activeFilter.getSort(m_app.defaultSorts)
             visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
@@ -1368,23 +1388,39 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     val taskBar = view.findViewById(R.id.datebar)
                     taskBar.visibility = View.GONE
                 }
-                var tokensToShow = TToken.ALL
-                // Hide dates if we have a date bar
-                if (m_app.hasExtendedTaskView()) {
-                    tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-                    tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-                    tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
-                }
-                tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-                tokensToShow = tokensToShow and TToken.COMPLETED.inv()
 
-                if (mFilter!!.hideLists) {
-                    tokensToShow = tokensToShow and TToken.LIST.inv()
+
+                // Also massage with Tcl
+                val txt = if (displayProcAvailable) {
+                    try {
+                        // Call the filter proc
+                        interp.eval(buildDisplayTclCommand(interp, task), TCL.EVAL_GLOBAL)
+                        interp.result.toString()
+                    } catch (e: Exception) {
+                        interp.result.toString()
+                    }
+                } else {
+                    var tokensToShow = TToken.ALL
+                    // Hide dates if we have a date bar
+                    if (m_app.hasExtendedTaskView()) {
+                        tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
+                        tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
+                        tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+                    }
+                    tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
+                    tokensToShow = tokensToShow and TToken.COMPLETED.inv()
+
+                    if (mFilter!!.hideLists) {
+                        tokensToShow = tokensToShow and TToken.LIST.inv()
+                    }
+                    if (mFilter!!.hideTags) {
+                        tokensToShow = tokensToShow and TToken.TTAG.inv()
+                    }
+                    task.showParts(tokensToShow)
                 }
-                if (mFilter!!.hideTags) {
-                    tokensToShow = tokensToShow and TToken.TTAG.inv()
-                }
-                val txt = task.showParts(tokensToShow)
+
+
+
 
                 val ss = SpannableString(txt)
 
@@ -1538,7 +1574,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 taskText.setHorizontallyScrolling(true)
                 taskText.ellipsize = truncateAt
             } else {
-                log!!.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
+                log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
             }
         }
     }

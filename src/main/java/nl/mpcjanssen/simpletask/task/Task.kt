@@ -472,6 +472,27 @@ interface TToken {
         const val MAIL = 1 shl 14
         const val ALL = 0b111111111111111
     }
+
+    fun typeAsString () : String {
+        return when(type) {
+            WHITE_SPACE -> "white_space"
+            LIST -> "list"
+            TTAG -> "tag"
+            COMPLETED -> "completed"
+            COMPLETED_DATE -> "completed_date"
+            CREATION_DATE -> "creation_date"
+            TEXT -> "text"
+            PRIO -> "prio"
+            THRESHOLD_DATE -> "threshold_date"
+            DUE_DATE -> "due_date"
+            HIDDEN -> "hidden"
+            RECURRENCE -> "recurrence"
+            PHONE -> "phone"
+            LINK -> "link"
+            MAIL -> "mail"
+            else -> "unknown"
+        }
+    }
 }
 
 data class CompletedToken(override val value: Boolean) :TToken {

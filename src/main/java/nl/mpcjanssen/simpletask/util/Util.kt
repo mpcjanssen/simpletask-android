@@ -47,6 +47,7 @@ import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
+import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoListItem
 
@@ -270,9 +271,38 @@ fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListene
     return builder.create()
 }
 
+fun buildFilterTclCommand(interp: Interp , t: Task) : TclObject {
+    val cmd = TclList.newInstance()
+    TclList.append(interp, cmd, TclString.newInstance(Constants.TCL_FILTER_COMMAND))
+    TclList.append(interp, cmd, TclString.newInstance(t.text))
+    val listsObj = TclList.newInstance()
+    t.lists.forEach {
+        TclList.append(interp,listsObj, TclString.newInstance(it))
+    }
+    TclList.append(interp, cmd, listsObj)
+    return cmd
+}
+
+fun buildDisplayTclCommand(interp: Interp , t: Task) : TclObject {
+    val cmd = TclList.newInstance()
+    TclList.append(interp, cmd, TclString.newInstance(Constants.TCL_DISPLAY_COMMAND))
+    TclList.append(interp, cmd, TclString.newInstance(t.text))
+    val tokensListObj = TclList.newInstance()
+
+    t.tokens.forEach {
+        val tokensObj = TclList.newInstance()
+        TclList.append(interp, tokensObj, TclString.newInstance(it.typeAsString()))
+        TclList.append(interp, tokensObj, TclString.newInstance(it.value))
+        TclList.append(interp, tokensObj, TclString.newInstance(it.text))
+        TclList.append(interp, tokensListObj, tokensObj)
+    }
+    TclList.append(interp, cmd, tokensListObj)
+    return cmd
+}
 
 fun initGlobals(i: Interp, t: Task) {
     i.setVar("task", t.inFileFormat(), TCL.GLOBAL_ONLY)
+
     val listsObj = TclList.newInstance()
     t.lists.forEach {
         TclList.append(i,listsObj, TclString.newInstance(it))
@@ -291,6 +321,7 @@ fun initGlobals(i: Interp, t: Task) {
     i.setVar("recurrence", t.recurrencePattern?:"", TCL.GLOBAL_ONLY)
     i.setVar("priority", t.priority.code, TCL.GLOBAL_ONLY)
     i.setVar("completed", if (t.isCompleted()) "true" else "false" , TCL.GLOBAL_ONLY)
+    i.setVar("today", todayAsString, TCL.GLOBAL_ONLY)
 }
 
 @Throws(IOException::class)
