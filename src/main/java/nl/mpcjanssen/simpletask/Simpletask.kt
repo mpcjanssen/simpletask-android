@@ -82,8 +82,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     private var mOverlayDialog: Dialog? = null
     private var mIgnoreScrollEvents = false
     private lateinit var log: Logger
-    val interp: Interp = Interp()
+    val interp: Interp
 
+    init {
+        interp = Interp()
+        interp.hideUnsafeCommands()
+    }
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log = Logger
