@@ -35,11 +35,9 @@ import org.json.JSONObject
 import java.util.*
 
 
-class Task(tokens: List<TToken>) {
+class Task(val tokens: ArrayList<TToken>) {
 
-    var tokens: List<TToken>
     init {
-        this.tokens = tokens
         // Next line is only meant for debugging. When uncommented it will show
         // full task contents in the log.
         //Logger.debug("Task", "Task initialized JSON: ${toJSON()}")
@@ -57,30 +55,21 @@ class Task(tokens: List<TToken>) {
     constructor (text: String) : this(text, null)
 
     fun update(rawText: String) {
-        tokens = parse(rawText)
+        tokens.clear()
+        tokens.addAll(parse(rawText))
     }
 
-    private inline fun <reified T> getFirstToken(): T? {
-        tokens.filterIsInstance<T>().forEach {
-            return it
+    private  fun getFirstToken(type: Int): TToken? {
+        return tokens.first { it.type == type }
+    }
+
+    private fun upsertToken(newToken: TToken) {
+        val idx  = tokens.indexOfFirst {  it.type == newToken.type }
+        if (idx==-1) {
+            tokens.add(newToken)
+        } else {
+            tokens[idx] = newToken
         }
-        return null
-    }
-
-    private inline fun <reified T : TToken> upsertToken(newToken: T) {
-
-            if (getFirstToken<T>() == null) {
-                tokens += newToken
-            } else {
-                tokens = tokens.map {
-                    if (it is T) {
-                        newToken
-                    } else {
-                        it
-                    }
-                }
-            }
-
     }
 
 
@@ -91,32 +80,30 @@ class Task(tokens: List<TToken>) {
         }
 
     var completionDate: String? = null
-        get() = getFirstToken<CompletedDateToken>()?.value ?: null
+        get() = getFirstToken(COMPLETED_DATE)?.value ?: null
 
     var createDate: String?
-        get() = getFirstToken<CreateDateToken>()?.value ?: null
+        get() = getFirstToken(CREATION_DATE)?.value ?: null
         set(newDate: String?) {
             val temp = ArrayList<TToken>()
-            if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
+            if (tokens.size > 0 && (tokens.first().type == COMPLETED)) {
                 temp.add(tokens[0])
-                tokens = tokens.drop(1)
-                if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
+                tokens.drop(1)
+                if (tokens.size > 0 && tokens.first().type == COMPLETED_DATE) {
                     temp.add(tokens.first())
-                    tokens = tokens.drop(1)
+                    tokens.drop(1)
                 }
             }
-            if (tokens.size > 0 && tokens[0] is PriorityToken) {
+            if (tokens.size > 0 && tokens[0].type == PRIO) {
                 temp.add(tokens.first())
-                tokens = tokens.drop(1)
+                tokens.drop(1)
             }
-            if (tokens.size > 0 && tokens[0] is CreateDateToken) {
-                tokens = tokens.drop(1)
+            if (tokens.size > 0 && tokens[0].type == CREATION_DATE) {
+                tokens.drop(1)
             }
             newDate?.let {
-                temp.add(CreateDateToken(newDate))
+                temp.add(TToken(CREATION_DATE,newDate,newDate))
             }
-            temp.addAll(tokens)
-            tokens = temp
         }
 
     var dueDate: String?
@@ -459,29 +446,24 @@ class Task(tokens: List<TToken>) {
     }
 }
 
-
-interface TToken {
-    val text: String
-    val value: Any?
-    val type: Int
-    companion object {
-        const val WHITE_SPACE = 1
-        const val LIST = 1 shl 1
-        const val TTAG = 1 shl 2
-        const val COMPLETED = 1 shl 3
-        const val COMPLETED_DATE = 1 shl 4
-        const val CREATION_DATE = 1 shl 5
-        const val TEXT = 1 shl 6
-        const val PRIO = 1 shl 7
-        const val THRESHOLD_DATE = 1 shl 8
-        const val DUE_DATE = 1 shl 9
-        const val HIDDEN = 1 shl 10
-        const val RECURRENCE = 1 shl 11
-        const val PHONE = 1 shl 12
-        const val LINK = 1 shl 13
-        const val MAIL = 1 shl 14
-        const val ALL = 0b111111111111111
+class TToken : JSONObject {
+    constructor(type: Int, text : String, value: String ) : super() {
+        put("type", type)
+        put("text", text)
+        put("value", value)
     }
+    val type : Int
+        get() {
+            return this.optInt("type")
+        }
+    val text : String
+        get() {
+            return this.optString("text")
+        }
+    val value : String
+        get() {
+            return this.optString("value")
+        }
 
     fun typeAsString () : String {
         return when(type) {
@@ -506,73 +488,23 @@ interface TToken {
 
 }
 
-data class CompletedToken(override val value: Boolean) :TToken {
-    override val text: String
-    get() = if (value) "x" else ""
-    override val type = TToken.COMPLETED;
-}
-
-data class HiddenToken(override val text: String) :TToken {
-    override val value: Boolean
-    get() = if (text == "h:1") true else false
-    override val type = TToken.HIDDEN;
-}
-data class PriorityToken(override val text: String) :TToken {
-    override val value: Priority
-    get() = Priority.toPriority(text.removeSurrounding("(",")"))
-    override val type = TToken.PRIO;
-}
-
-data class ListToken(override val text: String) : TToken {
-    override val value: String
-        get() = text.substring(1)
-    override val type = TToken.LIST;
-}
-
-data class TagToken(override val text: String) : TToken {
-    override val value: String
-        get() = text.substring(1)
-    override val type = TToken.TTAG;
-}
-
-// The value of this token is the val part in key:val
-// If there is no key: then val is returned as is.
-interface KeyValueToken : TToken {
-    override val value: String
-    get() = text.split(":").last()
-}
-data class CreateDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.CREATION_DATE;
-}
-data class CompletedDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.COMPLETED_DATE;
-}
-data class DueDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.DUE_DATE;
-}
-data class ThresholdDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.THRESHOLD_DATE;
-}
-data class TextToken(override val text: String) : KeyValueToken {
-    override val type = TToken.TEXT;
-}
-data class WhiteSpaceToken(override val text: String) : KeyValueToken {
-    override val type = TToken.WHITE_SPACE;
-}
-data class MailToken(override val text: String) : KeyValueToken {
-    override val type = TToken.MAIL;
-}
-data class LinkToken(override val text: String) : KeyValueToken {
-    override val type = TToken.LINK;
-}
-data class PhoneToken(override val text: String) : KeyValueToken {
-    override val type = TToken.PHONE;
-}
-data class RecurrenceToken(override val text: String) : KeyValueToken {
-    override val type = TToken.RECURRENCE;
-}
-
 // Extension functions
 
 fun String.lex(): List<String> = this.split(" ")
 
+const val WHITE_SPACE = 1
+const val LIST = 1 shl 1
+const val TTAG = 1 shl 2
+const val COMPLETED = 1 shl 3
+const val COMPLETED_DATE = 1 shl 4
+const val CREATION_DATE = 1 shl 5
+const val TEXT = 1 shl 6
+const val PRIO = 1 shl 7
+const val THRESHOLD_DATE = 1 shl 8
+const val DUE_DATE = 1 shl 9
+const val HIDDEN = 1 shl 10
+const val RECURRENCE = 1 shl 11
+const val PHONE = 1 shl 12
+const val LINK = 1 shl 13
+const val MAIL = 1 shl 14
+const val ALL = 0b111111111111111

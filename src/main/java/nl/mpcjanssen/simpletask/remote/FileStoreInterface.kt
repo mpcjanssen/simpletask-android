@@ -12,6 +12,7 @@ interface FileStoreInterface {
     val isAuthenticated: Boolean
     @Throws(IOException::class)
     fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String>
+    fun getCached(): List<String>
 
     fun startLogin(caller: Activity)
     fun logout()

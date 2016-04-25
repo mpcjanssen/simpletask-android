@@ -31,6 +31,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
@@ -46,6 +47,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
@@ -55,6 +57,7 @@ import tcl.lang.*
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.regex.Pattern
 
 val TAG = "Util"
@@ -516,4 +519,44 @@ fun ArrayList<HashSet<String>>.intersection() : Set<String> {
         }
     }
     return intersection
+}
+
+fun tasksFromCache(mPrefs : SharedPreferences?): List<String> {
+    val result = CopyOnWriteArrayList<String>()
+    val contents = loadContentsFromCache(mPrefs)
+    for (line in contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
+        result.add(line)
+    }
+    return result
+}
+
+private fun loadContentsFromCache(mPrefs : SharedPreferences?): String {
+    if (mPrefs == null) {
+        log.warn("Util", "Couldn't load cache from other_preferences, mPrefs == null")
+        return ""
+    }
+    return mPrefs.getString(LOCAL_CONTENTS, "")
+}
+
+fun saveToCache(mPrefs : SharedPreferences?, fileName: String, rev: String?, contents: String) {
+    log.info("Util", "Storing file in cache rev: $rev of file: $fileName")
+    if (mPrefs == null) {
+        return
+    }
+    val edit = mPrefs.edit()
+    edit.putString(LOCAL_NAME, fileName)
+    edit.putString(LOCAL_CONTENTS, contents)
+    edit.putString(LOCAL_REVISION, rev)
+    edit.commit()
+}
+
+private val LOCAL_CONTENTS = "localContents"
+private val LOCAL_NAME = "localName"
+private val LOCAL_REVISION = "localRev"
+
+fun localTodoRev(mPrefs : SharedPreferences?): String? {
+    if (mPrefs == null) {
+        return ""
+    }
+    return mPrefs.getString(LOCAL_REVISION, null)
 }

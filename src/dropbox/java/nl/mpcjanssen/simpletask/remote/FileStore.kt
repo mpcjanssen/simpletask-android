@@ -69,13 +69,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         setMDBApi(mApp)
     }
 
-    private fun loadContentsFromCache(): String {
-        if (mPrefs == null) {
-            log.warn(TAG, "Couldn't load cache from other_preferences, mPrefs == null")
-            return ""
-        }
-        return mPrefs.getString(LOCAL_CONTENTS, "")
-    }
+
 
     fun queueRunnable(description: String, r: Runnable) {
         log.info(TAG, "Handler: Queue " + description)
@@ -98,17 +92,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         return mPrefs.getBoolean(LOCAL_CHANGES_PENDING, false)
     }
 
-    private fun saveToCache(fileName: String, rev: String?, contents: String) {
-        log.info(TAG, "Storing file in cache rev: $rev of file: $fileName")
-        if (mPrefs == null) {
-            return
-        }
-        val edit = mPrefs.edit()
-        edit.putString(LOCAL_NAME, fileName)
-        edit.putString(LOCAL_CONTENTS, contents)
-        edit.putString(LOCAL_REVISION, rev)
-        edit.commit()
-    }
+
 
     private fun setChangesPending(pending: Boolean) {
         if (mPrefs == null) {
@@ -130,13 +114,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
             return netInfo != null && netInfo.isConnected
         }
 
-    private val localTodoRev: String?
-        get() {
-            if (mPrefs == null) {
-                return ""
-            }
-            return mPrefs.getString(LOCAL_REVISION, null)
-        }
+
 
     private fun setMDBApi(app: TodoApplication) {
         val app_secret: String
@@ -217,7 +195,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                             if (entry.metadata == null || entry.metadata.rev == null) {
                                 throw DropboxException("Metadata (or rev) in entry is null " + entry)
                             }
-                            if (entry.metadata.rev == localTodoRev) {
+                            if (entry.metadata.rev == localTodoRev(mPrefs)) {
                                 log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
                             } else {
                                 log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " reloading")
@@ -298,7 +276,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         if (changesPending()) {
             log.info(TAG, "Not loading, changes pending")
             isLoading = false
-            val tasks = tasksFromCache()
+            val tasks = tasksFromCache(mPrefs)
             saveTasksToFile(path, tasks, backup, eol)
             startWatching(path)
             return tasks
@@ -333,13 +311,13 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 openFileStream.close()
                 val contents = join(readFile, "\n")
                 backup?.backup(path, contents)
-                saveToCache(fileInfo.metadata.fileName(), fileInfo.metadata.rev, contents)
+                saveToCache(mPrefs, fileInfo.metadata.fileName(), fileInfo.metadata.rev, contents)
                 startWatching(path)
             } catch (e: DropboxException) {
                 // Couldn't download file use cached version
                 e.printStackTrace()
                 readFile.clear()
-                readFile.addAll(tasksFromCache())
+                readFile.addAll(tasksFromCache(mPrefs))
             } catch (e: IOException) {
                 isLoading = false
                 throw IOException(e)
@@ -350,14 +328,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         return readFile
     }
 
-    fun tasksFromCache(): List<String> {
-        val result = CopyOnWriteArrayList<String>()
-        val contents = loadContentsFromCache()
-        for (line in contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
-            result.add(line)
-        }
-        return result
-    }
+
 
     override fun startLogin(caller: Activity) {
         // MyActivity below should be your activity class name
@@ -436,6 +407,10 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         mPrefs!!.edit().remove(OAUTH2_TOKEN).commit()
     }
 
+    override fun getCached(): List<String> {
+        return tasksFromCache(mPrefs)
+    }
+
     override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
         if (!isOnline) {
             showToastLong(mApp, "Device is offline")
@@ -453,7 +428,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         val contents = join(lines, eol) + eol
         val r = Runnable {
             var newName = path
-            var rev = localTodoRev
+            var rev = localTodoRev(mPrefs)
             try {
                 val toStore = contents.toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
@@ -470,7 +445,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
             } finally {
                 // Always save to cache  so you wont lose changes
                 // if actual save fails (e.g. when the device is offline)
-                saveToCache(path, rev, contents)
+                saveToCache(mPrefs, path, rev, contents)
             }
 
             if (newName != path) {
@@ -772,10 +747,9 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
         private val TAG = "FileStoreDB"
 
-        private val LOCAL_CONTENTS = "localContents"
-        private val LOCAL_NAME = "localName"
+
+
         private val LOCAL_CHANGES_PENDING = "localChangesPending"
-        private val LOCAL_REVISION = "localRev"
         private val CACHE_PREFS = "dropboxMeta"
         private val OAUTH2_TOKEN = "dropboxToken"
 

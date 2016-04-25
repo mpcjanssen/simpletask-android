@@ -35,6 +35,8 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
+import nl.mpcjanssen.simpletask.dao.gen.TodoItemDao
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
@@ -53,83 +55,64 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 
 
-class TodoList(private val app: TodoApplication, private val mTodoListChanged: TodoList.TodoListChanged?) {
-    private val log: Logger
+
+
+
+
+class TodoList(private val dao: TodoItemDao, private val mTodoListChanged: TodoList.TodoListChanged?) {
+    private val log = Logger
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-
-    private var todolistQueue: Handler? = null
-    private var loadQueued = false
-
-
-    var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
+    private val todolistQueue: Handler
 
     init {
         // Set up the message queue
-        val t = Thread(Runnable {
-            Looper.prepare()
-            todolistQueue = Handler()
-            Looper.loop()
-        })
+        val t = LooperThread()
         t.start()
-        log = Logger
+        todolistQueue = t.mHandler
     }
 
-
+    // queue Runnables for sequential processsing
     fun queueRunnable(description: String, r: Runnable) {
         log.info(TAG, "Handler: Queue " + description)
-        while (todolistQueue == null) {
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-
-        }
-        if (todolistQueue != null) {
-            todolistQueue!!.post(LoggingRunnable(description, r))
-        } else {
-            r.run()
-        }
+        todolistQueue.post(LoggingRunnable(description, r))
     }
-
-    fun loadQueued(): Boolean {
-        return loadQueued
-    }
+    
 
     fun firstLine(): Int {
-        val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
-        if (items.size > 0) {
-            return items[0].line
+        val num = dao.count()
+        if (num > 0) {
+            return dao.queryBuilder().orderAsc(TodoItemDao.Properties.Line).limit(1).build().list().first().line-1
         } else {
             return -1
         }
     }
 
     fun lastLine(): Int {
-        val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
-        if (items.size > 0) {
-            return items[0].line
+        val num = dao.count()
+        if (num > 0) {
+            return dao.queryBuilder().orderDesc(TodoItemDao.Properties.Line).limit(1).build().list().first().line+1
         } else {
             return 1
         }
     }
 
-    fun add(t: TodoListItem, atEnd: Boolean) {
+    fun add(t: TodoItem, atEnd: Boolean) {
         queueRunnable("Add task", Runnable {
-            log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
+            t = Task()
+            log.debug(TAG, "Adding task atEnd #tokens: " + ${Task(). + " " + atEnd)
             if (atEnd) {
                 t.line = lastLine() + 1
             } else {
                 t.line = firstLine() - 1
             }
-            todoItems?.add(t) ?: log.warn(TAG, "Adding while todolist was not loaded")
+            dao.insert(t)
         })
     }
 
     fun add(t: Task, atEnd: Boolean) {
-        add(TodoListItem(0,t,false),atEnd)
+        add(TodoItem(0,t.toJSON().toString(),false),atEnd)
     }
 
 
@@ -271,49 +254,15 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
 
 
-    fun getSortedTasksCopy(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
+    fun getSortedTasksCopy(filter: ActiveFilter, today: String, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
         val filteredTasks = filter.apply(todoItems)
-        val comp = MultiComparator(sorts, app.today, caseSensitive,filter.createIsThreshold)
+        val comp = MultiComparator(sorts, today, caseSensitive,filter.createIsThreshold)
         Collections.sort(filteredTasks, comp)
         return filteredTasks
     }
 
-    fun reload(fileStore: FileStoreInterface, filename: String, backup: BackupInterface, lbm: LocalBroadcastManager, background: Boolean, eol: String) {
-        if (this@TodoList.loadQueued()) {
-            log.info(TAG, "TodoList reload is already queued waiting")
-            return
-        }
-        lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
-        loadQueued = true
-        val r = Runnable {
-            try {
-                todoItems = CopyOnWriteArrayList<TodoListItem>(
-                fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
-                    TodoListItem(line,Task(text))
-                })
-            } catch (e: Exception) {
-                e.printStackTrace()
 
-            } catch (e: IOException) {
-                log.error(TAG, "TodoList load failed: {}" + filename, e)
-                showToastShort(app, "Loading of todo file failed")
-            }
 
-            loadQueued = false
-            log.info(TAG, "TodoList loaded, refresh UI")
-            notifyChanged(fileStore, filename, eol, backup, false)
-        }
-        if (background) {
-            // give quick result from preferences
-
-            log.info(TAG, "Loading TodoList asynchronously")
-            queueRunnable("Reload", r)
-
-        } else {
-            log.info(TAG, "Loading TodoList synchronously")
-            r.run()
-        }
-    }
 
     fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         queueRunnable("Save", Runnable {
@@ -430,4 +379,11 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 }
 
-data class TodoListItem(var line: Int, var task: Task, var selected: Boolean = false)
+class LooperThread() : Thread() {
+    lateinit var  mHandler : Handler
+    override fun run() {
+        Looper.prepare();
+        mHandler = Handler()
+        Looper.loop();
+    }
+}

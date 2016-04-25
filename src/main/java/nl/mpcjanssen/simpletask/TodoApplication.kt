@@ -44,12 +44,16 @@ import nl.mpcjanssen.simpletask.dao.gen.*
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.appVersion
+import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 class TodoApplication : Application(),
@@ -68,6 +72,8 @@ class TodoApplication : Application(),
     internal lateinit var daoSession: DaoSession
     lateinit var  logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
+    internal lateinit var itemDao: TodoItemDao
+    internal lateinit var selectedDao: SelectedTodoItemDao
     lateinit var prefs: SharedPreferences
 
     override fun onCreate() {
@@ -82,6 +88,8 @@ class TodoApplication : Application(),
         daoSession = daoMaster.newSession()
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
+        itemDao = daoSession.todoItemDao
+        selectedDao = daoSession.selectedTodoItemDao
         log.setDao(logDao)
 
         setupUncaughtExceptionHandler()
@@ -314,7 +322,7 @@ class TodoApplication : Application(),
 
     fun loadTodoList(background: Boolean) {
         log.info(TAG, "Load todolist")
-        todoList.reload(mFileStore, todoFileName, this, localBroadCastManager, background, eol)
+
 
     }
 

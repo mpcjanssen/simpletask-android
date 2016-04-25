@@ -16,10 +16,8 @@ import de.greenrobot.daogenerator.Schema;
 public class SimpletaskDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1010, "nl.mpcjanssen.simpletask.dao.gen");
-
+        Schema schema = new Schema(1012, "nl.mpcjanssen.simpletask.dao.gen");
         addEntities(schema);
-
         new DaoGenerator().generateAll(schema, "src/main/java");
     }
 
@@ -27,8 +25,15 @@ public class SimpletaskDaoGenerator {
 
         backupSchema(schema);
         logSchema(schema);
+        itemSchema(schema);
     }
 
+    private static void itemSchema(Schema schema) {
+        Entity log = schema.addEntity("TodoItem");
+        log.addIntProperty("line").notNull();
+        log.addStringProperty("json");
+        log.addBooleanProperty("selected");
+    }
 
     private static void logSchema(Schema schema) {
         Entity log = schema.addEntity("LogItem");

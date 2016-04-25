@@ -20,8 +20,20 @@ fun Task.toJSON () : JSONObject {
     return JSONObject().put("tokens", json)
 }
 
+fun Task.fromJSON (json: JSONObject) {
+    tokens = json.get("tokens")
+}
 
 fun TToken.toJSON(): JSONObject {
+    val json = JSONObject()
+    json.put("type", this.type)
+    json.put("value", this.value)
+    json.put("text", this.text)
+    return json
+}
+
+fun TToken.fromJSON(json: JSONObject): TToken {
+    TToken(json.)
     val json = JSONObject()
     json.put("type", this.type)
     json.put("value", this.value)
