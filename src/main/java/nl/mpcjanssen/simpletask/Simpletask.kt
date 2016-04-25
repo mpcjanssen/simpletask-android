@@ -46,11 +46,7 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
@@ -1365,21 +1361,21 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     val taskBar = view.findViewById(R.id.datebar)
                     taskBar.visibility = View.GONE
                 }
-                var tokensToShow = TToken.ALL
+                var tokensToShow = ALL
                 // Hide dates if we have a date bar
                 if (m_app.hasExtendedTaskView()) {
-                    tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-                    tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-                    tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+                    tokensToShow = tokensToShow and COMPLETED_DATE.inv()
+                    tokensToShow = tokensToShow and THRESHOLD_DATE.inv()
+                    tokensToShow = tokensToShow and DUE_DATE.inv()
                 }
-                tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-                tokensToShow = tokensToShow and TToken.COMPLETED.inv()
+                tokensToShow = tokensToShow and CREATION_DATE.inv()
+                tokensToShow = tokensToShow and COMPLETED.inv()
 
                 if (mFilter!!.hideLists) {
-                    tokensToShow = tokensToShow and TToken.LIST.inv()
+                    tokensToShow = tokensToShow and LIST.inv()
                 }
                 if (mFilter!!.hideTags) {
-                    tokensToShow = tokensToShow and TToken.TTAG.inv()
+                    tokensToShow = tokensToShow and TTAG.inv()
                 }
                 val txt = task.showParts(tokensToShow)
 

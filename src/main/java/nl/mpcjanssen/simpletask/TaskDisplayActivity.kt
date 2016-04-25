@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import nl.mpcjanssen.simpletask.task.ALL
 import nl.mpcjanssen.simpletask.task.TToken
 
 
@@ -13,7 +14,7 @@ class TaskDisplayActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         // setContentView(R.layout.activity_task_display);
         // Directly select all for now
-        setResult(Activity.RESULT_FIRST_USER + TToken.ALL)
+        setResult(Activity.RESULT_FIRST_USER + ALL)
         finish()
     }
 
@@ -31,7 +32,7 @@ class TaskDisplayActivity : ThemedActivity() {
         val id = item.itemId
 
         if (id == R.id.menu_filter_action) {
-            setResult(Activity.RESULT_FIRST_USER + TToken.ALL)
+            setResult(Activity.RESULT_FIRST_USER + ALL)
             finish()
             return true
         }

@@ -14,9 +14,7 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 
 import nl.mpcjanssen.simpletask.sort.MultiComparator
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 
 
@@ -104,17 +102,17 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         val extended_widget = application.prefs.getBoolean("widget_extended", true)
         val task = item.task
 
-        var tokensToShow = TToken.ALL
-        tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-        tokensToShow = tokensToShow and TToken.COMPLETED.inv()
-        tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-        tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-        tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+        var tokensToShow = ALL
+        tokensToShow = tokensToShow and CREATION_DATE.inv()
+        tokensToShow = tokensToShow and COMPLETED.inv()
+        tokensToShow = tokensToShow and COMPLETED_DATE.inv()
+        tokensToShow = tokensToShow and THRESHOLD_DATE.inv()
+        tokensToShow = tokensToShow and DUE_DATE.inv()
         if (mFilter.hideLists) {
-            tokensToShow = tokensToShow and TToken.LIST.inv()
+            tokensToShow = tokensToShow and LIST.inv()
         }
         if (mFilter.hideTags) {
-            tokensToShow = tokensToShow and TToken.TTAG.inv()
+            tokensToShow = tokensToShow and TTAG.inv()
         }
         val ss = SpannableString(
                 task.showParts(tokensToShow).trim { it <= ' ' })

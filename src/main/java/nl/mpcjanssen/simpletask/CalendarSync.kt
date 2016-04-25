@@ -41,11 +41,9 @@ import android.provider.CalendarContract.Events
 import android.provider.CalendarContract.Reminders
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.task.*
 
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.*
-import nl.mpcjanssen.simpletask.task.TToken
-
 
 
 class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncThresholds: Boolean) {
@@ -292,15 +290,15 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
         private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
         private val CAL_COLOR = Color.BLUE       // Chosen arbitrarily...
         private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000  // ie. 24 hours
-        private val TASK_TOKENS = TToken.ALL and
-            (TToken.COMPLETED or
-            TToken.COMPLETED_DATE or
-            TToken.CREATION_DATE or
-            TToken.PRIO or
-            TToken.THRESHOLD_DATE or
-            TToken.DUE_DATE or
-            TToken.HIDDEN or
-            TToken.RECURRENCE).inv()
+        private val TASK_TOKENS = ALL and
+            (COMPLETED or
+            COMPLETED_DATE or
+            CREATION_DATE or
+            PRIO or
+            THRESHOLD_DATE or
+            DUE_DATE or
+            HIDDEN or
+            RECURRENCE).inv()
 
         private val SYNC_DELAY_MS = 1000
         private val TAG = "CalendarSync"
