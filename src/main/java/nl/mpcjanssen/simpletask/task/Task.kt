@@ -26,24 +26,34 @@
  */
 package nl.mpcjanssen.simpletask.task
 
+import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.util.addInterval
+import nl.mpcjanssen.simpletask.util.toJSON
+import org.json.JSONArray
+import org.json.JSONObject
 
 import java.util.*
 
 
-class Task(text: String, defaultPrependedDate: String? = null) {
+class Task(tokens: List<TToken>) {
 
     var tokens: List<TToken>
-
     init {
-        tokens = parse(text)
+        this.tokens = tokens
+        // Next line is only meant for debugging. When uncommented it will show
+        // full task contents in the log.
+        //Logger.debug("Task", "Task initialized JSON: ${toJSON()}")
+    }
+
+    constructor (text: String, defaultPrependedDate: String?) : this(parse(text)) {
         defaultPrependedDate?.let {
             if (createDate == null) {
+                Logger.debug("Task", "Updated create date of task to $createDate")
                 createDate = defaultPrependedDate
+
             }
         }
     }
-
     constructor (text: String) : this(text, null)
 
     fun update(rawText: String) {
@@ -493,6 +503,7 @@ interface TToken {
             else -> "unknown"
         }
     }
+
 }
 
 data class CompletedToken(override val value: Boolean) :TToken {

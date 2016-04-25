@@ -350,7 +350,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
         return readFile
     }
 
-    private fun tasksFromCache(): List<String> {
+    fun tasksFromCache(): List<String> {
         val result = CopyOnWriteArrayList<String>()
         val contents = loadContentsFromCache()
         for (line in contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {

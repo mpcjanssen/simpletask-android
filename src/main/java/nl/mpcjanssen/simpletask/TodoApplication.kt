@@ -45,6 +45,7 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.File
 import java.io.IOException
@@ -72,6 +73,7 @@ class TodoApplication : Application(),
     override fun onCreate() {
         log.debug(TAG, "onCreate()")
         super.onCreate()
+        log.info(TAG, "Started ${appVersion(this)}")
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
@@ -104,6 +106,7 @@ class TodoApplication : Application(),
         loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
+        log.debug(TAG, "onCreate() done")
     }
 
     private fun setupUncaughtExceptionHandler() {

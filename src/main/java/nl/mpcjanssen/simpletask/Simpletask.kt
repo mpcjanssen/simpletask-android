@@ -92,7 +92,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         super.onCreate(savedInstanceState)
         log = Logger
         log.info(TAG, "onCreate")
-        log.info(TAG, "Started ${appVersion(this)}")
         m_app = application as TodoApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()

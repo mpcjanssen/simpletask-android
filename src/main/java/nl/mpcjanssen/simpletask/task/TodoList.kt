@@ -29,6 +29,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
+import android.app.IntentService
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
@@ -45,10 +46,13 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
- * Implementation of the in memory representation of the todo list
+ * Implementation of the todolist. It's backed by a database. Modification and reading is handled in a queue
 
  * @author Mark Janssen
  */
+
+
+
 class TodoList(private val app: TodoApplication, private val mTodoListChanged: TodoList.TodoListChanged?) {
     private val log: Logger
 
@@ -300,6 +304,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
             notifyChanged(fileStore, filename, eol, backup, false)
         }
         if (background) {
+            // give quick result from preferences
+
             log.info(TAG, "Loading TodoList asynchronously")
             queueRunnable("Reload", r)
 
