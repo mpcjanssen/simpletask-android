@@ -34,8 +34,6 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.remote.BackupInterface
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 
@@ -49,7 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
  * @author Mark Janssen
  */
-class TodoList(private val app: TodoApplication, private val mTodoListChanged: TodoList.TodoListChanged?) {
+class TodoList(private val app: SimpletaskApplication, private val mTodoListChanged: TodoList.TodoListChanged?) {
     private val log: Logger
 
     private var mLists: ArrayList<String>? = null
@@ -59,18 +57,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     private var loadQueued = false
 
 
-    var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
 
-    init {
-        // Set up the message queue
-        val t = Thread(Runnable {
-            Looper.prepare()
-            todolistQueue = Handler()
-            Looper.loop()
-        })
-        t.start()
-        log = Logger
-    }
 
 
     fun queueRunnable(description: String, r: Runnable) {
@@ -328,7 +315,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     }
 
-    fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
+    fun archive(todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
         queueRunnable("Archive", Runnable {
             val items = todoItems
             if (items==null) {
@@ -423,5 +410,3 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
        }
     }
 }
-
-data class TodoListItem(var line: Int, var task: Task, var selected: Boolean = false)

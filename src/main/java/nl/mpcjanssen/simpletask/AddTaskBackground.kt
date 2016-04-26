@@ -47,7 +47,7 @@ class AddTaskBackground : Activity() {
         log = Logger;
         log.debug(TAG, "onCreate()")
         super.onCreate(instance)
-        val m_app = this.application as TodoApplication
+        val m_app = this.application as SimpletaskApplication
         m_app.loadTodoList(true)
 
         val intent = intent
@@ -97,7 +97,7 @@ class AddTaskBackground : Activity() {
 
     private fun startAddTaskActivity(addedTasks: ArrayList<Task>) {
         log.info(TAG, "Starting addTask activity")
-        val m_app = this.application as TodoApplication
+        val m_app = this.application as SimpletaskApplication
         val intent = Intent(this, AddTask::class.java)
         m_app.todoList.clearSelection()
         m_app.todoList.selectTasks(addedTasks,null)
@@ -113,7 +113,7 @@ class AddTaskBackground : Activity() {
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
-        val m_app = this.application as TodoApplication
+        val m_app = this.application as SimpletaskApplication
         val todoList = m_app.todoList
         val addedTasks = ArrayList<Task>()
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)

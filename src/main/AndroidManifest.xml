@@ -37,7 +37,7 @@ You should have received a copy of the GNU General Public License along with Sim
         android:xlargeScreens="true" />
 
     <application
-            android:name=".TodoApplication"
+            android:name=".SimpletaskApplication"
             android:allowBackup="true"
             android:fullBackupContent="true"
             android:icon="@drawable/ic_launcher"
@@ -45,18 +45,18 @@ You should have received a copy of the GNU General Public License along with Sim
             android:theme="@style/AppTheme.Light.DarkActionBar" tools:ignore="UnusedAttribute">
 
         <activity
-            android:name=".HelpScreen"
-            android:parentActivityName=".Simpletask"
+            android:name=".HelpActivity"
+            android:parentActivityName=".MainActivity"
             tools:ignore="UnusedAttribute"
                 android:label="@string/help">
         </activity>
         <activity
                 android:name=".DebugInfoScreen"
-                android:parentActivityName=".Preferences"
+                android:parentActivityName=".PreferencesActivity"
                 android:label="@string/debug_info"/>
         <activity
-                android:name=".HistoryScreen"
-                android:parentActivityName=".Preferences"
+                android:name=".HistoryActivity"
+                android:parentActivityName=".PreferencesActivity"
             android:label="@string/history">
         </activity>
 
@@ -66,8 +66,8 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity>
 
         <activity
-            android:name=".Preferences"
-            android:parentActivityName=".Simpletask"
+            android:name=".PreferencesActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/set_preferences" />
         <activity
             android:name=".AddTask"
@@ -80,7 +80,7 @@ You should have received a copy of the GNU General Public License along with Sim
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.mpcjanssen.simpletask.Simpletask" />
+                android:value="nl.mpcjanssen.simpletask.MainActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -115,7 +115,7 @@ You should have received a copy of the GNU General Public License along with Sim
 
 
         <activity
-            android:name=".Simpletask"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask" >
             <intent-filter>

@@ -142,14 +142,6 @@
             android:contentDescription="@string/save_filter"
             android:onClick="onAddFilterClick"
             android:id="@+id/btn_filter_add" />
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                style="?android:attr/borderlessButtonStyle"
-                android:src="@drawable/ic_action_navigation_more_vert"
-                android:onClick="onExportFilterClick"
-                android:id="@+id/btn_filter_import" />
         </LinearLayout>
 
 

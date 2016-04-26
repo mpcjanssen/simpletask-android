@@ -13,25 +13,43 @@ import de.greenrobot.daogenerator.Schema;
  */
 
 
+/**
+ * Two schemas:
+ * 1. application storage, Log and TodoList backups
+ * 2. TodoList, Todo items en Archived items
+ */
+
+
 public class SimpletaskDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1010, "nl.mpcjanssen.simpletask.dao.gen");
-
-        addEntities(schema);
-
-        new DaoGenerator().generateAll(schema, "src/main/java");
+        Schema appSchema = new Schema(1011, "nl.mpcjanssen.simpletask.dao.app");
+        Schema todoSchema = new Schema(1, "nl.mpcjanssen.simpletask.dao.todo");
+        addEntities(appSchema);
+        addTodoEntities(todoSchema);
+        new DaoGenerator().generateAll(appSchema, "src/main/java");
+        new DaoGenerator().generateAll(todoSchema, "src/main/java");
     }
 
-    private static void addEntities(Schema schema) {
+    private static void addTodoEntities(Schema todoSchema) {
+        Entity todo = todoSchema.addEntity("TodoItem");
+        todo.addIntProperty("line").notNull();
+        todo.addStringProperty("json").notNull();
+        todo.addBooleanProperty("selected").notNull();
 
-        backupSchema(schema);
-        logSchema(schema);
+        Entity archive = todoSchema.addEntity("ArchiveItem");
+        archive.addIntProperty("line").notNull();
+        archive.addStringProperty("json").notNull();
+    }
+
+    private static void addEntities(Schema appSchema) {
+        backupSchema(appSchema);
+        logSchema(appSchema);
     }
 
 
-    private static void logSchema(Schema schema) {
-        Entity log = schema.addEntity("LogItem");
+    private static void logSchema(Schema appSchema) {
+        Entity log = appSchema.addEntity("LogItem");
         log.addDateProperty("timestamp").notNull();
         log.addStringProperty("severity").notNull();
         log.addStringProperty("tag").notNull();
@@ -39,10 +57,9 @@ public class SimpletaskDaoGenerator {
         log.addStringProperty("exception").notNull();
     }
 
-    private static void backupSchema(Schema schema) {
-        Entity entry = schema.addEntity("TodoFile");
+    private static void backupSchema(Schema appSchema) {
+        Entity entry = appSchema.addEntity("TodoBackup");
         entry.addStringProperty("contents").notNull().primaryKey();
-        entry.addStringProperty("name").notNull();
         entry.addDateProperty("date").notNull();
     }
 

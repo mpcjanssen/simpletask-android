@@ -46,7 +46,7 @@ import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 
 
-class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncThresholds: Boolean) {
+class CalendarSync(private val m_app: SimpletaskApplication, syncDues: Boolean, syncThresholds: Boolean) {
     private val log: Logger
 
     private inner class SyncRunnable : Runnable {
@@ -141,7 +141,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
             put(Events.STATUS, Events.STATUS_CONFIRMED)
             put(Events.HAS_ATTENDEE_DATA, true)      // If this is not set, Calendar app is confused about Event.STATUS
             put(Events.CUSTOM_APP_PACKAGE, m_app.packageName)
-            put(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString())
+            put(Events.CUSTOM_APP_URI, Uri.withAppendedPath(MainActivity.URI_SEARCH, title).toString())
         }
         val uri = m_cr.insert(Events.CONTENT_URI, values)
 
@@ -239,7 +239,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
 
     private fun setSyncType(syncType: Int) {
         if (syncType == m_sync_type) return
-        if (!TodoApplication.atLeastAPI(16)) {
+        if (!SimpletaskApplication.atLeastAPI(16)) {
             m_sync_type = 0
             return
         }

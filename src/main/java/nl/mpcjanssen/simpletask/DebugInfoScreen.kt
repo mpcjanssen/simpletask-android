@@ -18,7 +18,7 @@ import java.util.*
 
 class DebugInfoScreen : ThemedActivity() {
 
-    private var m_app: TodoApplication? = null
+    private var m_app: SimpletaskApplication? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class DebugInfoScreen : ThemedActivity() {
         mVersionInfo.text = "Version: ${appVersion(this)}"
 
         val myDataset = ArrayList<String>()
-        m_app = application as TodoApplication
+        m_app = application as SimpletaskApplication
         for (entry in m_app!!.logDao.queryBuilder().orderDesc(LogItemDao.Properties.Timestamp).list()) {
             val line = logItemToString(entry)
             myDataset.add(line)

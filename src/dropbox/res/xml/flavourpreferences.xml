@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-        <Preference
-                android:key="logout_dropbox"
-                android:summary="@string/dropbox_logout_pref_summary"
-                android:title="@string/dropbox_logout_pref_title"/>
-</PreferenceScreen>

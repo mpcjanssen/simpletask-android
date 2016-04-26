@@ -16,8 +16,6 @@ import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.util.runOnMainThread
 import nl.mpcjanssen.simpletask.util.showToastShort
@@ -32,7 +30,7 @@ class FilterActivity : ThemedActivity() {
     internal var asWidgetConfigure = false
     internal lateinit var mFilter: ActiveFilter
 
-    internal lateinit var  m_app: TodoApplication
+    internal lateinit var  m_app: SimpletaskApplication
     internal lateinit var  prefs: SharedPreferences
 
     private var pager: ViewPager? = null
@@ -50,7 +48,7 @@ class FilterActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         log = Logger
         log!!.info(TAG, "Called with intent: " + intent.toString())
-        m_app = application as TodoApplication
+        m_app = application as SimpletaskApplication
         prefs = m_app.prefs
 
         setContentView(R.layout.filter)
@@ -170,38 +168,18 @@ class FilterActivity : ThemedActivity() {
             } else {
                 applyFilter()
             }
-            R.id.menu_filter_load_script -> openScript(object : FileStoreInterface.FileReadListener {
+/*            R.id.menu_filter_load_script -> openScript(object : FileStoreInterface.FileReadListener {
                 override fun fileRead(contents: String?) {
                     runOnMainThread(
                             Runnable { setScript(contents) })
                 }
-            })
+            })*/
         }
         return true
     }
 
-    private fun openScript(file_read: FileStoreInterface.FileReadListener) {
-        runOnMainThread(Runnable {
-            val dialog = FileStore.FileDialog(this@FilterActivity, File(m_app.todoFileName).parent, false)
-            dialog.addFileListener(object : FileStoreInterface.FileSelectedListener {
-                override fun fileSelected(file: String) {
-                    Thread(Runnable {
-                        try {
-
-                            m_app.fileStore.readFile(file, file_read)
-                        } catch (e: IOException) {
-                            showToastShort(this@FilterActivity, "Failed to load script.")
-                            e.printStackTrace()
-                        }
-                    }).start()
-                }
-            })
-            dialog.createFileDialog(this@FilterActivity, m_app.fileStore)
-        })
-    }
-
     private fun createFilterIntent(): Intent {
-        val target = Intent(this, Simpletask::class.java)
+        val target = Intent(this, MainActivity::class.java)
         target.action = Constants.INTENT_START_FILTER
         updateFilterFromFragments()
         mFilter.name = mFilter.proposedName

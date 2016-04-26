@@ -31,7 +31,7 @@ import java.util.*
 
 
 class AddTask : ThemedActivity() {
-    private lateinit var  m_app: TodoApplication
+    private lateinit var  m_app: SimpletaskApplication
 
     private val share_text: String? = null
 
@@ -46,7 +46,7 @@ class AddTask : ThemedActivity() {
         log.debug(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
-        m_app = application as TodoApplication
+        m_app = application as SimpletaskApplication
         val todoList = m_app.todoList
         // m_app.loadTodoList(true)
 
@@ -246,7 +246,7 @@ class AddTask : ThemedActivity() {
     }
 
     private fun showHelp() {
-        val i = Intent(this, HelpScreen::class.java)
+        val i = Intent(this, HelpActivity::class.java)
         i.putExtra(Constants.EXTRA_HELP_PAGE, getText(R.string.help_add_task))
         startActivity(i)
     }

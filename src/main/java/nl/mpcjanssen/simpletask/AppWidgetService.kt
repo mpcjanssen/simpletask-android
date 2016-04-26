@@ -33,7 +33,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     private val log: Logger
 
     private val mFilter: ActiveFilter
-    private val application: TodoApplication
+    private val application: SimpletaskApplication
 
     var visibleTasks = ArrayList<TodoListItem>()
 
@@ -41,7 +41,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         log = Logger
         val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
         log.debug(TAG, "Creating view for widget: " + widgetId)
-        application = ctxt as TodoApplication
+        application = ctxt as SimpletaskApplication
         val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
         mFilter = ActiveFilter()
         mFilter.initFromPrefs(preferences)

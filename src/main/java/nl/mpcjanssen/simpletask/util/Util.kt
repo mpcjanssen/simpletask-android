@@ -430,7 +430,7 @@ fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     return null;
 }
 
-fun getRelativeDueDate(task: Task, application : TodoApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
+fun getRelativeDueDate(task: Task, application : SimpletaskApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
     val date = task.dueDate
     if (date != null) {
         date.toDateTime()?.let {

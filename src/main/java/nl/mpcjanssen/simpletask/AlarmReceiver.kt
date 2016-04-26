@@ -13,7 +13,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Logger.info(TAG, "Executing Alarm callback")
-        val m_app = context.applicationContext as TodoApplication
+        val m_app = context.applicationContext as SimpletaskApplication
 
         // Clean up logging
         val now = Date()
