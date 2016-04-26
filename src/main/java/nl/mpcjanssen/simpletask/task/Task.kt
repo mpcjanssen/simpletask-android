@@ -26,16 +26,12 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.util.addInterval
-
-import org.json.JSONArray
-import org.json.JSONObject
 
 import java.util.*
 
 
-class Task(val tokens: ArrayList<TToken>) {
+data class Task(val tokens: ArrayList<TToken>) {
 
     init {
         // Next line is only meant for debugging. When uncommented it will show
@@ -43,19 +39,17 @@ class Task(val tokens: ArrayList<TToken>) {
         // Logger.debug("Task", "Task initialized JSON: ${toJSON()}")
     }
 
-    private fun toJSON(): JSONArray {
-        return JSONArray(tokens)
-    }
 
     constructor (text: String, defaultPrependedDate: String?) : this(parse(text)) {
         defaultPrependedDate?.let {
             if (createDate == null) {
-                Logger.debug("Task", "Updated create date of task to $createDate")
+                //Logger.debug("Task", "Updated create date of task to $defaultPrependedDate")
                 createDate = defaultPrependedDate
 
             }
         }
     }
+
     constructor (text: String) : this(text, null)
 
     fun update(rawText: String) {
@@ -63,13 +57,13 @@ class Task(val tokens: ArrayList<TToken>) {
         tokens.addAll(parse(rawText))
     }
 
-    private  fun getFirstToken(type: Int): TToken? {
+    private fun getFirstToken(type: Int): TToken? {
         return tokens.firstOrNull() { it.type == type }
     }
 
     private fun upsertToken(newToken: TToken) {
-        val idx  = tokens.indexOfFirst {  it.type == newToken.type }
-        if (idx==-1) {
+        val idx = tokens.indexOfFirst { it.type == newToken.type }
+        if (idx == -1) {
             tokens.add(newToken)
         } else {
             tokens[idx] = newToken
@@ -77,12 +71,11 @@ class Task(val tokens: ArrayList<TToken>) {
     }
 
     private fun removeFirstToken(type: Int) {
-        val idx = tokens.indexOfFirst {  it.type != type  }
-        if (idx>-1) {
+        val idx = tokens.indexOfFirst { it.type != type }
+        if (idx > -1) {
             tokens.removeAt(idx)
         }
     }
-
 
 
     val text: String
@@ -91,10 +84,13 @@ class Task(val tokens: ArrayList<TToken>) {
         }
 
     var completionDate: String? = null
-        get() = getFirstToken(COMPLETED_DATE)?.value ?: null
-
+        get() {
+            return getFirstToken(COMPLETED_DATE)?.let { it.value as String } ?: null
+        }
     var createDate: String?
-        get() = getFirstToken(CREATION_DATE)?.value ?: null
+        get() {
+            return getFirstToken(CREATION_DATE)?.let { it.value as String } ?: null
+        }
         set(newDate: String?) {
             val temp = ArrayList<TToken>()
             if (tokens.size > 0 && (tokens.first().type == COMPLETED)) {
@@ -113,72 +109,83 @@ class Task(val tokens: ArrayList<TToken>) {
                 tokens.drop(1)
             }
             newDate?.let {
-                temp.add(TToken(CREATION_DATE,newDate))
+                temp.add(TToken(CREATION_DATE, newDate, newDate))
             }
+            tokens.addAll(0, temp)
         }
 
     var dueDate: String?
-        get() = getFirstToken(DUE_DATE)?.value ?: null
+        get() {
+            return getFirstToken(DUE_DATE)?.let { it.value as String } ?: null
+        }
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
                 removeFirstToken(DUE_DATE)
             } else {
-                upsertToken(TToken(DUE_DATE, dateStr!!))
+                upsertToken(TToken(DUE_DATE, "due:$dateStr", dateStr))
             }
         }
 
     var thresholdDate: String?
-        get() = getFirstToken(THRESHOLD_DATE)?.value ?: null
+        get() {
+            val token = getFirstToken(THRESHOLD_DATE)
+            token?.let {
+                return token.value as String
+            }
+            return null
+        }
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
                 removeFirstToken(THRESHOLD_DATE)
             } else {
-                upsertToken(TToken(THRESHOLD_DATE, dateStr!!))
+                upsertToken(TToken(THRESHOLD_DATE, "t:$dateStr", dateStr))
             }
         }
 
     var priority: Priority
-        get() = Priority.toPriority(getFirstToken(PRIO)?.value) ?: Priority.NONE
+        get() {
+            return getFirstToken(PRIO)?.let { it.value as Priority } ?: Priority.NONE
+        }
         set(prio: Priority) {
             if (prio == Priority.NONE) {
                 removeFirstToken(PRIO)
             } else if (!tokens.any { it.type == PRIO }) {
-                tokens.add(0, TToken(PRIO, prio.code))
+                tokens.add(0, TToken(PRIO, prio.inFileFormat(), prio))
             } else {
-                upsertToken(TToken(PRIO, prio.code))
+                upsertToken(TToken(PRIO, prio.inFileFormat(), prio))
             }
         }
 
     var recurrencePattern: String? = null
-        get() = getFirstToken(RECURRENCE)?.value
+        get() = getFirstToken(RECURRENCE)?.let { it.value as String } ?: null
 
 
-    fun getAllTokens(type: Int) : SortedSet<String> {
-        return tokens.filter { it.type == type }.map { it -> it.value }.toSortedSet()
+    fun getAllTokenValues(type: Int): List<Any?> {
+        return tokens.filter { it.type == type }.map { it -> it.value }
     }
 
     var tags: SortedSet<String> = emptySet<String>().toSortedSet()
         get() {
-            return getAllTokens(TTAG)
+            return getAllTokenValues(TTAG).map { it as String }.toSortedSet()
         }
 
     var lists: SortedSet<String> = emptySet<String>().toSortedSet()
         get() {
-            return getAllTokens(LIST)
+            return getAllTokenValues(LIST).map { it as String }.toSortedSet()
         }
 
     var links: Set<String> = emptySet()
         get() {
-            return getAllTokens(LINK)
+            return getAllTokenValues(LINK).map { it as String }.toSortedSet()
         }
 
     var phoneNumbers: Set<String> = emptySet()
         get() {
-            return getAllTokens(PHONE)
+            return getAllTokenValues(PHONE).map { it as String }.toSortedSet()
         }
     var mailAddresses: Set<String> = emptySet()
         get() {
-            return getAllTokens(MAIL)
+            return getAllTokenValues(MAIL).map { it as String }.toSortedSet()
         }
 
 
@@ -192,17 +199,17 @@ class Task(val tokens: ArrayList<TToken>) {
         if (idx > -1 ) tokens.removeAt(idx)
     }
 
-    fun markComplete(dateStr: String) : Task? {
+    fun markComplete(dateStr: String): Task? {
         if (!this.isCompleted()) {
             val textWithoutCompletedInfo = text
-            tokens.add(0, TToken(COMPLETED_DATE, dateStr))
-            tokens.add(0, TToken(COMPLETED, "x "))
+            tokens.add(0, TToken(COMPLETED_DATE, dateStr, dateStr))
+            tokens.add(0, TToken(COMPLETED, "x ", true))
 
             val pattern = recurrencePattern
             if (pattern != null) {
-                var deferFromDate : String = "";
+                var deferFromDate: String = "";
                 if (!(recurrencePattern?.contains("+") ?: true)) {
-                    deferFromDate = completionDate?:"";
+                    deferFromDate = completionDate ?: "";
                 }
                 val newTask = Task(textWithoutCompletedInfo);
                 if (newTask.dueDate != null) {
@@ -226,48 +233,38 @@ class Task(val tokens: ArrayList<TToken>) {
         removeFirstToken(COMPLETED_DATE)
     }
 
-    fun deferThresholdDate(deferString:String, deferFromDate:String) {
-        if (deferString.matches(MATCH_SINGLE_DATE))
-        {
+    fun deferThresholdDate(deferString: String, deferFromDate: String) {
+        if (deferString.matches(MATCH_SINGLE_DATE)) {
             thresholdDate = deferString
             return
         }
-        if (deferString == "")
-        {
+        if (deferString == "") {
             thresholdDate = null
             return
         }
         val olddate: String?
-        if (deferFromDate.isNullOrEmpty())
-        {
+        if (deferFromDate.isNullOrEmpty()) {
             olddate = thresholdDate
-        }
-        else
-        {
+        } else {
             olddate = deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
         thresholdDate = newDate?.format(DATE_FORMAT)
     }
 
-    fun deferDueDate(deferString:String, deferFromDate:String) {
-        if (deferString.matches(MATCH_SINGLE_DATE))
-        {
+    fun deferDueDate(deferString: String, deferFromDate: String) {
+        if (deferString.matches(MATCH_SINGLE_DATE)) {
             dueDate = deferString
             return
         }
-        if (deferString == "")
-        {
+        if (deferString == "") {
             dueDate = null
             return
         }
         val olddate: String?
-        if (deferFromDate.isNullOrEmpty())
-        {
+        if (deferFromDate.isNullOrEmpty()) {
             olddate = dueDate
-        }
-        else
-        {
+        } else {
             olddate = deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
@@ -286,7 +283,12 @@ class Task(val tokens: ArrayList<TToken>) {
     }
 
     fun isHidden(): Boolean {
-        return getFirstToken(HIDDEN)?.value == 1 ?: false
+        val hidden = getFirstToken(HIDDEN)
+        if (hidden == null) {
+            return false
+        } else {
+            return hidden.value as Boolean
+        }
     }
 
     fun isCompleted(): Boolean {
@@ -296,7 +298,7 @@ class Task(val tokens: ArrayList<TToken>) {
     fun showParts(parts: Int): String {
         return tokens.filter {
             (it.type and parts) != 0
-        }.map {it.text}.joinToString(" ")
+        }.map { it.text }.joinToString(" ")
     }
 
     fun getHeader(sort: String, empty: String): String {
@@ -313,36 +315,35 @@ class Task(val tokens: ArrayList<TToken>) {
                 return empty;
             }
         } else if (sort.contains("by_threshold_date")) {
-            return thresholdDate?:empty;
+            return thresholdDate ?: empty;
         } else if (sort.contains("by_prio")) {
             return priority.code;
         } else if (sort.contains("by_due_date")) {
-            return dueDate?:empty;
+            return dueDate ?: empty;
         }
         return "";
     }
 
     /* Adds the task to list Listname
-** If the task is already on that list, it does nothing
- */
-    fun addList(listName : String) {
+        ** If the task is already on that list, it does nothing
+         */
+    fun addList(listName: String) {
         if (!lists.contains(listName)) {
-            tokens.add(TToken(LIST, listName))
+            tokens.add(TToken(LIST, "@$listName", listName))
         }
     }
 
     /* Tags the task with tag
-    ** If the task already has te tag, it does nothing
-    */
-    fun addTag(tagName : String) {
+            ** If the task already has te tag, it does nothing
+            */
+    fun addTag(tagName: String) {
         if (!tags.contains(tagName)) {
-            tokens.add(TToken(TTAG, tagName))
+            tokens.add(TToken(TTAG, "+$tagName", tagName))
         }
     }
 
 
-
-    override fun equals(other: Any?): Boolean{
+    override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
 
@@ -353,12 +354,14 @@ class Task(val tokens: ArrayList<TToken>) {
         return true
     }
 
-    override fun hashCode(): Int{
+    override fun hashCode(): Int {
         return text.hashCode()
     }
 
 
     companion object {
+
+
         var TAG = Task::class.java.simpleName
         const val DATE_FORMAT = "YYYY-MM-DD"
         private val MATCH_LIST = Regex("@(\\S+)")
@@ -376,19 +379,22 @@ class Task(val tokens: ArrayList<TToken>) {
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
 
         fun parse(text: String): ArrayList<TToken> {
-            var lexemes = text.lex()
+            val newTokens = ArrayList<TToken>()
+            newTokens.add(TToken(TEXT,text))
+            return newTokens
+/*            var lexemes = text.lex()
             val tokens = ArrayList<TToken>()
 
             if (lexemes.take(1) == listOf("x")) {
-                tokens.add(TToken(COMPLETED, "x "))
+                tokens.add(TToken(COMPLETED, "x ", true))
                 lexemes = lexemes.drop(1)
                 var nextToken = lexemes.getOrElse(0, { "" })
                 MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(TToken(COMPLETED_DATE,lexemes.first()))
+                    tokens.add(TToken(COMPLETED_DATE, lexemes.first()))
                     lexemes = lexemes.drop(1)
                     nextToken = lexemes.getOrElse(0, { "" })
                     MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                        tokens.add(TToken(CREATION_DATE,(lexemes.first())))
+                        tokens.add(TToken(CREATION_DATE, (lexemes.first())))
                         lexemes = lexemes.drop(1)
                     }
                 }
@@ -402,18 +408,18 @@ class Task(val tokens: ArrayList<TToken>) {
 
             nextToken = lexemes.getOrElse(0, { "" })
             MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(TToken(CREATION_DATE,lexemes.first()))
+                tokens.add(TToken(CREATION_DATE, lexemes.first()))
                 lexemes = lexemes.drop(1)
             }
 
 
             lexemes.forEach { lexeme ->
                 MATCH_LIST.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(LIST,lexeme))
+                    tokens.add(TToken(LIST, lexeme))
                     return@forEach
                 }
                 MATCH_TAG.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(TTAG,lexeme))
+                    tokens.add(TToken(TTAG, lexeme))
                     return@forEach
                 }
                 MATCH_DUE.matchEntire(lexeme)?.let {
@@ -421,7 +427,7 @@ class Task(val tokens: ArrayList<TToken>) {
                     return@forEach
                 }
                 MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(THRESHOLD_DATE,lexeme))
+                    tokens.add(TToken(THRESHOLD_DATE, lexeme))
                     return@forEach
                 }
                 MATCH_HIDDEN.matchEntire(lexeme)?.let {
@@ -433,15 +439,15 @@ class Task(val tokens: ArrayList<TToken>) {
                     return@forEach
                 }
                 MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(PHONE,lexeme))
+                    tokens.add(TToken(PHONE, lexeme))
                     return@forEach
                 }
                 MATCH_URI.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(LINK,lexeme))
+                    tokens.add(TToken(LINK, lexeme))
                     return@forEach
                 }
                 MATCH_MAIL.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(MAIL,lexeme))
+                    tokens.add(TToken(MAIL, lexeme))
                     return@forEach
                 }
                 if (lexeme.isBlank()) {
@@ -451,42 +457,15 @@ class Task(val tokens: ArrayList<TToken>) {
                 }
 
             }
-            return tokens
+            return tokens*/
         }
     }
 }
 
-class TToken : JSONObject {
-    constructor(type: Int, value : String ) : super() {
-        put("type", type)
-        put("value", value)
-        put("text", when (type) {
-            COMPLETED -> "x "
-            PRIO -> Priority.toPriority(value).inFileFormat()
-            LIST -> "@${value}"
-            TTAG -> "+${value}"
-            THRESHOLD_DATE -> "t:$value"
-            DUE_DATE -> "due:$value"
-            HIDDEN -> "h:$value"
-            RECURRENCE -> "rec:$value"
-            else -> value
-        })
 
-    }
+data class TToken (val type: Int, val text: String, val value: Any?) {
 
-
-    val type : Int
-        get() {
-            return this.optInt("type")
-        }
-    val text : String
-        get() {
-            return this.optString("text")
-        }
-    val value : String
-        get() {
-            return this.optString("value")
-        }
+    constructor( type: Int, text: String) : this (type, text, text)
 
     fun typeAsString () : String {
         return when(type) {
@@ -514,6 +493,10 @@ class TToken : JSONObject {
 // Extension functions
 
 fun String.lex(): List<String> = this.split(" ")
+
+fun Task.asTodoItem () : TodoItem {
+    return TodoItem(this, false)
+}
 
 const val WHITE_SPACE = 1
 const val LIST = 1 shl 1

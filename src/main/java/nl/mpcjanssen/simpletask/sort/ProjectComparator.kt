@@ -1,9 +1,9 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoItem
 import java.util.*
 
-class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
+class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoItem> {
 
     private val mStringComparator: AlphabeticalStringComparator
 
@@ -12,7 +12,7 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
     }
 
 
-    override fun compare(a: TodoListItem?, b: TodoListItem?): Int {
+    override fun compare(a: TodoItem?, b: TodoItem?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {

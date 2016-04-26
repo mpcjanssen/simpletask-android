@@ -13,8 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import de.greenrobot.dao.query.QueryBuilder;
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile;
+import nl.mpcjanssen.simpletask.dao.app.TodoBackup;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,18 +50,17 @@ public class HistoryActivity extends ThemedActivity {
     }
 
     private void initCursor() {
-        QueryBuilder<TodoFile> builder = m_app.daoSession.getTodoFileDao().queryBuilder();
+        QueryBuilder<TodoBackup> builder = m_app.backupDao.queryBuilder();
         cursor = builder.buildCursor().query();
         cursor.moveToLast();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (cursor!=null) {
             cursor.close();
         }
-
+        super.onDestroy();
     }
 
     private void shareHistory() {

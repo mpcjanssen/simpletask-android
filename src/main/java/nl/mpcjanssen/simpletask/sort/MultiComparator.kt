@@ -3,17 +3,17 @@ package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.todayAsString
+
+import nl.mpcjanssen.simpletask.task.TodoItem
 
 
 import java.util.*
 import kotlin.comparisons.reversed
 import kotlin.comparisons.then
+import kotlin.comparisons.thenComparator
 
-class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
-    var comparators : Comparator<TodoListItem>? = null
-    val defaultComparator = FileOrderComparator()
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoItem> {
+    var comparators : Comparator<TodoItem>? = null
 
     init {
         val log = Logger
@@ -32,9 +32,20 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     reverse = true
                 }
             }
-            var comp : Comparator<TodoListItem>
+            var comp : Comparator<TodoItem>
             when (sortType) {
-                "file_order" -> comp = FileOrderComparator()
+                "file_order" -> {
+                    if (reverse) {
+                        val reversedComparator = Collections.reverseOrder<TodoItem>()
+                        val otherComparators  = comparators
+                        if (otherComparators==null) {
+                            comparators = reversedComparator
+                        } else {
+                            comparators = reversedComparator.then(otherComparators)
+                        }
+                    }
+                    break@label
+                }
                 "by_context" -> comp = ContextComparator(caseSensitve)
                 "by_project" -> comp = ProjectComparator(caseSensitve)
                 "alphabetical" -> comp = AlphabeticalComparator(caseSensitve)
@@ -58,7 +69,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
         }
     }
 
-    override fun compare(o1: TodoListItem, o2: TodoListItem): Int {
-        return comparators?.compare(o1, o2)?:defaultComparator.compare(o1,o2)
+    override fun compare(o1: TodoItem, o2: TodoItem): Int {
+        return comparators?.compare(o1, o2)?: o1.task.text.compareTo(o2.task.text)
     }
 }

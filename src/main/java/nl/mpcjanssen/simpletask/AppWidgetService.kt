@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 
+
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
@@ -35,7 +36,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     private val mFilter: ActiveFilter
     private val application: SimpletaskApplication
 
-    var visibleTasks = ArrayList<TodoListItem>()
+    var visibleTasks = ArrayList<TodoItem>()
 
     init {
         log = Logger
@@ -52,23 +53,20 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         return super.hashCode()
     }
 
-
-    private fun createSelectedIntent(t: TodoListItem): Intent {
+    private fun createEditIntent(t: TodoItem): Intent {
         val target = Intent()
         mFilter.saveInIntent(target)
-        target.putExtra(Constants.INTENT_SELECTED_TASK, t.task.inFileFormat())
+        // Fix selection code here
         return target
     }
 
 
+
     fun setFilteredTasks() {
         // log.debug(TAG, "Widget: setFilteredTasks called");
-        visibleTasks = ArrayList<TodoListItem>()
+        visibleTasks = ArrayList<TodoItem>()
         if (application == null) {
             log.debug(TAG, "application object was null")
-            return
-        }
-        if (!application.isAuthenticated) {
             return
         }
 
@@ -97,7 +95,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         return null
     }
 
-    private fun getExtendedView(item: TodoListItem): RemoteViews {
+    private fun getExtendedView(item: TodoItem): RemoteViews {
         val rv = RemoteViews(application.packageName, R.layout.widget_list_item)
         val extended_widget = application.prefs.getBoolean("widget_extended", true)
         val task = item.task
@@ -182,7 +180,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
             //rv.setViewPadding(R.id.tasktext,
             //        4, 4, 4, 0);
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(item))
+        rv.setOnClickFillInIntent(R.id.taskline, createEditIntent(item))
         return rv
     }
 

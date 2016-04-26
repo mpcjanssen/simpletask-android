@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
+import nl.mpcjanssen.simpletask.dao.app.LogItemDao
 import nl.mpcjanssen.simpletask.util.todayAsString
 
 

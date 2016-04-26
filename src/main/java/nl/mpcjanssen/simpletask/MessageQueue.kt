@@ -19,9 +19,11 @@ class MessageQueue(val tag: String) : Thread() {
 
 
 
-    fun queueRunnable(description: String, r: Runnable) {
-        log.info(tag, "Handler: Queue " + description)
+    fun queueRunnable(description: String, r: Runnable , silent: Boolean = false) {
         while (mHandler == null) {
+            if (!silent) {
+                log.debug(tag, "Queue handler is null, waiting")
+            }
             try {
                 Thread.sleep(100)
             } catch (e: InterruptedException) {
@@ -29,8 +31,11 @@ class MessageQueue(val tag: String) : Thread() {
             }
 
         }
-
-        mHandler?.post(LoggingRunnable(tag, description, r))
+        if (!silent) {
+            mHandler?.post(LoggingRunnable(tag, description, r))
+        } else {
+            mHandler?.post (r)
+        }
     }
 
 

@@ -28,10 +28,6 @@ object Constants {
 
     const val DATE_FORMAT = "YYYY-MM-DD"
 
-    // Constants for creating shortcuts
-    const val INTENT_SELECTED_TASK = "SELECTED_TASK"
-
-    const val BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE"
     const val BROADCAST_UPDATE_UI = "UPDATE_UI"
     const val BROADCAST_TODOLIST_CHANGED = "TODOLIST_CHANGED"
     const val BROADCAST_THEME_CHANGED = "THEME_CHANGED"
@@ -54,9 +50,6 @@ object Constants {
     // Android OS specific constants
     const val ANDROID_EVENT = "vnd.android.cursor.item/event"
 
-    // Supported backends
-    const val STORE_DROPBOX = 0
-    const val STORE_SDCARD = 1
 
     // Help pages
     const val HELP_INDEX = "index.en.md"

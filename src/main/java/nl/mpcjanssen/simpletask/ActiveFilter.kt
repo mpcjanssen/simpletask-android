@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
 
+
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
@@ -221,9 +222,9 @@ class ActiveFilter {
         scriptTestTask = null
     }
 
-    fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
+    fun apply(items: List<TodoItem>?): ArrayList<TodoItem> {
         val filter = AndFilter()
-        val matched = ArrayList<TodoListItem>()
+        val matched = ArrayList<TodoItem>()
         var prototype: Prototype? = null
         var globals: Globals? = null
         if (items == null) {

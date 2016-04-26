@@ -84,7 +84,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string-array name="task_text_ellipsizing">
         <item>None: Very long task text</item>
-        <item>Start: ...task text</item>
+        <item>Start: ..task text</item>
         <item>Middle: Very... text</item>
         <item>End: Very long...</item>
         <item>Marquee: Very long ta</item>
@@ -149,7 +149,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="back_clears_filter" translatable="false">back_clears_filter</string>
     <string name="keep_prio" translatable="false">todotxt_completion</string>
     <string name="dropbox_full_access" translatable="false">dropbox_full_access</string>
-    <string name="share_task_show_edit" translatable="false">share_task_show_edit</string>
     <string name="append_tasks_at_end" translatable="false">append_tasks_at_end</string>
     <string name="dropbox_latest_cursor" translatable="false">dropbox_latest_cursor</string>
     <string name="custom_font_size" translatable="false">custom_font_size</string>

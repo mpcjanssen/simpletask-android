@@ -1,11 +1,11 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoItem
 import java.util.*
 
-class DueDateComparator : Comparator<TodoListItem> {
+class DueDateComparator : Comparator<TodoItem> {
 
-    override fun compare(a: TodoListItem?, b: TodoListItem?): Int {
+    override fun compare(a: TodoItem?, b: TodoItem?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {

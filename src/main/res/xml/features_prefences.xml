@@ -15,11 +15,7 @@
         android:key="@string/ui_show_confirmation_dialogs"
         android:summary="@string/show_confirmation_dialogs_summary"
         android:title="@string/show_confirmation_dialogs_title" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/share_task_show_edit"
-        android:summary="@string/share_task_show_edit_summary"
-        android:title="@string/share_task_show_edit_pref_title" />
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/ui_show_calendarview"

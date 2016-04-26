@@ -28,31 +28,40 @@
 package nl.mpcjanssen.simpletask
 
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.task.TodoItem
+import nl.mpcjanssen.simpletask.task.asTodoItem
 import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
 import java.util.*
 
+const val REQUEST_READ_PERMISSION = 1
 
-class AddTaskBackground : Activity() {
+class AddTaskBackground : ThemedActivity() {
     private var log = Logger
     val TAG = "AddTaskBackground"
+
+    private lateinit var m_app: SimpletaskApplication
 
     public override fun onCreate(instance: Bundle?) {
         log = Logger;
         log.debug(TAG, "onCreate()")
         super.onCreate(instance)
-        val m_app = this.application as SimpletaskApplication
-        m_app.loadTodoList(true)
+        m_app = this.application as SimpletaskApplication
+        extractData()
+    }
 
-        val intent = intent
+    private fun extractData() {
         val action = intent.action
-
         val append_text = m_app.shareAppendText
         if (intent.type.startsWith("text/")) {
             if (Intent.ACTION_SEND == action) {
@@ -60,6 +69,20 @@ class AddTaskBackground : Activity() {
                 var share_text = ""
                 if (intent.hasExtra(Intent.EXTRA_STREAM)) {
                     val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
+                    if (uri == null) {
+                        return
+                    }
+                    if (uri.scheme.equals("file")) {
+                        // With file:// schemes we need external storage access
+                        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                            setContentView(R.layout.add_task)
+                            ActivityCompat.requestPermissions(this,
+                                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_PERMISSION)
+                            return
+                        }
+                    }
+
                     try {
                         val `is` = contentResolver.openInputStream(uri)
                         share_text = `is`.reader().readText()
@@ -95,12 +118,21 @@ class AddTaskBackground : Activity() {
         }
     }
 
-    private fun startAddTaskActivity(addedTasks: ArrayList<Task>) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_READ_PERMISSION -> if (grantResults.size > 0 &&  grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivity(intent)
+            } else {
+                showToastShort(m_app, R.string.shared_data_access_denied)
+            }
+        }
+        finish()
+    }
+
+    private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
-        val m_app = this.application as SimpletaskApplication
         val intent = Intent(this, AddTask::class.java)
-        m_app.todoList.clearSelection()
-        m_app.todoList.selectTasks(addedTasks,null)
         startActivity(intent)
     }
 
@@ -115,34 +147,11 @@ class AddTaskBackground : Activity() {
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val m_app = this.application as SimpletaskApplication
         val todoList = m_app.todoList
-        val addedTasks = ArrayList<Task>()
-        log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
+        val lines = sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() })
+        todoList.appendRaw(lines)
 
-        for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
-            if (taskText.trim({ it <= ' ' }).isEmpty()) {
-                continue
-            }
-            var text : String
-            if (!appendText.isEmpty()) {
-                text = taskText + " " + appendText
-            } else {
-                text = taskText
-            }
-            val t: Task
-            if (m_app.hasPrependDate()) {
-                t = Task(text, DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT))
-            } else {
-                t = Task(text)
-            }
-            todoList.add(t, m_app.hasAppendAtEnd())
-            addedTasks.add(t)
-        }
-        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
-        finish()
         showToastShort(m_app, R.string.task_added)
-        if (m_app.hasShareTaskShowsEdit()) {
-            startAddTaskActivity(addedTasks)
-        }
+        finish()
     }
 
 }

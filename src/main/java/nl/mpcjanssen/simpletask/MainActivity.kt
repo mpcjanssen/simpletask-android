@@ -14,7 +14,6 @@ package nl.mpcjanssen.simpletask
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.app.SearchManager
 import android.content.*
 import android.content.res.Configuration
@@ -22,8 +21,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.design.widget.FloatingActionButton
@@ -47,6 +44,7 @@ import hirondelle.date4j.DateTime
 
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
+
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
@@ -56,7 +54,7 @@ import java.io.File
 import java.util.*
 
 
-class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
 
     internal var options_menu: Menu? = null
     internal lateinit var m_app: SimpletaskApplication
@@ -71,11 +69,8 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
     private var m_drawerLayout: DrawerLayout? = null
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
-    internal var m_scrollPosition = 0
-    private var mOverlayDialog: Dialog? = null
-    private var mIgnoreScrollEvents = false
-    private val log = Logger
 
+    private val log = Logger
 
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +79,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         m_app = application as SimpletaskApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE)
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
+        intentFilter.addAction(Constants.BROADCAST_TODOLIST_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
@@ -94,10 +88,9 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
-                if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
-                    archiveTasks(null)
-                } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
-                    log.info(TAG, "Updating UI because of broadcast")
+                log.info(TAG, "Handling broadcast ${receivedIntent.action}")
+                if (receivedIntent.action == Constants.BROADCAST_TODOLIST_CHANGED ||
+                        receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                     if (m_adapter == null) {
                         return
                     }
@@ -115,7 +108,6 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
 
 
         // Set the proper view
-
         if (m_app.hasLandscapeDrawers()) {
             setContentView(R.layout.main_landscape)
         } else {
@@ -136,13 +128,6 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                 val flags = resultCode - Activity.RESULT_FIRST_USER
                 shareTodoList(flags)
             }
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_PERMISSION -> m_app.switchTodoFile(m_app.todoFileName, false)
         }
     }
 
@@ -171,25 +156,21 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
 
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
-        for (t in todoList.selectedTasks) {
-            result.add(t.task.inFileFormat())
+        for (item in todoList.selectedTasks) {
+            result.add(item.task.inFileFormat())
         }
         return join(result, "\n")
     }
 
     private fun selectAllTasks() {
-
         for (visibleLine in m_adapter!!.visibleLines) {
             // Only check tasks that are not checked yet
             // and skip headers
             // This prevents double counting in the CAB title
             if (!visibleLine.header) {
-                selectedTasks.add(visibleLine.task!!)
+                visibleLine.item?.selected  = true
             }
         }
-        val tl = todoList
-        tl.clearSelection()
-        todoList.selectTodoItems(selectedTasks)
         handleIntent()
     }
 
@@ -202,11 +183,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
 
 
     private fun handleIntent() {
-        if (!m_app.isAuthenticated) {
-            log.info(TAG, "handleIntent: not authenticated")
-            startLogin()
-            return
-        }
+
 
         mFilter = ActiveFilter()
 
@@ -337,18 +314,9 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                 build.setItems(titleArray) { dialog, which ->
                     val actionIntent: Intent
                     val url = links[which]
-                    log!!.info(TAG, "" + actions[which] + ": " + url)
+                    log.info(TAG, "" + actions[which] + ": " + url)
                     when (actions[which]) {
-                        ACTION_LINK -> if (url.startsWith("todo://")) {
-                            val todoFolder = m_app.todoFile.parentFile
-                            val newName = File(todoFolder, url.substring(7))
-                            m_app.switchTodoFile(newName.absolutePath, true)
-                        } else if (url.startsWith("root://")) {
-                            val rootFolder = m_app.localFileRoot
-                            val file = File(rootFolder, url.substring(7))
-                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
-                            startActivity(actionIntent)
-                        } else {
+                        ACTION_LINK -> {
                             actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             startActivity(actionIntent)
                         }
@@ -373,57 +341,25 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
             }
         }
 
-        mIgnoreScrollEvents = true
-        // Setting a scroll listener reset the scroll
-        lv.setOnScrollListener(this)
-        mIgnoreScrollEvents = false
-        if (m_savedInstanceState != null) {
-            m_scrollPosition = m_savedInstanceState!!.getInt("position")
-        }
-
         lv.isFastScrollEnabled = m_app.useFastScroll()
 
-
-        // If we were started from the widget, select the pushed task
-        // and scroll to its position
-        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK)) {
-            val line = intent.getStringExtra(Constants.INTENT_SELECTED_TASK)
-            intent.removeExtra(Constants.INTENT_SELECTED_TASK)
-            setIntent(intent)
-            if (line != null) {
-                todoList.clearSelection()
-                val tasks = ArrayList<Task>()
-                tasks.add(Task(line))
-                todoList.selectTasks(tasks, localBroadcastManager)
-            }
-        }
-        val selection = todoList.selectedTasks
-        if (selection.size > 0) {
-            val selectedTask = selection[0]
-            m_scrollPosition = m_adapter!!.getPosition(selectedTask)
-            openSelectionMode()
-        } else {
-            closeSelectionMode()
-        }
-        // Check the selected items in the listView
-        setSelectedTasks(selection)
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        lv.setSelectionFromTop(m_scrollPosition, 0)
         fab.setOnClickListener { startAddTaskActivity() }
-
-        updateDrawers()
-        mOverlayDialog = showLoadingOverlay(this, mOverlayDialog, m_app.isLoading)
+        highlightSelectedTasks()
     }
 
 
-    private fun setSelectedTasks(items: List<TodoListItem>?) {
-        if (items == null) return
+    private fun highlightSelectedTasks() {
+        val items = todoList.selectedTasks
+        if (items.size == 0) {
+            return
+        }
+        openSelectionMode()
         val lv = listView
         for (t in items) {
             val position = m_adapter!!.getPosition(t)
             if (position != -1) {
-                lv.setItemChecked(position, true)
-                lv.setSelection(position)
+                lv.setItemChecked(position, t.selected)
             }
         }
     }
@@ -455,11 +391,6 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                 getText(R.string.script),
                 getText(R.string.title_filter_applied),
                 getText(R.string.no_filter))
-    }
-
-    private fun startLogin() {
-        m_app.startLogin(this)
-        finish()
     }
 
     override fun onDestroy() {
@@ -550,7 +481,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         })
     }
 
-    private fun getTaskAt(pos: Int): TodoListItem? {
+    private fun getTaskAt(pos: Int): TodoItem? {
         if (pos < m_adapter!!.count) {
             return m_adapter!!.getItem(pos)
         }
@@ -560,63 +491,60 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
     private fun shareTodoList(format: Int) {
         val text = StringBuilder()
         for (i in 0..m_adapter!!.count - 1 - 1) {
-            val task = m_adapter!!.getItem(i)
-            if (task != null) {
-                text.append(task.task.showParts(format)).append("\n")
+            val item = m_adapter!!.getItem(i)
+            if (item != null) {
+                text.append(item.task.showParts(format)).append("\n")
             }
         }
         shareText(this, "Simpletask list", text.toString())
     }
 
 
-    private fun prioritizeTasks(tasks: List<TodoListItem>) {
+    private fun prioritizeTasks(items: List<TodoItem>) {
         val strings = Priority.rangeInCode(Priority.NONE, Priority.Z)
         val priorityArr = strings.toTypedArray()
 
         var priorityIdx = 0
-        if (tasks.size == 1) {
-            priorityIdx = strings.indexOf(tasks[0].task.priority.code)
+        if (items.size == 1) {
+            priorityIdx = strings.indexOf(items[0].task.priority.code)
         }
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
         builder.setSingleChoiceItems(priorityArr, priorityIdx, { dialog, which ->
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
-            todoList.prioritize(tasks, priority)
+            todoList.prioritize(items, priority)
             closeSelectionMode()
         })
         builder.show()
 
     }
 
-    private fun completeTasks(task: TodoListItem) {
-        val tasks = ArrayList<TodoListItem>()
+    private fun completeTasks(task: TodoItem) {
+        val tasks = ArrayList<TodoItem>()
         tasks.add(task)
         completeTasks(tasks)
     }
 
-    private fun completeTasks(tasks: List<TodoListItem>) {
-        for (t in tasks) {
-            todoList.complete(t, m_app.hasKeepPrio(), m_app.hasAppendAtEnd())
-        }
+    private fun completeTasks(items: List<TodoItem>) {
+        todoList.complete(items, m_app.hasKeepPrio(), m_app.hasAppendAtEnd())
         if (m_app.isAutoArchive) {
-            archiveTasks(null)
+            archiveTasks(items)
         }
-        closeSelectionMode()
     }
 
-    private fun undoCompleteTasks(task: TodoListItem) {
-        val tasks = ArrayList<TodoListItem>()
+    private fun undoCompleteTasks(task: TodoItem) {
+        val tasks = ArrayList<TodoItem>()
         tasks.add(task)
         undoCompleteTasks(tasks)
     }
 
-    private fun undoCompleteTasks(tasks: List<TodoListItem>) {
+    private fun undoCompleteTasks(tasks: List<TodoItem>) {
         todoList.undoComplete(tasks)
         closeSelectionMode()
     }
 
-    private fun deferTasks(tasks: List<TodoListItem>, dateType: DateType) {
+    private fun deferTasks(tasks: List<TodoItem>, dateType: DateType) {
         var titleId = R.string.defer_due
         if (dateType === DateType.THRESHOLD) {
             titleId = R.string.defer_threshold
@@ -651,21 +579,15 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         d.show()
     }
 
-    private fun deleteTasks(tasks: List<TodoListItem>) {
+    private fun deleteTasks(tasks: List<TodoItem>) {
         m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i ->
-            for (t in tasks) {
-                m_app.todoList.remove(t)
-            }
+            m_app.todoList.remove(tasks)
             closeSelectionMode()
         }, R.string.delete_task_title)
     }
 
-    private fun archiveTasks(tasksToArchive: List<TodoListItem>?) {
-        if (m_app.todoFileName == m_app.doneFileName) {
-            showToastShort(this, "You have the done.txt file opened.")
-            return
-        }
-        todoList.archive(m_app.todoFileName, m_app.doneFileName, tasksToArchive, m_app.eol)
+    private fun archiveTasks(tasksToArchive: List<TodoItem>?) {
+        todoList.archive(tasksToArchive)
         closeSelectionMode()
     }
 
@@ -682,7 +604,6 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
             R.id.share -> startActivityForResult(Intent(baseContext, TaskDisplayActivity::class.java), REQUEST_SHARE_PARTS)
             R.id.help -> showHelp()
             R.id.archive -> m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveTasks(null) }, R.string.archive_task_title)
-            R.id.open_file -> m_app.browseForNewFile(this)
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -1016,9 +937,9 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         val t = getTaskAt(position) ?: return false
         val selected = !listView.isItemChecked(position)
         if (selected) {
-            todoList.selectTodoItem(t)
+            t.selected = true
         } else {
-            todoList.unSelectTodoItem(t)
+            t.selected = false
         }
         listView.setItemChecked(position, selected)
         val numSelected = todoList.selectedTasks.size
@@ -1107,15 +1028,6 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
     }
 
 
-    override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
-    }
-
-    override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-        if (!mIgnoreScrollEvents) {
-            m_scrollPosition = firstVisibleItem
-        }
-    }
-
     val listView: ListView
         get() {
             val lv = findViewById(android.R.id.list)
@@ -1123,11 +1035,11 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         }
 
 
-    data class ViewHolder (var taskText: TextView? = null,
-                           var taskAge: TextView? = null,
-                           var taskDue: TextView? = null,
-                           var taskThreshold: TextView? = null,
-                           var cbCompleted: CheckBox? = null)
+    data class ViewHolder(var taskText: TextView? = null,
+                          var taskAge: TextView? = null,
+                          var taskDue: TextView? = null,
+                          var taskThreshold: TextView? = null,
+                          var cbCompleted: CheckBox? = null)
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
 
@@ -1135,20 +1047,15 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            if (m_app.showTodoPath()) {
-                title = m_app.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
-            } else {
-                setTitle(R.string.app_label)
-            }
+            log.info(TAG, "setFilteredTasks called: " + todoList)
+            val visibleTasks: List<TodoItem>
 
-            val visibleTasks: List<TodoListItem>
-            log!!.info(TAG, "setFilteredTasks called: " + todoList)
             val activeFilter = mFilter ?: return
             val sorts = activeFilter.getSort(m_app.defaultSorts)
             visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
             visibleLines.clear()
 
-
+            log.info(TAG,"Adding headers..")
             var firstGroupSortIndex = 0
             if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
                 firstGroupSortIndex++
@@ -1160,6 +1067,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
 
             val firstSort = sorts[firstGroupSortIndex]
             visibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
+            log.info(TAG,"Adding headers..done")
             notifyDataSetChanged()
             updateFilterBar()
         }
@@ -1178,7 +1086,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         /*
         ** Get the adapter position for task
         */
-        fun getPosition(task: TodoListItem): Int {
+        fun getPosition(task: TodoItem): Int {
             val line = TaskLine(task)
             return visibleLines.indexOf(line)
         }
@@ -1187,12 +1095,12 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
             return visibleLines.size + 1
         }
 
-        override fun getItem(position: Int): TodoListItem? {
+        override fun getItem(position: Int): TodoItem? {
             val line = visibleLines[position]
             if (line.header) {
                 return null
             }
-            return line.task
+            return line.item
         }
 
         override fun getItemId(position: Int): Long {
@@ -1236,8 +1144,8 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                 } else {
                     holder = view.tag as ViewHolder
                 }
-                val item = line.task ?: return null
-                val task = item.task
+                val task = line.item?.task
+                if (task==null) return view
 
                 if (m_app.showCompleteCheckbox()) {
                     holder.cbCompleted!!.visibility = View.VISIBLE
@@ -1297,7 +1205,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                 val taskDue = holder.taskDue!!
                 val taskThreshold = holder.taskThreshold!!
 
-                taskAge.textSize =  m_app.activeFontSize *  m_app.dateBarRelativeSize
+                taskAge.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
                 taskDue.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
                 taskThreshold.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
 
@@ -1312,10 +1220,10 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                     taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     holder.taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     cb.isChecked = true
-                   cb.setOnClickListener({
-                        undoCompleteTasks(item)
+                    cb.setOnClickListener({
+                        line.item?.task?.markIncomplete()
                         closeSelectionMode()
-                        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                        todoList.save()
                     })
                 } else {
                     taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -1323,9 +1231,9 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                     cb.isChecked = false
 
                     cb.setOnClickListener {
-                        completeTasks(item)
+                        line.item?.task?.markComplete(m_app.today)
                         closeSelectionMode()
-                        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                        todoList.save()
                     }
 
                 }
@@ -1418,24 +1326,23 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
                 taskText.setHorizontallyScrolling(true)
                 taskText.ellipsize = truncateAt
             } else {
-                log!!.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
+                log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
             }
         }
     }
 
 
-
     private fun updateItemsDialog(title: String,
-                            checkedTasks: List<TodoListItem>,
-                            allItems: ArrayList<String>,
-                            retrieveFromTask: (Task) -> SortedSet<String>,
-                            addToTask: (Task, String) -> Unit,
-                            removeFromTask: (Task, String) -> Unit
+                                  checkedItems: List<TodoItem>,
+                                  allItems: ArrayList<String>,
+                                  retrieveFromTask: (Task) -> SortedSet<String>,
+                                  addToTask: (Task, String) -> Unit,
+                                  removeFromTask: (Task, String) -> Unit
     ) {
         val checkedTaskItems = ArrayList<HashSet<String>>()
-        for (task in checkedTasks) {
+        for (item in checkedItems) {
             val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(task.task))
+            items.addAll(retrieveFromTask(item.task))
             checkedTaskItems.add(items)
         }
 
@@ -1473,30 +1380,31 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
             if (newText.isNotEmpty()) {
-                for (i in checkedTasks) {
+                for (i in checkedItems) {
                     val t = i.task
-                    addToTask(t,newText)
+                    addToTask(t, newText)
                 }
             }
             val updatedValues = itemAdapter.currentState
             for (i in 0..updatedValues.lastIndex) {
                 when (updatedValues[i] ) {
                     false -> {
-                        for (task in checkedTasks) {
-                            val t = task.task
-                            removeFromTask(t,sortedAllItems[i])
+                        for (item in checkedItems) {
+                            val t = item.task
+                            removeFromTask(t, sortedAllItems[i])
                         }
                     }
                     true -> {
-                        for (task in checkedTasks) {
-                            val t = task.task
-                            addToTask(t,sortedAllItems[i])
+                        for (item in checkedItems) {
+                            val t = item.task
+                            addToTask(t, sortedAllItems[i])
                         }
                     }
                 }
             }
-            todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+            todoList.update(checkedItems)
             closeSelectionMode()
+            todoList.save()
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
@@ -1505,25 +1413,25 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
         dialog.show()
     }
 
-    private fun updateLists(checkedTasks: List<TodoListItem>) {
+    private fun updateLists(checkedTasks: List<TodoItem>) {
         updateItemsDialog(
                 m_app.listTerm,
                 checkedTasks,
                 sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null),
-                {task -> task.lists},
-                {task, list -> task.addList(list)},
-                {task, list -> task.removeList(list)}
+                { task -> task.lists },
+                { task, list -> task.addList(list) },
+                { task, list -> task.removeList(list) }
         )
     }
 
-    private fun updateTags(checkedTasks: List<TodoListItem>) {
+    private fun updateTags(checkedTasks: List<TodoItem>) {
         updateItemsDialog(
                 m_app.tagTerm,
                 checkedTasks,
                 sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null),
-                {task -> task.tags},
-                {task, tag -> task.addTag(tag)},
-                {task, tag -> task.removeTag(tag)}
+                { task -> task.tags },
+                { task, tag -> task.addTag(tag) },
+                { task, tag -> task.removeTag(tag) }
         )
     }
 
@@ -1569,7 +1477,6 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
 
         private val REQUEST_SHARE_PARTS = 1
         private val REQUEST_PREFERENCES = 2
-        private val REQUEST_PERMISSION = 3
 
         private val ACTION_LINK = "link"
         private val ACTION_SMS = "sms"

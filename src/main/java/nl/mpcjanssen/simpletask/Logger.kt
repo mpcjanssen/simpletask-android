@@ -22,14 +22,18 @@ object Logger {
 
 
     fun logInDB(severity: String, tag: String, s: String, throwable: Throwable? = null) {
-        loggingQueue.queueRunnable( "", Runnable {
-            var throwableMessage: String = ""
-            throwable?.let {
-                throwableMessage = Log.getStackTraceString(throwable)
-            }
-            val item = LogItem(Date(), severity, tag, s, throwableMessage)
-            dao?.insert(item)
-        })
+        try {
+            loggingQueue.queueRunnable("", Runnable {
+                var throwableMessage: String = ""
+                throwable?.let {
+                    throwableMessage = Log.getStackTraceString(throwable)
+                }
+                val item = LogItem(Date(), severity, tag, s, throwableMessage)
+                dao?.insert(item)
+            }, true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun error(tag: String, s: String) {

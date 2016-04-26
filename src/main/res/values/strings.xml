@@ -152,12 +152,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="font_size_delta_pref_summary">Change the font size.</string>
     <string name="theme_pref_title">Theme</string>
     <string name="theme_pref_summary">Change the theme used for the application.</string>
-
-    <string name="share_task_show_edit_pref_title">Edit shared task</string>
-    <string name="share_task_show_edit_summary">Allow editing of a shared task before saving it.
-            Disable this to have the shared task stored without intervention.</string>
-
-
     <string name="share_task_append_text_title">Background tag</string>
     <string name="share_task_append_text_summary">Append text \"%s\" to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
@@ -387,6 +381,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_title">Simpletask reminder</string>
     <string name="share_title">Simpletask task</string>
     <string name="version_copied">Version info copied to clipboard</string>
+
+    <string name="shared_data_access_denied">No permission to read the shared data. Not added.</string>
 
     <string name="task_added">Task added to Simpletask</string>
     <string name="default_sort">Default sort</string>

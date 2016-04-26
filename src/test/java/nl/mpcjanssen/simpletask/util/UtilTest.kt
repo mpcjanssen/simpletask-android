@@ -1,9 +1,11 @@
 package nl.mpcjanssen.simpletask.util
 
 import junit.framework.TestCase
+import nl.mpcjanssen.simpletask.dao.todo.TodoItem
 
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.task.asTodoItem
+
 import java.util.*
 
 /**
@@ -19,9 +21,9 @@ class UtilTest : TestCase() {
         tasks.add(Task("@Home h:1"))
         tasks.add(Task("@Work h:1"))
         tasks.add(Task("@College h:1"))
-        val items = ArrayList<TodoListItem>()
+        val items = ArrayList<TodoItem>()
         for (t in tasks) {
-            items.add(TodoListItem(0, t, false))
+            items.add(t.asTodoItem())
         }
         assertEquals(6, addHeaderLines(items, "by_context", "none").size)
 

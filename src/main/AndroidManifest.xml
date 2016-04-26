@@ -27,6 +27,7 @@ You should have received a copy of the GNU General Public License along with Sim
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <supports-screens
         android:anyDensity="true"
@@ -91,7 +92,6 @@ You should have received a copy of the GNU General Public License along with Sim
                 tools:ignore="MissingRegistered"
                 android:name=".AddTaskBackground"
                 android:enabled="true"
-                android:theme="@android:style/Theme.NoDisplay"
                 android:taskAffinity="nl.mpcjanssen.simpletask.task_add_background"
                 android:exported="true">
             <intent-filter>

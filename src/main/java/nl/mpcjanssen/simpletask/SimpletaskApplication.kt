@@ -29,8 +29,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
@@ -48,8 +46,7 @@ import nl.mpcjanssen.simpletask.dao.app.TodoBackupDao
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
-import java.io.File
-import java.io.IOException
+
 import java.util.*
 
 
@@ -90,11 +87,11 @@ class SimpletaskApplication : Application(),
 
         setupUncaughtExceptionHandler()
         val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
+        intentFilter.addAction(Constants.BROADCAST_TODOLIST_CHANGED)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == Constants.BROADCAST_UPDATE_UI) {
+                if (intent.action == Constants.BROADCAST_TODOLIST_CHANGED) {
                     m_calSync.syncLater()
                     redrawWidgets()
                     updateWidgets()
@@ -104,9 +101,8 @@ class SimpletaskApplication : Application(),
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         prefsChangeListener(this)
-        todoList = TodoList(this, this)
+        todoList = TodoList(this)
         log.info(TAG, "Created todolist {}" + todoList)
-        loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
     }
@@ -209,30 +205,6 @@ class SimpletaskApplication : Application(),
         get() = prefs.getInt(getString(R.string.calendar_reminder_time), 720)
 
 
-    val todoFileName: String
-        get() {
-            var name = prefs.getString(getString(R.string.todo_file_key), null)
-            if (name == null) {
-                name = FileStore.getDefaultPath(this)
-                setTodoFile(name)
-            }
-            val todoFile = File(name)
-            try {
-                return todoFile.canonicalPath
-            } catch (e: IOException) {
-                return FileStore.getDefaultPath(this)
-            }
-
-        }
-
-    val todoFile: File
-        get() = File(todoFileName)
-
-    @SuppressLint("CommitPrefEdits")
-    fun setTodoFile(todo: String) {
-        prefs.edit().putString(getString(R.string.todo_file_key), todo).commit()
-    }
-
     val isAutoArchive: Boolean
         get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
 
@@ -311,15 +283,6 @@ class SimpletaskApplication : Application(),
         }
     }
 
-    val isLoading: Boolean
-        get() = fileStore.isLoading
-
-    fun loadTodoList(background: Boolean) {
-        log.info(TAG, "Load todolist")
-        todoList.reload(mFileStore, todoFileName, this, localBroadCastManager, background, eol)
-
-    }
-
     fun updateWidgets() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
@@ -388,18 +351,6 @@ class SimpletaskApplication : Application(),
         }
     }
 
-    fun switchTodoFile(newTodo: String, background: Boolean) {
-        setTodoFile(newTodo)
-        loadTodoList(background)
-
-    }
-
-
-    override fun todoListChanged() {
-        log.info(TAG, "Tasks have changed, update UI")
-        localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-    }
-
     val dateBarRelativeSize: Float
         get() {
             val def = 80
@@ -457,36 +408,6 @@ class SimpletaskApplication : Application(),
         }
     }
 
-    val isAuthenticated: Boolean
-        get() {
-            val fs = fileStore
-            return fs.isAuthenticated
-        }
-
-    fun startLogin(caller: Activity) {
-        fileStore.startLogin(caller)
-    }
-
-    fun storeType(): Int {
-        return fileStore.type
-    }
-
-
-    val doneFileName: String
-        get() = File(todoFile.parentFile, "done.txt").absolutePath
-
-    override fun backup(name: String, contents: String) {
-
-        val now = Date()
-        val fileToBackup = TodoFile(contents, name, now)
-        backupDao.insertOrReplace(fileToBackup)
-        // Clean up old files
-        val removeBefore = Date(now.time - 2 * 24 * 60 * 60 * 1000)
-
-        backupDao.queryBuilder().where(TodoFileDao.Properties.Date.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
-
-    }
-
     fun getSortString(key: String): String {
         if (useTodoTxtTerms()) {
             if ("by_context" == key) {
@@ -505,10 +426,6 @@ class SimpletaskApplication : Application(),
         return values[index]
     }
 
-    fun hasShareTaskShowsEdit(): Boolean {
-        return prefs.getBoolean(getString(R.string.share_task_show_edit), false)
-    }
-
     fun hasExtendedTaskView(): Boolean {
         return prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
     }
@@ -520,4 +437,9 @@ class SimpletaskApplication : Application(),
     }
 
     var today: String = todayAsString
+
+    fun broadCastTodoListChanged() {
+        log.info(TAG, "Broadcasting todoList change")
+        localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_TODOLIST_CHANGED))
+    }
 }

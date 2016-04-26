@@ -19,10 +19,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import hirondelle.date4j.DateTime
 
+
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoItem
+import nl.mpcjanssen.simpletask.task.asTodoItem
 
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
 
@@ -36,11 +38,11 @@ class AddTask : ThemedActivity() {
     private val share_text: String? = null
 
     private lateinit var textInputField: EditText
-    private var m_broadcastReceiver: BroadcastReceiver? = null
-    private var localBroadcastManager: LocalBroadcastManager? = null
-    private var m_backup: MutableList<TodoListItem>? = null
+
     private val log = Logger
 
+
+    private val selected = ArrayList<TodoItem>()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         log.debug(TAG, "onCreate()")
@@ -54,23 +56,7 @@ class AddTask : ThemedActivity() {
         val mFilter = ActiveFilter()
         mFilter.initFromIntent(intent)
 
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
-        intentFilter.addAction(Constants.BROADCAST_SYNC_START)
-        intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
 
-        localBroadcastManager = m_app.localBroadCastManager
-
-        m_broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == Constants.BROADCAST_SYNC_START) {
-                    setProgressBarIndeterminateVisibility(true)
-                } else if (intent.action == Constants.BROADCAST_SYNC_DONE) {
-                    setProgressBarIndeterminateVisibility(false)
-                }
-            }
-        }
-        localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear);
@@ -91,13 +77,12 @@ class AddTask : ThemedActivity() {
         var iniTask: Task? = null
         setTitle(R.string.addtask)
 
-        m_backup = todoList.selectedTasks.toMutableList()
-        todoList.clearSelection()
+        selected.addAll(todoList.selectedTasks)
 
-        if (m_backup != null && m_backup!!.size > 0) {
+        if (selected.size > 0) {
             val preFill = ArrayList<String>()
-            for (t in m_backup!!) {
-                preFill.add(t.task.inFileFormat())
+            for (item in selected) {
+                preFill.add(item.task.inFileFormat())
             }
             val preFillString = join(preFill, "\n")
             textInputField.setText(preFillString)
@@ -196,7 +181,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
 
-        if (m_backup != null && m_backup!!.size > 0) {
+        if (textInputField.text.length > 0) {
             textInputField.setSelection(textInputField.text.length)
         }
     }
@@ -269,12 +254,18 @@ class AddTask : ThemedActivity() {
         val todoList = m_app.todoList
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
-        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup?.size ?: 0} tasks" )
+
+        val updatedTasks = ArrayList<TodoItem>()
+        val additionalTasks = ArrayList<TodoItem>()
+        val removedTasks = ArrayList<TodoItem>()
+
         for (task in enteredTasks) {
-            if (m_backup != null && m_backup!!.size > 0) {
+            if (selected.size > 0) {
                 // Don't modify create date for updated tasks
-                m_backup!![0].task.update(task.text)
-                m_backup!!.removeAt(0)
+                val item = selected[0]
+                item.task = task
+                updatedTasks.add(item)
+                selected.removeAt(0)
             } else {
                 val t: Task
                 if (m_app.hasPrependDate()) {
@@ -282,19 +273,23 @@ class AddTask : ThemedActivity() {
                 } else {
                     t = task
                 }
-                todoList.add(t, m_app.hasAppendAtEnd())
+                additionalTasks.add(t.asTodoItem())
             }
         }
 
         // Remove remaining tasks that where selected for update
-        if (m_backup != null) {
-            for (t in m_backup!!) {
-                todoList.remove(t)
+        if (selected != null) {
+            for (item in selected) {
+                removedTasks.add(item)
             }
         }
 
         // Save
-        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+        log.info(TAG, "Adding ${additionalTasks.size} tasks, updating ${selected.size} tasks, removing ${removedTasks.size} tasks" )
+        todoList.update(updatedTasks)
+        todoList.add(additionalTasks,m_app.hasAppendAtEnd())
+        todoList.remove(removedTasks)
+        todoList.save()
         finish()
     }
 
@@ -617,13 +612,6 @@ class AddTask : ThemedActivity() {
         }
         textInputField.text.replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length)
-    }
-
-    public override fun onDestroy() {
-        super.onDestroy()
-        if (localBroadcastManager != null) {
-            localBroadcastManager!!.unregisterReceiver(m_broadcastReceiver)
-        }
     }
 
     companion object {

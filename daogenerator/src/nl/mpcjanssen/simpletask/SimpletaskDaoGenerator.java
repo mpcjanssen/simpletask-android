@@ -24,21 +24,19 @@ public class SimpletaskDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         Schema appSchema = new Schema(1011, "nl.mpcjanssen.simpletask.dao.app");
-        Schema todoSchema = new Schema(1, "nl.mpcjanssen.simpletask.dao.todo");
+        Schema todoSchema = new Schema(4, "nl.mpcjanssen.simpletask.dao.todo");
         addEntities(appSchema);
         addTodoEntities(todoSchema);
         new DaoGenerator().generateAll(appSchema, "src/main/java");
-        new DaoGenerator().generateAll(todoSchema, "src/main/java");
     }
 
     private static void addTodoEntities(Schema todoSchema) {
         Entity todo = todoSchema.addEntity("TodoItem");
-        todo.addIntProperty("line").notNull();
-        todo.addStringProperty("json").notNull();
+        todo.addLongProperty("line").notNull().primaryKey();
+        todo.addStringProperty("contents").notNull();
         todo.addBooleanProperty("selected").notNull();
 
         Entity archive = todoSchema.addEntity("ArchiveItem");
-        archive.addIntProperty("line").notNull();
         archive.addStringProperty("json").notNull();
     }
 

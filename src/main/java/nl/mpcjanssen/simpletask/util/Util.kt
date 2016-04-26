@@ -35,7 +35,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import android.os.Parcelable
 import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
@@ -46,9 +45,11 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
+
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.task.TodoItem
+
 import org.luaj.vm2.*
 import java.io.*
 import java.nio.channels.FileChannel
@@ -105,7 +106,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoListItem>, firstSort: String, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<TodoItem>, firstSort: String, no_header: String): List<VisibleLine> {
     var header = ""
     var newHeader: String
     val result = ArrayList<VisibleLine>()
@@ -228,7 +229,7 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
     return newDate
 }
 
-fun prefixItems(prefix: String, items: ArrayList<String>): ArrayList<String> {
+fun prefixItems(prefix: String, items: List<String>): List<String> {
     val result = ArrayList<String>()
     for (item in items) {
         result.add(prefix + item)
@@ -401,23 +402,6 @@ fun shareText(act: Activity, subject: String,  text: String) {
 
     }
     act.startActivity(Intent.createChooser(shareIntent, "Share"))
-}
-
-fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
-    if (show) {
-        val newDialog = Dialog(act)
-        newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        newDialog.setContentView(R.layout.loading)
-        val pr = newDialog.findViewById(R.id.progress) as ProgressBar
-        pr.indeterminateDrawable.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
-        newDialog.window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        newDialog.setCancelable(false)
-        newDialog.show()
-        return newDialog
-    } else if (visibleDialog != null && visibleDialog.isShowing) {
-        visibleDialog.dismiss()
-    }
-    return null
 }
 
 fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
