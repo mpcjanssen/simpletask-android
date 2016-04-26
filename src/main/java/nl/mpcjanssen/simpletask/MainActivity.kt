@@ -76,22 +76,11 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
     private var mIgnoreScrollEvents = false
     private val log = Logger
 
-    private var messageQueue: Handler? = null
 
-    init {
-        // Set up the message queue
-        val t = Thread(Runnable {
-            Looper.prepare()
-            messageQueue = Handler()
-            Looper.loop()
-        })
-        t.start()
-    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log.info(TAG, "onCreate")
-        log.info(TAG, "Started ${appVersion(this)}")
         m_app = application as SimpletaskApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
@@ -189,7 +178,7 @@ class MainActivity : ThemedActivity(), AbsListView.OnScrollListener, AdapterView
     }
 
     private fun selectAllTasks() {
-       
+
         for (visibleLine in m_adapter!!.visibleLines) {
             // Only check tasks that are not checked yet
             // and skip headers

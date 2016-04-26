@@ -34,48 +34,42 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.dao.todo.ArchiveItemDao
+import nl.mpcjanssen.simpletask.dao.todo.DaoMaster
+import nl.mpcjanssen.simpletask.dao.todo.DaoSession
+import nl.mpcjanssen.simpletask.dao.todo.TodoItemDao
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 
-import java.io.IOException
-import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
- * Implementation of the in memory representation of the todo list
+ * Implementation of the database backed representation of the todo list
 
  * @author Mark Janssen
  */
-class TodoList(private val app: SimpletaskApplication, private val mTodoListChanged: TodoList.TodoListChanged?) {
-    private val log: Logger
+class TodoList(private val app: SimpletaskApplication) {
 
-    private var mLists: ArrayList<String>? = null
-    private var mTags: ArrayList<String>? = null
+    private val TAG = "TodoList"
+    private val log = Logger
 
     private var todolistQueue: Handler? = null
     private var loadQueued = false
 
+    private val daoSession: DaoSession?
 
+    private val todoDao: TodoItemDao?
+    private val archiveDao: ArchiveItemDao?
 
-
-
-    fun queueRunnable(description: String, r: Runnable) {
-        log.info(TAG, "Handler: Queue " + description)
-        while (todolistQueue == null) {
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-
-        }
-        if (todolistQueue != null) {
-            todolistQueue!!.post(LoggingRunnable(description, r))
-        } else {
-            r.run()
-        }
+    init {
+        val helper = DaoMaster.DevOpenHelper(app, "Todo_v1.db", null)
+        val todoDb = helper.writableDatabase
+        val daoMaster = DaoMaster(todoDb)
+        daoSession = daoMaster.newSession()
+        todoDao = daoSession.todoItemDao
+        archiveDao = daoSession.archiveItemDao
     }
+
 
     fun loadQueued(): Boolean {
         return loadQueued
@@ -339,30 +333,6 @@ class TodoList(private val app: SimpletaskApplication, private val mTodoListChan
         })
     }
 
-    interface TodoListChanged {
-        fun todoListChanged()
-    }
-
-    inner class LoggingRunnable internal constructor(private val description: String, private val runnable: Runnable) : Runnable {
-
-        init {
-            log.info(TAG, "Creating action " + description)
-        }
-
-        override fun toString(): String {
-            return description
-        }
-
-        override fun run() {
-            log.info(TAG, "Execution action " + description)
-            runnable.run()
-        }
-
-    }
-
-    companion object {
-        internal val TAG = TodoList::class.java.simpleName
-    }
 
     fun selectTasks(items: List<Task>, lbm: LocalBroadcastManager?) {
         if (todoItems == null) {

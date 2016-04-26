@@ -40,8 +40,13 @@ import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.widget.EditText
+import nl.mpcjanssen.simpletask.dao.app.DaoMaster
+import nl.mpcjanssen.simpletask.dao.app.DaoSession
+import nl.mpcjanssen.simpletask.dao.app.LogItemDao
+import nl.mpcjanssen.simpletask.dao.app.TodoBackupDao
 
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.File
 import java.io.IOException
@@ -50,7 +55,10 @@ import java.util.*
 
 class SimpletaskApplication : Application(),
 
-        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private val log = Logger
+    private val messageQueue = MessageQueue("App")
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -58,15 +66,15 @@ class SimpletaskApplication : Application(),
     private lateinit var m_calSync: CalendarSync
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
-    private val log = Logger
+
 
     internal lateinit var daoSession: DaoSession
     lateinit var  logDao: LogItemDao
-    internal lateinit var backupDao: TodoFileDao
+    internal lateinit var backupDao: TodoBackupDao
     lateinit var prefs: SharedPreferences
 
+
     override fun onCreate() {
-        log.debug(TAG, "onCreate()")
         super.onCreate()
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
@@ -75,8 +83,10 @@ class SimpletaskApplication : Application(),
         val daoMaster = DaoMaster(todoDb)
         daoSession = daoMaster.newSession()
         logDao = daoSession.logItemDao
-        backupDao = daoSession.todoFileDao
+        backupDao = daoSession.todoBackupDao
         log.setDao(logDao)
+
+        log.info(TAG, "Started ${appVersion(this)}")
 
         setupUncaughtExceptionHandler()
         val intentFilter = IntentFilter()
@@ -95,7 +105,6 @@ class SimpletaskApplication : Application(),
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         prefsChangeListener(this)
         todoList = TodoList(this, this)
-        this.mFileStore = FileStore(this, this)
         log.info(TAG, "Created todolist {}" + todoList)
         loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
