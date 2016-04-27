@@ -1,9 +1,10 @@
 package nl.mpcjanssen.simpletask.util
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.dao.todo.TodoItem
+
 
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.asTodoItem
 
 import java.util.*

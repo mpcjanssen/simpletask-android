@@ -552,7 +552,7 @@ class AddTask : ThemedActivity() {
         }
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
-            t.thresholdDate = newThresholdDate.toString()
+            //t.thresholdDate = newThresholdDate.toString()
             lines[currentLine] = t.inFileFormat()
             textInputField.setText(join(lines, "\n"))
         }

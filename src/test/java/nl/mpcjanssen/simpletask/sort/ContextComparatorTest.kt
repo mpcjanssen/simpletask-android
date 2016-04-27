@@ -1,8 +1,6 @@
 package nl.mpcjanssen.simpletask.sort
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.dao.asTask
-import nl.mpcjanssen.simpletask.dao.todo.TodoItem
 
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.asTodoItem

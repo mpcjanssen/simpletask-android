@@ -74,31 +74,42 @@ data class Task(var text: String) {
 
         }
 
-    var thresholdDate: String?
-        get() {
-            return null
+    val thresholdDate: String? by lazy {
+        MATCH_THRESHOLD.find(text)?.groups?.let {
+            it.first()?.value
         }
-        set(dateStr: String?) {
+        null
+    }
 
-        }
 
     var priority: Priority
         get() {
-            return  Priority.NONE
+            return Priority.NONE
         }
         set(prio: Priority) {
 
         }
 
     var recurrencePattern: String? = null
-        get() =  null
+        get() = null
 
 
-    var tags: SortedSet<String> = emptySet<String>().toSortedSet()
+    val tags: SortedSet<String> by lazy {
+        val result = ArrayList<String>()
+        MATCH_TAG.findAll(" $text ").forEach {
+            result.add(it.groupValues[1])
+        }
+        result.toSortedSet()
+    }
 
 
-    var lists: SortedSet<String> = emptySet<String>().toSortedSet()
-
+    val lists: SortedSet<String> by lazy {
+        val result = ArrayList<String>()
+        MATCH_LIST.findAll(" $text ").forEach {
+            result.add(it.groupValues[1])
+        }
+        result.toSortedSet()
+    }
 
     var links: Set<String> = emptySet()
 
@@ -106,7 +117,6 @@ data class Task(var text: String) {
     var phoneNumbers: Set<String> = emptySet()
 
     var mailAddresses: Set<String> = emptySet()
-
 
 
     fun removeTag(tag: String) {
@@ -128,11 +138,11 @@ data class Task(var text: String) {
 
     fun deferThresholdDate(deferString: String, deferFromDate: String) {
         if (deferString.matches(MATCH_SINGLE_DATE)) {
-            thresholdDate = deferString
+            //thresholdDate = deferString
             return
         }
         if (deferString == "") {
-            thresholdDate = null
+            //thresholdDate = null
             return
         }
         val olddate: String?
@@ -142,7 +152,7 @@ data class Task(var text: String) {
             olddate = deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
-        thresholdDate = newDate?.format(DATE_FORMAT)
+        //thresholdDate = newDate?.format(DATE_FORMAT)
     }
 
     fun deferDueDate(deferString: String, deferFromDate: String) {
@@ -177,7 +187,7 @@ data class Task(var text: String) {
 
     fun isHidden(): Boolean = false
 
-    fun isCompleted(): Boolean =  false
+    fun isCompleted(): Boolean = false
 
     fun showParts(parts: Int): String {
         return text
@@ -242,11 +252,11 @@ data class Task(var text: String) {
 
         var TAG = Task::class.java.simpleName
         const val DATE_FORMAT = "YYYY-MM-DD"
-        private val MATCH_LIST = Regex("@(\\S+)")
-        private val MATCH_TAG = Regex("\\+(\\S+)")
+        private val MATCH_LIST = Regex("\\s@(\\S+)\\s")
+        private val MATCH_TAG = Regex("\\s\\+(\\S+)\\s")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
         private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
+        private val MATCH_THRESHOLD = Regex("\b[Tt]:(\\d{4}-\\d{2}-\\d{2})\b")
         private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
@@ -258,95 +268,95 @@ data class Task(var text: String) {
 
         fun parse(text: String): ArrayList<TToken> {
             val newTokens = ArrayList<TToken>()
-            newTokens.add(TToken(TEXT,text))
+            newTokens.add(TToken(TEXT, text))
             return newTokens
-/*            var lexemes = text.lex()
-            val tokens = ArrayList<TToken>()
+            /*            var lexemes = text.lex()
+                        val tokens = ArrayList<TToken>()
 
-            if (lexemes.take(1) == listOf("x")) {
-                tokens.add(TToken(COMPLETED, "x ", true))
-                lexemes = lexemes.drop(1)
-                var nextToken = lexemes.getOrElse(0, { "" })
-                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(TToken(COMPLETED_DATE, lexemes.first()))
-                    lexemes = lexemes.drop(1)
-                    nextToken = lexemes.getOrElse(0, { "" })
-                    MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                        tokens.add(TToken(CREATION_DATE, (lexemes.first())))
-                        lexemes = lexemes.drop(1)
-                    }
-                }
-            }
+                        if (lexemes.take(1) == listOf("x")) {
+                            tokens.add(TToken(COMPLETED, "x ", true))
+                            lexemes = lexemes.drop(1)
+                            var nextToken = lexemes.getOrElse(0, { "" })
+                            MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                                tokens.add(TToken(COMPLETED_DATE, lexemes.first()))
+                                lexemes = lexemes.drop(1)
+                                nextToken = lexemes.getOrElse(0, { "" })
+                                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                                    tokens.add(TToken(CREATION_DATE, (lexemes.first())))
+                                    lexemes = lexemes.drop(1)
+                                }
+                            }
+                        }
 
-            var nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_PRIORITY.matchEntire(nextToken)?.let {
-                tokens.add(TToken(PRIO, nextToken))
-                lexemes = lexemes.drop(1)
-            }
+                        var nextToken = lexemes.getOrElse(0, { "" })
+                        MATCH_PRIORITY.matchEntire(nextToken)?.let {
+                            tokens.add(TToken(PRIO, nextToken))
+                            lexemes = lexemes.drop(1)
+                        }
 
-            nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(TToken(CREATION_DATE, lexemes.first()))
-                lexemes = lexemes.drop(1)
-            }
+                        nextToken = lexemes.getOrElse(0, { "" })
+                        MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                            tokens.add(TToken(CREATION_DATE, lexemes.first()))
+                            lexemes = lexemes.drop(1)
+                        }
 
 
-            lexemes.forEach { lexeme ->
-                MATCH_LIST.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(LIST, lexeme))
-                    return@forEach
-                }
-                MATCH_TAG.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(TTAG, lexeme))
-                    return@forEach
-                }
-                MATCH_DUE.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(DUE_DATE, lexeme))
-                    return@forEach
-                }
-                MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(THRESHOLD_DATE, lexeme))
-                    return@forEach
-                }
-                MATCH_HIDDEN.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(HIDDEN, lexeme))
-                    return@forEach
-                }
-                MATCH_RECURRURENE.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(RECURRENCE, lexeme))
-                    return@forEach
-                }
-                MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(PHONE, lexeme))
-                    return@forEach
-                }
-                MATCH_URI.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(LINK, lexeme))
-                    return@forEach
-                }
-                MATCH_MAIL.matchEntire(lexeme)?.let {
-                    tokens.add(TToken(MAIL, lexeme))
-                    return@forEach
-                }
-                if (lexeme.isBlank()) {
-                    tokens.add(TToken(WHITE_SPACE, lexeme))
-                } else {
-                    tokens.add(TToken(TEXT, lexeme))
-                }
+                        lexemes.forEach { lexeme ->
+                            MATCH_LIST.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(LIST, lexeme))
+                                return@forEach
+                            }
+                            MATCH_TAG.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(TTAG, lexeme))
+                                return@forEach
+                            }
+                            MATCH_DUE.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(DUE_DATE, lexeme))
+                                return@forEach
+                            }
+                            MATCH_THRESHOLD.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(THRESHOLD_DATE, lexeme))
+                                return@forEach
+                            }
+                            MATCH_HIDDEN.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(HIDDEN, lexeme))
+                                return@forEach
+                            }
+                            MATCH_RECURRURENE.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(RECURRENCE, lexeme))
+                                return@forEach
+                            }
+                            MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(PHONE, lexeme))
+                                return@forEach
+                            }
+                            MATCH_URI.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(LINK, lexeme))
+                                return@forEach
+                            }
+                            MATCH_MAIL.matchEntire(lexeme)?.let {
+                                tokens.add(TToken(MAIL, lexeme))
+                                return@forEach
+                            }
+                            if (lexeme.isBlank()) {
+                                tokens.add(TToken(WHITE_SPACE, lexeme))
+                            } else {
+                                tokens.add(TToken(TEXT, lexeme))
+                            }
 
-            }
-            return tokens*/
+                        }
+                        return tokens*/
         }
     }
 }
 
 
-data class TToken (val type: Int, val text: String, val value: Any?) {
+data class TToken(val type: Int, val text: String, val value: Any?) {
 
-    constructor( type: Int, text: String) : this (type, text, text)
+    constructor(type: Int, text: String) : this(type, text, text)
 
-    fun typeAsString () : String {
-        return when(type) {
+    fun typeAsString(): String {
+        return when (type) {
             WHITE_SPACE -> "white_space"
             LIST -> "list"
             TTAG -> "tag"
@@ -372,7 +382,7 @@ data class TToken (val type: Int, val text: String, val value: Any?) {
 
 fun String.lex(): List<String> = this.split(" ")
 
-fun Task.asTodoItem () : TodoItem {
+fun Task.asTodoItem(): TodoItem {
     return TodoItem(this, false)
 }
 
