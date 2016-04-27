@@ -61,6 +61,7 @@ import java.util.*
 
 
 class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+    val queue = MessageQueue("MainActivity")
 
     internal var options_menu: Menu? = null
     internal lateinit var m_app: TodoApplication
@@ -1252,34 +1253,41 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            if (m_app.showTodoPath()) {
-                title = m_app.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
-            } else {
-                setTitle(R.string.app_label)
-            }
-            updateConnectivityIndicator();
-            val visibleTasks: List<TodoListItem>
-            log!!.info(TAG, "setFilteredTasks called: " + todoList)
-            val activeFilter = mFilter ?: return
-            val sorts = activeFilter.getSort(m_app.defaultSorts)
-            visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
-            visibleLines.clear()
+            queue.add("setFilterTasks", Runnable {
+                val visibleTasks: List<TodoListItem>
+                log!!.info(TAG, "setFilteredTasks called: " + todoList)
+                val activeFilter = mFilter ?: return@Runnable
+                val sorts = activeFilter.getSort(m_app.defaultSorts)
+                visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
+                val newVisibleLines = ArrayList<VisibleLine>()
 
 
-            var firstGroupSortIndex = 0
-            if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
-                firstGroupSortIndex++
-                if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                var firstGroupSortIndex = 0
+                if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
                     firstGroupSortIndex++
+                    if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                        firstGroupSortIndex++
+                    }
                 }
-            }
 
 
-            val firstSort = sorts[firstGroupSortIndex]
-            visibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
-            notifyDataSetChanged()
-            updateFilterBar()
+                val firstSort = sorts[firstGroupSortIndex]
+                newVisibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
+                runOnUiThread {
+                    // Replace the array in the main thread to prevent OutOfIndex excpetions
+                    visibleLines = newVisibleLines
+                    notifyDataSetChanged()
+                    if (m_app.showTodoPath()) {
+                        title = m_app.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
+                    } else {
+                        setTitle(R.string.app_label)
+                    }
+                    updateConnectivityIndicator();
+                    updateFilterBar()
+                }
+            })
         }
+
 
         val countVisibleTodoItems: Int
             get() {
