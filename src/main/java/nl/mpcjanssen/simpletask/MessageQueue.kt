@@ -2,7 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.os.Handler
 import android.os.Looper
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TaskList
 import nl.mpcjanssen.simpletask.util.log
 
 class MessageQueue(val tag: String) : Thread() {
@@ -19,7 +19,7 @@ class MessageQueue(val tag: String) : Thread() {
 
 
 
-    fun queueRunnable(description: String, r: Runnable , silent: Boolean = false) {
+    fun add(description: String, r: Runnable, silent: Boolean = false) {
         while (mHandler == null) {
             if (!silent) {
                 log.debug(tag, "Queue handler is null, waiting")

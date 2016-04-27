@@ -23,7 +23,7 @@ object Logger {
 
     fun logInDB(severity: String, tag: String, s: String, throwable: Throwable? = null) {
         try {
-            loggingQueue.queueRunnable("", Runnable {
+            loggingQueue.add("", Runnable {
                 var throwableMessage: String = ""
                 throwable?.let {
                     throwableMessage = Log.getStackTraceString(throwable)

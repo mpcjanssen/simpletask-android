@@ -222,9 +222,9 @@ class ActiveFilter {
         scriptTestTask = null
     }
 
-    fun apply(items: List<TodoItem>?): ArrayList<TodoItem> {
+    fun apply(items: List<Task>?): ArrayList<Task> {
         val filter = AndFilter()
-        val matched = ArrayList<TodoItem>()
+        val matched = ArrayList<Task>()
         var prototype: Prototype? = null
         var globals: Globals? = null
         if (items == null) {
@@ -240,10 +240,7 @@ class ActiveFilter {
                 prototype = LuaC.instance.compile(input, "script")
                 globals = JsePlatform.standardGlobals()
             }
-            var idx = -1
-            for (item in items) {
-                idx++
-                val t = item.task
+            for (t in items) {
                 if (this.hideCompleted && t.isCompleted()) {
                     continue
                 }
@@ -253,7 +250,7 @@ class ActiveFilter {
                 if (this.hideHidden && t.isHidden()) {
                     continue
                 }
-                if ("" == t.inFileFormat().trim { it <= ' ' }) {
+                if ("" == t.text.trim { it <= ' ' }) {
                     continue
                 }
                 if (!filter.apply(t)) {
@@ -262,7 +259,6 @@ class ActiveFilter {
                 if (!script.isEmpty()) {
                     if (globals != null && prototype != null) {
                         initGlobals(globals, t)
-                        globals.set("idx", idx)
                         val closure = LuaClosure(prototype, globals)
                         val result = closure.call()
                         if (!result.toboolean()) {
@@ -270,7 +266,7 @@ class ActiveFilter {
                         }
                     }
                 }
-                matched.add(item)
+                matched.add(t)
             }
         } catch (e: LuaError) {
             log.debug(TAG, "Lua execution failed " + e.message)

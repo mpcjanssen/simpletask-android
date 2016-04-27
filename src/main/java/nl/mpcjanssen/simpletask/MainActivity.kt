@@ -41,21 +41,18 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import hirondelle.date4j.DateTime
-
-import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-
+import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
-
 import java.io.File
-
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
 
+    val queue = MessageQueue("MainActivity")
     internal var options_menu: Menu? = null
     internal lateinit var m_app: SimpletaskApplication
     internal var mFilter: ActiveFilter? = null
@@ -156,8 +153,8 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
 
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
-        for (item in todoList.selectedTasks) {
-            result.add(item.task.inFileFormat())
+        for (item in taskList.selection) {
+            result.add(item.text)
         }
         return join(result, "\n")
     }
@@ -168,7 +165,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
             // and skip headers
             // This prevents double counting in the CAB title
             if (!visibleLine.header) {
-                visibleLine.item?.selected  = true
+                //visibleLine.task?.selected  = true
             }
         }
         handleIntent()
@@ -274,13 +271,13 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
             val links = ArrayList<String>()
             val actions = ArrayList<String>()
             lv.setItemChecked(position, !lv.isItemChecked(position))
-            if (todoList.selectedTasks.size > 0) {
+            if (taskList.selection.size > 0) {
                 onItemLongClick(parent, view, position, id)
                 return@OnItemClickListener
             }
             val item = getTaskAt(position)
             if (item != null) {
-                val t = item.task
+                val t = item
                 for (link in t.links) {
                     actions.add(ACTION_LINK)
                     links.add(link)
@@ -350,7 +347,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
 
 
     private fun highlightSelectedTasks() {
-        val items = todoList.selectedTasks
+        val items = taskList.selection
         if (items.size == 0) {
             return
         }
@@ -359,7 +356,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         for (t in items) {
             val position = m_adapter!!.getPosition(t)
             if (position != -1) {
-                lv.setItemChecked(position, t.selected)
+                lv.setItemChecked(position, taskList.selection.indexOf(t)!=-1)
             }
         }
     }
@@ -378,8 +375,8 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         } else {
             actionbar.visibility = View.GONE
         }
-        val count = if (m_adapter != null) m_adapter!!.countVisibleTodoItems else 0
-        val total = todoList.size().toLong()
+        val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
+        val total = taskList.size().toLong()
 
         filterText.text = mFilter!!.getTitle(
                 count,
@@ -411,7 +408,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
         this.options_menu = menu
-        if (todoList.selectedTasks.size > 0) {
+        if (taskList.selection.size > 0) {
             openSelectionMode()
         } else {
             populateMainMenu(menu)
@@ -481,7 +478,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         })
     }
 
-    private fun getTaskAt(pos: Int): TodoItem? {
+    private fun getTaskAt(pos: Int): Task? {
         if (pos < m_adapter!!.count) {
             return m_adapter!!.getItem(pos)
         }
@@ -493,58 +490,58 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         for (i in 0..m_adapter!!.count - 1 - 1) {
             val item = m_adapter!!.getItem(i)
             if (item != null) {
-                text.append(item.task.showParts(format)).append("\n")
+                text.append(item.showParts(format)).append("\n")
             }
         }
         shareText(this, "Simpletask list", text.toString())
     }
 
 
-    private fun prioritizeTasks(items: List<TodoItem>) {
+    private fun prioritizeTasks(items: List<Task>) {
         val strings = Priority.rangeInCode(Priority.NONE, Priority.Z)
         val priorityArr = strings.toTypedArray()
 
         var priorityIdx = 0
         if (items.size == 1) {
-            priorityIdx = strings.indexOf(items[0].task.priority.code)
+            priorityIdx = strings.indexOf(items[0].priority.code)
         }
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
         builder.setSingleChoiceItems(priorityArr, priorityIdx, { dialog, which ->
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
-            todoList.prioritize(items, priority)
+            //taskList.prioritize(items, priority)
             closeSelectionMode()
         })
         builder.show()
 
     }
 
-    private fun completeTasks(task: TodoItem) {
-        val tasks = ArrayList<TodoItem>()
+    private fun completeTasks(task: Task) {
+        val tasks = ArrayList<Task>()
         tasks.add(task)
-        completeTasks(tasks)
+        //completeTasks(tasks)
     }
 
-    private fun completeTasks(items: List<TodoItem>) {
-        todoList.complete(items, m_app.hasKeepPrio(), m_app.hasAppendAtEnd())
+    private fun completeTasks(items: List<Task>) {
+        // taskList.complete(items, m_app.hasKeepPrio(), m_app.hasAppendAtEnd())
         if (m_app.isAutoArchive) {
             archiveTasks(items)
         }
     }
 
-    private fun undoCompleteTasks(task: TodoItem) {
-        val tasks = ArrayList<TodoItem>()
+    private fun undoCompleteTasks(task: Task) {
+        val tasks = ArrayList<Task>()
         tasks.add(task)
         undoCompleteTasks(tasks)
     }
 
-    private fun undoCompleteTasks(tasks: List<TodoItem>) {
-        todoList.undoComplete(tasks)
+    private fun undoCompleteTasks(tasks: List<Task>) {
+        taskList.update(tasks.undoComplete())
         closeSelectionMode()
     }
 
-    private fun deferTasks(tasks: List<TodoItem>, dateType: DateType) {
+    private fun deferTasks(tasks: List<Task>, dateType: DateType) {
         var titleId = R.string.defer_due
         if (dateType === DateType.THRESHOLD) {
             titleId = R.string.defer_threshold
@@ -557,7 +554,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                         var startMonth = month
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
-                        m_app.todoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
+                        //m_app.taskList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
                         closeSelectionMode()
                     },
                             today.year!!,
@@ -569,8 +566,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
-
-                    m_app.todoList.defer(input, tasks, dateType)
+                    //m_app.taskList.defer(input, tasks, dateType)
                     closeSelectionMode()
                 }
 
@@ -579,15 +575,15 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         d.show()
     }
 
-    private fun deleteTasks(tasks: List<TodoItem>) {
+    private fun deleteTasks(tasks: List<Task>) {
         m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i ->
-            m_app.todoList.remove(tasks)
+            m_app.taskList.update(null,null,tasks)
             closeSelectionMode()
         }, R.string.delete_task_title)
     }
 
-    private fun archiveTasks(tasksToArchive: List<TodoItem>?) {
-        todoList.archive(tasksToArchive)
+    private fun archiveTasks(tasksToArchive: List<Task>?) {
+        taskList.archive(tasksToArchive)
         closeSelectionMode()
     }
 
@@ -697,7 +693,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                 return
             }
         }
-        if (todoList.selectedTasks.size > 0) {
+        if (taskList.selection.size > 0) {
             closeSelectionMode()
             return
         }
@@ -711,7 +707,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
     }
 
     private fun closeSelectionMode() {
-        todoList.clearSelection()
+        taskList.clearSelection()
         listView.clearChoices()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val fab = findViewById(R.id.fab) as FloatingActionButton
@@ -893,7 +889,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
 
 
     private fun updateLeftDrawer() {
-        val taskBag = todoList
+        val taskBag = taskList
         val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, m_app.sortCaseSensitive(), "@-")
         val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, m_app.sortCaseSensitive(), "+-")
         val drawerAdapter = DrawerAdapter(layoutInflater,
@@ -923,8 +919,8 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         m_leftDrawerList!!.setItemChecked(drawerAdapter.projectsHeaderPosition, mFilter!!.projectsNot)
     }
 
-    private val todoList: TodoList
-        get() = m_app.todoList
+    private val taskList: TaskList
+        get() = m_app.taskList
 
 
     fun startFilterActivity() {
@@ -937,12 +933,12 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         val t = getTaskAt(position) ?: return false
         val selected = !listView.isItemChecked(position)
         if (selected) {
-            t.selected = true
+            taskList.selectTask(t)
         } else {
-            t.selected = false
+            taskList.unSelectTask(t)
         }
         listView.setItemChecked(position, selected)
-        val numSelected = todoList.selectedTasks.size
+        val numSelected = taskList.selection.size
         if (numSelected == 0) {
             closeSelectionMode()
         } else {
@@ -963,11 +959,11 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         inflater.inflate(R.menu.task_context, toolbar.menu)
 
         toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
-            val checkedTasks = todoList.selectedTasks
+            val checkedTasks = taskList.selection
             val menuId = item.itemId
             val intent: Intent
             when (menuId) {
-                R.id.complete -> completeTasks(checkedTasks)
+/*                R.id.complete -> completeTasks(checkedTasks)
                 R.id.select_all -> {
                     selectAllTasks()
                     return@OnMenuItemClickListener true
@@ -981,7 +977,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                 R.id.priority -> {
                     prioritizeTasks(checkedTasks)
                     return@OnMenuItemClickListener true
-                }
+                }*/
                 R.id.share -> {
                     val shareText = selectedTasksAsString()
                     shareText(this@MainActivity, "Simpletask tasks", shareText)
@@ -991,7 +987,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                     var calendarDescription = ""
                     if (checkedTasks.size == 1) {
                         // Set the task as title
-                        calendarTitle = checkedTasks[0].task.text
+                        calendarTitle = checkedTasks.first().text
                     } else {
                         // Set the tasks as description
                         calendarDescription = selectedTasksAsString()
@@ -1008,11 +1004,11 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                     startActivity(intent)
                 }
                 R.id.update_lists -> {
-                    updateLists(checkedTasks)
+                    //updateLists(checkedTasks)
                     return@OnMenuItemClickListener true
                 }
                 R.id.update_tags -> {
-                    updateTags(checkedTasks)
+                    //updateTags(checkedTasks)
                     return@OnMenuItemClickListener true
                 }
             }
@@ -1047,32 +1043,35 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            log.info(TAG, "setFilteredTasks called: " + todoList)
-            val visibleTasks: List<TodoItem>
+            queue.add("setFilteredTasks", Runnable {
+                val visibleTasks: List<Task>
 
-            val activeFilter = mFilter ?: return
-            val sorts = activeFilter.getSort(m_app.defaultSorts)
-            visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
-            visibleLines.clear()
-
-            log.info(TAG,"Adding headers..")
-            var firstGroupSortIndex = 0
-            if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
-                firstGroupSortIndex++
-                if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                val activeFilter = mFilter ?: return@Runnable
+                val sorts = activeFilter.getSort(m_app.defaultSorts)
+                visibleTasks = taskList.getSortedTasksCopy(activeFilter)
+                val newVisibleLines = ArrayList<VisibleLine>()
+                log.info(TAG, "Adding headers..")
+                var firstGroupSortIndex = 0
+                if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
                     firstGroupSortIndex++
+                    if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                        firstGroupSortIndex++
+                    }
                 }
-            }
 
 
-            val firstSort = sorts[firstGroupSortIndex]
-            visibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
-            log.info(TAG,"Adding headers..done")
-            notifyDataSetChanged()
-            updateFilterBar()
+                val firstSort = sorts[firstGroupSortIndex]
+                newVisibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
+                visibleLines = newVisibleLines
+                log.info(TAG, "Adding headers..done")
+                runOnUiThread {
+                    notifyDataSetChanged()
+                    updateFilterBar()
+                }
+            })
         }
 
-        val countVisibleTodoItems: Int
+        val countVisibleTasks: Int
             get() {
                 var count = 0
                 for (line in visibleLines) {
@@ -1086,7 +1085,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         /*
         ** Get the adapter position for task
         */
-        fun getPosition(task: TodoItem): Int {
+        fun getPosition(task: Task): Int {
             val line = TaskLine(task)
             return visibleLines.indexOf(line)
         }
@@ -1095,12 +1094,12 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
             return visibleLines.size + 1
         }
 
-        override fun getItem(position: Int): TodoItem? {
+        override fun getItem(position: Int): Task? {
             val line = visibleLines[position]
             if (line.header) {
                 return null
             }
-            return line.item
+            return line.task
         }
 
         override fun getItemId(position: Int): Long {
@@ -1144,7 +1143,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                 } else {
                     holder = view.tag as ViewHolder
                 }
-                val task = line.item?.task
+                val task = line.task
                 if (task==null) return view
 
                 if (m_app.showCompleteCheckbox()) {
@@ -1221,9 +1220,8 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                     holder.taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     cb.isChecked = true
                     cb.setOnClickListener({
-                        line.item?.task?.markIncomplete()
+                        line.task?.markIncomplete()
                         closeSelectionMode()
-                        todoList.save()
                     })
                 } else {
                     taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -1231,9 +1229,8 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                     cb.isChecked = false
 
                     cb.setOnClickListener {
-                        line.item?.task?.markComplete(m_app.today)
+                        line.task?.markComplete(m_app.today)
                         closeSelectionMode()
-                        todoList.save()
                     }
 
                 }
@@ -1333,7 +1330,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
 
 
     private fun updateItemsDialog(title: String,
-                                  checkedItems: List<TodoItem>,
+                                  checkedItems: List<Task>,
                                   allItems: ArrayList<String>,
                                   retrieveFromTask: (Task) -> SortedSet<String>,
                                   addToTask: (Task, String) -> Unit,
@@ -1342,7 +1339,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         val checkedTaskItems = ArrayList<HashSet<String>>()
         for (item in checkedItems) {
             val items = HashSet<String>()
-            items.addAll(retrieveFromTask(item.task))
+            items.addAll(retrieveFromTask(item))
             checkedTaskItems.add(items)
         }
 
@@ -1381,7 +1378,7 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
             val newText = ed.text.toString()
             if (newText.isNotEmpty()) {
                 for (i in checkedItems) {
-                    val t = i.task
+                    val t = i
                     addToTask(t, newText)
                 }
             }
@@ -1390,21 +1387,19 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
                 when (updatedValues[i] ) {
                     false -> {
                         for (item in checkedItems) {
-                            val t = item.task
+                            val t = item
                             removeFromTask(t, sortedAllItems[i])
                         }
                     }
                     true -> {
                         for (item in checkedItems) {
-                            val t = item.task
-                            addToTask(t, sortedAllItems[i])
+                            addToTask(item, sortedAllItems[i])
                         }
                     }
                 }
             }
-            todoList.update(checkedItems)
+            //taskList.update(checkedItems)
             closeSelectionMode()
-            todoList.save()
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
@@ -1413,22 +1408,22 @@ class MainActivity : ThemedActivity(), AdapterView.OnItemLongClickListener {
         dialog.show()
     }
 
-    private fun updateLists(checkedTasks: List<TodoItem>) {
+    private fun updateLists(checkedTasks: List<Task>) {
         updateItemsDialog(
                 m_app.listTerm,
                 checkedTasks,
-                sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null),
+                sortWithPrefix(taskList.contexts, m_app.sortCaseSensitive(), null),
                 { task -> task.lists },
                 { task, list -> task.addList(list) },
                 { task, list -> task.removeList(list) }
         )
     }
 
-    private fun updateTags(checkedTasks: List<TodoItem>) {
+    private fun updateTags(checkedTasks: List<Task>) {
         updateItemsDialog(
                 m_app.tagTerm,
                 checkedTasks,
-                sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null),
+                sortWithPrefix(taskList.projects, m_app.sortCaseSensitive(), null),
                 { task -> task.tags },
                 { task, tag -> task.addTag(tag) },
                 { task, tag -> task.removeTag(tag) }

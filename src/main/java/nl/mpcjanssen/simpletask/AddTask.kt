@@ -5,30 +5,25 @@
  */
 package nl.mpcjanssen.simpletask
 
+
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.*
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.InputType
-
 import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.AbsListView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListView
 import hirondelle.date4j.DateTime
-
-
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoItem
-import nl.mpcjanssen.simpletask.task.asTodoItem
-
-import nl.mpcjanssen.simpletask.util.InputDialogListener
+import nl.mpcjanssen.simpletask.task.UpdatedTask
 import nl.mpcjanssen.simpletask.util.*
-
-
 import java.util.*
 
 
@@ -42,14 +37,14 @@ class AddTask : ThemedActivity() {
     private val log = Logger
 
 
-    private val selected = ArrayList<TodoItem>()
+    private val selected = ArrayList<Task>()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         log.debug(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         m_app = application as SimpletaskApplication
-        val todoList = m_app.todoList
+        val todoList = m_app.taskList
         // m_app.loadTodoList(true)
 
         val intent = intent
@@ -77,12 +72,12 @@ class AddTask : ThemedActivity() {
         var iniTask: Task? = null
         setTitle(R.string.addtask)
 
-        selected.addAll(todoList.selectedTasks)
+        selected.addAll(todoList.selection)
 
         if (selected.size > 0) {
             val preFill = ArrayList<String>()
             for (item in selected) {
-                preFill.add(item.task.inFileFormat())
+                preFill.add(item.text)
             }
             val preFillString = join(preFill, "\n")
             textInputField.setText(preFillString)
@@ -251,20 +246,20 @@ class AddTask : ThemedActivity() {
         }
 
         // Update the TodoList with changes
-        val todoList = m_app.todoList
+        val todoList = m_app.taskList
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
 
-        val updatedTasks = ArrayList<TodoItem>()
-        val additionalTasks = ArrayList<TodoItem>()
-        val removedTasks = ArrayList<TodoItem>()
+        val updatedTasks = ArrayList<UpdatedTask>()
+        val additionalTasks = ArrayList<Task>()
+        val removedTasks = ArrayList<Task>()
 
         for (task in enteredTasks) {
             if (selected.size > 0) {
                 // Don't modify create date for updated tasks
                 val item = selected[0]
-                item.task = task
-                updatedTasks.add(item)
+                val newItem = task
+                updatedTasks.add(UpdatedTask(item, newItem))
                 selected.removeAt(0)
             } else {
                 val t: Task
@@ -273,7 +268,7 @@ class AddTask : ThemedActivity() {
                 } else {
                     t = task
                 }
-                additionalTasks.add(t.asTodoItem())
+                additionalTasks.add(t)
             }
         }
 
@@ -286,10 +281,7 @@ class AddTask : ThemedActivity() {
 
         // Save
         log.info(TAG, "Adding ${additionalTasks.size} tasks, updating ${selected.size} tasks, removing ${removedTasks.size} tasks" )
-        todoList.update(updatedTasks)
-        todoList.add(additionalTasks,m_app.hasAppendAtEnd())
-        todoList.remove(removedTasks)
-        todoList.save()
+        todoList.update(updatedTasks, additionalTasks,removedTasks, m_app.hasAppendAtEnd())
         finish()
     }
 
@@ -353,7 +345,7 @@ class AddTask : ThemedActivity() {
 
     private fun showTagMenu() {
         val items = TreeSet<String>()
-        val todoList = m_app.todoList
+        val todoList = m_app.taskList
         items.addAll(todoList.projects)
         // Also display contexts in tasks being added
         val tasks = getTasks()
@@ -434,7 +426,7 @@ class AddTask : ThemedActivity() {
 
     private fun showListMenu() {
         val items = TreeSet<String>()
-        val todoList = m_app.todoList
+        val todoList = m_app.taskList
 
         items.addAll(todoList.contexts)
         // Also display contexts in tasks being added
@@ -530,8 +522,8 @@ class AddTask : ThemedActivity() {
         }
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
-            t.dueDate = newDueDate.toString()
-            lines[currentLine] = t.inFileFormat()
+            // t.dueDate = newDueDate.toString()
+            lines[currentLine] = t.text
             textInputField.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
@@ -553,7 +545,7 @@ class AddTask : ThemedActivity() {
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
             //t.thresholdDate = newThresholdDate.toString()
-            lines[currentLine] = t.inFileFormat()
+            lines[currentLine] = t.text
             textInputField.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
@@ -594,7 +586,7 @@ class AddTask : ThemedActivity() {
             val t = Task(lines[currentLine])
             log!!.debug(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
             t.priority = Priority.toPriority(newPriority.toString())
-            lines[currentLine] = t.inFileFormat()
+            lines[currentLine] = t.text
             textInputField.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, true)

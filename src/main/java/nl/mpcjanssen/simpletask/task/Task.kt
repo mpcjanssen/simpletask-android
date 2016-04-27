@@ -31,7 +31,7 @@ import nl.mpcjanssen.simpletask.util.addInterval
 import java.util.*
 
 
-data class Task(var text: String) {
+data class Task(val text: String) {
 
     init {
         // Next line is only meant for debugging. When uncommented it will show
@@ -51,7 +51,7 @@ data class Task(var text: String) {
     }
 
     fun update(rawText: String) {
-        text = rawText
+        //text = rawText
     }
 
     var completionDate: String? = null
@@ -66,19 +66,16 @@ data class Task(var text: String) {
 
         }
 
-    var dueDate: String?
-        get() {
-            return null
-        }
-        set(dateStr: String?) {
-
+    val dueDate: String? by lazy {
+            MATCH_DUE.find(" $text")?.groups?.let {
+                it.first()?.value
+            }
         }
 
     val thresholdDate: String? by lazy {
-        MATCH_THRESHOLD.find(text)?.groups?.let {
+        MATCH_THRESHOLD.find(" $text ")?.groups?.let {
             it.first()?.value
         }
-        null
     }
 
 
@@ -119,8 +116,8 @@ data class Task(var text: String) {
     var mailAddresses: Set<String> = emptySet()
 
 
-    fun removeTag(tag: String) {
-
+    fun removeTag(tag: String) : Task {
+        return this
     }
 
     fun removeList(list: String) {
@@ -157,11 +154,11 @@ data class Task(var text: String) {
 
     fun deferDueDate(deferString: String, deferFromDate: String) {
         if (deferString.matches(MATCH_SINGLE_DATE)) {
-            dueDate = deferString
+            // dueDate = deferString
             return
         }
         if (deferString == "") {
-            dueDate = null
+            // dueDate = null
             return
         }
         val olddate: String?
@@ -171,11 +168,8 @@ data class Task(var text: String) {
             olddate = deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
-        dueDate = newDate?.format(DATE_FORMAT)
+        // dueDate = newDate?.format(DATE_FORMAT)
     }
-
-
-    fun inFileFormat() = text
 
     fun inFuture(today: String): Boolean {
         val date = thresholdDate
@@ -381,10 +375,6 @@ data class TToken(val type: Int, val text: String, val value: Any?) {
 // Extension functions
 
 fun String.lex(): List<String> = this.split(" ")
-
-fun Task.asTodoItem(): TodoItem {
-    return TodoItem(this, false)
-}
 
 const val WHITE_SPACE = 1
 const val LIST = 1 shl 1

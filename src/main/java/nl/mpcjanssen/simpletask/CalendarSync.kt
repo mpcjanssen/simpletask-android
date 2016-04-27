@@ -163,12 +163,11 @@ class CalendarSync(private val m_app: SimpletaskApplication, syncDues: Boolean, 
         }
     }
 
-    private fun insertEvts(calID: Long, tasks: List<TodoItem>?) {
+    private fun insertEvts(calID: Long, tasks: List<Task>?) {
         if (tasks == null) {
             return
         }
-        for (item in tasks) {
-            val task = item.task
+        for (task in tasks) {
             if (task.isCompleted()) continue
 
             var dt: DateTime?
@@ -223,8 +222,8 @@ class CalendarSync(private val m_app: SimpletaskApplication, syncDues: Boolean, 
                 }
             }
 
-            val tl = m_app.todoList
-            val tasks = tl.todoItems
+            val tl = m_app.taskList
+            val tasks = tl.tasks
 
             setReminderDays(m_app.reminderDays)
             setReminderTime(m_app.reminderTime)

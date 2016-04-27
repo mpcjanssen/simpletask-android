@@ -4,7 +4,7 @@ package nl.mpcjanssen.simpletask.sort
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
 
-import nl.mpcjanssen.simpletask.task.TodoItem
+import nl.mpcjanssen.simpletask.task.Task
 
 
 import java.util.*
@@ -12,8 +12,8 @@ import kotlin.comparisons.reversed
 import kotlin.comparisons.then
 import kotlin.comparisons.thenComparator
 
-class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoItem> {
-    var comparators : Comparator<TodoItem>? = null
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<Task> {
+    var comparators : Comparator<Task>? = null
 
     init {
         val log = Logger
@@ -32,11 +32,11 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     reverse = true
                 }
             }
-            var comp : Comparator<TodoItem>
+            var comp : Comparator<Task>
             when (sortType) {
                 "file_order" -> {
                     if (reverse) {
-                        val reversedComparator = Collections.reverseOrder<TodoItem>()
+                        val reversedComparator = Collections.reverseOrder<Task>()
                         val otherComparators  = comparators
                         if (otherComparators==null) {
                             comparators = reversedComparator
@@ -69,7 +69,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
         }
     }
 
-    override fun compare(o1: TodoItem, o2: TodoItem): Int {
-        return comparators?.compare(o1, o2)?: o1.task.text.compareTo(o2.task.text)
+    override fun compare(o1: Task, o2: Task): Int {
+        return comparators?.compare(o1, o2)?: o1.text.compareTo(o2.text)
     }
 }

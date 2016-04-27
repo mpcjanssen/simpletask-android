@@ -1,12 +1,12 @@
 package nl.mpcjanssen.simpletask.sort
 
 
-import nl.mpcjanssen.simpletask.task.TodoItem
+import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class PriorityComparator : Comparator<TodoItem> {
+class PriorityComparator : Comparator<Task> {
 
-    override fun compare(a: TodoItem?, b: TodoItem?): Int {
+    override fun compare(a: Task?, b: Task?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {
@@ -14,8 +14,8 @@ class PriorityComparator : Comparator<TodoItem> {
         } else if (b == null) {
             return 1
         }
-        val prioA = a.task.priority
-        val prioB = b.task.priority
+        val prioA = a.priority
+        val prioB = b.priority
 
         if (prioA.code == prioB.code) {
             return 0

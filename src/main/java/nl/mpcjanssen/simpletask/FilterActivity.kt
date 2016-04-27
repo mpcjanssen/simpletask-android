@@ -78,7 +78,7 @@ class FilterActivity : ThemedActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(m_app.todoList.contexts, m_app.sortCaseSensitive(), "-"))
+                sortWithPrefix(m_app.taskList.contexts, m_app.sortCaseSensitive(), "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
         arguments.putBoolean(INITIAL_NOT, mFilter.contextsNot)
         arguments.putString(TAB_TYPE, CONTEXT_TAB)
@@ -90,7 +90,7 @@ class FilterActivity : ThemedActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(m_app.todoList.projects, m_app.sortCaseSensitive(), "-"))
+                sortWithPrefix(m_app.taskList.projects, m_app.sortCaseSensitive(), "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
         arguments.putBoolean(INITIAL_NOT, mFilter.projectsNot)
         arguments.putString(TAB_TYPE, PROJECT_TAB)
@@ -100,7 +100,7 @@ class FilterActivity : ThemedActivity() {
 
         // Fill arguments for fragment
         arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.todoList.priorities))
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.taskList.priorities))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.priorities))
         arguments.putBoolean(INITIAL_NOT, mFilter.prioritiesNot)
         arguments.putString(TAB_TYPE, PRIO_TAB)

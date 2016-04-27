@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask
 
-import android.app.Activity
+
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
@@ -12,15 +12,10 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-
-
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
-
-
-import java.util.ArrayList
-import java.util.Collections
+import java.util.*
 
 class AppWidgetService : RemoteViewsService() {
 
@@ -36,7 +31,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     private val mFilter: ActiveFilter
     private val application: SimpletaskApplication
 
-    var visibleTasks = ArrayList<TodoItem>()
+    var visibleTasks = ArrayList<Task>()
 
     init {
         log = Logger
@@ -53,7 +48,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         return super.hashCode()
     }
 
-    private fun createEditIntent(t: TodoItem): Intent {
+    private fun createEditIntent(t: Task): Intent {
         val target = Intent()
         mFilter.saveInIntent(target)
         // Fix selection code here
@@ -64,23 +59,16 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
     fun setFilteredTasks() {
         // log.debug(TAG, "Widget: setFilteredTasks called");
-        visibleTasks = ArrayList<TodoItem>()
+        visibleTasks = ArrayList<Task>()
         if (application == null) {
             log.debug(TAG, "application object was null")
             return
         }
 
-        val tl = application.todoList
-        val items = tl.todoItems
-        for (t in mFilter.apply(items)) {
+        val tasks = application.taskList.getSortedTasksCopy(mFilter)
+        for (t in mFilter.apply(tasks)) {
             visibleTasks.add(t)
         }
-        val comp = MultiComparator(mFilter.getSort(
-                application.defaultSorts),
-                application.today,
-                application.sortCaseSensitive(),
-                mFilter.createIsThreshold)
-        Collections.sort(visibleTasks, comp)
     }
 
     override fun getCount(): Int {
@@ -95,10 +83,9 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         return null
     }
 
-    private fun getExtendedView(item: TodoItem): RemoteViews {
+    private fun getExtendedView(task: Task): RemoteViews {
         val rv = RemoteViews(application.packageName, R.layout.widget_list_item)
         val extended_widget = application.prefs.getBoolean("widget_extended", true)
-        val task = item.task
 
         var tokensToShow = ALL
         tokensToShow = tokensToShow and CREATION_DATE.inv()
@@ -180,7 +167,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
             //rv.setViewPadding(R.id.tasktext,
             //        4, 4, 4, 0);
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createEditIntent(item))
+        rv.setOnClickFillInIntent(R.id.taskline, createEditIntent(task))
         return rv
     }
 

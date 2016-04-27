@@ -28,10 +28,8 @@ package nl.mpcjanssen.simpletask.util
 
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -39,17 +37,12 @@ import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.Window
 import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoItem
-
 import org.luaj.vm2.*
 import java.io.*
 import java.nio.channels.FileChannel
@@ -106,14 +99,13 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, firstSort: String, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, firstSort: String, no_header: String): List<VisibleLine> {
     var header = ""
     var newHeader: String
     val result = ArrayList<VisibleLine>()
     var count = 0
     var headerLine: HeaderLine? = null
-    for (item in visibleTasks) {
-        val t = item.task
+    for (t in visibleTasks) {
         newHeader = t.getHeader(firstSort, no_header)
         if (header != newHeader) {
             if (headerLine != null) {
@@ -125,7 +117,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, firstSort: String, no_header: S
             header = newHeader
         }
         count++
-        val taskLine = TaskLine(item)
+        val taskLine = TaskLine(t)
         result.add(taskLine)
     }
     // Add count to last header
@@ -272,7 +264,7 @@ fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListene
 
 
 fun initGlobals(globals: Globals, t: Task) {
-    globals.set("task", t.inFileFormat())
+    globals.set("task", t.text)
 
     globals.set("due", dateStringToLuaLong(t.dueDate))
     globals.set("threshold", dateStringToLuaLong(t.thresholdDate))

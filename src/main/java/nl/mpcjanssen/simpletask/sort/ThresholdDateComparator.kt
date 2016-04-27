@@ -1,11 +1,11 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.task.TodoItem
+import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<TodoItem> {
+class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<Task> {
 
-    override fun compare(a: TodoItem?, b: TodoItem?): Int {
+    override fun compare(a: Task?, b: Task?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {
@@ -15,15 +15,15 @@ class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<TodoItem
         }
         val result: Int
 
-        var dateA = a.task.thresholdDate
-        var dateB = b.task.thresholdDate
+        var dateA = a.thresholdDate
+        var dateB = b.thresholdDate
 
 
         // Use create date as threshold date
         // if configured in the settings.
         if (createAsBackup) {
-            dateA = dateA ?: a.task.createDate
-            dateB = dateB ?: b.task.createDate
+            dateA = dateA ?: a.createDate
+            dateB = dateB ?: b.createDate
         }
         if (dateA == null && dateB == null) {
             result = 0

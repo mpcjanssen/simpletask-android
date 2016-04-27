@@ -43,7 +43,7 @@ import nl.mpcjanssen.simpletask.dao.app.DaoSession
 import nl.mpcjanssen.simpletask.dao.app.LogItemDao
 import nl.mpcjanssen.simpletask.dao.app.TodoBackupDao
 
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TaskList
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
 
@@ -59,7 +59,7 @@ class SimpletaskApplication : Application(),
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
-    lateinit var  todoList: TodoList
+    lateinit var taskList: TaskList
     private lateinit var m_calSync: CalendarSync
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
@@ -101,8 +101,8 @@ class SimpletaskApplication : Application(),
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         prefsChangeListener(this)
-        todoList = TodoList(this)
-        log.info(TAG, "Created todolist {}" + todoList)
+        taskList = TaskList(this)
+        log.info(TAG, "Created todolist {}" + taskList)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
     }

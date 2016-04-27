@@ -29,20 +29,15 @@ package nl.mpcjanssen.simpletask
 
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.task.TodoItem
-import nl.mpcjanssen.simpletask.task.asTodoItem
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
-import java.util.*
 
 const val REQUEST_READ_PERMISSION = 1
 
@@ -146,10 +141,9 @@ class AddTaskBackground : ThemedActivity() {
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val m_app = this.application as SimpletaskApplication
-        val todoList = m_app.todoList
-        val lines = sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() })
-        todoList.appendRaw(lines)
-
+        val todoList = m_app.taskList
+        val lines = sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).map { Task("it$appendText") }
+        todoList.update(null,lines,null,m_app.hasAppendAtEnd())
         showToastShort(m_app, R.string.task_added)
         finish()
     }

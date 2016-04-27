@@ -1,9 +1,9 @@
 package nl.mpcjanssen.simpletask.sort
 
-import nl.mpcjanssen.simpletask.task.TodoItem
+import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoItem> {
+class ProjectComparator(caseSensitive: Boolean) : Comparator<Task> {
 
     private val mStringComparator: AlphabeticalStringComparator
 
@@ -12,7 +12,7 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoItem> {
     }
 
 
-    override fun compare(a: TodoItem?, b: TodoItem?): Int {
+    override fun compare(a: Task?, b: Task?): Int {
         if (a === b) {
             return 0
         } else if (a == null) {
@@ -20,8 +20,8 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<TodoItem> {
         } else if (b == null) {
             return 1
         }
-        val projectsA = a.task.tags.toMutableList()
-        val projectsB = b.task.tags.toMutableList()
+        val projectsA = a.tags.toMutableList()
+        val projectsB = b.tags.toMutableList()
 
         if (projectsA.isEmpty() && projectsB.isEmpty()) {
             return 0
