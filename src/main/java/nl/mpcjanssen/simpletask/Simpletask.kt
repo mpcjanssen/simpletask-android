@@ -1252,7 +1252,20 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
         internal var visibleLines = ArrayList<VisibleLine>()
 
+        fun showListiewProgess (show: Boolean) {
+            val progressBar = findViewById(R.id.empty_progressbar)
+            val filteredView = findViewById(R.id.filtered_view)
+            if (show) {
+                progressBar?.visibility = View.VISIBLE
+                filteredView?.visibility = View.GONE
+            } else {
+                progressBar?.visibility = View.GONE
+                filteredView?.visibility = View.VISIBLE
+            }
+        }
+
         internal fun setFilteredTasks() {
+            showListiewProgess(true)
             queue.add("setFilterTasks", Runnable {
                 val visibleTasks: List<TodoListItem>
                 log!!.info(TAG, "setFilteredTasks called: " + todoList)
@@ -1284,6 +1297,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     }
                     updateConnectivityIndicator();
                     updateFilterBar()
+                    showListiewProgess(false)
                 }
             })
         }
