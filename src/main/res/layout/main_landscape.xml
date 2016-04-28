@@ -105,7 +105,7 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_gravity="center"
                 android:indeterminate="true"
                 android:visibility="gone" />
-            
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
