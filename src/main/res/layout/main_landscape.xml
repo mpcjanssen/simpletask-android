@@ -24,11 +24,11 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/tablet_drawer_layout"
-              android:layout_width="fill_parent"
-              android:orientation="horizontal"
-              android:layout_height="fill_parent"
-              android:baselineAligned="false">
+    android:id="@+id/tablet_drawer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <!-- The navigation drawer -->
 
@@ -37,105 +37,124 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1"
+        android:background="#111"
         android:choiceMode="multipleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#111" />
+        android:dividerHeight="0dp" />
 
     <!-- The main content view -->
     <LinearLayout
-                  android:id="@+id/home_root"
-                  android:orientation="vertical"
-                  android:divider="?android:attr/dividerVertical"
-                  android:showDividers="middle"
-                  android:layout_width="0dp"
-                  android:layout_weight="2"
-                  android:layout_height="fill_parent">
+        android:id="@+id/home_root"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:divider="?android:attr/dividerVertical"
+        android:orientation="vertical"
+        android:showDividers="middle">
 
-        <LinearLayout
-                android:id="@+id/actionbar"
-                android:showDividers="middle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
-
-            <ImageButton
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/cancel_light"
-                    android:contentDescription="@string/clear_filter"
-                    android:onClick="onClearClick"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:paddingLeft="2dip"
-                    android:paddingRight="2dip"
-                    android:paddingTop="0dip"
-                    android:id="@+id/actionbar_clear" />
-
-            <TextView
-                    android:id="@+id/filter_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
-        </LinearLayout>
         <FrameLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="0dp"
-                     android:layout_weight="1">
-            <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/filtered_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/actionbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:showDividers="middle"
+                    android:visibility="visible">
+
+                    <ImageButton
+                        android:id="@+id/actionbar_clear"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/clear_filter"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp"
+                        android:onClick="onClearClick"
+                        android:paddingLeft="2dip"
+                        android:paddingRight="2dip"
+                        android:paddingTop="0dip"
+                        android:src="@drawable/cancel_light" />
+
+                    <TextView
+                        android:id="@+id/filter_text"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+                <ListView
                     android:id="@android:id/list"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:fastScrollEnabled="true" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/empty_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
             <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/content_new"/>
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="16dp"
+                android:src="@drawable/content_new" />
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="fill_parent"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:theme="@style/AppTheme"
-                android:background="?attr/colorPrimary"/>
+            android:id="@+id/toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme"
+            android:visibility="gone" />
 
     </LinearLayout>
     <!-- The right navigation drawer -->
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/right_drawer"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="fill_parent"
         android:layout_gravity="end"
-        android:background="#111">
+        android:layout_weight="1"
+        android:background="#111"
+        android:orientation="vertical">
 
-        <TextView 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <TextView
             android:id="@+id/text1"
-            android:text="@string/filter_saved_prompt"
-            android:background="@android:color/holo_blue_dark"
-            android:textColor="@android:color/white"
             style="?android:attr/listSeparatorTextViewStyle"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="5dip"
-            android:paddingBottom="5dip" />
-        <ImageButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+            android:text="@string/filter_saved_prompt"
+            android:textColor="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/button"
             style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/content_new"
-            android:onClick="onAddFilterClick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/add_filter_shortcut"
-            android:id="@+id/button" />
+            android:onClick="onAddFilterClick"
+            android:src="@drawable/content_new" />
 
         <ListView
             android:id="@+id/right_drawer_list"
@@ -144,8 +163,6 @@ You should have received a copy of the GNU General Public License along with Tod
             android:choiceMode="multipleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp" />
-
-
 
 
     </LinearLayout>

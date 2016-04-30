@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        android:id="@+id/drawer_layout"
-                                        android:layout_width="fill_parent"
-                                        android:layout_height="fill_parent">
+    android:id="@+id/drawer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <!-- The main content view -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/home_root"
-        android:orientation="vertical"
-        android:divider="?android:attr/dividerVertical"
-        android:showDividers="middle"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:divider="?android:attr/dividerVertical"
+        android:orientation="vertical"
+        android:showDividers="middle">
 
 
         <View
@@ -20,72 +20,90 @@
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:background="#FF0000"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <View
             android:id="@+id/offline"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:background="@android:color/holo_orange_light"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/actionbar"
-            android:showDividers="middle"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <!--suppress AndroidMissingOnClickHandler -->
-            <ImageButton
-                style="?android:attr/borderlessButtonStyle"
+            <LinearLayout
+                android:id="@+id/filtered_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/actionbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:showDividers="middle"
+                    android:visibility="visible">
+
+                    <!--suppress AndroidMissingOnClickHandler -->
+                    <ImageButton
+                        android:id="@+id/actionbar_clear"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/clear_filter"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp"
+                        android:onClick="onClearClick"
+                        android:paddingLeft="2dip"
+                        android:paddingRight="2dip"
+                        android:paddingTop="0dip"
+                        android:src="@drawable/cancel_light" />
+
+                    <TextView
+                        android:id="@+id/filter_text"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@android:id/list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:fastScrollEnabled="true" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/empty_progressbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/cancel_light"
-                android:contentDescription="@string/clear_filter"
-                android:onClick="onClearClick"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:paddingLeft="2dip"
-                android:paddingRight="2dip"
-                android:paddingTop="0dip"
-                android:id="@+id/actionbar_clear" />
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/filter_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
-            </LinearLayout>
-        <FrameLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="0dp"
-                     android:layout_weight="1">
-            <ListView
-                android:id="@android:id/list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fastScrollEnabled="true" />
             <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/content_new"/>
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:src="@drawable/content_new" />
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="fill_parent"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:theme="@style/AppTheme"
-                android:background="?attr/colorPrimary"/>
+            android:id="@+id/toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme"
+            android:visibility="gone" />
 
     </LinearLayout>
-
 
 
     <!-- The left navigation drawer -->
@@ -93,63 +111,65 @@
         android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:choiceMode="multipleChoice"
         android:layout_gravity="start"
+        android:background="#111"
+        android:choiceMode="multipleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#111" />
+        android:dividerHeight="0dp" />
 
     <!-- The right navigation drawer -->
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/right_drawer"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="end"
-        android:background="#111">
+        android:background="#111"
+        android:orientation="vertical">
 
-        <TextView 
+        <TextView
+            android:id="@+id/text1"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text1"
-            android:text="@string/filter_saved_prompt"
             android:background="@android:color/holo_blue_dark"
-            android:textColor="@android:color/white"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:gravity="center_vertical|center_horizontal"
+            android:paddingBottom="5dip"
             android:paddingTop="5dip"
-            android:paddingBottom="5dip" />
+            android:text="@string/filter_saved_prompt"
+            android:textColor="@android:color/white" />
 
         <ListView
             android:id="@+id/right_drawer_list"
             android:layout_width="match_parent"
-            android:layout_weight="1"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:choiceMode="multipleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/content_new"
-            android:contentDescription="@string/save_filter"
-            android:onClick="onAddFilterClick"
-            android:id="@+id/btn_filter_add" />
+            android:orientation="horizontal">
+
             <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:id="@+id/btn_filter_add"
                 style="?android:attr/borderlessButtonStyle"
-                android:src="@drawable/ic_action_navigation_more_vert"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/save_filter"
+                android:onClick="onAddFilterClick"
+                android:src="@drawable/content_new" />
+
+            <ImageButton
+                android:id="@+id/btn_filter_import"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:onClick="onExportFilterClick"
-                android:id="@+id/btn_filter_import" />
+                android:src="@drawable/ic_action_navigation_more_vert" />
         </LinearLayout>
 
 

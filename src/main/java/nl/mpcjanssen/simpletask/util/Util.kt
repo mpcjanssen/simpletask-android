@@ -418,7 +418,12 @@ fun shareText(act: Activity, subject: String,  text: String) {
 }
 
 fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
+
     if (show) {
+        if (visibleDialog!=null) {
+            visibleDialog.show()
+            return visibleDialog
+        }
         val newDialog = Dialog(act)
         newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         newDialog.setContentView(R.layout.loading)

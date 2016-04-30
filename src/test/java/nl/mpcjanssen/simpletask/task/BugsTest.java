@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask.task;
 import junit.framework.TestCase;
 import nl.mpcjanssen.simpletask.ActiveFilter;
 import nl.mpcjanssen.simpletask.sort.MultiComparator;
+import nl.mpcjanssen.simpletask.util.Util;
 
 /**
  * Tests to guard against bug regressions.
@@ -19,7 +20,7 @@ public class BugsTest extends TestCase {
 
     public void testActiveSortNullCrash() {
         ActiveFilter f = new ActiveFilter();
-        MultiComparator mc =  new MultiComparator(f.getSort(null), "2000-01-01",true, false);
+        MultiComparator mc =  new MultiComparator(f.getSort(null), Util.getTodayAsString(),true, false);
         assertNotNull(mc);
     }
 

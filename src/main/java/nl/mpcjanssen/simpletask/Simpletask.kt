@@ -64,6 +64,7 @@ import java.util.*
 
 
 class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+    val queue = MessageQueue("MainActivity")
 
     internal var options_menu: Menu? = null
     internal lateinit var m_app: TodoApplication
@@ -88,6 +89,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         interp = Interp()
         interp.hideUnsafeCommands()
     }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log = Logger
@@ -458,7 +460,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         if (fileStore.changesPending()) {
             pendingChangesIndicator?.visibility = View.VISIBLE
             offlineIndicator?.visibility = View.GONE
-        } else if (!fileStore.isOnline){
+        } else if (!fileStore.isOnline) {
             pendingChangesIndicator?.visibility = View.GONE
             offlineIndicator?.visibility = View.VISIBLE
         } else {
@@ -527,8 +529,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     override fun onResume() {
         super.onResume()
         m_app.fileStore.pause(false)
-        if (!fileStore.isLoading && mOverlayDialog!=null) {
-            showLoadingOverlay(this,mOverlayDialog,false)
+        if (!fileStore.isLoading && mOverlayDialog != null) {
+            showLoadingOverlay(this, mOverlayDialog, false)
         }
         handleIntent()
     }
@@ -818,7 +820,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
 
 
     }
-    fun importFilters (importFile: File) {
+
+    fun importFilters(importFile: File) {
         val r = Runnable() {
             try {
                 val contents = fileStore.readFile(importFile.canonicalPath, null)
@@ -826,7 +829,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 jsonFilters.keys().forEach {
                     val filter = ActiveFilter()
                     filter.initFromJSON(jsonFilters.getJSONObject(it))
-                    saveFilterInPrefs(it,filter)
+                    saveFilterInPrefs(it, filter)
                 }
                 localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
             } catch (e: IOException) {
@@ -837,15 +840,16 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         Thread(r).start()
     }
 
-    fun exportFilters (exportFile: File) {
+    fun exportFilters(exportFile: File) {
         val jsonFilters = JSONObject()
         savedFilters.forEach {
             val jsonItem = JSONObject()
             it.saveInJSON(jsonItem)
-            jsonFilters.put(it.name,jsonItem)
+            jsonFilters.put(it.name, jsonItem)
         }
-        fileStore.writeFile(exportFile,jsonFilters.toString(2))
+        fileStore.writeFile(exportFile, jsonFilters.toString(2))
     }
+
     /**
      * Handle add filter click *
      */
@@ -1251,62 +1255,83 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             return lv as ListView
         }
 
+    fun showListiewProgess(show: Boolean) {
+        val progressBar = findViewById(R.id.empty_progressbar)
+        val filteredView = findViewById(R.id.filtered_view)
+        if (show) {
+            progressBar?.visibility = View.VISIBLE
+            filteredView?.visibility = View.GONE
+        } else {
+            progressBar?.visibility = View.GONE
+            filteredView?.visibility = View.VISIBLE
+        }
+    }
 
-    data class ViewHolder (var taskText: TextView? = null,
-                           var taskAge: TextView? = null,
-                           var taskDue: TextView? = null,
-                           var taskThreshold: TextView? = null,
-                           var cbCompleted: CheckBox? = null)
+
+    data class ViewHolder(var taskText: TextView? = null,
+                          var taskAge: TextView? = null,
+                          var taskDue: TextView? = null,
+                          var taskThreshold: TextView? = null,
+                          var cbCompleted: CheckBox? = null)
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
 
         internal var visibleLines = ArrayList<VisibleLine>()
 
         private var displayProcAvailable = false
-
         internal fun setFilteredTasks() {
-            if (m_app.showTodoPath()) {
-                title = m_app.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
-            } else {
-                setTitle(R.string.app_label)
-            }
-            if (!mFilter?.script.isNullOrEmpty()) {
-                try {
-                    val scriptObj = TclString.newInstance(mFilter?.script)
-                    interp.eval(scriptObj, TCL.EVAL_GLOBAL)
-                    displayProcAvailable = interp.getCommand(Constants.TCL_DISPLAY_COMMAND) != null
-                    if (!displayProcAvailable) {
-                        log.info(ActiveFilter.TAG, "Tcl script doesn't define a ${Constants.TCL_DISPLAY_COMMAND} command")
+            showListiewProgess(true)
+            queue.add("setFilterTasks", Runnable {
+                val visibleTasks: List<TodoListItem>
+                log!!.info(TAG, "setFilteredTasks called: " + todoList)
+                val activeFilter = mFilter ?: return@Runnable
+                val sorts = activeFilter.getSort(m_app.defaultSorts)
+                visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
+                val newVisibleLines = ArrayList<VisibleLine>()
+
+                if (!mFilter?.script.isNullOrEmpty()) {
+                    try {
+                        val scriptObj = TclString.newInstance(mFilter?.script)
+                        interp.eval(scriptObj, TCL.EVAL_GLOBAL)
+                        displayProcAvailable = interp.getCommand(Constants.TCL_DISPLAY_COMMAND) != null
+                        if (!displayProcAvailable) {
+                            log.info(ActiveFilter.TAG, "Tcl script doesn't define a ${Constants.TCL_DISPLAY_COMMAND} command")
+                        }
+                    } catch (e: Exception) {
+                        log.error(ActiveFilter.TAG, "Error in Tcl script: ${e.cause} -> ${interp.getResult()}")
                     }
-                } catch (e: Exception) {
-                    log.error(ActiveFilter.TAG, "Error in Tcl script: ${e.cause} -> ${interp.getResult()}")
                 }
-            }
 
-
-            updateConnectivityIndicator();
-            val visibleTasks: List<TodoListItem>
-            log.info(TAG, "setFilteredTasks called: " + todoList)
-            val activeFilter = mFilter ?: return
-            val sorts = activeFilter.getSort(m_app.defaultSorts)
-            visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
-            visibleLines.clear()
-
-
-            var firstGroupSortIndex = 0
-            if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
-                firstGroupSortIndex++
-                if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                var firstGroupSortIndex = 0
+                if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
                     firstGroupSortIndex++
+                    if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                        firstGroupSortIndex++
+                        if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+                            firstGroupSortIndex++
+                        }
+                    }
                 }
-            }
 
 
-            val firstSort = sorts[firstGroupSortIndex]
-            visibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
-            notifyDataSetChanged()
-            updateFilterBar()
+                val firstSort = sorts[firstGroupSortIndex]
+                newVisibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
+                runOnUiThread {
+                    // Replace the array in the main thread to prevent OutOfIndex excpetions
+                    visibleLines = newVisibleLines
+                    notifyDataSetChanged()
+                    if (m_app.showTodoPath()) {
+                        title = m_app.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
+                    } else {
+                        setTitle(R.string.app_label)
+                    }
+                    updateConnectivityIndicator();
+                    updateFilterBar()
+                    showListiewProgess(false)
+                }
+            })
         }
+
 
         val countVisibleTodoItems: Int
             get() {
@@ -1424,8 +1449,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 }
 
 
-
-
                 val ss = SpannableString(txt)
 
                 val colorizeStrings = ArrayList<String>()
@@ -1457,7 +1480,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 val taskDue = holder.taskDue!!
                 val taskThreshold = holder.taskThreshold!!
 
-                taskAge.textSize =  m_app.activeFontSize *  m_app.dateBarRelativeSize
+                taskAge.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
                 taskDue.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
                 taskThreshold.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
 
@@ -1472,7 +1495,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     holder.taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     cb.isChecked = true
-                   cb.setOnClickListener({
+                    cb.setOnClickListener({
                         undoCompleteTasks(item)
                         closeSelectionMode()
                         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
@@ -1584,13 +1607,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     }
 
 
-
     private fun updateItemsDialog(title: String,
-                            checkedTasks: List<TodoListItem>,
-                            allItems: ArrayList<String>,
-                            retrieveFromTask: (Task) -> SortedSet<String>,
-                            addToTask: (Task, String) -> Unit,
-                            removeFromTask: (Task, String) -> Unit
+                                  checkedTasks: List<TodoListItem>,
+                                  allItems: ArrayList<String>,
+                                  retrieveFromTask: (Task) -> SortedSet<String>,
+                                  addToTask: (Task, String) -> Unit,
+                                  removeFromTask: (Task, String) -> Unit
     ) {
         val checkedTaskItems = ArrayList<HashSet<String>>()
         for (task in checkedTasks) {
@@ -1635,7 +1657,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             if (newText.isNotEmpty()) {
                 for (i in checkedTasks) {
                     val t = i.task
-                    addToTask(t,newText)
+                    addToTask(t, newText)
                 }
             }
             val updatedValues = itemAdapter.currentState
@@ -1644,13 +1666,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     false -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            removeFromTask(t,sortedAllItems[i])
+                            removeFromTask(t, sortedAllItems[i])
                         }
                     }
                     true -> {
                         for (task in checkedTasks) {
                             val t = task.task
-                            addToTask(t,sortedAllItems[i])
+                            addToTask(t, sortedAllItems[i])
                         }
                     }
                 }
@@ -1670,9 +1692,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 m_app.listTerm,
                 checkedTasks,
                 sortWithPrefix(todoList.contexts, m_app.sortCaseSensitive(), null),
-                {task -> task.lists},
-                {task, list -> task.addList(list)},
-                {task, list -> task.removeList(list)}
+                { task -> task.lists },
+                { task, list -> task.addList(list) },
+                { task, list -> task.removeList(list) }
         )
     }
 
@@ -1681,9 +1703,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 m_app.tagTerm,
                 checkedTasks,
                 sortWithPrefix(todoList.projects, m_app.sortCaseSensitive(), null),
-                {task -> task.tags},
-                {task, tag -> task.addTag(tag)},
-                {task, tag -> task.removeTag(tag)}
+                { task -> task.tags },
+                { task, tag -> task.addTag(tag) },
+                { task, tag -> task.removeTag(tag) }
         )
     }
 
