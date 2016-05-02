@@ -37,6 +37,7 @@ class ActiveFilter {
     var hideTags = false
     var hideCreateDate = false
     var createIsThreshold = false
+    var useScript: Boolean = false;
     var script: String? = null
     var scriptTestTask: String? = null
 
@@ -71,6 +72,8 @@ class ActiveFilter {
         json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
         json.put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
         json.put(INTENT_SCRIPT_FILTER, script)
+        json.put(INTENT_USE_SCRIPT_FILTER, useScript)
+        json.put(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
         json.put(SearchManager.QUERY, search)
     }
 
@@ -89,6 +92,7 @@ class ActiveFilter {
         contexts = json.optString(INTENT_CONTEXTS_FILTER)
         sorts = json.optString(INTENT_SORT_ORDER)
 
+        useScript = json.optBoolean(INTENT_USE_SCRIPT_FILTER,false)
         script = json.optString(INTENT_SCRIPT_FILTER)
         scriptTestTask = json.optString(INTENT_SCRIPT_TEST_TASK_FILTER)
 
@@ -127,7 +131,7 @@ class ActiveFilter {
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
-                || !isEmptyOrNull(search) || !isEmptyOrNull(script)
+                || !isEmptyOrNull(search) || useScript
     }
 
     fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
@@ -217,8 +221,7 @@ class ActiveFilter {
         search = null
         prioritiesNot = false
         contextsNot = false
-        script = null
-        scriptTestTask = null
+        useScript = false
     }
 
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
@@ -234,7 +237,7 @@ class ActiveFilter {
             var script: String? = script
             if (script == null) script = ""
             script = script.trim { it <= ' ' }
-            if (!script.isEmpty()) {
+            if (useScript && !script.isEmpty()) {
                 val input = ByteArrayInputStream(script.toByteArray())
                 prototype = LuaC.instance.compile(input, "script")
                 globals = JsePlatform.standardGlobals()
@@ -258,7 +261,7 @@ class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (!script.isEmpty()) {
+                if (useScript && !script.isEmpty()) {
                     if (globals != null && prototype != null) {
                         initGlobals(globals, t)
                         globals.set("idx", idx)
@@ -349,6 +352,7 @@ class ActiveFilter {
 
         const val INTENT_CREATE_AS_THRESHOLD = "CREATEISTHRESHOLD"
 
+        const val INTENT_USE_SCRIPT_FILTER = "USE_SCRIPT"
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
 
