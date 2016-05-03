@@ -64,6 +64,8 @@ android {
     dexOptions {
         incremental = false
         preDexLibraries = false
+        javaMaxHeapSize "3g"
+        dexInProcess = true
     }
 }
 
