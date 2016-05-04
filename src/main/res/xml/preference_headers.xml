@@ -5,16 +5,10 @@
         android:title="@string/preference_appearance" />
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$InterfacePrefFragment"
-        android:title="@string/todotxt_ui_settings_header"
-        android:summary="@string/todotxt_ui_settings_summary"/>
-    <header
-        android:fragment="nl.mpcjanssen.simpletask.Preferences$FeaturesPrefFragment"
-        android:title="@string/todotxt_features_settings_header"
-        android:summary="@string/todotxt_features_settings_summary"/>
+        android:title="@string/todotxt_ui_settings_header" />
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$ConfigurationPrefFragment"
-        android:title="@string/todotxt_configuration_settings_header"
-        android:summary="@string/todotxt_configuration_settings_summary"/>
+        android:title="@string/todotxt_configuration_settings_header" />
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$WidgetPrefFragment"
         android:title="@string/preference_widget" />
@@ -27,7 +21,6 @@
     <header
         android:fragment="nl.mpcjanssen.simpletask.FlavourPrefFragment"
         android:title="@string/flavour_settings_label" />
-
     <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$DonatePrefFragment"
         android:title="@string/donate_title" />
