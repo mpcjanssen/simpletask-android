@@ -32,9 +32,13 @@
 --><!-- suppress ALL -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/show_txt_only"
+        android:summary="@string/show_txt_only_summary"
+        android:title="@string/show_txt_only_pref_title" />
+    <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_sort_case_sensitive"
-        android:summary="@string/sort_case_sensitive_summary"
         android:title="@string/sort_case_sensitive_title" />
     <Preference
         android:key="share_history"

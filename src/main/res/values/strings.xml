@@ -106,7 +106,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ARCHIVE_settings_header">Archive</string>
     <string name="ARCHIVE_settings_summary">Settings for archiving completed tasks in done.txt</string>
     <string name="auto_archive_pref_title">Auto archive</string>
-    <string name="auto_archive_pref_summary">Automatically archive tasks to done.txt on completion.</string>
+    <string name="auto_archive_pref_summary">Archive tasks immediately on completion.</string>
     <string name="archive_now_pref_title">Archive now</string>
     <string name="archive_now_pref_summary">Move completed tasks from todo.txt to done.txt.</string>
     <string name="dropbox_logout_pref_title">Log out</string>
@@ -133,11 +133,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
     <string name="keep_prio_header">Prio in completed tasks</string>
-    <string name="keep_prio_summary">Keep priorities in completed tasks. disable this to restore the todo.txt app behavior, which removes the priority when completing a task.</string>
+    <string name="keep_prio_summary">Keep priorities in completed tasks. todo.txt removes priority on completion</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
-    <string name="prepend_date_pref_summary">Automatically add creation date to new tasks.</string>
-    <string name="line_breaks_pref_title">Windows line breaks</string>
-    <string name="line_breaks_pref_summary">Use Windows-friendly line breaks in the text file.</string>
+    <string name="prepend_date_pref_summary">Automatically add creation date</string>
+    <string name="line_breaks_pref_title">Windows compatibility</string>
+    <string name="line_breaks_pref_summary">Use Windows-friendly line breaks</string>
     <string name="recur_from_original_date_pref_title">Recur task using original dates</string>
     <string name="recur_from_original_date_pref_summary">Increase the original dates in the task when creating the recurring task.
         Un-check this to set the new dates relative to today.</string>
@@ -153,17 +153,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="theme_pref_title">Theme</string>
     <string name="theme_pref_summary">Change the theme used for the application.</string>
 
-    <string name="share_task_show_edit_pref_title">Edit shared task</string>
-    <string name="share_task_show_edit_summary">Allow editing of a shared task before saving it.
-            Disable this to have the shared task stored without intervention.</string>
+    <string name="share_task_show_edit_pref_title">Edit shared tasks</string>
+    <string name="share_task_show_edit_summary">Edit tasks shared to Simpletask before saving them</string>
 
 
     <string name="share_task_append_text_title">Background tag</string>
     <string name="share_task_append_text_summary">Append text \"%s\" to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
 
-    <string name="local_file_root_title">File link root</string>
-    <string name="local_file_root_summary">Resolve root://.... links from %s.</string>
-
+    <string name="local_file_root_title">root:// directory</string>
+    <string name="local_file_root_summary">%s</string>
 
     <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
     <string name="back_saves_pref_title">Back button</string>
@@ -176,10 +174,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_screen_summary">Automatically create calendar reminders for due and/or threshold dates.</string>
     <string name="calendar_sync_dues_title">Due dates</string>
     <string name="calendar_sync_thresholds_title">Threshold dates</string>
-    <string name="calendar_reminder_days_title">Remind in advance</string>
-    <string name="calendar_reminder_days_summary">How many days before the due/threshold date should the reminder be set.</string>
-    <string name="calendar_reminder_time_title">Reminders time</string>
-    <string name="calendar_reminder_time_summary">At what time of day should the reminder be set.</string>
+    <string name="calendar_reminder_days_title">Days in advance</string>
+    <string name="calendar_reminder_days_summary">How early to set the reminder</string>
+    <string name="calendar_reminder_time_title">Reminder time</string>
+    <string name="calendar_reminder_time_summary">The time of day to set the reminder</string>
 
     <string name="drawer_fixed_landscape_title">Open landscape drawers</string>
     <string name="drawer_fixed_landscape_summary">Always open the drawers in landscape mode.</string>
@@ -191,20 +189,20 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_text_ellipsizing_pref_title">Task text ellipsizing</string>
     <string name="task_text_ellipsizing_pref_summary">Ellipsize task text in main window if it takes more than 2 lines.</string>
 
-    <string name="widget_header_transparency_title">Widget header transparency</string>
-    <string name="widget_background_transparency_title">Widget background transparency</string>
+    <string name="widget_header_transparency_title">Header transparency</string>
+    <string name="widget_background_transparency_title">Background transparency</string>
 
-    <string name="widget_extended_pref_title">Datebar in widget</string>
-    <string name="widget_extended_pref_summary">Show tasks in widget with separate date bar.</string>
+    <string name="widget_extended_pref_title">Show datebar</string>
+    <string name="widget_extended_pref_summary">Display dates on a separate line</string>
 
-    <string name="taskview_extended_pref_title">Datebar in main view</string>
-    <string name="taskview_extended_pref_summary">Show tasks in the main view with separate date bar.</string>
+    <string name="taskview_extended_pref_title">Show datebar</string>
+    <string name="taskview_extended_pref_summary">Display dates on a separate line</string>
 
-    <string name="append_tasks_at_end_title">Append new tasks</string>
-    <string name="append_tasks_at_end_summary">Append new tasks at the end of the todo file. When disabled, new tasks are inserted at the beginning.</string>
+    <string name="append_tasks_at_end_title">Append to list</string>
+    <string name="append_tasks_at_end_summary">Insert new tasks at the start of the file instead of the end</string>
 
     <string name="color_due_pref_title">Color due dates</string>
-    <string name="color_due_pref_summary">Color due dates based on whether they are due today, due in the future or overdue.</string>
+    <string name="color_due_pref_summary">Color due and threshold dates</string>
 
     <string name="show_hidden_title">Show hidden tasks</string>
     <string name="show_hidden_summary">Show hidden (h:1) tasks so you can edit them. After editing, uncheck this setting again.</string>
@@ -217,18 +215,17 @@ You should have received a copy of the GNU General Public License along with Tod
         For more screen estate for the todo list turn this off. </string>
 
     <string name="show_edittext_hints_title">Show hints</string>
-    <string name="show_edittext_hints_summary">Show editing hints in textboxes. If you find this distracting, disable this setting.</string>
+    <string name="show_edittext_hints_summary">Show hints when adding tasks. Disable if you find these distracting.</string>
 
-    <string name="show_complete_checkbox_title">Show completion checkbox</string>
+    <string name="show_complete_checkbox_title">Show completion checkboxes</string>
     <string name="show_complete_checkbox_summary">Show the checkbox in front of the tasks to complete or uncomplete them.</string>
 
     <string name="show_confirmation_dialogs_title">Show confirmation dialogs</string>
-    <string name="show_confirmation_dialogs_summary">Show a confirmation dialog before executing undoable actions or actions that can lead to data loss.
-        Disable this setting if you find this annoying. You have been warned though.</string>
+    <string name="show_confirmation_dialogs_summary">Prompt before actions that are irreversible or can lead to data loss</string>
 
 
-    <string name="show_todo_path_title">Show todo path</string>
-    <string name="show_todo_path_summary">Shows the path to the todo file. The directories are shortened to the first letter. For example /todo/home/todo.txt becomes /t/h/todo.txt.</string>
+    <string name="show_todo_path_title">Show file path</string>
+    <string name="show_todo_path_summary">Show the path to the todo file. Directories are shortened to the first letter.</string>
 
     <string name="show_fast_scroll_title">Fast scrolling</string>
     <string name="show_fast_scroll_summary">Use fast scrolling if the todo list gets longer.</string>
@@ -242,7 +239,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="use_create_backup_summary">When sorting, use the task creation date as threshold date if no threshold date is set.</string>
 
     <string name="todotxt_terms_title">Use todo.txt terms</string>
-    <string name="todotxt_terms_summary">Use context and project instead of tag and list to match the terms in todo.txt.</string>
+    <string name="todotxt_terms_summary">Use context and project instead of tag and list</string>
 
     <string name="about_settings_header">About</string>
     <string name="about_settings_summary">Application information</string>
@@ -428,7 +425,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="back_clears_filter_title">Back clears filter</string>
-    <string name="back_clears_filter_summary">If enabled, the first press of the back button clears the active filter and only the second press exits the app.</string>
+    <string name="back_clears_filter_summary">Back button clears the filter before exiting the app</string>
     <string name="experimental_title">Experimental</string>
     <string name="experimental_summary">Enable experimental features</string>
 
