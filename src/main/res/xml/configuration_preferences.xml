@@ -2,46 +2,45 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/todotxt_creation_settings_header">
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/capitalize_tasks"
+            android:title="@string/capitalize_tasks_pref_title" />
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prepend_date_pref_key"
             android:summary="@string/prepend_date_pref_summary"
             android:title="@string/prepend_date_pref_title" />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="@string/capitalize_tasks"
-            android:title="@string/capitalize_tasks_pref_title" />
+            android:key="@string/share_task_show_edit"
+            android:summary="@string/share_task_show_edit_summary"
+            android:title="@string/share_task_show_edit_pref_title" />
         <EditTextPreference
             android:defaultValue=""
             android:key="@string/share_task_append_text"
             android:summary="@string/share_task_append_text_summary"
             android:title="@string/share_task_append_text_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/preference_other">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/append_tasks_at_end"
             android:summary="@string/append_tasks_at_end_summary"
             android:title="@string/append_tasks_at_end_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preference_other">
-        <CheckBoxPreference
-            android:key="@string/auto_archive_pref_key"
-            android:summary="@string/auto_archive_pref_summary"
-            android:title="@string/auto_archive_pref_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/keep_prio"
             android:summary="@string/keep_prio_summary"
             android:title="@string/keep_prio_header" />
-        <EditTextPreference
-            android:defaultValue="/sdcard/"
-            android:key="@string/local_file_root"
-            android:summary="@string/local_file_root_summary"
-            android:title="@string/local_file_root_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/line_breaks_pref_key"
             android:summary="@string/line_breaks_pref_summary"
             android:title="@string/line_breaks_pref_title" />
-
-
+        <EditTextPreference
+            android:defaultValue="/sdcard/"
+            android:key="@string/local_file_root"
+            android:summary="@string/local_file_root_summary"
+            android:title="@string/local_file_root_title" />
     </PreferenceCategory>
 </PreferenceScreen>

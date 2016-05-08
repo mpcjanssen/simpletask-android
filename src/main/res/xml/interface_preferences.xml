@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="no_ellipsize"
-        android:entries="@array/task_text_ellipsizing"
-        android:entryValues="@array/task_text_ellipsizing_values"
-        android:key="@string/task_text_ellipsizing_pref_key"
-        android:summary="%s"
-        android:title="@string/task_text_ellipsizing_pref_title" />
     <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/show_todo_path"
-        android:summary="@string/show_todo_path_summary"
-        android:title="@string/show_todo_path_title" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/show_txt_only"
-        android:summary="@string/show_txt_only_summary"
-        android:title="@string/show_txt_only_pref_title" />
+        android:defaultValue="true"
+        android:key="@string/ui_complete_checkbox"
+        android:summary="@string/show_complete_checkbox_summary"
+        android:title="@string/show_complete_checkbox_title" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/taskview_extended_pref_key"
         android:summary="@string/taskview_extended_pref_summary"
         android:title="@string/taskview_extended_pref_title" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/ui_show_confirmation_dialogs"
+        android:summary="@string/show_confirmation_dialogs_summary"
+        android:title="@string/show_confirmation_dialogs_title" />
+    <CheckBoxPreference
+        android:key="@string/auto_archive_pref_key"
+        android:summary="@string/auto_archive_pref_summary"
+        android:title="@string/auto_archive_pref_title" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/ui_fast_scroll"
+        android:summary="@string/show_fast_scroll_summary"
+        android:title="@string/show_fast_scroll_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/back_clears_filter"
+        android:summary="@string/back_clears_filter_summary"
+        android:title="@string/back_clears_filter_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/ui_drawer_fixed_landscape"
+        android:summary="@string/drawer_fixed_landscape_summary"
+        android:title="@string/drawer_fixed_landscape_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/ui_show_calendarview"
+        android:title="@string/show_calendarview_title" />
 </PreferenceScreen>
