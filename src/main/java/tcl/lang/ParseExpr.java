@@ -75,7 +75,7 @@ class ParseExpr {
 	static String lexemeStrings[] = { "LITERAL", "FUNCNAME", "[", "{", "(",
 			")", "$", "\"", ",", "END", "UNKNOWN", "*", "/", "%", "+", "-",
 			"<<", ">>", "<", ">", "<=", ">=", "==", "!=", "&", "^", "|", "&&",
-			"||", "?", ":", "!", "~", "eq", "ne", };
+			"||", "?", ":", "!", "~", "eq", "ne", "in", "ni",};
 
 	// The ParseInfo structure holds state while parsing an expression.
 	// A pointer to an ParseInfo record is passed among the routines in

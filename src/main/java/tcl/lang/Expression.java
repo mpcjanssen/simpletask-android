@@ -65,6 +65,10 @@ public class Expression {
 	public static final int NOT = 32;
 	public static final int BIT_NOT = 33;
 
+	// 8.5 ni and in
+	public static final int NI = 34;
+	public static final int IN = 35;
+
 
 	/**
 	 * Precedence table.  The values for non-operator token types are ignored.
@@ -84,8 +88,8 @@ public class Expression {
 			2, // QUESTY
 			1, // COLON
 			8, 8, // STREQ, STRNEQ
-			13, 13, 13, 13 // UNARY_MINUS, UNARY_PLUS, NOT,
-	// BIT_NOT
+			13, 13, 13, 13, // UNARY_MINUS, UNARY_PLUS, NOT, BIT_NOT
+			8, 8, // IN, NI
 	};
 
 	/**
@@ -94,7 +98,7 @@ public class Expression {
 	public static String operatorStrings[] = { "VALUE", "(", ")", ",", "END",
 			"UNKNOWN", "6", "7", "*", "/", "%", "+", "-", "<<", ">>", "<", ">",
 			"<=", ">=", "==", "!=", "&", "^", "|", "&&", "||", "?", ":", "eq",
-			"ne", "-", "+", "!", "~" };
+			"ne", "ni", "in", "-", "+", "!", "~" };
 
 	/**
 	 * Maps name of function to its implementation
