@@ -58,16 +58,18 @@ public class Expression {
 	public static final int STREQ = 28;
 	public static final int STRNEQ = 29;
 
+	// 8.5 ni and in
+	public static final int IN = 30;
+	public static final int NI = 31;
+
 	// Unary operators:
 
-	public static final int UNARY_MINUS = 30;
-	public static final int UNARY_PLUS = 31;
-	public static final int NOT = 32;
-	public static final int BIT_NOT = 33;
+	public static final int UNARY_MINUS = 32;
+	public static final int UNARY_PLUS = 33;
+	public static final int NOT = 34;
+	public static final int BIT_NOT = 35;
 
-	// 8.5 ni and in
-	public static final int NI = 34;
-	public static final int IN = 35;
+
 
 
 	/**
@@ -87,9 +89,8 @@ public class Expression {
 			3, // OR
 			2, // QUESTY
 			1, // COLON
-			8, 8, // STREQ, STRNEQ
+			8, 8, 8, 8, // STREQ, STRNEQ, IN, NI
 			13, 13, 13, 13, // UNARY_MINUS, UNARY_PLUS, NOT, BIT_NOT
-			8, 8, // IN, NI
 	};
 
 	/**
@@ -98,7 +99,7 @@ public class Expression {
 	public static String operatorStrings[] = { "VALUE", "(", ")", ",", "END",
 			"UNKNOWN", "6", "7", "*", "/", "%", "+", "-", "<<", ">>", "<", ">",
 			"<=", ">=", "==", "!=", "&", "^", "|", "&&", "||", "?", ":", "eq",
-			"ne", "ni", "in", "-", "+", "!", "~" };
+			"ne", "in", "ni", "-", "+", "!", "~",};
 
 	/**
 	 * Maps name of function to its implementation
@@ -961,8 +962,32 @@ public class Expression {
 					value2.getStringValue()));
 			return;
 
-			// For the operators below, no strings are allowed, but
-			// no int->double conversions are performed.
+		case IN:
+			TclObject inList = TclString.newInstance(value2.getStringValue());
+			for (TclObject element : TclList.getElements(interp, inList)) {
+				if (value.getStringValue().equals(
+						element.toString())) {
+					value.setIntValue(true);
+					return;
+				}
+			}
+			value.setIntValue(false);
+			return;
+
+		case NI:
+			TclObject niList = TclString.newInstance(value2.getStringValue());
+			for (TclObject element : TclList.getElements(interp, niList)) {
+				if (value.getStringValue().equals(
+						element.toString())) {
+					value.setIntValue(false);
+					return;
+				}
+			}
+			value.setIntValue(true);
+			return;
+
+		// For the operators below, no strings are allowed, but
+		// no int->double conversions are performed.
 
 		case AND:
 		case OR:
@@ -1614,6 +1639,7 @@ public class Expression {
 
 		case 'e':
 		case 'n':
+		case 'i':
 			if (c == 'e' && c2 == 'q') {
 				m_ind += 1;
 				m_token = STREQ;
@@ -1621,6 +1647,14 @@ public class Expression {
 			} else if (c == 'n' && c2 == 'e') {
 				m_ind += 1;
 				m_token = STRNEQ;
+				return null;
+			} else if (c == 'n' && c2 == 'i') {
+				m_ind += 1;
+				m_token = NI;
+				return null;
+			} else if (c == 'i' && c2 == 'n') {
+				m_ind += 1;
+				m_token = IN;
 				return null;
 			}
 			// Fall through to default

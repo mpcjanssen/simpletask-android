@@ -69,6 +69,10 @@ class ParseExpr {
 	static final int STREQ = 34;
 	static final int STRNEQ = 35;
 
+	// 8.5 ni and in
+	public static final int IN = 36;
+	public static final int NI = 37;
+
 	// Mapping from lexemes to strings; used for debugging messages. These
 	// entries must match the order and number of the lexeme definitions above.
 
@@ -557,7 +561,7 @@ class ParseExpr {
 
 		lexeme = info.lexeme;
 		while ((lexeme == EQUAL) || (lexeme == NEQ) || (lexeme == STREQ)
-				|| (lexeme == STRNEQ)) {
+				|| (lexeme == STRNEQ) || (lexeme == IN) || (lexeme == NI)) {
 			operator = info.start;
 			GetLexeme(interp, info); // skip over ==, !=, 'eq' or 'ne'
 			ParseRelationalExpr(interp, info);
@@ -1470,9 +1474,27 @@ class ParseExpr {
 				return;
 			}
 
+		case 'i':
+			if (c2 == 'n') {
+				info.lexeme = IN;
+				info.size = 2;
+				info.next = src + 2;
+				parseObj.termIndex = info.next;
+				return;
+			} else {
+				checkFuncName(interp, info, src);
+				return;
+			}
+
 		case 'n':
 			if (c2 == 'e') {
 				info.lexeme = STRNEQ;
+				info.size = 2;
+				info.next = src + 2;
+				parseObj.termIndex = info.next;
+				return;
+			} else if (c2 == 'i') {
+				info.lexeme = NI;
 				info.size = 2;
 				info.next = src + 2;
 				parseObj.termIndex = info.next;
