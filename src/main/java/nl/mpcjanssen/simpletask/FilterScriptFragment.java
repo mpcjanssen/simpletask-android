@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class FilterScriptFragment extends Fragment {
 
     final static String TAG = FilterScriptFragment.class.getSimpleName();
     private EditText txtScript;
+    private CheckBox cbUseScript;
     @Nullable
     ActionBar actionbar;
     private EditText txtTestTask;
@@ -64,6 +66,7 @@ public class FilterScriptFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.script_filter,
                 container, false);
 
+        cbUseScript = (CheckBox) layout.findViewById(R.id.cb_use_script);
         txtScript = (EditText) layout.findViewById(R.id.txt_script);
         txtTestTask = (EditText) layout.findViewById(R.id.txt_testtask);
         tvResult = (TextView) layout.findViewById(R.id.result);
@@ -109,13 +112,24 @@ public class FilterScriptFragment extends Fragment {
 
         });
         if (savedInstanceState != null) {
+            cbUseScript.setChecked(savedInstanceState.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER,false));
             txtScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_FILTER,""));
             txtTestTask.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,""));
         } else {
+            cbUseScript.setChecked(arguments.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER,false));
             txtScript.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER,""));
             txtTestTask.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,""));
         }
         return layout;
+    }
+
+    public Boolean getUseScript() {
+        Bundle arguments = getArguments();
+        if (cbUseScript == null) {
+            return arguments.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, false);
+        } else {
+            return cbUseScript.isChecked();
+        }
     }
 
     public String getScript() {

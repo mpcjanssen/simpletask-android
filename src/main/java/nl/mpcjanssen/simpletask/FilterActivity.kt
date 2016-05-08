@@ -134,6 +134,7 @@ class FilterActivity : ThemedActivity() {
         pagerAdapter!!.add(sortTab)
 
         arguments = Bundle()
+        arguments.putBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
         arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.script)
         arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
         arguments.putString(TAB_TYPE, SCRIPT_TAB)
@@ -247,6 +248,7 @@ class FilterActivity : ThemedActivity() {
                 }
                 SCRIPT_TAB -> {
                     val scrf = f as FilterScriptFragment
+                    mFilter.useScript = scrf.useScript
                     mFilter.script = scrf.script
                     mFilter.scriptTestTask = scrf.testTask
                 }

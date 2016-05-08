@@ -1,6 +1,5 @@
 buildscript {
-
-    ext.kotlin_version = '1.0.1'
+    ext.kotlin_version = '1.0.1-2'
     ext.android_support_version = '23.3.0'
     repositories {
         jcenter()
@@ -62,8 +61,10 @@ android {
         }
     }
     dexOptions {
-        incremental = false
-        preDexLibraries = false
+        incremental = true
+        preDexLibraries = true
+        javaMaxHeapSize "3g"
+        dexInProcess = true
     }
 }
 

@@ -80,7 +80,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
     internal var m_scrollPosition = 0
-    private var mOverlayDialog: Dialog? = null
+
     private var mIgnoreScrollEvents = false
     private lateinit var log: Logger
     val interp: Interp
@@ -129,9 +129,9 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     m_adapter!!.setFilteredTasks()
                     updateDrawers()
                 } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
-                    mOverlayDialog = showLoadingOverlay(this@Simpletask, mOverlayDialog, true)
+                    showListiewProgess(true)
                 } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
-                    mOverlayDialog = showLoadingOverlay(this@Simpletask, mOverlayDialog, false)
+                    showListiewProgess(false)
                 } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
                     updateConnectivityIndicator()
                 } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
@@ -158,6 +158,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
             actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -448,7 +449,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         fab.setOnClickListener { startAddTaskActivity() }
 
         updateDrawers()
-        mOverlayDialog = showLoadingOverlay(this, mOverlayDialog, m_app.isLoading)
     }
 
     private fun updateConnectivityIndicator() {
@@ -529,8 +529,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     override fun onResume() {
         super.onResume()
         m_app.fileStore.pause(false)
-        if (!fileStore.isLoading && mOverlayDialog != null) {
-            showLoadingOverlay(this, mOverlayDialog, false)
+        if (fileStore.isLoading) {
+            showListiewProgess(true)
         }
         handleIntent()
     }
@@ -1255,7 +1255,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             return lv as ListView
         }
 
-    fun showListiewProgess(show: Boolean) {
+    fun showListiewProgess (show: Boolean) {
         val progressBar = findViewById(R.id.empty_progressbar)
         val filteredView = findViewById(R.id.filtered_view)
         if (show) {
@@ -1277,11 +1277,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
 
         internal var visibleLines = ArrayList<VisibleLine>()
-
         private var displayProcAvailable = false
+
         internal fun setFilteredTasks() {
-            showListiewProgess(true)
             queue.add("setFilterTasks", Runnable {
+                runOnUiThread() {
+                    showListiewProgess(true)
+                }
                 val visibleTasks: List<TodoListItem>
                 log!!.info(TAG, "setFilteredTasks called: " + todoList)
                 val activeFilter = mFilter ?: return@Runnable

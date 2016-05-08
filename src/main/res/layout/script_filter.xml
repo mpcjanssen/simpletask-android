@@ -7,7 +7,13 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:showDividers="middle">
+    <CheckBox
+        android:id="@+id/cb_use_script"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use script"/>
     <TextView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Script" />
