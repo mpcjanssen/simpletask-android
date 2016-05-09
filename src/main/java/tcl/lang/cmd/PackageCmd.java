@@ -448,9 +448,8 @@ public class PackageCmd implements Command {
 			try {
 				sbuf = new StringBuffer();
 				once = false;
-				for (Iterator iter = interp.packageTable.entrySet().iterator(); iter
-						.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
+				for (Object o : interp.packageTable.entrySet()) {
+					Map.Entry entry = (Map.Entry) o;
 					key = (String) entry.getKey();
 					pkg = (Package) entry.getValue();
 					once = true;

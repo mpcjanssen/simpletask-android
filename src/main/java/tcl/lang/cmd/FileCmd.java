@@ -516,8 +516,8 @@ public class FileCmd implements Command {
 			File[] roots = File.listRoots();
 			if (roots != null) {
 				TclObject list = TclList.newInstance();
-				for (int i = 0; i < roots.length; i++) {
-					String root = roots[i].getPath();
+				for (File root1 : roots) {
+					String root = root1.getPath();
 					TclList.append(interp, list, TclString.newInstance(root));
 				}
 				interp.setResult(list);
@@ -895,8 +895,8 @@ public class FileCmd implements Command {
 		if (fileObj.isDirectory() && (fileObj.list().length > 0)) {
 			if (force) {
 				String fileList[] = fileObj.list();
-				for (int i = 0; i < fileList.length; i++) {
-					deleteOneFile(interp, new File(fileObj, fileList[i]), force);
+				for (String aFileList : fileList) {
+					deleteOneFile(interp, new File(fileObj, aFileList), force);
 				}
 			} else {
 				throw new TclPosixException(interp, TclPosixException.ENOTEMPTY, "error deleting \"" + fileObj.getName()

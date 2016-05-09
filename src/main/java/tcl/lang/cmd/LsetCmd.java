@@ -246,8 +246,8 @@ public class LsetCmd implements Command {
 				// Spoil all the string reps
 
 				int chainListLen = chainList.size();
-				for (int i = 0; i < chainListLen; i++) {
-					TclObject tobj = (TclObject) chainList.get(i);
+				for (Object aChainList : chainList) {
+					TclObject tobj = (TclObject) aChainList;
 					tobj.invalidateStringRep();
 				}
 				list.invalidateStringRep();
@@ -481,8 +481,8 @@ public class LsetCmd implements Command {
 				// Spoil all the string reps
 				
 				int chainListLen = chainList.size();
-				for (int i = 0; i < chainListLen; i++) {
-					TclObject tobj = (TclObject) chainList.get(i);
+				for (Object aChainList : chainList) {
+					TclObject tobj = (TclObject) aChainList;
 					tobj.invalidateStringRep();
 				}
 				list.invalidateStringRep();

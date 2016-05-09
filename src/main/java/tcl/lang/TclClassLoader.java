@@ -296,19 +296,7 @@ public class TclClassLoader extends ClassLoader {
 			// parent will do any needed caching.
 
 			return result;
-		} catch (ClassNotFoundException e) {
-			if (printStack) {
-				e.printStackTrace(System.err);
-			}
-		} catch (IllegalArgumentException e) {
-			if (printStack) {
-				e.printStackTrace(System.err);
-			}
-		} catch (NoClassDefFoundError e) {
-			if (printStack) {
-				e.printStackTrace(System.err);
-			}
-		} catch (IncompatibleClassChangeError e) {
+		} catch (ClassNotFoundException | IncompatibleClassChangeError | NoClassDefFoundError | IllegalArgumentException e) {
 			if (printStack) {
 				e.printStackTrace(System.err);
 			}
@@ -364,7 +352,7 @@ public class TclClassLoader extends ClassLoader {
 			// to find out the real name of the class without knowing the
 			// format of the .class file and parsing it.
 
-			StringBuffer buf = new StringBuffer(50);
+			StringBuilder buf = new StringBuilder(50);
 			buf.append(err.getMessage());
 			buf.append(". ");
 			if (lastSearchedClassFile != null) {
@@ -525,13 +513,6 @@ public class TclClassLoader extends ClassLoader {
 
 		try {
 			result = defineClass(null, classData, 0, classData.length);
-		} catch (ClassFormatError ex) {
-			// Don't allow this exception to terminate execution, but
-			// print some debug info to stderr since this will likely
-			// be cause by a compiler bug and we want to know about that.
-
-			System.err.println("TclClassLoader.defineClass():");
-			System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 		} catch (LinkageError ex) {
 			// Don't allow this exception to terminate execution, but
 			// print some debug info to stderr since this will likely
@@ -699,8 +680,8 @@ public class TclClassLoader extends ClassLoader {
 			return null;
 		}
 
-		for (int i = 0; i < jarFiles.length; i++) {
-			result = extractClassFromJar(curDir + File.separatorChar + jarFiles[i], className);
+		for (String jarFile : jarFiles) {
+			result = extractClassFromJar(curDir + File.separatorChar + jarFile, className);
 			if (result != null) {
 				break;
 			}
@@ -945,8 +926,8 @@ public class TclClassLoader extends ClassLoader {
 		jarFilter = new JarFilenameFilter();
 		jarFiles = (new File(curDir)).list(jarFilter);
 
-		for (int i = 0; i < jarFiles.length; i++) {
-			result = extractURLFromJar(curDir + File.separatorChar + jarFiles[i], resName);
+		for (String jarFile : jarFiles) {
+			result = extractURLFromJar(curDir + File.separatorChar + jarFile, resName);
 			if (result != null) {
 				break;
 			}

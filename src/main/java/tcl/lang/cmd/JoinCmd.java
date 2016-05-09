@@ -47,7 +47,7 @@ public class JoinCmd implements Command {
 			return;
 		}
 
-		StringBuffer sbuf = new StringBuffer(TclList.index(interp, list, 0)
+		StringBuilder sbuf = new StringBuilder(TclList.index(interp, list, 0)
 				.toString());
 
 		for (int i = 1; i < size; i++) {

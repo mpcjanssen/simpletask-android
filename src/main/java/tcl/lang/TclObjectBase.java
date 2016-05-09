@@ -199,9 +199,9 @@ abstract class TclObjectBase {
 			String key = "TclObject";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -250,9 +250,9 @@ abstract class TclObjectBase {
 			String key = "TclObject";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -288,9 +288,9 @@ abstract class TclObjectBase {
 			String key = "TclObject";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -528,7 +528,7 @@ abstract class TclObjectBase {
 
 	static String getObjRecords() {
 		if (TclObjectBase.saveObjRecords) {
-			StringBuffer sb = new StringBuffer(64);
+			StringBuilder sb = new StringBuilder(64);
 			for (Enumeration keys = TclObject.objRecordMap.keys(); keys
 					.hasMoreElements();) {
 				String key = (String) keys.nextElement();

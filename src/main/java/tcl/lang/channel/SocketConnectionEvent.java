@@ -73,7 +73,7 @@ public class SocketConnectionEvent extends TclEvent {
 			}
 			TclIO.registerChannel(cbInterp, chan);
 			
-			StringBuffer cblist = new StringBuffer();
+			StringBuilder cblist = new StringBuilder();
 			cblist.append(callbackCmd.toString());
 			cblist.append(" ");
 			cblist.append(chan.getChanName());

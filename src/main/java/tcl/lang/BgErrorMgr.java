@@ -286,13 +286,9 @@ class BgErrorMgr implements AssocData {
 							chan.write(interp, "\n");
 						}
 						chan.flush(interp);
-					} catch (TclException e1) {
+					} catch (TclException | IOException e1) {
 
 						// Ignore.
-
-					} catch (IOException e2) {
-
-						// Ignore, too.
 
 					}
 					break;

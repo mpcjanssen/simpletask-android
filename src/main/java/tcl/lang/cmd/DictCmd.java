@@ -856,9 +856,8 @@ public class DictCmd implements Command {
 			final TclObject tmp = TclDict.newInstance();
 			// Get new key values -- using keys that were in the
 			// dictionary when we started.
-			Iterator keys = keyList.iterator();
-			while (keys.hasNext()) {
-				TclObject key = (TclObject) keys.next();
+			for (Object aKeyList : keyList) {
+				TclObject key = (TclObject) aKeyList;
 				TclObject val = null;
 				try {
 					val = interp.getVar(key, 0);

@@ -460,7 +460,7 @@ public class Regex {
 	protected static String parseSubSpec(String subSpec) {
 		boolean escaped = false;
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		final int len = subSpec.length();
 
 		for (int i = 0; i < len; i++) {
@@ -682,13 +682,13 @@ public class Regex {
 
 		// Either '(' or '[' without a closing ')' or ']'
 
-		if (msg.indexOf("Unclosed group near") != -1) {
+		if (msg.contains("Unclosed group near")) {
 			suffix = "parentheses () not balanced";
-		} else if (msg.indexOf("Unclosed character class near") != -1) {
+		} else if (msg.contains("Unclosed character class near")) {
 			suffix = "brackets [] not balanced";
-		} else if (msg.indexOf("Dangling meta character") != -1) {
+		} else if (msg.contains("Dangling meta character")) {
             suffix = "quantifier operand invalid";
-        } else if (msg.indexOf("Unclosed counted closure")!= -1) {
+        } else if (msg.contains("Unclosed counted closure")) {
             suffix = "braces {} not balanced";
         }
 
@@ -991,12 +991,12 @@ public class Regex {
                     /* openSubExpression and validSubExpression are 0-based,
                      * even though back refs are 1-based
                      */
-                    openSubExpressions.push(new Integer(validSubExpression.size()));
-                    validSubExpression.add(new Boolean(false));
+                    openSubExpressions.push(validSubExpression.size());
+                    validSubExpression.add(false);
                 } else {
                     isCaptureGroup = false;
                 }
-                groupStack.push(new Boolean(isCaptureGroup));
+                groupStack.push(isCaptureGroup);
                 
                 ++index;
                 continue; // next regex char, since we don't do anything with '('
@@ -1006,10 +1006,10 @@ public class Regex {
                     throw new PatternSyntaxException("Unbalanced parentheses", 
                                                       regexsb.toString(), index);
                 }
-                boolean isCaptureGroup = ((Boolean)groupStack.pop()).booleanValue();
+                boolean isCaptureGroup = (Boolean) groupStack.pop();
                 if (isCaptureGroup) {
-                    int closedExpr = ((Integer)openSubExpressions.pop()).intValue();
-                    validSubExpression.set(closedExpr,new Boolean(true));
+                    int closedExpr = (Integer) openSubExpressions.pop();
+                    validSubExpression.set(closedExpr, true);
                 }
                 ++index;
                 continue; // next regex char, since we don't do anything with ')'
@@ -1123,7 +1123,7 @@ public class Regex {
                                         " [::] [..] [==] not allowed outside of a bracket expression",
                                         regexsb.toString(),index);
                     }
-                    StringBuffer charClass = new StringBuffer("[");
+                    StringBuilder charClass = new StringBuilder("[");
                     charClass.append(c2);
                     // suck up everything into charClass until next ']'
                     int i = index+2;
@@ -1222,7 +1222,7 @@ public class Regex {
                                                              regexsb.toString(), index);
                          }
                     } else {
-                        boolean isValid = ((Boolean)validSubExpression.get(value-1)).booleanValue();
+                        boolean isValid = (Boolean) validSubExpression.get(value - 1);
                         if (! isValid) {
                             // not in Docs, but test case reg-14.18 and reg-15.9 do this
                             throw new PatternSyntaxException("invalid backreference number",

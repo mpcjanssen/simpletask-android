@@ -280,9 +280,8 @@ public class InterpCmd implements Command {
 			Interp slaveInterp = getInterp(interp, objv);
 
 			TclObject result = TclList.newInstance();
-			for (Iterator iter = slaveInterp.slaveTable.entrySet().iterator(); iter
-					.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Object o : slaveInterp.slaveTable.entrySet()) {
+				Map.Entry entry = (Map.Entry) o;
 				String string = (String) entry.getKey();
 				TclList.append(interp, result, TclString.newInstance(string));
 			}
@@ -429,8 +428,8 @@ public class InterpCmd implements Command {
 		TclObject[] objv = TclList.getElements(interp, path);
 		Interp searchInterp = interp; // Interim storage for interp. to find.
 
-		for (int i = 0; i < objv.length; i++) {
-			String name = objv[i].toString();
+		for (TclObject anObjv : objv) {
+			String name = anObjv.toString();
 			if (!searchInterp.slaveTable.containsKey(name)) {
 				searchInterp = null;
 				break;

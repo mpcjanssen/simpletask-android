@@ -29,15 +29,15 @@ public class TclList implements InternalRep {
 	 * Create a new empty Tcl List.
 	 */
 	private TclList() {
-		alist = new ArrayList<TclObject>();
+		alist = new ArrayList<>();
 
 		if (TclObject.saveObjRecords) {
 			String key = "TclList";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -51,15 +51,15 @@ public class TclList implements InternalRep {
 	 *            the number of slots pre-allocated in the alist.
 	 */
 	private TclList(int size) {
-		alist = new ArrayList<TclObject>(size);
+		alist = new ArrayList<>(size);
 
 		if (TclObject.saveObjRecords) {
 			String key = "TclList";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -70,8 +70,8 @@ public class TclList implements InternalRep {
 	 */
 	public void dispose() {
 		final int size = alist.size();
-		for (int i = 0; i < size; i++) {
-			(alist.get(i)).release();
+		for (TclObject anAlist : alist) {
+			anAlist.release();
 		}
 		alist.clear();
 	}
@@ -96,9 +96,9 @@ public class TclList implements InternalRep {
 			String key = "TclList.duplicate()";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -121,8 +121,7 @@ public class TclList implements InternalRep {
 
 		StringBuffer sbuf = new StringBuffer((est > 64) ? est : 64);
 		try {
-			for (int i = 0; i < size; i++) {
-				TclObject elm = alist.get(i);
+			for (TclObject elm : alist) {
 				if (elm != null) {
 					Util.appendElement(null, sbuf, elm.toString());
 				} else {
@@ -203,9 +202,9 @@ public class TclList implements InternalRep {
 			String key = "TclString -> TclList";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}

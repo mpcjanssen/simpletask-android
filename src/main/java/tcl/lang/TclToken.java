@@ -96,8 +96,8 @@ class TclToken {
 			System.out.println("size is " + size);
 
 			System.out.print("the string is \"");
-			for (int k = 0; k < script_array.length; k++) {
-				System.out.print(script_array[k]);
+			for (char aScript_array : script_array) {
+				System.out.print(aScript_array);
 			}
 			System.out.println("\"");
 		}
@@ -120,7 +120,7 @@ class TclToken {
 	 */
 
 	public String toString() {
-		StringBuffer sbuf = new StringBuffer();
+		StringBuilder sbuf = new StringBuilder();
 		switch (type) {
 		case Parser.TCL_TOKEN_WORD: {
 			sbuf.append("\n  Token Type: TCL_TOKEN_WORD");

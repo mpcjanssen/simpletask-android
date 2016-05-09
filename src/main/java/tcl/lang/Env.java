@@ -130,7 +130,7 @@ class Env  {
 				return Collections.unmodifiableMap(new HashMap<String,String>());
 			}
 		} else {
-			HashMap<String, String> env = new HashMap<String,String>();
+			HashMap<String, String> env = new HashMap<>();
 			Map<String, Var> arrayMap = retArray[0].getArrayMap();
 			for (Entry<String, Var> envVar : arrayMap.entrySet()) {
 				if (! envVar.getValue().isVarUndefined()) {

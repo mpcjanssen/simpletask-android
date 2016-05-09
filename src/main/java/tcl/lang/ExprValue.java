@@ -211,7 +211,7 @@ public final class ExprValue {
 	// of the internal state of a ExprValue object.
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer(64);
+		StringBuilder sb = new StringBuilder(64);
 		if (type == STRING) {
 			sb.append("STRING \"" + stringValue + "\"");
 		} else if (type == INT) {

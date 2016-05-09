@@ -230,9 +230,8 @@ public class NamespaceCmd implements InternalRep, Command {
 		// whose names match the specified pattern, if any.
 
 		list = TclList.newInstance();
-		for (Iterator iter = ns.childTable.entrySet().iterator(); iter
-				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Map.Entry<String, Namespace> stringNamespaceEntry : ns.childTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) stringNamespaceEntry;
 			childNs = (Namespace) entry.getValue();
 			if ((pattern == null)
 					|| Util.stringMatch(childNs.fullName, pattern)) {
@@ -1090,13 +1089,16 @@ public class NamespaceCmd implements InternalRep, Command {
 		lookup = 0; // assume command lookup by default
 		arg = objv[2].toString();
 		if ((arg.length() > 1) && (arg.charAt(0) == '-')) {
-			if (arg.equals("-command")) {
-				lookup = 0;
-			} else if (arg.equals("-variable")) {
-				lookup = 1;
-			} else {
-				throw new TclNumArgsException(interp, 2, objv,
-						"?-command? ?-variable? name");
+			switch (arg) {
+				case "-command":
+					lookup = 0;
+					break;
+				case "-variable":
+					lookup = 1;
+					break;
+				default:
+					throw new TclNumArgsException(interp, 2, objv,
+							"?-command? ?-variable? name");
 			}
 			argIndex = 3;
 		}

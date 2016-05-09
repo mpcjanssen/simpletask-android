@@ -376,7 +376,7 @@ public class FileUtil {
 			// We can not use the joinPath() method because joing("D:/",
 			// "/f.txt")
 			// returns "/f.txt" for some wacky reason. Just do it ourselves.
-			StringBuffer buff = new StringBuffer();
+			StringBuilder buff = new StringBuilder();
 			buff.append(cwd.substring(0, 2));
 			buff.append('\\');
 			for (int i = 0; i < fileName.length(); i++) {
@@ -902,7 +902,7 @@ public class FileUtil {
 		if (Util.isUnix()) {
 			if (userDirs == null) {
 				try {
-					userDirs = new HashMap<String, String>();
+					userDirs = new HashMap<>();
 					File passwd = new File("/etc/passwd");
 					BufferedReader reader = new BufferedReader(new FileReader(passwd));
 					while (true) {
@@ -1115,7 +1115,7 @@ public class FileUtil {
 		try {
 			Method canExecute = fileObj.getClass().getMethod("canExecute");
 			Boolean result = (Boolean) canExecute.invoke(fileObj);
-			return result.booleanValue();
+			return result;
 
 		} catch (Exception e) {
 

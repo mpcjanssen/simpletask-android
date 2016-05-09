@@ -247,7 +247,7 @@ public class GlobCmd implements Command {
 		resultList.preserve();
 
 		try {
-			ArrayList<StringBuffer> patternList = new ArrayList<StringBuffer>();
+			ArrayList<StringBuffer> patternList = new ArrayList<>();
 
 			/*
 			 * Copy the patterns into patterns, joining the arguments into one
@@ -271,7 +271,7 @@ public class GlobCmd implements Command {
 					 * expand out any brace expressions like src/{*.c}{*.h} into
 					 * a list of patterns: src/*.c and src/*.h
 					 */
-					ArrayList<StringBuffer> argExpansion = new ArrayList<StringBuffer>();
+					ArrayList<StringBuffer> argExpansion = new ArrayList<>();
 					argExpansion.add(new StringBuffer());
 					expandBraceExpressions(interp, argv[i].toString(), 0, argExpansion, false);
 					patternList.addAll(argExpansion);
@@ -317,7 +317,7 @@ public class GlobCmd implements Command {
 		try {
 			if ((TclList.getLength(interp, resultList) == 0) && !noComplain) {
 				String sep = "";
-				StringBuffer ret = new StringBuffer();
+				StringBuilder ret = new StringBuilder();
 
 				ret.append("no files matched glob pattern");
 				ret.append((join || (argv.length - firstNonSwitchArgumentIndex == 1)) ? " \"" : "s \"");
@@ -393,10 +393,10 @@ public class GlobCmd implements Command {
 			switch (c) {
 
 			case '{':
-				ArrayList<StringBuffer> alternation = new ArrayList<StringBuffer>();
+				ArrayList<StringBuffer> alternation = new ArrayList<>();
 				--nextIndex;
 				while (nextIndex < pattern.length() && pattern.charAt(nextIndex) != '}') {
-					ArrayList<StringBuffer> oneAlternative = new ArrayList<StringBuffer>();
+					ArrayList<StringBuffer> oneAlternative = new ArrayList<>();
 					oneAlternative.add(new StringBuffer());
 					/*
 					 * call recusrively to get the next string in the {}
@@ -414,7 +414,7 @@ public class GlobCmd implements Command {
 				 * Now build a new expandedPatterns by duplicating existing list
 				 * with each of the alternations
 				 */
-				ArrayList<StringBuffer> newExpandedPatterns = new ArrayList<StringBuffer>(expandedPatterns.size()
+				ArrayList<StringBuffer> newExpandedPatterns = new ArrayList<>(expandedPatterns.size()
 						* alternation.size());
 				for (StringBuffer alternationSb : alternation) {
 					for (StringBuffer prefix : expandedPatterns) {
@@ -482,7 +482,7 @@ public class GlobCmd implements Command {
 	 */
 	private void getResultsForOnePattern(Interp interp, String pattern, int types, File topDirectory, String prefix,
 			boolean tails, TclObject resultList) throws TclException {
-		Stack<GlobPair> stack = new Stack<GlobPair>();
+		Stack<GlobPair> stack = new Stack<>();
 
 		/*
 		 * Inspect path to see if it has a trailing separator; this can get lost
@@ -719,12 +719,17 @@ public class GlobCmd implements Command {
 			/* Otherwise, match it to types */
 			boolean typesTest;
 			File testFile;
-			if (name.equals("."))
-				testFile = dir.getAbsoluteFile();
-			else if (name.equals(".."))
-				testFile = dir.getAbsoluteFile().getParentFile();
-			else
-				testFile = new File(dir, name);
+			switch (name) {
+				case ".":
+					testFile = dir.getAbsoluteFile();
+					break;
+				case "..":
+					testFile = dir.getAbsoluteFile().getParentFile();
+					break;
+				default:
+					testFile = new File(dir, name);
+					break;
+			}
 
 			if ((types & (TYPE_BLOCKSPECIAL | TYPE_CHARSPECIAL | TYPE_PIPE | TYPE_SOCKET | TYPE_DIRECTORY
 					| TYPE_REGULARFILE | TYPE_LINK)) != 0) {

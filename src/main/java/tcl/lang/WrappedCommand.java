@@ -155,7 +155,7 @@ public class WrappedCommand {
 		// same
 		// type/name
 		if (commandTraces == null) {
-			commandTraces = new ArrayList<CommandTrace>();
+			commandTraces = new ArrayList<>();
 		}
 		commandTraces.add(trace);
 	}
@@ -272,7 +272,7 @@ public class WrappedCommand {
 		/* Remove old trace of same name/type */
 		untraceExecution(trace.getType(), trace.getCallbackCmd());
 		if (executionTraces == null) {
-			executionTraces = new ArrayList<ExecutionTrace>();
+			executionTraces = new ArrayList<>();
 		}
 		executionTraces.add(trace);
 		if (trace.getType()==ExecutionTrace.ENTERSTEP || trace.getType()==ExecutionTrace.LEAVESTEP)
@@ -346,8 +346,8 @@ public class WrappedCommand {
 						copyOfTraces[i].trace(interp, type, commandString.toString(), completionCode, result);
 					}
 				} else {
-					for (int i = 0; i < copyOfTraces.length; ++i) {
-						copyOfTraces[i].trace(interp, type, commandString.toString(), completionCode, result);
+					for (ExecutionTrace copyOfTrace : copyOfTraces) {
+						copyOfTrace.trace(interp, type, commandString.toString(), completionCode, result);
 					}
 				}
 			} finally {
@@ -536,7 +536,7 @@ public class WrappedCommand {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append("Wrapper for ");
 		if (ns != null) {

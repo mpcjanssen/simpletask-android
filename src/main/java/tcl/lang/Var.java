@@ -307,7 +307,7 @@ public class Var {
 	 * Create a new array map in this Var
 	 */
 	public void createArrayMap() {
-		this.arraymap = new HashMap<String, Var>();
+		this.arraymap = new HashMap<>();
 	}
 	
 	/**
@@ -322,7 +322,7 @@ public class Var {
 	 */
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (ns != null) {
 			sb.append(ns.fullName);
 			if (ns.fullName.equals("::")) {
@@ -402,8 +402,8 @@ public class Var {
 
 	public Iterator getSearch(String s) {
 		SearchId sid;
-		for (int i = 0; i < sidVec.size(); i++) {
-			sid = (SearchId) sidVec.get(i);
+		for (Object aSidVec : sidVec) {
+			sid = (SearchId) aSidVec;
 			if (sid.equals(s)) {
 				return sid.getIterator();
 			}
@@ -609,7 +609,7 @@ public class Var {
 
 		if (((flags & (TCL.GLOBAL_ONLY | TCL.NAMESPACE_ONLY)) != 0)
 				|| (varFrame == null) || !varFrame.isProcCallFrame
-				|| (part1.indexOf("::") != -1)) {
+				|| (part1.contains("::"))) {
 			String tail;
 
 			// Don't pass TCL.LEAVE_ERR_MSG, we may yet create the variable,
@@ -1264,7 +1264,7 @@ public class Var {
 			// A compiled local that is a scoped value would never
 			// be initialized by this method.
 
-			if (varname.indexOf("::") != -1) {
+			if (varname.contains("::")) {
 				throw new TclRuntimeError(
 						"scoped scalar should neve be initialized here "
 								+ varname);
@@ -1371,7 +1371,7 @@ public class Var {
 			// as a link var. A non-global scoped link var
 			// should never be pass in here.
 
-			if (!varname.startsWith("::") && (-1 != varname.indexOf("::"))) {
+			if (!varname.startsWith("::") && (varname.contains("::"))) {
 				throw new TclRuntimeError("unexpected scoped scalar");
 			}
 
@@ -1439,7 +1439,7 @@ public class Var {
 
 			// A non-global scoped link var should never be passed in here.
 
-			if (!varname.startsWith("::") && (-1 != varname.indexOf("::"))) {
+			if (!varname.startsWith("::") && (varname.contains("::"))) {
 				throw new TclRuntimeError("unexpected scoped scalar");
 			}
 		}
@@ -1522,7 +1522,7 @@ public class Var {
 			// A compiled local that is a scoped value would never
 			// be initialized by this method.
 
-			if (varname.indexOf("::") != -1) {
+			if (varname.contains("::")) {
 				throw new TclRuntimeError(
 						"scoped scalar should neve be initialized here "
 								+ varname);
@@ -1623,7 +1623,7 @@ public class Var {
 			// A compiled local that is a scoped value would never
 			// be initialized by this method.
 
-			if (varname.indexOf("::") != -1) {
+			if (varname.contains("::")) {
 				throw new TclRuntimeError(
 						"scoped scalar should neve be initialized here "
 								+ varname);
@@ -2311,7 +2311,7 @@ public class Var {
 		if (((myFlags & (TCL.GLOBAL_ONLY | TCL.NAMESPACE_ONLY)) != 0)
 				|| (varFrame == null)
 				|| !varFrame.isProcCallFrame
-				|| ((myName.indexOf("::") != -1) && ((myFlags & EXPLICIT_LOCAL_NAME) == 0))) {
+				|| ((myName.contains("::")) && ((myFlags & EXPLICIT_LOCAL_NAME) == 0))) {
 
 			Namespace.GetNamespaceForQualNameResult gnfqnr = interp.getnfqnResult;
 			Namespace.getNamespaceForQualName(interp, myName, null, myFlags,
@@ -2510,7 +2510,7 @@ public class Var {
 			Var var // Token for the variable returned by a
 	// previous call to Tcl_FindNamespaceVar.
 	) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 
 		// Add the full name of the containing namespace (if any), followed by
 		// the "::" separator, then the variable name.
@@ -2712,8 +2712,8 @@ public class Var {
 			flags |= TCL.NAMESPACE_ONLY;
 		}
 
-		for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Object o : table.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			deleteVar(interp, (Var) entry.getValue(), flags);
 		}
 		table.clear();
@@ -2885,13 +2885,14 @@ public class Var {
 		deleteSearches(var);
 		Map<String, Var> table = var.getArrayMap();
 
-		for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Map.Entry<String, Var> stringVarEntry : table.entrySet()) {
+			Map.Entry entry = (Map.Entry) stringVarEntry;
 			// String key = (String) entry.getKey();
 			el = (Var) entry.getValue();
 
 			if (el.isVarScalar() && (el.getValue() != null)) {
-				obj = el.getValue();;
+				obj = el.getValue();
+				;
 				obj.release();
 				el.setValue(null);
 			}
@@ -3090,9 +3091,8 @@ public class Var {
 
 		HashMap localVarTable = frame.varTable;
 		if (localVarTable != null) {
-			for (Iterator iter = localVarTable.entrySet().iterator(); iter
-					.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Object o : localVarTable.entrySet()) {
+				Map.Entry entry = (Map.Entry) o;
 				varName = (String) entry.getKey();
 				var = (Var) entry.getValue();
 				if (!var.isVarUndefined() && (includeLinks || !var.isVarLink())) {
@@ -3107,8 +3107,7 @@ public class Var {
 		Var[] compiledLocals = frame.compiledLocals;
 		if (compiledLocals != null) {
 			final int max = compiledLocals.length;
-			for (int i = 0; i < max; i++) {
-				Var clocal = compiledLocals[i];
+			for (Var clocal : compiledLocals) {
 				if (clocal != null && !clocal.isVarNonLocal()) {
 					var = clocal;
 					varName = (String) var.hashKey;

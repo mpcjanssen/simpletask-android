@@ -1658,7 +1658,7 @@ class ParseExpr {
 		if (expr.length() > 60) {
 			expr = expr.substring(0, 60) + "...";
 		}
-		StringBuffer msg = new StringBuffer();
+		StringBuilder msg = new StringBuilder();
 		msg.append("syntax error in expression \"");
 		msg.append(expr);
 		msg.append("\"");

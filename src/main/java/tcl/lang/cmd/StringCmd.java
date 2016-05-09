@@ -885,7 +885,7 @@ public class StringCmd implements Command {
 				}
 
 				String string2;
-				StringBuffer buf = new StringBuffer();
+				StringBuilder buf = new StringBuilder();
 				buf.append(string1.substring(0, first));
 				if (last + 1 > length1) {
 					string2 = string1.substring(first);

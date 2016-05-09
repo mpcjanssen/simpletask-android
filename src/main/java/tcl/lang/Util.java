@@ -597,7 +597,7 @@ public class Util {
 		double result = 0;
 
 		try {
-			result = Double.valueOf(s).doubleValue();
+			result = Double.valueOf(s);
 		} catch (NumberFormatException e) {
 			strtodResult.update(0, 0, TCL.INVALID_DOUBLE);
 			return;
@@ -955,7 +955,7 @@ public class Util {
 		if (length == 0) {
 			return "";
 		}
-		StringBuffer buf = new StringBuffer(length);
+		StringBuilder buf = new StringBuilder(length);
 		buf.append(Character.toTitleCase(str.charAt(0)));
 		buf.append(str.substring(1).toLowerCase());
 		return buf.toString();

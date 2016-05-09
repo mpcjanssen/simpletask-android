@@ -927,8 +927,8 @@ class UTF8CharPointer extends CharPointer implements InternalRep {
 			char c;
 			boolean singleBytes = true;
 
-			for (int i = 0; i < array.length; i++) {
-				c = array[i];
+			for (char anArray : array) {
+				c = anArray;
 				if (c == '\0') {
 					// Ignore encoding issues related to null byte in Java vs
 					// UTF8
@@ -1112,7 +1112,7 @@ class UTF8CharPointer extends CharPointer implements InternalRep {
 			return "1 byte for each character with length " + orig.length();
 		}
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		int max_char = array.length - 1;
 		int max_byte = bytes.length - 1;

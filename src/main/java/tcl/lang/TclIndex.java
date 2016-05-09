@@ -117,7 +117,7 @@ public class TclIndex implements InternalRep {
 				}
 			}
 			if (numAbbrev != 1) {
-				StringBuffer sbuf = new StringBuffer();
+				StringBuilder sbuf = new StringBuilder();
 				if (numAbbrev > 1) {
 					sbuf.append("ambiguous ");
 				} else {

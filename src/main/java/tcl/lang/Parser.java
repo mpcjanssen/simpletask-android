@@ -995,7 +995,7 @@ public class Parser {
 				if (bs.isWordSep) {
 					p = "\\" + bs.c;
 				} else {
-					Character ch = new Character(bs.c);
+					Character ch = bs.c;
 					p = ch.toString();
 				}
 				break;

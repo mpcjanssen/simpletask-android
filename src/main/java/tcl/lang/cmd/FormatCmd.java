@@ -460,8 +460,8 @@ public class FormatCmd implements Command {
 
 	private String cvtLngToStr(long lngValue, int width, int precision,
 			int flags, int base, char[] charSet, String altPrefix) {
-		StringBuffer sbuf = new StringBuffer(100);
-		StringBuffer tmpBuf = new StringBuffer(100);
+		StringBuilder sbuf = new StringBuilder(100);
+		StringBuilder tmpBuf = new StringBuilder(100);
 
 		int i;
 		int length;
@@ -605,7 +605,7 @@ public class FormatCmd implements Command {
 	private static String cvtDblToStr(double dblValue, int width,
 			int precision, int flags, int base, char[] charSet,
 			String altPrefix, int xtype) {
-		StringBuffer sbuf = new StringBuffer(100);
+		StringBuilder sbuf = new StringBuilder(100);
 		int i;
 		int exp;
 		int length;
@@ -639,7 +639,7 @@ public class FormatCmd implements Command {
 			prefix = '-';
 			prefixSize = 1;
 		} else if (dblValue == 0.0
-				&& (new Double(dblValue)).equals((new Double(-0.0)))) {
+				&& (Double.valueOf(dblValue)).equals((-0.0))) {
 			// Handle -0.0
 			//
 			// 15.19.1 "Numerical Comparison Operators <, <=, >, and >= "
@@ -867,7 +867,7 @@ public class FormatCmd implements Command {
 		// (tmpBuf) with the correct number of spaces.
 
 		int nspace = width - length;
-		StringBuffer tmpBuf = new StringBuffer(100 + nspace);
+		StringBuilder tmpBuf = new StringBuilder(100 + nspace);
 		if (nspace > 0) {
 			for (i = 0; i < nspace; i++) {
 				tmpBuf.append(' ');
@@ -909,7 +909,7 @@ public class FormatCmd implements Command {
 			int precision, int flags) {
 		String left = "";
 		String right = "";
-		StringBuffer sbuf = new StringBuffer(100);
+		StringBuilder sbuf = new StringBuilder(100);
 
 		if (precision >= 0 && precision < strValue.length()) {
 			strValue = strValue.substring(0, precision);

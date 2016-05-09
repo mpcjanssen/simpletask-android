@@ -921,7 +921,7 @@ public class ScanCmd implements Command {
 					nranges++;
 				ch = format.charAt(endIndex++);
 			}
-			StringBuffer charsbuf = new StringBuffer();
+			StringBuilder charsbuf = new StringBuilder();
 			if (nranges > 0) {
 				ranges = new Range[nranges];
 			} else {
@@ -985,8 +985,8 @@ public class ScanCmd implements Command {
 			if (chars.indexOf(ch) >= 0) {
 				match = true;
 			} else if (ranges != null) {
-				for (int i = 0; i < ranges.length; i++) {
-					if (ranges[i] != null && ranges[i].isInRange(ch)) {
+				for (Range range : ranges) {
+					if (range != null && range.isInRange(ch)) {
 						match = true;
 						break;
 					}
@@ -998,7 +998,7 @@ public class ScanCmd implements Command {
 
 		@Override
 		public String toString() {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append('[');
 			if (exclude)
 				sb.append('^');

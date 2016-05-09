@@ -260,9 +260,8 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 		// delete those aliases. If the other interp was already dead, it
 		// would have removed the target record already.
 
-		for (Iterator iter = interp.targetTable.entrySet().iterator(); iter
-				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Object o : interp.targetTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			WrappedCommand slaveCmd = (WrappedCommand) entry.getKey();
 			Interp slaveInterp = (Interp) entry.getValue();
 			slaveInterp.deleteCommandFromToken(slaveCmd);
@@ -524,9 +523,8 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 		}
 
 		TclObject result = TclList.newInstance();
-		for (Iterator iter = slaveInterp.hiddenCmdTable.entrySet().iterator(); iter
-				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Object o : slaveInterp.hiddenCmdTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			String cmdName = (String) entry.getKey();
 			TclList.append(interp, result, TclString.newInstance(cmdName));
 		}

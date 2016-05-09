@@ -94,7 +94,7 @@ public class ExecutionTrace {
 	public void trace(Interp interp, int type, String commandString, int resultCode, TclObject result)
 			throws TclException {
 		if (type == this.type && ! deleted) {
-			StringBuffer sb = new StringBuffer(callbackCmd.length() + commandString.length()
+			StringBuilder sb = new StringBuilder(callbackCmd.length() + commandString.length()
 					+ (result == null ? 0 : result.toString().length()) + 16);
 			sb.append(callbackCmd).append(" {").append(commandString).append("} ");
 			switch (type) {

@@ -183,10 +183,9 @@ public class ArrayCmd implements Command {
 			 * case the reading of a value triggers a read trace that modifies
 			 * the array
 			 */
-			ArrayList<String> keysToReturn = new ArrayList<String>();
+			ArrayList<String> keysToReturn = new ArrayList<>();
 
-			for (Iterator<String> iter = var.getArrayMap().keySet().iterator(); iter.hasNext();) {
-				String key = iter.next();
+			for (String key : var.getArrayMap().keySet()) {
 				if (pattern != null && !Util.stringMatch(key, pattern)) {
 					continue;
 				}
@@ -239,8 +238,8 @@ public class ArrayCmd implements Command {
 			// pattern, test for a match. Each valid key and its value
 			// is written into sbuf, which is returned.
 
-			for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Map.Entry<String, Var> stringVarEntry : table.entrySet()) {
+				Map.Entry entry = (Map.Entry) stringVarEntry;
 				key = (String) entry.getKey();
 				Var elem = (Var) entry.getValue();
 				if (!elem.isVarUndefined()) {
@@ -333,8 +332,8 @@ public class ArrayCmd implements Command {
 				Map<String, Var> table = var.getArrayMap();
 				int size = 0;
 
-				for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
+				for (Map.Entry<String, Var> stringVarEntry : table.entrySet()) {
+					Map.Entry entry = (Map.Entry) stringVarEntry;
 					String key = (String) entry.getKey();
 					Var elem = (Var) entry.getValue();
 					if (!elem.isVarUndefined()) {

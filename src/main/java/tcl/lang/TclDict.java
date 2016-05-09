@@ -45,9 +45,9 @@ public class TclDict implements InternalRep {
 			String key = "TclDict";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -68,9 +68,9 @@ public class TclDict implements InternalRep {
 			String key = "TclDict";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -81,9 +81,8 @@ public class TclDict implements InternalRep {
 	 */
 	public void dispose() {
 		// Release the objects associated with each key/value pair.
-		final Iterator entries = map.entrySet().iterator();
-		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
+		for (Object o : map.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			TclObject key = (TclObject) entry.getKey();
 			TclObject val = (TclObject) entry.getValue();
 			key.release();
@@ -98,9 +97,8 @@ public class TclDict implements InternalRep {
 		final int size = map.size();
 		TclDict newDict = new TclDict(size);
 
-		final Iterator entries = map.entrySet().iterator();
-		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
+		for (Object o : map.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			TclObject key = (TclObject) entry.getKey();
 			TclObject value = (TclObject) entry.getValue();
 			key.preserve();
@@ -113,9 +111,9 @@ public class TclDict implements InternalRep {
 			String key = "TclDict.duplicate()";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -138,9 +136,8 @@ public class TclDict implements InternalRep {
 
 		StringBuffer sbuf = new StringBuffer((est > 64) ? est : 64);
 		try {
-			Iterator entries = map.entrySet().iterator();
-			while (entries.hasNext()) {
-				Map.Entry entry = (Map.Entry) entries.next();
+			for (Object o : map.entrySet()) {
+				Map.Entry entry = (Map.Entry) o;
 				Object key = entry.getKey();
 				Object val = entry.getValue();
 				if (key != null) {
@@ -189,9 +186,9 @@ public class TclDict implements InternalRep {
 			String key = "TclString -> TclDict";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -363,9 +360,8 @@ public class TclDict implements InternalRep {
 		// aren't released before we have finished iterating. This can
 		// happen e.g. if the dict is shimmered to a list (which would
 		// release() all the elements).
-		Iterator elements = ir.map.entrySet().iterator();
-		while (elements.hasNext()) {
-			Map.Entry entry = (Map.Entry) elements.next();
+		for (Object o : ir.map.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			TclObject key = (TclObject) entry.getKey();
 			TclObject val = (TclObject) entry.getValue();
 			key.preserve();
@@ -373,8 +369,9 @@ public class TclDict implements InternalRep {
 		}
 		// Now, iterate through each element invoking the Visitor callback
 		// for each one.
+		Iterator elements = ir.map.entrySet().iterator();
 		try {
-			elements = ir.map.entrySet().iterator();
+
 			while (elements.hasNext()) {
 				Map.Entry entry = (Map.Entry) elements.next();
 				TclObject key = (TclObject) entry.getKey();

@@ -55,9 +55,9 @@ public class TclDouble implements InternalRep {
 			String key = "TclDouble";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -88,9 +88,9 @@ public class TclDouble implements InternalRep {
 			String key = "TclDouble";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -115,9 +115,9 @@ public class TclDouble implements InternalRep {
 			String key = "TclDouble.duplicate()";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}
@@ -194,9 +194,9 @@ public class TclDouble implements InternalRep {
 			String key = "TclString -> TclDouble";
 			Integer num = (Integer) TclObject.objRecordMap.get(key);
 			if (num == null) {
-				num = new Integer(1);
+				num = 1;
 			} else {
-				num = new Integer(num.intValue() + 1);
+				num = num.intValue() + 1;
 			}
 			TclObject.objRecordMap.put(key, num);
 		}

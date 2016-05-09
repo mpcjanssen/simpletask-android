@@ -40,7 +40,7 @@ public class ExprCmd implements Command {
 		if (argv.length == 2) {
 			interp.expr.evalSetResult(interp, argv[1].toString());
 		} else {
-			StringBuffer sbuf = new StringBuffer();
+			StringBuilder sbuf = new StringBuilder();
 			sbuf.append(argv[1].toString());
 			for (int i = 2; i < argv.length; i++) {
 				sbuf.append(' ');

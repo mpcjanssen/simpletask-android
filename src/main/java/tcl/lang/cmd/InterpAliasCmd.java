@@ -332,9 +332,8 @@ public class InterpAliasCmd implements CommandWithDispose {
 			Interp slaveInterp) // Interp whose aliases to compute.
 			throws TclException {
 		TclObject result = TclList.newInstance();
-		for (Iterator iter = slaveInterp.aliasTable.entrySet().iterator(); iter
-				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Object o : slaveInterp.aliasTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			InterpAliasCmd alias = (InterpAliasCmd) entry.getValue();
 			TclList.append(interp, result, alias.name);
 		}

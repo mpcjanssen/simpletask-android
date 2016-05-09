@@ -489,7 +489,7 @@ public class AfterCmd implements Command {
 		}
 
 		public String toString() {
-			StringBuffer sb = new StringBuffer(64);
+			StringBuilder sb = new StringBuilder(64);
 			sb.append(super.toString());
 			sb.append("AfterCmd.TimerInfo : " + command + "\n");
 			return sb.toString();
@@ -553,7 +553,7 @@ public class AfterCmd implements Command {
 		}
 
 		public String toString() {
-			StringBuffer sb = new StringBuffer(64);
+			StringBuilder sb = new StringBuilder(64);
 			sb.append(super.toString());
 			sb.append("AfterCmd.IdleInfo : " + command + "\n");
 			return sb.toString();

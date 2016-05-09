@@ -102,7 +102,7 @@ public class Procedure implements Command, CommandWithDispose {
 			}
 			TclObject argName = TclList.index(interp, argSpec, 0);
 			String argNameStr = argName.toString();
-			if (argNameStr.indexOf("::") != -1) {
+			if (argNameStr.contains("::")) {
 				// NEM: 2010-06-14: updated to match Tcl 8.5+
                 throw new TclException(interp, "formal parameter \"" + argSpec +
                         "\" is not a simple name");

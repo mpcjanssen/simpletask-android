@@ -519,7 +519,7 @@ public class BinaryCmd implements Command {
 							break;
 						}
 					}
-					StringBuffer s = new StringBuffer(count);
+					StringBuilder s = new StringBuilder(count);
 					int thisOffset = offset;
 
 					if (cmd == 'b') {
@@ -562,7 +562,7 @@ public class BinaryCmd implements Command {
 							break;
 						}
 					}
-					StringBuffer s = new StringBuffer(count);
+					StringBuilder s = new StringBuilder(count);
 					int thisOffset = offset;
 
 					if (cmd == 'h') {

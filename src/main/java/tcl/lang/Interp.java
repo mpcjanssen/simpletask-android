@@ -802,8 +802,8 @@ public class Interp extends EventuallyFreed {
 
 		// Close any remaining channels
 
-		for (Iterator iter = interpChanTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Map.Entry<String, Channel> stringChannelEntry : interpChanTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) stringChannelEntry;
 			Channel chan = (Channel) entry.getValue();
 			try {
 				chan.close();
@@ -1045,7 +1045,7 @@ public class Interp extends EventuallyFreed {
 
 	public void setAssocData(String name, AssocData data) {
 		if (assocData == null) {
-			assocData = new HashMap<String, AssocData>();
+			assocData = new HashMap<>();
 		}
 		assocData.put(name, data);
 	}
@@ -1514,7 +1514,7 @@ public class Interp extends EventuallyFreed {
 		// namespace qualifiers, we put it in the specified namespace;
 		// otherwise, we always put it in the global namespace.
 
-		if (cmdName.indexOf("::") != -1) {
+		if (cmdName.contains("::")) {
 			Namespace.GetNamespaceForQualNameResult gnfqnr = this.getnfqnResult;
 			Namespace.getNamespaceForQualName(this, cmdName, null, Namespace.CREATE_NS_IF_UNKNOWN, gnfqnr);
 			ns = gnfqnr.ns;
@@ -1595,7 +1595,7 @@ public class Interp extends EventuallyFreed {
 	 */
 	public String getCommandFullName(WrappedCommand cmd) {
 		Interp interp = this;
-		StringBuffer name = new StringBuffer();
+		StringBuilder name = new StringBuilder();
 
 		// Add the full name of the containing namespace, followed by the "::"
 		// separator, and the command name.
@@ -2064,7 +2064,7 @@ public class Interp extends EventuallyFreed {
 	 */
 	boolean activateExecutionStepTrace(WrappedCommand cmd) {
 		if (activeExecutionStepTraces == null) {
-			activeExecutionStepTraces = new ArrayList<WrappedCommand>();
+			activeExecutionStepTraces = new ArrayList<>();
 		}
 		if (activeExecutionStepTraces.contains(cmd))
 			return false;
@@ -2412,8 +2412,8 @@ public class Interp extends EventuallyFreed {
 			if (invokedEval && result == TCL.ERROR && !(this.errAlreadyLogged)) {
 				StringBuffer cmd_strbuf = new StringBuffer(64);
 
-				for (int i = 0; i < objv.length; i++) {
-					Util.appendElement(this, cmd_strbuf, objv[i].toString());
+				for (TclObject anObjv : objv) {
+					Util.appendElement(this, cmd_strbuf, anObjv.toString());
 				}
 
 				String cmd_str = cmd_strbuf.toString();
@@ -2449,8 +2449,7 @@ public class Interp extends EventuallyFreed {
 			}
 		} finally {
 			if (objv != null) {
-				for (int i = 0; i < objv.length; i++) {
-					TclObject obj = objv[i];
+				for (TclObject obj : objv) {
 					if (obj != null) {
 						obj.release();
 					}
@@ -2729,7 +2728,7 @@ public class Interp extends EventuallyFreed {
 	 */
 	String convertStringCRLF(String inStr) {
 		String str = inStr;
-		StringBuffer sb = new StringBuffer(str.length());
+		StringBuilder sb = new StringBuilder(str.length());
 		char c, prev = '\n';
 		boolean foundCRLF = false;
 		final int length = str.length();
@@ -3399,7 +3398,7 @@ public class Interp extends EventuallyFreed {
 		// for the source, in order to avoid potential confusion,
 		// lets prevent "::" in the token too. --dl
 
-		if (hiddenCmdToken.indexOf("::") >= 0) {
+		if (hiddenCmdToken.contains("::")) {
 			throw new TclException(this, "cannot use namespace qualifiers in " + "hidden command token (rename)");
 		}
 
@@ -3479,7 +3478,7 @@ public class Interp extends EventuallyFreed {
 		// (that the user is not trying to do an expose and a rename
 		// (to another namespace) at the same time)
 
-		if (cmdName.indexOf("::") >= 0) {
+		if (cmdName.contains("::")) {
 			throw new TclException(this, "can not expose to a namespace " + "(use expose to toplevel, then rename)");
 		}
 
@@ -3549,9 +3548,9 @@ public class Interp extends EventuallyFreed {
 	 */
 
 	public void hideUnsafeCommands() throws TclException {
-		for (int ix = 0; ix < unsafeCmds.length; ix++) {
+		for (String unsafeCmd : unsafeCmds) {
 			try {
-				hideCommand(unsafeCmds[ix], unsafeCmds[ix]);
+				hideCommand(unsafeCmd, unsafeCmd);
 			} catch (TclException e) {
 				if (!e.getMessage().startsWith("unknown command")) {
 					throw e;
@@ -3764,8 +3763,8 @@ public class Interp extends EventuallyFreed {
 		// If found, then replace its rules.
 
 		if (resolvers != null) {
-			for (ListIterator iter = resolvers.listIterator(); iter.hasNext();) {
-				res = (ResolverScheme) iter.next();
+			for (Object resolver1 : resolvers) {
+				res = (ResolverScheme) resolver1;
 				if (name.equals(res.name)) {
 					res.resolver = resolver;
 					return;
@@ -3806,8 +3805,8 @@ public class Interp extends EventuallyFreed {
 		// then return pointers to its procedures.
 
 		if (resolvers != null) {
-			for (ListIterator iter = resolvers.listIterator(); iter.hasNext();) {
-				res = (ResolverScheme) iter.next();
+			for (Object resolver : resolvers) {
+				res = (ResolverScheme) resolver;
 				if (name.equals(res.name)) {
 					return res.resolver;
 				}
@@ -3836,8 +3835,8 @@ public class Interp extends EventuallyFreed {
 		// Look for an existing scheme with the given name.
 
 		if (resolvers != null) {
-			for (ListIterator iter = resolvers.listIterator(); iter.hasNext();) {
-				res = (ResolverScheme) iter.next();
+			for (Object resolver : resolvers) {
+				res = (ResolverScheme) resolver;
 				if (name.equals(res.name)) {
 					found = true;
 					break;
@@ -3872,8 +3871,7 @@ public class Interp extends EventuallyFreed {
 	public final TclObject checkCommonInteger(long value) {
 		if (VALIDATE_SHARED_RESULTS) {
 			TclObject[] objv = { m_minusoneIntegerResult, m_zeroIntegerResult, m_oneIntegerResult, m_twoIntegerResult };
-			for (int i = 0; i < objv.length; i++) {
-				TclObject obj = objv[i];
+			for (TclObject obj : objv) {
 				if (!obj.isShared()) {
 					throw new TclRuntimeError("ref count error: " + "integer constant for " + obj.toString()
 							+ " should be shared but refCount was " + obj.getRefCount());
@@ -3933,8 +3931,7 @@ public class Interp extends EventuallyFreed {
 	final TclObject checkCommonDouble(double value) {
 		if (VALIDATE_SHARED_RESULTS) {
 			TclObject[] objv = { m_zeroDoubleResult, m_onehalfDoubleResult, m_oneDoubleResult, m_twoDoubleResult };
-			for (int i = 0; i < objv.length; i++) {
-				TclObject obj = objv[i];
+			for (TclObject obj : objv) {
 				if (!obj.isShared()) {
 					throw new TclRuntimeError("ref count error: " + "double constant for " + obj.toString()
 							+ " should be shared but refCount was " + obj.getRefCount());
@@ -3993,8 +3990,7 @@ public class Interp extends EventuallyFreed {
 	final TclObject checkCommonBoolean(boolean value) {
 		if (VALIDATE_SHARED_RESULTS) {
 			TclObject[] objv = { m_trueBooleanResult, m_falseBooleanResult };
-			for (int i = 0; i < objv.length; i++) {
-				TclObject obj = objv[i];
+			for (TclObject obj : objv) {
 				if (!obj.isShared()) {
 					throw new TclRuntimeError("ref count error: " + "boolean constant for " + obj.toString()
 							+ " should be shared but refCount was " + obj.getRefCount());
@@ -4290,7 +4286,7 @@ public class Interp extends EventuallyFreed {
 	 */
 
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		String info = super.toString();
 

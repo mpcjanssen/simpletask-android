@@ -51,7 +51,7 @@ public class TclNumArgsException extends TclException {
 		super(TCL.ERROR);
 
 		if (interp != null) {
-			StringBuffer buff = new StringBuffer(50);
+			StringBuilder buff = new StringBuilder(50);
 			buff.append("wrong # args: should be \"");
 
 			for (int i = 0; i < argc; i++) {

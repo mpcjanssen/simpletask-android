@@ -51,16 +51,19 @@ public class ExecCmd implements Command {
 		boolean keepNewline = false;
 
 		// Check for a leading "-keepnewline" argument.
+		label:
 		for (firstWord = 1; firstWord < argv.length; firstWord++) {
 			String argStr = argv[firstWord].toString();
 			if ((argStr.length() > 0) && (argStr.charAt(0) == '-')) {
-				if (argStr.equals("-keepnewline")) {
-					keepNewline = true;
-				} else if (argStr.equals("--")) {
-					firstWord++;
-					break;
-				} else {
-					throw new TclException(interp, "bad switch \"" + argStr + "\": must be -keepnewline or --");
+				switch (argStr) {
+					case "-keepnewline":
+						keepNewline = true;
+						break;
+					case "--":
+						firstWord++;
+						break label;
+					default:
+						throw new TclException(interp, "bad switch \"" + argStr + "\": must be -keepnewline or --");
 				}
 			} else {
 				break;

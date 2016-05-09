@@ -647,7 +647,7 @@ public class Namespace {
 		 * commands, separate the iteration through the command table from the trace
 		 * execution.
 		 */
-		ArrayList<String> tracedCommands = new ArrayList<String>();
+		ArrayList<String> tracedCommands = new ArrayList<>();
 		for (Map.Entry<String, WrappedCommand> entry : ns.cmdTable.entrySet()) {
 			if (entry.getValue().hasCommandTraces()) {
 				tracedCommands.add(entry.getKey());
@@ -911,7 +911,7 @@ public class Namespace {
 		if (ns.exportArray==null) return;
 		
 		/* Unique-fy the list */
-		HashSet<String> unique = new HashSet<String>( ns.exportArray.length);
+		HashSet<String> unique = new HashSet<>(ns.exportArray.length);
 		for (i = 0; i < ns.numExportPatterns; i++) {
 			unique.add(ns.exportArray[i]);
 		}
@@ -1028,23 +1028,21 @@ public class Namespace {
 		/* Scan through the command table and make a list of any built-in
 		 * commands that should be loaded before we import
 		 */
-		HashMap<String, AutoloadStub> toBeLoaded = new HashMap<String, AutoloadStub>();
-		for (Iterator<Map.Entry<String, WrappedCommand>> iter = importNs.cmdTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry<String, WrappedCommand> entry = iter.next();
+		HashMap<String, AutoloadStub> toBeLoaded = new HashMap<>();
+		for (Map.Entry<String, WrappedCommand> entry : importNs.cmdTable.entrySet()) {
 			cmdName = entry.getKey();
 			if (Util.stringMatch(cmdName, simplePattern)) {
 				cmd = (WrappedCommand) importNs.cmdTable.get(cmdName);
 				if (cmd.cmd instanceof AutoloadStub) {
 					AutoloadStub autoloadCmd = (AutoloadStub) cmd.cmd;
-					toBeLoaded.put(cmdName,autoloadCmd);
+					toBeLoaded.put(cmdName, autoloadCmd);
 				}
 			}
 		}
 		
 		/* Now load all the commands that were found */
-		
-		for (Iterator<Map.Entry<String, AutoloadStub>> iter = toBeLoaded.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry<String, AutoloadStub> entry = iter.next();
+
+		for (Map.Entry<String, AutoloadStub> entry : toBeLoaded.entrySet()) {
 			cmdName = entry.getKey();
 			AutoloadStub stubcmd = entry.getValue();
 			stubcmd.load(interp, cmdName);
@@ -1053,8 +1051,7 @@ public class Namespace {
 		// exported commands that match the string pattern. Create an "imported
 		// command" in the current namespace for each imported command; these
 		// commands redirect their invocations to the "real" command.
-		for (Iterator<Map.Entry<String, WrappedCommand>> iter = importNs.cmdTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry<String, WrappedCommand> entry = iter.next();
+		for (Map.Entry<String, WrappedCommand> entry : importNs.cmdTable.entrySet()) {
 			cmdName = entry.getKey();
 
 			if (Util.stringMatch(cmdName, simplePattern)) {
@@ -1077,8 +1074,8 @@ public class Namespace {
 				// in the current namespace that refers to cmdPtr.
 				WrappedCommand oldCommand = ns.cmdTable.get(cmdName);
 				if (oldCommand == null || allowOverwrite) {
-					
-				
+
+
 					// Create the imported command and its client data.
 					// To create the new command in the current namespace,
 					// generate a fully qualified name for it.
@@ -1091,7 +1088,7 @@ public class Namespace {
 						ds.append("::");
 					}
 					ds.append(cmdName);
-					
+
 					cmd = (WrappedCommand) importNs.cmdTable.get(cmdName);
 
 					// Check whether creating the new imported command in the
@@ -1099,18 +1096,16 @@ public class Namespace {
 					// command references that also would destroy an existing
 					// "real" command already in the current namespace.
 					realCmd = cmd;
-					ArrayList<String> importPath = new ArrayList<String>();
-					importPath.add(ns.fullName+"::"+cmdName);
+					ArrayList<String> importPath = new ArrayList<>();
+					importPath.add(ns.fullName + "::" + cmdName);
 					while (realCmd.cmd instanceof ImportedCmdData) {
-						realCmd = ((ImportedCmdData)realCmd.cmd).realCmd;
+						realCmd = ((ImportedCmdData) realCmd.cmd).realCmd;
 						/* What's the name of realCmd in it's namespace?  We could try the obvious */
 						String cmdPath = "";
 						WrappedCommand testcmd = realCmd.ns.cmdTable.get(cmdName);
 						if (testcmd != realCmd) {
 							/* Need to actually search for it */
-							for (Iterator<Map.Entry<String, WrappedCommand>> itr = realCmd.ns.cmdTable.entrySet().iterator();
-									itr.hasNext();) {
-								Map.Entry<String, WrappedCommand> entr = itr.next();
+							for (Map.Entry<String, WrappedCommand> entr : realCmd.ns.cmdTable.entrySet()) {
 								if (entr.getValue() == realCmd) {
 									cmdPath = realCmd.ns.fullName + "::" + entr.getKey();
 									break;
@@ -1119,10 +1114,10 @@ public class Namespace {
 						} else {
 							cmdPath = realCmd.ns.fullName + "::" + cmdName;
 						}
-						
+
 						if (importPath.contains(cmdPath)) {
 							throw new TclException(interp,
-									"import pattern \""+ pattern+ "\" would create a loop containing command \""
+									"import pattern \"" + pattern + "\" would create a loop containing command \""
 											+ cmdPath + "\"");
 						}
 						importPath.add(cmdPath);
@@ -1162,9 +1157,9 @@ public class Namespace {
 							throwException = false;
 						}
 					}
-					if (throwException )
+					if (throwException)
 						throw new TclException(interp, "can't import command \""
-							+ cmdName + "\": already exists");
+								+ cmdName + "\": already exists");
 				}
 			}
 		}
@@ -1218,15 +1213,13 @@ public class Namespace {
 		// may actually be 'ns', if the pattern was not qualified with
 		// a namespace.  Place commands that match the pattern in matchingCommands.
 		
-		ArrayList<WrappedCommand> matchingCommands = new ArrayList<WrappedCommand>();
+		ArrayList<WrappedCommand> matchingCommands = new ArrayList<>();
 
-		for (Iterator<Map.Entry <String, WrappedCommand>> iter = importNs.cmdTable.entrySet().iterator(); iter
-				.hasNext();) {
-			Map.Entry<String, WrappedCommand> entry = iter.next();
+		for (Map.Entry<String, WrappedCommand> entry : importNs.cmdTable.entrySet()) {
 			cmdName = entry.getKey();
 			cmd = entry.getValue();
 
-			if (Util.stringMatch(cmdName, simplePattern)  && cmd!=null) {
+			if (Util.stringMatch(cmdName, simplePattern) && cmd != null) {
 				matchingCommands.add(cmd);
 			}
 		}
@@ -1241,24 +1234,22 @@ public class Namespace {
 			/* Go through all the commands in 'ns' and find imported commands that are imported from importNs and
 			 * are listed in the matchingCommands list
 			 */
-			ArrayList<WrappedCommand> commandsToDelete = new ArrayList<WrappedCommand>(matchingCommands.size());
-			for (Iterator<Map.Entry<String, WrappedCommand>> iter = ns.cmdTable.entrySet().iterator(); iter
-					.hasNext();) {
-				Map.Entry<String, WrappedCommand> entry = iter.next();
+			ArrayList<WrappedCommand> commandsToDelete = new ArrayList<>(matchingCommands.size());
+			for (Map.Entry<String, WrappedCommand> entry : ns.cmdTable.entrySet()) {
 				cmd = entry.getValue();
-				
+
 				if (cmd.cmd instanceof ImportedCmdData) {
 					ImportedCmdData importedCmdData = (ImportedCmdData) cmd.cmd;
 					WrappedCommand originalCommand = getOriginalCommand(cmd);
 					/* Delete command if the command was directly imported from importNs, or if the original command
 					 * exists in importNs
 					 */
-					if ( (importedCmdData.realCmd.ns == importNs && matchingCommands.contains(importedCmdData.realCmd))
+					if ((importedCmdData.realCmd.ns == importNs && matchingCommands.contains(importedCmdData.realCmd))
 							|| (originalCommand.ns == importNs && matchingCommands.contains(originalCommand))) {
 
 						commandsToDelete.add(cmd);
 					}
-					
+
 				}
 			}
 			/* Finally, delete the commands */			
@@ -2078,9 +2069,8 @@ public class Namespace {
 
 					// nsPtr->cmdRefEpoch++;
 
-					for (Iterator iter = ns.cmdTable.entrySet().iterator(); iter
-							.hasNext();) {
-						Map.Entry entry = (Map.Entry) iter.next();
+					for (Map.Entry<String, WrappedCommand> stringWrappedCommandEntry : ns.cmdTable.entrySet()) {
+						Map.Entry entry = (Map.Entry) stringWrappedCommandEntry;
 						wcmd = (WrappedCommand) entry.getValue();
 						wcmd.incrEpoch();
 					}

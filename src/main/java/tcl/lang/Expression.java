@@ -188,7 +188,7 @@ public class Expression {
 	 * Constructor.
 	 */
 	public Expression() {
-		mathFuncTable = new HashMap<String, MathFunction>();
+		mathFuncTable = new HashMap<>();
 
 		// rand -- needs testing
 		// srand -- needs testing
@@ -481,26 +481,27 @@ public class Expression {
 
 			c = s.charAt(1);
 			if (c == '.') {
-				if (s.equals("0.0")) {
-					dval = 0.0;
-					value.setDoubleValue(dval, s);
-					TclDouble.exprSetInternalRep(obj, dval);
-					return;
-				} else if (s.equals("0.5")) {
-					dval = 0.5;
-					value.setDoubleValue(dval, s);
-					TclDouble.exprSetInternalRep(obj, dval);
-					return;
-				} else if (s.equals("1.0")) {
-					dval = 1.0;
-					value.setDoubleValue(dval, s);
-					TclDouble.exprSetInternalRep(obj, dval);
-					return;
-				} else if (s.equals("2.0")) {
-					dval = 2.0;
-					value.setDoubleValue(dval, s);
-					TclDouble.exprSetInternalRep(obj, dval);
-					return;
+				switch (s) {
+					case "0.0":
+						dval = 0.0;
+						value.setDoubleValue(dval, s);
+						TclDouble.exprSetInternalRep(obj, dval);
+						return;
+					case "0.5":
+						dval = 0.5;
+						value.setDoubleValue(dval, s);
+						TclDouble.exprSetInternalRep(obj, dval);
+						return;
+					case "1.0":
+						dval = 1.0;
+						value.setDoubleValue(dval, s);
+						TclDouble.exprSetInternalRep(obj, dval);
+						return;
+					case "2.0":
+						dval = 2.0;
+						value.setDoubleValue(dval, s);
+						TclDouble.exprSetInternalRep(obj, dval);
+						return;
 				}
 			}
 			break;
@@ -1940,8 +1941,8 @@ public class Expression {
 
 		if (releaseValues && values != null) {
 			// Release ExprValue elements in values array
-			for (int i = 0; i < values.length; i++) {
-				releaseExprValue(values[i]);
+			for (ExprValue value : values) {
+				releaseExprValue(value);
 			}
 		}
 	}

@@ -182,9 +182,9 @@ public class TclPosixException extends TclException {
 		int errno;
 		if (errorAt == -1) {
 			iomsg = iomsg.toLowerCase();
-			if (iomsg.indexOf("no such file or directory") != -1) {
+			if (iomsg.contains("no such file or directory")) {
 				errno = ENOENT;
-			} else if (iomsg.indexOf("broken pipe") != -1) {
+			} else if (iomsg.contains("broken pipe")) {
 				errno = EPIPE;
 			} else throw new TclException(interp,iomsg);
 

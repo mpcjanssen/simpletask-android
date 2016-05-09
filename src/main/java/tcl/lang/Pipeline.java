@@ -22,7 +22,7 @@ public class Pipeline implements Runnable {
 	/**
 	 * The processes, in input to output order
 	 */
-	private ArrayList<TclProcess> processes = new ArrayList<TclProcess>();
+	private ArrayList<TclProcess> processes = new ArrayList<>();
 
 	/**
 	 * set to true if 2>@1 seen
@@ -61,7 +61,7 @@ public class Pipeline implements Runnable {
 	 */
 	private static final Set<String> redirectors;
 	static {
-		Set<String> rd = new HashSet<String>(13);
+		Set<String> rd = new HashSet<>(13);
 		rd.add("<");
 		rd.add("<@");
 		rd.add("<<");
@@ -92,7 +92,7 @@ public class Pipeline implements Runnable {
 	 *             if a syntax error occurs
 	 */
 	public Pipeline(Interp interp, TclObject[] objv, int startIndex) throws TclException {
-		ArrayList<String> commandList = new ArrayList<String>();
+		ArrayList<String> commandList = new ArrayList<>();
 		File cwd = interp.getWorkingDir();
 		this.interp = interp;
 
@@ -115,7 +115,7 @@ public class Pipeline implements Runnable {
 					throw new TclException(interp, "illegal use of | or |& in command");
 				}
 				addCommand(commandList, cwd);
-				commandList = new ArrayList<String>(); // reset command list
+				commandList = new ArrayList<>(); // reset command list
 				continue;
 			}
 
@@ -128,7 +128,7 @@ public class Pipeline implements Runnable {
 				int newCmdIndex = addCommand(commandList, cwd);
 				processes.get(newCmdIndex).setStderrRedirect(Redirect.stderrToStdout());
 
-				commandList = new ArrayList<String>(); // reset command list
+				commandList = new ArrayList<>(); // reset command list
 				continue;
 			}
 
@@ -274,8 +274,7 @@ public class Pipeline implements Runnable {
 		/*
 		 * Execute each command in the pipeline
 		 */
-		for (int i = 0; i < processes.size(); i++) {
-			TclProcess process = processes.get(i);
+		for (TclProcess process : processes) {
 			if (process.getStderrRedirect() == null && stderrRedirect != null) {
 				process.setStderrRedirect(stderrRedirect);
 			}
@@ -299,14 +298,14 @@ public class Pipeline implements Runnable {
 		/*
 		 * Wait for processes to finish
 		 */
-		for (int i = 0; i < processes.size(); i++) {
+		for (TclProcess process : processes) {
 			if (force)
-				processes.get(i).destroy();
+				process.destroy();
 			else {
 				try {
-					processes.get(i).waitFor();
+					process.waitFor();
 				} catch (InterruptedException e) {
-					processes.get(i).destroy();
+					process.destroy();
 				} catch (IOException e1) {
 					throw new TclPosixException(interp, e1, true, "Error");
 				}

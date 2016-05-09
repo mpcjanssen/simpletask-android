@@ -119,14 +119,18 @@ public class StdChannel extends Channel {
 	 */
 
 	StdChannel(String stdName) {
-		if (stdName.equals("stdin")) {
-			open(STDIN);
-		} else if (stdName.equals("stdout")) {
-			open(STDOUT);
-		} else if (stdName.equals("stderr")) {
-			open(STDERR);
-		} else {
-			throw new TclRuntimeError("Error: unexpected type for StdChannel");
+		switch (stdName) {
+			case "stdin":
+				open(STDIN);
+				break;
+			case "stdout":
+				open(STDOUT);
+				break;
+			case "stderr":
+				open(STDERR);
+				break;
+			default:
+				throw new TclRuntimeError("Error: unexpected type for StdChannel");
 		}
 	}
 

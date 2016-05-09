@@ -211,7 +211,7 @@ public class CallFrame {
 	private String wrongNumProcArgs(TclObject[] objv, Procedure proc)
 			throws TclException {
 		int i;
-		StringBuffer sbuf = new StringBuffer(200);
+		StringBuilder sbuf = new StringBuilder(200);
 		sbuf.append("wrong # args: should be \"");
 		TclObject procNameList = TclList.newInstance();
         if (proc.isLambda()) {
@@ -272,8 +272,8 @@ public class CallFrame {
 			return alist;
 		}
 
-		for (Iterator iter = varTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Object o : varTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			Var v = (Var) entry.getValue();
 			if (!v.isVarUndefined()) {
 				alist.add(v.hashKey);
@@ -294,8 +294,8 @@ public class CallFrame {
 			return alist;
 		}
 
-		for (Iterator iter = varTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Object o : varTable.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			Var v = (Var) entry.getValue();
 			if (!v.isVarUndefined() && !v.isVarLink()) {
 				alist.add(v.hashKey);

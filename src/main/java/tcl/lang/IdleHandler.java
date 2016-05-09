@@ -141,7 +141,7 @@ public abstract class IdleHandler {
 	 * This method prints a text description of the event for debugging.
 	 */
 	public String toString() {
-		StringBuffer sb = new StringBuffer(64);
+		StringBuilder sb = new StringBuilder(64);
 		sb.append("IdleHandler.generation is " + generation + "\n");
 		return sb.toString();
 	}

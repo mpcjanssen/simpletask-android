@@ -78,7 +78,7 @@ public class Notifier implements EventDeleter {
 	 *  Stores the Notifier for each thread.
 	 */
 
-	private static HashMap<Thread, Notifier> notifierTable = new HashMap<Thread, Notifier>();
+	private static HashMap<Thread, Notifier> notifierTable = new HashMap<>();
 
 	/**
 	 *  List of registered timer handlers.
@@ -131,9 +131,9 @@ public class Notifier implements EventDeleter {
 		lastEvent = null;
 		markerEvent = null;
 
-		timerList = new ArrayList<TimerHandler>();
+		timerList = new ArrayList<>();
 		timerGeneration = 0;
-		idleList = new ArrayList<IdleHandler>();
+		idleList = new ArrayList<>();
 		idleGeneration = 0;
 		timerPending = false;
 		refCount = 0;

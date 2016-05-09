@@ -394,19 +394,19 @@ public class TraceCmd implements Command {
 				// new style trace add ...
 				isNewStyle = true;
 				TclObject opsArray[] = TclList.getElements(interp, objv[start + 1]);
-				for (int i = 0; i < opsArray.length; i++) {
-					if ("read".equals(opsArray[i].toString())) {
+				for (TclObject anOpsArray : opsArray) {
+					if ("read".equals(anOpsArray.toString())) {
 						flags |= TCL.TRACE_READS;
-					} else if ("write".equals(opsArray[i].toString())) {
+					} else if ("write".equals(anOpsArray.toString())) {
 						flags |= TCL.TRACE_WRITES;
-					} else if ("unset".equals(opsArray[i].toString())) {
+					} else if ("unset".equals(anOpsArray.toString())) {
 						flags |= TCL.TRACE_UNSETS;
-					} else if ("array".equals(opsArray[i].toString())) {
+					} else if ("array".equals(anOpsArray.toString())) {
 						flags |= TCL.TRACE_ARRAY;
 					} else {
-						throw new TclException(interp, "bad operation \"" + opsArray[i].toString()
+						throw new TclException(interp, "bad operation \"" + anOpsArray.toString()
 								+ "\": must be array, read, unset, or write");
-					}	
+					}
 				}
 				if (flags == 0) {
 					throw new TclException(interp, "bad operation list \"" + objv[start + 1]

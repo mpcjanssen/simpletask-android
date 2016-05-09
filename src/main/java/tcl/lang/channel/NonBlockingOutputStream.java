@@ -58,7 +58,7 @@ class NonBlockingOutputStream extends FilterOutputStream implements Runnable {
 		super(out);
 		setBlocking(blocking);
 		this.channel = channel;
-		queue = new ConcurrentLinkedQueue<Transaction>();
+		queue = new ConcurrentLinkedQueue<>();
 		
 		/* 
 		 * The bkgndWriter thread reads the queue in both blocking and non-blocking mode.

@@ -303,8 +303,8 @@ public class InfoCmd implements Command {
 		list = TclList.newInstance();
 
 		if (ns != null) {
-			for (Iterator iter = ns.cmdTable.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Entry<String, WrappedCommand> stringWrappedCommandEntry1 : ns.cmdTable.entrySet()) {
+				Entry entry = (Entry) stringWrappedCommandEntry1;
 				cmdName = (String) entry.getKey();
 
 				if ((simplePattern == null) || Util.stringMatch(cmdName, simplePattern)) {
@@ -325,8 +325,8 @@ public class InfoCmd implements Command {
 			// the effective namespace.
 
 			if ((ns != globalNs) && !specificNsInPattern) {
-				for (Iterator iter = globalNs.cmdTable.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
+				for (Entry<String, WrappedCommand> stringWrappedCommandEntry : globalNs.cmdTable.entrySet()) {
+					Entry entry = (Entry) stringWrappedCommandEntry;
 					cmdName = (String) entry.getKey();
 					if ((simplePattern == null) || Util.stringMatch(cmdName, simplePattern)) {
 						if (ns.cmdTable.get(cmdName) == null) {
@@ -473,10 +473,9 @@ public class InfoCmd implements Command {
 		list = TclList.newInstance();
 
 		Set set = mathFns.mathFuncTable.entrySet();
-		Iterator it = set.iterator();
 
-		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
+		for (Object aSet : set) {
+			Entry entry = (Entry) aSet;
 			varName = (String) entry.getKey();
 
 			if ((pattern == null) || Util.stringMatch(varName, pattern)) {
@@ -518,8 +517,8 @@ public class InfoCmd implements Command {
 
 		list = TclList.newInstance();
 
-		for (Iterator iter = globalNs.varTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Entry<String, Var> stringVarEntry : globalNs.varTable.entrySet()) {
+			Entry entry = (Entry) stringVarEntry;
 			varName = (String) entry.getKey();
 			var = (Var) entry.getValue();
 			if (var.isVarUndefined()) {
@@ -876,17 +875,16 @@ public class InfoCmd implements Command {
 
 		list = TclList.newInstance();
 		if (namespace != null) {
-			for (Iterator<Entry<String, WrappedCommand>> iter = namespace.cmdTable.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry<String, WrappedCommand> entry = iter.next();
+			for (Entry<String, WrappedCommand> entry : namespace.cmdTable.entrySet()) {
 				cmdName = entry.getKey();
 				cmd = entry.getValue();
-	
+
 				// If the command isn't itself a proc, it still might be an
 				// imported command that points to a "real" proc in a different
 				// namespace.
-	
+
 				realCmd = Namespace.getOriginalCommand(cmd);
-	
+
 				if (Procedure.isProc(cmd) || ((realCmd != null) && Procedure.isProc(realCmd))) {
 					if ((pattern == null) || Util.stringMatch(cmdName, pattern)) {
 						String result = (namespaceName == null ? "" : namespace.toString() + "::") + cmdName;
@@ -1032,8 +1030,8 @@ public class InfoCmd implements Command {
 			// but a specific namespace was specified. Create a list containing
 			// only the variables in the effective namespace's variable table.
 
-			for (Iterator iter = ns.varTable.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Entry<String, Var> stringVarEntry1 : ns.varTable.entrySet()) {
+				Entry entry = (Entry) stringVarEntry1;
 				varName = (String) entry.getKey();
 				var = (Var) entry.getValue();
 
@@ -1057,8 +1055,8 @@ public class InfoCmd implements Command {
 			// namespace.
 
 			if ((ns != globalNs) && !specificNsInPattern) {
-				for (Iterator iter = globalNs.varTable.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
+				for (Entry<String, Var> stringVarEntry : globalNs.varTable.entrySet()) {
+					Entry entry = (Entry) stringVarEntry;
 					varName = (String) entry.getKey();
 					var = (Var) entry.getValue();
 

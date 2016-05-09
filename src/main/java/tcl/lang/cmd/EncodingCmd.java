@@ -166,11 +166,9 @@ public class EncodingCmd implements Command {
 		// Store entries in a Hashtable, so that access from
 		// multiple threads will be synchronized.
 
-		encodeHash = new Hashtable<String, EncodingMap> ();
+		encodeHash = new Hashtable<>();
 
-		for (int i = 0; i < encodings.length; i++) {
-			EncodingMap map = encodings[i];
-
+		for (EncodingMap map : encodings) {
 			String tclKey = "tcl," + map.tclName;
 			String javaKey = "java," + map.javaName;
 
@@ -187,7 +185,7 @@ public class EncodingCmd implements Command {
 		
 		Charset defaultCharset = Charset.defaultCharset();
 		Set<String> aliases = defaultCharset.aliases();
-		ArrayList<String> all = new ArrayList<String>(aliases.size()+1);
+		ArrayList<String> all = new ArrayList<>(aliases.size() + 1);
 		all.add(defaultCharset.name());
 		all.addAll(aliases);
 		
@@ -292,37 +290,45 @@ public class EncodingCmd implements Command {
 			try {
 				if (index == OPT_CONVERTFROM) {
 					// this doesn't preserve tclbytearray on identity
-					if (tclEncoding.equals("identity")) {
-						// preserve the original bytes as a TclByteArray
-						TclByteArray.getLength(interp, data);
-						interp.setResult(data);
-					} else if (tclEncoding.equals("symbol")) {
-						char [] cbuf = new char[TclByteArray.getLength(interp,data)];
-						decodeSymbol(TclByteArray.getBytes(interp, data), cbuf, 0, cbuf.length);
-						interp.setResult(new String(cbuf));
-					} else {
-						interp.setResult(TclByteArray.decodeToString(interp, data, tclEncoding));
+					switch (tclEncoding) {
+						case "identity":
+							// preserve the original bytes as a TclByteArray
+							TclByteArray.getLength(interp, data);
+							interp.setResult(data);
+							break;
+						case "symbol":
+							char[] cbuf = new char[TclByteArray.getLength(interp, data)];
+							decodeSymbol(TclByteArray.getBytes(interp, data), cbuf, 0, cbuf.length);
+							interp.setResult(new String(cbuf));
+							break;
+						default:
+							interp.setResult(TclByteArray.decodeToString(interp, data, tclEncoding));
+							break;
 					}
 				} else /* OPT_CONVERTTO */ {
-					if (tclEncoding.equals("identity")) {
-						if (data.isByteArrayType())
-							interp.setResult(data);
-						else {
-							// convert to TclByteArray, using modified UTF8, where \u0000 is 0xc0 0x80
-							// We'll use a DataOutputStream.writeUTF() to do this for us
-							ByteArrayOutputStream bos = new ByteArrayOutputStream(data.toString().length()*3);
-							DataOutputStream dos = new DataOutputStream(bos);
-							dos.writeUTF(data.toString());
-							
-							byte [] bytes = bos.toByteArray();
-							interp.setResult(TclByteArray.newInstance(bytes, 2, bytes.length-2));
-						}
-					} else if (tclEncoding.equals("symbol")) {
-						byte [] bbuf = encodeSymbol(data.toString().toCharArray(), 0, data.toString().length());
-						interp.setResult(TclByteArray.newInstance(bbuf, 0, bbuf.length));
-					} else {
-						TclObject rv = TclByteArray.newInstance(data.toString().getBytes(javaEncoding));
-						interp.setResult(rv);
+					switch (tclEncoding) {
+						case "identity":
+							if (data.isByteArrayType())
+								interp.setResult(data);
+							else {
+								// convert to TclByteArray, using modified UTF8, where \u0000 is 0xc0 0x80
+								// We'll use a DataOutputStream.writeUTF() to do this for us
+								ByteArrayOutputStream bos = new ByteArrayOutputStream(data.toString().length() * 3);
+								DataOutputStream dos = new DataOutputStream(bos);
+								dos.writeUTF(data.toString());
+
+								byte[] bytes = bos.toByteArray();
+								interp.setResult(TclByteArray.newInstance(bytes, 2, bytes.length - 2));
+							}
+							break;
+						case "symbol":
+							byte[] bbuf = encodeSymbol(data.toString().toCharArray(), 0, data.toString().length());
+							interp.setResult(TclByteArray.newInstance(bbuf, 0, bbuf.length));
+							break;
+						default:
+							TclObject rv = TclByteArray.newInstance(data.toString().getBytes(javaEncoding));
+							interp.setResult(rv);
+							break;
 					}
 				}
 
@@ -341,9 +347,7 @@ public class EncodingCmd implements Command {
 			}
 
 			TclObject list = TclList.newInstance();
-			for (int i = 0; i < encodings.length; i++) {
-				EncodingMap map = encodings[i];
-
+			for (EncodingMap map : encodings) {
 				// Encodings that exists in the table but
 				// is not supported by the runtime should
 				// not be returned.

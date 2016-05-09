@@ -235,10 +235,8 @@ public class TclIO {
 	 */
 	public static void flushAllOpenChannels(Interp interp) {
 		HashMap<String, Channel> chanTable = getInterpChanTable(interp);
-		Iterator<Channel> chanIt = chanTable.values().iterator();
 
-		while (chanIt.hasNext()) {
-			Channel channel = chanIt.next();
+		for (Channel channel : chanTable.values()) {
 			if (channel.isWriteOnly() || channel.isReadWrite()) {
 				boolean blockingMode = channel.getBlocking();
 				if (!blockingMode)
@@ -355,7 +353,7 @@ public class TclIO {
 		Channel chan;
 		
 		if (interp.interpChanTable == null) {
-			interp.interpChanTable = new HashMap<String, Channel>();
+			interp.interpChanTable = new HashMap<>();
 
 			chan = getStdChannel(StdChannel.STDIN);
 			registerChannel(interp, chan);
@@ -460,20 +458,22 @@ public class TclIO {
 	 */
 
 	public static int getTranslationID(String translation) {
-		if (translation.equals("auto"))
-			return TRANS_AUTO;
-		else if (translation.equals("cr"))
-			return TRANS_CR;
-		else if (translation.equals("crlf"))
-			return TRANS_CRLF;
-		else if (translation.equals("lf"))
-			return TRANS_LF;
-		else if (translation.equals("binary"))
-			return TRANS_LF;
-		else if (translation.equals("platform"))
-			return TRANS_PLATFORM;
-		else
-			return -1;
+		switch (translation) {
+			case "auto":
+				return TRANS_AUTO;
+			case "cr":
+				return TRANS_CR;
+			case "crlf":
+				return TRANS_CRLF;
+			case "lf":
+				return TRANS_LF;
+			case "binary":
+				return TRANS_LF;
+			case "platform":
+				return TRANS_PLATFORM;
+			default:
+				return -1;
+		}
 	}
 
 	/**
@@ -502,14 +502,16 @@ public class TclIO {
 	 */
 
 	public static int getBufferingID(String buffering) {
-		if (buffering.equals("full"))
-			return BUFF_FULL;
-		else if (buffering.equals("line"))
-			return BUFF_LINE;
-		else if (buffering.equals("none"))
-			return BUFF_NONE;
-		else
-			return -1;
+		switch (buffering) {
+			case "full":
+				return BUFF_FULL;
+			case "line":
+				return BUFF_LINE;
+			case "none":
+				return BUFF_NONE;
+			default:
+				return -1;
+		}
 	}
 
 }
