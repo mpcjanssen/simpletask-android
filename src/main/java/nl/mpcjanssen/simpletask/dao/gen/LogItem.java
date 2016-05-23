@@ -6,6 +6,7 @@ package nl.mpcjanssen.simpletask.dao.gen;
  */
 public class LogItem {
 
+    private Long id;
     /** Not-null value. */
     private java.util.Date timestamp;
     /** Not-null value. */
@@ -20,12 +21,25 @@ public class LogItem {
     public LogItem() {
     }
 
-    public LogItem(java.util.Date timestamp, String severity, String tag, String message, String exception) {
+    public LogItem(Long id) {
+        this.id = id;
+    }
+
+    public LogItem(Long id, java.util.Date timestamp, String severity, String tag, String message, String exception) {
+        this.id = id;
         this.timestamp = timestamp;
         this.severity = severity;
         this.tag = tag;
         this.message = message;
         this.exception = exception;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /** Not-null value. */

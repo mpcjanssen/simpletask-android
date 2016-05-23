@@ -30,7 +30,7 @@ object Logger {
             throwable?.let {
                 throwableMessage = Log.getStackTraceString(throwable)
             }
-            val item = LogItem(Date(), severity, tag, s, throwableMessage)
+            val item = LogItem(null, Date(), severity, tag, s, throwableMessage)
             dao?.insert(item)
         }
     }
