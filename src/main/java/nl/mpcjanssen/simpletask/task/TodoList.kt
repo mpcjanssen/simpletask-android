@@ -251,7 +251,6 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         todolistQueue!!.post {
             if (save) {
                 log.info(TAG, "Handler: Handle notifyChanged")
-                log.info(TAG, "Saving todo list, size ${size()}")
                 save(fileStore, todoName, backup, eol)
             }
             if (mTodoListChanged != null) {
@@ -320,6 +319,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 val lines = items.map {
                     it.task.text
                 }
+                log.info(TAG, "Saving todo list, size ${lines.size}")
                 fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
             } catch (e: IOException) {
                 e.printStackTrace()

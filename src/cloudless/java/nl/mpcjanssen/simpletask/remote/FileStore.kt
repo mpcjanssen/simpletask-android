@@ -72,17 +72,20 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
     }
 
     @Synchronized override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
-        log.info(TAG, "Loading tasks from file: {}" + path)
+        log.info(TAG, "Loading tasks")
         val result = CopyOnWriteArrayList<String>()
         isLoading = true
         try {
             val completeFile = ArrayList<String>()
-            for (line in loadFromFile(File(path))) {
+            val lines = File(path).readLines()
+            log.info(TAG, "Read ${lines.size} lines from $path")
+            for (line in lines) {
                 completeFile.add(line)
                 result.add(line)
             }
             backup?.backup(path, join(completeFile, "\n"))
         } catch (e: IOException) {
+            log.info(TAG, "Read read failed", e)
             e.printStackTrace()
         } finally {
             isLoading = false
@@ -104,7 +107,8 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
         log.info(TAG, "Reading file: {}" + file)
         isLoading = true
         var contents : String
-        contents = join(loadFromFile(File(file)), "\n")
+        val lines = File(file).readLines()
+        contents = join(lines, "\n")
         isLoading = false
         fileRead?.fileRead(contents)
         return contents
@@ -151,10 +155,11 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
         val obs = observer
         obs?.ignoreEvents(true)
 
-        queueRunnable("Save to file " + path, Runnable {
+        queueRunnable("Save ${lines.size} lines to file " + path, Runnable {
             try {
                 writeToFile(join(lines, eol) + eol, File(path), false)
             } catch (e: IOException) {
+                log.error(TAG, "Saving $path failed" ,e)
                 e.printStackTrace()
             } finally {
                 obs?.delayedStartListen(1000)
@@ -164,10 +169,8 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
-        log.info(TAG, "Appending tasks to file: " + path)
-        val size = lines.size
-        queueRunnable("Appending $size tasks to $path", Runnable {
-            log.info(TAG, "Appending $size tasks to $path")
+        queueRunnable("Appending  ${lines.size} lines tasks to $path", Runnable {
+            log.info(TAG, "Appending ${lines.size} tasks to $path")
             try {
                 writeToFile(join(lines, eol) + eol, File(path), true)
             } catch (e: IOException) {
