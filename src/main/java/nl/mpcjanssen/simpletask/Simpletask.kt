@@ -1196,7 +1196,16 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     intent = Intent(Intent.ACTION_EDIT).setType(Constants.ANDROID_EVENT).putExtra(Events.TITLE, calendarTitle).putExtra(Events.DESCRIPTION, calendarDescription)
                     // Explicitly set start and end date/time.
                     // Some calendar providers need this.
-                    val calDate = GregorianCalendar()
+                    val dueDate =  checkedTasks[0].task.dueDate
+                    val calDate = if (checkedTasks.size == 1 && dueDate != null ) {
+                        val year = dueDate.substring(0,4).toInt()
+                        val month =  dueDate.substring(5,7).toInt()-1
+                        val day =  dueDate.substring(8,10).toInt()
+                        GregorianCalendar(year, month, day)
+                    } else {
+                        GregorianCalendar()
+                    }
+
                     intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
                             calDate.timeInMillis)
                     intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
