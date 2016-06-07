@@ -47,11 +47,11 @@ public class ByProjectFilter implements TaskFilter {
 
 
     @Override
-    public boolean apply(@NonNull Task input) {
+    public boolean apply(@NonNull Task t) {
         if (not) {
-            return !filter(input);
+            return !filter(t);
         } else {
-            return filter(input);
+            return filter(t);
         }
     }
 
