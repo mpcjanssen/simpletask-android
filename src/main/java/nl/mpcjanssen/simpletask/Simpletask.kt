@@ -147,6 +147,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         if (m_app.isDarkTheme) {
             val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
             actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
+        } else {
+            val btnFilterAdd = findViewById(R.id.btn_filter_add) as ImageButton?
+            btnFilterAdd?.setColorFilter(resources.getColor(android.R.color.holo_blue_dark, null));
+
+            val btnFilterImport = findViewById(R.id.btn_filter_import) as ImageButton?
+            btnFilterImport?.setColorFilter(resources.getColor(android.R.color.holo_blue_dark, null));
         }
 
     }
