@@ -726,7 +726,11 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 if (entries == null) {
                     return
                 }
-                if (!entries.isDir) return
+                if (!entries.isDir) {
+                    // Not pointing to dir, restart from root.
+                    loadFileList(act, api, File("/"))
+                    return
+                }
                 if (path.toString() != "/") {
                     d.add(PARENT_DIR)
                 }
