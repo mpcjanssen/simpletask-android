@@ -538,7 +538,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         super.onResume()
         m_app.fileStore.pause(false)
         if (fileStore.isLoading) {
-            showListiewProgess(true)
+            showListViewProgress(true)
         }
         handleIntent()
     }
