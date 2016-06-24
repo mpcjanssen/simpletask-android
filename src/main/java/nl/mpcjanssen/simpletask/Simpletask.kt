@@ -14,7 +14,6 @@ package nl.mpcjanssen.simpletask
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.app.SearchManager
 import android.content.*
 import android.content.res.Configuration
@@ -41,6 +40,7 @@ import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
@@ -63,7 +63,7 @@ import java.io.IOException
 import java.util.*
 
 
-class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongClickListener {
     val queue = MessageQueue("MainActivity")
 
     internal var options_menu: Menu? = null
@@ -116,29 +116,31 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
                     archiveTasks(null)
-                } else if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
-                    log!!.info(TAG, "Logging out from Dropbox")
-                    fileStore.logout()
-                    finish()
-                    startActivity(intent)
-                } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
-                    log!!.info(TAG, "Updating UI because of broadcast")
-                    if (m_adapter == null) {
-                        return
+                } else {
+                    if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
+                        log!!.info(TAG, "Logging out from Dropbox")
+                        fileStore.logout()
+                        finish()
+                        startActivity(intent)
+                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
+                        log!!.info(TAG, "Updating UI because of broadcast")
+                        if (m_adapter == null) {
+                            return
+                        }
+                        m_adapter!!.setFilteredTasks()
+                        updateDrawers()
+                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
+                        showListViewProgress(true)
+                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
+                        showListViewProgress(false)
+                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
+                        updateConnectivityIndicator()
+                    } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                        handleIntent()
+                    } else if ( receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
+                            receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
+                        recreate()
                     }
-                    m_adapter!!.setFilteredTasks()
-                    updateDrawers()
-                } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
-                    showListiewProgess(true)
-                } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
-                    showListiewProgess(false)
-                } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
-                    updateConnectivityIndicator()
-                } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
-                    handleIntent()
-                } else if ( receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
-                        receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
-                    recreate()
                 }
             }
         }
@@ -159,10 +161,10 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
         } else {
             val btnFilterAdd = findViewById(R.id.btn_filter_add) as ImageButton?
-            btnFilterAdd?.setColorFilter(resources.getColor(android.R.color.holo_blue_dark, null));
+            btnFilterAdd?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
 
             val btnFilterImport = findViewById(R.id.btn_filter_import) as ImageButton?
-            btnFilterImport?.setColorFilter(resources.getColor(android.R.color.holo_blue_dark, null));
+            btnFilterImport?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
         }
 
     }
@@ -1001,7 +1003,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             }
             updateDrawers()
         }
-        m_rightDrawerList!!.onItemLongClickListener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
+        m_rightDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
             val filter = filters[position]
             val prefsName = filter.prefName!!
             val popupMenu = PopupMenu(this@Simpletask, view)
@@ -1270,7 +1272,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
             return lv as ListView
         }
 
-    fun showListiewProgess (show: Boolean) {
+    fun showListViewProgress(show: Boolean) {
         val progressBar = findViewById(R.id.empty_progressbar)
         val filteredView = findViewById(R.id.filtered_view)
         if (show) {
@@ -1297,7 +1299,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         internal fun setFilteredTasks() {
             queue.add("setFilterTasks", Runnable {
                 runOnUiThread() {
-                    showListiewProgess(true)
+                    showListViewProgress(true)
                 }
                 val visibleTasks: List<TodoListItem>
                 log!!.info(TAG, "setFilteredTasks called: " + todoList)
@@ -1334,7 +1336,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 val firstSort = sorts[firstGroupSortIndex]
                 newVisibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
                 runOnUiThread {
-                    // Replace the array in the main thread to prevent OutOfIndex excpetions
+                    // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
                     notifyDataSetChanged()
                     if (m_app.showTodoPath()) {
@@ -1344,7 +1346,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     }
                     updateConnectivityIndicator();
                     updateFilterBar()
-                    showListiewProgess(false)
+                    showListViewProgress(false)
                 }
             })
         }
@@ -1409,7 +1411,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                 t.textSize = m_app.activeFontSize
 
             } else {
-                var holder: ViewHolder
+                val holder: ViewHolder
                 if (view == null) {
                     view = m_inflater.inflate(R.layout.list_item, parent, false)
                     holder = ViewHolder()
