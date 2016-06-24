@@ -71,9 +71,9 @@ class TodoApplication : Application(),
     lateinit var prefs: SharedPreferences
 
     override fun onCreate() {
-        log.debug(TAG, "onCreate()")
+
         super.onCreate()
-        log.info(TAG, "Started ${appVersion(this)}")
+
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
@@ -83,6 +83,9 @@ class TodoApplication : Application(),
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
         log.setDao(logDao)
+
+        log.debug(TAG, "onCreate()")
+        log.info(TAG, "Started ${appVersion(this)}")
 
         setupUncaughtExceptionHandler()
         val intentFilter = IntentFilter()
