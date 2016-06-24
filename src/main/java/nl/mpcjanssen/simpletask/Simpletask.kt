@@ -94,7 +94,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         super.onCreate(savedInstanceState)
         log = Logger
         log.info(TAG, "onCreate")
-        log.info(TAG, "Started ${appVersion(this)}")
+
         m_app = application as TodoApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
@@ -157,6 +157,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
         if (m_app.isDarkTheme) {
             val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
             actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
+        } else {
+            val btnFilterAdd = findViewById(R.id.btn_filter_add) as ImageButton?
+            btnFilterAdd?.setColorFilter(resources.getColor(android.R.color.holo_blue_dark, null));
+
+            val btnFilterImport = findViewById(R.id.btn_filter_import) as ImageButton?
+            btnFilterImport?.setColorFilter(resources.getColor(android.R.color.holo_blue_dark, null));
         }
 
     }
@@ -1212,7 +1218,16 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, AdapterView.O
                     intent = Intent(Intent.ACTION_EDIT).setType(Constants.ANDROID_EVENT).putExtra(Events.TITLE, calendarTitle).putExtra(Events.DESCRIPTION, calendarDescription)
                     // Explicitly set start and end date/time.
                     // Some calendar providers need this.
-                    val calDate = GregorianCalendar()
+                    val dueDate =  checkedTasks[0].task.dueDate
+                    val calDate = if (checkedTasks.size == 1 && dueDate != null ) {
+                        val year = dueDate.substring(0,4).toInt()
+                        val month =  dueDate.substring(5,7).toInt()-1
+                        val day =  dueDate.substring(8,10).toInt()
+                        GregorianCalendar(year, month, day)
+                    } else {
+                        GregorianCalendar()
+                    }
+
                     intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
                             calDate.timeInMillis)
                     intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,

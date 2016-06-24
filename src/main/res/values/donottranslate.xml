@@ -154,6 +154,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dropbox_latest_cursor" translatable="false">dropbox_latest_cursor</string>
     <string name="custom_font_size" translatable="false">custom_font_size</string>
     <string name="font_size" translatable="false">font_size</string>
+    <string name="font_key" translatable="false">font_key</string>
     <string name="datebar_relative_size" translatable="false">datebar_delta_sp</string>
 </resources>
 

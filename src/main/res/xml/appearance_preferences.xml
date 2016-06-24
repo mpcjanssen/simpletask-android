@@ -7,10 +7,19 @@
         android:entryValues="@array/theme_values"
         android:summary="%s"
         android:title="@string/theme_pref_title"/>
+
+    <nl.mpcjanssen.simpletask.util.FontPreference
+            android:defaultValue=""
+            android:key="@string/font_key"
+            android:summary="%s"
+            android:title="Custom Font" />
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/custom_font_size"
         android:title="@string/font_size_delta_pref_title"/>
+
+
     <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
         android:dependency="@string/custom_font_size"
         android:key="@string/font_size"

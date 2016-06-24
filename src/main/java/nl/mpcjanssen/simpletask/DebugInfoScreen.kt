@@ -30,7 +30,7 @@ class DebugInfoScreen : ThemedActivity() {
 
         val myDataset = ArrayList<String>()
         m_app = application as TodoApplication
-        for (entry in m_app!!.logDao.queryBuilder().orderDesc(LogItemDao.Properties.Timestamp).list()) {
+        for (entry in m_app!!.logDao.queryBuilder().orderDesc(LogItemDao.Properties.Id).list()) {
             val line = logItemToString(entry)
             myDataset.add(line)
         }

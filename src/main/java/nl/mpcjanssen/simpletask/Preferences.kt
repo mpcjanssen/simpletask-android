@@ -37,6 +37,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.MenuItem
+import nl.mpcjanssen.simpletask.util.FontManager
 import java.util.*
 
 
@@ -73,6 +74,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
         if (    getString(R.string.theme_pref_key) == key ||
                 getString(R.string.custom_font_size) == key ||
                 getString(R.string.font_size) == key ) {
+            onContentChanged()
             val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
             intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, AppearancePrefFragment::class.java.name);
             localBroadcastManager.sendBroadcast(broadcastIntent)
@@ -150,7 +152,28 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     }
 
-    class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences)
+    class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences), SharedPreferences.OnSharedPreferenceChangeListener {
+        val fonts = FontManager.enumerateFonts()
+        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+            if (activity.getString(R.string.font_key).equals(key)) {
+                updateFontSummary()
+            }
+        }
+        fun updateFontSummary() {
+            val fontPref = findPreference(getString(R.string.font_key))
+            fontPref.valueInSummary(fonts[fontPref.sharedPreferences.getString(fontPref.key, "")])
+            fontPref.setOnPreferenceChangeListener { preference, any ->
+                preference.summary = "%s"
+                preference.valueInSummary(fonts[any])
+                true
+            }
+
+        }
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            updateFontSummary()
+        }
+    }
     class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
     class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
     class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
@@ -214,5 +237,5 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
 // Helper to replace %s in all setting summaries not only ListPreferences
 fun Preference.valueInSummary(any: Any? = null) {
-    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?: this.sharedPreferences.getString(this.key, null))
-}
+    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?: this.sharedPreferences.getString(this.key, ""))
+    }
