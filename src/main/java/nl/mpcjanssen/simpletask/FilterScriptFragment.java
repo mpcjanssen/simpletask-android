@@ -23,6 +23,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class FilterScriptFragment extends Fragment {
 
@@ -80,13 +81,12 @@ public class FilterScriptFragment extends Fragment {
                 Task t = new Task(getTestTask());
                 try {
                     String script = getScript();
-                    InputStream input = new ByteArrayInputStream(script.getBytes());
-                    Prototype prototype = LuaC.instance.compile(input, "script");
-                    Globals globals = JsePlatform.standardGlobals();
+                     Globals _G = JsePlatform.standardGlobals();
+                    _G.load( script ).call();
 
-                    Util.initGlobals(globals, t);
-                    LuaClosure closure = new LuaClosure(prototype, globals);
-                    LuaValue result = closure.call();
+                    LuaValue onFilter = _G.get("onFilter");
+                    Varargs args = Util.initVarargs(t);
+                    LuaValue result = onFilter.invoke(args).arg1();
 
                     tvResult.setText(result.toString());
 
@@ -99,8 +99,6 @@ public class FilterScriptFragment extends Fragment {
                     log.debug(TAG, "Lua execution failed " + e.getMessage());
                     tvBooleanResult.setText("error");
                     tvResult.setText(e.getMessage());
-                } catch (IOException e) {
-                    log.debug(TAG, "Execution failed " + e.getMessage());
                 }
             }
 

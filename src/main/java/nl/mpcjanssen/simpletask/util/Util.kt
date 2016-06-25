@@ -270,25 +270,37 @@ fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListene
 }
 
 
-fun initGlobals(globals: Globals, t: Task) {
-    globals.set("task", t.inFileFormat())
+fun initVarargs(t: Task) : Varargs {
+    val args = ArrayList<LuaValue>();
+    args.add(LuaValue.valueOf(t.inFileFormat()))
+    val fieldTable = LuaTable.tableOf()
+    fieldTable.set("task", t.inFileFormat())
 
-    globals.set("due", dateStringToLuaLong(t.dueDate))
-    globals.set("threshold", dateStringToLuaLong(t.thresholdDate))
-    globals.set("createdate", dateStringToLuaLong(t.createDate))
-    globals.set("completiondate", dateStringToLuaLong(t.completionDate))
+    fieldTable.set("due", dateStringToLuaLong(t.dueDate))
+    fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
+    fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
+    fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
 
     val recPat = t.recurrencePattern
     if (recPat == null) {
-        globals.set("recurrence", LuaValue.NIL)
+        fieldTable.set("recurrence", LuaValue.NIL)
     } else {
-        globals.set("recurrence", t.recurrencePattern)
+        fieldTable.set("recurrence", t.recurrencePattern)
     }
-    globals.set("completed", LuaBoolean.valueOf(t.isCompleted()))
-    globals.set("priority", t.priority.code)
+    fieldTable.set("completed", LuaBoolean.valueOf(t.isCompleted()))
+    fieldTable.set("priority", t.priority.code)
 
-    globals.set("tags", javaListToLuaTable(t.tags))
-    globals.set("lists", javaListToLuaTable(t.lists))
+    fieldTable.set("tags", javaListToLuaTable(t.tags))
+    fieldTable.set("lists", javaListToLuaTable(t.lists))
+
+    args.add(fieldTable)
+
+    // TODO: implement
+    val extensionTable = LuaTable.tableOf()
+    args.add(extensionTable)
+
+    return LuaValue.varargsOf(args.toTypedArray())
+
 }
 
 fun dateStringToLuaLong(dateString: String?): LuaValue {
