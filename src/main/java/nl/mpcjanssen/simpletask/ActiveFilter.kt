@@ -8,12 +8,8 @@ import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import org.luaj.vm2.*
-import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.jse.JsePlatform
 
-
-import java.io.ByteArrayInputStream
-import java.io.IOException
 import java.util.*
 
 /**
@@ -227,8 +223,7 @@ class ActiveFilter {
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
-        var prototype: Prototype? = null
-        var globals: Globals? = null
+        var _G: Globals? = null
         if (items == null) {
             return ArrayList()
         }
@@ -238,9 +233,8 @@ class ActiveFilter {
             if (script == null) script = ""
             script = script.trim { it <= ' ' }
             if (useScript && !script.isEmpty()) {
-                val input = ByteArrayInputStream(script.toByteArray())
-                prototype = LuaC.instance.compile(input, "script")
-                globals = JsePlatform.standardGlobals()
+                _G = JsePlatform.standardGlobals()
+                _G.load(script).call()
             }
             var idx = -1
             for (item in items) {
@@ -262,11 +256,10 @@ class ActiveFilter {
                     continue
                 }
                 if (useScript && !script.isEmpty()) {
-                    if (globals != null && prototype != null) {
-                        initGlobals(globals, t)
-                        globals.set("idx", idx)
-                        val closure = LuaClosure(prototype, globals)
-                        val result = closure.call()
+                    if (_G != null ) {
+                        val onFilter = _G.get("onFilter")
+                        val args = initVarargs(t)
+                        val result = onFilter.invoke(args).arg1()
                         if (!result.toboolean()) {
                             continue
                         }
@@ -276,8 +269,6 @@ class ActiveFilter {
             }
         } catch (e: LuaError) {
             log.debug(TAG, "Lua execution failed " + e.message)
-        } catch (e: IOException) {
-            log.debug(TAG, "Execution failed " + e.message)
         }
 
         return matched
