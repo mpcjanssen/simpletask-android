@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:text="Script" />
 
+
     <EditText
         android:id="@+id/txt_script"
         android:layout_width="match_parent"
@@ -25,6 +26,12 @@
         android:layout_weight="1"
         android:gravity="top|left"
         android:inputType="text|textMultiLine"/>
+    <Spinner
+            android:id="@+id/luaCallBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/callBacks"
+            android:text="Callback" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

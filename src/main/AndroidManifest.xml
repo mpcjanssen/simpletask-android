@@ -146,6 +146,7 @@ You should have received a copy of the GNU General Public License along with Sim
         </activity>
         <activity
             android:name=".FilterActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="true"
             android:label="@string/title_activity_filter" >
             <intent-filter>

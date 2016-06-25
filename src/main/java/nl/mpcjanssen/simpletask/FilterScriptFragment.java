@@ -8,11 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.luaj.vm2.*;
@@ -35,6 +31,7 @@ public class FilterScriptFragment extends Fragment {
     private EditText txtTestTask;
     private TextView tvResult;
     private TextView tvBooleanResult;
+    private Spinner spnCallBack;
     private Logger log;
 
     @Override
@@ -74,6 +71,7 @@ public class FilterScriptFragment extends Fragment {
         txtTestTask = (EditText) layout.findViewById(R.id.txt_testtask);
         tvResult = (TextView) layout.findViewById(R.id.result);
         tvBooleanResult = (TextView) layout.findViewById(R.id.booleanResult);
+        spnCallBack = (Spinner) layout.findViewById(R.id.luaCallBack);
         Button btnTest = (Button) layout.findViewById(R.id.btnTest);
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,9 +82,12 @@ public class FilterScriptFragment extends Fragment {
                      Globals _G = JsePlatform.standardGlobals();
                     _G.load( script ).call();
 
-                    LuaValue onFilter = _G.get("onFilter");
+                    // get selected callback
+                    String callBack = spnCallBack.getSelectedItem().toString();
+                    LuaValue callback = _G.get(callBack);
+
                     Varargs args = Util.initVarargs(t);
-                    LuaValue result = onFilter.invoke(args).arg1();
+                    LuaValue result = callback.invoke(args).arg1();
 
                     tvResult.setText(result.toString());
 
