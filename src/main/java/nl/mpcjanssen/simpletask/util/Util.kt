@@ -313,13 +313,12 @@ fun dateStringToLuaLong(dateString: String?): LuaValue {
 fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
     val size = javaList.count()
     if (size == 0) return LuaValue.NIL
-    val luaArray = arrayOfNulls<LuaString>(javaList.count())
+    val luaTable = LuaValue.tableOf()
     var i = 0
     for (item in javaList) {
-        luaArray[i] = LuaString.valueOf(item)
-        i++
+        luaTable.set(item, LuaValue.TRUE)
     }
-    return LuaTable.listOf(luaArray)
+    return luaTable
 }
 
 @Throws(IOException::class)
