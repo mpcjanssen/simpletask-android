@@ -223,7 +223,7 @@ class ActiveFilter {
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
-        var _G: Globals? = null
+        var onFilter : LuaValue = LuaValue.NIL
         if (items == null) {
             return ArrayList()
         }
@@ -233,8 +233,9 @@ class ActiveFilter {
             if (script == null) script = ""
             script = script.trim { it <= ' ' }
             if (useScript && !script.isEmpty()) {
-                _G = JsePlatform.standardGlobals()
+                val _G = JsePlatform.standardGlobals()
                 _G.load(script).call()
+                onFilter = _G.get("onFilter")
             }
             var idx = -1
             for (item in items) {
@@ -256,8 +257,8 @@ class ActiveFilter {
                     continue
                 }
                 if (useScript && !script.isEmpty()) {
-                    if (_G != null ) {
-                        val onFilter = _G.get("onFilter")
+                    if (!onFilter.isnil() ) {
+
                         val args = initVarargs(t)
                         val result = onFilter.invoke(args).arg1()
                         if (!result.toboolean()) {
