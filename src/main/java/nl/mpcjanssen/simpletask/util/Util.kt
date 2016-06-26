@@ -270,7 +270,8 @@ fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListene
 }
 
 
-fun initVarargs(t: Task) : Varargs {
+// Fill the arguments for the onFilter callback
+fun fillOnFilterVarargs(t: Task) : Varargs {
     val args = ArrayList<LuaValue>();
     args.add(LuaValue.valueOf(t.inFileFormat()))
     val fieldTable = LuaTable.tableOf()
@@ -282,9 +283,7 @@ fun initVarargs(t: Task) : Varargs {
     fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
 
     val recPat = t.recurrencePattern
-    if (recPat == null) {
-        fieldTable.set("recurrence", LuaValue.NIL)
-    } else {
+    if (recPat != null) {
         fieldTable.set("recurrence", t.recurrencePattern)
     }
     fieldTable.set("completed", LuaBoolean.valueOf(t.isCompleted()))

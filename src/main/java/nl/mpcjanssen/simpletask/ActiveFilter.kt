@@ -259,7 +259,7 @@ class ActiveFilter {
                 if (useScript && !script.isEmpty()) {
                     if (!onFilter.isnil() ) {
 
-                        val args = initVarargs(t)
+                        val args = fillOnFilterVarargs(t)
                         val result = onFilter.invoke(args).arg1()
                         if (!result.toboolean()) {
                             continue
