@@ -12,14 +12,7 @@ import android.widget.*;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
 import org.luaj.vm2.*;
-import org.luaj.vm2.compiler.LuaC;
 import org.luaj.vm2.lib.jse.JsePlatform;
-
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 public class FilterScriptFragment extends Fragment {
 
@@ -86,7 +79,7 @@ public class FilterScriptFragment extends Fragment {
                     String callBack = spnCallBack.getSelectedItem().toString();
                     LuaValue callback = _G.get(callBack);
 
-                    Varargs args = Util.initVarargs(t);
+                    Varargs args = Util.fillOnFilterVarargs(t);
                     LuaValue result = callback.invoke(args).arg1();
 
                     tvResult.setText(result.toString());
