@@ -92,7 +92,6 @@ class AddTask : ThemedActivity() {
         setTitle(R.string.addtask)
 
         m_backup = todoList.selectedTasks.toMutableList()
-        todoList.clearSelection()
 
         if (m_backup != null && m_backup!!.size > 0) {
             val preFill = ArrayList<String>()
@@ -253,6 +252,8 @@ class AddTask : ThemedActivity() {
 
 
     private fun saveTasksAndClose() {
+        val todoList = m_app.todoList
+        todoList.clearSelection()
         // strip line breaks
         textInputField = findViewById(R.id.taskText) as EditText
         val input: String
@@ -266,7 +267,6 @@ class AddTask : ThemedActivity() {
         }
 
         // Update the TodoList with changes
-        val todoList = m_app.todoList
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
         log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup?.size ?: 0} tasks" )
