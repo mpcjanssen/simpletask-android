@@ -1,10 +1,38 @@
 ﻿Changelog
 =========
 
-7.3.0
+8.0.0
 -----
 
+- **INCOMPATIBLE CHANGE**: Define Lua scripts as callbacks for #349.
+- **INCOMPATIBLE CHANGE**: Represent lists and tags as Lua table keys instead of Lua arrays for #349.
 - Re-use filter export format (JSON) to store active filter in preferences. This will reset the filter after the update.
+- Recreate activity when some changing preferences, fixes #435.
+- Sort checked tags and lists to top when updating. Implements #180.
+- Added a font size between large and huge.
+- Merged calendar fixes (#436 vojtechkral)
+- Calendar sync: Filter out irrelevant task tokens for #369.
+- Calendar sync: Fix error handling #398.
+- Moved created as threshold setting from preferences to active filter.
+- Performance improvements.
+- Fixed some memory leaks.
+- Added a setting for relative datebar size.
+- Filter and sort in a background thread. Makes a big performance difference.
+- Improved task filtering visual feedback.
+- Open Donate URL with Intent so it also works without internet permissions on cloudless.
+- Add checkbox to enable or disable filter script, prevent clearing script when clearing filter.
+- Merged settings update (#442 smichel17)
+- Improve cloudless file handling logging
+- Updated Kotlin to 1.0.3.
+- Proper logging ordering in debug info.
+- Use due date as default reminder date. Fixes #456.
+- Fix crash in Font code.
+- Add fuzzy search, fixes #459.
+- Fix drawers background to match current theme (matheusdev #464)
+- Restart browse from root on error, fixes #455.
+- Only log application start after DB logger is setup.
+- Add #simpletask on Freenode link in help.
+
 
 7.2.2
 -----
