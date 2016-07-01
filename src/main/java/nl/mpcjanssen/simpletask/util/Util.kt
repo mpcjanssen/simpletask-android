@@ -31,6 +31,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
@@ -41,9 +42,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Window
+import android.webkit.WebView
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.github.rjeschke.txtmark.Processor
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
@@ -176,7 +179,7 @@ fun addInterval(dateTimeStr: String?, interval: String): DateTime? {
     return addInterval(dateTimeStr?.toDateTime(), interval)
 }
 
-fun addBusinessDays(originalDate : DateTime, days: Int): DateTime {
+fun addBusinessDays(originalDate: DateTime, days: Int): DateTime {
     var date = originalDate
     var amount = days
     while (amount > 0) {
@@ -250,7 +253,7 @@ fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     return items
 }
 
-fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListener): AlertDialog {
+fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener): AlertDialog {
     var keys = act.resources.getStringArray(R.array.deferOptions)
     val today = "0d"
     val tomorrow = "1d"
@@ -271,7 +274,7 @@ fun createDeferDialog(act: Activity, titleId: Int,  listener: InputDialogListene
 
 
 // Fill the arguments for the onFilter callback
-fun fillOnFilterVarargs(t: Task) : Varargs {
+fun fillOnFilterVarargs(t: Task): Varargs {
     val args = ArrayList<LuaValue>();
     args.add(LuaValue.valueOf(t.inFileFormat()))
     val fieldTable = LuaTable.tableOf()
@@ -381,13 +384,13 @@ fun sortWithPrefix(items: Set<String>, caseSensitive: Boolean, prefix: String?):
     return sortWithPrefix(temp, caseSensitive, prefix)
 }
 
-fun appVersion (ctx: Context) :String {
+fun appVersion(ctx: Context): String {
     val packageInfo = ctx.packageManager.getPackageInfo(
             ctx.packageName, 0)
     return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
 }
 
-fun shareText(act: Activity, subject: String,  text: String) {
+fun shareText(act: Activity, subject: String, text: String) {
 
     val shareIntent = Intent(android.content.Intent.ACTION_SEND)
     shareIntent.type = "text/plain"
@@ -416,7 +419,7 @@ fun shareText(act: Activity, subject: String,  text: String) {
 fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
 
     if (show) {
-        if (visibleDialog!=null) {
+        if (visibleDialog != null) {
             visibleDialog.show()
             return visibleDialog
         }
@@ -435,6 +438,45 @@ fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Di
     return null
 }
 
+fun showChangelogOverlay(act: Activity): Dialog? {
+    val builder = AlertDialog.Builder(act)
+    builder.setMessage(readAsset(act.assets, "changelog.en.md"))
+    builder.setCancelable(true)
+    builder.setPositiveButton("OK", null)
+    val dialog = builder.create()
+    dialog.show()
+    return dialog
+}
+
+
+
+fun markdownAssetAsHtml(ctxt: Context, name: String): String {
+    var html = ""
+    try {
+        var markdown = readAsset(ctxt.assets, name)
+        // Change issue numbers to links
+        markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
+        html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>"
+    } catch (e: IOException) {
+        log.error(TAG, "Failed to load markdown asset: {}" + name, e)
+    }
+    return html
+}
+
+@Throws(IOException::class)
+fun readAsset(assets: AssetManager, name: String): String {
+    val buf = StringBuilder()
+    val input = assets.open(name)
+    val `in` = BufferedReader(InputStreamReader(input))
+    var str: String
+    `in`.forEachLine {
+        buf.append(it).append("\n")
+    }
+
+    `in`.close()
+    return buf.toString()
+}
+
 fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     val date = task.thresholdDate
     if (date != null) {
@@ -445,7 +487,7 @@ fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     return null;
 }
 
-fun getRelativeDueDate(task: Task, application : TodoApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
+fun getRelativeDueDate(task: Task, application: TodoApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
     val date = task.dueDate
     if (date != null) {
         date.toDateTime()?.let {
@@ -479,7 +521,7 @@ fun getRelativeAge(task: Task, ctx: Context): String? {
     return null;
 }
 
-fun initTaskWithFilter(task: Task, mFilter : ActiveFilter) {
+fun initTaskWithFilter(task: Task, mFilter: ActiveFilter) {
     if (!mFilter.contextsNot && mFilter.contexts.size == 1) {
         task.addList(mFilter.contexts[0]);
     }
@@ -491,7 +533,7 @@ fun initTaskWithFilter(task: Task, mFilter : ActiveFilter) {
 
 fun String.toDateTime(): DateTime? {
     var date: DateTime?;
-    if ( DateTime.isParseable(this)) {
+    if (DateTime.isParseable(this)) {
         date = DateTime(this)
     } else {
         date = null
@@ -499,8 +541,8 @@ fun String.toDateTime(): DateTime? {
     return date
 }
 
-fun ArrayList<HashSet<String>>.union() : Set<String> {
-    val result = this.fold  (HashSet<String>()) {
+fun ArrayList<HashSet<String>>.union(): Set<String> {
+    val result = this.fold(HashSet<String>()) {
         left, right ->
         left.addAll(right)
         left
@@ -508,7 +550,7 @@ fun ArrayList<HashSet<String>>.union() : Set<String> {
     return result
 }
 
-fun ArrayList<HashSet<String>>.intersection() : Set<String> {
+fun ArrayList<HashSet<String>>.intersection(): Set<String> {
     val intersection = this.firstOrNull()?.toHashSet() ?: return emptySet()
     for (i in 1..this.lastIndex) {
         intersection.retainAll(this[i])

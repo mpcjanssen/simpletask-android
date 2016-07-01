@@ -247,6 +247,12 @@ class TodoApplication : Application(),
     val shareAppendText: String
         get() = prefs.getString(getString(R.string.share_task_append_text), "")
 
+    var latestChangelogShown: Int
+        get() = prefs.getInt(getString(R.string.latest_changelog_shown), 0)
+        set(versionCode: Int) {
+            prefs.edit().putInt(getString(R.string.latest_changelog_shown), versionCode).commit()
+        }
+
     val localFileRoot: String
         get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
 
