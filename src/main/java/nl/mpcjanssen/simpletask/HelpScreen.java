@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.github.rjeschke.txtmark.Processor;
+import nl.mpcjanssen.simpletask.util.Util;
 
 
 import java.io.BufferedReader;
@@ -110,33 +111,10 @@ public class HelpScreen extends ThemedActivity {
         startActivity(browserIntent);
     }
 
-    @NonNull
-    public static String readAsset(@NonNull AssetManager assets, String name) throws IOException  {
-        StringBuilder buf=new StringBuilder();
-        InputStream input =assets.open(name);
-        BufferedReader in=
-            new BufferedReader(new InputStreamReader(input));
-        String str;
-
-        while ((str=in.readLine()) != null) {
-            buf.append(str).append("\n");
-        }
-
-        in.close();
-        return buf.toString();
-    }
 
     public void showMarkdownAsset(@NonNull WebView wv, @NonNull Context ctxt,  String name) {
         log.debug(TAG, "Loading asset " + name + " into " + wv + "(" + ctxt + ")");
-        String html = "";
-        try {
-            String markdown = readAsset(ctxt.getAssets(), name);
-            // Change issue numbers to links
-            markdown = markdown.replaceAll("(\\s)(#)([0-9]+)", "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)");
-            html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>";
-        } catch (IOException e) {
-            log.error(TAG, "Failed to load markdown asset: {}" +  name, e);
-        }
+        String html = Util.markdownAssetAsHtml(ctxt, name);
         history.push(name);
         wv.loadDataWithBaseURL(BASE_URL, html,"text/html", "UTF-8","file:///android_asset/index." + getText(R.string.help_locale) + ".md");
     }

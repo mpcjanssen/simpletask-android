@@ -32,6 +32,7 @@
 - Restart browse from root on error, fixes #455.
 - Only log application start after DB logger is setup.
 - Add #simpletask on Freenode link in help.
+- Show changelog on first launch of a new version.
 
 
 7.2.2

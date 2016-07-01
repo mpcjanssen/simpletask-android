@@ -156,7 +156,11 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             val btnFilterImport = findViewById(R.id.btn_filter_import) as ImageButton?
             btnFilterImport?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
         }
-
+        val versionCode = BuildConfig.VERSION_CODE
+        if (m_app.latestChangelogShown < versionCode) {
+            showChangelogOverlay(this)
+            m_app.latestChangelogShown = versionCode
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
