@@ -258,11 +258,14 @@ class ActiveFilter {
                 }
                 if (useScript && !script.isEmpty()) {
                     if (!onFilter.isnil() ) {
-
                         val args = fillOnFilterVarargs(t)
-                        val result = onFilter.invoke(args).arg1()
-                        if (!result.toboolean()) {
-                            continue
+                        try {
+                            val result = onFilter.invoke(args).arg1()
+                            if (!result.toboolean()) {
+                                continue
+                            }
+                        } catch (e: LuaError) {
+                            log.debug(TAG, "Lua execution failed " + e.message)
                         }
                     }
                 }
