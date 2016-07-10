@@ -72,7 +72,6 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
         if (    getString(R.string.theme_pref_key) == key ||
-                getString(R.string.custom_font_size) == key ||
                 getString(R.string.font_size) == key ) {
             onContentChanged()
             val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)

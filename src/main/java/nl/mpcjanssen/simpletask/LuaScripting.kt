@@ -16,6 +16,7 @@ object LuaScripting {
     val globals = JsePlatform.standardGlobals()
     val ON_FILTER_NAME = "onFilter"
     val CONFIG_THEME = "theme"
+    val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
 
     fun init(context: Context) {
         globals.set("toast", LuaToastShort(context))
@@ -24,11 +25,25 @@ object LuaScripting {
     // Callback to determine the theme. Return true for datk.
     fun configTheme(): String? {
         synchronized(this) {
-            val configTheme = globals.get(CONFIG_THEME)
-            if (!configTheme.isnil()) {
+            val function = globals.get(CONFIG_THEME)
+            if (!function.isnil()) {
                 try {
-                    val result = configTheme
-                    return result.toString()
+                    return function.call().toString()
+                } catch (e: LuaError) {
+                    log.debug(TAG, "Lua execution failed " + e.message)
+                }
+            }
+            return null
+        }
+    }
+
+    fun tasklistTextSize(): Float? {
+        synchronized(this) {
+            val function = globals.get(CONFIG_TASKLIST_TEXT_SIZE_SP)
+            if (!function.isnil()) {
+                try {
+                    log.debug(TAG, "Text size from Lua " + function.tojstring())
+                    return function.call().tofloat()
                 } catch (e: LuaError) {
                     log.debug(TAG, "Lua execution failed " + e.message)
                 }

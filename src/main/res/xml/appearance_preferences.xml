@@ -2,9 +2,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:defaultValue="light_darkactionbar"
-        android:key="@string/theme_pref_key"
         android:entries="@array/themes"
         android:entryValues="@array/theme_values"
+        android:key="@string/theme_pref_key"
         android:summary="%s"
         android:title="@string/theme_pref_title"/>
 
@@ -14,30 +14,15 @@
             android:summary="%s"
             android:title="Custom Font" />
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/custom_font_size"
-        android:title="@string/font_size_delta_pref_title"/>
-
-
     <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-        android:dependency="@string/custom_font_size"
-        android:key="@string/font_size"
-        android:defaultValue="14"
-        android:max="36"
-        robobunny:min="12"
-        robobunny:interval="2"
-        robobunny:unitsLeft=""
-        robobunny:unitsRight="sp"/>
-    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-        android:title="@string/datebar_relative_size_summary"
-        android:key="@string/datebar_relative_size"
-        android:defaultValue="80"
-        android:max="100"
-        robobunny:min="0"
-        robobunny:interval="1"
-        robobunny:unitsLeft=""
-        robobunny:unitsRight="%"/>
+                                     android:defaultValue="80"
+                                     android:key="@string/datebar_relative_size"
+                                     android:max="100"
+                                     android:title="@string/datebar_relative_size_summary"
+                                     robobunny:interval="1"
+                                     robobunny:min="0"
+                                     robobunny:unitsLeft=""
+                                     robobunny:unitsRight="%"/>
     <ListPreference
         android:defaultValue="no_ellipsize"
         android:entries="@array/task_text_ellipsizing"
@@ -53,8 +38,8 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/ui_todotxt_terms"
-        android:title="@string/todotxt_terms_title"
-        android:summary="@string/todotxt_terms_summary"/>
+        android:summary="@string/todotxt_terms_summary"
+        android:title="@string/todotxt_terms_title"/>
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_show_edittext_hints"
