@@ -1,17 +1,41 @@
 package nl.mpcjanssen.simpletask
 
+import android.content.Context
 import nl.mpcjanssen.simpletask.task.Task
-
+import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.toDateTime
 import org.luaj.vm2.*
+import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
 object LuaScripting {
     private val log = Logger
+
     private val TAG = "LuaCallback"
     val interp = JsePlatform.standardGlobals()
     val ON_FILTER_NAME = "onFilter"
+    val CONFIG_THEME = "theme"
+
+    fun init(context: Context) {
+        interp.set("toast", LuaToast(context))
+    }
+
+    // Callback to determine the theme. Return true for datk.
+    fun configTheme(): String? {
+        synchronized(this) {
+            val configTheme = interp.get(CONFIG_THEME)
+            if (!configTheme.isnil()) {
+                try {
+                    val result = configTheme
+                    return result.toString()
+                } catch (e: LuaError) {
+                    log.debug(TAG, "Lua execution failed " + e.message)
+                }
+            }
+            return null
+        }
+    }
 
     fun onFilterCallback (t : Task) : Boolean {
         synchronized(this) {
@@ -75,12 +99,20 @@ object LuaScripting {
 
     fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
         val size = javaList.count()
-        if (size == 0) return LuaValue.NIL
         val luaTable = LuaValue.tableOf()
+        if (size == 0) return luaTable
         var i = 0
         for (item in javaList) {
             luaTable.set(item, LuaValue.TRUE)
         }
         return luaTable
+    }
+}
+
+class LuaToast(val context: Context) : OneArgFunction() {
+    override fun call(arg: LuaValue?): LuaValue? {
+        val string = arg?.tojstring() ?: ""
+        showToastLong(context, string)
+        return LuaValue.NIL
     }
 }
