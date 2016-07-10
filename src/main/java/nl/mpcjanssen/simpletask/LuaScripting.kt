@@ -14,17 +14,25 @@ object LuaScripting {
     val ON_FILTER_NAME = "onFilter"
 
     fun onFilterCallback (t : Task) : Boolean {
-        val onFilter = interp.get(ON_FILTER_NAME)
-        if (!onFilter.isnil() ) {
-            val args = fillOnFilterVarargs(t)
-            try {
-                val result = onFilter.invoke(args).arg1()
-                return result.toboolean()
-            } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+        synchronized(this) {
+            val onFilter = interp.get(ON_FILTER_NAME)
+            if (!onFilter.isnil()) {
+                val args = fillOnFilterVarargs(t)
+                try {
+                    val result = onFilter.invoke(args).arg1()
+                    return result.toboolean()
+                } catch (e: LuaError) {
+                    log.debug(TAG, "Lua execution failed " + e.message)
+                }
             }
+            return true
         }
-        return true
+    }
+
+    fun evalScript(script: String) {
+        synchronized(this) {
+            interp.load(script).call();
+        }
     }
 
     // Fill the arguments for the onFilter callback
@@ -56,10 +64,6 @@ object LuaScripting {
         args.add(extensionTable)
 
         return LuaValue.varargsOf(args.toTypedArray())
-    }
-
-    fun evalScript (script : String ) {
-        interp.load( script ).call();
     }
 
     fun dateStringToLuaLong(dateString: String?): LuaValue {
