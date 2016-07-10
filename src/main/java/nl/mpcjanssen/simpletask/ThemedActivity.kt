@@ -8,7 +8,6 @@ abstract class ThemedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val app = application as TodoApplication
         setTheme(app.activeTheme)
-        setTheme(app.activeFont)
         super.onCreate(savedInstanceState)
     }
 }

@@ -42,19 +42,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
-
-import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
+import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.InputDialogListener
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
-
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -62,6 +55,8 @@ import java.util.*
 
 class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongClickListener {
     val queue = MessageQueue("MainActivity")
+
+    var textSize: Float = 14.0F
 
     internal var options_menu: Menu? = null
     internal lateinit var m_app: TodoApplication
@@ -79,12 +74,11 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
     internal var m_scrollPosition = 0
 
     private var mIgnoreScrollEvents = false
-    private var log: Logger? = null
+    private var log = Logger
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log = Logger
-        log!!.info(TAG, "onCreate")
+        log.info(TAG, "onCreate")
         m_app = application as TodoApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
@@ -98,7 +92,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
-
+        textSize = m_app.tasklistTextSize ?: textSize
+        log.info(TAG, "Text size = $textSize")
 
         localBroadcastManager = m_app.localBroadCastManager
 
@@ -108,12 +103,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                     archiveTasks(null)
                 } else {
                     if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
-                        log!!.info(TAG, "Logging out from Dropbox")
+                        log.info(TAG, "Logging out from Dropbox")
                         fileStore.logout()
                         finish()
                         startActivity(intent)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
-                        log!!.info(TAG, "Updating UI because of broadcast")
+                        log.info(TAG, "Updating UI because of broadcast")
                         if (m_adapter == null) {
                             return
                         }
@@ -237,7 +232,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
     private fun handleIntent() {
         if (!m_app.isAuthenticated) {
-            log!!.info(TAG, "handleIntent: not authenticated")
+            log.info(TAG, "handleIntent: not authenticated")
             startLogin()
             return
         }
@@ -1380,7 +1375,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 }
                 val t = view!!.findViewById(R.id.list_header_title) as TextView
                 t.text = line.title
-                t.textSize = m_app.activeFontSize
+                t.textSize = textSize
 
             } else {
                 val holder: ViewHolder
@@ -1457,13 +1452,14 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 val taskDue = holder.taskDue!!
                 val taskThreshold = holder.taskThreshold!!
 
-                taskAge.textSize =  m_app.activeFontSize *  m_app.dateBarRelativeSize
-                taskDue.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
-                taskThreshold.textSize = m_app.activeFontSize * m_app.dateBarRelativeSize
+
+                taskAge.textSize = textSize * m_app.dateBarRelativeSize
+                taskDue.textSize = textSize * m_app.dateBarRelativeSize
+                taskThreshold.textSize = textSize * m_app.dateBarRelativeSize
 
                 val cb = holder.cbCompleted!!
                 taskText.text = ss
-
+                taskText.textSize = textSize
                 handleEllipsis(holder.taskText as TextView)
 
 
