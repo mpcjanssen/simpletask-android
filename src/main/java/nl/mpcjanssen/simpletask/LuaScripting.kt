@@ -2,7 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.showToastLong
+import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.toDateTime
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
@@ -13,18 +13,18 @@ object LuaScripting {
     private val log = Logger
 
     private val TAG = "LuaCallback"
-    val interp = JsePlatform.standardGlobals()
+    val globals = JsePlatform.standardGlobals()
     val ON_FILTER_NAME = "onFilter"
     val CONFIG_THEME = "theme"
 
     fun init(context: Context) {
-        interp.set("toast", LuaToast(context))
+        globals.set("toast", LuaToastShort(context))
     }
 
     // Callback to determine the theme. Return true for datk.
     fun configTheme(): String? {
         synchronized(this) {
-            val configTheme = interp.get(CONFIG_THEME)
+            val configTheme = globals.get(CONFIG_THEME)
             if (!configTheme.isnil()) {
                 try {
                     val result = configTheme
@@ -39,7 +39,7 @@ object LuaScripting {
 
     fun onFilterCallback (t : Task) : Boolean {
         synchronized(this) {
-            val onFilter = interp.get(ON_FILTER_NAME)
+            val onFilter = globals.get(ON_FILTER_NAME)
             if (!onFilter.isnil()) {
                 val args = fillOnFilterVarargs(t)
                 try {
@@ -55,13 +55,13 @@ object LuaScripting {
 
     fun evalScript(script: String) {
         synchronized(this) {
-            interp.load(script).call();
+            globals.load(script).call()
         }
     }
 
     // Fill the arguments for the onFilter callback
     fun fillOnFilterVarargs(t: Task): Varargs {
-        val args = ArrayList<LuaValue>();
+        val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat()))
         val fieldTable = LuaTable.tableOf()
         fieldTable.set("task", t.inFileFormat())
@@ -101,7 +101,6 @@ object LuaScripting {
         val size = javaList.count()
         val luaTable = LuaValue.tableOf()
         if (size == 0) return luaTable
-        var i = 0
         for (item in javaList) {
             luaTable.set(item, LuaValue.TRUE)
         }
@@ -109,10 +108,10 @@ object LuaScripting {
     }
 }
 
-class LuaToast(val context: Context) : OneArgFunction() {
-    override fun call(arg: LuaValue?): LuaValue? {
-        val string = arg?.tojstring() ?: ""
-        showToastLong(context, string)
+class LuaToastShort(val context: Context) : OneArgFunction() {
+    override fun call(text: LuaValue?): LuaValue? {
+        val string = text?.tojstring() ?: ""
+        showToastShort(context, string)
         return LuaValue.NIL
     }
 }
