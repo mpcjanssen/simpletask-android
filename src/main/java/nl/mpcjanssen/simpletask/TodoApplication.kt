@@ -47,6 +47,7 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
+import org.luaj.vm2.lib.jse.JsePlatform
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -64,7 +65,6 @@ class TodoApplication : Application(),
 
     private val log = Logger
     private lateinit var mFileStore: FileStoreInterface;
-
     internal lateinit var daoSession: DaoSession
     lateinit var  logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
@@ -550,6 +550,7 @@ class TodoApplication : Application(),
 
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int) : Boolean =  android.os.Build.VERSION.SDK_INT >= api
+        val interp = JsePlatform.standardGlobals()
     }
 
     var today: String = todayAsString
