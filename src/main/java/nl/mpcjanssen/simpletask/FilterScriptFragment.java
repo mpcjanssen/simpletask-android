@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,22 +8,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import nl.mpcjanssen.simpletask.task.Task;
 import nl.mpcjanssen.simpletask.util.Util;
-import org.luaj.vm2.*;
-import org.luaj.vm2.lib.jse.JsePlatform;
+import org.luaj.vm2.LuaError;
 
 public class FilterScriptFragment extends Fragment {
 
     final static String TAG = FilterScriptFragment.class.getSimpleName();
     private EditText txtScript;
     private CheckBox cbUseScript;
-    @Nullable
-    ActionBar actionbar;
     private EditText txtTestTask;
-    private TextView tvBooleanResult;
     private Logger log;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +42,8 @@ public class FilterScriptFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         log.debug(TAG, "onSaveInstanceState() this:" + this);
-        outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER,getScript());
-        outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,getTestTask());
+        outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER, getScript());
+        outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, getTestTask());
     }
 
     @Override
@@ -53,7 +52,6 @@ public class FilterScriptFragment extends Fragment {
         log.debug(TAG, "onCreateView() this:" + this);
 
         Bundle arguments = getArguments();
-        actionbar = getActivity().getActionBar();
         log.debug(TAG, "Fragment bundle:" + this);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.script_filter,
                 container, false);
@@ -68,17 +66,18 @@ public class FilterScriptFragment extends Fragment {
             public void onClick(View v) {
                 Task t = new Task(getTestTask());
                 try {
-                    String result;
                     String script = getScript();
-                     LuaScripting.INSTANCE.evalScript(script);
-
+                    LuaScripting.INSTANCE.evalScript(script);
+                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG);
+                    View barView = snackbar.getView();
                     if (script.trim().isEmpty() || LuaScripting.INSTANCE.onFilterCallback(t)) {
-                        result = "True, task will be shown";
+                        snackbar.setText("True, task will be shown");
+                        barView.setBackgroundColor(0xff43a047);
                     } else {
-                        result = "False: task will not be shown";
+                        snackbar.setText("False: task will not be shown");
+                        barView.setBackgroundColor(0xffe53935);
                     }
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), result, Snackbar.LENGTH_LONG)
-                            .show();
+                    snackbar.show();
                 } catch (LuaError e) {
                     log.debug(TAG, "Lua execution failed " + e.getMessage());
                     Util.createAlertDialog(getActivity(), R.string.lua_error, e.getMessage()).show();
@@ -87,13 +86,13 @@ public class FilterScriptFragment extends Fragment {
 
         });
         if (savedInstanceState != null) {
-            cbUseScript.setChecked(savedInstanceState.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER,false));
-            txtScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_FILTER,""));
-            txtTestTask.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,""));
+            cbUseScript.setChecked(savedInstanceState.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, false));
+            txtScript.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_FILTER, ""));
+            txtTestTask.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, ""));
         } else {
-            cbUseScript.setChecked(arguments.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER,false));
-            txtScript.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER,""));
-            txtTestTask.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER,""));
+            cbUseScript.setChecked(arguments.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, false));
+            txtScript.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER, ""));
+            txtTestTask.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, ""));
         }
         return layout;
     }
@@ -116,18 +115,18 @@ public class FilterScriptFragment extends Fragment {
         }
     }
 
+    public void setScript(String script) {
+        if (txtScript != null) {
+            txtScript.setText(script);
+        }
+    }
+
     public String getTestTask() {
         Bundle arguments = getArguments();
         if (txtTestTask == null) {
             return arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, "");
         } else {
             return txtTestTask.getText().toString();
-        }
-    }
-
-    public void setScript(String script) {
-        if (txtScript!=null) {
-            txtScript.setText(script);
         }
     }
 }
