@@ -47,7 +47,6 @@ import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
-import org.luaj.vm2.lib.jse.JsePlatform
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -73,7 +72,7 @@ class TodoApplication : Application(),
     override fun onCreate() {
 
         super.onCreate()
-
+        LuaScripting.init(applicationContext)
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
@@ -363,7 +362,7 @@ class TodoApplication : Application(),
 
     val activeTheme: Int
         get() {
-            return themeStringToId(prefs.getString(getString(R.string.theme_pref_key), ""))
+            return themeStringToId(activeThemeString)
         }
 
     val isDarkTheme: Boolean
@@ -378,7 +377,7 @@ class TodoApplication : Application(),
         get() = "dark" == prefs.getString(getString(R.string.widget_theme_pref_key), "light_darkactionbar")
 
     private val activeThemeString: String
-        get() = prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
+        get() = LuaScripting.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
 
     var fullDropBoxAccess: Boolean
         @SuppressWarnings("unused")
