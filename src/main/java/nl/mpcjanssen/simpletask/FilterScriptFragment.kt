@@ -11,7 +11,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.util.createAlertDialog
 import org.luaj.vm2.LuaError
 
 class FilterScriptFragment : Fragment() {
@@ -120,7 +120,6 @@ class FilterScriptFragment : Fragment() {
         }
 
     companion object {
-
         internal val TAG = FilterScriptFragment::class.java.simpleName
     }
 }
