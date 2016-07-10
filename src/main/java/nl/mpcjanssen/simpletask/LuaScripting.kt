@@ -12,7 +12,7 @@ import java.util.*
 object LuaScripting {
     private val log = Logger
 
-    private val TAG = "LuaCallback"
+    private val TAG = "LuaScripting"
     val globals = JsePlatform.standardGlobals()
     val ON_FILTER_NAME = "onFilter"
     val CONFIG_THEME = "theme"
@@ -22,13 +22,15 @@ object LuaScripting {
         globals.set("toast", LuaToastShort(context))
     }
 
-    // Callback to determine the theme. Return true for datk.
-    fun configTheme(): String? {
+    // Call a Lua function `name`
+    // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
+    // Returns null if the function is not found or if a `LuaError` occurred
+    fun <T> callZeroArgLuaFunction(name: String, unpackResult: (LuaValue) -> T?): T? {
         synchronized(this) {
-            val function = globals.get(CONFIG_THEME)
+            val function = globals.get(name)
             if (!function.isnil()) {
                 try {
-                    return function.call().toString()
+                    return unpackResult(function.call())
                 } catch (e: LuaError) {
                     log.debug(TAG, "Lua execution failed " + e.message)
                 }
@@ -38,18 +40,12 @@ object LuaScripting {
     }
 
     fun tasklistTextSize(): Float? {
-        synchronized(this) {
-            val function = globals.get(CONFIG_TASKLIST_TEXT_SIZE_SP)
-            if (!function.isnil()) {
-                try {
-                    log.debug(TAG, "Text size from Lua " + function.tojstring())
-                    return function.call().tofloat()
-                } catch (e: LuaError) {
-                    log.debug(TAG, "Lua execution failed " + e.message)
-                }
-            }
-            return null
-        }
+        return callZeroArgLuaFunction<Float>(CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
+    }
+
+    // Callback to determine the theme. Return true for datk.
+    fun configTheme(): String? {
+        return callZeroArgLuaFunction<String>(CONFIG_THEME) { it -> it.toString() }
     }
 
     fun onFilterCallback (t : Task) : Boolean {
