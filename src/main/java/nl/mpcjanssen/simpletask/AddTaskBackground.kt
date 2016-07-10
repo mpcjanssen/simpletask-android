@@ -43,6 +43,7 @@ class AddTaskBackground : Activity() {
     private var log = Logger
     val TAG = "AddTaskBackground"
 
+
     public override fun onCreate(instance: Bundle?) {
         log = Logger;
         log.debug(TAG, "onCreate()")
@@ -58,7 +59,7 @@ class AddTaskBackground : Activity() {
             if (Intent.ACTION_SEND == action) {
                 log.debug(TAG, "Share")
                 var share_text = ""
-                if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+                if (TodoApplication.atLeastAPI(21) && intent.hasExtra(Intent.EXTRA_STREAM)) {
                     val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
                     try {
                         val `is` = contentResolver.openInputStream(uri)
@@ -95,14 +96,7 @@ class AddTaskBackground : Activity() {
         }
     }
 
-    private fun startAddTaskActivity(addedTasks: ArrayList<Task>) {
-        log.info(TAG, "Starting addTask activity")
-        val m_app = this.application as TodoApplication
-        val intent = Intent(this, AddTask::class.java)
-        m_app.todoList.clearSelection()
-        m_app.todoList.selectTasks(addedTasks,null)
-        startActivity(intent)
-    }
+
 
     private fun noteToSelf(intent: Intent, append_text: String) {
         val task = intent.getStringExtra(Intent.EXTRA_TEXT)
@@ -118,6 +112,9 @@ class AddTaskBackground : Activity() {
         val addedTasks = ArrayList<Task>()
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
+        if (m_app.hasShareTaskShowsEdit()) {
+            todoList.clearSelection()
+        }
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
             if (taskText.trim({ it <= ' ' }).isEmpty()) {
                 continue
@@ -134,14 +131,14 @@ class AddTaskBackground : Activity() {
             } else {
                 t = Task(text)
             }
-            todoList.add(t, m_app.hasAppendAtEnd())
+            todoList.add(t, m_app.hasAppendAtEnd(),m_app.hasShareTaskShowsEdit())
             addedTasks.add(t)
         }
         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
         finish()
         showToastShort(m_app, R.string.task_added)
         if (m_app.hasShareTaskShowsEdit()) {
-            startAddTaskActivity(addedTasks)
+            todoList.startAddTaskActivity(this)
         }
     }
 

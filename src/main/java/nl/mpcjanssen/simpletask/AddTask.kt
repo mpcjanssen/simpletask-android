@@ -35,10 +35,11 @@ class AddTask : ThemedActivity() {
 
     private val share_text: String? = null
 
+    private val m_backup = ArrayList<TodoListItem>()
+
     private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
-    private var m_backup: MutableList<TodoListItem>? = null
     private val log = Logger
 
 
@@ -91,14 +92,10 @@ class AddTask : ThemedActivity() {
         var iniTask: Task? = null
         setTitle(R.string.addtask)
 
-        m_backup = todoList.selectedTasks.toMutableList()
-
-        if (m_backup != null && m_backup!!.size > 0) {
-            val preFill = ArrayList<String>()
-            for (t in m_backup!!) {
-                preFill.add(t.task.inFileFormat())
-            }
-            val preFillString = join(preFill, "\n")
+        val selection = todoList.selectedTasks
+        m_backup.addAll(selection)
+        if (selection.size > 0) {
+            val preFillString = join(selection.map {it.task.inFileFormat()}, "\n")
             textInputField.setText(preFillString)
             setTitle(R.string.updatetask)
         } else {
@@ -195,7 +192,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
 
-        if (m_backup != null && m_backup!!.size > 0) {
+        if (selection != null && selection!!.size > 0) {
             textInputField.setSelection(textInputField.text.length)
         }
     }
@@ -273,7 +270,7 @@ class AddTask : ThemedActivity() {
         for (task in enteredTasks) {
             if (m_backup != null && m_backup!!.size > 0) {
                 // Don't modify create date for updated tasks
-                m_backup!![0].task.update(task.text)
+                m_backup[0].task.update(task.text)
                 m_backup!!.removeAt(0)
             } else {
                 val t: Task
