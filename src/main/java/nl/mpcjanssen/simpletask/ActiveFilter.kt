@@ -223,7 +223,6 @@ class ActiveFilter {
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
-        var onFilter : LuaValue = LuaValue.NIL
         if (items == null) {
             return ArrayList()
         }
@@ -232,10 +231,7 @@ class ActiveFilter {
             var script: String? = script
             if (script == null) script = ""
             script = script.trim { it <= ' ' }
-            if (useScript && !script.isEmpty()) {
-                TodoApplication.interp.load(script).call()
-                onFilter = TodoApplication.interp.get("onFilter")
-            }
+
             var idx = -1
             for (item in items) {
                 idx++
@@ -256,16 +252,8 @@ class ActiveFilter {
                     continue
                 }
                 if (useScript && !script.isEmpty()) {
-                    if (!onFilter.isnil() ) {
-                        val args = fillOnFilterVarargs(t)
-                        try {
-                            val result = onFilter.invoke(args).arg1()
-                            if (!result.toboolean()) {
-                                continue
-                            }
-                        } catch (e: LuaError) {
-                            log.debug(TAG, "Lua execution failed " + e.message)
-                        }
+                    if (!LuaScripting.onFilterCallback(t)) {
+                        continue
                     }
                 }
                 matched.add(item)

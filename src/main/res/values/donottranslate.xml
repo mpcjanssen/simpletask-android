@@ -97,13 +97,6 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>marquee</item>
     </string-array>
 
-
-    <!-- available Lua callBacks -->
-    <string-array name="callBacks">
-        <item>onFilter</item>
-        <item>onDisplay</item>
-    </string-array>
-
     <!-- Unlocalized Help names -->
     <string name="help_add_task" translatable="false">addtask</string>
 
