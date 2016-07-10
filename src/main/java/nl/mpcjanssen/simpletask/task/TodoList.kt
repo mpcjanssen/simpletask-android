@@ -29,6 +29,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
@@ -112,7 +113,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         }
     }
 
-    fun add(t: TodoListItem, atEnd: Boolean) {
+    fun add(t: TodoListItem, atEnd: Boolean, select: Boolean = false) {
         queueRunnable("Add task", Runnable {
             log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
             if (atEnd) {
@@ -124,8 +125,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         })
     }
 
-    fun add(t: Task, atEnd: Boolean) {
-        add(TodoListItem(0,t,false),atEnd)
+    fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
+        add(TodoListItem(0,t,select),atEnd)
     }
 
 
@@ -264,7 +265,13 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         }
     }
 
-
+    fun startAddTaskActivity(act: Activity) {
+        queueRunnable("Add/Edit tasks", Runnable {
+            log.info(TAG, "Starting addTask activity")
+            val intent = Intent(act, AddTask::class.java)
+            act.startActivity(intent)
+        })
+    }
 
     fun getSortedTasksCopy(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
         val filteredTasks = filter.apply(todoItems)
@@ -422,6 +429,8 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
            it.selected = false
        }
     }
+
+
 }
 
 data class TodoListItem(var line: Int, var task: Task, var selected: Boolean = false)

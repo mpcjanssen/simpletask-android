@@ -33,6 +33,7 @@
 - Only log application start after DB logger is setup.
 - Add #simpletask on Freenode link in help.
 - Show changelog on first launch of a new version.
+- Select task added in background if "Edit background" is enabled. Fixes #473"
 
 
 7.2.2
