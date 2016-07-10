@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,7 @@ public class FilterScriptFragment extends Fragment {
     @Nullable
     ActionBar actionbar;
     private EditText txtTestTask;
-    private TextView tvResult;
     private TextView tvBooleanResult;
-    private Spinner spnCallBack;
     private Logger log;
 
     @Override
@@ -62,37 +61,27 @@ public class FilterScriptFragment extends Fragment {
         cbUseScript = (CheckBox) layout.findViewById(R.id.cb_use_script);
         txtScript = (EditText) layout.findViewById(R.id.txt_script);
         txtTestTask = (EditText) layout.findViewById(R.id.txt_testtask);
-        tvResult = (TextView) layout.findViewById(R.id.result);
-        tvBooleanResult = (TextView) layout.findViewById(R.id.booleanResult);
-        spnCallBack = (Spinner) layout.findViewById(R.id.luaCallBack);
+
         Button btnTest = (Button) layout.findViewById(R.id.btnTest);
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Task t = new Task(getTestTask());
                 try {
+                    String result;
                     String script = getScript();
-                     Globals _G = JsePlatform.standardGlobals();
-                    _G.load( script ).call();
+                     LuaScripting.INSTANCE.evalScript(script);
 
-                    // get selected callback
-                    String callBack = spnCallBack.getSelectedItem().toString();
-                    LuaValue callback = _G.get(callBack);
-
-                    Varargs args = Util.fillOnFilterVarargs(t);
-                    LuaValue result = callback.invoke(args).arg1();
-
-                    tvResult.setText(result.toString());
-
-                    if (result.toboolean() || script.trim().isEmpty()) {
-                        tvBooleanResult.setText("true");
+                    if (script.trim().isEmpty() || LuaScripting.INSTANCE.onFilterCallback(t)) {
+                        result = "True, task will be shown";
                     } else {
-                        tvBooleanResult.setText("false");
+                        result = "False: task will not be shown";
                     }
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), result, Snackbar.LENGTH_LONG)
+                            .show();
                 } catch (LuaError e) {
                     log.debug(TAG, "Lua execution failed " + e.getMessage());
-                    tvBooleanResult.setText("error");
-                    tvResult.setText(e.getMessage());
+                    Util.createAlertDialog(getActivity(), R.string.lua_error, e.getMessage()).show();
                 }
             }
 

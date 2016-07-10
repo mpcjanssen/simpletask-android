@@ -550,7 +550,7 @@ class TodoApplication : Application(),
 
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int) : Boolean =  android.os.Build.VERSION.SDK_INT >= api
-        val interp = JsePlatform.standardGlobals()
+
     }
 
     var today: String = todayAsString

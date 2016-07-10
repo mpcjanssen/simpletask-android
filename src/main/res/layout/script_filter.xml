@@ -1,41 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="?android:attr/dividerHorizontal"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:showDividers="middle">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:divider="?android:attr/dividerHorizontal"
+              android:orientation="vertical"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:showDividers="middle">
+
     <CheckBox
         android:id="@+id/cb_use_script"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Use script"/>
-    <TextView
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Script" />
 
 
-    <EditText
-        android:id="@+id/txt_script"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="top|left"
-        android:inputType="text|textMultiLine"/>
-    <Spinner
-            android:id="@+id/luaCallBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/callBacks"
-            android:text="Callback" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Test task" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true"
-            android:gravity="top|left" />
+            android:hint="Test task"
+            android:gravity="top|left"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,27 +38,15 @@
             android:text="Test"/>
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerVertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:showDividers="middle">
+        android:text="Script"/>
+    <EditText
+        android:id="@+id/txt_script"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top|left"
+        android:inputType="text|textMultiLine"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/result"
-            android:hint="result"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:id="@+id/booleanResult"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="result as boolean"/>
-    </LinearLayout>
 </LinearLayout>

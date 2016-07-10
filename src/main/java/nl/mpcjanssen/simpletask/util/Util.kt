@@ -52,7 +52,7 @@ import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoListItem
-import org.luaj.vm2.*
+
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
@@ -253,6 +253,14 @@ fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     return items
 }
 
+fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
+    val builder = AlertDialog.Builder(act)
+    builder.setTitle(titleId)
+    builder.setPositiveButton(R.string.ok, null)
+    builder.setMessage(alert)
+    return builder.create()
+}
+
 fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener): AlertDialog {
     var keys = act.resources.getStringArray(R.array.deferOptions)
     val today = "0d"
@@ -270,57 +278,6 @@ fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener
         listener.onClick(selected)
     }
     return builder.create()
-}
-
-
-// Fill the arguments for the onFilter callback
-fun fillOnFilterVarargs(t: Task): Varargs {
-    val args = ArrayList<LuaValue>();
-    args.add(LuaValue.valueOf(t.inFileFormat()))
-    val fieldTable = LuaTable.tableOf()
-    fieldTable.set("task", t.inFileFormat())
-
-    fieldTable.set("due", dateStringToLuaLong(t.dueDate))
-    fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
-    fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
-    fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-
-    val recPat = t.recurrencePattern
-    if (recPat != null) {
-        fieldTable.set("recurrence", t.recurrencePattern)
-    }
-    fieldTable.set("completed", LuaBoolean.valueOf(t.isCompleted()))
-    fieldTable.set("priority", t.priority.code)
-
-    fieldTable.set("tags", javaListToLuaTable(t.tags))
-    fieldTable.set("lists", javaListToLuaTable(t.lists))
-
-    args.add(fieldTable)
-
-    // TODO: implement
-    val extensionTable = LuaTable.tableOf()
-    args.add(extensionTable)
-
-    return LuaValue.varargsOf(args.toTypedArray())
-
-}
-
-fun dateStringToLuaLong(dateString: String?): LuaValue {
-    dateString?.toDateTime()?.let {
-        return LuaValue.valueOf((it.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
-    }
-    return LuaValue.NIL
-}
-
-fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
-    val size = javaList.count()
-    if (size == 0) return LuaValue.NIL
-    val luaTable = LuaValue.tableOf()
-    var i = 0
-    for (item in javaList) {
-        luaTable.set(item, LuaValue.TRUE)
-    }
-    return luaTable
 }
 
 @Throws(IOException::class)
