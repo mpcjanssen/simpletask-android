@@ -233,9 +233,8 @@ class ActiveFilter {
             if (script == null) script = ""
             script = script.trim { it <= ' ' }
             if (useScript && !script.isEmpty()) {
-                val _G = JsePlatform.standardGlobals()
-                _G.load(script).call()
-                onFilter = _G.get("onFilter")
+                TodoApplication.interp.load(script).call()
+                onFilter = TodoApplication.interp.get("onFilter")
             }
             var idx = -1
             for (item in items) {
