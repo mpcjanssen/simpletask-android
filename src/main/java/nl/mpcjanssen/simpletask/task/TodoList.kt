@@ -430,6 +430,14 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
        }
     }
 
+    fun getTaskCount(): Long {
+        val items = todoItems
+        if (items == null) {
+            return 0
+        }
+        return items.filter {it.task.inFileFormat().isNotBlank()}.size.toLong()
+    }
+
 
 }
 

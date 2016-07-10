@@ -498,7 +498,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             actionbar.visibility = View.GONE
         }
         val count = if (m_adapter != null) m_adapter!!.countVisibleTodoItems else 0
-        val total = todoList.size().toLong()
+        val total = todoList.getTaskCount()
 
         filterText.text = mFilter!!.getTitle(
                 count,
