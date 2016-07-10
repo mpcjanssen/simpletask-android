@@ -157,7 +157,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             btnFilterImport?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
         }
         val versionCode = BuildConfig.VERSION_CODE
-        if (m_app.latestChangelogShown < versionCode) {
+        if (m_app.isAuthenticated && m_app.latestChangelogShown < versionCode) {
             showChangelogOverlay(this)
             m_app.latestChangelogShown = versionCode
         }
