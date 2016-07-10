@@ -40,12 +40,12 @@ object LuaScripting {
     }
 
     fun tasklistTextSize(): Float? {
-        return callZeroArgLuaFunction<Float>(CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
+        return callZeroArgLuaFunction(CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
     }
 
     // Callback to determine the theme. Return true for datk.
     fun configTheme(): String? {
-        return callZeroArgLuaFunction<String>(CONFIG_THEME) { it -> it.toString() }
+        return callZeroArgLuaFunction(CONFIG_THEME) { it -> it.toString() }
     }
 
     fun onFilterCallback (t : Task) : Boolean {
