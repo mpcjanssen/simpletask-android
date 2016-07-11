@@ -61,6 +61,7 @@ Configuration
 =============
 
 Configuration is read on app start and whenever it is changed or ran from the Lua Config screen.
+Configuration from Lua will always override the value from the settings (Lua wins).
 
 ### `theme () -> string`
 
@@ -109,6 +110,12 @@ Show all tasks with the `@errands` tag:
 
     function onFilter(t,f,e)
        return f.tags["@errands"]
+    end
+
+Change the font size of the main task list to `16sp`:
+
+    function tasklistTextSize()
+       return 16.0
     end
 
 
