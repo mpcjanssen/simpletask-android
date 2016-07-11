@@ -175,6 +175,10 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         }
     }
 
+    private fun openLuaConfig() {
+        val i = Intent(this, LuaConfigScreen::class.java)
+        startActivity(i)
+    }
     private fun showHelp() {
         val i = Intent(this, HelpScreen::class.java)
         startActivity(i)
@@ -748,6 +752,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             R.id.filter -> startFilterActivity()
             R.id.share -> startActivityForResult(Intent(baseContext, TaskDisplayActivity::class.java), REQUEST_SHARE_PARTS)
             R.id.help -> showHelp()
+            R.id.open_lua -> openLuaConfig()
             R.id.sync -> fileStore.sync()
             R.id.archive -> m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveTasks(null) }, R.string.archive_task_title)
             R.id.open_file -> m_app.browseForNewFile(this)
