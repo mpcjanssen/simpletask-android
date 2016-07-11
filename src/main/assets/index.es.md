@@ -32,5 +32,5 @@ Vea el menú para encontrar más secciones de ayuda o haga clic abajo.
 - [Listas y Etiquetas](./listsandtags.es.md) Por Simpletask usa listas y etiquetas en lugar de Contextos y Proyectos de todo.txt?
 - [Definiendo intents](./intents.es.md) Intents que pueden ser utilizados para automatizar Simpletask
 - [Utilizando Simpletask para 1MTD/MYN - 1 Minute ToDo List/Manage Your Now](./Myn.es.md)
-- [Filtrando con Lua](./script.es.md)
+- [Lua](./script.en.md)
 

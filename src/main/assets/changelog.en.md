@@ -6,6 +6,9 @@
 
 - **INCOMPATIBLE CHANGE**: Define Lua scripts as callbacks for #349.
 - **INCOMPATIBLE CHANGE**: Represent lists and tags as Lua table keys instead of Lua arrays for #349.
+
+- Add application wide configuration using Lua. Fixes #349. See help for details.
+
 - Re-use filter export format (JSON) to store active filter in preferences. This will reset the filter after the update.
 - Recreate activity when some changing preferences, fixes #435.
 - Sort checked tags and lists to top when updating. Implements #180.
