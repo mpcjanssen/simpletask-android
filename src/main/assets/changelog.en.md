@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.0.1
+-----
+
+- Replace corrupted Cloudless PlayStore build, it crashed when opening filter.
+
 8.0.0
 -----
 
