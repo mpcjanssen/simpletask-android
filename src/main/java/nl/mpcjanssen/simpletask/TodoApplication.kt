@@ -46,7 +46,10 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.appVersion
+import nl.mpcjanssen.simpletask.util.createAlertDialog
+import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.todayAsString
+import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -72,7 +75,7 @@ class TodoApplication : Application(),
     override fun onCreate() {
 
         super.onCreate()
-        LuaScripting.init(applicationContext)
+
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
@@ -85,8 +88,13 @@ class TodoApplication : Application(),
 
         log.debug(TAG, "onCreate()")
         log.info(TAG, "Started ${appVersion(this)}")
-
         setupUncaughtExceptionHandler()
+
+        // Read Lua config
+        LuaScripting.init(applicationContext)
+        reloadLuaConfig()
+
+
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
 
@@ -108,6 +116,15 @@ class TodoApplication : Application(),
         loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
+    }
+
+    fun reloadLuaConfig() {
+        try {
+            LuaScripting.evalScript(luaConfig)
+        } catch (e: LuaError) {
+            log.warn(TAG, "Lua execution failed " + e.message)
+            showToastLong(this, "${getString(R.string.lua_error)}:  ${e.message}")
+        }
     }
 
     private fun setupUncaughtExceptionHandler() {
@@ -384,6 +401,13 @@ class TodoApplication : Application(),
         get() = prefs.getBoolean(getString(R.string.dropbox_full_access), true)
         set(full) {
             prefs.edit().putBoolean(getString(R.string.dropbox_full_access), full).commit()
+        }
+
+
+    var luaConfig: String
+        get() = prefs.getString(getString(R.string.lua_config), "")
+        set(config) {
+            prefs.edit().putString(getString(R.string.lua_config), config).commit()
         }
 
 
