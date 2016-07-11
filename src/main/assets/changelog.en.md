@@ -39,7 +39,7 @@
 - Show changelog on first launch of a new version.
 - Select task added in background if "Edit background" is enabled. Fixes #473"
 - Don't count empty lines in total task count. Fixes #469.
-
+- Updated add/save task icon.
 
 7.2.2
 -----
