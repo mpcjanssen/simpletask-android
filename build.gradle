@@ -28,8 +28,8 @@ android {
 
 
     defaultConfig {
-        versionName '8.0.0'
-        versionCode 3032
+        versionName '8.0.1'
+        versionCode 3033
 	    minSdkVersion 14
         targetSdkVersion 23
     }
