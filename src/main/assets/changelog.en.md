@@ -5,6 +5,7 @@
 -----
 
 - Restore old (non fuzzy) text search.
+- Add text filter Lua callback `onTextFilter` and the 8.0.0 fuzzy search as an example script.
 
 8.0.1
 -----
