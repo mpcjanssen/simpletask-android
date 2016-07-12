@@ -19,6 +19,10 @@ Helper functions
 
 Shows `string` as an Android toast. Useful for debugging scripts.
 
+### Notes
+
+Don't use toasts inside functions. This is a good way to make Simpletask hang.
+
 Callbacks
 =========
 
@@ -31,16 +35,16 @@ Called for every task as part of filtering the todo list.
 
 * `task`: The task as a string.
 * `fields`:
-   * `completed`: Boolean indicating if the task is completed.
-   * `completiondate`: The completion date in seconds of the task or `nil` if not set.
-   * `createdate`: The created date  in seconds of the task or `nil` if not set.
-   * `due`: The due date in seconds or `nil` if not set.
-   * `lists`: A table with the lists of the task as keys. `fields.lits` itself will never be `nil`
-   * `priority`: The priority of the task as string.
-   * `recurrence`: The recurrence pattern of the task as string or `nil` if not set.
-   * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
-   * `task`: The full task as string.
-   * `threshold`: The threshold date in seconds or `nil` if not set.
+    * `completed`: Boolean indicating if the task is completed.
+    * `completiondate`: The completion date in seconds of the task or `nil` if not set.
+    * `createdate`: The created date  in seconds of the task or `nil` if not set.
+    * `due`: The due date in seconds or `nil` if not set.
+    * `lists`: A table with the lists of the task as keys. `fields.lits` itself will never be `nil`
+    * `priority`: The priority of the task as string.
+    * `recurrence`: The recurrence pattern of the task as string or `nil` if not set.
+    * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
+    * `task`: The full task as string.
+    * `threshold`: The threshold date in seconds or `nil` if not set.
 * `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. **NOT IMPLEMENTED YET**
 
 ### Returns

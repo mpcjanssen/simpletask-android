@@ -3,13 +3,13 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
-
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.util.isEmptyOrNull
+import nl.mpcjanssen.simpletask.util.join
+import nl.mpcjanssen.simpletask.util.todayAsString
+import nl.mpcjanssen.todotxtholo.task.ByTextFilter
 import org.json.JSONObject
-import org.luaj.vm2.*
-import org.luaj.vm2.lib.jse.JsePlatform
-
+import org.luaj.vm2.LuaError
 import java.util.*
 
 /**
