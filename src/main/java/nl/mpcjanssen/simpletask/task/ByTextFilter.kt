@@ -22,35 +22,43 @@
  * *
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
  */
-package nl.mpcjanssen.simpletask.task
+package nl.mpcjanssen.todotxtholo.task
 
-import java.util.Locale
+import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TaskFilter
+import java.util.*
 
 /**
  * A filter that matches Tasks containing the specified text
 
- * @author Mark Janssen
+ * @author Tim Barlotta
  */
-class ByTextFilter(var text: String?, private val caseSensitive: Boolean) : TaskFilter {
-
+class ByTextFilter(text: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
+    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
+    internal val text: String
+    private val parts: Array<String>
 
     init {
-        val origText = text ?: ""
-        text = if (caseSensitive) origText else origText.toUpperCase(Locale.getDefault())
+        var text = text
+        if (text == null) {
+            text = ""
+        }
+        this.text = if (isCaseSensitive) text else text.toUpperCase(Locale.getDefault())
+
+        this.parts = this.text.split("\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
-    override fun apply(t: Task): Boolean {
-        val taskText = if (caseSensitive)
-            t.inFileFormat()
+    override fun apply(input: Task): Boolean {
+        val taskText = if (isCaseSensitive)
+            input.text
         else
-            t.inFileFormat().toUpperCase(Locale.getDefault())
-        var fuzzy: String = text ?: return true
-        taskText.forEach {
-            if (fuzzy.length == 0 ) return true
-            if (it == fuzzy.get(0)) {
-                fuzzy = fuzzy.substring(1)
-            }
+            input.text.toUpperCase(Locale.getDefault())
+
+        for (part in parts) {
+            if (part.length > 0 && !taskText.contains(part))
+                return false
         }
-        return fuzzy.length == 0
+
+        return true
     }
 }

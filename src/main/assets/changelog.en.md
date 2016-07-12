@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.0.2
+-----
+
+- Restore old (non fuzzy) text search.
+
 8.0.1
 -----
 
