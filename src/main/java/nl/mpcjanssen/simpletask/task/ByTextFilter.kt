@@ -24,6 +24,7 @@
  */
 package nl.mpcjanssen.todotxtholo.task
 
+import nl.mpcjanssen.simpletask.LuaScripting
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TaskFilter
 import java.util.*
@@ -33,22 +34,22 @@ import java.util.*
 
  * @author Tim Barlotta
  */
-class ByTextFilter(text: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
+class ByTextFilter(searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    internal val text: String
     private val parts: Array<String>
-
+    private var casedText: String
+    val text = searchText ?: ""
     init {
-        var text = text
-        if (text == null) {
-            text = ""
-        }
-        this.text = if (isCaseSensitive) text else text.toUpperCase(Locale.getDefault())
-
-        this.parts = this.text.split("\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        this.casedText = if (isCaseSensitive) text else text.toUpperCase(Locale.getDefault())
+        this.parts = this.casedText.split("\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
     override fun apply(input: Task): Boolean {
+        val luaResult = LuaScripting.onTextSearchCallback(input.text, text, isCaseSensitive)
+        if (luaResult != null) {
+            return luaResult
+        }
+
         val taskText = if (isCaseSensitive)
             input.text
         else

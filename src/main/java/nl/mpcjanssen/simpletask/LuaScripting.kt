@@ -15,6 +15,7 @@ object LuaScripting {
     private val TAG = "LuaScripting"
     val globals = JsePlatform.standardGlobals()
     val ON_FILTER_NAME = "onFilter"
+    val ON_TEXTSEARCH_NAME = "onTextSearch"
     val CONFIG_THEME = "theme"
     val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
 
@@ -61,6 +62,21 @@ object LuaScripting {
                 }
             }
             return true
+        }
+    }
+
+    fun onTextSearchCallback(input: String, search: String, caseSensitive: Boolean): Boolean? {
+        synchronized(this) {
+            val onFilter = globals.get(ON_TEXTSEARCH_NAME)
+            if (!onFilter.isnil()) {
+                try {
+                    val result = onFilter.invoke(LuaString.valueOf(input), LuaString.valueOf(search), LuaBoolean.valueOf(caseSensitive)).arg1()
+                    return result.toboolean()
+                } catch (e: LuaError) {
+                    log.debug(TAG, "Lua execution failed " + e.message)
+                }
+            }
+            return null
         }
     }
 

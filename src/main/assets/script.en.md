@@ -60,6 +60,25 @@ Called for every task as part of filtering the todo list.
 Defining it in the main configuration will work, but then the Lua script will be the same for all
 filters.
 
+### `onTextSearch (taskText, caseSensitive) -> boolean`
+
+Called for every task as when searching for text.
+
+### Parameters
+
+* `taskText`: The task text as it appears in the `todo.txt` file
+* `searchText`: Text being searched for
+* `caseSensitive`: `true` if case sensitive searching is configured in the settings.
+
+### Returns
+
+* `true` if the task should be shown
+* `false` if the task should not be shown
+
+### Notes
+
+* If there is a Lua error in the callback, it behaves as if it had returned `true`
+* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
 
 Configuration
 =============
@@ -110,6 +129,12 @@ The following code will show only overdue tasks where tasks without a due date, 
        return false;
     end
 
+Show tasks without tags or lists (the GTD Inbox):
+
+    function onFilter(t,f,e)
+       return next(f.tags)==nil and next(f.lists)==nil
+    end
+
 Show all tasks with the `@errands` tag:
 
     function onFilter(t,f,e)
@@ -121,6 +146,15 @@ Change the font size of the main task list to `16sp`:
     function tasklistTextSize()
        return 16.0
     end
+
+The 8.0.0 fuzzy search in Lua:
+
+    function onTextSearch(text, search, case)
+        pat = string.gsub(search, ".", "%0.*")
+        res = string.match(text, pat)
+        return res~=nil
+    end
+
 
 
 Learning Lua
