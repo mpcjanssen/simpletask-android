@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.0.3
+-----
+
+- Actually load Lua script from filter. Fixes #479.
+
 8.0.2
 -----
 
