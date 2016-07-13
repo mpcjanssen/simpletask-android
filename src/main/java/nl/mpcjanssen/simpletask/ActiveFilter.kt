@@ -10,6 +10,7 @@ import nl.mpcjanssen.simpletask.util.todayAsString
 import nl.mpcjanssen.todotxtholo.task.ByTextFilter
 import org.json.JSONObject
 import org.luaj.vm2.LuaError
+import org.luaj.vm2.LuaValue
 import java.util.*
 
 /**
@@ -231,6 +232,10 @@ class ActiveFilter {
             var script: String? = script
             if (script == null) script = ""
             script = script.trim { it <= ' ' }
+            LuaScripting.globals.set(LuaScripting.ON_FILTER_NAME, LuaValue.NIL)
+            if (script.isNotEmpty()) {
+                LuaScripting.evalScript(script)
+            }
 
             var idx = -1
             for (item in items) {
