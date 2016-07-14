@@ -524,3 +524,7 @@ fun broadcastFileChanged(broadcastManager: LocalBroadcastManager) {
 fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
 }
+
+fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+}

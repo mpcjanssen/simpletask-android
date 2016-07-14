@@ -19,6 +19,7 @@ import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
+import nl.mpcjanssen.simpletask.util.broadcastRefreshWidgets
 import nl.mpcjanssen.simpletask.util.runOnMainThread
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.sortWithPrefix
@@ -30,6 +31,7 @@ class FilterActivity : ThemedActivity() {
 
 
     internal var asWidgetConfigure = false
+    internal var asWidgetReConfigure = false
     internal lateinit var mFilter: ActiveFilter
 
     internal lateinit var  m_app: TodoApplication
@@ -37,7 +39,7 @@ class FilterActivity : ThemedActivity() {
 
     private var pager: ViewPager? = null
     private var m_menu: Menu? = null
-    private var log: Logger? = null
+    private var log = Logger
     private var pagerAdapter: ScreenSlidePagerAdapter? = null
     private var scriptFragment: FilterScriptFragment? = null
 
@@ -48,8 +50,8 @@ class FilterActivity : ThemedActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log = Logger
-        log!!.info(TAG, "Called with intent: " + intent.toString())
+
+        log.info(TAG, "Called with intent: " + intent.toString())
         m_app = application as TodoApplication
         prefs = m_app.prefs
 
@@ -69,9 +71,18 @@ class FilterActivity : ThemedActivity() {
         }
 
         mFilter = ActiveFilter(environment)
-
+        val context = applicationContext
         if (asWidgetConfigure) {
-            mFilter.initFromPrefs(prefs)
+            if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false) ) {
+                asWidgetReConfigure = true
+                asWidgetConfigure = false
+                setTitle(R.string.config_widget)
+                val preferences = context.getSharedPreferences("" + intent.getIntExtra(Constants.EXTRA_WIDGET_ID, -1), Context.MODE_PRIVATE)
+                mFilter.initFromPrefs(preferences)
+            } else {
+                setTitle(R.string.create_widget)
+                mFilter.initFromPrefs(prefs)
+            }
         } else {
             mFilter.initFromIntent(intent)
         }
@@ -173,6 +184,9 @@ class FilterActivity : ThemedActivity() {
             }
             R.id.menu_filter_action -> if (asWidgetConfigure) {
                 askWidgetName()
+            } else if (asWidgetReConfigure) {
+                updateWidget()
+                finish()
             } else {
                 applyFilter()
             }
@@ -269,6 +283,15 @@ class FilterActivity : ThemedActivity() {
         } else {
             script?.let {scriptFragment!!.script = script}
         }
+    }
+
+    private fun updateWidget() {
+        updateFilterFromFragments()
+        val widgetId = getIntent().getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
+        log.info (TAG, "Saving settings for widget $widgetId")
+        val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
+        mFilter.saveInPrefs(preferences)
+        broadcastRefreshWidgets(m_app.localBroadCastManager)
     }
 
 

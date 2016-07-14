@@ -59,7 +59,7 @@ import java.util.*
 
 class TodoApplication : Application(),
 
-        SharedPreferences.OnSharedPreferenceChangeListener, TodoList.TodoListChanged, FileStoreInterface.FileChangeListener, BackupInterface {
+        SharedPreferences.OnSharedPreferenceChangeListener,  FileStoreInterface.FileChangeListener, BackupInterface {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -134,6 +134,7 @@ class TodoApplication : Application(),
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
+        intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
         intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
@@ -145,6 +146,9 @@ class TodoApplication : Application(),
                         redrawWidgets()
                         updateWidgets()
                     })
+                } else if (intent.action == Constants.BROADCAST_UPDATE_WIDGETS) {
+                    log.info(TAG, "Refresh widgets from broadcast")
+                    updateWidgets()
                 } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
                     log.info(TAG, "File changed, reloading")
                     loadTodoList(true)
@@ -476,14 +480,6 @@ class TodoApplication : Application(),
 
     }
 
-
-    override fun todoListChanged() {
-        log.info(TAG, "Tasks have changed, update UI")
-        localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
-        localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-
-
-    }
 
     val dateBarRelativeSize: Float
         get() {

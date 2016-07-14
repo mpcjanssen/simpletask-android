@@ -228,6 +228,8 @@ class TodoList(private val app: TodoApplication) {
                 log.info(TAG, "Handler: Handle notifyChanged")
                 save(fileStore, todoName, backup, eol)
             }
+            mLists = null
+            mTags = null
             broadcastRefreshUI(app.localBroadCastManager)
         }
     }
@@ -325,11 +327,6 @@ class TodoList(private val app: TodoApplication) {
             }
         })
     }
-
-    interface TodoListChanged {
-        fun todoListChanged()
-    }
-
 
 
     companion object {
