@@ -29,7 +29,7 @@ import java.util.Collections
 import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
-class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterface.FileChangeListener) : FileStoreInterface {
+class FileStore(ctx: Context) : FileStoreInterface {
     override val isOnline = true
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
@@ -139,7 +139,7 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
             obs.ignoreEvents(true)
             obs.stopWatching()
         }
-        observer = TodoObserver(path, m_fileChangedListener)
+        observer = TodoObserver(path)
         log.info(TAG, "Observer: modifying done")
     }
 
@@ -303,7 +303,7 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
     override fun logout() {
     }
 
-    private inner class TodoObserver(val path: String, private val fileChangedListener: FileStoreInterface.FileChangeListener) : FileObserver(File(path).parentFile.absolutePath) {
+    private inner class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
         private val fileName: String
         private var log =  Logger
         private var ignoreEvents: Boolean = false
@@ -338,7 +338,7 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
                         log.info(TAG, "Observer: ignored event on: " + path)
                     } else {
                         log.info(TAG, "File changed {}" + path)
-                        fileChangedListener.fileChanged(path)
+                        broadcastFileChanged(bm)
                     }
                 }
             }
