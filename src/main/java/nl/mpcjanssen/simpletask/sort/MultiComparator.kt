@@ -47,7 +47,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
             }
             if (reverse) {
-                comp = comp.reversed()
+                comp =  CompReverser(comp)
             }
 
             comparators = comparators?.then(comp) ?:  comp
