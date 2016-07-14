@@ -22,6 +22,20 @@
             android:layout_gravity="center_vertical|left"
             android:layout_weight="1"
             android:paddingLeft="6dp" />
+        <ImageButton
+                android:layout_gravity="center"
+                android:id="@+id/widgetconfig"
+                style="@android:style/Widget.Holo.ActionButton"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+                android:padding="2sp"
+                android:scaleType="centerCrop"
+                android:clickable="true"
+                android:contentDescription="@string/config_widget"
+                android:enabled="true"
+
+                android:icon="@drawable/ic_action_action_settings_dark"
+                android:src="@drawable/ic_action_action_settings_dark" />
 
         <ImageButton
             android:layout_gravity="center"

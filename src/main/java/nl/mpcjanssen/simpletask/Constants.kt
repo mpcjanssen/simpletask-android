@@ -34,6 +34,7 @@ object Constants {
     const val BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE"
     const val BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT"
     const val BROADCAST_UPDATE_UI = "UPDATE_UI"
+    const val BROADCAST_UPDATE_WIDGETS = "UPDATE_WIDGETS"
     const val BROADCAST_FILE_CHANGED = "FILE_CHANGED"
     const val BROADCAST_THEME_CHANGED = "THEME_CHANGED"
     const val BROADCAST_DATEBAR_SIZE_CHANGED = "DATEBAR_SIZE_CHANGED"
@@ -53,6 +54,9 @@ object Constants {
     // Intent extras
     const val EXTRA_BACKGROUND_TASK = "task"
     const val EXTRA_HELP_PAGE = "page"
+
+    const val EXTRA_WIDGET_RECONFIGURE = "widgetreconfigure"
+    const val EXTRA_WIDGET_ID = "widgetid"
 
     // Android OS specific constants
     const val ANDROID_EVENT = "vnd.android.cursor.item/event"

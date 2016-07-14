@@ -1127,6 +1127,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         }
         m_leftDrawerList!!.setItemChecked(drawerAdapter.contextHeaderPosition, mFilter!!.contextsNot)
         m_leftDrawerList!!.setItemChecked(drawerAdapter.projectsHeaderPosition, mFilter!!.projectsNot)
+        m_leftDrawerList!!.deferNotifyDataSetChanged()
     }
 
     private val todoList: TodoList

@@ -16,6 +16,7 @@ import java.io.File;
 
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
+
     final static int FROM_LISTVIEW = 0;
     // Create unique numbers for every widget pendingintent
     // Otherwise the will overwrite each other
@@ -89,6 +90,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         putFilterExtras(appIntent, preferences, widgetId);
         pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
+
+        appIntent = new Intent(ctx,FilterActivity.class);
+        appIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+        appIntent.putExtra(Constants.EXTRA_WIDGET_RECONFIGURE, true);
+        appIntent.putExtra(Constants.EXTRA_WIDGET_ID, widgetId);
+        filter.saveInIntent(appIntent);
+        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.widgetconfig,pendingIntent);
         return view;
 	}
 	
