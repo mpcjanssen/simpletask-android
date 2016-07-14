@@ -55,11 +55,8 @@ public class ByPriorityFilter implements TaskFilter {
     }
 
     public boolean filter(@NonNull Task input) {
-        if (priorities.size() == 0) {
-            return true;
-        }
+        return priorities.size() == 0 || priorities.contains(input.getPriority());
 
-        return priorities.contains(input.getPriority());
     }
 
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */

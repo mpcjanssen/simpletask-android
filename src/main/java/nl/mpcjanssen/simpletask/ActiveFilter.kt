@@ -7,16 +7,17 @@ import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.todayAsString
-import nl.mpcjanssen.todotxtholo.task.ByTextFilter
+import nl.mpcjanssen.simpletask.task.ByTextFilter
 import org.json.JSONObject
 import org.luaj.vm2.LuaError
+import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
 import java.util.*
 
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter {
+class ActiveFilter (val environment: String?) {
     private val log: Logger
 
     var priorities = ArrayList<Priority>()
@@ -222,20 +223,16 @@ class ActiveFilter {
     }
 
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
+        log.info(TAG, "Apply in filter ${script}")
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
         if (items == null) {
             return ArrayList()
         }
+        val code = if (useScript) {script } else {null}
         val today = todayAsString
         try {
-            var script: String? = script
-            if (script == null) script = ""
-            script = script.trim { it <= ' ' }
-            LuaScripting.globals.set(LuaScripting.ON_FILTER_NAME, LuaValue.NIL)
-            if (script.isNotEmpty()) {
-                LuaScripting.evalScript(script)
-            }
+            val callback = LuaScripting.setOnFilter(environment, code)
 
             var idx = -1
             for (item in items) {
@@ -256,10 +253,8 @@ class ActiveFilter {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (useScript && !script.isEmpty()) {
-                    if (!LuaScripting.onFilterCallback(t)) {
+                if (!callback.isnil() && !LuaScripting.onFilterCallback(callback, t)) {
                         continue
-                    }
                 }
                 matched.add(item)
             }
@@ -340,6 +335,7 @@ class ActiveFilter {
         const val INTENT_CREATE_AS_THRESHOLD = "CREATEISTHRESHOLD"
 
         const val INTENT_USE_SCRIPT_FILTER = "USE_SCRIPT"
+        const val INTENT_WIDGET_ID = "WIDGET_ID"
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
 

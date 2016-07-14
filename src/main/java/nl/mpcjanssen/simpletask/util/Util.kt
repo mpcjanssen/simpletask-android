@@ -36,13 +36,12 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import android.os.Parcelable
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Window
-import android.webkit.WebView
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -52,7 +51,6 @@ import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoListItem
-
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
@@ -516,4 +514,13 @@ fun ArrayList<HashSet<String>>.intersection(): Set<String> {
         }
     }
     return intersection
+}
+
+fun broadcastFileChanged(broadcastManager: LocalBroadcastManager) {
+    log.info(TAG, "Sending file changed broadcast")
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_CHANGED))
+}
+
+fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
 }

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class HistoryScreen extends ThemedActivity {
 
@@ -160,7 +161,7 @@ public class HistoryScreen extends ThemedActivity {
             name = cursor.getString(1);
 
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         TextView fileView = (TextView) findViewById(R.id.history_view);
 
         TextView nameView = (TextView) findViewById(R.id.name);

@@ -1,14 +1,10 @@
 package nl.mpcjanssen.simpletask
 
-import android.app.IntentService
-import android.content.Intent
 import android.util.Log
 import nl.mpcjanssen.simpletask.dao.gen.LogItem
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
-import java.io.Serializable
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.concurrent.thread
 
 /*
  * Small logging wrapper to be able to swap loggers without

@@ -19,7 +19,7 @@ public class FontManager
     static public HashMap< String, String > enumerateFonts()
     {
         String[] fontdirs = { "/system/fonts", "/system/font", "/data/fonts" };
-        HashMap< String, String > fonts = new HashMap< String, String >();
+        HashMap< String, String > fonts = new HashMap<>();
         TTFAnalyzer analyzer = new TTFAnalyzer();
 
         for ( String fontdir : fontdirs )

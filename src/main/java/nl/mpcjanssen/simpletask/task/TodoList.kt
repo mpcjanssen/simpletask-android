@@ -50,50 +50,24 @@ import java.util.concurrent.CopyOnWriteArrayList
 
  * @author Mark Janssen
  */
-class TodoList(private val app: TodoApplication, private val mTodoListChanged: TodoList.TodoListChanged?) {
+class TodoList(private val app: TodoApplication) {
     private val log: Logger
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
 
-    private var todolistQueue: Handler? = null
-    private var loadQueued = false
+
 
 
     var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
 
     init {
-        // Set up the message queue
-        val t = Thread(Runnable {
-            Looper.prepare()
-            todolistQueue = Handler()
-            Looper.loop()
-        })
-        t.start()
+
         log = Logger
     }
 
 
-    fun queueRunnable(description: String, r: Runnable) {
-        log.info(TAG, "Handler: Queue " + description)
-        while (todolistQueue == null) {
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
 
-        }
-        if (todolistQueue != null) {
-            todolistQueue!!.post(LoggingRunnable(description, r))
-        } else {
-            r.run()
-        }
-    }
-
-    fun loadQueued(): Boolean {
-        return loadQueued
-    }
 
     fun firstLine(): Int {
         val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
@@ -114,7 +88,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun add(t: TodoListItem, atEnd: Boolean, select: Boolean = false) {
-        queueRunnable("Add task", Runnable {
+        app.queueRunnable("Add task", Runnable {
             log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
             if (atEnd) {
                 t.line = lastLine() + 1
@@ -131,7 +105,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
 
     fun remove(item: TodoListItem) {
-        queueRunnable("Remove", Runnable {
+        app.queueRunnable("Remove", Runnable {
             todoItems?.remove(item) ?: log.warn(TAG, "Tried to remove an item from a null todo list")
          })
     }
@@ -198,7 +172,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
 
     fun undoComplete(items: List<TodoListItem>) {
-        queueRunnable("Uncomplete", Runnable {
+        app.queueRunnable("Uncomplete", Runnable {
             items.forEach {
                 it.task.markIncomplete()
             }
@@ -209,7 +183,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                  keepPrio: Boolean,
                  extraAtEnd: Boolean) {
 
-        queueRunnable("Complete", Runnable {
+        app.queueRunnable("Complete", Runnable {
             val task  = item.task
             val extra = task.markComplete(todayAsString)
             if (extra != null) {
@@ -223,7 +197,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
 
     fun prioritize(items: List<TodoListItem>, prio: Priority) {
-        queueRunnable("Complete", Runnable {
+        app.queueRunnable("Complete", Runnable {
             for (item in items) {
                 val task = item.task
                 task.priority = prio
@@ -249,24 +223,17 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
 
     fun notifyChanged(fileStore: FileStoreInterface, todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
-        todolistQueue!!.post {
+        app.todolistQueue!!.post {
             if (save) {
                 log.info(TAG, "Handler: Handle notifyChanged")
                 save(fileStore, todoName, backup, eol)
             }
-            if (mTodoListChanged != null) {
-                log.info(TAG, "TodoList changed, notifying listener and invalidating cached values")
-                mTags = null
-                mLists = null
-                mTodoListChanged.todoListChanged()
-            } else {
-                log.info(TAG, "TodoList changed, but nobody is listening")
-            }
+            broadcastRefreshUI(app.localBroadCastManager)
         }
     }
 
     fun startAddTaskActivity(act: Activity) {
-        queueRunnable("Add/Edit tasks", Runnable {
+        app.queueRunnable("Add/Edit tasks", Runnable {
             log.info(TAG, "Starting addTask activity")
             val intent = Intent(act, AddTask::class.java)
             act.startActivity(intent)
@@ -281,12 +248,12 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun reload(fileStore: FileStoreInterface, filename: String, backup: BackupInterface, lbm: LocalBroadcastManager, background: Boolean, eol: String) {
-        if (this@TodoList.loadQueued()) {
+        if (app.loadQueued()) {
             log.info(TAG, "TodoList reload is already queued waiting")
             return
         }
         lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
-        loadQueued = true
+        app.loadQueued = true
         val r = Runnable {
             try {
                 todoItems = CopyOnWriteArrayList<TodoListItem>(
@@ -301,13 +268,13 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
                 showToastShort(app, "Loading of todo file failed")
             }
 
-            loadQueued = false
+            app.loadQueued = false
             log.info(TAG, "TodoList loaded, refresh UI")
             notifyChanged(fileStore, filename, eol, backup, false)
         }
         if (background) {
             log.info(TAG, "Loading TodoList asynchronously")
-            queueRunnable("Reload", r)
+            app.queueRunnable("Reload", r)
 
         } else {
             log.info(TAG, "Loading TodoList synchronously")
@@ -316,7 +283,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
-        queueRunnable("Save", Runnable {
+        app.queueRunnable("Save", Runnable {
             val items = todoItems
             if (items==null) {
                 log.error(TAG, "Trying to save null todo list")
@@ -336,7 +303,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
-        queueRunnable("Archive", Runnable {
+        app.queueRunnable("Archive", Runnable {
             val items = todoItems
             if (items==null) {
                 log.error(TAG, "Trying to archive null todo list")
@@ -363,22 +330,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         fun todoListChanged()
     }
 
-    inner class LoggingRunnable internal constructor(private val description: String, private val runnable: Runnable) : Runnable {
 
-        init {
-            log.info(TAG, "Creating action " + description)
-        }
-
-        override fun toString(): String {
-            return description
-        }
-
-        override fun run() {
-            log.info(TAG, "Execution action " + description)
-            runnable.run()
-        }
-
-    }
 
     companion object {
         internal val TAG = TodoList::class.java.simpleName
@@ -388,7 +340,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
         if (todoItems == null) {
             var selection = items
             log.info(TAG, "todoItems is null, queuing selection of ${items.size} items")
-            queueRunnable("Selection", Runnable {
+            app.queueRunnable("Selection", Runnable {
                 selectTasks(selection,lbm)
                 log.info(TAG, "Queued selection update, lbm = $lbm")
                 lbm?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
@@ -431,10 +383,7 @@ class TodoList(private val app: TodoApplication, private val mTodoListChanged: T
     }
 
     fun getTaskCount(): Long {
-        val items = todoItems
-        if (items == null) {
-            return 0
-        }
+        val items = todoItems ?: return 0
         return items.filter {it.task.inFileFormat().isNotBlank()}.size.toLong()
     }
 

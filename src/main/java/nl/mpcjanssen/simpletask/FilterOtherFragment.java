@@ -23,8 +23,6 @@ public class FilterOtherFragment extends Fragment {
     private CheckBox cbHideCreateDate;
     private CheckBox cbHideHidden;
     private CheckBox cbCreateAsThreshold;
-    @Nullable
-    ActionBar actionbar;
     private Logger log;
 
     @Override
@@ -59,7 +57,7 @@ public class FilterOtherFragment extends Fragment {
         log.debug(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
-        actionbar = getActivity().getActionBar();
+
         log.debug(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
                 container, false);

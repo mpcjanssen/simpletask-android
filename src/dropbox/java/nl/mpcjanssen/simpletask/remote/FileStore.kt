@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 /**
  * FileStore implementation backed by Dropbox
  */
-class FileStore(private val mApp: TodoApplication, private val mFileChangedListerer: FileStoreInterface.FileChangeListener) : FileStoreInterface {
+class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
     override fun pause(pause: Boolean) {
         if (pause) {
             log.info(TAG, "App went to background stop watching")
@@ -221,7 +221,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                                 log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
                             } else {
                                 log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " reloading")
-                                mFileChangedListerer.fileChanged(null)
+                                broadcastFileChanged(mApp.localBroadCastManager)
                             }
                         }
                     }
@@ -478,7 +478,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
                 // Usually this means the was a conflict.
                 log.info(TAG, "Filename was changed remotely. New name is: " + newName)
                 showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
-                mFileChangedListerer.fileChanged(newName)
+                mApp.switchTodoFile(newName,true)
             }
         }
         queueRunnable("Save to file " + path, r)
@@ -529,7 +529,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
     }
 
     override fun sync() {
-        mFileChangedListerer.fileChanged(null)
+        broadcastFileChanged(mApp.localBroadCastManager)
     }
 
     override fun writeFile(file: File, contents: String) {
@@ -600,7 +600,7 @@ class FileStore(private val mApp: TodoApplication, private val mFileChangedListe
 
                     if (isOnline) {
                         continuePolling = true
-                        mFileChangedListerer.fileChanged(null)
+                        broadcastFileChanged(mApp.localBroadCastManager)
                     } else {
 
                         log.info(TAG, "Device no longer online skipping reload")

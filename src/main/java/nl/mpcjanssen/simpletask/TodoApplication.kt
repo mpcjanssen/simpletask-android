@@ -36,6 +36,8 @@ import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.os.Handler
+import android.os.Looper
 import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
@@ -46,7 +48,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.appVersion
-import nl.mpcjanssen.simpletask.util.createAlertDialog
+import nl.mpcjanssen.simpletask.util.broadcastFileChanged
 import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.todayAsString
 import org.luaj.vm2.LuaError
@@ -61,23 +63,58 @@ class TodoApplication : Application(),
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
-    lateinit var  todoList: TodoList
+    lateinit var todoList: TodoList
     private lateinit var m_calSync: CalendarSync
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
     private val log = Logger
     private lateinit var mFileStore: FileStoreInterface;
     internal lateinit var daoSession: DaoSession
-    lateinit var  logDao: LogItemDao
+    lateinit var logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
     lateinit var prefs: SharedPreferences
+
+    lateinit var todolistQueue: Handler
+    var loadQueued = false
+
+    init {
+
+        // Set up the message queue
+        val t = Thread(Runnable {
+            Looper.prepare()
+            todolistQueue = Handler()
+            Looper.loop()
+        })
+        t.start()
+    }
+
+    fun queueRunnable(description: String, r: Runnable) {
+        log.info(TodoList.TAG, "Handler: Queue " + description)
+        while (todolistQueue == null) {
+            try {
+                Thread.sleep(100)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+
+        }
+        if (todolistQueue != null) {
+            todolistQueue!!.post(LoggingRunnable(description, r))
+        } else {
+            r.run()
+        }
+    }
+
+    fun loadQueued(): Boolean {
+        return loadQueued
+    }
 
     override fun onCreate() {
 
         super.onCreate()
 
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
-        prefs  = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
         val todoDb = helper.writableDatabase
         val daoMaster = DaoMaster(todoDb)
@@ -97,30 +134,37 @@ class TodoApplication : Application(),
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
+        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
+                log.info(TAG, "Received broadcast ${intent.action}")
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
-                    m_calSync.syncLater()
-                    redrawWidgets()
-                    updateWidgets()
+                    queueRunnable("Refresh UI", Runnable {
+                        m_calSync.syncLater()
+                        redrawWidgets()
+                        updateWidgets()
+                    })
+                } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
+                    log.info(TAG, "File changed, reloading")
+                    loadTodoList(true)
                 }
             }
         }
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         prefsChangeListener(this)
-        todoList = TodoList(this, this)
-        this.mFileStore = FileStore(this, this)
+        todoList = TodoList(this)
+        this.mFileStore = FileStore(this)
         log.info(TAG, "Created todolist {}" + todoList)
-        loadTodoList(true)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
+        queueRunnable("Intial Load", Runnable { loadTodoList(true) })
     }
 
     fun reloadLuaConfig() {
         try {
-            LuaScripting.evalScript(luaConfig)
+            LuaScripting.evalScript(null, luaConfig)
         } catch (e: LuaError) {
             log.warn(TAG, "Lua execution failed " + e.message)
             showToastLong(this, "${getString(R.string.lua_error)}:  ${e.message}")
@@ -444,7 +488,7 @@ class TodoApplication : Application(),
     val dateBarRelativeSize: Float
         get() {
             val def = 80
-            return prefs.getInt(getString(R.string.datebar_relative_size), def)/100.0f
+            return prefs.getInt(getString(R.string.datebar_relative_size), def) / 100.0f
         }
 
 
@@ -543,9 +587,27 @@ class TodoApplication : Application(),
     companion object {
 
         private val TAG = TodoApplication::class.java.simpleName
-        fun atLeastAPI(api: Int) : Boolean =  android.os.Build.VERSION.SDK_INT >= api
+        fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
 
     }
 
     var today: String = todayAsString
+}
+
+class LoggingRunnable internal constructor(private val description: String, private val runnable: Runnable) : Runnable {
+    val log = Logger
+
+    init {
+        log.info(TodoList.TAG, "Creating action " + description)
+    }
+
+    override fun toString(): String {
+        return description
+    }
+
+    override fun run() {
+        log.info(TodoList.TAG, "Execution action " + description)
+        runnable.run()
+    }
+
 }

@@ -13,38 +13,38 @@ import android.widget.LinearLayout
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.createAlertDialog
 import org.luaj.vm2.LuaError
+import org.luaj.vm2.LuaTable
 
 class FilterScriptFragment : Fragment() {
     private var txtScript: EditText? = null
     private var cbUseScript: CheckBox? = null
     private var txtTestTask: EditText? = null
-    private var log: Logger? = null
+    private var log: Logger = Logger
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log = Logger
-        log!!.debug(TAG, "onCreate() this:" + this)
+        log.debug(TAG, "onCreate() this:" + this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        log!!.debug(TAG, "onDestroy() this:" + this)
+        log.debug(TAG, "onDestroy() this:" + this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        log!!.debug(TAG, "onSaveInstanceState() this:" + this)
+        log.debug(TAG, "onSaveInstanceState() this:" + this)
         outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER, script)
         outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, testTask)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        log!!.debug(TAG, "onCreateView() this:" + this)
+        log.debug(TAG, "onCreateView() this:" + this)
 
         val arguments = arguments
-        log!!.debug(TAG, "Fragment bundle:" + this)
+        log.debug(TAG, "Fragment bundle:" + this)
         val layout = inflater.inflate(R.layout.script_filter,
                 container, false) as LinearLayout
 
@@ -56,11 +56,11 @@ class FilterScriptFragment : Fragment() {
         btnTest.setOnClickListener {
             val t = Task(testTask)
             try {
+                log.info(TAG, "Running onFilter test Lua callback in module ${environment}")
                 val script = script
-                LuaScripting.evalScript(script)
                 val snackBar = Snackbar.make(activity.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
                 val barView = snackBar.view
-                if (script.trim { it <= ' ' }.isEmpty() || LuaScripting.onFilterCallback(t)) {
+                if (script.trim { it <= ' ' }.isEmpty() || LuaScripting.onFilterCallback(LuaScripting.setOnFilter(environment, script), t)) {
                     snackBar.setText("True, task will be shown")
                     barView.setBackgroundColor(0xff43a047.toInt())
                 } else {
@@ -69,7 +69,7 @@ class FilterScriptFragment : Fragment() {
                 }
                 snackBar.show()
             } catch (e: LuaError) {
-                log!!.debug(TAG, "Lua execution failed " + e.message)
+                log.debug(TAG, "Lua execution failed " + e.message)
                 createAlertDialog(activity, R.string.lua_error, e.message ?: "").show()
             }
         }
@@ -93,6 +93,12 @@ class FilterScriptFragment : Fragment() {
             } else {
                 return cbUseScript?.isChecked ?: false
             }
+        }
+
+    val environment: String?
+        get() {
+            val arguments = arguments
+            return arguments.getString(ActiveFilter.INTENT_WIDGET_ID, null)
         }
 
     var script: String

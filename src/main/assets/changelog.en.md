@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.0.4
+-----
+
+- Tagged only FDroid release.
+
 8.0.3
 -----
 

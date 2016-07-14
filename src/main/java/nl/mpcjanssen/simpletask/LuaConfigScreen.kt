@@ -3,22 +3,11 @@
  */
 package nl.mpcjanssen.simpletask
 
-import android.app.ActionBar
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.view.Menu
-import android.view.MenuItem
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.util.createAlertDialog
 import org.luaj.vm2.LuaError
-
-import java.util.Stack
 
 class LuaConfigScreen : ThemedActivity() {
 
@@ -34,7 +23,7 @@ class LuaConfigScreen : ThemedActivity() {
         val btnRun = findViewById(R.id.btn_run) as Button
         btnRun.setOnClickListener {
             try {
-                LuaScripting.evalScript(script())
+                LuaScripting.evalScript(null, script())
             } catch (e: LuaError) {
                 log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
                 createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
