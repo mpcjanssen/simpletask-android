@@ -59,16 +59,14 @@ public class IndeterminateRadioButton extends AppCompatRadioButton
         setButtonDrawable(Utils.tintDrawable(this, R.drawable.btn_radio));
 
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndeterminateCheckable);
-        try {
-            // Read the XML attributes
-            final boolean indeterminate = a.getBoolean(
-                    R.styleable.IndeterminateCheckable_indeterminate, false);
-            if (indeterminate) {
-                setState(null);
-            }
-        } finally {
-            a.recycle();
+
+        // Read the XML attributes
+        final boolean indeterminate = a.getBoolean(
+                R.styleable.IndeterminateCheckable_indeterminate, false);
+        if (indeterminate) {
+            setState(null);
         }
+        a.recycle();
     }
 
     @Override

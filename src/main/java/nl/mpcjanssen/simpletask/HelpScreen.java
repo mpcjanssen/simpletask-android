@@ -3,13 +3,13 @@
  */
 package nl.mpcjanssen.simpletask;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -65,7 +65,7 @@ public class HelpScreen extends ThemedActivity {
             page = i.getStringExtra(Constants.EXTRA_HELP_PAGE) + "." + getText(R.string.help_locale).toString()  + ".md";
         }
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

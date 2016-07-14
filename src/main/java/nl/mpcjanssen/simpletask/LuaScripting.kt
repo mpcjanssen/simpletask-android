@@ -5,6 +5,7 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.toDateTime
 import org.luaj.vm2.*
+import org.luaj.vm2.ast.Str
 import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
@@ -49,9 +50,26 @@ object LuaScripting {
         return callZeroArgLuaFunction(CONFIG_THEME) { it -> it.toString() }
     }
 
-    fun onFilterCallback (t : Task) : Boolean {
+
+    fun setOnFilter(namespace: String?, code: String?): LuaValue {
+        val env = if (namespace == null) {
+            LuaScripting.globals
+        } else {
+            val module = LuaTable.tableOf()
+            LuaScripting.globals.set(namespace, module)
+            module
+        }
+        env.set(LuaScripting.ON_FILTER_NAME, LuaValue.NIL)
+        code?.let {
+            log.info(ActiveFilter.TAG, "Executing filter code in env $namespace")
+            LuaScripting.evalScript(namespace, code)
+        }
+        return env.get(LuaScripting.ON_FILTER_NAME)
+
+    }
+
+    fun onFilterCallback (onFilter : LuaValue, t : Task) : Boolean {
         synchronized(this) {
-            val onFilter = globals.get(ON_FILTER_NAME)
             if (!onFilter.isnil()) {
                 val args = fillOnFilterVarargs(t)
                 try {
@@ -80,9 +98,13 @@ object LuaScripting {
         }
     }
 
-    fun evalScript(script: String) {
+    fun evalScript(environment: String?, script: String) {
         synchronized(this) {
-            globals.load(script).call()
+            if (environment!=null) {
+                globals.load(script, environment, globals.get(environment).checktable()).call()
+            } else {
+                globals.load(script).call()
+            }
         }
     }
 

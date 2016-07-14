@@ -14,6 +14,7 @@ import nl.mpcjanssen.simpletask.dao.gen.TodoFile;
 /** 
  * DAO for table "TODO_FILE".
 */
+@SuppressWarnings("PointlessArithmeticExpression")
 public class TodoFileDao extends AbstractDao<TodoFile, String> {
 
     public static final String TABLENAME = "TODO_FILE";

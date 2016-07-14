@@ -62,18 +62,15 @@ public class IndeterminateCheckBox extends AppCompatCheckBox
             //setSupportButtonTintList(ContextCompat.getColorStateList(context, R.color.control_checkable_material));
             setButtonDrawable(Utils.tintDrawable(this, R.drawable.btn_checkmark));
         }
-
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndeterminateCheckable);
-        try {
-            // Read the XML attributes
-            final boolean indeterminate = a.getBoolean(
-                    R.styleable.IndeterminateCheckable_indeterminate, false);
-            if (indeterminate) {
-                setIndeterminate(true);
-            }
-        } finally {
-            a.recycle();
+        // Read the XML attributes
+        final boolean indeterminate = a.getBoolean(
+                R.styleable.IndeterminateCheckable_indeterminate, false);
+        if (indeterminate) {
+            setIndeterminate(true);
         }
+        a.recycle();
+
     }
 
     @Override

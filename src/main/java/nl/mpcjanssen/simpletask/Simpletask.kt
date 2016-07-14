@@ -246,7 +246,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             return
         }
 
-        mFilter = ActiveFilter()
+        mFilter = ActiveFilter(null)
 
         m_leftDrawerList = findViewById(R.id.left_drawer) as ListView
         m_rightDrawerList = findViewById(R.id.right_drawer_list) as ListView
@@ -293,25 +293,25 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
             mFilter!!.initFromIntent(intent)
-            log!!.info(TAG, "handleIntent: launched with filter" + mFilter!!)
+            log.info(TAG, "handleIntent: launched with filter" + mFilter!!)
             val extras = intent.extras
             if (extras != null) {
                 for (key in extras.keySet()) {
                     val value = extras.get(key)
                     if (value != null) {
-                        log!!.debug(TAG, "%s %s (%s)".format(key, value.toString(), value.javaClass.name))
+                        log.debug(TAG, "%s %s (%s)".format(key, value.toString(), value.javaClass.name))
                     } else {
-                        log!!.debug(TAG, "%s %s)".format(key, "<null>"))
+                        log.debug(TAG, "%s %s)".format(key, "<null>"))
                     }
 
                 }
 
             }
-            log!!.info(TAG, "handleIntent: saving filter in prefs")
+            log.info(TAG, "handleIntent: saving filter in prefs")
             mFilter!!.saveInPrefs(m_app.prefs)
         } else {
             // Set previous filters and sort
-            log!!.info(TAG, "handleIntent: from m_prefs state")
+            log.info(TAG, "handleIntent: from m_prefs state")
             mFilter!!.initFromPrefs(m_app.prefs)
         }
 
@@ -375,7 +375,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 build.setItems(titleArray) { dialog, which ->
                     val actionIntent: Intent
                     val url = links[which]
-                    log!!.info(TAG, "" + actions[which] + ": " + url)
+                    log.info(TAG, "" + actions[which] + ": " + url)
                     when (actions[which]) {
                         ACTION_LINK -> if (url.startsWith("todo://")) {
                             val todoFolder = m_app.todoFile.parentFile
@@ -551,7 +551,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
     private fun populateMainMenu(menu: Menu?) {
 
         if (menu == null) {
-            log!!.warn(TAG, "Menu was null")
+            log.warn(TAG, "Menu was null")
             return
         }
         menu.clear()
@@ -601,7 +601,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             override fun onQueryTextChange(newText: String): Boolean {
                 if (!m_ignoreSearchChangeCallback) {
                     if (mFilter == null) {
-                        mFilter = ActiveFilter()
+                        mFilter = ActiveFilter(null)
                     }
                     mFilter!!.search = newText
                     mFilter!!.saveInPrefs(m_app.prefs)
@@ -744,7 +744,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         if (m_drawerToggle != null && m_drawerToggle!!.onOptionsItemSelected(item)) {
             return true
         }
-        log!!.info(TAG, "onMenuItemSelected: " + item.itemId)
+        log.info(TAG, "onMenuItemSelected: " + item.itemId)
         when (item.itemId) {
             R.id.search -> {
             }
@@ -762,7 +762,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
     }
 
     private fun startAddTaskActivity() {
-        log!!.info(TAG, "Starting addTask activity")
+        log.info(TAG, "Starting addTask activity")
         val intent = Intent(this, AddTask::class.java)
         mFilter!!.saveInIntent(intent)
         startActivity(intent)
@@ -787,7 +787,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             val filterIds = saved_filter_ids.getStringSet("ids", HashSet<String>())
             for (id in filterIds) {
                 val filter_pref = getSharedPreferences(id, Context.MODE_PRIVATE)
-                val filter = ActiveFilter()
+                val filter = ActiveFilter(null)
                 filter.initFromPrefs(filter_pref)
                 filter.prefName = id
                 saved_filters.add(filter)
@@ -824,13 +824,13 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 val contents = fileStore.readFile(importFile.canonicalPath, null)
                 val jsonFilters = JSONObject(contents)
                 jsonFilters.keys().forEach {
-                    val filter = ActiveFilter()
+                    val filter = ActiveFilter(null)
                     filter.initFromJSON(jsonFilters.getJSONObject(it))
                     saveFilterInPrefs(it,filter)
                 }
                 localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
             } catch (e: IOException) {
-                log!!.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
+                log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
             }
         }
@@ -942,12 +942,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action) {
             // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-            log!!.warn(TAG, "Not implemented search")
+            log.warn(TAG, "Not implemented search")
         } else if (intent.extras != null) {
             // Only change intent if it actually contains a filter
             setIntent(intent)
         }
-        log!!.info(TAG, "onNewIntent: " + intent)
+        log.info(TAG, "onNewIntent: " + intent)
 
     }
 
@@ -1038,21 +1038,21 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         ids.remove(prefsName)
         saved_filters.edit().putStringSet("ids", ids).apply()
         val filter_prefs = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val deleted_filter = ActiveFilter()
+        val deleted_filter = ActiveFilter(null)
         deleted_filter.initFromPrefs(filter_prefs)
         filter_prefs.edit().clear().apply()
         val prefs_path = File(this.filesDir, "../shared_prefs")
         val prefs_xml = File(prefs_path, prefsName + ".xml")
         val deleted = prefs_xml.delete()
         if (!deleted) {
-            log!!.warn(TAG, "Failed to delete saved filter: " + deleted_filter.name!!)
+            log.warn(TAG, "Failed to delete saved filter: " + deleted_filter.name!!)
         }
         updateRightDrawer()
     }
 
     private fun updateSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter()
+        val old_filter = ActiveFilter(null)
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         mFilter!!.name = filterName
@@ -1062,7 +1062,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
     private fun renameSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter()
+        val old_filter = ActiveFilter(null)
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         val alert = AlertDialog.Builder(this)
@@ -1289,7 +1289,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                     showListViewProgress(true)
                 }
                 val visibleTasks: List<TodoListItem>
-                log!!.info(TAG, "setFilteredTasks called: " + todoList)
+                log.info(TAG, "setFilteredTasks called: " + todoList)
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(m_app.defaultSorts)
                 visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
@@ -1579,7 +1579,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 taskText.setHorizontallyScrolling(true)
                 taskText.ellipsize = truncateAt
             } else {
-                log!!.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
+                log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
             }
         }
     }

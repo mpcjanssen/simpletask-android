@@ -285,7 +285,7 @@ class FileStore(ctx: Context, private val m_fileChangedListener: FileStoreInterf
                 r.add("/")
             }
             Collections.sort(r)
-            fileList = r.toArray<String>(arrayOfNulls<String>(r.size))
+            fileList = r.toArray(arrayOfNulls<String>(r.size))
         }
 
         private fun getChosenFile(fileChosen: String): File {

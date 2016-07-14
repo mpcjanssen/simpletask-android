@@ -52,7 +52,7 @@ class AddTask : ThemedActivity() {
         // m_app.loadTodoList(true)
 
         val intent = intent
-        val mFilter = ActiveFilter()
+        val mFilter = ActiveFilter(null)
         mFilter.initFromIntent(intent)
 
         val intentFilter = IntentFilter()
@@ -192,7 +192,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
 
-        if (selection != null && selection!!.size > 0) {
+        if (selection != null && selection.size > 0) {
             textInputField.setSelection(textInputField.text.length)
         }
     }
@@ -266,12 +266,12 @@ class AddTask : ThemedActivity() {
         // Update the TodoList with changes
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
-        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup?.size ?: 0} tasks" )
+        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks" )
         for (task in enteredTasks) {
-            if (m_backup != null && m_backup!!.size > 0) {
+            if (m_backup.size > 0) {
                 // Don't modify create date for updated tasks
                 m_backup[0].task.update(task.text)
-                m_backup!!.removeAt(0)
+                m_backup.removeAt(0)
             } else {
                 val t: Task
                 if (m_app.hasPrependDate()) {
@@ -284,11 +284,10 @@ class AddTask : ThemedActivity() {
         }
 
         // Remove remaining tasks that where selected for update
-        if (m_backup != null) {
-            for (t in m_backup!!) {
-                todoList.remove(t)
-            }
+        for (t in m_backup) {
+            todoList.remove(t)
         }
+
 
         // Save
         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
@@ -581,7 +580,7 @@ class AddTask : ThemedActivity() {
         // save current selection and length
         val start = textInputField.selectionStart
         val end = textInputField.selectionEnd
-        log!!.debug(TAG, "Current selection: $start-$end")
+        log.debug(TAG, "Current selection: $start-$end")
         val length = textInputField.text.length
         val lines = ArrayList<String>()
         Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
@@ -594,7 +593,7 @@ class AddTask : ThemedActivity() {
         }
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
-            log!!.debug(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
+            log.debug(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
             t.priority = Priority.toPriority(newPriority.toString())
             lines[currentLine] = t.inFileFormat()
             textInputField.setText(join(lines, "\n"))

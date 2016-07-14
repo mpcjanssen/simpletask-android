@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.0.3'
-    ext.android_support_version = '23.3.0'
+    ext.android_support_version = '24.0.0'
     repositories {
         jcenter()
     }
@@ -18,7 +18,7 @@ apply plugin: 'kotlin-android'
 
 android {
     buildToolsVersion "23.0.3"
-    compileSdkVersion 23
+    compileSdkVersion 24
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -31,7 +31,7 @@ android {
         versionName '8.0.3'
         versionCode 3035
 	    minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
     }
 
     productFlavors {

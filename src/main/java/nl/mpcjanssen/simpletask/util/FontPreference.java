@@ -107,22 +107,23 @@ public class FontPreference extends DialogPreference implements DialogInterface.
 
         // Get the fonts on the device
         HashMap< String, String > fonts = FontManager.enumerateFonts();
-        m_fontPaths = new ArrayList< String >();
-        m_fontNames = new ArrayList< String >();
+        m_fontPaths = new ArrayList<>();
+        m_fontNames = new ArrayList<>();
 
         // Get the current value to find the checked item
         String selectedFontPath = getSharedPreferences().getString( getKey(), "");
         int idx = 0, checked_item = 0;
         m_fontPaths.add("");
         m_fontNames.add("Default");
-        for ( String path : fonts.keySet() )
-        {
-            if ( path.equals( selectedFontPath ) )
-                checked_item = idx;
+        if (fonts != null ) {
+            for (String path : fonts.keySet()) {
+                if (path.equals(selectedFontPath))
+                    checked_item = idx;
 
-            m_fontPaths.add( path );
-            m_fontNames.add( fonts.get(path) );
-            idx++;
+                m_fontPaths.add(path);
+                m_fontNames.add(fonts.get(path));
+                idx++;
+            }
         }
 
         // Create out adapter

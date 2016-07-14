@@ -5,7 +5,7 @@ import java.util.ArrayList
 class ListenerList<L> {
     private val listenerList = ArrayList<L>()
 
-    interface FireHandler<L> {
+    interface FireHandler<in L> {
         fun fireEvent(listener: L)
     }
 

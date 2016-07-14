@@ -14,6 +14,7 @@ import nl.mpcjanssen.simpletask.dao.gen.LogItem;
 /** 
  * DAO for table "LOG_ITEM".
 */
+@SuppressWarnings("ALL")
 public class LogItemDao extends AbstractDao<LogItem, Long> {
 
     public static final String TABLENAME = "LOG_ITEM";

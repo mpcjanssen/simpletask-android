@@ -2,6 +2,7 @@ package com.mobeta.android.dslv;
 
 import android.graphics.Point;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.*;
 import android.widget.AdapterView;
 import nl.mpcjanssen.simpletask.Logger;
@@ -23,6 +24,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     /**
      * Drag init mode enum.
      */
+
     public static final int ON_DOWN = 0;
     public static final int ON_DRAG = 1;
     public static final int ON_LONG_PRESS = 2;
@@ -114,6 +116,31 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
         super(dslv);
         log = Logger.INSTANCE;
         mDslv = dslv;
+        if (mFlingRemoveListener == null) {
+            mFlingRemoveListener =
+                    new GestureDetector.SimpleOnGestureListener() {
+                        @Override
+                        public final boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                                     float velocityY) {
+                            // log.debug(TAG, "on fling remove called");
+                            if (mRemoveEnabled && mIsRemoving) {
+                                int w = mDslv.getWidth();
+                                int minPos = w / 5;
+                                if (velocityX > mFlingSpeed) {
+                                    if (mPositionX > -minPos) {
+                                        mDslv.stopDragWithVelocity(true, velocityX);
+                                    }
+                                } else if (velocityX < -mFlingSpeed) {
+                                    if (mPositionX < minPos) {
+                                        mDslv.stopDragWithVelocity(true, velocityX);
+                                    }
+                                }
+                                mIsRemoving = false;
+                            }
+                            return false;
+                        }
+                    };
+        }
         mDetector = new GestureDetector(dslv.getContext(), this);
         mFlingRemoveDetector = new GestureDetector(dslv.getContext(), mFlingRemoveListener);
         mFlingRemoveDetector.setIsLongpressEnabled(false);
@@ -446,29 +473,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
         // do nothing
     }
 
-    @NonNull
-    private GestureDetector.OnGestureListener mFlingRemoveListener =
-            new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public final boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                        float velocityY) {
-                    // log.debug(TAG, "on fling remove called");
-                    if (mRemoveEnabled && mIsRemoving) {
-                        int w = mDslv.getWidth();
-                        int minPos = w / 5;
-                        if (velocityX > mFlingSpeed) {
-                            if (mPositionX > -minPos) {
-                                mDslv.stopDragWithVelocity(true, velocityX);
-                            }
-                        } else if (velocityX < -mFlingSpeed) {
-                            if (mPositionX < minPos) {
-                                mDslv.stopDragWithVelocity(true, velocityX);
-                            }
-                        }
-                        mIsRemoving = false;
-                    }
-                    return false;
-                }
-            };
+    @Nullable
+    private static GestureDetector.OnGestureListener mFlingRemoveListener = null;
 
 }

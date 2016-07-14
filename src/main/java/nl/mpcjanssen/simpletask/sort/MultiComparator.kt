@@ -4,11 +4,7 @@ package nl.mpcjanssen.simpletask.sort
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.todayAsString
-
-
 import java.util.*
-import kotlin.comparisons.reversed
 import kotlin.comparisons.then
 
 class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {

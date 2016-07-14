@@ -2220,11 +2220,7 @@ public class DragSortListView extends ListView {
 
         View v = mFloatViewManager.onCreateFloatView(position);
 
-        if (v == null) {
-            return false;
-        } else {
-            return startDrag(position, v, dragFlags, deltaX, deltaY);
-        }
+        return v != null && startDrag(position, v, dragFlags, deltaX, deltaY);
 
     }
 

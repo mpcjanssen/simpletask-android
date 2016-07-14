@@ -22,11 +22,9 @@
  * *
  * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
  */
-package nl.mpcjanssen.todotxtholo.task
+package nl.mpcjanssen.simpletask.task
 
 import nl.mpcjanssen.simpletask.LuaScripting
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TaskFilter
 import java.util.*
 
 /**

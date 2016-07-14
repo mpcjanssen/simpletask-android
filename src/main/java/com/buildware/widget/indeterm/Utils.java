@@ -60,11 +60,10 @@ class Utils {
 
     private static int resolveColor(Context context, @AttrRes int attr, int defaultValue) {
         TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{attr});
-        try {
-            return a.getColor(0, defaultValue);
-        } finally {
-            a.recycle();
-        }
+        int result;
+        result =  a.getColor(0, defaultValue);
+        a.recycle();
+        return result;
     }
 
     private static float resolveFloat(Context context, @AttrRes int attr, float defaultValue) {
