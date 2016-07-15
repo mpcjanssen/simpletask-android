@@ -21,6 +21,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.design.widget.FloatingActionButton
@@ -320,96 +321,11 @@ class Simpletask : ThemedActivity() {
             m_adapter = TaskAdapter(layoutInflater, application)
         }
         m_adapter!!.setFilteredTasks()
-        listView.setLayoutManager(LinearLayoutManager(this));
-        listView.adapter = this.m_adapter
 
-        val lv = listView
+        listView?.layoutManager = LinearLayoutManager(this);
 
-/*        lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
-        lv.isClickable = true
-        lv.isLongClickable = true
-        lv.onItemLongClickListener = this
+        listView?.adapter = this.m_adapter
 
-
-        lv.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val links = ArrayList<String>()
-            val actions = ArrayList<String>()
-            lv.setItemChecked(position, !lv.isItemChecked(position))
-            if (todoList.selectedTasks.size > 0) {
-                onItemLongClick(parent, view, position, id)
-                return@OnItemClickListener
-            }
-            val item = getTaskAt(position)
-            if (item != null) {
-                val t = item.task
-                for (link in t.links) {
-                    actions.add(ACTION_LINK)
-                    links.add(link)
-                }
-                for (number in t.phoneNumbers) {
-                    actions.add(ACTION_PHONE)
-                    links.add(number)
-                    actions.add(ACTION_SMS)
-                    links.add(number)
-                }
-                for (mail in t.mailAddresses) {
-                    actions.add(ACTION_MAIL)
-                    links.add(mail)
-                }
-            }
-            if (links.size == 0) {
-                onItemLongClick(parent, view, position, id)
-            } else {
-                // Decorate the links array
-                val titles = ArrayList<String>()
-                for (i in links.indices) {
-                    when (actions[i]) {
-                        ACTION_SMS -> titles.add(i, "SMS: " + links[i])
-                        ACTION_PHONE -> titles.add(i, "Call: " + links[i])
-                        else -> titles.add(i, links[i])
-                    }
-                }
-                val build = AlertDialog.Builder(this@Simpletask)
-                build.setTitle(R.string.task_action)
-                val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
-                build.setItems(titleArray) { dialog, which ->
-                    val actionIntent: Intent
-                    val url = links[which]
-                    log.info(TAG, "" + actions[which] + ": " + url)
-                    when (actions[which]) {
-                        ACTION_LINK -> if (url.startsWith("todo://")) {
-                            val todoFolder = m_app.todoFile.parentFile
-                            val newName = File(todoFolder, url.substring(7))
-                            m_app.switchTodoFile(newName.absolutePath, true)
-                        } else if (url.startsWith("root://")) {
-                            val rootFolder = m_app.localFileRoot
-                            val file = File(rootFolder, url.substring(7))
-                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
-                            startActivity(actionIntent)
-                        } else {
-                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            startActivity(actionIntent)
-                        }
-                        ACTION_PHONE -> {
-                            actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
-                            startActivity(actionIntent)
-                        }
-                        ACTION_SMS -> {
-                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
-                            startActivity(actionIntent)
-                        }
-                        ACTION_MAIL -> {
-                            actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                            actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                                    arrayOf(url))
-                            actionIntent.type = "text/plain"
-                            startActivity(actionIntent)
-                        }
-                    }
-                }
-                build.create().show()
-            }
-        }*/
 
 
         // If we were started from the widget, select the pushed task
@@ -429,10 +345,9 @@ class Simpletask : ThemedActivity() {
         if (selection.size > 0) {
             val selectedTask = selection[0]
             m_scrollPosition = m_adapter!!.getPosition(selectedTask)
-            openSelectionMode()
-        } else {
-            closeSelectionMode()
+
         }
+        refreshSelectionMode()
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { startAddTaskActivity() }
@@ -460,7 +375,7 @@ class Simpletask : ThemedActivity() {
 
     private fun updateFilterBar() {
         val lv = listView
-        val v = lv.getChildAt(0)
+        val v = lv?.getChildAt(0)
         val top = if (v == null) 0 else v.top
 
         val actionbar = findViewById(R.id.actionbar) as LinearLayout
@@ -493,11 +408,6 @@ class Simpletask : ThemedActivity() {
     override fun onDestroy() {
         super.onDestroy()
         localBroadcastManager!!.unregisterReceiver(m_broadcastReceiver)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        // outState.putInt("position", listView.firstVisiblePosition)
     }
 
     override fun onResume() {
@@ -1116,24 +1026,6 @@ class Simpletask : ThemedActivity() {
         startActivity(i)
     }
 
-/*    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
-        val t = getTaskAt(position) ?: return false
-        val selected = !listView.isItemChecked(position)
-        if (selected) {
-            todoList.selectTodoItem(t)
-        } else {
-            todoList.unSelectTodoItem(t)
-        }
-        listView.setItemChecked(position, selected)
-        val numSelected = todoList.selectedTasks.size
-        if (numSelected == 0) {
-            closeSelectionMode()
-        } else {
-            openSelectionMode()
-        }
-        return true
-    }*/
-
     private fun openSelectionMode() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         if (options_menu == null) {
@@ -1219,10 +1111,10 @@ class Simpletask : ThemedActivity() {
         toolbar.visibility = View.VISIBLE
     }
 
-    val listView: RecyclerView
+    val listView: RecyclerView?
         get() {
             val lv = findViewById(android.R.id.list)
-            return lv as RecyclerView
+            return lv as RecyclerView?
         }
 
     fun showListViewProgress(show: Boolean) {
@@ -1408,9 +1300,95 @@ class Simpletask : ThemedActivity() {
                 taskThreshold.text = ""
                 taskThreshold.visibility = View.GONE
             }
+            // Set selected state
+            view.isActivated = item.selected
 
+            // Set click listeners
+            view.setOnClickListener {
+                if (item.selected) {
+                    todoList.unSelectTodoItem(item)
+                } else {
+                    todoList.selectTodoItem(item)
+                }
+                refreshSelectionMode()
+                notifyItemChanged(position)
+            }
+
+            view.setOnLongClickListener {
+                val links = ArrayList<String>()
+                val actions = ArrayList<String>()
+                //lv.setItemChecked(position, !lv.isItemChecked(position))
+                if (item != null) {
+                    val t = item.task
+                    for (link in t.links) {
+                        actions.add(ACTION_LINK)
+                        links.add(link)
+                    }
+                    for (number in t.phoneNumbers) {
+                        actions.add(ACTION_PHONE)
+                        links.add(number)
+                        actions.add(ACTION_SMS)
+                        links.add(number)
+                    }
+                    for (mail in t.mailAddresses) {
+                        actions.add(ACTION_MAIL)
+                        links.add(mail)
+                    }
+                }
+                if (actions.size != 0) {
+
+
+                    val titles = ArrayList<String>()
+                    for (i in links.indices) {
+                        when (actions[i]) {
+                            ACTION_SMS -> titles.add(i, "SMS: " + links[i])
+                            ACTION_PHONE -> titles.add(i, "Call: " + links[i])
+                            else -> titles.add(i, links[i])
+                        }
+                    }
+                    val build = AlertDialog.Builder(this@Simpletask)
+                    build.setTitle(R.string.task_action)
+                    val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
+                    build.setItems(titleArray) { dialog, which ->
+                        val actionIntent: Intent
+                        val url = links[which]
+                        log.info(TAG, "" + actions[which] + ": " + url)
+                        when (actions[which]) {
+                            ACTION_LINK -> if (url.startsWith("todo://")) {
+                                val todoFolder = m_app.todoFile.parentFile
+                                val newName = File(todoFolder, url.substring(7))
+                                m_app.switchTodoFile(newName.absolutePath, true)
+                            } else if (url.startsWith("root://")) {
+                                val rootFolder = m_app.localFileRoot
+                                val file = File(rootFolder, url.substring(7))
+                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
+                                startActivity(actionIntent)
+                            } else {
+                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                startActivity(actionIntent)
+                            }
+                            ACTION_PHONE -> {
+                                actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
+                                startActivity(actionIntent)
+                            }
+                            ACTION_SMS -> {
+                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
+                                startActivity(actionIntent)
+                            }
+                            ACTION_MAIL -> {
+                                actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
+                                actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                                        arrayOf(url))
+                                actionIntent.type = "text/plain"
+                                startActivity(actionIntent)
+                            }
+                        }
+                    }
+                    build.create().show()
+                }
+                true
+            }
         }
-        val lv = listView
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
@@ -1491,18 +1469,13 @@ class Simpletask : ThemedActivity() {
                 return 1
             }
         }
+    }
 
-
-        fun isEnabled(position: Int): Boolean {
-            if (position == visibleLines.size) {
-                return false
-            }
-
-            if (visibleLines.size < position + 1) {
-                return false
-            }
-            val line = visibleLines[position]
-            return !line.header
+    private fun refreshSelectionMode() {
+        if (todoList.selectedTasks.size!=0) {
+            openSelectionMode()
+        } else {
+            closeSelectionMode()
         }
     }
 

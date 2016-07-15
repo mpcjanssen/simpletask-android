@@ -144,7 +144,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_show_calendarview" translatable="false">ui_show_calendarview</string>
     <string name="ui_sort_case_sensitive" translatable="false">ui_sort_case_sensitive</string>
     <string name="ui_todotxt_terms">ui_todo_txt_terms</string>
-    <string name="ui_fast_scroll" translatable="false">ui_fast_scroll</string>
     <string name="show_todo_path" translatable="false">show_todo_path</string>
     <string name="back_clears_filter" translatable="false">back_clears_filter</string>
     <string name="keep_prio" translatable="false">todotxt_completion</string>

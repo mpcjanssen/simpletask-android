@@ -30,6 +30,8 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:orientation="horizontal"
                 android:background="?android:attr/activatedBackgroundIndicator"
                 android:id="@+id/taskline"
+              android:clickable="true"
+              android:longClickable="true"
         >
 
     <CheckBox
