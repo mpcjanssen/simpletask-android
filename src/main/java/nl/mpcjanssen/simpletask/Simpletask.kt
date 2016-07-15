@@ -469,18 +469,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         }
     }
 
-    private fun ssetSelectedTasks(items: List<TodoListItem>?) {
-        if (items == null) return
-        val lv = listView
-        for (t in items) {
-            val position = m_adapter!!.getPosition(t)
-            if (position != -1) {
-                lv.setItemChecked(position, true)
-                lv.setSelection(position)
-            }
-        }
-    }
-
     private fun updateFilterBar() {
         val lv = listView
         val index = lv.firstVisiblePosition
@@ -1280,7 +1268,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
 
-
+        val lv = listView
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
@@ -1292,7 +1280,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 log.info(TAG, "setFilteredTasks called: " + todoList)
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(m_app.defaultSorts)
-                visibleTasks = todoList.getSortedTasksCopy(activeFilter, sorts, m_app.sortCaseSensitive())
+                visibleTasks = todoList.getSortedTasks(activeFilter, sorts, m_app.sortCaseSensitive())
                 val newVisibleLines = ArrayList<VisibleLine>()
 
 
@@ -1397,7 +1385,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                     holder = view.tag as ViewHolder
                 }
                 val item = line.task ?: return null
-                val lv = listView
 
                 if (item.selected) {
                     lv.setItemChecked(position, true)
