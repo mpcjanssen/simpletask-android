@@ -10,6 +10,7 @@
 - Allow reconfiguration of widgets. Fixes #90.
 - Fix crash with reversed sort for non MM devices.
 - Add explanation to change 7.x to 8.0 Lua filters. See scripting help.
+- Handle selected state of a task in the ListView adapter.
 
 
 8.0.4
