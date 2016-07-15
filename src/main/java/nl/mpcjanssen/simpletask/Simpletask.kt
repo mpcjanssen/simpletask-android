@@ -1258,6 +1258,7 @@ class Simpletask : ThemedActivity() {
                 cb.setOnClickListener({
                     undoCompleteTasks(item)
                     closeSelectionMode()
+                    notifyItemChanged(position)
                     todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
                 })
             } else {
@@ -1268,6 +1269,7 @@ class Simpletask : ThemedActivity() {
                 cb.setOnClickListener {
                     completeTasks(item)
                     closeSelectionMode()
+                    notifyItemChanged(position)
                     todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
                 }
 
