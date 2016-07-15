@@ -443,8 +443,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         } else {
             closeSelectionMode()
         }
-        // Check the selected items in the listView
-        setSelectedTasks(selection)
+
         val fab = findViewById(R.id.fab) as FloatingActionButton
         lv.setSelectionFromTop(m_scrollPosition, 0)
         fab.setOnClickListener { startAddTaskActivity() }
@@ -470,7 +469,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         }
     }
 
-    private fun setSelectedTasks(items: List<TodoListItem>?) {
+    private fun ssetSelectedTasks(items: List<TodoListItem>?) {
         if (items == null) return
         val lv = listView
         for (t in items) {
@@ -1398,6 +1397,16 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                     holder = view.tag as ViewHolder
                 }
                 val item = line.task ?: return null
+                val lv = listView
+
+                if (item.selected) {
+                    lv.setItemChecked(position, true)
+                    lv.setSelection(position)
+                } else {
+                    lv.setItemChecked(position, false)
+                }
+
+
                 val task = item.task
 
                 if (m_app.showCompleteCheckbox()) {
