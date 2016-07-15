@@ -1254,26 +1254,23 @@ class Simpletask : ThemedActivity() {
                 // log.info( "Striking through " + task.getText());
                 taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                cb.isChecked = true
                 cb.setOnClickListener({
                     undoCompleteTasks(item)
                     closeSelectionMode()
-                    notifyItemChanged(position)
                     todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
                 })
             } else {
                 taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                cb.isChecked = false
 
                 cb.setOnClickListener {
                     completeTasks(item)
                     closeSelectionMode()
-                    notifyItemChanged(position)
                     todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
                 }
 
             }
+            cb.isChecked = completed
 
             val relAge = getRelativeAge(task, mContext)
             val relDue = getRelativeDueDate(task, m_app, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
