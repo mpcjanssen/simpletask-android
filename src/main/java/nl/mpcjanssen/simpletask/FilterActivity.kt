@@ -44,7 +44,9 @@ class FilterActivity : ThemedActivity() {
     private var scriptFragment: FilterScriptFragment? = null
 
     override fun onBackPressed() {
-        applyFilter()
+        if (!asWidgetConfigure && !asWidgetReConfigure) {
+            applyFilter()
+        }
         super.onBackPressed()
     }
 
