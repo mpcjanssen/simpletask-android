@@ -12,6 +12,7 @@
 - Add explanation to change 7.x to 8.0 Lua filters. See scripting help.
 - Handle selected state of a task in the ListView adapter.
 - Switched to RecyclerView. Fixes erratic completion feedback #474 and improves selection smoothness.
+- Executing actions always requires a long click.
 
 8.0.4
 -----
