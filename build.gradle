@@ -77,6 +77,7 @@ dependencies {
     compile "com.android.support:support-v4:$android_support_version"
     compile "com.android.support:design:$android_support_version"
     compile "com.android.support:appcompat-v7:$android_support_version"
+    compile "com.android.support:recyclerview-v7:$android_support_version"
     compile "de.greenrobot:greendao:2.1.0"
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'

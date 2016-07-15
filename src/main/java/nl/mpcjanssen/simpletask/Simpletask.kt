@@ -53,7 +53,7 @@ import java.io.IOException
 import java.util.*
 
 
-class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongClickListener {
+class Simpletask : ThemedActivity() {
     val queue = MessageQueue("MainActivity")
 
     var textSize: Float = 14.0F
@@ -320,12 +320,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             m_adapter = TaskAdapter(layoutInflater, application)
         }
         m_adapter!!.setFilteredTasks()
-
+        listView.setLayoutManager(LinearLayoutManager(this));
         listView.adapter = this.m_adapter
 
         val lv = listView
-        lv.isTextFilterEnabled = true
-        lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+
+/*        lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
         lv.isClickable = true
         lv.isLongClickable = true
         lv.onItemLongClickListener = this
@@ -409,17 +409,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
                 }
                 build.create().show()
             }
-        }
-
-        mIgnoreScrollEvents = true
-        // Setting a scroll listener reset the scroll
-        lv.setOnScrollListener(this)
-        mIgnoreScrollEvents = false
-        if (m_savedInstanceState != null) {
-            m_scrollPosition = m_savedInstanceState!!.getInt("position")
-        }
-
-        lv.isFastScrollEnabled = m_app.useFastScroll()
+        }*/
 
 
         // If we were started from the widget, select the pushed task
@@ -445,7 +435,6 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         }
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        lv.setSelectionFromTop(m_scrollPosition, 0)
         fab.setOnClickListener { startAddTaskActivity() }
 
         updateDrawers()
@@ -471,10 +460,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
     private fun updateFilterBar() {
         val lv = listView
-        val index = lv.firstVisiblePosition
         val v = lv.getChildAt(0)
         val top = if (v == null) 0 else v.top
-        lv.setSelectionFromTop(index, top)
 
         val actionbar = findViewById(R.id.actionbar) as LinearLayout
         val filterText = findViewById(R.id.filter_text) as TextView
@@ -510,7 +497,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("position", listView.firstVisiblePosition)
+        // outState.putInt("position", listView.firstVisiblePosition)
     }
 
     override fun onResume() {
@@ -601,19 +588,19 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         })
     }
 
-    private fun getTaskAt(pos: Int): TodoListItem? {
+/*    private fun getTaskAt(pos: Int): TodoListItem? {
         if (pos < m_adapter!!.count) {
             return m_adapter!!.getItem(pos)
         }
         return null
-    }
+    }*/
 
     private fun shareTodoList(format: Int) {
         val text = StringBuilder()
-        for (i in 0..m_adapter!!.count - 1 - 1) {
-            val task = m_adapter!!.getItem(i)
-            if (task != null) {
-                text.append(task.task.showParts(format)).append("\n")
+        for (line in m_adapter!!.visibleLines) {
+            if (line != null && !line.header) {
+                val item = line.task ?: continue
+                text.append(item.task.showParts(format)).append("\n")
             }
         }
         shareText(this, "Simpletask list", text.toString())
@@ -905,7 +892,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
 
     private fun closeSelectionMode() {
         todoList.clearSelection()
-        listView.clearChoices()
+        // listView.clearChoices()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
@@ -1129,7 +1116,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         startActivity(i)
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+/*    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
         val t = getTaskAt(position) ?: return false
         val selected = !listView.isItemChecked(position)
         if (selected) {
@@ -1145,7 +1132,7 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             openSelectionMode()
         }
         return true
-    }
+    }*/
 
     private fun openSelectionMode() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
@@ -1232,20 +1219,10 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         toolbar.visibility = View.VISIBLE
     }
 
-
-    override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
-    }
-
-    override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-        if (!mIgnoreScrollEvents) {
-            m_scrollPosition = firstVisibleItem
-        }
-    }
-
-    val listView: ListView
+    val listView: RecyclerView
         get() {
             val lv = findViewById(android.R.id.list)
-            return lv as ListView
+            return lv as RecyclerView
         }
 
     fun showListViewProgress(show: Boolean) {
@@ -1260,14 +1237,179 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
         }
     }
 
-    data class ViewHolder (var taskText: TextView? = null,
-                           var taskAge: TextView? = null,
-                           var taskDue: TextView? = null,
-                           var taskThreshold: TextView? = null,
-                           var cbCompleted: CheckBox? = null)
+    class TaskViewHolder(itemView: View, val viewType : Int)  : RecyclerView.ViewHolder(itemView) {
 
-    inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : BaseAdapter(), ListAdapter {
+    }
 
+    inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : RecyclerView.Adapter <TaskViewHolder>() {
+        override fun getItemCount(): Int {
+            return visibleLines.size + 1
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TaskViewHolder {
+            val view = when (viewType) {
+                0 -> {
+                    // Header
+                    m_inflater.inflate(R.layout.list_header, parent, false)
+                }
+                1 -> {
+                    // Task
+                    m_inflater.inflate(R.layout.list_item, parent, false)
+                }
+                else -> {
+                    // Empty at end
+                    m_inflater.inflate(R.layout.empty_list_item, parent, false)
+                }
+
+            }
+            return TaskViewHolder(view, viewType)
+        }
+
+        override fun onBindViewHolder(holder: TaskViewHolder?, position: Int) {
+            if (holder == null) return
+            when(holder.viewType) {
+                0 -> bindHeader(holder, position)
+                1 -> bindTask(holder,position)
+                else -> return
+            }
+        }
+
+        fun bindHeader(holder : TaskViewHolder, position: Int) {
+            val t = holder.itemView.findViewById(R.id.list_header_title) as TextView
+            val line = visibleLines[position]
+            t.text = line.title
+            t.textSize = textSize
+        }
+
+        fun bindTask (holder : TaskViewHolder, position: Int) {
+            val line = visibleLines[position]
+            val item = line.task ?: return
+            val view = holder.itemView
+            val taskText = view!!.findViewById(R.id.tasktext) as TextView
+            val taskAge = view.findViewById(R.id.taskage) as TextView
+            val taskDue = view.findViewById(R.id.taskdue) as TextView
+            val taskThreshold = view.findViewById(R.id.taskthreshold) as TextView
+            val cbCompleted = view.findViewById(R.id.checkBox) as CheckBox
+
+            val task = item.task
+
+            if (m_app.showCompleteCheckbox()) {
+                cbCompleted!!.visibility = View.VISIBLE
+            } else {
+                cbCompleted!!.visibility = View.GONE
+            }
+            if (!m_app.hasExtendedTaskView()) {
+                val taskBar = view.findViewById(R.id.datebar)
+                taskBar.visibility = View.GONE
+            }
+            var tokensToShow = TToken.ALL
+            // Hide dates if we have a date bar
+            if (m_app.hasExtendedTaskView()) {
+                tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
+                tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
+                tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+            }
+            tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
+            tokensToShow = tokensToShow and TToken.COMPLETED.inv()
+
+            if (mFilter!!.hideLists) {
+                tokensToShow = tokensToShow and TToken.LIST.inv()
+            }
+            if (mFilter!!.hideTags) {
+                tokensToShow = tokensToShow and TToken.TTAG.inv()
+            }
+            val txt = task.showParts(tokensToShow)
+
+            val ss = SpannableString(txt)
+
+            val colorizeStrings = ArrayList<String>()
+            val contexts = task.lists
+            for (context in contexts) {
+                colorizeStrings.add("@" + context)
+            }
+            setColor(ss, Color.GRAY, colorizeStrings)
+            colorizeStrings.clear()
+            val projects = task.tags
+            for (project in projects) {
+                colorizeStrings.add("+" + project)
+            }
+            setColor(ss, Color.GRAY, colorizeStrings)
+
+            val priorityColor: Int
+            val priority = task.priority
+            when (priority) {
+                Priority.A -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark)
+                Priority.B -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_orange_dark)
+                Priority.C -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_green_dark)
+                Priority.D -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_blue_dark)
+                else -> priorityColor = ContextCompat.getColor(m_app, android.R.color.darker_gray)
+            }
+            setColor(ss, priorityColor, priority.inFileFormat())
+            val completed = task.isCompleted()
+
+
+            taskAge.textSize = textSize * m_app.dateBarRelativeSize
+            taskDue.textSize = textSize * m_app.dateBarRelativeSize
+            taskThreshold.textSize = textSize * m_app.dateBarRelativeSize
+
+            val cb = cbCompleted!!
+            taskText.text = ss
+            taskText.textSize = textSize
+            handleEllipsis(taskText as TextView)
+
+
+            if (completed) {
+                // log.info( "Striking through " + task.getText());
+                taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                cb.isChecked = true
+                cb.setOnClickListener({
+                    undoCompleteTasks(item)
+                    closeSelectionMode()
+                    todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                })
+            } else {
+                taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                cb.isChecked = false
+
+                cb.setOnClickListener {
+                    completeTasks(item)
+                    closeSelectionMode()
+                    todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                }
+
+            }
+
+            val relAge = getRelativeAge(task, mContext)
+            val relDue = getRelativeDueDate(task, m_app, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
+                    ContextCompat.getColor(m_app, android.R.color.holo_red_light),
+                    m_app.hasColorDueDates())
+            val relativeThresholdDate = getRelativeThresholdDate(task, mContext)
+            if (!isEmptyOrNull(relAge) && !mFilter!!.hideCreateDate) {
+                taskAge.text = relAge
+                taskAge.visibility = View.VISIBLE
+            } else {
+                taskAge.text = ""
+                taskAge.visibility = View.GONE
+            }
+
+            if (relDue != null) {
+                taskDue.text = relDue
+                taskDue.visibility = View.VISIBLE
+            } else {
+                taskDue.text = ""
+                taskDue.visibility = View.GONE
+            }
+            if (!isEmptyOrNull(relativeThresholdDate)) {
+                taskThreshold.text = relativeThresholdDate
+                taskThreshold.visibility = View.VISIBLE
+            } else {
+                taskThreshold.text = ""
+                taskThreshold.visibility = View.GONE
+            }
+
+        }
         val lv = listView
         internal var visibleLines = ArrayList<VisibleLine>()
 
@@ -1331,193 +1473,12 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             return visibleLines.indexOf(line)
         }
 
-        override fun getCount(): Int {
-            return visibleLines.size + 1
-        }
-
-        override fun getItem(position: Int): TodoListItem? {
-            val line = visibleLines[position]
-            if (line.header) {
-                return null
-            }
-            return line.task
-        }
 
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
-        override fun hasStableIds(): Boolean {
-            return true // To change body of implemented methods use File |
-            // Settings | File Templates.
-        }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-            var view = convertView
-            if (position == visibleLines.size) {
-                if (view == null) {
-                    view = m_inflater.inflate(R.layout.empty_list_item, parent, false)
-                }
-                return view
-            }
-
-            val line = visibleLines[position]
-            if (line.header) {
-                if (view == null) {
-                    view = m_inflater.inflate(R.layout.list_header, parent, false)
-                }
-                val t = view!!.findViewById(R.id.list_header_title) as TextView
-                t.text = line.title
-                t.textSize = textSize
-
-            } else {
-                val holder: ViewHolder
-                if (view == null) {
-                    view = m_inflater.inflate(R.layout.list_item, parent, false)
-                    holder = ViewHolder()
-                    holder.taskText = view!!.findViewById(R.id.tasktext) as TextView
-                    holder.taskAge = view.findViewById(R.id.taskage) as TextView
-                    holder.taskDue = view.findViewById(R.id.taskdue) as TextView
-                    holder.taskThreshold = view.findViewById(R.id.taskthreshold) as TextView
-                    holder.cbCompleted = view.findViewById(R.id.checkBox) as CheckBox
-                    view.tag = holder
-                } else {
-                    holder = view.tag as ViewHolder
-                }
-                val item = line.task ?: return null
-
-                if (item.selected) {
-                    lv.setItemChecked(position, true)
-                    lv.setSelection(position)
-                } else {
-                    lv.setItemChecked(position, false)
-                }
-
-
-                val task = item.task
-
-                if (m_app.showCompleteCheckbox()) {
-                    holder.cbCompleted!!.visibility = View.VISIBLE
-                } else {
-                    holder.cbCompleted!!.visibility = View.GONE
-                }
-                if (!m_app.hasExtendedTaskView()) {
-                    val taskBar = view.findViewById(R.id.datebar)
-                    taskBar.visibility = View.GONE
-                }
-                var tokensToShow = TToken.ALL
-                // Hide dates if we have a date bar
-                if (m_app.hasExtendedTaskView()) {
-                    tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-                    tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-                    tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
-                }
-                tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-                tokensToShow = tokensToShow and TToken.COMPLETED.inv()
-
-                if (mFilter!!.hideLists) {
-                    tokensToShow = tokensToShow and TToken.LIST.inv()
-                }
-                if (mFilter!!.hideTags) {
-                    tokensToShow = tokensToShow and TToken.TTAG.inv()
-                }
-                val txt = task.showParts(tokensToShow)
-
-                val ss = SpannableString(txt)
-
-                val colorizeStrings = ArrayList<String>()
-                val contexts = task.lists
-                for (context in contexts) {
-                    colorizeStrings.add("@" + context)
-                }
-                setColor(ss, Color.GRAY, colorizeStrings)
-                colorizeStrings.clear()
-                val projects = task.tags
-                for (project in projects) {
-                    colorizeStrings.add("+" + project)
-                }
-                setColor(ss, Color.GRAY, colorizeStrings)
-
-                val priorityColor: Int
-                val priority = task.priority
-                when (priority) {
-                    Priority.A -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark)
-                    Priority.B -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_orange_dark)
-                    Priority.C -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_green_dark)
-                    Priority.D -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_blue_dark)
-                    else -> priorityColor = ContextCompat.getColor(m_app, android.R.color.darker_gray)
-                }
-                setColor(ss, priorityColor, priority.inFileFormat())
-                val completed = task.isCompleted()
-                val taskText = holder.taskText!!
-                val taskAge = holder.taskAge!!
-                val taskDue = holder.taskDue!!
-                val taskThreshold = holder.taskThreshold!!
-
-
-                taskAge.textSize = textSize * m_app.dateBarRelativeSize
-                taskDue.textSize = textSize * m_app.dateBarRelativeSize
-                taskThreshold.textSize = textSize * m_app.dateBarRelativeSize
-
-                val cb = holder.cbCompleted!!
-                taskText.text = ss
-                taskText.textSize = textSize
-                handleEllipsis(holder.taskText as TextView)
-
-
-                if (completed) {
-                    // log.info( "Striking through " + task.getText());
-                    taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    holder.taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    cb.isChecked = true
-                   cb.setOnClickListener({
-                        undoCompleteTasks(item)
-                        closeSelectionMode()
-                        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
-                    })
-                } else {
-                    taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    cb.isChecked = false
-
-                    cb.setOnClickListener {
-                        completeTasks(item)
-                        closeSelectionMode()
-                        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
-                    }
-
-                }
-
-                val relAge = getRelativeAge(task, mContext)
-                val relDue = getRelativeDueDate(task, m_app, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
-                        ContextCompat.getColor(m_app, android.R.color.holo_red_light),
-                        m_app.hasColorDueDates())
-                val relativeThresholdDate = getRelativeThresholdDate(task, mContext)
-                if (!isEmptyOrNull(relAge) && !mFilter!!.hideCreateDate) {
-                    taskAge.text = relAge
-                    taskAge.visibility = View.VISIBLE
-                } else {
-                    taskAge.text = ""
-                    taskAge.visibility = View.GONE
-                }
-
-                if (relDue != null) {
-                    taskDue.text = relDue
-                    taskDue.visibility = View.VISIBLE
-                } else {
-                    taskDue.text = ""
-                    taskDue.visibility = View.GONE
-                }
-                if (!isEmptyOrNull(relativeThresholdDate)) {
-                    taskThreshold.text = relativeThresholdDate
-                    taskThreshold.visibility = View.VISIBLE
-                } else {
-                    taskThreshold.text = ""
-                    taskThreshold.visibility = View.GONE
-                }
-            }
-            return view
-        }
 
         override fun getItemViewType(position: Int): Int {
             if (position == visibleLines.size) {
@@ -1531,19 +1492,8 @@ class Simpletask : ThemedActivity(), AbsListView.OnScrollListener, OnItemLongCli
             }
         }
 
-        override fun getViewTypeCount(): Int {
-            return 3
-        }
 
-        override fun isEmpty(): Boolean {
-            return visibleLines.size == 0
-        }
-
-        override fun areAllItemsEnabled(): Boolean {
-            return false
-        }
-
-        override fun isEnabled(position: Int): Boolean {
+        fun isEnabled(position: Int): Boolean {
             if (position == visibleLines.size) {
                 return false
             }
