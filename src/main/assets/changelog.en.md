@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.0.6
+-----
+
+- Update the widget after reconfiguring the filter.
+
 8.0.5
 -----
 
