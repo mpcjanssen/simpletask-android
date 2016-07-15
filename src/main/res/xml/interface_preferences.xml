@@ -20,11 +20,6 @@
         android:summary="@string/auto_archive_pref_summary"
         android:title="@string/auto_archive_pref_title" />
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/ui_fast_scroll"
-        android:summary="@string/show_fast_scroll_summary"
-        android:title="@string/show_fast_scroll_title" />
-    <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/back_clears_filter"
         android:summary="@string/back_clears_filter_summary"

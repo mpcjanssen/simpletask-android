@@ -252,10 +252,6 @@ class TodoApplication : Application(),
         return prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
     }
 
-    fun useFastScroll(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_fast_scroll), true)
-    }
-
     fun showTxtOnly(): Boolean {
         return prefs.getBoolean(getString(R.string.show_txt_only), false)
     }
