@@ -410,4 +410,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="todotxt_features_settings_header">Eigenschaften</string>
     <string name="todotxt_features_settings_summary">Eigenschaften ein- und ausschalten</string>
     <string name="todotxt_ui_settings_summary">Festlegen, was angezeigt wird</string>
+    <string name="config_widget">Widget-Konfiguration</string>
+    <string name="datebar_relative_size_summary">Relative Schriftgröße Datum</string>
+    <string name="lua_config_screen">Lua-Konfiguration</string>
+    <string name="lua_error">Lua Fehler</string>
+    <string name="lua_open_config">Lua Konfiguration</string>
+    <string name="lua_run">Ausführen</string>
 </resources>
