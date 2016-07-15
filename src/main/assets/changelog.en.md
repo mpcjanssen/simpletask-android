@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+8.0.5
+-----
+
+- Restore task list font size in Settings.
+- Remove unimplemented font selector.
+- Run widget scripting code in a separate context to prevent interference between apps and widgets. Fixes #486.
+- Allow reconfiguration of widgets. Fixes #90.
+- Fix crash with reversed sort for non MM devices.
+- Add explanation to change 7.x to 8.0 Lua filters. See scripting help.
+
+
 8.0.4
 -----
 

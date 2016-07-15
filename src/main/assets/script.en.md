@@ -11,6 +11,27 @@ This way you can define helper functions in the config and use them in callbacks
 
 *NB: The filtering callback has been changed from pre 8.0 versions (See below).*
 
+To change existing (app and widget) filters to the 8.0 format do the following.
+
+Add `function onFilter(t,f,e)` before and `end` after the existing script. Prefix all fields with `f`. i.e. `due` -> `f.due`. Example:
+
+    if due~=nil then
+        return os.time() >= due;
+    end
+    --- tasks with no due date are not overdue.
+    return false;
+
+
+becomes
+
+    function onFilter(t,f,e)
+        if f.due~=nil then
+            return os.time() >= f.due;
+        end
+        --- tasks with no due date are not overdue.
+        return false;
+    end
+
 
 Helper functions
 ================
