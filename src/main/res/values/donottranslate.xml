@@ -112,6 +112,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="resume_sync_pref_key" translatable="false">resumesyncpref</string>
     <string name="font_size_delta_pref_key" translatable="false">fontsizedelta</string>
     <string name="theme_pref_key" translatable="false">theme</string>
+    <string name="custom_font_size" translatable="false">custom_font_size</string>
     <string name="widget_theme_pref_key" translatable="false">widget_theme</string>
     <string name="task_text_ellipsizing_pref_key" translatable="false">task_text_ellipsizing</string>
     <string name="widget_extended_pref_key" translatable="false">widget_extended</string>

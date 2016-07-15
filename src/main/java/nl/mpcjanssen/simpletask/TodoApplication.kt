@@ -59,7 +59,7 @@ import java.util.*
 
 class TodoApplication : Application(),
 
-        SharedPreferences.OnSharedPreferenceChangeListener,  FileStoreInterface.FileChangeListener, BackupInterface {
+        SharedPreferences.OnSharedPreferenceChangeListener, FileStoreInterface.FileChangeListener, BackupInterface {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -489,7 +489,19 @@ class TodoApplication : Application(),
 
 
     val tasklistTextSize: Float?
-        get() = LuaScripting.tasklistTextSize()
+        get() {
+            val luaValue = LuaScripting.tasklistTextSize()
+            if (luaValue != null) {
+                return luaValue
+            }
+
+            if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {
+                return 14.0f
+            }
+            val font_size = prefs.getInt(getString(R.string.font_size), 14)
+            return font_size.toFloat()
+        }
+
 
     val fileStore: FileStoreInterface
         get() = mFileStore
@@ -589,6 +601,7 @@ class TodoApplication : Application(),
 
     var today: String = todayAsString
 }
+
 
 class LoggingRunnable internal constructor(private val description: String, private val runnable: Runnable) : Runnable {
     val log = Logger

@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:defaultValue="light_darkactionbar"
-        android:entries="@array/themes"
-        android:entryValues="@array/theme_values"
-        android:key="@string/theme_pref_key"
-        android:summary="%s"
-        android:title="@string/theme_pref_title"/>
+            android:defaultValue="light_darkactionbar"
+            android:entries="@array/themes"
+            android:entryValues="@array/theme_values"
+            android:key="@string/theme_pref_key"
+            android:summary="%s"
+            android:title="@string/theme_pref_title"/>
 
-    <nl.mpcjanssen.simpletask.util.FontPreference
+    <!-- <nl.mpcjanssen.simpletask.util.FontPreference
             android:defaultValue=""
             android:key="@string/font_key"
             android:summary="%s"
-            android:title="Custom Font" />
+            android:title="Custom Font" /> -->
+    <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/custom_font_size"
+            android:title="@string/font_size_delta_pref_title"/>
+
+
+    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+                                     android:dependency="@string/custom_font_size"
+                                     android:key="@string/font_size"
+                                     android:defaultValue="14"
+                                     android:max="36"
+                                     robobunny:min="12"
+                                     robobunny:interval="2"
+                                     robobunny:unitsLeft=""
+                                     robobunny:unitsRight="sp"/>
 
     <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
                                      android:defaultValue="80"
@@ -24,30 +39,30 @@
                                      robobunny:unitsLeft=""
                                      robobunny:unitsRight="%"/>
     <ListPreference
-        android:defaultValue="no_ellipsize"
-        android:entries="@array/task_text_ellipsizing"
-        android:entryValues="@array/task_text_ellipsizing_values"
-        android:key="@string/task_text_ellipsizing_pref_key"
-        android:summary="%s"
-        android:title="@string/task_text_ellipsizing_pref_title" />
+            android:defaultValue="no_ellipsize"
+            android:entries="@array/task_text_ellipsizing"
+            android:entryValues="@array/task_text_ellipsizing_values"
+            android:key="@string/task_text_ellipsizing_pref_key"
+            android:summary="%s"
+            android:title="@string/task_text_ellipsizing_pref_title"/>
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/color_due_date_key"
-        android:summary="@string/color_due_pref_summary"
-        android:title="@string/color_due_pref_title"/>
+            android:defaultValue="true"
+            android:key="@string/color_due_date_key"
+            android:summary="@string/color_due_pref_summary"
+            android:title="@string/color_due_pref_title"/>
     <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/ui_todotxt_terms"
-        android:summary="@string/todotxt_terms_summary"
-        android:title="@string/todotxt_terms_title"/>
+            android:defaultValue="false"
+            android:key="@string/ui_todotxt_terms"
+            android:summary="@string/todotxt_terms_summary"
+            android:title="@string/todotxt_terms_title"/>
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/ui_show_edittext_hints"
-        android:summary="@string/show_edittext_hints_summary"
-        android:title="@string/show_edittext_hints_title"/>
+            android:defaultValue="true"
+            android:key="@string/ui_show_edittext_hints"
+            android:summary="@string/show_edittext_hints_summary"
+            android:title="@string/show_edittext_hints_title"/>
     <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/show_todo_path"
-        android:summary="@string/show_todo_path_summary"
-        android:title="@string/show_todo_path_title" />
+            android:defaultValue="false"
+            android:key="@string/show_todo_path"
+            android:summary="@string/show_todo_path_summary"
+            android:title="@string/show_todo_path_title"/>
 </PreferenceScreen>
