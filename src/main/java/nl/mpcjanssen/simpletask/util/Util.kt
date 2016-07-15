@@ -526,5 +526,6 @@ fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
 }
 
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+    log.info(TAG, "Sending widget refresh broadcast")
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
 }

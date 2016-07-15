@@ -207,7 +207,7 @@ class ActiveFilter (val environment: String?) {
             val json = JSONObject()
             this.saveInJSON(json)
             editor.putString(INTENT_JSON, json.toString(2))
-            editor.apply()
+            editor.commit()
         }
     }
 

@@ -32,7 +32,6 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     private val log: Logger
     private val application: TodoApplication
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
-    val mFilter = ActiveFilter("widget" + widgetId.toString())
     val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
     var visibleTasks = ArrayList<TodoListItem>()
 
@@ -40,7 +39,13 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         log = Logger
         log.debug(TAG, "Creating view for widget: " + widgetId)
         application = ctxt as TodoApplication
-        mFilter.initFromPrefs(preferences)
+    }
+
+    val mFilter : ActiveFilter
+    get () {
+        val filter = ActiveFilter("widget" + widgetId.toString())
+        filter.initFromPrefs(preferences)
+        return filter
     }
 
     override fun hashCode(): Int {
@@ -50,6 +55,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
     private fun createSelectedIntent(t: TodoListItem): Intent {
         val target = Intent()
+
         mFilter.saveInIntent(target)
         target.putExtra(Constants.INTENT_SELECTED_TASK, t.task.inFileFormat())
         return target
@@ -71,20 +77,18 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
         val tl = application.todoList
 
-        log.debug(TAG, "Lua Script for widget $widgetId = ${mFilter.script}, useScript = ${mFilter?.useScript}")
         val items = tl.todoItems
         visibleTasks.clear()
-        val o  = JSONObject()
-        mFilter.saveInJSON(o)
-        log.info(TAG, "Widget filter is ${o.toString()} ")
-        for (t in mFilter.apply(items)) {
+        val filter = mFilter
+
+        for (t in filter.apply(items)) {
             visibleTasks.add(t)
         }
-        val comp = MultiComparator(mFilter.getSort(
+        val comp = MultiComparator(filter.getSort(
                 application.defaultSorts),
                 application.today,
                 application.sortCaseSensitive(),
-                mFilter.createIsThreshold)
+                filter.createIsThreshold)
         Collections.sort(visibleTasks, comp)
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks");
     }
@@ -102,6 +106,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     }
 
     private fun getExtendedView(item: TodoListItem): RemoteViews {
+        val filter = mFilter
         val rv = RemoteViews(application.packageName, R.layout.widget_list_item)
         val extended_widget = application.prefs.getBoolean("widget_extended", true)
         val task = item.task
@@ -112,10 +117,10 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
         tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
         tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
-        if (mFilter?.hideLists ?: false) {
+        if (filter.hideLists ?: false) {
             tokensToShow = tokensToShow and TToken.LIST.inv()
         }
-        if (mFilter?.hideTags ?: false) {
+        if (filter.hideTags ?: false) {
             tokensToShow = tokensToShow and TToken.TTAG.inv()
         }
         val ss = SpannableString(
@@ -159,7 +164,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
                 true)
         val relThres = getRelativeThresholdDate(task, application)
         var anyDateShown = false
-        if (!isEmptyOrNull(relAge) && !(mFilter?.hideCreateDate ?: false)) {
+        if (!isEmptyOrNull(relAge) && !(filter.hideCreateDate ?: false)) {
             rv.setTextViewText(R.id.taskage, relAge)
             anyDateShown = true
         } else {
