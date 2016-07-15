@@ -13,7 +13,7 @@ This way you can define helper functions in the config and use them in callbacks
 
 To change existing (app and widget) filters to the 8.0 format do the following.
 
-Add `function onFilter(t,f,e)` before and `end` after the existing script. Prefix all fields with `f`. i.e. `due` -> `f.due`. Example:
+Add `function onFilter(t,f,e)` before and `end` after the existing script. Prefix all fields with `f.` i.e. `due` -> `f.due`. Example:
 
     if due~=nil then
         return os.time() >= due;
