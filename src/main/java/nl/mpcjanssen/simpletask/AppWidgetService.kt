@@ -30,15 +30,17 @@ class AppWidgetService : RemoteViewsService() {
 
 internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory {
     private val log: Logger
-    private var mFilter : ActiveFilter? = null
     private val application: TodoApplication
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+    val mFilter = ActiveFilter("widget" + widgetId.toString())
+    val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
     var visibleTasks = ArrayList<TodoListItem>()
 
     init {
         log = Logger
         log.debug(TAG, "Creating view for widget: " + widgetId)
         application = ctxt as TodoApplication
+        mFilter.initFromPrefs(preferences)
     }
 
     override fun hashCode(): Int {
@@ -48,7 +50,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
     private fun createSelectedIntent(t: TodoListItem): Intent {
         val target = Intent()
-        mFilter?.saveInIntent(target)
+        mFilter.saveInIntent(target)
         target.putExtra(Constants.INTENT_SELECTED_TASK, t.task.inFileFormat())
         return target
     }
@@ -68,23 +70,21 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         }
 
         val tl = application.todoList
-        val filter = ActiveFilter("widget" + widgetId.toString())
-        val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
-        filter.initFromPrefs(preferences)
-        log.debug(TAG, "Lua Script for widget $widgetId = ${filter.script}, useScript = ${filter?.useScript}")
+
+        log.debug(TAG, "Lua Script for widget $widgetId = ${mFilter.script}, useScript = ${mFilter?.useScript}")
         val items = tl.todoItems
         visibleTasks.clear()
         val o  = JSONObject()
-        filter.saveInJSON(o)
+        mFilter.saveInJSON(o)
         log.info(TAG, "Widget filter is ${o.toString()} ")
-        for (t in filter.apply(items)) {
+        for (t in mFilter.apply(items)) {
             visibleTasks.add(t)
         }
-        val comp = MultiComparator(filter.getSort(
+        val comp = MultiComparator(mFilter.getSort(
                 application.defaultSorts),
                 application.today,
                 application.sortCaseSensitive(),
-                filter.createIsThreshold)
+                mFilter.createIsThreshold)
         Collections.sort(visibleTasks, comp)
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks");
     }
