@@ -163,7 +163,7 @@ class TodoApplication : Application(),
         log.info(TAG, "Created todolist {}" + todoList)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
-        queueRunnable("Intial Load", Runnable { loadTodoList(true) })
+        loadTodoList(true)
     }
 
     fun reloadLuaConfig() {
