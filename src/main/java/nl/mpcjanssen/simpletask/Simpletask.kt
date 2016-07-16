@@ -1118,15 +1118,14 @@ class Simpletask : ThemedActivity() {
             }
             true
         })
-
-        val menu = toolbar.menu
-        menu.clear()
-        inflater.inflate(R.menu.task_context, toolbar.menu)
-
-        populateSelectionMenu(this.options_menu)
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.GONE
         toolbar.visibility = View.VISIBLE
+        toolbar.popupTheme = m_app.activeTheme
+        val menu = toolbar.menu
+        menu.clear()
+        inflater.inflate(R.menu.task_context, toolbar.menu)
+        populateSelectionMenu(this.options_menu)
     }
 
     val listView: RecyclerView?
