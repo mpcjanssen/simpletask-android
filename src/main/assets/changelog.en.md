@@ -10,6 +10,8 @@
 - Add link to scripting help from Lua Config screen for #488.
 - Add black theme for application.
 - Restore last active filter tab.
+- Greatly improve selection performance. Fixes #491.
+- When selection active, update the selected state of task when closing it with the back button. Fixes #491.
 
 8.0.6
 -----
