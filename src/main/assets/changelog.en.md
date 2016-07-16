@@ -5,7 +5,7 @@
 -----
 
 - Merged updated German translation. (#490 twickr).
-- Add all task list activities in the queue to prevent race conditions.
+- Add all task list activities (modification and reading) in the queue to prevent race conditions.
 - Add Todo History in the main menu.
 - Add link to scripting help from Lua Config screen for #488.
 - Add black theme for application.
