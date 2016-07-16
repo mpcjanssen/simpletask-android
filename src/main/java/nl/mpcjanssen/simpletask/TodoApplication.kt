@@ -47,10 +47,7 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.appVersion
-import nl.mpcjanssen.simpletask.util.broadcastFileChanged
-import nl.mpcjanssen.simpletask.util.showToastLong
-import nl.mpcjanssen.simpletask.util.todayAsString
+import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
@@ -75,7 +72,6 @@ class TodoApplication : Application(),
     lateinit var prefs: SharedPreferences
 
     lateinit var todolistQueue: Handler
-    var loadQueued = false
 
     init {
 
@@ -105,9 +101,6 @@ class TodoApplication : Application(),
         }
     }
 
-    fun loadQueued(): Boolean {
-        return loadQueued
-    }
 
     override fun onCreate() {
 
@@ -151,7 +144,9 @@ class TodoApplication : Application(),
                     updateWidgets()
                 } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
                     log.info(TAG, "File changed, reloading")
-                    loadTodoList(true)
+                    queueRunnable("Reload from BROADCAST", Runnable {
+                        loadTodoList()
+                    })
                 }
             }
         }
@@ -163,7 +158,9 @@ class TodoApplication : Application(),
         log.info(TAG, "Created todolist {}" + todoList)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
-        loadTodoList(true)
+        queueRunnable("|Initial load", Runnable {
+            loadTodoList()
+        })
     }
 
     fun reloadLuaConfig() {
@@ -380,9 +377,9 @@ class TodoApplication : Application(),
     val isLoading: Boolean
         get() = fileStore.isLoading
 
-    fun loadTodoList(background: Boolean) {
+    fun loadTodoList() {
         log.info(TAG, "Load todolist")
-        todoList.reload(mFileStore, todoFileName, this, localBroadCastManager, background, eol)
+        todoList.reload(mFileStore, todoFileName, this, localBroadCastManager, eol)
 
     }
 
@@ -391,7 +388,9 @@ class TodoApplication : Application(),
         newName?.let {
             setTodoFile(newName)
         }
-        loadTodoList(true)
+        queueRunnable("Reload from fileChanged()", Runnable {
+            loadTodoList()
+        })
     }
 
 
@@ -472,7 +471,9 @@ class TodoApplication : Application(),
 
     fun switchTodoFile(newTodo: String, background: Boolean) {
         setTodoFile(newTodo)
-        loadTodoList(background)
+        queueRunnable("Reload from file switch", Runnable {
+            loadTodoList()
+        })
 
     }
 
@@ -603,7 +604,7 @@ class LoggingRunnable internal constructor(private val description: String, priv
     val log = Logger
 
     init {
-        log.info(TodoList.TAG, "Creating action " + description)
+        log.info(TAG, "Creating action " + description)
     }
 
     override fun toString(): String {
@@ -611,7 +612,7 @@ class LoggingRunnable internal constructor(private val description: String, priv
     }
 
     override fun run() {
-        log.info(TodoList.TAG, "Execution action " + description)
+        log.info(TAG, "Execution action " + description)
         runnable.run()
     }
 

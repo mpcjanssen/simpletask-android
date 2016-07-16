@@ -49,7 +49,6 @@ class AddTaskBackground : Activity() {
         log.debug(TAG, "onCreate()")
         super.onCreate(instance)
         val m_app = this.application as TodoApplication
-        m_app.loadTodoList(true)
 
         val intent = intent
         val action = intent.action
