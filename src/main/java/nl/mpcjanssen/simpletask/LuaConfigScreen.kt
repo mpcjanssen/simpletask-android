@@ -3,6 +3,7 @@
  */
 package nl.mpcjanssen.simpletask
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -21,6 +22,7 @@ class LuaConfigScreen : ThemedActivity() {
         setContentView(R.layout.lua_config)
         scriptEdit = findViewById(R.id.lua_config) as EditText
         val btnRun = findViewById(R.id.btn_run) as Button
+        val btnHelp = findViewById(R.id.btn_help) as Button
         btnRun.setOnClickListener {
             try {
                 LuaScripting.evalScript(null, script())
@@ -28,6 +30,11 @@ class LuaConfigScreen : ThemedActivity() {
                 log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
                 createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
             }
+        }
+        btnHelp.setOnClickListener {
+            val intent = Intent(this, HelpScreen::class.java)
+            intent.putExtra(Constants.EXTRA_HELP_PAGE, "script")
+            startActivityForResult(intent, 0)
         }
         scriptEdit.setText(m_app.luaConfig)
     }
