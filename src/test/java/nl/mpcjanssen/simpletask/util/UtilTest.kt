@@ -21,7 +21,7 @@ class UtilTest : TestCase() {
         tasks.add(Task("@College h:1"))
         val items = ArrayList<TodoListItem>()
         for (t in tasks) {
-            items.add(TodoListItem(0, t, false))
+            items.add(TodoListItem(0, t))
         }
         assertEquals(6, addHeaderLines(items, "by_context", "none").size)
 
