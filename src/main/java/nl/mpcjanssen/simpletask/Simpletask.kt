@@ -1076,6 +1076,8 @@ class Simpletask : ThemedActivity() {
             val menuId = item.itemId
             val intent: Intent
             when (menuId) {
+                R.id.complete -> completeTasks(checkedTasks)
+                R.id.uncomplete -> undoCompleteTasks(checkedTasks)
                 R.id.update -> startAddTaskActivity()
                 R.id.delete -> deleteTasks(checkedTasks)
                 R.id.archive -> archiveTasks(checkedTasks, true)
