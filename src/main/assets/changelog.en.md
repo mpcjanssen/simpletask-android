@@ -1,12 +1,17 @@
 ﻿Changelog
 =========
 
+8.0.7
+-----
+
+- Merged updated German translation. (#490 twickr).
+- Add all task list activities in the queue to prevent race conditions.
+- Add Todo History in the main menu.
+
 8.0.6
 -----
 
 - Update the widget after reconfiguring the filter.
-- Merged updated German translation. (#490 twickr).
-- Add all task list activities in the queue to prevent race conditions.
 
 8.0.5
 -----
