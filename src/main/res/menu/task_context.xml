@@ -31,13 +31,13 @@ You should have received a copy of the GNU General Public License along with Tod
         android:title="@string/done"
         android:id="@+id/complete"
         android:icon="@drawable/complete" 
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
     <item
 	android:title="@string/unComplete"
         android:icon="@drawable/uncomplete"
         android:id="@+id/uncomplete"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
     <item
         android:title="@string/update"
@@ -59,16 +59,6 @@ You should have received a copy of the GNU General Public License along with Tod
         app:showAsAction="always"
         android:id="@+id/priority"
         android:icon="@drawable/prio" />
-    <item
-        android:title="@string/select_all"
-        android:id="@+id/select_all"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_content_select_all" />
-    <item
-        android:title="@string/share"
-        app:showAsAction="ifRoom"
-        android:id="@+id/share"
-        android:icon="@drawable/share" />
     <item
         android:title="@string/add_to_calendar"
         app:showAsAction="never"

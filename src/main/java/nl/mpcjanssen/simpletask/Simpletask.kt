@@ -214,12 +214,14 @@ class Simpletask : ThemedActivity() {
 
     private fun selectAllTasks() {
         val selectedTasks = ArrayList<TodoListItem>()
+        var count = 0
         for (visibleLine in m_adapter!!.visibleLines) {
             // Only check tasks that are not checked yet
             // and skip headers
             // This prevents double counting in the CAB title
             if (!visibleLine.header) {
                 selectedTasks.add(visibleLine.task!!)
+                count++
             }
         }
         todoList.selectTodoItems(selectedTasks)
@@ -431,6 +433,15 @@ class Simpletask : ThemedActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    private fun populateSelectionMenu(menu: Menu?) {
+        if (menu == null) {
+            log.warn(TAG, "Menu was null")
+            return
+        }
+        menu.clear()
+        val inflater = menuInflater
+        inflater.inflate(R.menu.task_context_actionbar, menu)
+    }
     private fun populateMainMenu(menu: Menu?) {
 
         if (menu == null) {
@@ -633,7 +644,18 @@ class Simpletask : ThemedActivity() {
             }
             R.id.preferences -> startPreferencesActivity()
             R.id.filter -> startFilterActivity()
-            R.id.share -> startActivityForResult(Intent(baseContext, TaskDisplayActivity::class.java), REQUEST_SHARE_PARTS)
+            R.id.select_all -> {
+                selectAllTasks()
+                return true
+            }
+            R.id.share -> {
+                if (todoList.numSelected() > 0) {
+                        val shareText = selectedTasksAsString()
+                        shareText(this@Simpletask, "Simpletask tasks", shareText)
+                } else {
+                    startActivityForResult(Intent(baseContext, TaskDisplayActivity::class.java), REQUEST_SHARE_PARTS)
+                }
+            }
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> fileStore.sync()
@@ -1039,9 +1061,7 @@ class Simpletask : ThemedActivity() {
         }
         options_menu!!.clear()
         val inflater = menuInflater
-        val menu = toolbar.menu
-        menu.clear()
-        inflater.inflate(R.menu.task_context, toolbar.menu)
+
 
         toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
             val checkedTasks = todoList.selectedTasks
@@ -1049,10 +1069,6 @@ class Simpletask : ThemedActivity() {
             val intent: Intent
             when (menuId) {
                 R.id.complete -> completeTasks(checkedTasks)
-                R.id.select_all -> {
-                    selectAllTasks()
-                    return@OnMenuItemClickListener true
-                }
                 R.id.uncomplete -> undoCompleteTasks(checkedTasks)
                 R.id.update -> startAddTaskActivity()
                 R.id.delete -> deleteTasks(checkedTasks)
@@ -1062,10 +1078,6 @@ class Simpletask : ThemedActivity() {
                 R.id.priority -> {
                     prioritizeTasks(checkedTasks)
                     return@OnMenuItemClickListener true
-                }
-                R.id.share -> {
-                    val shareText = selectedTasksAsString()
-                    shareText(this@Simpletask, "Simpletask tasks", shareText)
                 }
                 R.id.calendar -> {
                     var calendarTitle = getString(R.string.calendar_title)
@@ -1108,10 +1120,15 @@ class Simpletask : ThemedActivity() {
             }
             true
         })
+
+        val menu = toolbar.menu
+        menu.clear()
+        inflater.inflate(R.menu.task_context, toolbar.menu)
         if (!m_app.showCompleteCheckbox()) {
             menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
+        populateSelectionMenu(this.options_menu)
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.GONE
         toolbar.visibility = View.VISIBLE
@@ -1138,7 +1155,6 @@ class Simpletask : ThemedActivity() {
     }
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : RecyclerView.Adapter <TaskViewHolder>() {
-        internal var selectedCount = 0
         override fun getItemCount(): Int {
             return visibleLines.size + 1
         }
@@ -1305,20 +1321,18 @@ class Simpletask : ThemedActivity() {
                 taskThreshold.visibility = View.GONE
             }
             // Set selected state
-            view.isActivated = item.selected
+            view.isActivated = todoList.isSelected(item)
 
             // Set click listeners
             view.setOnClickListener { it ->
 
-                val newSelectedState = !item.selected
+                val newSelectedState = !todoList.isSelected(item)
                 if (newSelectedState) {
-                    selectedCount++
                     todoList.selectTodoItem(item)
                 } else {
-                    selectedCount--
                     todoList.unSelectTodoItem(item)
                 }
-                if (selectedCount < 1) {
+                if (todoList.numSelected() < 1) {
                     closeSelectionMode()
                 } else {
                     openSelectionMode()
@@ -1414,7 +1428,6 @@ class Simpletask : ThemedActivity() {
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(m_app.defaultSorts)
                 visibleTasks = todoList.getSortedTasks(activeFilter, sorts, m_app.sortCaseSensitive())
-                selectedCount = visibleTasks.filter {it -> it.selected}.size
                 val newVisibleLines = ArrayList<VisibleLine>()
 
 

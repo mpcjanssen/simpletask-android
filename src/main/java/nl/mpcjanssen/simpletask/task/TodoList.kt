@@ -55,8 +55,7 @@ class TodoList(private val app: TodoApplication) {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-
-
+    private val selection = HashSet<TodoListItem>()
     var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
 
     init {
@@ -83,7 +82,7 @@ class TodoList(private val app: TodoApplication) {
         }
     }
 
-    fun add(t: TodoListItem, atEnd: Boolean, select: Boolean = false) {
+    fun add(t: TodoListItem, atEnd: Boolean) {
         app.queueRunnable("Add task", Runnable {
             log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
             if (atEnd) {
@@ -95,8 +94,12 @@ class TodoList(private val app: TodoApplication) {
         })
     }
 
-    fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
-        add(TodoListItem(0, t, select), atEnd)
+    fun add(t: Task, atEnd: Boolean, select : Boolean = false) {
+        val newItem = TodoListItem(0, t)
+        add(TodoListItem(0, t), atEnd)
+        if (select) {
+            selectTodoItem(newItem)
+        }
     }
 
 
@@ -213,7 +216,7 @@ class TodoList(private val app: TodoApplication) {
 
     var selectedTasks: List<TodoListItem> = ArrayList()
         get() {
-            return todoItems?.filter { it.selected } ?: emptyList()
+            return selection.toList()
         }
 
 
@@ -304,6 +307,14 @@ class TodoList(private val app: TodoApplication) {
         })
     }
 
+    fun isSelected(item : TodoListItem) : Boolean {
+        return selection.indexOf(item) > -1
+    }
+
+    fun numSelected() : Int {
+        return selection.size
+    }
+
 
     companion object {
         internal val TAG = TodoList::class.java.simpleName
@@ -322,7 +333,7 @@ class TodoList(private val app: TodoApplication) {
         } else {
             todoItems?.forEach {
                 if (it.task in items) {
-                    it.selected = true
+                    selection.add(it)
                 }
             }
 
@@ -334,9 +345,7 @@ class TodoList(private val app: TodoApplication) {
     }
 
     fun selectTodoItems(items: List<TodoListItem>) {
-        items.forEach {
-            it.selected = true
-        }
+        selection.addAll(items)
     }
 
     fun unSelectTodoItem(item: TodoListItem) {
@@ -344,15 +353,12 @@ class TodoList(private val app: TodoApplication) {
     }
 
     fun unSelectTodoItems(items: List<TodoListItem>) {
-        items.forEach {
-            it.selected = false
-        }
+        selection.removeAll(items)
+
     }
 
     fun clearSelection() {
-        todoItems?.forEach {
-            it.selected = false
-        }
+        selection.clear()
     }
 
     fun getTaskCount(): Long {
@@ -363,4 +369,4 @@ class TodoList(private val app: TodoApplication) {
 
 }
 
-data class TodoListItem(var line: Int, var task: Task, var selected: Boolean = false)
+data class TodoListItem(var line: Int, var task: Task)
