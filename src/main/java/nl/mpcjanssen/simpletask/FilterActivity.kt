@@ -34,14 +34,15 @@ class FilterActivity : ThemedActivity() {
     internal var asWidgetReConfigure = false
     internal lateinit var mFilter: ActiveFilter
 
-    internal lateinit var  m_app: TodoApplication
-    internal lateinit var  prefs: SharedPreferences
+    internal lateinit var m_app: TodoApplication
+    internal lateinit var prefs: SharedPreferences
 
     private var pager: ViewPager? = null
     private var m_menu: Menu? = null
     private var log = Logger
     private var pagerAdapter: ScreenSlidePagerAdapter? = null
     private var scriptFragment: FilterScriptFragment? = null
+    private var m_page = 0;
 
     override fun onBackPressed() {
         if (!asWidgetConfigure && !asWidgetReConfigure) {
@@ -66,7 +67,7 @@ class FilterActivity : ThemedActivity() {
 
         val intent = intent
 
-        var environment : String? = null
+        var environment: String? = null
         if (intent.action != null) {
             asWidgetConfigure = getIntent().action == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
@@ -75,7 +76,7 @@ class FilterActivity : ThemedActivity() {
         mFilter = ActiveFilter(environment)
         val context = applicationContext
         if (asWidgetConfigure) {
-            if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false) ) {
+            if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
                 asWidgetReConfigure = true
                 asWidgetConfigure = false
                 setTitle(R.string.config_widget)
@@ -168,6 +169,24 @@ class FilterActivity : ThemedActivity() {
         val tabLayout = findViewById(R.id.sliding_tabs) as TabLayout
         tabLayout.setupWithViewPager(pager as ViewPager)
         tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
+        pager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+                return
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                return
+            }
+
+            override fun onPageSelected(position: Int) {
+                log.info(TAG, "Page $position selected")
+                m_page  = position
+            }
+        })
+        val activePage = prefs.getInt(getString(R.string.last_open_filter_tab),0)
+        if (activePage < pagerAdapter?.count ?: 0) {
+            pager?.setCurrentItem(activePage, false)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -283,14 +302,14 @@ class FilterActivity : ThemedActivity() {
             // fragment was never intialized
             showToastShort(this, "Script tab not visible??")
         } else {
-            script?.let {scriptFragment!!.script = script}
+            script?.let { scriptFragment!!.script = script }
         }
     }
 
     private fun updateWidget() {
         updateFilterFromFragments()
         val widgetId = getIntent().getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
-        log.info (TAG, "Saving settings for widget $widgetId")
+        log.info(TAG, "Saving settings for widget $widgetId")
         val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
         mFilter.saveInPrefs(preferences)
         broadcastRefreshWidgets(m_app.localBroadCastManager)
@@ -361,12 +380,18 @@ class FilterActivity : ThemedActivity() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        prefs.edit().putInt(getString(R.string.last_open_filter_tab),m_page).commit()
+        pager?.clearOnPageChangeListeners()
+    }
+
 
     /**
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
      */
-    private inner class ScreenSlidePagerAdapter(private val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    private inner class ScreenSlidePagerAdapter(val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         val fragments: ArrayList<Fragment>
 
         init {
@@ -394,6 +419,7 @@ class FilterActivity : ThemedActivity() {
         override fun getCount(): Int {
             return fragments.size
         }
+
     }
 
     companion object {
