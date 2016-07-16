@@ -54,6 +54,9 @@
         <item name="android:background">#000000</item>
     </style>
 
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="android:colorBackground">#FF000000</item>
+    </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">#0099CC</item>
@@ -61,6 +64,7 @@
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
     </style>
+
 
     <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#0099CC</item>

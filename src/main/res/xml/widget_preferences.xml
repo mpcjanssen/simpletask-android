@@ -2,8 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:defaultValue="light_darkactionbar"
-        android:entries="@array/themes"
-        android:entryValues="@array/theme_values"
+        android:entries="@array/widget_themes"
+        android:entryValues="@array/widget_theme_values"
         android:key="@string/widget_theme_pref_key"
         android:summary="%s"
         android:title="@string/widget_theme_pref_title"/>
