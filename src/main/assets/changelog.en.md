@@ -5,6 +5,8 @@
 -----
 
 - Update the widget after reconfiguring the filter.
+- Merged updated German translation. (#490 twickr).
+- Add all task list activities in the queue to prevent race conditions.
 
 8.0.5
 -----
