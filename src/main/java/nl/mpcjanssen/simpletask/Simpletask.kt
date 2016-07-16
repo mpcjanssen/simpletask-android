@@ -812,7 +812,7 @@ class Simpletask : ThemedActivity() {
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
         toolbar.visibility = View.GONE
-        //getTodoList().clearSelectedTasks();
+        todoList.clearSelection();
         populateMainMenu(options_menu)
         //updateDrawers();
 
