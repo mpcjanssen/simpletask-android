@@ -26,7 +26,7 @@ import java.util.Locale;
 public class HistoryScreen extends ThemedActivity {
 
     private Logger log;
-    private Cursor cursor;
+    private Cursor m_cursor;
     private Menu toolbar_menu;
     private int mScroll = 0;
     private TodoApplication m_app;
@@ -51,15 +51,15 @@ public class HistoryScreen extends ThemedActivity {
 
     private void initCursor() {
         QueryBuilder<TodoFile> builder = m_app.daoSession.getTodoFileDao().queryBuilder();
-        cursor = builder.buildCursor().query();
-        cursor.moveToLast();
+        m_cursor = builder.buildCursor().query();
+        m_cursor.moveToLast();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (cursor!=null) {
-            cursor.close();
+        if (m_cursor !=null) {
+            m_cursor.close();
         }
 
     }
@@ -110,7 +110,7 @@ public class HistoryScreen extends ThemedActivity {
                         clearDatabase();
                         return true;
                     case R.id.menu_share:
-                        if (cursor.getCount()==0) {
+                        if (m_cursor.getCount()==0) {
                             Util.showToastShort(HistoryScreen.this, "Nothing to share");
                         } else {
                             Util.shareText(HistoryScreen.this, "Old todo version", getCurrentFileContents());
@@ -135,7 +135,7 @@ public class HistoryScreen extends ThemedActivity {
 
     private void showNext() {
         saveScroll();
-        cursor.moveToNext();
+        m_cursor.moveToNext();
         displayCurrent();
     }
 
@@ -147,7 +147,7 @@ public class HistoryScreen extends ThemedActivity {
 
     private void showPrev() {
         saveScroll();
-        cursor.moveToPrevious();
+        m_cursor.moveToPrevious();
         displayCurrent();
     }
 
@@ -155,10 +155,10 @@ public class HistoryScreen extends ThemedActivity {
         String todoContents = "no history";
         long date = 0L;
         String name = "";
-        if (cursor.getCount() != 0) {
+        if (this.m_cursor.getCount() != 0) {
             todoContents = getCurrentFileContents();
-            date = cursor.getLong(2);
-            name = cursor.getString(1);
+            date = this.m_cursor.getLong(2);
+            name = this.m_cursor.getString(1);
 
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -175,21 +175,21 @@ public class HistoryScreen extends ThemedActivity {
     }
 
     private String getCurrentFileContents() {
-        return cursor.getString(0);
+        return m_cursor.getString(0);
     }
 
     private void updateMenu() {
-        if (cursor == null || toolbar_menu == null) {
+        if (toolbar_menu == null || m_cursor == null) {
             return;
         }
         MenuItem prev = toolbar_menu.findItem(R.id.menu_prev);
         MenuItem next = toolbar_menu.findItem(R.id.menu_next);
-        if (cursor.isFirst() || cursor.getCount()==0) {
+        if (m_cursor.isFirst() || m_cursor.getCount() < 2) {
             prev.setEnabled(false);
         } else {
             prev.setEnabled(true);
         }
-        if (cursor.isLast() ||  cursor.getCount()==0) {
+        if (m_cursor.isLast() ||  m_cursor.getCount() < 2) {
             next.setEnabled(false);
         } else {
             next.setEnabled(true);
