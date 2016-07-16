@@ -219,10 +219,6 @@ class TodoApplication : Application(),
     val defaultSorts: Array<String>
         get() = resources.getStringArray(R.array.sortKeys)
 
-    fun showCompleteCheckbox(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_complete_checkbox), true)
-    }
-
     fun showCalendar(): Boolean {
         return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
     }
