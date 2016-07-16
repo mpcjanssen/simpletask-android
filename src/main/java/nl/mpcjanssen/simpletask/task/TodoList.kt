@@ -65,21 +65,11 @@ class TodoList(private val app: TodoApplication) {
 
 
     fun firstLine(): Int {
-        val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
-        if (items.size > 0) {
-            return items[0].line
-        } else {
-            return -1
-        }
+        return todoItems?.map { it -> it.line }?.min() ?: 0
     }
 
     fun lastLine(): Int {
-        val items = todoItems ?: CopyOnWriteArrayList<TodoListItem>()
-        if (items.size > 0) {
-            return items[0].line
-        } else {
-            return 1
-        }
+        return todoItems?.map { it -> it.line }?.max() ?: 1
     }
 
     fun add(t: TodoListItem, atEnd: Boolean) {
