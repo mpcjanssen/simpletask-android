@@ -9,6 +9,7 @@
 - Add Todo History in the main menu.
 - Add link to scripting help from Lua Config screen for #488.
 - Add black theme for application.
+- Restore last active filter tab.
 
 8.0.6
 -----
