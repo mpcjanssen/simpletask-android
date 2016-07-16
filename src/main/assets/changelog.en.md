@@ -1,7 +1,7 @@
 ﻿Changelog
 =========
 
-8.0.7
+8.1.0
 -----
 
 - Merged updated German translation. (#490 twickr).
