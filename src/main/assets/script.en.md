@@ -114,6 +114,7 @@ None
 ### Returns
 
 * `"dark"` for the dark theme
+* `"black"` for the black theme (works well on Amoled devices).
 * `"light_darkactionbar"` if the task should not be shown
 
 ### Notes

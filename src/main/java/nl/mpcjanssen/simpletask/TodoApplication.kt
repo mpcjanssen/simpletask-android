@@ -414,6 +414,7 @@ class TodoApplication : Application(),
     private fun themeStringToId(theme: String): Int {
         when (theme) {
             "dark" -> return R.style.AppTheme
+            "black" -> return R.style.AppTheme_Black
             "light_darkactionbar" -> return R.style.AppTheme_Light_DarkActionBar
         }
         return R.style.AppTheme_Light_DarkActionBar
@@ -428,7 +429,7 @@ class TodoApplication : Application(),
     val isDarkTheme: Boolean
         get() {
             when (activeThemeString) {
-                "dark" -> return true
+                "dark", "black" -> return true
                 else -> return false
             }
         }
