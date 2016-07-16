@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.createAlertDialog
 import org.luaj.vm2.LuaError
-import org.luaj.vm2.LuaTable
 
 class FilterScriptFragment : Fragment() {
     private var txtScript: EditText? = null
@@ -56,7 +55,7 @@ class FilterScriptFragment : Fragment() {
         btnTest.setOnClickListener {
             val t = Task(testTask)
             try {
-                log.info(TAG, "Running onFilter test Lua callback in module ${environment}")
+                log.info(TAG, "Running onFilter test Lua callback in module $environment")
                 val script = script
                 val snackBar = Snackbar.make(activity.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
                 val barView = snackBar.view
