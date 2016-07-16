@@ -640,6 +640,7 @@ class Simpletask : ThemedActivity() {
             R.id.sync -> fileStore.sync()
             R.id.archive -> m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveTasks(null) }, R.string.archive_task_title)
             R.id.open_file -> m_app.browseForNewFile(this)
+            R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -1542,6 +1543,8 @@ class Simpletask : ThemedActivity() {
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this);
         rcv.layoutManager = layoutManager;
+
+
         val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
         rcv.adapter = itemAdapter
 
