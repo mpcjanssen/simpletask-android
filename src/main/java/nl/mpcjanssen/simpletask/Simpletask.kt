@@ -221,10 +221,8 @@ class Simpletask : ThemedActivity() {
                 selectedTasks.add(visibleLine.task!!)
             }
         }
-        val tl = todoList
-        tl.clearSelection()
         todoList.selectTodoItems(selectedTasks)
-        handleIntent()
+        m_adapter?.notifyDataSetChanged()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -790,6 +788,12 @@ class Simpletask : ThemedActivity() {
         }
         if (todoList.selectedTasks.size > 0) {
             closeSelectionMode()
+            val lay = listView?.layoutManager ?: return
+            for ( i in 0..lay.childCount-1 ) {
+                val view = lay.getChildAt(i)
+                view.isActivated = false
+            }
+
             return
         }
         if (m_app.backClearsFilter() && mFilter != null && mFilter!!.hasFilter()) {
@@ -1135,6 +1139,7 @@ class Simpletask : ThemedActivity() {
     }
 
     inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : RecyclerView.Adapter <TaskViewHolder>() {
+        internal var selectedCount = 0
         override fun getItemCount(): Int {
             return visibleLines.size + 1
         }
@@ -1304,14 +1309,23 @@ class Simpletask : ThemedActivity() {
             view.isActivated = item.selected
 
             // Set click listeners
-            view.setOnClickListener {
-                if (item.selected) {
-                    todoList.unSelectTodoItem(item)
-                } else {
+            view.setOnClickListener { it ->
+
+                val newSelectedState = !item.selected
+                if (newSelectedState) {
+                    selectedCount++
                     todoList.selectTodoItem(item)
+                } else {
+                    selectedCount--
+                    todoList.unSelectTodoItem(item)
                 }
-                refreshSelectionMode()
-                notifyItemChanged(position)
+                if (selectedCount < 1) {
+                    closeSelectionMode()
+                } else {
+                    openSelectionMode()
+                }
+                it.isActivated = newSelectedState
+
             }
 
             view.setOnLongClickListener {
@@ -1401,6 +1415,7 @@ class Simpletask : ThemedActivity() {
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(m_app.defaultSorts)
                 visibleTasks = todoList.getSortedTasks(activeFilter, sorts, m_app.sortCaseSensitive())
+                selectedCount = visibleTasks.filter {it -> it.selected}.size
                 val newVisibleLines = ArrayList<VisibleLine>()
 
 
