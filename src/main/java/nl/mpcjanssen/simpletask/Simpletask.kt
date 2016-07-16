@@ -101,7 +101,7 @@ class Simpletask : ThemedActivity() {
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
-                    archiveTasks(null)
+                    archiveTasks(null, false)
                 } else {
                     if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                         log.info(TAG, "Logging out from Dropbox")
@@ -559,7 +559,7 @@ class Simpletask : ThemedActivity() {
             todoList.complete(t, m_app.hasKeepPrio(), m_app.hasAppendAtEnd())
         }
         if (m_app.isAutoArchive) {
-            archiveTasks(null)
+            archiveTasks(null, false)
         }
         closeSelectionMode()
         todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
@@ -625,13 +625,21 @@ class Simpletask : ThemedActivity() {
         }, R.string.delete_task_title)
     }
 
-    private fun archiveTasks(tasksToArchive: List<TodoListItem>?) {
-        if (m_app.todoFileName == m_app.doneFileName) {
-            showToastShort(this, "You have the done.txt file opened.")
-            return
+    private fun archiveTasks(tasksToArchive: List<TodoListItem>?, areYouSureDialog: Boolean) {
+
+        val archiveAction = {
+            if (m_app.todoFileName == m_app.doneFileName) {
+                showToastShort(this, "You have the done.txt file opened.")
+            }
+            todoList.archive(fileStore, m_app.todoFileName, m_app.doneFileName, tasksToArchive, m_app.eol)
+            closeSelectionMode()
         }
-        todoList.archive(fileStore, m_app.todoFileName, m_app.doneFileName, tasksToArchive, m_app.eol)
-        closeSelectionMode()
+        if (areYouSureDialog) {
+            m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }, R.string.archive_task_title)
+        } else {
+            archiveAction()
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -659,7 +667,7 @@ class Simpletask : ThemedActivity() {
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> fileStore.sync()
-            R.id.archive -> m_app.showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveTasks(null) }, R.string.archive_task_title)
+            R.id.archive -> archiveTasks(null, true)
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             else -> return super.onOptionsItemSelected(item)
@@ -1070,7 +1078,7 @@ class Simpletask : ThemedActivity() {
             when (menuId) {
                 R.id.update -> startAddTaskActivity()
                 R.id.delete -> deleteTasks(checkedTasks)
-                R.id.archive -> archiveTasks(checkedTasks)
+                R.id.archive -> archiveTasks(checkedTasks, true)
                 R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
                 R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
                 R.id.priority -> {
