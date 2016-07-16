@@ -1068,8 +1068,6 @@ class Simpletask : ThemedActivity() {
             val menuId = item.itemId
             val intent: Intent
             when (menuId) {
-                R.id.complete -> completeTasks(checkedTasks)
-                R.id.uncomplete -> undoCompleteTasks(checkedTasks)
                 R.id.update -> startAddTaskActivity()
                 R.id.delete -> deleteTasks(checkedTasks)
                 R.id.archive -> archiveTasks(checkedTasks)
@@ -1124,10 +1122,7 @@ class Simpletask : ThemedActivity() {
         val menu = toolbar.menu
         menu.clear()
         inflater.inflate(R.menu.task_context, toolbar.menu)
-        if (!m_app.showCompleteCheckbox()) {
-            menu.findItem(R.id.complete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-            menu.findItem(R.id.uncomplete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-        }
+
         populateSelectionMenu(this.options_menu)
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.GONE
@@ -1206,11 +1201,6 @@ class Simpletask : ThemedActivity() {
 
             val task = item.task
 
-            if (m_app.showCompleteCheckbox()) {
-                cbCompleted!!.visibility = View.VISIBLE
-            } else {
-                cbCompleted!!.visibility = View.GONE
-            }
             if (!m_app.hasExtendedTaskView()) {
                 val taskBar = view.findViewById(R.id.datebar)
                 taskBar.visibility = View.GONE
