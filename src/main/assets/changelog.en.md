@@ -1,6 +1,15 @@
 ﻿Changelog
 =========
 
+8.1.1
+-----
+
+- Don't recreate activities when changing font size preference, fixes #441.
+- Refactored selection and moves some menus to actionbar. Fixes #481.
+- Always show checkboxes for code simplification and fuller toolbar.
+- Set the proper toolbar popup theme. Fixes #463.
+
+
 8.1.0
 -----
 
