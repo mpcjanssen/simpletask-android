@@ -110,6 +110,7 @@ class Simpletask : ThemedActivity() {
                         startActivity(intent)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
+                        textSize = m_app.tasklistTextSize ?: textSize
                         if (m_adapter == null) {
                             return
                         }
