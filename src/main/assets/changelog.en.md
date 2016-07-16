@@ -8,6 +8,7 @@
 - Refactored selection and moves some menus to actionbar. Fixes #481.
 - Always show checkboxes for code simplification and fuller toolbar.
 - Set the proper toolbar popup theme. Fixes #463.
+- Create new tasks with a proper line number for file order sorting. Fixes #499.
 
 
 8.1.0
