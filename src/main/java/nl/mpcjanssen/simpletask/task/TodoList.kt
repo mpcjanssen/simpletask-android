@@ -57,16 +57,12 @@ class TodoList(private val app: TodoApplication) {
     private var mTags: ArrayList<String>? = null
 
 
-
-
     var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
 
     init {
 
         log = Logger
     }
-
-
 
 
     fun firstLine(): Int {
@@ -100,14 +96,14 @@ class TodoList(private val app: TodoApplication) {
     }
 
     fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
-        add(TodoListItem(0,t,select),atEnd)
+        add(TodoListItem(0, t, select), atEnd)
     }
 
 
     fun remove(item: TodoListItem) {
         app.queueRunnable("Remove", Runnable {
             todoItems?.remove(item) ?: log.warn(TAG, "Tried to remove an item from a null todo list")
-         })
+        })
     }
 
 
@@ -155,7 +151,7 @@ class TodoList(private val app: TodoApplication) {
             }
             val res = HashSet<String>()
             todoItems?.forEach {
-            res.addAll(it.task.tags)
+                res.addAll(it.task.tags)
             }
             val newTags = ArrayList<String>()
             newTags.addAll(res)
@@ -184,7 +180,7 @@ class TodoList(private val app: TodoApplication) {
                  extraAtEnd: Boolean) {
 
         app.queueRunnable("Complete", Runnable {
-            val task  = item.task
+            val task = item.task
             val extra = task.markComplete(todayAsString)
             if (extra != null) {
                 add(extra, extraAtEnd)
@@ -223,15 +219,14 @@ class TodoList(private val app: TodoApplication) {
 
     fun notifyChanged(fileStore: FileStoreInterface, todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
-        app.todolistQueue!!.post {
+        app.queueRunnable("Notified changed", Runnable {
             if (save) {
-                log.info(TAG, "Handler: Handle notifyChanged")
                 save(fileStore, todoName, backup, eol)
             }
             mLists = null
             mTags = null
             broadcastRefreshUI(app.localBroadCastManager)
-        }
+        })
     }
 
     fun startAddTaskActivity(act: Activity) {
@@ -244,52 +239,35 @@ class TodoList(private val app: TodoApplication) {
 
     fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
         val filteredTasks = filter.apply(todoItems)
-        val comp = MultiComparator(sorts, app.today, caseSensitive,filter.createIsThreshold)
+        val comp = MultiComparator(sorts, app.today, caseSensitive, filter.createIsThreshold)
         Collections.sort(filteredTasks, comp)
         return filteredTasks
     }
 
-    fun reload(fileStore: FileStoreInterface, filename: String, backup: BackupInterface, lbm: LocalBroadcastManager, background: Boolean, eol: String) {
-        if (app.loadQueued()) {
-            log.info(TAG, "TodoList reload is already queued waiting")
-            return
-        }
+    fun reload(fileStore: FileStoreInterface, filename: String, backup: BackupInterface, lbm: LocalBroadcastManager, eol: String) {
         lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
-        app.loadQueued = true
-        val r = Runnable {
-            try {
-                todoItems = CopyOnWriteArrayList<TodoListItem>(
-                fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
-                    TodoListItem(line,Task(text))
-                })
-            } catch (e: Exception) {
-                e.printStackTrace()
+        try {
+            todoItems = CopyOnWriteArrayList<TodoListItem>(
+                    fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
+                        TodoListItem(line, Task(text))
+                    })
+        } catch (e: Exception) {
+            e.printStackTrace()
 
-            } catch (e: IOException) {
-                log.error(TAG, "TodoList load failed: {}" + filename, e)
-                showToastShort(app, "Loading of todo file failed")
-            }
-
-            app.loadQueued = false
-            log.info(TAG, "TodoList loaded, refresh UI")
-            notifyChanged(fileStore, filename, eol, backup, false)
+        } catch (e: IOException) {
+            log.error(TAG, "TodoList load failed: {}" + filename, e)
+            showToastShort(app, "Loading of todo file failed")
         }
-        if (background) {
-            log.info(TAG, "Loading TodoList asynchronously")
-            app.queueRunnable("Reload", r)
-
-        } else {
-            log.info(TAG, "Loading TodoList synchronously")
-            r.run()
-        }
+        log.info(TAG, "TodoList loaded, refresh UI")
+        notifyChanged(fileStore, filename, eol, backup, false)
     }
 
-    fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
-        app.queueRunnable("Save", Runnable {
+
+    private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
             val items = todoItems
-            if (items==null) {
+            if (items == null) {
                 log.error(TAG, "Trying to save null todo list")
-                return@Runnable
+                return
             }
             try {
                 val lines = items.map {
@@ -300,14 +278,12 @@ class TodoList(private val app: TodoApplication) {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        })
-
     }
 
     fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
         app.queueRunnable("Archive", Runnable {
             val items = todoItems
-            if (items==null) {
+            if (items == null) {
                 log.error(TAG, "Trying to archive null todo list")
                 return@Runnable
             }
@@ -315,13 +291,13 @@ class TodoList(private val app: TodoApplication) {
 
             val completedTasks = tasksToArchive.filter { it.task.isCompleted() };
             try {
-                fileStore.appendTaskToFile(doneFileName, completedTasks.map {it.task.text}, eol);
+                fileStore.appendTaskToFile(doneFileName, completedTasks.map { it.task.text }, eol);
                 completedTasks.forEach {
                     todoItems?.remove(it)
                 }
 
                 notifyChanged(fileStore, todoFilename, eol, null, true);
-            } catch (e : IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace();
                 showToastShort(app, "Task archiving failed");
             }
@@ -338,7 +314,7 @@ class TodoList(private val app: TodoApplication) {
             var selection = items
             log.info(TAG, "todoItems is null, queuing selection of ${items.size} items")
             app.queueRunnable("Selection", Runnable {
-                selectTasks(selection,lbm)
+                selectTasks(selection, lbm)
                 log.info(TAG, "Queued selection update, lbm = $lbm")
                 lbm?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
             })
@@ -358,9 +334,9 @@ class TodoList(private val app: TodoApplication) {
     }
 
     fun selectTodoItems(items: List<TodoListItem>) {
-            items.forEach {
-                it.selected = true
-            }
+        items.forEach {
+            it.selected = true
+        }
     }
 
     fun unSelectTodoItem(item: TodoListItem) {
@@ -374,14 +350,14 @@ class TodoList(private val app: TodoApplication) {
     }
 
     fun clearSelection() {
-       todoItems?.forEach {
-           it.selected = false
-       }
+        todoItems?.forEach {
+            it.selected = false
+        }
     }
 
     fun getTaskCount(): Long {
         val items = todoItems ?: return 0
-        return items.filter {it.task.inFileFormat().isNotBlank()}.size.toLong()
+        return items.filter { it.task.inFileFormat().isNotBlank() }.size.toLong()
     }
 
 
