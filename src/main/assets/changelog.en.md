@@ -12,6 +12,7 @@
 - Restore last active filter tab.
 - Greatly improve selection performance. Fixes #491.
 - When selection active, update the selected state of task when closing it with the back button. Fixes #491.
+- Removed last visual task update artifacts. Fixes #474.
 
 8.0.6
 -----

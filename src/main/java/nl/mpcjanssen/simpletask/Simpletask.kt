@@ -1127,10 +1127,8 @@ class Simpletask : ThemedActivity() {
         val filteredView = findViewById(R.id.filtered_view)
         if (show) {
             progressBar?.visibility = View.VISIBLE
-            filteredView?.visibility = View.GONE
         } else {
             progressBar?.visibility = View.GONE
-            filteredView?.visibility = View.VISIBLE
         }
     }
 
