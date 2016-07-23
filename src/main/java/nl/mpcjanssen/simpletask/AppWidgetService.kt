@@ -44,7 +44,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     fun getFilter () : ActiveFilter {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
-        val filter = ActiveFilter("widget" + widgetId.toString())
+        val filter = ActiveFilter(application)
         filter.initFromPrefs(preferences)
         val obj = JSONObject()
         filter.saveInJSON(obj)

@@ -248,7 +248,7 @@ class Simpletask : ThemedActivity() {
             return
         }
 
-        mFilter = ActiveFilter(null)
+        mFilter = ActiveFilter(m_app)
 
         m_leftDrawerList = findViewById(R.id.left_drawer) as ListView
         m_rightDrawerList = findViewById(R.id.right_drawer_list) as ListView
@@ -495,7 +495,7 @@ class Simpletask : ThemedActivity() {
             override fun onQueryTextChange(newText: String): Boolean {
                 if (!m_ignoreSearchChangeCallback) {
                     if (mFilter == null) {
-                        mFilter = ActiveFilter(null)
+                        mFilter = ActiveFilter(m_app)
                     }
                     mFilter!!.search = newText
                     mFilter!!.saveInPrefs(m_app.prefs)
@@ -701,7 +701,7 @@ class Simpletask : ThemedActivity() {
             val filterIds = saved_filter_ids.getStringSet("ids", HashSet<String>())
             for (id in filterIds) {
                 val filter_pref = getSharedPreferences(id, Context.MODE_PRIVATE)
-                val filter = ActiveFilter(null)
+                val filter = ActiveFilter(m_app)
                 filter.initFromPrefs(filter_pref)
                 filter.prefName = id
                 saved_filters.add(filter)
@@ -738,7 +738,7 @@ class Simpletask : ThemedActivity() {
                 val contents = fileStore.readFile(importFile.canonicalPath, null)
                 val jsonFilters = JSONObject(contents)
                 jsonFilters.keys().forEach {
-                    val filter = ActiveFilter(null)
+                    val filter = ActiveFilter(m_app)
                     filter.initFromJSON(jsonFilters.getJSONObject(it))
                     saveFilterInPrefs(it,filter)
                 }
@@ -958,7 +958,7 @@ class Simpletask : ThemedActivity() {
         ids.remove(prefsName)
         saved_filters.edit().putStringSet("ids", ids).apply()
         val filter_prefs = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val deleted_filter = ActiveFilter(null)
+        val deleted_filter = ActiveFilter(m_app)
         deleted_filter.initFromPrefs(filter_prefs)
         filter_prefs.edit().clear().apply()
         val prefs_path = File(this.filesDir, "../shared_prefs")
@@ -972,7 +972,7 @@ class Simpletask : ThemedActivity() {
 
     private fun updateSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(null)
+        val old_filter = ActiveFilter(m_app)
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         mFilter!!.name = filterName
@@ -982,7 +982,7 @@ class Simpletask : ThemedActivity() {
 
     private fun renameSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(null)
+        val old_filter = ActiveFilter(m_app)
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         val alert = AlertDialog.Builder(this)

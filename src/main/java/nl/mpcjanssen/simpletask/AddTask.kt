@@ -52,7 +52,7 @@ class AddTask : ThemedActivity() {
         // m_app.loadTodoList(true)
 
         val intent = intent
-        val mFilter = ActiveFilter(null)
+        val mFilter = ActiveFilter(m_app)
         mFilter.initFromIntent(intent)
 
         val intentFilter = IntentFilter()

@@ -10,39 +10,35 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-class LuaScripting(app: TodoApplication) {
-
+class LuaInterpreter(app: TodoApplication) {
 
 
     val globals = JsePlatform.standardGlobals()
-    val ON_FILTER_NAME = "onFilter"
-    val ON_TEXTSEARCH_NAME = "onTextSearch"
-    val CONFIG_THEME = "theme"
-    val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
+
 
     init {
         globals.set("toast", LuaToastShort(app))
-        globals.load(app.luaConfig)
+        evalScript(app.luaConfig)
     }
 
 
-
     fun tasklistTextSize(): Float? {
-        return callZeroArgLuaFunction(CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
+        return callZeroArgLuaFunction(globals, CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
     }
 
     // Callback to determine the theme. Return true for datk.
     fun configTheme(): String? {
-        return callZeroArgLuaFunction(CONFIG_THEME) { it -> it.toString() }
+        return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
     }
 
 
-    fun onFilterCallback(onFilter: LuaValue, t: Task): Boolean {
+    fun onFilterCallback(t: Task): Boolean {
+        val onFilter = globals.get(LuaInterpreter.ON_FILTER_NAME)
         if (!onFilter.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
                 val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
-                log.info("LuaScripting", "onFilter for $t result = ${result.tojstring()}")
+                log.info("LuaInterpreter", "onFilter for $t result = ${result.tojstring()}")
                 return result.toboolean()
             } catch (e: LuaError) {
                 log.debug(TAG, "Lua execution failed " + e.message)
@@ -66,10 +62,9 @@ class LuaScripting(app: TodoApplication) {
 
     }
 
-    fun evalScript(environment: String?, script: String) {
-        globals.load(script).call()
-
-
+    fun evalScript(script: String?) : LuaInterpreter {
+        script?.let {globals.load(script).call()}
+        return this
     }
 
     // Fill the arguments for the onFilter callback
@@ -122,7 +117,12 @@ class LuaScripting(app: TodoApplication) {
 
     companion object {
         private val log = Logger
-        private val TAG = "LuaScripting"
+        private val TAG = "LuaInterpreter"
+
+        val ON_FILTER_NAME = "onFilter"
+        val ON_TEXTSEARCH_NAME = "onTextSearch"
+        val CONFIG_THEME = "theme"
+        val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
 
         // Call a Lua function `name`
         // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
@@ -139,6 +139,7 @@ class LuaScripting(app: TodoApplication) {
             return null
 
         }
+    }
 }
 
 class LuaToastShort(val context: Context) : OneArgFunction() {

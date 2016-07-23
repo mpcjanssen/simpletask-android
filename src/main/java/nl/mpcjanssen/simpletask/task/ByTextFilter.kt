@@ -24,7 +24,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import nl.mpcjanssen.simpletask.LuaScripting
+import nl.mpcjanssen.simpletask.LuaInterpreter
 import java.util.*
 
 /**
@@ -32,7 +32,7 @@ import java.util.*
 
  * @author Tim Barlotta
  */
-class ByTextFilter(searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
+class ByTextFilter(val interp : LuaInterpreter, searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
     private val parts: Array<String>
     private var casedText: String
@@ -43,7 +43,7 @@ class ByTextFilter(searchText: String?, internal val isCaseSensitive: Boolean) :
     }
 
     override fun apply(input: Task): Boolean {
-        val luaResult = LuaScripting.onTextSearchCallback(input.text, text, isCaseSensitive)
+        val luaResult = interp.onTextSearchCallback(input.text, text, isCaseSensitive)
         if (luaResult != null) {
             return luaResult
         }
