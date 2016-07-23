@@ -1,16 +1,20 @@
 ﻿Changelog
 =========
 
+8.1.2
+-----
+
+- Return proper Lua callback for widgets, fixes #502.
+
 8.1.1
 -----
 
 - Don't recreate activities when changing font size preference, fixes #441.
 - Refactored selection and moves some menus to actionbar. Fixes #481.
 - Always show checkboxes for code simplification and fuller toolbar.
+- Always show complete and uncomplete context actions (in menu) for Select all -> (un)complete use case.
 - Set the proper toolbar popup theme. Fixes #463.
 - Create new tasks with a proper line number for file order sorting. Fixes #499.
-- Restore complete and uncomplete context actions for Select all -> (un)complete use case.
-
 
 8.1.0
 -----
