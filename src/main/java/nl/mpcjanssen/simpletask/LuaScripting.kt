@@ -10,36 +10,22 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-object LuaScripting {
-    private val log = Logger
+class LuaScripting(app: TodoApplication) {
 
-    private val TAG = "LuaScripting"
+
+
     val globals = JsePlatform.standardGlobals()
     val ON_FILTER_NAME = "onFilter"
     val ON_TEXTSEARCH_NAME = "onTextSearch"
     val CONFIG_THEME = "theme"
     val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
 
-    fun init(context: Context) {
-        globals.set("toast", LuaToastShort(context))
+    init {
+        globals.set("toast", LuaToastShort(app))
+        globals.load(app.luaConfig)
     }
 
-    // Call a Lua function `name`
-    // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
-    // Returns null if the function is not found or if a `LuaError` occurred
-    fun <T> callZeroArgLuaFunction(name: String, unpackResult: (LuaValue) -> T?): T? {
-        synchronized(this) {
-            val function = globals.get(name)
-            if (!function.isnil()) {
-                try {
-                    return unpackResult(function.call())
-                } catch (e: LuaError) {
-                    log.debug(TAG, "Lua execution failed " + e.message)
-                }
-            }
-            return null
-        }
-    }
+
 
     fun tasklistTextSize(): Float? {
         return callZeroArgLuaFunction(CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
@@ -51,61 +37,39 @@ object LuaScripting {
     }
 
 
-    fun setOnFilter(namespace: String?, code: String?): LuaValue {
-        val env = if (namespace == null) {
-            LuaScripting.globals
-        } else {
-            val module = LuaTable.tableOf()
-            LuaScripting.globals.set(namespace, module)
-            module
-        }
-        env.set(LuaScripting.ON_FILTER_NAME, LuaValue.NIL)
-        code?.let {
-            log.info(ActiveFilter.TAG, "Executing filter code in env $namespace")
-            LuaScripting.evalScript(namespace, code)
-        }
-        return env.get(LuaScripting.ON_FILTER_NAME)
-
-    }
-
-    fun onFilterCallback (onFilter : LuaValue, t : Task) : Boolean {
-        synchronized(this) {
-            if (!onFilter.isnil()) {
-                val args = fillOnFilterVarargs(t)
-                try {
-                    val result = onFilter.invoke(args).arg1()
-                    return result.toboolean()
-                } catch (e: LuaError) {
-                    log.debug(TAG, "Lua execution failed " + e.message)
-                }
+    fun onFilterCallback(onFilter: LuaValue, t: Task): Boolean {
+        if (!onFilter.isnil()) {
+            val args = fillOnFilterVarargs(t)
+            try {
+                val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
+                log.info("LuaScripting", "onFilter for $t result = ${result.tojstring()}")
+                return result.toboolean()
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
             }
-            return true
         }
+        return true
+
     }
 
     fun onTextSearchCallback(input: String, search: String, caseSensitive: Boolean): Boolean? {
-        synchronized(this) {
-            val onFilter = globals.get(ON_TEXTSEARCH_NAME)
-            if (!onFilter.isnil()) {
-                try {
-                    val result = onFilter.invoke(LuaString.valueOf(input), LuaString.valueOf(search), LuaBoolean.valueOf(caseSensitive)).arg1()
-                    return result.toboolean()
-                } catch (e: LuaError) {
-                    log.debug(TAG, "Lua execution failed " + e.message)
-                }
+        val onFilter = globals.get(ON_TEXTSEARCH_NAME)
+        if (!onFilter.isnil()) {
+            try {
+                val result = onFilter.invoke(LuaString.valueOf(input), LuaString.valueOf(search), LuaBoolean.valueOf(caseSensitive)).arg1()
+                return result.toboolean()
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
             }
-            return null
         }
+        return null
+
     }
 
     fun evalScript(environment: String?, script: String) {
-        synchronized(this) {
-            if (environment!=null) {
-                globals.load(script, environment, globals.get(environment).checktable()).call()
-            } else {
-                globals.load(script).call()
-            }
-        }
+        globals.load(script).call()
+
+
     }
 
     // Fill the arguments for the onFilter callback
@@ -155,6 +119,26 @@ object LuaScripting {
         }
         return luaTable
     }
+
+    companion object {
+        private val log = Logger
+        private val TAG = "LuaScripting"
+
+        // Call a Lua function `name`
+        // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
+        // Returns null if the function is not found or if a `LuaError` occurred
+        fun <T> callZeroArgLuaFunction(globals: LuaValue, name: String, unpackResult: (LuaValue) -> T?): T? {
+            val function = globals.get(name)
+            if (!function.isnil()) {
+                try {
+                    return unpackResult(function.call())
+                } catch (e: LuaError) {
+                    log.debug(TAG, "Lua execution failed " + e.message)
+                }
+            }
+            return null
+
+        }
 }
 
 class LuaToastShort(val context: Context) : OneArgFunction() {

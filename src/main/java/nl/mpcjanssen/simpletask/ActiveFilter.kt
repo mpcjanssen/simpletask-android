@@ -232,6 +232,7 @@ class ActiveFilter (val environment: String?) {
         val code = if (useScript) {script } else {null}
         val today = todayAsString
         try {
+            log.debug(TAG, "Loading callback code in $environment, $code")
             val callback = LuaScripting.setOnFilter(environment, code)
 
             var idx = -1

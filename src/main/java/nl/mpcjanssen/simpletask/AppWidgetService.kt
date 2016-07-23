@@ -32,7 +32,6 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     private val log: Logger
     private val application: TodoApplication
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
-    val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
     var visibleTasks = ArrayList<TodoListItem>()
 
     init {
@@ -41,10 +40,16 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         application = ctxt as TodoApplication
     }
 
-    val mFilter : ActiveFilter
-    get () {
+   
+    fun getFilter () : ActiveFilter {
+	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
+	    val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
         val filter = ActiveFilter("widget" + widgetId.toString())
         filter.initFromPrefs(preferences)
+        val obj = JSONObject()
+        filter.saveInJSON(obj)
+        log.debug (TAG, "Widget $widgetId filter $obj")
+
         return filter
     }
 
@@ -55,8 +60,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
     private fun createSelectedIntent(t: TodoListItem): Intent {
         val target = Intent()
-
-        mFilter.saveInIntent(target)
+        getFilter().saveInIntent(target)
         target.putExtra(Constants.INTENT_SELECTED_TASK, t.task.inFileFormat())
         return target
     }
@@ -64,7 +68,6 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
     fun setFilteredTasks() {
         log.debug(TAG, "Widget $widgetId: setFilteredTasks called");
-
 
         if (application == null) {
             log.debug(TAG, "application object was null")
@@ -79,7 +82,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
         val items = tl.todoItems
         visibleTasks.clear()
-        val filter = mFilter
+        val filter = getFilter() 
 
         for (t in filter.apply(items)) {
             visibleTasks.add(t)
@@ -106,7 +109,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     }
 
     private fun getExtendedView(item: TodoListItem): RemoteViews {
-        val filter = mFilter
+        val filter = getFilter()
         val rv = RemoteViews(application.packageName, R.layout.widget_list_item)
         val extended_widget = application.prefs.getBoolean("widget_extended", true)
         val task = item.task
