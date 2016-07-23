@@ -144,6 +144,7 @@ class TodoApplication : Application(),
                     })
                 } else if (intent.action == Constants.BROADCAST_UPDATE_WIDGETS) {
                     log.info(TAG, "Refresh widgets from broadcast")
+                    redrawWidgets()
                     updateWidgets()
                 } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
                     log.info(TAG, "File changed, reloading")

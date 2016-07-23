@@ -4,7 +4,8 @@
 8.1.2
 -----
 
-- Return proper Lua callback for widgets, fixes #502.
+- Use a separate Lua interpreter for every filter, fixes #502.
+- Recreate widgets if filter changed to updated filterbar click intent.
 
 8.1.1
 -----
