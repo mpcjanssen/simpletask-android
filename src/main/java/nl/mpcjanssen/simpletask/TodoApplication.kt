@@ -48,6 +48,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
+import org.luaj.vm2.Lua
 import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
@@ -64,13 +65,14 @@ class TodoApplication : Application(),
     private lateinit var m_calSync: CalendarSync
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
+
     private val log = Logger
     private lateinit var mFileStore: FileStoreInterface;
     internal lateinit var daoSession: DaoSession
     lateinit var logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
     lateinit var prefs: SharedPreferences
-
+    lateinit var interp : LuaInterpreter
     lateinit var todolistQueue: Handler
 
     init {
@@ -105,9 +107,11 @@ class TodoApplication : Application(),
     override fun onCreate() {
 
         super.onCreate()
-
-        localBroadCastManager = LocalBroadcastManager.getInstance(this)
+        app = this
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        interp = LuaInterpreter(this)
+        localBroadCastManager = LocalBroadcastManager.getInstance(this)
+
         val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
         val todoDb = helper.writableDatabase
         val daoMaster = DaoMaster(todoDb)
@@ -121,7 +125,6 @@ class TodoApplication : Application(),
         setupUncaughtExceptionHandler()
 
         // Read Lua config
-        LuaScripting.init(applicationContext)
         reloadLuaConfig()
 
 
@@ -165,7 +168,7 @@ class TodoApplication : Application(),
 
     fun reloadLuaConfig() {
         try {
-            LuaScripting.evalScript(null, luaConfig)
+            interp.evalScript(luaConfig)
         } catch (e: LuaError) {
             log.warn(TAG, "Lua execution failed " + e.message)
             showToastLong(this, "${getString(R.string.lua_error)}:  ${e.message}")
@@ -434,7 +437,7 @@ class TodoApplication : Application(),
         get() = "dark" == prefs.getString(getString(R.string.widget_theme_pref_key), "light_darkactionbar")
 
     private val activeThemeString: String
-        get() = LuaScripting.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
+        get() = interp.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
 
     var fullDropBoxAccess: Boolean
         @SuppressWarnings("unused")
@@ -484,7 +487,7 @@ class TodoApplication : Application(),
 
     val tasklistTextSize: Float?
         get() {
-            val luaValue = LuaScripting.tasklistTextSize()
+            val luaValue = interp.tasklistTextSize()
             if (luaValue != null) {
                 return luaValue
             }
@@ -590,6 +593,7 @@ class TodoApplication : Application(),
 
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
+        lateinit var  app : TodoApplication
 
     }
 

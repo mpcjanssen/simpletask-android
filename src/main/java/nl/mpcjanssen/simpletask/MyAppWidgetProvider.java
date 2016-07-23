@@ -25,7 +25,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     public static void putFilterExtras (Intent target , @NonNull SharedPreferences preferences,  int widgetId) {
         // log.debug(TAG, "putFilter extras  for appwidget " + widgetId);
-        ActiveFilter filter = new ActiveFilter("widget" + String.valueOf(widgetId));
+        ActiveFilter filter = new ActiveFilter(TodoApplication.app);
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
     }
@@ -66,7 +66,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
 
-        ActiveFilter filter = new ActiveFilter("widget" + String.valueOf(widgetId));
+        ActiveFilter filter = new ActiveFilter(TodoApplication.app);
         filter.initFromPrefs(preferences);
         view.setTextViewText(R.id.title,filter.getName());
 

@@ -59,7 +59,8 @@ class FilterScriptFragment : Fragment() {
                 val script = script
                 val snackBar = Snackbar.make(activity.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
                 val barView = snackBar.view
-                if (script.trim { it <= ' ' }.isEmpty() || LuaScripting.onFilterCallback(LuaScripting.setOnFilter(environment, script), t)) {
+                val interp = LuaInterpreter(activity.application as TodoApplication)
+                if (script.trim { it <= ' ' }.isEmpty() || interp.evalScript(script).onFilterCallback(t)) {
                     snackBar.setText("True, task will be shown")
                     barView.setBackgroundColor(0xff43a047.toInt())
                 } else {

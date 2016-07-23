@@ -10,16 +10,15 @@ import nl.mpcjanssen.simpletask.util.todayAsString
 import nl.mpcjanssen.simpletask.task.ByTextFilter
 import org.json.JSONObject
 import org.luaj.vm2.LuaError
-import org.luaj.vm2.LuaTable
-import org.luaj.vm2.LuaValue
+
 import java.util.*
 
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter (val environment: String?) {
+class ActiveFilter (val app : TodoApplication) {
     private val log: Logger
-
+    val interp = LuaInterpreter(app)
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
@@ -232,9 +231,7 @@ class ActiveFilter (val environment: String?) {
         val code = if (useScript) {script } else {null}
         val today = todayAsString
         try {
-            log.debug(TAG, "Loading callback code in $environment, $code")
-            val callback = LuaScripting.setOnFilter(environment, code)
-
+            interp.evalScript(code)
             var idx = -1
             for (item in items) {
                 idx++
@@ -254,7 +251,7 @@ class ActiveFilter (val environment: String?) {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (!callback.isnil() && !LuaScripting.onFilterCallback(callback, t)) {
+                if (!interp.onFilterCallback(t)) {
                         continue
                 }
                 matched.add(item)
@@ -286,7 +283,7 @@ class ActiveFilter (val environment: String?) {
             }
 
             if (!isEmptyOrNull(search)) {
-                addFilter(ByTextFilter(search, false))
+                addFilter(ByTextFilter(interp, search, false))
             }
         }
 

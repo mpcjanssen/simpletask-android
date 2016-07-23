@@ -25,7 +25,7 @@ class LuaConfigScreen : ThemedActivity() {
         val btnHelp = findViewById(R.id.btn_help) as Button
         btnRun.setOnClickListener {
             try {
-                LuaScripting.evalScript(null, script())
+                m_app.interp.evalScript(script())
             } catch (e: LuaError) {
                 log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
                 createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
