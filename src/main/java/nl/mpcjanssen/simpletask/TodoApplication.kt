@@ -67,7 +67,7 @@ class TodoApplication : Application(),
 
 
     private val log = Logger
-    private lateinit var mFileStore: FileStoreInterface;
+
     internal lateinit var daoSession: DaoSession
     lateinit var logDao: LogItemDao
     internal lateinit var backupDao: TodoFileDao
@@ -158,7 +158,7 @@ class TodoApplication : Application(),
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         prefsChangeListener(this)
         todoList = TodoList(this)
-        this.mFileStore = FileStore(this)
+
         log.info(TAG, "Created todolist {}" + todoList)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
@@ -375,11 +375,11 @@ class TodoApplication : Application(),
     }
 
     val isLoading: Boolean
-        get() = fileStore.isLoading
+        get() = FileStore.isLoading
 
     fun loadTodoList() {
         log.info(TAG, "Load todolist")
-        todoList.reload(mFileStore, todoFileName, this, localBroadCastManager, eol)
+        todoList.reload(FileStore, todoFileName, this, localBroadCastManager, eol)
 
     }
 
@@ -501,9 +501,6 @@ class TodoApplication : Application(),
         }
 
 
-    val fileStore: FileStoreInterface
-        get() = mFileStore
-
     fun showConfirmationDialog(cxt: Context, msgid: Int,
                                okListener: DialogInterface.OnClickListener, titleid: Int) {
         val show = prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
@@ -524,20 +521,19 @@ class TodoApplication : Application(),
 
     val isAuthenticated: Boolean
         get() {
-            val fs = fileStore
-            return fs.isAuthenticated
+            return FileStore.isAuthenticated
         }
 
     fun startLogin(caller: Activity) {
-        fileStore.startLogin(caller)
+        FileStore.startLogin(caller)
     }
 
     fun storeType(): Int {
-        return fileStore.type
+        return FileStore.type
     }
 
     fun browseForNewFile(act: Activity) {
-        val fileStore = fileStore
+        val fileStore = FileStore
         fileStore.browseForNewFile(
                 act,
                 File(todoFileName).parent,

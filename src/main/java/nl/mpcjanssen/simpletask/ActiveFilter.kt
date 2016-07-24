@@ -251,7 +251,7 @@ class ActiveFilter (val app : TodoApplication) {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (!interp.onFilterCallback(t)) {
+                if (useScript && !interp.onFilterCallback(t)) {
                         continue
                 }
                 matched.add(item)
