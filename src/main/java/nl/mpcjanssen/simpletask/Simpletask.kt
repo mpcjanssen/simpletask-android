@@ -56,7 +56,6 @@ import java.util.*
 
 
 class Simpletask : ThemedActivity() {
-    val queue = MessageQueue("MainActivity")
 
     var textSize: Float = 14.0F
 
@@ -1417,7 +1416,7 @@ class Simpletask : ThemedActivity() {
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            queue.add("setFilterTasks", Runnable {
+            ActionQueue.add("setFilterTasks", Runnable {
                 runOnUiThread() {
                     showListViewProgress(true)
                 }

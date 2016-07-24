@@ -73,35 +73,7 @@ class TodoApplication : Application(),
     internal lateinit var backupDao: TodoFileDao
     lateinit var prefs: SharedPreferences
     lateinit var interp : LuaInterpreter
-    lateinit var todolistQueue: Handler
 
-    init {
-
-        // Set up the message queue
-        val t = Thread(Runnable {
-            Looper.prepare()
-            todolistQueue = Handler()
-            Looper.loop()
-        })
-        t.start()
-    }
-
-    fun queueRunnable(description: String, r: Runnable) {
-        log.info(TodoList.TAG, "Handler: Queue " + description)
-        while (todolistQueue == null) {
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-
-        }
-        if (todolistQueue != null) {
-            todolistQueue!!.post(LoggingRunnable(description, r))
-        } else {
-            r.run()
-        }
-    }
 
 
     override fun onCreate() {
@@ -137,7 +109,7 @@ class TodoApplication : Application(),
             override fun onReceive(context: Context, intent: Intent) {
                 log.info(TAG, "Received broadcast ${intent.action}")
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
-                    queueRunnable("Refresh UI", Runnable {
+                    ActionQueue.add("Refresh UI", Runnable {
                         m_calSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
@@ -148,7 +120,7 @@ class TodoApplication : Application(),
                     updateWidgets()
                 } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
                     log.info(TAG, "File changed, reloading")
-                    queueRunnable("Reload from BROADCAST", Runnable {
+                    ActionQueue.add("Reload from BROADCAST", Runnable {
                         loadTodoList()
                     })
                 }
@@ -162,7 +134,7 @@ class TodoApplication : Application(),
         log.info(TAG, "Created todolist {}" + todoList)
         m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
-        queueRunnable("|Initial load", Runnable {
+        ActionQueue.add("|Initial load", Runnable {
             loadTodoList()
         })
     }
@@ -388,7 +360,7 @@ class TodoApplication : Application(),
         newName?.let {
             setTodoFile(newName)
         }
-        queueRunnable("Reload from fileChanged()", Runnable {
+        ActionQueue.add("Reload from fileChanged()", Runnable {
             loadTodoList()
         })
     }
@@ -472,7 +444,7 @@ class TodoApplication : Application(),
 
     fun switchTodoFile(newTodo: String, background: Boolean) {
         setTodoFile(newTodo)
-        queueRunnable("Reload from file switch", Runnable {
+        ActionQueue.add("Reload from file switch", Runnable {
             loadTodoList()
         })
 
@@ -598,20 +570,3 @@ class TodoApplication : Application(),
 }
 
 
-class LoggingRunnable internal constructor(private val description: String, private val runnable: Runnable) : Runnable {
-    val log = Logger
-
-    init {
-        log.info(TAG, "Creating action " + description)
-    }
-
-    override fun toString(): String {
-        return description
-    }
-
-    override fun run() {
-        log.info(TAG, "Execution action " + description)
-        runnable.run()
-    }
-
-}
