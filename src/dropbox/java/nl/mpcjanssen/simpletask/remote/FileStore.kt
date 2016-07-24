@@ -32,7 +32,15 @@ import java.util.concurrent.CopyOnWriteArrayList
 /**
  * FileStore implementation backed by Dropbox
  */
-class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
+object FileStore : FileStoreInterface {
+    private val TAG = "FileStoreDB"
+    private val LOCAL_CONTENTS = "localContents"
+    private val LOCAL_NAME = "localName"
+    private val LOCAL_CHANGES_PENDING = "localChangesPending"
+    private val LOCAL_REVISION = "localRev"
+    private val CACHE_PREFS = "dropboxMeta"
+    private val OAUTH2_TOKEN = "dropboxToken"
+
     override fun pause(pause: Boolean) {
         if (pause) {
             log.info(TAG, "App went to background stop watching")
@@ -54,6 +62,7 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
     override var isLoading = false
     private var mOnline: Boolean = false
     private var fileOperationsQueue: Handler? = null
+    private val mApp = TodoApplication.app
 
     init {
         log = Logger
@@ -248,10 +257,10 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
                 log.info(polltag, "Longpoll Json exception, restarting backing of {} seconds" + 30, e)
                 pollFailures++
             } catch (e: DropboxException) {
-                log.info(polltag, "Longpoll Dropbox exception" , e)
+                log.info(polltag, "Longpoll Dropbox exception", e)
                 pollFailures++
             }
-            newBackoffSeconds = (backoffFactor*(Math.pow(2.0, pollFailures.toDouble())-1.0)).toInt()
+            newBackoffSeconds = (backoffFactor * (Math.pow(2.0, pollFailures.toDouble()) - 1.0)).toInt()
             startLongPoll(newBackoffSeconds)
         })
         pollingTask!!.start()
@@ -361,7 +370,7 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
 
     override fun startLogin(caller: Activity) {
         // MyActivity below should be your activity class name
-       val intent = Intent(caller, LoginScreen::class.java)
+        val intent = Intent(caller, LoginScreen::class.java)
         caller.startActivity(intent)
     }
 
@@ -373,9 +382,9 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
         }
     }
 
-    private fun getLatestCursor() : String? {
+    private fun getLatestCursor(): String? {
         val cursor = mPrefs?.getString(mApp.getString(R.string.dropbox_latest_cursor), null)
-        if (cursor!=null) {
+        if (cursor != null) {
             return cursor
         } else {
             val dbxCursor = latestCursorOnDropbox()
@@ -384,7 +393,7 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
         }
     }
 
-    private fun latestCursorOnDropbox() : String? {
+    private fun latestCursorOnDropbox(): String? {
         try {
             log.info(TAG, "Finding latest cursor")
             val params = ArrayList<String>()
@@ -478,7 +487,7 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
                 // Usually this means the was a conflict.
                 log.info(TAG, "Filename was changed remotely. New name is: " + newName)
                 showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
-                mApp.switchTodoFile(newName,true)
+                mApp.switchTodoFile(newName, true)
             }
         }
         queueRunnable("Save to file " + path, r)
@@ -626,7 +635,7 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
      * *
      * @param pathName intial path shown in the file dialog
      */
-    class FileDialog (private val activity: Activity, pathName: String, private val txtOnly: Boolean) {
+    class FileDialog(private val activity: Activity, pathName: String, private val txtOnly: Boolean) {
         private val log: Logger
         private var fileList: Array<String>? = null
         private val entryHash = HashMap<String, DropboxAPI.Entry>()
@@ -653,7 +662,7 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
 
             // Use an asynctask because we need to manage the UI
             Thread(Runnable {
-                loadFileList(act, api, currentPath?:File("/"))
+                loadFileList(act, api, currentPath ?: File("/"))
                 loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
                 runOnMainThread(Runnable {
                     val builder = AlertDialog.Builder(activity)
@@ -772,23 +781,14 @@ class FileStore(private val mApp: TodoApplication) : FileStoreInterface {
         }
     }
 
-    companion object {
 
-        private val TAG = "FileStoreDB"
 
-        private val LOCAL_CONTENTS = "localContents"
-        private val LOCAL_NAME = "localName"
-        private val LOCAL_CHANGES_PENDING = "localChangesPending"
-        private val LOCAL_REVISION = "localRev"
-        private val CACHE_PREFS = "dropboxMeta"
-        private val OAUTH2_TOKEN = "dropboxToken"
 
-        fun getDefaultPath(app: TodoApplication): String {
-            if (app.fullDropBoxAccess) {
-                return "/todo/todo.txt"
-            } else {
-                return "/todo.txt"
-            }
+    fun getDefaultPath(app: TodoApplication): String {
+        if (app.fullDropBoxAccess) {
+            return "/todo/todo.txt"
+        } else {
+            return "/todo.txt"
         }
     }
 }

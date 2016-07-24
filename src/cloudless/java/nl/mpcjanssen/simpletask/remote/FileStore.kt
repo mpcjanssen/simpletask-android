@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Environment
 import android.os.FileObserver
 import android.os.Handler
@@ -29,7 +30,7 @@ import java.util.Collections
 import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
-class FileStore(ctx: Context) : FileStoreInterface {
+object FileStore : FileStoreInterface {
     override val isOnline = true
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
@@ -44,7 +45,7 @@ class FileStore(ctx: Context) : FileStoreInterface {
         log = Logger
         log.info(TAG, "onCreate")
         observer = null
-        this.bm = LocalBroadcastManager.getInstance(ctx)
+        this.bm = LocalBroadcastManager.getInstance(TodoApplication.app)
 
         // Set up the message queue
         val t = Thread(Runnable {
@@ -303,7 +304,7 @@ class FileStore(ctx: Context) : FileStoreInterface {
     override fun logout() {
     }
 
-    private inner class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
+    private class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
         private val fileName: String
         private var log =  Logger
         private var ignoreEvents: Boolean = false
@@ -354,10 +355,10 @@ class FileStore(ctx: Context) : FileStoreInterface {
         }
     }
 
-    companion object {
+
 
         fun getDefaultPath(app: TodoApplication): String {
             return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
         }
-    }
+
 }

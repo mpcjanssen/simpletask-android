@@ -33,6 +33,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
@@ -133,7 +134,7 @@ class AddTaskBackground : Activity() {
             todoList.add(t, m_app.hasAppendAtEnd(),m_app.hasShareTaskShowsEdit())
             addedTasks.add(t)
         }
-        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+        todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
         finish()
         showToastShort(m_app, R.string.task_added)
         if (m_app.hasShareTaskShowsEdit()) {

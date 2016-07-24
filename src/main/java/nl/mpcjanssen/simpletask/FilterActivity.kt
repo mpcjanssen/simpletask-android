@@ -229,7 +229,7 @@ class FilterActivity : ThemedActivity() {
                     Thread(Runnable {
                         try {
 
-                            m_app.fileStore.readFile(file, file_read)
+                            FileStore.readFile(file, file_read)
                         } catch (e: IOException) {
                             showToastShort(this@FilterActivity, "Failed to load script.")
                             e.printStackTrace()
@@ -237,7 +237,7 @@ class FilterActivity : ThemedActivity() {
                     }).start()
                 }
             })
-            dialog.createFileDialog(this@FilterActivity, m_app.fileStore)
+            dialog.createFileDialog(this@FilterActivity, FileStore)
         })
     }
 

@@ -45,6 +45,7 @@ import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
+import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
@@ -105,7 +106,7 @@ class Simpletask : ThemedActivity() {
                 } else {
                     if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                         log.info(TAG, "Logging out from Dropbox")
-                        fileStore.logout()
+                        FileStore.logout()
                         finish()
                         startActivity(intent)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
@@ -244,7 +245,7 @@ class Simpletask : ThemedActivity() {
         }
 
         // Check if we have SDCard permission for cloudless
-        if (!m_app.fileStore.getWritePermission(this, REQUEST_PERMISSION)) {
+        if (!FileStore.getWritePermission(this, REQUEST_PERMISSION)) {
             return
         }
 
@@ -362,10 +363,10 @@ class Simpletask : ThemedActivity() {
         // Yellow -> offline
         val pendingChangesIndicator = findViewById(R.id.pendingchanges)
         val offlineIndicator = findViewById(R.id.offline)
-        if (fileStore.changesPending()) {
+        if (FileStore.changesPending()) {
             pendingChangesIndicator?.visibility = View.VISIBLE
             offlineIndicator?.visibility = View.GONE
-        } else if (!fileStore.isOnline){
+        } else if (!FileStore.isOnline){
             pendingChangesIndicator?.visibility = View.GONE
             offlineIndicator?.visibility = View.VISIBLE
         } else {
@@ -413,12 +414,12 @@ class Simpletask : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
-        m_app.fileStore.pause(false)
+        FileStore.pause(false)
         handleIntent()
     }
 
     override fun onPause() {
-        m_app.fileStore.pause(true)
+        FileStore.pause(true)
         super.onPause()
     }
 
@@ -452,7 +453,7 @@ class Simpletask : ThemedActivity() {
         val inflater = menuInflater
         inflater.inflate(R.menu.main, menu)
 
-        if (!fileStore.supportsSync()) {
+        if (!FileStore.supportsSync()) {
             val mItem = menu.findItem(R.id.sync)
             mItem.isVisible = false
         }
@@ -541,7 +542,7 @@ class Simpletask : ThemedActivity() {
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             todoList.prioritize(tasks, priority)
-            todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+            todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
             closeSelectionMode()
         })
         builder.show()
@@ -562,7 +563,7 @@ class Simpletask : ThemedActivity() {
             archiveTasks(null, false)
         }
         closeSelectionMode()
-        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+        todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
     }
 
     private fun undoCompleteTasks(task: TodoListItem) {
@@ -574,7 +575,7 @@ class Simpletask : ThemedActivity() {
     private fun undoCompleteTasks(tasks: List<TodoListItem>) {
         todoList.undoComplete(tasks)
         closeSelectionMode()
-        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+        todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
     }
 
     private fun deferTasks(tasks: List<TodoListItem>, dateType: DateType) {
@@ -592,7 +593,7 @@ class Simpletask : ThemedActivity() {
                         val date = DateTime.forDateOnly(year, startMonth, day)
                         m_app.todoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
                         closeSelectionMode()
-                        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                        todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
                     },
                             today.year!!,
                             today.month!! - 1,
@@ -606,7 +607,7 @@ class Simpletask : ThemedActivity() {
 
                     m_app.todoList.defer(input, tasks, dateType)
                     closeSelectionMode()
-                    todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                    todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
 
                 }
 
@@ -621,7 +622,7 @@ class Simpletask : ThemedActivity() {
                 m_app.todoList.remove(t)
             }
             closeSelectionMode()
-            todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+            todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
         }, R.string.delete_task_title)
     }
 
@@ -631,7 +632,7 @@ class Simpletask : ThemedActivity() {
             if (m_app.todoFileName == m_app.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
             }
-            todoList.archive(fileStore, m_app.todoFileName, m_app.doneFileName, tasksToArchive, m_app.eol)
+            todoList.archive(FileStore, m_app.todoFileName, m_app.doneFileName, tasksToArchive, m_app.eol)
             closeSelectionMode()
         }
         if (areYouSureDialog) {
@@ -666,7 +667,7 @@ class Simpletask : ThemedActivity() {
             }
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
-            R.id.sync -> fileStore.sync()
+            R.id.sync -> FileStore.sync()
             R.id.archive -> archiveTasks(null, true)
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
@@ -735,7 +736,7 @@ class Simpletask : ThemedActivity() {
     fun importFilters (importFile: File) {
         val r = Runnable() {
             try {
-                val contents = fileStore.readFile(importFile.canonicalPath, null)
+                val contents = FileStore.readFile(importFile.canonicalPath, null)
                 val jsonFilters = JSONObject(contents)
                 jsonFilters.keys().forEach {
                     val filter = ActiveFilter(m_app)
@@ -758,7 +759,7 @@ class Simpletask : ThemedActivity() {
             it.saveInJSON(jsonItem)
             jsonFilters.put(it.name,jsonItem)
         }
-        fileStore.writeFile(exportFile,jsonFilters.toString(2))
+        FileStore.writeFile(exportFile,jsonFilters.toString(2))
     }
     /**
      * Handle add filter click *
@@ -1053,8 +1054,6 @@ class Simpletask : ThemedActivity() {
     private val todoList: TodoList
         get() = m_app.todoList
 
-    private val fileStore: FileStoreInterface
-        get() = m_app.fileStore
 
     fun startFilterActivity() {
         val i = Intent(this, FilterActivity::class.java)
@@ -1277,7 +1276,7 @@ class Simpletask : ThemedActivity() {
                 cb.setOnClickListener({
                     undoCompleteTasks(item)
                     closeSelectionMode()
-                    todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                    todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
                 })
             } else {
                 taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -1286,7 +1285,7 @@ class Simpletask : ThemedActivity() {
                 cb.setOnClickListener {
                     completeTasks(item)
                     closeSelectionMode()
-                    todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+                    todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
                 }
 
             }
@@ -1604,7 +1603,7 @@ class Simpletask : ThemedActivity() {
                     }
                 }
             }
-            todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+            todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
             closeSelectionMode()
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }

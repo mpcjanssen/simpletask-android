@@ -18,6 +18,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.remote.FileStore
 
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
@@ -290,7 +291,7 @@ class AddTask : ThemedActivity() {
 
 
         // Save
-        todoList.notifyChanged(m_app.fileStore, m_app.todoFileName, m_app.eol, m_app, true)
+        todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
         finish()
     }
 
