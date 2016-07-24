@@ -3,8 +3,9 @@ package nl.mpcjanssen.simpletask.util
 import android.os.Handler
 import android.os.Looper
 
-class MessageQueue(val tag: String) : Thread() {
+object ActionQueue : Thread() {
     private var mHandler: Handler? = null
+    private val TAG = ActionQueue::class.java.simpleName
 
     init {
         start()
@@ -18,9 +19,12 @@ class MessageQueue(val tag: String) : Thread() {
 
 
     fun add(description: String, r: Runnable, silent: Boolean = false) {
+        if (!silent) {
+            log.info(TAG, "Adding to queue: $description")
+        }
         while (mHandler == null) {
             if (!silent) {
-                log.debug(tag, "Queue handler is null, waiting")
+                log.debug(TAG, "Queue handler is null, waiting")
             }
             try {
                 Thread.sleep(100)
@@ -30,7 +34,7 @@ class MessageQueue(val tag: String) : Thread() {
 
         }
         if (!silent) {
-            mHandler?.post(LoggingRunnable(tag, description, r))
+            mHandler?.post(LoggingRunnable(description, r))
         } else {
             mHandler?.post (r)
         }
@@ -39,18 +43,15 @@ class MessageQueue(val tag: String) : Thread() {
 
 }
 
-class LoggingRunnable (val tag : String, val description: String, val runnable: Runnable) : Runnable {
-
-    init {
-        log.info(tag, "Creating action " + description)
-    }
+class LoggingRunnable (val description: String, val runnable: Runnable) : Runnable {
+    private val TAG = ActionQueue::class.java.simpleName
 
     override fun toString(): String {
         return description
     }
 
     override fun run() {
-        log.info(tag, "Execution action " + description)
+        log.info(TAG, "Execution action " + description)
         runnable.run()
     }
 
