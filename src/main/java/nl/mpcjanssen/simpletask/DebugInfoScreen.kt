@@ -9,6 +9,7 @@ import android.view.Menu
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
+import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.LogItem
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
 import nl.mpcjanssen.simpletask.util.appVersion
@@ -30,8 +31,7 @@ class DebugInfoScreen : ThemedActivity() {
 
         val myDataset = ArrayList<String>()
         m_app = application as TodoApplication
-        for (entry in m_app!!.logDao.queryBuilder().orderDesc(LogItemDao.Properties.Id).list()) {
-            val line = logItemToString(entry)
+        for (line in Daos.logItemsDesc()) {
             myDataset.add(line)
         }
 
@@ -41,17 +41,10 @@ class DebugInfoScreen : ThemedActivity() {
 
     }
 
-    private fun logItemToString(entry: LogItem): String {
-        val format = SimpleDateFormat("HH:mm:ss.S", Locale.US)
-        return format.format(entry.timestamp) + "\t" + entry.severity + "\t" + entry.tag + "\t" + entry.message + "\t" + entry.exception
-    }
+
 
     private fun sendLog() {
-        val logContents = StringBuilder()
-        for (item in m_app!!.logDao.loadAll()) {
-            logContents.append(logItemToString(item)).append("\n")
-        }
-        shareText(this@DebugInfoScreen, "${appVersion(this)} log",  logContents.toString())
+        shareText(this@DebugInfoScreen, "${appVersion(this)} log",  Daos.logAsText())
     }
 
 

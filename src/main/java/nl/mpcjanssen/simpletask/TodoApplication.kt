@@ -36,19 +36,20 @@ import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.os.Handler
-import android.os.Looper
 import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.dao.gen.*
+import nl.mpcjanssen.simpletask.dao.Daos
+import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.*
-import org.luaj.vm2.Lua
+import nl.mpcjanssen.simpletask.util.ActionQueue
+import nl.mpcjanssen.simpletask.util.appVersion
+import nl.mpcjanssen.simpletask.util.showToastLong
+import nl.mpcjanssen.simpletask.util.todayAsString
 import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
@@ -68,29 +69,18 @@ class TodoApplication : Application(),
 
     private val log = Logger
 
-    internal lateinit var daoSession: DaoSession
-    lateinit var logDao: LogItemDao
-    internal lateinit var backupDao: TodoFileDao
+
     lateinit var prefs: SharedPreferences
     lateinit var interp : LuaInterpreter
 
 
 
     override fun onCreate() {
-
-        super.onCreate()
         app = this
+        super.onCreate()
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         interp = LuaInterpreter(this)
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
-
-        val helper = DaoMaster.DevOpenHelper(this, "TodoFiles_v1.db", null)
-        val todoDb = helper.writableDatabase
-        val daoMaster = DaoMaster(todoDb)
-        daoSession = daoMaster.newSession()
-        logDao = daoSession.logItemDao
-        backupDao = daoSession.todoFileDao
-        log.setDao(logDao)
 
         log.debug(TAG, "onCreate()")
         log.info(TAG, "Started ${appVersion(this)}")
@@ -521,14 +511,9 @@ class TodoApplication : Application(),
         get() = File(todoFile.parentFile, "done.txt").absolutePath
 
     override fun backup(name: String, contents: String) {
-
         val now = Date()
         val fileToBackup = TodoFile(contents, name, now)
-        backupDao.insertOrReplace(fileToBackup)
-        // Clean up old files
-        val removeBefore = Date(now.time - 2 * 24 * 60 * 60 * 1000)
-
-        backupDao.queryBuilder().where(TodoFileDao.Properties.Date.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
+        Daos.backup(fileToBackup)
 
     }
 

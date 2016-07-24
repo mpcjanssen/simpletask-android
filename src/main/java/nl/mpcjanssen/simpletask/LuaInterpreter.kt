@@ -11,16 +11,12 @@ import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
 class LuaInterpreter(app: TodoApplication) {
-
-
     val globals = JsePlatform.standardGlobals()
-
 
     init {
         globals.set("toast", LuaToastShort(app))
         evalScript(app.luaConfig)
     }
-
 
     fun tasklistTextSize(): Float? {
         return callZeroArgLuaFunction(globals, CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
@@ -45,7 +41,6 @@ class LuaInterpreter(app: TodoApplication) {
             }
         }
         return true
-
     }
 
     fun onTextSearchCallback(input: String, search: String, caseSensitive: Boolean): Boolean? {
@@ -59,7 +54,6 @@ class LuaInterpreter(app: TodoApplication) {
             }
         }
         return null
-
     }
 
     fun evalScript(script: String?) : LuaInterpreter {

@@ -6,7 +6,6 @@ import android.os.Looper
 object ActionQueue : Thread() {
     private var mHandler: Handler? = null
     private val TAG = ActionQueue::class.java.simpleName
-
     init {
         start()
     }
@@ -15,8 +14,6 @@ object ActionQueue : Thread() {
         mHandler = Handler() // the Handler hooks up to the current Thread
         Looper.loop();
     }
-
-
 
     fun add(description: String, r: Runnable, silent: Boolean = false) {
         if (!silent) {
@@ -31,7 +28,6 @@ object ActionQueue : Thread() {
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-
         }
         if (!silent) {
             mHandler?.post(LoggingRunnable(description, r))
@@ -39,8 +35,6 @@ object ActionQueue : Thread() {
             mHandler?.post (r)
         }
     }
-
-
 }
 
 class LoggingRunnable (val description: String, val runnable: Runnable) : Runnable {
@@ -54,7 +48,6 @@ class LoggingRunnable (val description: String, val runnable: Runnable) : Runnab
         log.info(TAG, "Execution action " + description)
         runnable.run()
     }
-
 }
 
 
