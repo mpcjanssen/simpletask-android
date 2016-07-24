@@ -38,7 +38,7 @@ object RelativeDate {
 
     fun computeRelativeDate(context: Context?, now: DateTime, `when`: DateTime): String {
         if (context==null) {
-            return now.format(Constants.DATE_FORMAT);
+            return now.format(Constants.DATE_FORMAT)
         }
         if (`when`.lteq(now)) {
             val period = `when`.numDaysFrom(now)

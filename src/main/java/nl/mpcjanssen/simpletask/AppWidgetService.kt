@@ -67,7 +67,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
 
 
     fun setFilteredTasks() {
-        log.debug(TAG, "Widget $widgetId: setFilteredTasks called");
+        log.debug(TAG, "Widget $widgetId: setFilteredTasks called")
 
         if (application == null) {
             log.debug(TAG, "application object was null")
@@ -93,7 +93,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
                 application.sortCaseSensitive(),
                 filter.createIsThreshold)
         Collections.sort(visibleTasks, comp)
-        log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks");
+        log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks")
     }
 
     override fun getCount(): Int {
@@ -120,10 +120,10 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
         tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
         tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
-        if (filter.hideLists ?: false) {
+        if (filter.hideLists) {
             tokensToShow = tokensToShow and TToken.LIST.inv()
         }
-        if (filter.hideTags ?: false) {
+        if (filter.hideTags) {
             tokensToShow = tokensToShow and TToken.TTAG.inv()
         }
         val ss = SpannableString(
@@ -167,7 +167,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
                 true)
         val relThres = getRelativeThresholdDate(task, application)
         var anyDateShown = false
-        if (!isEmptyOrNull(relAge) && !(filter.hideCreateDate ?: false)) {
+        if (!isEmptyOrNull(relAge) && !filter.hideCreateDate) {
             rv.setTextViewText(R.id.taskage, relAge)
             anyDateShown = true
         } else {
@@ -236,7 +236,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     }
 
     override fun onCreate() {
-        log.debug(TAG, "Widget: OnCreate called in ViewFactory");
+        log.debug(TAG, "Widget: OnCreate called in ViewFactory")
     }
 
     override fun onDataSetChanged() {

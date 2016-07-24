@@ -78,7 +78,7 @@ class TodoApplication : Application(),
     override fun onCreate() {
         app = this
         super.onCreate()
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
         interp = LuaInterpreter(this)
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
 
@@ -140,7 +140,7 @@ class TodoApplication : Application(),
 
     private fun setupUncaughtExceptionHandler() {
         // save original Uncaught exception handler
-        androidUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        androidUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
         // Handle all uncaught exceptions for logging.
         // After that call the default uncaught exception handler
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->

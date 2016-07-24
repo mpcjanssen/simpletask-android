@@ -42,7 +42,7 @@ class FilterActivity : ThemedActivity() {
     private var log = Logger
     private var pagerAdapter: ScreenSlidePagerAdapter? = null
     private var scriptFragment: FilterScriptFragment? = null
-    private var m_page = 0;
+    private var m_page = 0
 
     override fun onBackPressed() {
         if (!asWidgetConfigure && !asWidgetReConfigure) {
@@ -60,7 +60,7 @@ class FilterActivity : ThemedActivity() {
 
         setContentView(R.layout.filter)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear);
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear)
 
 
         var arguments: Bundle
@@ -308,7 +308,7 @@ class FilterActivity : ThemedActivity() {
 
     private fun updateWidget() {
         updateFilterFromFragments()
-        val widgetId = getIntent().getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
+        val widgetId = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
         log.info(TAG, "Saving settings for widget $widgetId")
         val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
         mFilter.saveInPrefs(preferences)

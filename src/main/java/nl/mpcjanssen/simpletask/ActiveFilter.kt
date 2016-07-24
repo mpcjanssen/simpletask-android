@@ -34,7 +34,7 @@ class ActiveFilter (val app : TodoApplication) {
     var hideTags = false
     var hideCreateDate = false
     var createIsThreshold = false
-    var useScript: Boolean = false;
+    var useScript: Boolean = false
     var script: String? = null
     var scriptTestTask: String? = null
 

@@ -188,20 +188,20 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
             val pattern = recurrencePattern
             if (pattern != null) {
-                var deferFromDate : String = "";
+                var deferFromDate : String = ""
                 if (!(recurrencePattern?.contains("+") ?: true)) {
-                    deferFromDate = completionDate?:"";
+                    deferFromDate = completionDate?:""
                 }
-                val newTask = Task(textWithoutCompletedInfo);
+                val newTask = Task(textWithoutCompletedInfo)
                 if (newTask.dueDate != null) {
-                    newTask.deferDueDate(pattern, deferFromDate);
+                    newTask.deferDueDate(pattern, deferFromDate)
 
                 }
                 if (newTask.thresholdDate != null) {
-                    newTask.deferThresholdDate(pattern, deferFromDate);
+                    newTask.deferThresholdDate(pattern, deferFromDate)
                 }
                 if (!createDate.isNullOrEmpty()) {
-                    newTask.createDate = dateStr;
+                    newTask.createDate = dateStr
                 }
                 return newTask
             }
@@ -295,24 +295,24 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun getHeader(sort: String, empty: String): String {
         if (sort.contains("by_context")) {
             if (lists.size > 0) {
-                return lists.first();
+                return lists.first()
             } else {
-                return empty;
+                return empty
             }
         } else if (sort.contains("by_project")) {
             if (tags.size > 0) {
-                return tags.first();
+                return tags.first()
             } else {
-                return empty;
+                return empty
             }
         } else if (sort.contains("by_threshold_date")) {
-            return thresholdDate?:empty;
+            return thresholdDate?:empty
         } else if (sort.contains("by_prio")) {
-            return priority.code;
+            return priority.code
         } else if (sort.contains("by_due_date")) {
-            return dueDate?:empty;
+            return dueDate?:empty
         }
-        return "";
+        return ""
     }
 
     /* Adds the task to list Listname
@@ -320,7 +320,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
  */
     fun addList(listName : String) {
         if (!lists.contains(listName)) {
-            tokens += ListToken("@"+listName);
+            tokens += ListToken("@"+listName)
         }
     }
 
@@ -329,7 +329,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     */
     fun addTag(tagName : String) {
         if (!tags.contains(tagName)) {
-            tokens += TagToken("+"+tagName);
+            tokens += TagToken("+"+tagName)
         }
     }
 
@@ -477,30 +477,30 @@ interface TToken {
 data class CompletedToken(override val value: Boolean) :TToken {
     override val text: String
     get() = if (value) "x" else ""
-    override val type = TToken.COMPLETED;
+    override val type = TToken.COMPLETED
 }
 
 data class HiddenToken(override val text: String) :TToken {
     override val value: Boolean
     get() = if (text == "h:1") true else false
-    override val type = TToken.HIDDEN;
+    override val type = TToken.HIDDEN
 }
 data class PriorityToken(override val text: String) :TToken {
     override val value: Priority
     get() = Priority.toPriority(text.removeSurrounding("(",")"))
-    override val type = TToken.PRIO;
+    override val type = TToken.PRIO
 }
 
 data class ListToken(override val text: String) : TToken {
     override val value: String
         get() = text.substring(1)
-    override val type = TToken.LIST;
+    override val type = TToken.LIST
 }
 
 data class TagToken(override val text: String) : TToken {
     override val value: String
         get() = text.substring(1)
-    override val type = TToken.TTAG;
+    override val type = TToken.TTAG
 }
 
 // The value of this token is the val part in key:val
@@ -510,34 +510,34 @@ interface KeyValueToken : TToken {
     get() = text.split(":").last()
 }
 data class CreateDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.CREATION_DATE;
+    override val type = TToken.CREATION_DATE
 }
 data class CompletedDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.COMPLETED_DATE;
+    override val type = TToken.COMPLETED_DATE
 }
 data class DueDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.DUE_DATE;
+    override val type = TToken.DUE_DATE
 }
 data class ThresholdDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.THRESHOLD_DATE;
+    override val type = TToken.THRESHOLD_DATE
 }
 data class TextToken(override val text: String) : KeyValueToken {
-    override val type = TToken.TEXT;
+    override val type = TToken.TEXT
 }
 data class WhiteSpaceToken(override val text: String) : KeyValueToken {
-    override val type = TToken.WHITE_SPACE;
+    override val type = TToken.WHITE_SPACE
 }
 data class MailToken(override val text: String) : KeyValueToken {
-    override val type = TToken.MAIL;
+    override val type = TToken.MAIL
 }
 data class LinkToken(override val text: String) : KeyValueToken {
-    override val type = TToken.LINK;
+    override val type = TToken.LINK
 }
 data class PhoneToken(override val text: String) : KeyValueToken {
-    override val type = TToken.PHONE;
+    override val type = TToken.PHONE
 }
 data class RecurrenceToken(override val text: String) : KeyValueToken {
-    override val type = TToken.RECURRENCE;
+    override val type = TToken.RECURRENCE
 }
 
 // Extension functions

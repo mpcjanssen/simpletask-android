@@ -51,7 +51,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
         app = application as TodoApplication
         localBroadcastManager = app.localBroadCastManager
         val intentFilter = IntentFilter()
@@ -74,7 +74,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
         if (    getString(R.string.theme_pref_key) == key ) {
             onContentChanged()
             val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
-            intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, AppearancePrefFragment::class.java.name);
+            intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, AppearancePrefFragment::class.java.name)
             localBroadcastManager.sendBroadcast(broadcastIntent)
         }
         if (getString(R.string.datebar_relative_size) == key ) {
@@ -94,7 +94,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
                 if (permissionCheck == PackageManager.PERMISSION_DENIED) {
                     ActivityCompat.requestPermissions(this,
-                            arrayOf(Manifest.permission.WRITE_CALENDAR), 0);
+                            arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
                 }
             }
         }
@@ -119,7 +119,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     override fun onBuildHeaders(target: MutableList<Header>) {
         val allHeaders = ArrayList<Header>()
-        loadHeadersFromResource(R.xml.preference_headers, allHeaders);
+        loadHeadersFromResource(R.xml.preference_headers, allHeaders)
 
         // Remove calendar preferences for older devices
         if (!TodoApplication.atLeastAPI(16)) {
@@ -130,7 +130,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     override fun isValidFragment(fragmentName: String): Boolean {
-        return true;
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -207,7 +207,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            val screen = preferenceScreen;
+            val screen = preferenceScreen
             val toHide: Preference
             val app = activity.application as TodoApplication
             if (app.hasDonated()) {

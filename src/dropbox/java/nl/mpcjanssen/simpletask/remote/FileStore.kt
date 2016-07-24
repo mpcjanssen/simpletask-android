@@ -46,8 +46,8 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "App went to background stop watching")
             stopWatching()
         } else {
-            log.info(TAG, "App came to foreground continue watching ${mApp?.todoFileName}")
-            continueWatching(mApp?.todoFileName)
+            log.info(TAG, "App came to foreground continue watching ${mApp.todoFileName}")
+            continueWatching(mApp.todoFileName)
         }
     }
 

@@ -148,10 +148,10 @@ class Simpletask : ThemedActivity() {
             actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
         } else {
             val btnFilterAdd = findViewById(R.id.btn_filter_add) as ImageButton?
-            btnFilterAdd?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
+            btnFilterAdd?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
 
             val btnFilterImport = findViewById(R.id.btn_filter_import) as ImageButton?
-            btnFilterImport?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
+            btnFilterImport?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
         }
         val versionCode = BuildConfig.VERSION_CODE
         if (m_app.isAuthenticated && m_app.latestChangelogShown < versionCode) {
@@ -323,7 +323,7 @@ class Simpletask : ThemedActivity() {
         }
         m_adapter!!.setFilteredTasks()
 
-        listView?.layoutManager = LinearLayoutManager(this);
+        listView?.layoutManager = LinearLayoutManager(this)
 
         listView?.adapter = this.m_adapter
 
@@ -843,7 +843,7 @@ class Simpletask : ThemedActivity() {
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
         toolbar.visibility = View.GONE
-        todoList.clearSelection();
+        todoList.clearSelection()
         populateMainMenu(options_menu)
         //updateDrawers();
 
@@ -1262,16 +1262,16 @@ class Simpletask : ThemedActivity() {
             taskDue.textSize = textSize * m_app.dateBarRelativeSize
             taskThreshold.textSize = textSize * m_app.dateBarRelativeSize
 
-            val cb = cbCompleted!!
+            val cb = cbCompleted
             taskText.text = ss
             taskText.textSize = textSize
-            handleEllipsis(taskText as TextView)
+            handleEllipsis(taskText)
 
 
             if (completed) {
                 // log.info( "Striking through " + task.getText());
                 taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                taskAge!!.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 cb.setOnClickListener({
                     undoCompleteTasks(item)
                     closeSelectionMode()
@@ -1448,7 +1448,7 @@ class Simpletask : ThemedActivity() {
                     } else {
                         setTitle(R.string.app_label)
                     }
-                    updateConnectivityIndicator();
+                    updateConnectivityIndicator()
                     updateFilterBar()
                     showListViewProgress(false)
                 }
@@ -1565,8 +1565,8 @@ class Simpletask : ThemedActivity() {
         val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
         val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
         rcv.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(this);
-        rcv.layoutManager = layoutManager;
+        val layoutManager = LinearLayoutManager(this)
+        rcv.layoutManager = layoutManager
 
 
         val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())

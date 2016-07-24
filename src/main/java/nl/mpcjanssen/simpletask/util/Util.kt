@@ -57,7 +57,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 val TAG = "Util"
-val log = Logger;
+val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
 
@@ -90,7 +90,7 @@ interface InputDialogListener {
 
 @Throws(TodoException::class)
 fun createParentDirectory(dest: File?) {
-    val log = Logger;
+    val log = Logger
     if (dest == null) {
         throw TodoException("createParentDirectory: dest is null")
     }
@@ -120,7 +120,7 @@ fun addHeaderLines(visibleTasks: List<TodoListItem>, firstSort: String, no_heade
                 headerLine.title += " ($count)"
             }
             headerLine = HeaderLine(newHeader)
-            count = 0;
+            count = 0
             result.add(headerLine)
             header = newHeader
         }
@@ -436,58 +436,58 @@ fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
     val date = task.thresholdDate
     if (date != null) {
         date.toDateTime()?.let {
-            return "T: " + RelativeDate.getRelativeDate(ctx, it);
+            return "T: " + RelativeDate.getRelativeDate(ctx, it)
         }
     }
-    return null;
+    return null
 }
 
 fun getRelativeDueDate(task: Task, application: TodoApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
     val date = task.dueDate
     if (date != null) {
         date.toDateTime()?.let {
-            val relativeDate = RelativeDate.getRelativeDate(application, it);
-            val ss = SpannableString("Due: " + relativeDate);
+            val relativeDate = RelativeDate.getRelativeDate(application, it)
+            val ss = SpannableString("Due: " + relativeDate)
             if (date == application.today && useColor) {
-                setColor(ss, dueTodayColor);
+                setColor(ss, dueTodayColor)
             } else if ((application.today.compareTo(date) > 0) && useColor) {
-                setColor(ss, overDueColor);
+                setColor(ss, overDueColor)
             }
-            return ss;
+            return ss
         }
     }
-    return null;
+    return null
 }
 
 
 private fun calculateRelativeAge(ctx: Context, dateString: String): String {
     val date = dateString.toDateTime()
     date?.let {
-        return RelativeDate.getRelativeDate(ctx, date);
+        return RelativeDate.getRelativeDate(ctx, date)
     }
-    return dateString;
+    return dateString
 }
 
 fun getRelativeAge(task: Task, ctx: Context): String? {
     val date = task.createDate
     date?.let {
-        return (calculateRelativeAge(ctx, date));
+        return (calculateRelativeAge(ctx, date))
     }
-    return null;
+    return null
 }
 
 fun initTaskWithFilter(task: Task, mFilter: ActiveFilter) {
     if (!mFilter.contextsNot && mFilter.contexts.size == 1) {
-        task.addList(mFilter.contexts[0]);
+        task.addList(mFilter.contexts[0])
     }
 
     if (!mFilter.projectsNot && mFilter.projects.size == 1) {
-        task.addTag(mFilter.projects[0]);
+        task.addTag(mFilter.projects[0])
     }
 }
 
 fun String.toDateTime(): DateTime? {
-    var date: DateTime?;
+    var date: DateTime?
     if (DateTime.isParseable(this)) {
         date = DateTime(this)
     } else {
