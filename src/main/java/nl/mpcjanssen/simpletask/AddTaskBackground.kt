@@ -46,7 +46,7 @@ class AddTaskBackground : Activity() {
 
 
     public override fun onCreate(instance: Bundle?) {
-        log = Logger;
+        log = Logger
         log.debug(TAG, "onCreate()")
         super.onCreate(instance)
         val m_app = this.application as TodoApplication

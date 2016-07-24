@@ -22,7 +22,7 @@ class FlavourPrefFragment : PreferenceFragment() {
             app.showConfirmationDialog(activity, R.string.logout_message,
                     DialogInterface.OnClickListener() { dialogInterface, i ->
                         FileStore.logout()
-                        activity.finish();
+                        activity.finish()
                         LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_ACTION_LOGOUT))
                     }, R.string.dropbox_logout_pref_title)
             true

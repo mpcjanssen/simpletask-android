@@ -282,17 +282,17 @@ class TodoList(private val app: TodoApplication) {
             }
             val tasksToArchive = tasks ?: items
 
-            val completedTasks = tasksToArchive.filter { it.task.isCompleted() };
+            val completedTasks = tasksToArchive.filter { it.task.isCompleted() }
             try {
-                fileStore.appendTaskToFile(doneFileName, completedTasks.map { it.task.text }, eol);
+                fileStore.appendTaskToFile(doneFileName, completedTasks.map { it.task.text }, eol)
                 completedTasks.forEach {
                     todoItems?.remove(it)
                 }
 
-                notifyChanged(fileStore, todoFilename, eol, null, true);
+                notifyChanged(fileStore, todoFilename, eol, null, true)
             } catch (e: IOException) {
-                e.printStackTrace();
-                showToastShort(app, "Task archiving failed");
+                e.printStackTrace()
+                showToastShort(app, "Task archiving failed")
             }
         })
     }

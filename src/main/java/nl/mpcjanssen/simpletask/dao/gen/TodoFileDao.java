@@ -27,7 +27,7 @@ public class TodoFileDao extends AbstractDao<TodoFile, String> {
         public final static Property Contents = new Property(0, String.class, "contents", true, "CONTENTS");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Date = new Property(2, java.util.Date.class, "date", false, "DATE");
-    };
+    }
 
 
     public TodoFileDao(DaoConfig config) {

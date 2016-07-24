@@ -10,9 +10,9 @@ object ActionQueue : Thread() {
         start()
     }
     override fun run(): Unit {
-        Looper.prepare();
+        Looper.prepare()
         mHandler = Handler() // the Handler hooks up to the current Thread
-        Looper.loop();
+        Looper.loop()
     }
 
     fun add(description: String, r: Runnable, silent: Boolean = false) {

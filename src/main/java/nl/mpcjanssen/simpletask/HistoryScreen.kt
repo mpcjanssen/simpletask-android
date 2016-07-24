@@ -9,19 +9,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.ScrollView
 import android.widget.TextView
-import de.greenrobot.dao.query.QueryBuilder
 import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile
-import nl.mpcjanssen.simpletask.util.*
-
+import nl.mpcjanssen.simpletask.util.createCachedDatabase
+import nl.mpcjanssen.simpletask.util.shareText
+import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class HistoryScreen : ThemedActivity() {
 
@@ -79,7 +75,7 @@ class HistoryScreen : ThemedActivity() {
     }
 
     private val databaseFile: File
-        get() = File(Daos.daoSession.getDatabase().getPath())
+        get() = File(Daos.daoSession.database.path)
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,7 +133,7 @@ class HistoryScreen : ThemedActivity() {
     }
 
     private fun saveScroll() {
-        val sv = findViewById(R.id.scrollView) as ScrollView
+        val sv = findViewById(R.id.scrollbar) as ScrollView
         mScroll = sv.scrollY
     }
 
@@ -163,7 +159,7 @@ class HistoryScreen : ThemedActivity() {
 
         val nameView = findViewById(R.id.name) as TextView
         val dateView = findViewById(R.id.date) as TextView
-        val sv = findViewById(R.id.scrollView) as ScrollView
+        val sv = findViewById(R.id.scrollbar) as ScrollView
         fileView.text = todoContents
         nameView.text = name
         dateView.text = format.format(Date(date))
