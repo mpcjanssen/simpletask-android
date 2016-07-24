@@ -10,12 +10,14 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-class LuaInterpreter(app: TodoApplication) {
+class LuaInterpreter(app: TodoApplication?) {
     val globals = JsePlatform.standardGlobals()
 
     init {
-        globals.set("toast", LuaToastShort(app))
-        evalScript(app.luaConfig)
+        app?.let {
+            globals.set("toast", LuaToastShort(app))
+            evalScript(app.luaConfig)
+        }
     }
 
     fun tasklistTextSize(): Float? {

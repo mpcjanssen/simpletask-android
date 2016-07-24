@@ -16,7 +16,7 @@ import java.util.*
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter (val app : TodoApplication) {
+class ActiveFilter (val app : TodoApplication?) {
     private val log: Logger
     val interp = LuaInterpreter(app)
     var priorities = ArrayList<Priority>()
