@@ -57,10 +57,6 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val reminderTime: Int
         get() = prefs.getInt(getString(R.string.calendar_reminder_time), 720)
 
-    fun showCalendar(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
-    }
-
     val listTerm: String
         get() {
             if (useTodoTxtTerms()) {
