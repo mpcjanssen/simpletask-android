@@ -5,7 +5,6 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -421,7 +420,7 @@ class FilterActivity : ThemedActivity() {
 
     companion object {
 
-        val TAG = FilterActivity::class.java.simpleName
+        val TAG = "FilterActivity"
         val TAB_TYPE = "type"
         val CONTEXT_TAB = "context"
         val PROJECT_TAB = "project"

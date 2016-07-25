@@ -1,12 +1,6 @@
 package nl.mpcjanssen.simpletask.task;
 
-import hirondelle.date4j.DateTime;
-import nl.mpcjanssen.simpletask.util.Util;
-
 import junit.framework.TestCase;
-
-import java.util.ArrayList;
-import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,7 +51,6 @@ public class TaskTestOld extends TestCase {
         String rawText = "Test";
         Task t = new Task( rawText, "2000-10-10");
         rawText = t.inFileFormat();
-        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete("2222-11-11");
         assertTrue(t.isCompleted());
         t.markIncomplete();
@@ -79,7 +72,6 @@ public class TaskTestOld extends TestCase {
         Task t = new Task( rawText);
         assertEquals(Priority.A, t.getPriority());
 
-        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete("2010-01-01");
         assertTrue(t.isCompleted());
         t.setPriority(Priority.B);
@@ -94,7 +86,6 @@ public class TaskTestOld extends TestCase {
         Task t = new Task( rawText);
         t.update(rawText);
         assertEquals(t.getPriority(), Priority.A);
-        DateTime completionDate = DateTime.today(TimeZone.getDefault());
         t.markComplete("2001-01-01");
         assertTrue(t.isCompleted());
         t.markIncomplete();

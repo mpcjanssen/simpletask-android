@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.remote
 
+
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
@@ -7,7 +8,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.os.Environment
 import android.os.FileObserver
 import android.os.Handler
@@ -19,15 +19,13 @@ import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.ListenerList
-import nl.mpcjanssen.simpletask.util.*
-
-
+import nl.mpcjanssen.simpletask.util.broadcastFileChanged
+import nl.mpcjanssen.simpletask.util.join
+import nl.mpcjanssen.simpletask.util.writeToFile
 import java.io.File
 import java.io.FilenameFilter
 import java.io.IOException
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 object FileStore : FileStoreInterface {
@@ -107,7 +105,7 @@ object FileStore : FileStoreInterface {
     override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
         log.info(TAG, "Reading file: {}" + file)
         isLoading = true
-        var contents : String
+        val contents : String
         val lines = File(file).readLines()
         contents = join(lines, "\n")
         isLoading = false

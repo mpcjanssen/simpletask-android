@@ -3,26 +3,18 @@
  */
 package nl.mpcjanssen.simpletask
 
+
 import android.content.Context
 import android.content.Intent
-import android.content.res.AssetManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.ActionBar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.github.rjeschke.txtmark.Processor
 import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.*
-
-
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.util.Stack
+import nl.mpcjanssen.simpletask.util.markdownAssetAsHtml
+import java.util.*
 
 class HelpScreen : ThemedActivity() {
 
@@ -63,8 +55,9 @@ class HelpScreen : ThemedActivity() {
         setContentView(R.layout.help)
         wvHelp = findViewById(R.id.help_view) as WebView
         wvHelp!!.setWebViewClient(object : WebViewClient() {
+            // Replacement is API >= 21 only
+            @Suppress("OverridingDeprecatedMember")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                var url = url
                 log!!.debug(TAG, "Loading url: " + url)
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
@@ -80,8 +73,7 @@ class HelpScreen : ThemedActivity() {
                     openUrl(url)
                     return true
                 } else if (url.endsWith(".md")) {
-                    url = url.replace(BASE_URL, "")
-                    showMarkdownAsset(view, this@HelpScreen, url)
+                    showMarkdownAsset(view, this@HelpScreen, url.replace(BASE_URL, ""))
                     return true
                 } else {
                     return false

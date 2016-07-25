@@ -1667,8 +1667,8 @@ class Simpletask : ThemedActivity() {
         private val ACTION_PHONE = "phone"
         private val ACTION_MAIL = "mail"
 
-        val URI_BASE = Uri.fromParts("Simpletask", "", null)
-        val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")
+        val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
+        val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
         private val TAG = "Simpletask"
     }
 }

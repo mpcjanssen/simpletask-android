@@ -352,7 +352,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
 
     companion object {
-        var TAG = Task::class.java.simpleName
+        var TAG = "Task"
         const val DATE_FORMAT = "YYYY-MM-DD"
         private val MATCH_LIST = Regex("@(\\S+)")
         private val MATCH_TAG = Regex("\\+(\\S+)")

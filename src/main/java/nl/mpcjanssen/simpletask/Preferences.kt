@@ -163,10 +163,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             }
         }
         fun updateFontSummary() {
-            val fontPref = findPreference(getString(R.string.font_key))
-            if (fontPref == null) {
-                return
-            }
+            val fontPref = findPreference(getString(R.string.font_key)) ?: return
             fontPref.valueInSummary(fonts[fontPref.sharedPreferences.getString(fontPref.key, "")])
             fontPref.setOnPreferenceChangeListener { preference, any ->
                 preference.summary = "%s"

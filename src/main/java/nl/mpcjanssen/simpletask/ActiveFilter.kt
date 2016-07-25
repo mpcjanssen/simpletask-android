@@ -222,7 +222,7 @@ class ActiveFilter (initLua : Boolean = false) {
     }
 
     fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
-        log.info(TAG, "Apply in filter ${script}")
+        log.info(TAG, "Apply in filter $script")
         val filter = AndFilter()
         val matched = ArrayList<TodoListItem>()
         if (items == null) {

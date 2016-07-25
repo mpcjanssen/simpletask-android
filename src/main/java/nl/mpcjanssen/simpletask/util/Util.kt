@@ -282,7 +282,7 @@ fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
 }
 
 fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener): AlertDialog {
-    var keys = act.resources.getStringArray(R.array.deferOptions)
+    val keys = act.resources.getStringArray(R.array.deferOptions)
     val today = "0d"
     val tomorrow = "1d"
     val oneWeek = "1w"
@@ -293,7 +293,7 @@ fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener
     val builder = AlertDialog.Builder(act)
     builder.setTitle(titleId)
     builder.setItems(keys) { dialog, whichButton ->
-        var which = whichButton
+        val which = whichButton
         val selected = values[which]
         listener.onClick(selected)
     }
@@ -509,7 +509,7 @@ fun initTaskWithFilter(task: Task, mFilter: ActiveFilter) {
 }
 
 fun String.toDateTime(): DateTime? {
-    var date: DateTime?
+    val date: DateTime?
     if (DateTime.isParseable(this)) {
         date = DateTime(this)
     } else {
