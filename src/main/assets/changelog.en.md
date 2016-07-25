@@ -12,6 +12,7 @@
 - Create new tasks with a proper line number for file order sorting. Fixes #499.
 - Use a separate Lua interpreter for every filter, fixes #502.
 - Recreate widgets if filter changed to updated filterbar click intent.
+- Code cleanup and reduced memory usage.
 
 8.1.0
 -----
