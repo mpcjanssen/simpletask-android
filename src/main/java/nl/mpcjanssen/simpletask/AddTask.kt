@@ -320,10 +320,6 @@ class AddTask : ThemedActivity() {
                             today.month!! - 1,
                             today.day!!)
 
-                    val showCalendar = Config.showCalendar()
-
-                    dialog.datePicker.calendarViewShown = showCalendar
-                    dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
                     if (!input.isNullOrEmpty()) {

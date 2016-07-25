@@ -21,7 +21,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.design.widget.FloatingActionButton
@@ -46,7 +45,6 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
@@ -74,7 +72,6 @@ class Simpletask : ThemedActivity() {
     private var m_savedInstanceState: Bundle? = null
     internal var m_scrollPosition = 0
 
-    private var mIgnoreScrollEvents = false
     private var log = Logger
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -206,8 +203,8 @@ class Simpletask : ThemedActivity() {
 
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
-        for (t in todoList.selectedTasks) {
-            result.add(t.task.inFileFormat())
+        for ((line, task) in todoList.selectedTasks) {
+            result.add(task.inFileFormat())
         }
         return join(result, "\n")
     }
@@ -319,7 +316,7 @@ class Simpletask : ThemedActivity() {
 
         // Initialize Adapter
         if (m_adapter == null) {
-            m_adapter = TaskAdapter(layoutInflater, application)
+            m_adapter = TaskAdapter(layoutInflater)
         }
         m_adapter!!.setFilteredTasks()
 
@@ -375,9 +372,6 @@ class Simpletask : ThemedActivity() {
     }
 
     private fun updateFilterBar() {
-        val lv = listView
-        val v = lv?.getChildAt(0)
-        val top = if (v == null) 0 else v.top
 
         val actionbar = findViewById(R.id.actionbar) as LinearLayout
         val filterText = findViewById(R.id.filter_text) as TextView
@@ -518,7 +512,7 @@ class Simpletask : ThemedActivity() {
     private fun shareTodoList(format: Int) {
         val text = StringBuilder()
         for (line in m_adapter!!.visibleLines) {
-            if (line != null && !line.header) {
+            if (!line.header) {
                 val item = line.task ?: continue
                 text.append(item.task.showParts(format)).append("\n")
             }
@@ -597,10 +591,7 @@ class Simpletask : ThemedActivity() {
                             today.year!!,
                             today.month!! - 1,
                             today.day!!)
-                    val showCalendar = Config.showCalendar()
 
-                    dialog.datePicker.calendarViewShown = showCalendar
-                    dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
 
@@ -1144,7 +1135,6 @@ class Simpletask : ThemedActivity() {
 
     fun showListViewProgress(show: Boolean) {
         val progressBar = findViewById(R.id.empty_progressbar)
-        val filteredView = findViewById(R.id.filtered_view)
         if (show) {
             progressBar?.visibility = View.VISIBLE
         } else {
@@ -1156,7 +1146,7 @@ class Simpletask : ThemedActivity() {
 
     }
 
-    inner class TaskAdapter(private val m_inflater: LayoutInflater, val mContext: Context) : RecyclerView.Adapter <TaskViewHolder>() {
+    inner class TaskAdapter(private val m_inflater: LayoutInflater) : RecyclerView.Adapter <TaskViewHolder>() {
         override fun getItemCount(): Int {
             return visibleLines.size + 1
         }
@@ -1290,11 +1280,11 @@ class Simpletask : ThemedActivity() {
             }
             cb.isChecked = completed
 
-            val relAge = getRelativeAge(task, mContext)
+            val relAge = getRelativeAge(task, TodoApplication.app)
             val relDue = getRelativeDueDate(task, m_app, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
                     ContextCompat.getColor(m_app, android.R.color.holo_red_light),
                     Config.hasColorDueDates())
-            val relativeThresholdDate = getRelativeThresholdDate(task, mContext)
+            val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
             if (!isEmptyOrNull(relAge) && !mFilter!!.hideCreateDate) {
                 taskAge.text = relAge
                 taskAge.visibility = View.VISIBLE
@@ -1341,8 +1331,6 @@ class Simpletask : ThemedActivity() {
             view.setOnLongClickListener {
                 val links = ArrayList<String>()
                 val actions = ArrayList<String>()
-                //lv.setItemChecked(position, !lv.isItemChecked(position))
-                if (item != null) {
                     val t = item.task
                     for (link in t.links) {
                         actions.add(ACTION_LINK)
@@ -1358,7 +1346,6 @@ class Simpletask : ThemedActivity() {
                         actions.add(ACTION_MAIL)
                         links.add(mail)
                     }
-                }
                 if (actions.size != 0) {
 
 
@@ -1538,9 +1525,9 @@ class Simpletask : ThemedActivity() {
                             removeFromTask: (Task, String) -> Unit
     ) {
         val checkedTaskItems = ArrayList<HashSet<String>>()
-        for (task in checkedTasks) {
+        for ((line, task) in checkedTasks) {
             val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(task.task))
+            items.addAll(retrieveFromTask.invoke(task))
             checkedTaskItems.add(items)
         }
 
@@ -1580,8 +1567,7 @@ class Simpletask : ThemedActivity() {
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
             if (newText.isNotEmpty()) {
-                for (i in checkedTasks) {
-                    val t = i.task
+                for ((line, t) in checkedTasks) {
                     addToTask(t,newText)
                 }
             }
@@ -1589,14 +1575,12 @@ class Simpletask : ThemedActivity() {
             for (i in 0..updatedValues.lastIndex) {
                 when (updatedValues[i] ) {
                     false -> {
-                        for (task in checkedTasks) {
-                            val t = task.task
+                        for ((line, t) in checkedTasks) {
                             removeFromTask(t,sortedAllItems[i])
                         }
                     }
                     true -> {
-                        for (task in checkedTasks) {
-                            val t = task.task
+                        for ((line, t) in checkedTasks) {
                             addToTask(t,sortedAllItems[i])
                         }
                     }

@@ -192,8 +192,7 @@ object CalendarSync {
         if (tasks == null) {
             return
         }
-        for (item in tasks) {
-            val task = item.task
+        for ((line, task) in tasks) {
             if (task.isCompleted()) continue
 
             var dt: DateTime?
