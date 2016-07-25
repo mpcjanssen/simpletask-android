@@ -48,13 +48,37 @@ import nl.mpcjanssen.simpletask.task.TToken
 
 
 
-class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncThresholds: Boolean) {
+object CalendarSync {
     private val log: Logger
+    private val UTC = TimeZone.getTimeZone("UTC")
 
-    private inner class SyncRunnable : Runnable {
+    private val ACCOUNT_NAME = "Simpletask Calendar"
+    private val ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL
+    private val CAL_URI = Calendars.CONTENT_URI.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true").appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME).appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build()
+    private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
+    private val CAL_COLOR = Color.BLUE       // Chosen arbitrarily...
+    private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000  // ie. 24 hours
+    private val TASK_TOKENS = TToken.ALL and
+            (TToken.COMPLETED or
+                    TToken.COMPLETED_DATE or
+                    TToken.CREATION_DATE or
+                    TToken.PRIO or
+                    TToken.THRESHOLD_DATE or
+                    TToken.DUE_DATE or
+                    TToken.HIDDEN or
+                    TToken.RECURRENCE).inv()
+
+    private val SYNC_DELAY_MS = 1000
+    private val TAG = "CalendarSync"
+
+
+    val SYNC_TYPE_DUES = 1
+    val SYNC_TYPE_THRESHOLDS = 2
+
+    private class SyncRunnable : Runnable {
         override fun run() {
             try {
-                this@CalendarSync.sync()
+                sync()
             } catch (e: Exception) {
                 log.error(TAG, "STPE exception", e)
             }
@@ -74,7 +98,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
         val selection = Calendars.NAME + " = ?"
         val args = arrayOf(CAL_NAME)
         /* Check for calendar permission */
-        val permissionCheck = ContextCompat.checkSelfPermission(m_app,
+        val permissionCheck = ContextCompat.checkSelfPermission(TodoApplication.app,
                 Manifest.permission.WRITE_CALENDAR)
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
@@ -99,7 +123,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
             put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
             put(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE)
             put(Calendars.NAME, CAL_NAME)
-            put(Calendars.CALENDAR_DISPLAY_NAME, m_app.getString(R.string.calendar_disp_name))
+            put(Calendars.CALENDAR_DISPLAY_NAME, TodoApplication.app.getString(R.string.calendar_disp_name))
             put(Calendars.CALENDAR_COLOR, CAL_COLOR)
             put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ)
             put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME)
@@ -142,7 +166,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
             put(Events.EVENT_TIMEZONE, UTC.id)
             put(Events.STATUS, Events.STATUS_CONFIRMED)
             put(Events.HAS_ATTENDEE_DATA, true)      // If this is not set, Calendar app is confused about Event.STATUS
-            put(Events.CUSTOM_APP_PACKAGE, m_app.packageName)
+            put(Events.CUSTOM_APP_PACKAGE, TodoApplication.app.packageName)
             put(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString())
         }
         val uri = m_cr.insert(Events.CONTENT_URI, values)
@@ -180,7 +204,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
                 dt = task.dueDate?.toDateTime()
                 if (dt != null) {
                     text = task.showParts(TASK_TOKENS)
-                    insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_due))
+                    insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
                 }
             }
             task.dueDate?.toDateTime()
@@ -189,7 +213,7 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
                 dt = task.thresholdDate?.toDateTime()
                 if (dt != null) {
                     if (text == null) text = task.showParts(TASK_TOKENS)
-                    insertEvt(calID, dt, text, m_app.getString(R.string.calendar_sync_desc_thre))
+                    insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                 }
             }
         }
@@ -224,11 +248,11 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
                 }
             }
 
-            val tl = m_app.todoList
+            val tl = TodoApplication.app.todoList
             val tasks = tl.todoItems
 
-            setReminderDays(m_app.reminderDays)
-            setReminderTime(m_app.reminderTime)
+            setReminderDays(Config.reminderDays)
+            setReminderTime(Config.reminderTime)
 
             log.debug(TAG, "Syncing due/threshold calendar reminders...")
             purgeEvts(calID)
@@ -252,11 +276,11 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
     init {
         log = Logger
         m_sync_runnable = SyncRunnable()
-        m_cr = m_app.contentResolver
+        m_cr = TodoApplication.app.contentResolver
         m_stpe = ScheduledThreadPoolExecutor(1)
         var syncType = 0
-        if (syncDues) syncType = syncType or SYNC_TYPE_DUES
-        if (syncThresholds) syncType = syncType or SYNC_TYPE_THRESHOLDS
+        if (Config.isSyncDues) syncType = syncType or SYNC_TYPE_DUES
+        if (Config.isSyncThresholds) syncType = syncType or SYNC_TYPE_THRESHOLDS
         setSyncType(syncType)
     }
 
@@ -283,30 +307,4 @@ class CalendarSync(private val m_app: TodoApplication, syncDues: Boolean, syncTh
         m_rem_time = DateTime.forTimeOnly(time / 60, time % 60, 0, 0)
     }
 
-    companion object {
-        private val UTC = TimeZone.getTimeZone("UTC")
-
-        private val ACCOUNT_NAME = "Simpletask Calendar"
-        private val ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL
-        private val CAL_URI = Calendars.CONTENT_URI.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true").appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME).appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE).build()
-        private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
-        private val CAL_COLOR = Color.BLUE       // Chosen arbitrarily...
-        private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000  // ie. 24 hours
-        private val TASK_TOKENS = TToken.ALL and
-            (TToken.COMPLETED or
-            TToken.COMPLETED_DATE or
-            TToken.CREATION_DATE or
-            TToken.PRIO or
-            TToken.THRESHOLD_DATE or
-            TToken.DUE_DATE or
-            TToken.HIDDEN or
-            TToken.RECURRENCE).inv()
-
-        private val SYNC_DELAY_MS = 1000
-        private val TAG = "CalendarSync"
-
-
-        val SYNC_TYPE_DUES = 1
-        val SYNC_TYPE_THRESHOLDS = 2
-    }
 }

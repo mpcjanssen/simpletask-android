@@ -366,7 +366,7 @@
 -----
 
 - Fix some punctuation errors. (Shayne Holmes)
-- Don't save todo list after a reload. This should prevent another case of conflicts on Dropbox.
+- Don't save todo list after a reloadLuaConfig. This should prevent another case of conflicts on Dropbox.
 - Hide last empty header if `show empty headers` is disabled.  Fixes #283
 - Fix NPE in broadcast receiver.
 - Link to the topydo project rather than the (obsoleted) todo.txt-tools. (Bram Schoenmakers)

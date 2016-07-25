@@ -46,8 +46,8 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "App went to background stop watching")
             stopWatching()
         } else {
-            log.info(TAG, "App came to foreground continue watching ${mApp.todoFileName}")
-            continueWatching(mApp.todoFileName)
+            log.info(TAG, "App came to foreground continue watching ${Config.todoFileName}")
+            continueWatching(Config.todoFileName)
         }
     }
 
@@ -152,7 +152,7 @@ object FileStore : FileStoreInterface {
         var app_key: String
         if (mDBApi == null) {
             // Full access or folder access?
-            if (app.fullDropBoxAccess) {
+            if (Config.fullDropBoxAccess) {
                 app_secret = mApp.getString(R.string.dropbox_consumer_secret)
                 app_key = mApp.getString(R.string.dropbox_consumer_key)
             } else {
@@ -222,14 +222,14 @@ object FileStore : FileStoreInterface {
                     val delta = mDBApi!!.delta(getLatestCursor())
                     saveLatestCursor(delta.cursor)
                     for (entry in delta.entries) {
-                        if (entry.lcPath.equals(mApp.todoFileName, ignoreCase = true)) {
+                        if (entry.lcPath.equals(Config.todoFileName, ignoreCase = true)) {
                             if (entry.metadata == null || entry.metadata.rev == null) {
                                 throw DropboxException("Metadata (or rev) in entry is null " + entry)
                             }
                             if (entry.metadata.rev == localTodoRev) {
-                                log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
+                                log.info(TAG, "Remote file " + Config.todoFileName + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
                             } else {
-                                log.info(TAG, "Remote file " + mApp.todoFileName + " changed, rev: " + entry.metadata.rev + " reloading")
+                                log.info(TAG, "Remote file " + Config.todoFileName + " changed, rev: " + entry.metadata.rev + " reloading")
                                 broadcastFileChanged(mApp.localBroadCastManager)
                             }
                         }
@@ -594,7 +594,7 @@ object FileStore : FileStoreInterface {
         val prevOnline = mOnline
         mOnline = isOnline
         if (!prevOnline && mOnline) {
-            // Schedule a task to reload the file
+            // Schedule a task to reloadLuaConfig the file
             // Give some time to settle so we ignore rapid connectivity changes
             // Only schedule if another thread is not running
             if (onOnline == null || !onOnline!!.isAlive) {
@@ -612,7 +612,7 @@ object FileStore : FileStoreInterface {
                         broadcastFileChanged(mApp.localBroadCastManager)
                     } else {
 
-                        log.info(TAG, "Device no longer online skipping reload")
+                        log.info(TAG, "Device no longer online skipping reloadLuaConfig")
                     }
                 })
             }
@@ -785,7 +785,7 @@ object FileStore : FileStoreInterface {
 
 
     fun getDefaultPath(app: TodoApplication): String {
-        if (app.fullDropBoxAccess) {
+        if (Config.fullDropBoxAccess) {
             return "/todo/todo.txt"
         } else {
             return "/todo.txt"

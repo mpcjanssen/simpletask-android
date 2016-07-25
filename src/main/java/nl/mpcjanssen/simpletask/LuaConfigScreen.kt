@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.createAlertDialog
 import org.luaj.vm2.LuaError
 
@@ -25,7 +26,7 @@ class LuaConfigScreen : ThemedActivity() {
         val btnHelp = findViewById(R.id.btn_help) as Button
         btnRun.setOnClickListener {
             try {
-                m_app.interp.evalScript(script())
+                Config.interp.evalScript(script())
             } catch (e: LuaError) {
                 log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
                 createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
@@ -36,7 +37,7 @@ class LuaConfigScreen : ThemedActivity() {
             intent.putExtra(Constants.EXTRA_HELP_PAGE, "script")
             startActivityForResult(intent, 0)
         }
-        scriptEdit.setText(m_app.luaConfig)
+        scriptEdit.setText(Config.luaConfig)
     }
 
     fun script () : String {
@@ -44,8 +45,8 @@ class LuaConfigScreen : ThemedActivity() {
     }
 
     override fun onDestroy() {
-        m_app.luaConfig = script()
-        m_app.reloadLuaConfig()
+        Config.luaConfig = script()
+        Config.reloadLuaConfig()
         super.onDestroy()
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.util.showConfirmationDialog
 
 class FlavourPrefFragment : PreferenceFragment() {
     private val log = Logger
@@ -19,7 +20,7 @@ class FlavourPrefFragment : PreferenceFragment() {
         val dropboxPref = findPreference("logout_dropbox")
         dropboxPref.setOnPreferenceClickListener {
             log.info(TAG, "Logging out from Dropbox")
-            app.showConfirmationDialog(activity, R.string.logout_message,
+            showConfirmationDialog(activity, R.string.logout_message,
                     DialogInterface.OnClickListener() { dialogInterface, i ->
                         FileStore.logout()
                         activity.finish()

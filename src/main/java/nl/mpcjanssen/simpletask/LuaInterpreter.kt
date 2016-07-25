@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.toDateTime
 import org.luaj.vm2.*
@@ -10,13 +11,13 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-class LuaInterpreter(app: TodoApplication?) {
+class LuaInterpreter(init : Boolean = false) {
     val globals = JsePlatform.standardGlobals()
 
     init {
-        app?.let {
-            globals.set("toast", LuaToastShort(app))
-            evalScript(app.luaConfig)
+        if (init) {
+            globals.set("toast", LuaToastShort())
+            evalScript(Config.luaConfig)
         }
     }
 
@@ -138,10 +139,10 @@ class LuaInterpreter(app: TodoApplication?) {
     }
 }
 
-class LuaToastShort(val context: Context) : OneArgFunction() {
+class LuaToastShort() : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
-        showToastShort(context, string)
+        showToastShort(TodoApplication.app, string)
         return LuaValue.NIL
     }
 }

@@ -19,7 +19,7 @@ public class BugsTest extends TestCase {
     }
 
     public void testActiveSortNullCrash() {
-        ActiveFilter f = new ActiveFilter(null);
+        ActiveFilter f = new ActiveFilter(false);
         MultiComparator mc =  new MultiComparator(f.getSort(null), Util.getTodayAsString(),true, false);
         assertNotNull(mc);
     }
