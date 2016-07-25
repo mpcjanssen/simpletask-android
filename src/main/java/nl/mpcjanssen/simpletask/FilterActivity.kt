@@ -19,10 +19,7 @@ import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.util.broadcastRefreshWidgets
-import nl.mpcjanssen.simpletask.util.runOnMainThread
-import nl.mpcjanssen.simpletask.util.showToastShort
-import nl.mpcjanssen.simpletask.util.sortWithPrefix
+import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -35,7 +32,7 @@ class FilterActivity : ThemedActivity() {
     internal lateinit var mFilter: ActiveFilter
 
     internal lateinit var m_app: TodoApplication
-    internal lateinit var prefs: SharedPreferences
+    val prefs = Config.prefs
 
     private var pager: ViewPager? = null
     private var m_menu: Menu? = null
@@ -56,7 +53,7 @@ class FilterActivity : ThemedActivity() {
 
         log.info(TAG, "Called with intent: " + intent.toString())
         m_app = application as TodoApplication
-        prefs = m_app.prefs
+
 
         setContentView(R.layout.filter)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -73,7 +70,7 @@ class FilterActivity : ThemedActivity() {
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
 
-        mFilter = ActiveFilter(m_app)
+        mFilter = ActiveFilter()
         val context = applicationContext
         if (asWidgetConfigure) {
             if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
@@ -96,7 +93,7 @@ class FilterActivity : ThemedActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(m_app.todoList.contexts, m_app.sortCaseSensitive(), "-"))
+                sortWithPrefix(m_app.todoList.contexts, Config.sortCaseSensitive(), "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
         arguments.putBoolean(INITIAL_NOT, mFilter.contextsNot)
         arguments.putString(TAB_TYPE, CONTEXT_TAB)
@@ -108,7 +105,7 @@ class FilterActivity : ThemedActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(m_app.todoList.projects, m_app.sortCaseSensitive(), "-"))
+                sortWithPrefix(m_app.todoList.projects, Config.sortCaseSensitive(), "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
         arguments.putBoolean(INITIAL_NOT, mFilter.projectsNot)
         arguments.putString(TAB_TYPE, PROJECT_TAB)
@@ -143,7 +140,7 @@ class FilterActivity : ThemedActivity() {
 
         // Fill arguments for fragment
         arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS, mFilter.getSort(m_app.defaultSorts))
+        arguments.putStringArrayList(FILTER_ITEMS, mFilter.getSort(Config.defaultSorts))
         arguments.putString(TAB_TYPE, SORT_TAB)
         val sortTab = FilterSortFragment()
         sortTab.arguments = arguments
@@ -223,7 +220,7 @@ class FilterActivity : ThemedActivity() {
 
     private fun openScript(file_read: FileStoreInterface.FileReadListener) {
         runOnMainThread(Runnable {
-            val dialog = FileStore.FileDialog(this@FilterActivity, File(m_app.todoFileName).parent, false)
+            val dialog = FileStore.FileDialog(this@FilterActivity, File(Config.todoFileName).parent, false)
             dialog.addFileListener(object : FileStoreInterface.FileSelectedListener {
                 override fun fileSelected(file: String) {
                     Thread(Runnable {
@@ -406,8 +403,8 @@ class FilterActivity : ThemedActivity() {
             val f = fragments[position]
             val type = f.arguments.getString(TAB_TYPE, "unknown")
             when (type) {
-                PROJECT_TAB -> return m_app.tagTerm
-                CONTEXT_TAB -> return m_app.listTerm
+                PROJECT_TAB -> return Config.tagTerm
+                CONTEXT_TAB -> return Config.listTerm
                 else -> return type
             }
         }

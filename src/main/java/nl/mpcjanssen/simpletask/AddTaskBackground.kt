@@ -35,6 +35,8 @@ import android.os.Bundle
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
 import java.util.*
@@ -54,7 +56,7 @@ class AddTaskBackground : Activity() {
         val intent = intent
         val action = intent.action
 
-        val append_text = m_app.shareAppendText
+        val append_text = Config.shareAppendText
         if (intent.type.startsWith("text/")) {
             if (Intent.ACTION_SEND == action) {
                 log.debug(TAG, "Share")
@@ -107,12 +109,11 @@ class AddTaskBackground : Activity() {
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
-        val m_app = this.application as TodoApplication
-        val todoList = m_app.todoList
+        val todoList = TodoList
         val addedTasks = ArrayList<Task>()
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
-        if (m_app.hasShareTaskShowsEdit()) {
+        if (Config.hasShareTaskShowsEdit()) {
             todoList.clearSelection()
         }
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
@@ -126,18 +127,18 @@ class AddTaskBackground : Activity() {
                 text = taskText
             }
             val t: Task
-            if (m_app.hasPrependDate()) {
+            if (Config.hasPrependDate()) {
                 t = Task(text, DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT))
             } else {
                 t = Task(text)
             }
-            todoList.add(t, m_app.hasAppendAtEnd(),m_app.hasShareTaskShowsEdit())
+            todoList.add(t, Config.hasAppendAtEnd(),Config.hasShareTaskShowsEdit())
             addedTasks.add(t)
         }
-        todoList.notifyChanged(FileStore, m_app.todoFileName, m_app.eol, m_app, true)
+        todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
-        showToastShort(m_app, R.string.task_added)
-        if (m_app.hasShareTaskShowsEdit()) {
+        showToastShort(TodoApplication.app, R.string.task_added)
+        if (Config.hasShareTaskShowsEdit()) {
             todoList.startAddTaskActivity(this)
         }
     }

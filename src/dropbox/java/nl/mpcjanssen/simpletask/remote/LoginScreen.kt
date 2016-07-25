@@ -38,6 +38,7 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedActivity
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.util.Config
 
 
 class LoginScreen : ThemedActivity() {
@@ -50,7 +51,7 @@ class LoginScreen : ThemedActivity() {
         super.onCreate(savedInstanceState)
 
         m_app = application as TodoApplication
-        setTheme(m_app.activeTheme)
+        setTheme(Config.activeTheme)
         setContentView(R.layout.login)
         localBroadcastManager = LocalBroadcastManager.getInstance(this)
 
@@ -67,13 +68,13 @@ class LoginScreen : ThemedActivity() {
 
         var m_LoginButton = findViewById(R.id.login) as Button
         m_LoginButton.setOnClickListener {
-            m_app.fullDropBoxAccess = true
+            Config.fullDropBoxAccess = true
             startLogin()
         }
 
         m_LoginButton = findViewById(R.id.login_folder) as Button
         m_LoginButton.setOnClickListener {
-            m_app.fullDropBoxAccess = false
+            Config.fullDropBoxAccess = false
             startLogin()
         }
 
@@ -88,7 +89,7 @@ class LoginScreen : ThemedActivity() {
         var app_key: String
 
             // Full access or folder access?
-            if (mApp.fullDropBoxAccess) {
+            if (Config.fullDropBoxAccess) {
                 app_secret = mApp.getString(R.string.dropbox_consumer_secret)
                 app_key = mApp.getString(R.string.dropbox_consumer_key)
             } else {
@@ -117,7 +118,7 @@ class LoginScreen : ThemedActivity() {
 
     private fun finishLogin() {
         if (m_app.isAuthenticated) {
-            m_app.fileChanged(m_app.todoFileName)
+            m_app.fileChanged(Config.todoFileName)
             switchToTodolist()
         }
     }

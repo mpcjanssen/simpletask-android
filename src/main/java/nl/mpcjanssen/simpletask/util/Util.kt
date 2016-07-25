@@ -30,6 +30,7 @@ package nl.mpcjanssen.simpletask.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
@@ -66,6 +67,27 @@ fun runOnMainThread(r: Runnable) {
     handler.post(r)
 }
 
+fun getString (resId : Int) : String {
+    return TodoApplication.app.getString(resId)
+}
+
+fun showConfirmationDialog(cxt: Context, msgid: Int,
+                           okListener: DialogInterface.OnClickListener, titleid: Int) {
+    val show = Config.showConfirmationDialogs()
+
+    val builder = AlertDialog.Builder(cxt)
+    builder.setTitle(titleid)
+    builder.setMessage(msgid)
+    builder.setPositiveButton(android.R.string.ok, okListener)
+    builder.setNegativeButton(android.R.string.cancel, null)
+    builder.setCancelable(true)
+    val dialog = builder.create()
+    if (show) {
+        dialog.show()
+    } else {
+        okListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE)
+    }
+}
 
 fun showToastShort(cxt: Context, resid: Int) {
     runOnMainThread(Runnable { Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show() })

@@ -44,7 +44,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     fun getFilter () : ActiveFilter {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = ctxt.getSharedPreferences("" + widgetId, 0)
-        val filter = ActiveFilter(application)
+        val filter = ActiveFilter()
         filter.initFromPrefs(preferences)
         val obj = JSONObject()
         filter.saveInJSON(obj)
@@ -88,9 +88,9 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
             visibleTasks.add(t)
         }
         val comp = MultiComparator(filter.getSort(
-                application.defaultSorts),
+                Config.defaultSorts),
                 application.today,
-                application.sortCaseSensitive(),
+                Config.sortCaseSensitive(),
                 filter.createIsThreshold)
         Collections.sort(visibleTasks, comp)
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks")
@@ -111,7 +111,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
     private fun getExtendedView(item: TodoListItem): RemoteViews {
         val filter = getFilter()
         val rv = RemoteViews(application.packageName, R.layout.widget_list_item)
-        val extended_widget = application.prefs.getBoolean("widget_extended", true)
+        val extended_widget = Config.prefs.getBoolean("widget_extended", true)
         val task = item.task
 
         var tokensToShow = TToken.ALL
@@ -129,7 +129,7 @@ internal class AppWidgetRemoteViewsFactory(private val ctxt: Context, intent: In
         val ss = SpannableString(
                 task.showParts(tokensToShow).trim { it <= ' ' })
 
-        if (application.isDarkWidgetTheme) {
+        if (Config.isDarkWidgetTheme) {
             itemForDarkTheme(rv)
         } else {
             itemForLightTheme(rv)

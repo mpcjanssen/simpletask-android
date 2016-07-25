@@ -31,15 +31,12 @@ package nl.mpcjanssen.simpletask.task
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
-
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -50,7 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
  * @author Mark Janssen
  */
-class TodoList(private val app: TodoApplication) {
+object TodoList {
     private val log: Logger
 
     private var mLists: ArrayList<String>? = null
@@ -84,7 +81,7 @@ class TodoList(private val app: TodoApplication) {
         })
     }
 
-    fun add(t: Task, atEnd: Boolean, select : Boolean = false) {
+    fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
         val newItem = TodoListItem(0, t)
         add(TodoListItem(0, t), atEnd)
         if (select) {
@@ -218,7 +215,7 @@ class TodoList(private val app: TodoApplication) {
             }
             mLists = null
             mTags = null
-            broadcastRefreshUI(app.localBroadCastManager)
+            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         })
     }
 
@@ -232,7 +229,7 @@ class TodoList(private val app: TodoApplication) {
 
     fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoListItem> {
         val filteredTasks = filter.apply(todoItems)
-        val comp = MultiComparator(sorts, app.today, caseSensitive, filter.createIsThreshold)
+        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
         Collections.sort(filteredTasks, comp)
         return filteredTasks
     }
@@ -249,7 +246,7 @@ class TodoList(private val app: TodoApplication) {
 
         } catch (e: IOException) {
             log.error(TAG, "TodoList load failed: {}" + filename, e)
-            showToastShort(app, "Loading of todo file failed")
+            showToastShort(TodoApplication.app, "Loading of todo file failed")
         }
         log.info(TAG, "TodoList loaded, refresh UI")
         notifyChanged(fileStore, filename, eol, backup, false)
@@ -257,20 +254,20 @@ class TodoList(private val app: TodoApplication) {
 
 
     private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
-            val items = todoItems
-            if (items == null) {
-                log.error(TAG, "Trying to save null todo list")
-                return
+        val items = todoItems
+        if (items == null) {
+            log.error(TAG, "Trying to save null todo list")
+            return
+        }
+        try {
+            val lines = items.map {
+                it.task.text
             }
-            try {
-                val lines = items.map {
-                    it.task.text
-                }
-                log.info(TAG, "Saving todo list, size ${lines.size}")
-                fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            log.info(TAG, "Saving todo list, size ${lines.size}")
+            fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoListItem>?, eol: String) {
@@ -292,23 +289,22 @@ class TodoList(private val app: TodoApplication) {
                 notifyChanged(fileStore, todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
-                showToastShort(app, "Task archiving failed")
+                showToastShort(TodoApplication.app, "Task archiving failed")
             }
         })
     }
 
-    fun isSelected(item : TodoListItem) : Boolean {
+    fun isSelected(item: TodoListItem): Boolean {
         return selection.indexOf(item) > -1
     }
 
-    fun numSelected() : Int {
+    fun numSelected(): Int {
         return selection.size
     }
 
 
-    companion object {
-        internal val TAG = TodoList::class.java.simpleName
-    }
+    internal val TAG = TodoList::class.java.simpleName
+
 
     fun selectTasks(items: List<Task>, lbm: LocalBroadcastManager?) {
         if (todoItems == null) {

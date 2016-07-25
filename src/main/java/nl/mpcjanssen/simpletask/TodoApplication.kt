@@ -29,17 +29,13 @@
  */
 package nl.mpcjanssen.simpletask
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AlertDialog
-import android.widget.EditText
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
@@ -47,48 +43,33 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.ActionQueue
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.appVersion
-import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.todayAsString
-import org.luaj.vm2.LuaError
 import java.io.File
-import java.io.IOException
 import java.util.*
 
 
 class TodoApplication : Application(),
 
-        SharedPreferences.OnSharedPreferenceChangeListener, FileStoreInterface.FileChangeListener, BackupInterface {
+         FileStoreInterface.FileChangeListener, BackupInterface {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
     lateinit var todoList: TodoList
-    private lateinit var m_calSync: CalendarSync
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
-
     private val log = Logger
-
-
-    lateinit var prefs: SharedPreferences
-    lateinit var interp : LuaInterpreter
-
-
 
     override fun onCreate() {
         app = this
         super.onCreate()
-        prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        interp = LuaInterpreter(this)
+
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
 
         log.debug(TAG, "onCreate()")
         log.info(TAG, "Started ${appVersion(this)}")
         setupUncaughtExceptionHandler()
-
-        // Read Lua config
-        reloadLuaConfig()
-
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
@@ -100,7 +81,7 @@ class TodoApplication : Application(),
                 log.info(TAG, "Received broadcast ${intent.action}")
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
                     ActionQueue.add("Refresh UI", Runnable {
-                        m_calSync.syncLater()
+                        CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
                     })
@@ -118,25 +99,16 @@ class TodoApplication : Application(),
         }
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-        prefsChangeListener(this)
-        todoList = TodoList(this)
+        todoList = TodoList
 
         log.info(TAG, "Created todolist {}" + todoList)
-        m_calSync = CalendarSync(this, isSyncDues, isSyncThresholds)
         scheduleOnNewDay()
         ActionQueue.add("|Initial load", Runnable {
             loadTodoList()
         })
     }
 
-    fun reloadLuaConfig() {
-        try {
-            interp.evalScript(luaConfig)
-        } catch (e: LuaError) {
-            log.warn(TAG, "Lua execution failed " + e.message)
-            showToastLong(this, "${getString(R.string.lua_error)}:  ${e.message}")
-        }
-    }
+
 
     private fun setupUncaughtExceptionHandler() {
         // save original Uncaught exception handler
@@ -170,170 +142,19 @@ class TodoApplication : Application(),
                 AlarmManager.INTERVAL_DAY, pi)
     }
 
-    fun prefsChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-    }
 
     override fun onTerminate() {
         log.info(TAG, "De-registered receiver")
-        prefs.unregisterOnSharedPreferenceChangeListener(this)
         localBroadCastManager.unregisterReceiver(m_broadcastReceiver)
         super.onTerminate()
     }
 
+    fun switchTodoFile(newTodo: String, background: Boolean) {
+        Config.setTodoFile(newTodo)
+        ActionQueue.add("Reload from file switch", Runnable {
+            loadTodoList()
+        })
 
-    val defaultSorts: Array<String>
-        get() = resources.getStringArray(R.array.sortKeys)
-
-    fun showCalendar(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
-    }
-
-    val listTerm: String
-        get() {
-            if (useTodoTxtTerms()) {
-                return getString(R.string.context_prompt_todotxt)
-            } else {
-                return getString(R.string.context_prompt)
-            }
-        }
-
-    val tagTerm: String
-        get() {
-            if (useTodoTxtTerms()) {
-                return getString(R.string.project_prompt_todotxt)
-            } else {
-                return getString(R.string.project_prompt)
-            }
-        }
-
-    private fun useTodoTxtTerms(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
-    }
-
-    fun showTxtOnly(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_txt_only), false)
-    }
-
-    val isSyncDues: Boolean
-        get() = atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_dues), false)
-
-    val isSyncThresholds: Boolean
-        get() = atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false)
-
-    val reminderDays: Int
-        get() = prefs.getInt(getString(R.string.calendar_reminder_days), 1)
-
-    val reminderTime: Int
-        get() = prefs.getInt(getString(R.string.calendar_reminder_time), 720)
-
-
-    val todoFileName: String
-        get() {
-            var name = prefs.getString(getString(R.string.todo_file_key), null)
-            if (name == null) {
-                name = FileStore.getDefaultPath(this)
-                setTodoFile(name)
-            }
-            val todoFile = File(name)
-            try {
-                return todoFile.canonicalPath
-            } catch (e: IOException) {
-                return FileStore.getDefaultPath(this)
-            }
-
-        }
-
-    val todoFile: File
-        get() = File(todoFileName)
-
-    @SuppressLint("CommitPrefEdits")
-    fun setTodoFile(todo: String) {
-        prefs.edit().putString(getString(R.string.todo_file_key), todo).commit()
-    }
-
-    val isAutoArchive: Boolean
-        get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
-
-    fun hasPrependDate(): Boolean {
-        return prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
-    }
-
-    fun hasKeepPrio(): Boolean {
-        return prefs.getBoolean(getString(R.string.keep_prio), true)
-    }
-
-    val shareAppendText: String
-        get() = prefs.getString(getString(R.string.share_task_append_text), "")
-
-    var latestChangelogShown: Int
-        get() = prefs.getInt(getString(R.string.latest_changelog_shown), 0)
-        set(versionCode: Int) {
-            prefs.edit().putInt(getString(R.string.latest_changelog_shown), versionCode).commit()
-        }
-
-    val localFileRoot: String
-        get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
-
-    fun hasCapitalizeTasks(): Boolean {
-        return prefs.getBoolean(getString(R.string.capitalize_tasks), false)
-    }
-
-    fun hasColorDueDates(): Boolean {
-        return prefs.getBoolean(getString(R.string.color_due_date_key), true)
-    }
-
-    fun hasLandscapeDrawers(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_drawer_fixed_landscape), false) && resources.getBoolean(R.bool.is_landscape)
-    }
-
-    fun setEditTextHint(editText: EditText, resId: Int) {
-        if (prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
-            editText.setHint(resId)
-        }
-    }
-
-    var isAddTagsCloneTags: Boolean
-        get() = prefs.getBoolean(getString(R.string.clone_tags_key), false)
-        set(bool) = prefs.edit().putBoolean(getString(R.string.clone_tags_key), bool).apply()
-
-    fun hasAppendAtEnd(): Boolean {
-        return prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
-    }
-
-    var isWordWrap: Boolean
-        get() = prefs.getBoolean(getString(R.string.word_wrap_key), true)
-        set(bool) = prefs.edit().putBoolean(getString(R.string.word_wrap_key), bool).apply()
-
-    fun showTodoPath(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_todo_path), false)
-    }
-
-
-    fun backClearsFilter(): Boolean {
-        return prefs.getBoolean(getString(R.string.back_clears_filter), false)
-    }
-
-    fun sortCaseSensitive(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
-    }
-
-    val eol: String
-        get() {
-            if (prefs.getBoolean(getString(R.string.line_breaks_pref_key), true)) {
-                return "\r\n"
-            } else {
-                return "\n"
-            }
-        }
-
-    fun hasDonated(): Boolean {
-        try {
-            packageManager.getInstallerPackageName("nl.mpcjanssen.simpletask.donate")
-            return true
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
     }
 
     val isLoading: Boolean
@@ -341,14 +162,14 @@ class TodoApplication : Application(),
 
     fun loadTodoList() {
         log.info(TAG, "Load todolist")
-        todoList.reload(FileStore, todoFileName, this, localBroadCastManager, eol)
+        todoList.reload(FileStore, Config.todoFileName, this, localBroadCastManager, Config.eol)
 
     }
 
 
     override fun fileChanged(newName: String?) {
         newName?.let {
-            setTodoFile(newName)
+            Config.setTodoFile(newName)
         }
         ActionQueue.add("Reload from fileChanged()", Runnable {
             loadTodoList()
@@ -364,7 +185,7 @@ class TodoApplication : Application(),
         }
     }
 
-    private fun redrawWidgets() {
+    fun redrawWidgets() {
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
         log.info(TAG, "Redrawing widgets ")
@@ -373,113 +194,15 @@ class TodoApplication : Application(),
         }
     }
 
-    private fun themeStringToId(theme: String): Int {
-        when (theme) {
-            "dark" -> return R.style.AppTheme
-            "black" -> return R.style.AppTheme_Black
-            "light_darkactionbar" -> return R.style.AppTheme_Light_DarkActionBar
-        }
-        return R.style.AppTheme_Light_DarkActionBar
-
-    }
-
-    val activeTheme: Int
-        get() {
-            return themeStringToId(activeThemeString)
-        }
-
-    val isDarkTheme: Boolean
-        get() {
-            when (activeThemeString) {
-                "dark", "black" -> return true
-                else -> return false
-            }
-        }
-
-    val isDarkWidgetTheme: Boolean
-        get() = "dark" == prefs.getString(getString(R.string.widget_theme_pref_key), "light_darkactionbar")
-
-    private val activeThemeString: String
-        get() = interp.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
-
-    var fullDropBoxAccess: Boolean
-        @SuppressWarnings("unused")
-        get() = prefs.getBoolean(getString(R.string.dropbox_full_access), true)
-        set(full) {
-            prefs.edit().putBoolean(getString(R.string.dropbox_full_access), full).commit()
-        }
 
 
-    var luaConfig: String
-        get() = prefs.getString(getString(R.string.lua_config), "")
-        set(config) {
-            prefs.edit().putString(getString(R.string.lua_config), config).commit()
-        }
 
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
-        if (s == getString(R.string.widget_theme_pref_key) ||
-                s == getString(R.string.widget_extended_pref_key) ||
-                s == getString(R.string.widget_background_transparency) ||
-                s == getString(R.string.widget_header_transparency)) {
-            redrawWidgets()
-        } else if (s == getString(R.string.calendar_sync_dues)) {
-            m_calSync.setSyncDues(isSyncDues)
-        } else if (s == getString(R.string.calendar_sync_thresholds)) {
-            m_calSync.setSyncThresholds(isSyncThresholds)
-        } else if (s == getString(R.string.calendar_reminder_days) || s == getString(R.string.calendar_reminder_time)) {
-            m_calSync.syncLater()
-        }
-    }
-
-    fun switchTodoFile(newTodo: String, background: Boolean) {
-        setTodoFile(newTodo)
-        ActionQueue.add("Reload from file switch", Runnable {
-            loadTodoList()
-        })
-
-    }
 
 
-    val dateBarRelativeSize: Float
-        get() {
-            val def = 80
-            return prefs.getInt(getString(R.string.datebar_relative_size), def) / 100.0f
-        }
 
 
-    val tasklistTextSize: Float?
-        get() {
-            val luaValue = interp.tasklistTextSize()
-            if (luaValue != null) {
-                return luaValue
-            }
 
-            if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {
-                return 14.0f
-            }
-            val font_size = prefs.getInt(getString(R.string.font_size), 14)
-            return font_size.toFloat()
-        }
-
-
-    fun showConfirmationDialog(cxt: Context, msgid: Int,
-                               okListener: DialogInterface.OnClickListener, titleid: Int) {
-        val show = prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
-
-        val builder = AlertDialog.Builder(cxt)
-        builder.setTitle(titleid)
-        builder.setMessage(msgid)
-        builder.setPositiveButton(android.R.string.ok, okListener)
-        builder.setNegativeButton(android.R.string.cancel, null)
-        builder.setCancelable(true)
-        val dialog = builder.create()
-        if (show) {
-            dialog.show()
-        } else {
-            okListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE)
-        }
-    }
 
     val isAuthenticated: Boolean
         get() {
@@ -498,17 +221,17 @@ class TodoApplication : Application(),
         val fileStore = FileStore
         fileStore.browseForNewFile(
                 act,
-                File(todoFileName).parent,
+                Config.todoFile.parent,
                 object : FileStoreInterface.FileSelectedListener {
                     override fun fileSelected(file: String) {
                         switchTodoFile(file, true)
                     }
                 },
-                showTxtOnly())
+                Config.showTxtOnly())
     }
 
     val doneFileName: String
-        get() = File(todoFile.parentFile, "done.txt").absolutePath
+        get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
 
     override fun backup(name: String, contents: String) {
         val now = Date()
@@ -518,7 +241,7 @@ class TodoApplication : Application(),
     }
 
     fun getSortString(key: String): String {
-        if (useTodoTxtTerms()) {
+        if (Config.useTodoTxtTerms()) {
             if ("by_context" == key) {
                 return getString(R.string.by_context_todotxt)
             }
@@ -535,13 +258,7 @@ class TodoApplication : Application(),
         return values[index]
     }
 
-    fun hasShareTaskShowsEdit(): Boolean {
-        return prefs.getBoolean(getString(R.string.share_task_show_edit), false)
-    }
 
-    fun hasExtendedTaskView(): Boolean {
-        return prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
-    }
 
     companion object {
 

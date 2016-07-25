@@ -37,6 +37,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.MenuItem
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.FontManager
 import java.util.*
 
@@ -87,7 +88,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
         }
         if (key.equals(getString(R.string.calendar_sync_dues)) ||
                 key.equals(getString(R.string.calendar_sync_thresholds))) {
-            if (app.isSyncDues || app.isSyncThresholds) {
+            if (Config.isSyncDues || Config.isSyncThresholds) {
                 /* Check for calendar permission */
                 val permissionCheck = ContextCompat.checkSelfPermission(app,
                         Manifest.permission.WRITE_CALENDAR)
@@ -209,8 +210,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             super.onCreate(savedInstanceState)
             val screen = preferenceScreen
             val toHide: Preference
-            val app = activity.application as TodoApplication
-            if (app.hasDonated()) {
+            if (Config.hasDonated()) {
                 toHide = screen.findPreference("donate")
             } else {
                 toHide = screen.findPreference("donated")
