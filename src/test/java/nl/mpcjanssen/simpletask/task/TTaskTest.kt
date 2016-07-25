@@ -62,7 +62,7 @@ class TaskTest : TestCase() {
     }
 
     fun testGetCompletionDate() {
-        var t = "x 2012-11-11 due:2014-10-10 rec:12w mail@example.com"
+        val t = "x 2012-11-11 due:2014-10-10 rec:12w mail@example.com"
         assertEquals("2012-11-11", Task(t).completionDate)
     }
 
@@ -76,7 +76,7 @@ class TaskTest : TestCase() {
     }
 
     fun testShow() {
-        var t = Task("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com")
+        val t = Task("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com")
 
         val text = t.tokens.filter {
             it.type == TToken.TEXT
@@ -85,7 +85,7 @@ class TaskTest : TestCase() {
     }
 
     fun testCompletion() {
-        var str = "test"
+        val str = "test"
         val t1 =  Task(str)
         t1.markComplete("2010-12-12")
         assertEquals("x 2010-12-12 $str", t1.text )

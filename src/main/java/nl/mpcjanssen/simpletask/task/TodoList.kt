@@ -184,8 +184,7 @@ object TodoList {
 
     fun prioritize(items: List<TodoListItem>, prio: Priority) {
         ActionQueue.add("Complete", Runnable {
-            for (item in items) {
-                val task = item.task
+            for ((line, task) in items) {
                 task.priority = prio
             }
         })
@@ -308,7 +307,7 @@ object TodoList {
 
     fun selectTasks(items: List<Task>, lbm: LocalBroadcastManager?) {
         if (todoItems == null) {
-            var selection = items
+            val selection = items
             log.info(TAG, "todoItems is null, queuing selection of ${items.size} items")
             ActionQueue.add("Selection", Runnable {
                 selectTasks(selection, lbm)

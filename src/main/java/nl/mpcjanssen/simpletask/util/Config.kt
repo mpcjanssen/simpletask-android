@@ -1,11 +1,8 @@
 package nl.mpcjanssen.simpletask.util
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.support.v7.app.AlertDialog
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter

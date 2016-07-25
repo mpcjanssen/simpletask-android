@@ -8,8 +8,8 @@ import java.util.*
 class AlphabeticalComparator(caseSensitive: Boolean) : Comparator<TodoListItem> {
     val stringComp = AlphabeticalStringComparator(caseSensitive)
     override fun compare(t1: TodoListItem?, t2: TodoListItem?): Int {
-        var a = t1?.task ?: Task("")
-        var b = t2?.task ?: Task("")
+        val a = t1?.task ?: Task("")
+        val b = t2?.task ?: Task("")
         return stringComp.compare(a.showParts(TToken.TEXT),b.showParts(TToken.TEXT))
     }
 }

@@ -28,7 +28,6 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public static final int ON_DOWN = 0;
     public static final int ON_DRAG = 1;
     public static final int ON_LONG_PRESS = 2;
-    private Logger log = Logger.INSTANCE;
 
     private int mDragInitMode = ON_DOWN;
 
@@ -114,7 +113,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public DragSortController(@NonNull DragSortListView dslv, int dragHandleId, int dragInitMode,
             int removeMode, int clickRemoveId, int flingHandleId) {
         super(dslv);
-        log = Logger.INSTANCE;
+        Logger log = Logger.INSTANCE;
         mDslv = dslv;
         if (mFlingRemoveListener == null) {
             mFlingRemoveListener =

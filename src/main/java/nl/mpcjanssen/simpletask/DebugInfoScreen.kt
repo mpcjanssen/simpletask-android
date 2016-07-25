@@ -10,11 +10,8 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.LogItem
-import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.shareText
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DebugInfoScreen : ThemedActivity() {

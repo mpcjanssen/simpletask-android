@@ -1,18 +1,16 @@
 package nl.mpcjanssen.simpletask
 
-import android.content.Context
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.toDateTime
 import org.luaj.vm2.*
-import org.luaj.vm2.ast.Str
 import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
 class LuaInterpreter(init : Boolean = false) {
-    val globals = JsePlatform.standardGlobals()
+    val globals = JsePlatform.standardGlobals()!!
 
     init {
         if (init) {

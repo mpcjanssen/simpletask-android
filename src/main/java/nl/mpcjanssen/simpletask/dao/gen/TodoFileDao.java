@@ -71,12 +71,11 @@ public class TodoFileDao extends AbstractDao<TodoFile, String> {
     /** @inheritdoc */
     @Override
     public TodoFile readEntity(Cursor cursor, int offset) {
-        TodoFile entity = new TodoFile( //
+        return new TodoFile( //
             cursor.getString(offset + 0), // contents
             cursor.getString(offset + 1), // name
             new java.util.Date(cursor.getLong(offset + 2)) // date
         );
-        return entity;
     }
      
     /** @inheritdoc */

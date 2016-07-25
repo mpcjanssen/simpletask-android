@@ -146,18 +146,6 @@ public class DragSortListView extends ListView {
 
 
     /**
-     * The difference (in x) between screen coordinates and coordinates
-     * in this view.
-     */
-    private int mOffsetX;
-
-    /**
-     * The difference (in y) between screen coordinates and coordinates
-     * in this view.
-     */
-    private int mOffsetY;
-
-    /**
      * A listener that receives callbacks whenever the floating View
      * hovers over a new position.
      */
@@ -292,19 +280,9 @@ public class DragSortListView extends ListView {
     private int mY;
 
     /**
-     * Last touch x.
-     */
-    private int mLastX;
-
-    /**
      * Last touch y.
      */
     private int mLastY;
-
-    /**
-     * The touch y-coord at which drag started
-     */
-    private int mDragStartY;
 
     /**
      * Drag flag bit. Floating View can move in the positive
@@ -1687,6 +1665,10 @@ public class DragSortListView extends ListView {
 
     private void saveTouchCoords(@NonNull MotionEvent ev) {
         int action = ev.getAction() & MotionEvent.ACTION_MASK;
+        /*
+      Last touch x.
+     */
+        int mLastX;
         if (action != MotionEvent.ACTION_DOWN) {
             mLastX = mX;
             mLastY = mY;
@@ -1697,8 +1679,16 @@ public class DragSortListView extends ListView {
             mLastX = mX;
             mLastY = mY;
         }
-        mOffsetX = (int) ev.getRawX() - mX;
-        mOffsetY = (int) ev.getRawY() - mY;
+        /*
+      The difference (in x) between screen coordinates and coordinates
+      in this view.
+     */
+        int mOffsetX = (int) ev.getRawX() - mX;
+        /*
+      The difference (in y) between screen coordinates and coordinates
+      in this view.
+     */
+        int mOffsetY = (int) ev.getRawY() - mY;
     }
 
     public boolean listViewIntercepted() {
@@ -2184,10 +2174,8 @@ public class DragSortListView extends ListView {
         return true;
     }
 
-    private boolean mFloatViewInvalidated = false;
-
     private void invalidateFloatView() {
-        mFloatViewInvalidated = true;
+        boolean mFloatViewInvalidated = true;
     }
 
     /**
@@ -2272,7 +2260,10 @@ public class DragSortListView extends ListView {
 
         mDragDeltaX = deltaX;
         mDragDeltaY = deltaY;
-        mDragStartY = mY;
+        /*
+      The touch y-coord at which drag started
+     */
+        int mDragStartY = mY;
 
         // updateFloatView(mX - mDragDeltaX, mY - mDragDeltaY);
         mFloatLoc.x = mX - mDragDeltaX;
