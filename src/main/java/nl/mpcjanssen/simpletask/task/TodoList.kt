@@ -39,7 +39,6 @@ import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -53,7 +52,7 @@ object TodoList {
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
     private val selection = HashSet<TodoListItem>()
-    var todoItems: CopyOnWriteArrayList<TodoListItem>? = null
+    var todoItems: ArrayList<TodoListItem>? = null
 
     init {
 
@@ -236,7 +235,7 @@ object TodoList {
     fun reload(fileStore: FileStoreInterface, filename: String, backup: BackupInterface, lbm: LocalBroadcastManager, eol: String) {
         lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
         try {
-            todoItems = CopyOnWriteArrayList<TodoListItem>(
+            todoItems = ArrayList<TodoListItem>(
                     fileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
                         TodoListItem(line, Task(text))
                     })
@@ -259,9 +258,11 @@ object TodoList {
             return
         }
         try {
+            items.sortBy {it.line}
             val lines = items.map {
                 it.task.text
             }
+
             log.info(TAG, "Saving todo list, size ${lines.size}")
             fileStore.saveTasksToFile(todoFileName, lines, backup, eol)
         } catch (e: IOException) {
