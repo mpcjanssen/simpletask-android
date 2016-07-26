@@ -1,21 +1,25 @@
 package nl.mpcjanssen.simpletask
 
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.showToastShort
-import nl.mpcjanssen.simpletask.util.toDateTime
+import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-class LuaInterpreter(init : Boolean = false) {
+class LuaInterpreter(fromTest : Boolean = false) {
     val globals = JsePlatform.standardGlobals()!!
 
     init {
-        if (init) {
-            globals.set("toast", LuaToastShort())
-            evalScript(Config.luaConfig)
+        if (!fromTest) {
+            try {
+                globals.set("toast", LuaToastShort())
+                evalScript(Config.luaConfig)
+
+            } catch (e: LuaError) {
+                nl.mpcjanssen.simpletask.util.log.warn(Config.TAG, "Lua execution failed " + e.message)
+                showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
+            }
         }
     }
 

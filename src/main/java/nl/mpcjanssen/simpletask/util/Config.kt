@@ -26,12 +26,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun reloadLuaConfig() {
         interp = LuaInterpreter()
-        try {
-            interp.evalScript(luaConfig)
-        } catch (e: LuaError) {
-            log.warn(TAG, "Lua execution failed " + e.message)
-            showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
-        }
+
     }
 
     fun useTodoTxtTerms(): Boolean {

@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.1.2
+-----
+
+- Fix Lua interpreter initialisation.
+
 8.1.1
 -----
 
@@ -13,6 +18,7 @@
 - Use a separate Lua interpreter for every filter, fixes #502.
 - Recreate widgets if filter changed to updated filterbar click intent.
 - Code cleanup and reduced memory usage.
+- Sort items by line before saving.
 
 8.1.0
 -----
