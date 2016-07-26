@@ -16,9 +16,9 @@ import java.util.*
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter (initLua : Boolean = false) {
+class ActiveFilter (fromTest : Boolean = false) {
     private val log: Logger
-    val interp = LuaInterpreter(initLua)
+    val interp = LuaInterpreter(fromTest)
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
