@@ -1375,8 +1375,13 @@ class Simpletask : ThemedActivity() {
                                 actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
                                 startActivity(actionIntent)
                             } else {
-                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                startActivity(actionIntent)
+                                try {
+                                    actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    startActivity(actionIntent)
+                                } catch(e: ActivityNotFoundException) {
+                                    log.info(TAG, "No handler for $url")
+                                    showToastLong(TodoApplication.app, "No handler for $url" )
+                                }
                             }
                             ACTION_PHONE -> {
                                 actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
