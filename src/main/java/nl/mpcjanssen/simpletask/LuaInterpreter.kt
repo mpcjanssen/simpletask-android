@@ -39,7 +39,6 @@ class LuaInterpreter(fromTest : Boolean = false) {
             val args = fillOnFilterVarargs(t)
             try {
                 val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
-                log.info("LuaInterpreter", "onFilter for $t result = ${result.tojstring()}")
                 return result.toboolean()
             } catch (e: LuaError) {
                 log.debug(TAG, "Lua execution failed " + e.message)
