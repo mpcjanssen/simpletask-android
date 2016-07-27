@@ -1379,7 +1379,7 @@ class Simpletask : ThemedActivity() {
                                     actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                     startActivity(actionIntent)
                                 } catch(e: ActivityNotFoundException) {
-                                    log.info(TAG, "No handler for $url")
+                                    log.info(TAG, "No handler for task action $url")
                                     showToastLong(TodoApplication.app, "No handler for $url" )
                                 }
                             }
