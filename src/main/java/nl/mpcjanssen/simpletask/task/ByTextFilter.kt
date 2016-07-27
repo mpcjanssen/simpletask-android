@@ -32,7 +32,7 @@ import java.util.*
 
  * @author Tim Barlotta
  */
-class ByTextFilter(val interp : LuaInterpreter, searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
+class ByTextFilter(val moduleName : String, searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
     private val parts: Array<String>
     private var casedText: String
@@ -43,7 +43,7 @@ class ByTextFilter(val interp : LuaInterpreter, searchText: String?, internal va
     }
 
     override fun apply(input: Task): Boolean {
-        val luaResult = interp.onTextSearchCallback(input.text, text, isCaseSensitive)
+        val luaResult = LuaInterpreter.onTextSearchCallback(moduleName, input.text, text, isCaseSensitive)
         if (luaResult != null) {
             return luaResult
         }

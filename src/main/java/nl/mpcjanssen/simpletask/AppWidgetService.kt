@@ -38,11 +38,14 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         log.debug(TAG, "Creating view for widget: " + widgetId)
     }
 
+    fun moduleName () : String {
+        return "widget$widgetId"
+    }
    
     fun getFilter () : ActiveFilter {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
-        val filter = ActiveFilter()
+        val filter = ActiveFilter(moduleName())
         filter.initFromPrefs(preferences)
         val obj = JSONObject()
         filter.saveInJSON(obj)

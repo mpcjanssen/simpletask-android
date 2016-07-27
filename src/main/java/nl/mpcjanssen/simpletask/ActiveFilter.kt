@@ -16,9 +16,8 @@ import java.util.*
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter (fromTest : Boolean = false) {
+class ActiveFilter (val moduleName : String) {
     private val log: Logger
-    val interp = LuaInterpreter(fromTest)
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
@@ -233,7 +232,9 @@ class ActiveFilter (fromTest : Boolean = false) {
         val code = if (useScript) {script } else {null}
         val today = todayAsString
         try {
-            interp.evalScript(code)
+            log.info(TAG, "Resetting onFilter callback in module $moduleName")
+            LuaInterpreter.clearOnFilter(moduleName)
+            LuaInterpreter.evalScript(moduleName, code)
             var idx = -1
             for (item in items) {
                 idx++
@@ -253,7 +254,7 @@ class ActiveFilter (fromTest : Boolean = false) {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (useScript && !interp.onFilterCallback(t)) {
+                if (useScript && !LuaInterpreter.onFilterCallback(moduleName, t)) {
                         continue
                 }
                 matched.add(item)
@@ -285,7 +286,7 @@ class ActiveFilter (fromTest : Boolean = false) {
             }
 
             if (!isEmptyOrNull(search)) {
-                addFilter(ByTextFilter(interp, search, false))
+                addFilter(ByTextFilter(moduleName, search, false))
             }
         }
 
@@ -335,7 +336,7 @@ class ActiveFilter (fromTest : Boolean = false) {
         const val INTENT_CREATE_AS_THRESHOLD = "CREATEISTHRESHOLD"
 
         const val INTENT_USE_SCRIPT_FILTER = "USE_SCRIPT"
-        const val INTENT_WIDGET_ID = "WIDGET_ID"
+        const val INTENT_LUA_MODULE = "MODULE"
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
 
