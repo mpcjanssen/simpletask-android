@@ -7,20 +7,27 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-class LuaInterpreter(fromTest : Boolean = false) {
+object LuaInterpreter {
     val globals = JsePlatform.standardGlobals()!!
+    private val log = Logger
+    private val TAG = "LuaInterpreter"
+
+    val ON_FILTER_NAME = "onFilter"
+    val ON_TEXTSEARCH_NAME = "onTextSearch"
+    val CONFIG_THEME = "theme"
+    val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
 
     init {
-        if (!fromTest) {
-            try {
-                globals.set("toast", LuaToastShort())
-                evalScript(Config.luaConfig)
 
-            } catch (e: LuaError) {
-                nl.mpcjanssen.simpletask.util.log.warn(Config.TAG, "Lua execution failed " + e.message)
-                showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
-            }
+        try {
+            globals.set("toast", LuaToastShort())
+            evalScript(null, Config.luaConfig)
+
+        } catch (e: LuaError) {
+            nl.mpcjanssen.simpletask.util.log.warn(Config.TAG, "Lua execution failed " + e.message)
+            showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
         }
+
     }
 
     fun tasklistTextSize(): Float? {
@@ -33,8 +40,12 @@ class LuaInterpreter(fromTest : Boolean = false) {
     }
 
 
-    fun onFilterCallback(t: Task): Boolean {
-        val onFilter = globals.get(LuaInterpreter.ON_FILTER_NAME)
+    fun onFilterCallback(moduleName : String, t: Task): Boolean {
+        val module = globals.get(moduleName).checktable()
+        if (module == LuaValue.NIL) {
+            return true
+        }
+        val onFilter = module.get(LuaInterpreter.ON_FILTER_NAME)
         if (!onFilter.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
@@ -47,8 +58,12 @@ class LuaInterpreter(fromTest : Boolean = false) {
         return true
     }
 
-    fun onTextSearchCallback(input: String, search: String, caseSensitive: Boolean): Boolean? {
-        val onFilter = globals.get(ON_TEXTSEARCH_NAME)
+    fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
+        val module = globals.get(moduleName)
+        if (module == LuaValue.NIL) {
+            return true
+        }
+        val onFilter = module.get(ON_TEXTSEARCH_NAME)
         if (!onFilter.isnil()) {
             try {
                 val result = onFilter.invoke(LuaString.valueOf(input), LuaString.valueOf(search), LuaBoolean.valueOf(caseSensitive)).arg1()
@@ -60,8 +75,19 @@ class LuaInterpreter(fromTest : Boolean = false) {
         return null
     }
 
-    fun evalScript(script: String?) : LuaInterpreter {
-        script?.let {globals.load(script).call()}
+    fun evalScript(moduleName : String?, script: String?) : LuaInterpreter {
+        var module = globals.checktable()
+        if (moduleName != null) {
+            module = LuaTable.tableOf()
+            val metatable = LuaValue.tableOf()
+            metatable.set("__index", globals)
+            module.setmetatable(metatable)
+            globals.set(moduleName, module)
+            script?.let { globals.load(script, moduleName, module).call() }
+        } else {
+            script?.let { globals.load(script).call() }
+        }
+
         return this
     }
 
@@ -113,14 +139,8 @@ class LuaInterpreter(fromTest : Boolean = false) {
         return luaTable
     }
 
-    companion object {
-        private val log = Logger
-        private val TAG = "LuaInterpreter"
 
-        val ON_FILTER_NAME = "onFilter"
-        val ON_TEXTSEARCH_NAME = "onTextSearch"
-        val CONFIG_THEME = "theme"
-        val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
+
 
         // Call a Lua function `name`
         // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
@@ -136,6 +156,13 @@ class LuaInterpreter(fromTest : Boolean = false) {
             }
             return null
 
+        }
+
+
+    fun clearOnFilter(moduleName: String) {
+        val module = globals.get(moduleName)
+        if (module != LuaValue.NIL) {
+            module.set(ON_FILTER_NAME, LuaValue.NIL)
         }
     }
 }

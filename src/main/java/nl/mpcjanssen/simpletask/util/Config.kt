@@ -14,19 +14,13 @@ import java.io.File
 import java.io.IOException
 
 object Config : SharedPreferences.OnSharedPreferenceChangeListener {
-    lateinit var interp: LuaInterpreter
-    val prefs: SharedPreferences
+    val prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)
+    val interp = LuaInterpreter
+
     val TAG = "LuaConfig"
 
     init {
-        prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)
         prefs.registerOnSharedPreferenceChangeListener(this)
-        reloadLuaConfig()
-    }
-
-    fun reloadLuaConfig() {
-        interp = LuaInterpreter()
-
     }
 
     fun useTodoTxtTerms(): Boolean {

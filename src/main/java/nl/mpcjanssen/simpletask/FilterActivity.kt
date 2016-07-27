@@ -63,13 +63,13 @@ class FilterActivity : ThemedActivity() {
 
         val intent = intent
 
-        var environment: String? = null
+        var environment: String = "mainui"
         if (intent.action != null) {
             asWidgetConfigure = getIntent().action == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
 
-        mFilter = ActiveFilter()
+        mFilter = ActiveFilter(environment)
         val context = applicationContext
         if (asWidgetConfigure) {
             if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
@@ -146,9 +146,8 @@ class FilterActivity : ThemedActivity() {
         pagerAdapter!!.add(sortTab)
 
         arguments = Bundle()
-        environment?.let {
-            arguments.putString(ActiveFilter.INTENT_WIDGET_ID, environment)
-        }
+        arguments.putString(ActiveFilter.INTENT_LUA_MODULE, environment)
+
         arguments.putBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
         arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.script)
         arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
