@@ -634,11 +634,24 @@ class Simpletask : ThemedActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (m_drawerToggle != null && m_drawerToggle!!.onOptionsItemSelected(item)) {
-            return true
-        }
+
         log.info(TAG, "onMenuItemSelected: " + item.itemId)
         when (item.itemId) {
+            android.R.id.home -> {
+                val toggle = m_drawerToggle ?: return true
+                val layout = m_drawerLayout ?: return true
+
+                if (layout.isDrawerOpen(GravityCompat.START)) {
+                    layout.closeDrawer(GravityCompat.START)
+                    return true
+                }
+                if (layout.isDrawerOpen(GravityCompat.END)) {
+                    layout.closeDrawer(GravityCompat.END)
+                    return true
+                }
+                toggle.onOptionsItemSelected(item)
+                return true
+            }
             R.id.search -> {
             }
             R.id.preferences -> startPreferencesActivity()
