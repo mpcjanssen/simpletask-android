@@ -73,11 +73,17 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     }
 
-
-
     val text: String
         get() {
             return tokens.map { it.text }.joinToString(" ")
+        }
+
+    val extensions: List<Pair<String,String>>
+        get() {
+            return tokens.filter { it is KeyValueToken }.map {
+                val token = it as KeyValueToken
+                Pair(token.key, token.valueStr)
+            }
         }
 
     var completionDate: String? = null
@@ -110,22 +116,22 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
     var dueDate: String?
-        get() = getFirstToken<DueDateToken>()?.value ?: null
+        get() = getFirstToken<DueDateToken>()?.valueStr ?: null
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
                 tokens = tokens.filter { it !is DueDateToken }
             } else {
-                upsertToken(DueDateToken("due:$dateStr"))
+                upsertToken(DueDateToken(dateStr!!))
             }
         }
 
     var thresholdDate: String?
-        get() = getFirstToken<ThresholdDateToken>()?.value ?: null
+        get() = getFirstToken<ThresholdDateToken>()?.valueStr ?: null
         set(dateStr: String?) {
             if (dateStr.isNullOrEmpty()) {
                 tokens = tokens.filter { it !is ThresholdDateToken }
             } else {
-                upsertToken(ThresholdDateToken("t:$dateStr"))
+                upsertToken(ThresholdDateToken(dateStr!!))
             }
         }
 
@@ -142,7 +148,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
     var recurrencePattern: String? = null
-        get() = getFirstToken<RecurrenceToken>()?.value
+        get() = getFirstToken<RecurrenceToken>()?.valueStr
 
 
     var tags: SortedSet<String> = emptySet<String>().toSortedSet()
@@ -333,8 +339,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
     }
 
-
-
     override fun equals(other: Any?): Boolean{
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
@@ -350,7 +354,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return text.hashCode()
     }
 
-
     companion object {
         var TAG = "Task"
         const val DATE_FORMAT = "YYYY-MM-DD"
@@ -360,6 +363,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
+        private val MATCH_EXT = Regex("(.+):(.+)")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
         private val MATCH_PHONE_NUMBER = Regex("[0\\+]?[0-9,#]{4,}")
@@ -399,7 +403,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 lexemes = lexemes.drop(1)
             }
 
-
             lexemes.forEach { lexeme ->
                 MATCH_LIST.matchEntire(lexeme)?.let {
                     tokens.add(ListToken(lexeme))
@@ -410,19 +413,19 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     return@forEach
                 }
                 MATCH_DUE.matchEntire(lexeme)?.let {
-                    tokens.add(DueDateToken(lexeme))
+                    tokens.add(DueDateToken(it.groupValues[1]))
                     return@forEach
                 }
                 MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(ThresholdDateToken(lexeme))
+                    tokens.add(ThresholdDateToken(it.groupValues[1]))
                     return@forEach
                 }
                 MATCH_HIDDEN.matchEntire(lexeme)?.let {
-                    tokens.add(HiddenToken(lexeme))
+                    tokens.add(HiddenToken(it.groupValues[1]))
                     return@forEach
                 }
                 MATCH_RECURRURENE.matchEntire(lexeme)?.let {
-                    tokens.add(RecurrenceToken(lexeme))
+                    tokens.add(RecurrenceToken(it.groupValues[1]))
                     return@forEach
                 }
                 MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
@@ -435,6 +438,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 }
                 MATCH_MAIL.matchEntire(lexeme)?.let {
                     tokens.add(MailToken(lexeme))
+                    return@forEach
+                }
+                MATCH_EXT.matchEntire(lexeme)?.let {
+                    tokens.add(ExtToken(it.groupValues[1], it.groupValues[2]))
                     return@forEach
                 }
                 if (lexeme.isBlank()) {
@@ -470,7 +477,8 @@ interface TToken {
         const val PHONE = 1 shl 12
         const val LINK = 1 shl 13
         const val MAIL = 1 shl 14
-        const val ALL = 0b111111111111111
+        const val EXTENSION = 1 shl 15
+        const val ALL = 0b1111111111111111
     }
 }
 
@@ -480,11 +488,6 @@ data class CompletedToken(override val value: Boolean) :TToken {
     override val type = TToken.COMPLETED
 }
 
-data class HiddenToken(override val text: String) :TToken {
-    override val value: Boolean
-    get() = if (text == "h:1") true else false
-    override val type = TToken.HIDDEN
-}
 data class PriorityToken(override val text: String) :TToken {
     override val value: Priority
     get() = Priority.toPriority(text.removeSurrounding("(",")"))
@@ -503,44 +506,71 @@ data class TagToken(override val text: String) : TToken {
     override val type = TToken.TTAG
 }
 
-// The value of this token is the val part in key:val
-// If there is no key: then val is returned as is.
-interface KeyValueToken : TToken {
+// Tokens with the same value as text representation
+interface StringValueToken : TToken {
     override val value: String
-    get() = text.split(":").last()
+        get () = text
 }
-data class CreateDateToken(override val text: String) : KeyValueToken {
+
+data class CreateDateToken(override val text: String) : StringValueToken {
     override val type = TToken.CREATION_DATE
 }
-data class CompletedDateToken(override val text: String) : KeyValueToken {
+data class CompletedDateToken(override val text: String) : StringValueToken {
     override val type = TToken.COMPLETED_DATE
 }
-data class DueDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.DUE_DATE
-}
-data class ThresholdDateToken(override val text: String) : KeyValueToken {
-    override val type = TToken.THRESHOLD_DATE
-}
-data class TextToken(override val text: String) : KeyValueToken {
+
+data class TextToken(override val text: String) : StringValueToken {
     override val type = TToken.TEXT
 }
-data class WhiteSpaceToken(override val text: String) : KeyValueToken {
+data class WhiteSpaceToken(override val text: String) : StringValueToken {
     override val type = TToken.WHITE_SPACE
 }
-data class MailToken(override val text: String) : KeyValueToken {
+data class MailToken(override val text: String) : StringValueToken {
     override val type = TToken.MAIL
 }
-data class LinkToken(override val text: String) : KeyValueToken {
+data class LinkToken(override val text: String) : StringValueToken {
     override val type = TToken.LINK
 }
-data class PhoneToken(override val text: String) : KeyValueToken {
+data class PhoneToken(override val text: String) : StringValueToken {
     override val type = TToken.PHONE
 }
-data class RecurrenceToken(override val text: String) : KeyValueToken {
+
+// Key Value tokens
+interface KeyValueToken : TToken {
+    val key : String
+    val valueStr : String
+    override val value: Any?
+    get() = valueStr
+    override val text: String
+        get() = "$key:$value"
+}
+
+
+data class DueDateToken(override val valueStr : String) : KeyValueToken {
+    override val key = "due"
+    override val type = TToken.DUE_DATE
+}
+data class ThresholdDateToken(override val valueStr : String) : KeyValueToken {
+    override val key = "t"
+    override val type = TToken.THRESHOLD_DATE
+}
+
+data class RecurrenceToken(override val valueStr : String) : KeyValueToken {
+    override val key = "rec"
     override val type = TToken.RECURRENCE
 }
 
-// Extension functions
+data class HiddenToken(override val valueStr : String) :KeyValueToken {
+    override val key = "h"
+    override val value: Boolean
+        get() = if (valueStr == "1") true else false
+    override val type = TToken.HIDDEN
+}
 
+data class ExtToken(override val key : String, override val valueStr: String) : KeyValueToken {
+    override val type = TToken.EXTENSION
+}
+
+// Extension functions
 fun String.lex(): List<String> = this.split(" ")
 
