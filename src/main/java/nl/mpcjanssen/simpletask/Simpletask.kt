@@ -11,6 +11,7 @@
 
 package nl.mpcjanssen.simpletask
 
+import android.R.id as androidId
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -637,7 +638,7 @@ class Simpletask : ThemedActivity() {
 
         log.info(TAG, "onMenuItemSelected: " + item.itemId)
         when (item.itemId) {
-            android.R.id.home -> {
+            androidId.home -> {
                 val toggle = m_drawerToggle ?: return true
                 val layout = m_drawerLayout ?: return true
 
@@ -1142,7 +1143,7 @@ class Simpletask : ThemedActivity() {
 
     val listView: RecyclerView?
         get() {
-            val lv = findViewById(android.R.id.list)
+            val lv = findViewById(androidId.list)
             return lv as RecyclerView?
         }
 
