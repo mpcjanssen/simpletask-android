@@ -9,13 +9,12 @@ import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
-import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
 
 object Config : SharedPreferences.OnSharedPreferenceChangeListener {
-    val prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)
-    val interp = LuaInterpreter
+    val prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)!!
+    val interpreter = LuaInterpreter
 
     val TAG = "LuaConfig"
 
@@ -143,8 +142,10 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = "dark" == prefs.getString(getString(R.string.widget_theme_pref_key), "light_darkactionbar")
 
     private val activeThemeString: String
-        get() = interp.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
+        get() = interpreter.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
 
+    // Only used in Dropbox build
+    @Suppress("unused")
     var fullDropBoxAccess: Boolean
         @SuppressWarnings("unused")
         get() = prefs.getBoolean(getString(R.string.dropbox_full_access), true)
@@ -161,7 +162,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     val tasklistTextSize: Float?
         get() {
-            val luaValue = interp.tasklistTextSize()
+            val luaValue = interpreter.tasklistTextSize()
             if (luaValue != null) {
                 return luaValue
             }
