@@ -171,7 +171,7 @@ class Simpletask : ThemedActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            REQUEST_PERMISSION -> m_app.switchTodoFile(Config.todoFileName, false)
+            REQUEST_PERMISSION -> m_app.switchTodoFile(Config.todoFileName)
         }
     }
 
@@ -1382,7 +1382,7 @@ class Simpletask : ThemedActivity() {
                             ACTION_LINK -> if (url.startsWith("todo://")) {
                                 val todoFolder = Config.todoFile.parentFile
                                 val newName = File(todoFolder, url.substring(7))
-                                m_app.switchTodoFile(newName.absolutePath, true)
+                                m_app.switchTodoFile(newName.absolutePath)
                             } else if (url.startsWith("root://")) {
                                 val rootFolder = Config.localFileRoot
                                 val file = File(rootFolder, url.substring(7))

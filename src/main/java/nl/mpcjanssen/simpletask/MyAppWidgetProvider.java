@@ -17,20 +17,20 @@ import java.io.File;
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
 
-    final static int FROM_LISTVIEW = 0;
-    // Create unique numbers for every widget pendingintent
+    private final static int FROM_LIST_VIEW = 0;
+    // Create unique numbers for every widget pendingIntent
     // Otherwise the will overwrite each other
-    final static int FROM_WIDGETS_START = 1;
+    private final static int FROM_WIDGETS_START = 1;
     private static final String TAG = "MyAppWidgetProvider" ;
 
-    public static void putFilterExtras (Intent target , @NonNull SharedPreferences preferences,  int widgetId) {
+    private static void putFilterExtras(Intent target, @NonNull SharedPreferences preferences, int widgetId) {
         // log.debug(TAG, "putFilter extras  for appwidget " + widgetId);
         ActiveFilter filter = new ActiveFilter("widget" + widgetId);
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
     }
 
-	public static RemoteViews updateView(int widgetId, @NonNull Context ctx) {
+	private static RemoteViews updateView(int widgetId, @NonNull Context ctx) {
         SharedPreferences preferences = ctx.getSharedPreferences("" + widgetId, 0);
         RemoteViews view ;
         SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -77,7 +77,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         appIntent = new Intent(ctx,Simpletask.class);
         appIntent.setAction(Constants.INTENT_START_FILTER);
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, FROM_LISTVIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, FROM_LIST_VIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
         appIntent = new Intent(ctx,Simpletask.class);
@@ -110,7 +110,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
-            // Need to update the listview to redraw the listitems when
+            // Need to update the listView to redraw the listItems when
             // Changing the theme
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widgetlv);
 		}

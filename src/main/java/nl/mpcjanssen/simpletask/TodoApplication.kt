@@ -149,16 +149,13 @@ class TodoApplication : Application(),
         super.onTerminate()
     }
 
-    fun switchTodoFile(newTodo: String, background: Boolean) {
+    fun switchTodoFile(newTodo: String) {
         Config.setTodoFile(newTodo)
         ActionQueue.add("Reload from file switch", Runnable {
             loadTodoList()
         })
 
     }
-
-    val isLoading: Boolean
-        get() = FileStore.isLoading
 
     fun loadTodoList() {
         log.info(TAG, "Load todolist")
@@ -194,16 +191,6 @@ class TodoApplication : Application(),
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     val isAuthenticated: Boolean
         get() {
             return FileStore.isAuthenticated
@@ -213,10 +200,6 @@ class TodoApplication : Application(),
         FileStore.startLogin(caller)
     }
 
-    fun storeType(): Int {
-        return FileStore.type
-    }
-
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
         fileStore.browseForNewFile(
@@ -224,7 +207,7 @@ class TodoApplication : Application(),
                 Config.todoFile.parent,
                 object : FileStoreInterface.FileSelectedListener {
                     override fun fileSelected(file: String) {
-                        switchTodoFile(file, true)
+                        switchTodoFile(file)
                     }
                 },
                 Config.showTxtOnly())

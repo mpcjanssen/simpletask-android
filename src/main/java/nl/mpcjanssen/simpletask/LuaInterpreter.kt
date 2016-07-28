@@ -76,9 +76,8 @@ object LuaInterpreter {
     }
 
     fun evalScript(moduleName : String?, script: String?) : LuaInterpreter {
-        var module = globals.checktable()
         if (moduleName != null) {
-            module = LuaTable.tableOf()
+            val module = LuaTable.tableOf()
             val metatable = LuaValue.tableOf()
             metatable.set("__index", globals)
             module.setmetatable(metatable)
