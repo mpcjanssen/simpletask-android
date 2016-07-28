@@ -487,7 +487,7 @@ object FileStore : FileStoreInterface {
                 // Usually this means the was a conflict.
                 log.info(TAG, "Filename was changed remotely. New name is: " + newName)
                 showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
-                mApp.switchTodoFile(newName, true)
+                mApp.switchTodoFile(newName)
             }
         }
         queueRunnable("Save to file " + path, r)

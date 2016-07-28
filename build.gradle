@@ -41,9 +41,6 @@ android {
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
         }
-        //toodledo {
-        //    applicationId 'nl.mpcjanssen.simpletask.toodledo'
-        //}
     }
 
     signingConfigs {
