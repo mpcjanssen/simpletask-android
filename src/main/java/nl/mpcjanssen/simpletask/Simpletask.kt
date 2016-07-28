@@ -663,10 +663,8 @@ class Simpletask : ThemedActivity() {
             }
             R.id.share -> {
                 if (todoList.numSelected() > 0) {
-                        val shareText = selectedTasksAsString()
-                        shareText(this@Simpletask, "Simpletask tasks", shareText)
-                } else {
-                    startActivityForResult(Intent(baseContext, TaskDisplayActivity::class.java), REQUEST_SHARE_PARTS)
+                    val shareText = selectedTasksAsString()
+                    shareText(this@Simpletask, "Simpletask tasks", shareText)
                 }
             }
             R.id.help -> showHelp()

@@ -1,6 +1,15 @@
 ﻿Changelog
 =========
 
+8.1.3
+-----
+
+- All Lua is run in a single interpreter again.
+- Implement `extension` paramter for `onFilter` callback.
+- Close right drawer when pressing Up navigation. Fixes #505.
+- Don't crash when trying to open URIs from tasks without any application handling the URI.
+- Reduce Lua filter logging.
+
 8.1.2
 -----
 

@@ -55,7 +55,7 @@ Called for every task as part of filtering the todo list.
 ### Parameters
 
 * `task`: The task as a string.
-* `fields`:
+* `fields`: Parts of the task converted to different types (such as a timestamp for `createdate`)
     * `completed`: Boolean indicating if the task is completed.
     * `completiondate`: The completion date in seconds of the task or `nil` if not set.
     * `createdate`: The created date  in seconds of the task or `nil` if not set.
@@ -66,7 +66,7 @@ Called for every task as part of filtering the todo list.
     * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
     * `task`: The full task as string.
     * `threshold`: The threshold date in seconds or `nil` if not set.
-* `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. **NOT IMPLEMENTED YET**
+* `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. There is only one entry for every key, this is to make use easier. If you need multiple `key:val` pairs with the same key, you can parse the task in Lua.
 
 ### Returns
 

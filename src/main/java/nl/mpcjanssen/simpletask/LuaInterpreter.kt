@@ -114,8 +114,10 @@ object LuaInterpreter {
 
         args.add(fieldTable)
 
-        // TODO: implement
         val extensionTable = LuaTable.tableOf()
+        for ((key, value) in t.extensions) {
+            extensionTable.set(key,value)
+        }
         args.add(extensionTable)
 
         return LuaValue.varargsOf(args.toTypedArray())
