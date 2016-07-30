@@ -3,12 +3,12 @@ package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import java.util.*
 import kotlin.comparisons.then
 
-class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoListItem> {
-    var comparators : Comparator<TodoListItem>? = null
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) : Comparator<TodoItem> {
+    var comparators : Comparator<TodoItem>? = null
     val defaultComparator = FileOrderComparator()
 
     init {
@@ -28,7 +28,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     reverse = true
                 }
             }
-            var comp : Comparator<TodoListItem>
+            var comp : Comparator<TodoItem>
             when (sortType) {
                 "file_order" -> comp = FileOrderComparator()
                 "by_context" -> comp = ContextComparator(caseSensitve)
@@ -54,7 +54,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
         }
     }
 
-    override fun compare(o1: TodoListItem, o2: TodoListItem): Int {
+    override fun compare(o1: TodoItem, o2: TodoItem): Int {
         return comparators?.compare(o1, o2)?:defaultComparator.compare(o1,o2)
     }
 }

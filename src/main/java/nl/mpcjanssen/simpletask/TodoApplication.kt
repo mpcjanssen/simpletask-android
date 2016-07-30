@@ -159,7 +159,7 @@ class TodoApplication : Application(),
 
     fun loadTodoList() {
         log.info(TAG, "Load todolist")
-        todoList.reload(FileStore, Config.todoFileName, this, localBroadCastManager, Config.eol)
+        todoList.reload(this, localBroadCastManager, Config.eol)
 
     }
 

@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,11 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.mobeta.android.dslv.DragSortListView
-import nl.mpcjanssen.simpletask.util.*
-
-
-import java.util.ArrayList
-import java.util.Arrays
+import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.isEmptyOrNull
+import java.util.*
 
 class FilterSortFragment : Fragment() {
 

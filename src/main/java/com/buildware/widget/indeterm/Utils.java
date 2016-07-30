@@ -12,7 +12,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
-
 import nl.mpcjanssen.simpletask.R;
 
 class Utils {

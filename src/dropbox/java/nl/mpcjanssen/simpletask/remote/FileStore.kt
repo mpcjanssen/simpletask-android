@@ -33,6 +33,15 @@ import java.util.concurrent.CopyOnWriteArrayList
  * FileStore implementation backed by Dropbox
  */
 object FileStore : FileStoreInterface {
+    override fun needsRefesh(currentVersion: String?): Boolean {
+        return !getVersion(Config.todoFileName).equals(localTodoRev)
+    }
+
+    override fun getVersion(filename: String): String {
+        return getPathMetaData(mDBApi, File(filename))?.rev ?: ""
+
+    }
+
     private val TAG = "FileStoreDB"
     private val LOCAL_CONTENTS = "localContents"
     private val LOCAL_NAME = "localName"
@@ -457,7 +466,7 @@ object FileStore : FileStoreInterface {
     }
 
     @Synchronized @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String) {
+    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean) {
         backup?.backup(path, join(lines, "\n"))
         val contents = join(lines, eol) + eol
         val r = Runnable {
@@ -471,6 +480,9 @@ object FileStore : FileStoreInterface {
                         toStore.size.toLong(), rev, null)
                 rev = newEntry.rev
                 newName = newEntry.path
+                if (updateVersion) {
+                    Config.currentVersionId = rev
+                }
                 setChangesPending(false)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -630,6 +642,15 @@ object FileStore : FileStoreInterface {
         return true
     }
 
+    @Throws(DropboxException::class)
+    private fun getPathMetaData(api: DropboxAPI<AndroidAuthSession>?, path: File): DropboxAPI.Entry? {
+        if (api != null) {
+            return api.metadata(path.toString(), 0, null, true, null)
+        } else {
+            return null
+        }
+    }
+
     /**
      * @param activity activity to display the file dialog.
      * *
@@ -715,14 +736,7 @@ object FileStore : FileStoreInterface {
             })
         }
 
-        @Throws(DropboxException::class)
-        private fun getPathMetaData(api: DropboxAPI<AndroidAuthSession>?, path: File): DropboxAPI.Entry? {
-            if (api != null) {
-                return api.metadata(path.toString(), 0, null, true, null)
-            } else {
-                return null
-            }
-        }
+
 
         private fun loadFileList(act: Activity, api: DropboxAPI<AndroidAuthSession>, path: File) {
             this.currentPath = path

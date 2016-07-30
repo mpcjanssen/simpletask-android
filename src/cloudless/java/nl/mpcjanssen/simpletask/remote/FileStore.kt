@@ -18,10 +18,7 @@ import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.ListenerList
-import nl.mpcjanssen.simpletask.util.broadcastFileChanged
-import nl.mpcjanssen.simpletask.util.join
-import nl.mpcjanssen.simpletask.util.writeToFile
+import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.FilenameFilter
 import java.io.IOException
@@ -29,6 +26,14 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 object FileStore : FileStoreInterface {
+    override fun getVersion(filename: String): String {
+        return File(filename).lastModified().toString()
+    }
+
+    override fun needsRefesh(version : String?): Boolean {
+        return version?.toLong() ?: 0  < Config.todoFile.lastModified()
+    }
+
     override val isOnline = true
     private val TAG = javaClass.simpleName
     private val bm: LocalBroadcastManager
@@ -148,7 +153,7 @@ object FileStore : FileStoreInterface {
         dialog.createFileDialog(act, this)
     }
 
-    @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String) {
+    @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean) {
         log.info(TAG, "Saving tasks to file: {}" + path)
         backup?.backup(path, join(lines, "\n"))
         val obs = observer
@@ -157,6 +162,10 @@ object FileStore : FileStoreInterface {
         queueRunnable("Save ${lines.size} lines to file " + path, Runnable {
             try {
                 writeToFile(join(lines, eol) + eol, File(path), false)
+                if (updateVersion) {
+                    Config.currentVersionId = File(path).lastModified().toString()
+                }
+
             } catch (e: IOException) {
                 log.error(TAG, "Saving $path failed" ,e)
                 e.printStackTrace()

@@ -9,8 +9,7 @@ import android.content.Context
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.R
-
-import java.util.TimeZone
+import java.util.*
 
 
 object RelativeDate {

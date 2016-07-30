@@ -49,9 +49,9 @@ import android.widget.Toast
 import com.github.rjeschke.txtmark.Processor
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
@@ -128,7 +128,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoListItem>, firstSort: String, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<TodoItem>, firstSort: String, no_header: String): List<VisibleLine> {
     var header = ""
     var newHeader: String
     val result = ArrayList<VisibleLine>()

@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+
 import android.app.ActionBar
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,9 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-
-
-import java.util.ArrayList
+import java.util.*
 
 class FilterListFragment : Fragment() {
     private var lv: ListView? = null

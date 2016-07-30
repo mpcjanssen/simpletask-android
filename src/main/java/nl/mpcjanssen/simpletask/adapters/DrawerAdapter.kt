@@ -8,8 +8,7 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import nl.mpcjanssen.simpletask.R
-
-import java.util.ArrayList
+import java.util.*
 
 class DrawerAdapter(private val m_inflater: LayoutInflater,
                     contextHeader: String,

@@ -24,10 +24,6 @@
 
 package nl.mpcjanssen.simpletask
 
-import java.util.Calendar
-import java.util.TimeZone
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.ContentResolver
@@ -36,16 +32,16 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.provider.CalendarContract
-import android.provider.CalendarContract.Calendars
-import android.provider.CalendarContract.Events
-import android.provider.CalendarContract.Reminders
+import android.provider.CalendarContract.*
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
-
-import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import nl.mpcjanssen.simpletask.task.TToken
-
+import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.toDateTime
+import java.util.*
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 
 object CalendarSync {
@@ -188,31 +184,32 @@ object CalendarSync {
         }
     }
 
-    private fun insertEvts(calID: Long, tasks: List<TodoListItem>?) {
+    private fun insertEvts(calID: Long, tasks: List<TodoItem>?) {
         if (tasks == null) {
             return
         }
-        for ((line, task) in tasks) {
-            if (task.isCompleted()) continue
+        tasks.forEach {
+            if (!it.task.isCompleted()) {
 
-            var dt: DateTime?
-            var text: String? = null
+                var dt: DateTime?
+                var text: String? = null
 
-            // Check due date:
-            if (m_sync_type and SYNC_TYPE_DUES != 0) {
-                dt = task.dueDate?.toDateTime()
-                if (dt != null) {
-                    text = task.showParts(TASK_TOKENS)
-                    insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
+                // Check due date:
+                if (m_sync_type and SYNC_TYPE_DUES != 0) {
+                    dt = it.task.dueDate?.toDateTime()
+                    if (dt != null) {
+                        text = it.task.showParts(TASK_TOKENS)
+                        insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
+                    }
                 }
-            }
-            task.dueDate?.toDateTime()
-            // Check threshold date:
-            if (m_sync_type and SYNC_TYPE_THRESHOLDS != 0) {
-                dt = task.thresholdDate?.toDateTime()
-                if (dt != null) {
-                    if (text == null) text = task.showParts(TASK_TOKENS)
-                    insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
+                it.task.dueDate?.toDateTime()
+                // Check threshold date:
+                if (m_sync_type and SYNC_TYPE_THRESHOLDS != 0) {
+                    dt = it.task.thresholdDate?.toDateTime()
+                    if (dt != null) {
+                        if (text == null) text = it.task.showParts(TASK_TOKENS)
+                        insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
+                    }
                 }
             }
         }

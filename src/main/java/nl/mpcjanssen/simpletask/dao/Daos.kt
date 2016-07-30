@@ -2,9 +2,11 @@ package nl.mpcjanssen.simpletask.dao
 
 
 import android.database.Cursor
+import de.greenrobot.dao.converter.PropertyConverter
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.dao.gen.*
+import nl.mpcjanssen.simpletask.task.Task
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -12,6 +14,7 @@ object Daos {
     internal val daoSession: DaoSession
     val logDao: LogItemDao
     val backupDao: TodoFileDao
+    val todoItemDao: TodoItemDao
     init {
         val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
         val todoDb = helper.writableDatabase
@@ -19,6 +22,7 @@ object Daos {
         daoSession = daoMaster.newSession()
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
+        todoItemDao = daoSession.todoItemDao
         Logger.setDao(logDao)
     }
 
@@ -58,5 +62,14 @@ object Daos {
     fun initHistoryCursor (): Cursor {
         val builder = daoSession.todoFileDao.queryBuilder()
         return builder.buildCursor().query()
+    }
+}
+
+class TaskPropertyConverter  : PropertyConverter<Task, String> {
+    override fun convertToEntityProperty(databaseValue: String) : Task {
+        return Task(databaseValue)
+    }
+    override fun convertToDatabaseValue(entityProperty : Task) : String {
+        return entityProperty.inFileFormat()
     }
 }

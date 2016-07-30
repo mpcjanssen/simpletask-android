@@ -60,6 +60,12 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             }
         }
 
+    var currentVersionId : String?
+        get() = prefs.getString(getString(R.string.file_current_version_id), null)
+        set(version) {
+            prefs.edit().putString(getString(R.string.file_current_version_id), version).commit()
+        }
+
     var luaConfig: String
         get() = prefs.getString(getString(R.string.lua_config), "")
         set(config) {
@@ -228,7 +234,10 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("CommitPrefEdits")
     fun setTodoFile(todo: String) {
-        prefs.edit().putString(getString(R.string.todo_file_key), todo).commit()
+        val edit = prefs.edit()
+        edit.putString(getString(R.string.todo_file_key), todo)
+        edit.remove(getString(R.string.file_current_version_id))
+        edit.commit()
     }
 
     val isAutoArchive: Boolean

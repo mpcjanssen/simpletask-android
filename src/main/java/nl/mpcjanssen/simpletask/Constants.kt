@@ -29,7 +29,7 @@ object Constants {
     const val DATE_FORMAT = "YYYY-MM-DD"
 
     // Constants for creating shortcuts
-    const val INTENT_SELECTED_TASK = "SELECTED_TASK"
+    const val INTENT_SELECTED_TASK_LINE = "SELECTED_TASK_LINE"
 
     const val BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE"
     const val BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT"

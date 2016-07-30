@@ -53,7 +53,7 @@ android {
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
-	    minifyEnabled true
+	        minifyEnabled true
             proguardFile "proguard.txt"
         }
     }
