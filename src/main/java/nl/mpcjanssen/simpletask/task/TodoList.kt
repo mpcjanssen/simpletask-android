@@ -338,7 +338,7 @@ object TodoList {
         items.forEach {
             it.selected = false
         }
-        log.info(TAG, "Unselecting done")
+        todoItemsDao.updateInTx(items)
     }
 
     fun clearSelection() {
