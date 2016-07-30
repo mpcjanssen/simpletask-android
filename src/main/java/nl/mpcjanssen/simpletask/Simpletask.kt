@@ -11,7 +11,6 @@
 
 package nl.mpcjanssen.simpletask
 
-import android.R.id as androidId
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -45,13 +44,18 @@ import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.*
+import nl.mpcjanssen.simpletask.task.Priority
+import nl.mpcjanssen.simpletask.task.TToken
+import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.*
+import android.R.id as androidId
 
 
 class Simpletask : ThemedActivity() {
@@ -204,14 +208,14 @@ class Simpletask : ThemedActivity() {
 
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
-        for ((line, task) in todoList.selectedTasks) {
-            result.add(task.inFileFormat())
+        todoList.selectedTasks.forEach {
+            result.add(it.task.inFileFormat())
         }
         return join(result, "\n")
     }
 
     private fun selectAllTasks() {
-        val selectedTasks = ArrayList<TodoListItem>()
+        val selectedTasks = ArrayList<TodoItem>()
         var count = 0
         for (visibleLine in m_adapter!!.visibleLines) {
             // Only check tasks that are not checked yet
@@ -329,15 +333,14 @@ class Simpletask : ThemedActivity() {
 
         // If we were started from the widget, select the pushed task
         // and scroll to its position
-        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK)) {
-            val line = intent.getStringExtra(Constants.INTENT_SELECTED_TASK)
-            intent.removeExtra(Constants.INTENT_SELECTED_TASK)
+        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
+            val line = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
             setIntent(intent)
-            if (line != null) {
+            if (line.equals(-1)) {
                 todoList.clearSelection()
-                val tasks = ArrayList<Task>()
-                tasks.add(Task(line))
-                todoList.selectTasks(tasks, localBroadcastManager)
+                TodoList.selectLine(line)
+                localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
             }
         }
         val selection = todoList.selectedTasks
@@ -522,7 +525,7 @@ class Simpletask : ThemedActivity() {
     }
 
 
-    private fun prioritizeTasks(tasks: List<TodoListItem>) {
+    private fun prioritizeTasks(tasks: List<TodoItem>) {
         val strings = Priority.rangeInCode(Priority.NONE, Priority.Z)
         val priorityArr = strings.toTypedArray()
 
@@ -536,20 +539,20 @@ class Simpletask : ThemedActivity() {
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             todoList.prioritize(tasks, priority)
-            todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+            todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
             closeSelectionMode()
         })
         builder.show()
 
     }
 
-    private fun completeTasks(task: TodoListItem) {
-        val tasks = ArrayList<TodoListItem>()
+    private fun completeTasks(task: TodoItem) {
+        val tasks = ArrayList<TodoItem>()
         tasks.add(task)
         completeTasks(tasks)
     }
 
-    private fun completeTasks(tasks: List<TodoListItem>) {
+    private fun completeTasks(tasks: List<TodoItem>) {
         for (t in tasks) {
             todoList.complete(t, Config.hasKeepPrio(), Config.hasAppendAtEnd())
         }
@@ -557,22 +560,22 @@ class Simpletask : ThemedActivity() {
             archiveTasks(null, false)
         }
         closeSelectionMode()
-        todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+        todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
-    private fun undoCompleteTasks(task: TodoListItem) {
-        val tasks = ArrayList<TodoListItem>()
+    private fun undoCompleteTasks(task: TodoItem) {
+        val tasks = ArrayList<TodoItem>()
         tasks.add(task)
         undoCompleteTasks(tasks)
     }
 
-    private fun undoCompleteTasks(tasks: List<TodoListItem>) {
+    private fun undoCompleteTasks(tasks: List<TodoItem>) {
         todoList.undoComplete(tasks)
         closeSelectionMode()
-        todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+        todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
-    private fun deferTasks(tasks: List<TodoListItem>, dateType: DateType) {
+    private fun deferTasks(tasks: List<TodoItem>, dateType: DateType) {
         var titleId = R.string.defer_due
         if (dateType === DateType.THRESHOLD) {
             titleId = R.string.defer_threshold
@@ -587,7 +590,7 @@ class Simpletask : ThemedActivity() {
                         val date = DateTime.forDateOnly(year, startMonth, day)
                         m_app.todoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
                         closeSelectionMode()
-                        todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+                        todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                     },
                             today.year!!,
                             today.month!! - 1,
@@ -598,7 +601,7 @@ class Simpletask : ThemedActivity() {
 
                     m_app.todoList.defer(input, tasks, dateType)
                     closeSelectionMode()
-                    todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+                    todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
 
                 }
 
@@ -607,17 +610,17 @@ class Simpletask : ThemedActivity() {
         d.show()
     }
 
-    private fun deleteTasks(tasks: List<TodoListItem>) {
+    private fun deleteTasks(tasks: List<TodoItem>) {
         showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i ->
             for (t in tasks) {
                 m_app.todoList.remove(t)
             }
             closeSelectionMode()
-            todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+            todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
         }, R.string.delete_task_title)
     }
 
-    private fun archiveTasks(tasksToArchive: List<TodoListItem>?, areYouSureDialog: Boolean) {
+    private fun archiveTasks(tasksToArchive: List<TodoItem>?, areYouSureDialog: Boolean) {
 
         val archiveAction = {
             if (Config.todoFileName == m_app.doneFileName) {
@@ -1277,7 +1280,7 @@ class Simpletask : ThemedActivity() {
                 cb.setOnClickListener({
                     undoCompleteTasks(item)
                     closeSelectionMode()
-                    todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+                    todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                 })
             } else {
                 taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -1286,7 +1289,7 @@ class Simpletask : ThemedActivity() {
                 cb.setOnClickListener {
                     completeTasks(item)
                     closeSelectionMode()
-                    todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+                    todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                 }
 
             }
@@ -1424,7 +1427,7 @@ class Simpletask : ThemedActivity() {
                 runOnUiThread() {
                     showListViewProgress(true)
                 }
-                val visibleTasks: List<TodoListItem>
+                val visibleTasks: List<TodoItem>
                 log.info(TAG, "setFilteredTasks called: " + todoList)
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(Config.defaultSorts)
@@ -1474,7 +1477,7 @@ class Simpletask : ThemedActivity() {
         /*
         ** Get the adapter position for task
         */
-        fun getPosition(task: TodoListItem): Int {
+        fun getPosition(task: TodoItem): Int {
             val line = TaskLine(task)
             return visibleLines.indexOf(line)
         }
@@ -1535,16 +1538,16 @@ class Simpletask : ThemedActivity() {
 
 
     private fun updateItemsDialog(title: String,
-                            checkedTasks: List<TodoListItem>,
+                            checkedTasks: List<TodoItem>,
                             allItems: ArrayList<String>,
                             retrieveFromTask: (Task) -> SortedSet<String>,
                             addToTask: (Task, String) -> Unit,
                             removeFromTask: (Task, String) -> Unit
     ) {
         val checkedTaskItems = ArrayList<HashSet<String>>()
-        for ((line, task) in checkedTasks) {
+        checkedTasks.forEach {
             val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(task))
+            items.addAll(retrieveFromTask.invoke(it.task))
             checkedTaskItems.add(items)
         }
 
@@ -1584,26 +1587,26 @@ class Simpletask : ThemedActivity() {
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
             if (newText.isNotEmpty()) {
-                for ((line, t) in checkedTasks) {
-                    addToTask(t,newText)
+                checkedTasks.forEach {
+                    addToTask(it.task,newText)
                 }
             }
             val updatedValues = itemAdapter.currentState
             for (i in 0..updatedValues.lastIndex) {
                 when (updatedValues[i] ) {
                     false -> {
-                        for ((line, t) in checkedTasks) {
-                            removeFromTask(t,sortedAllItems[i])
+                        checkedTasks.forEach {
+                            removeFromTask(it.task,sortedAllItems[i])
                         }
                     }
                     true -> {
-                        for ((line, t) in checkedTasks) {
-                            addToTask(t,sortedAllItems[i])
+                        checkedTasks.forEach {
+                            addToTask(it.task,sortedAllItems[i])
                         }
                     }
                 }
             }
-            todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, m_app, true)
+            todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
             closeSelectionMode()
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
@@ -1613,7 +1616,7 @@ class Simpletask : ThemedActivity() {
         dialog.show()
     }
 
-    private fun updateLists(checkedTasks: List<TodoListItem>) {
+    private fun updateLists(checkedTasks: List<TodoItem>) {
         updateItemsDialog(
                 Config.listTerm,
                 checkedTasks,
@@ -1624,7 +1627,7 @@ class Simpletask : ThemedActivity() {
         )
     }
 
-    private fun updateTags(checkedTasks: List<TodoListItem>) {
+    private fun updateTags(checkedTasks: List<TodoItem>) {
         updateItemsDialog(
                 Config.tagTerm,
                 checkedTasks,

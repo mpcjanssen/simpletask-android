@@ -14,7 +14,6 @@ import nl.mpcjanssen.simpletask.dao.gen.TodoFile;
 /** 
  * DAO for table "TODO_FILE".
 */
-@SuppressWarnings("PointlessArithmeticExpression")
 public class TodoFileDao extends AbstractDao<TodoFile, String> {
 
     public static final String TABLENAME = "TODO_FILE";
@@ -27,7 +26,7 @@ public class TodoFileDao extends AbstractDao<TodoFile, String> {
         public final static Property Contents = new Property(0, String.class, "contents", true, "CONTENTS");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Date = new Property(2, java.util.Date.class, "date", false, "DATE");
-    }
+    };
 
 
     public TodoFileDao(DaoConfig config) {
@@ -71,11 +70,12 @@ public class TodoFileDao extends AbstractDao<TodoFile, String> {
     /** @inheritdoc */
     @Override
     public TodoFile readEntity(Cursor cursor, int offset) {
-        return new TodoFile( //
+        TodoFile entity = new TodoFile( //
             cursor.getString(offset + 0), // contents
             cursor.getString(offset + 1), // name
             new java.util.Date(cursor.getLong(offset + 2)) // date
         );
+        return entity;
     }
      
     /** @inheritdoc */

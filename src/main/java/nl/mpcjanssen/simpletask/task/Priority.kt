@@ -24,8 +24,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 enum class Priority constructor(val code: String, private val listFormat: String, private val detailFormat: String,
                                         private val fileFormat: String) {

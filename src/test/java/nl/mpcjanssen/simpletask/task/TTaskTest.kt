@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.task
 
+import junit.framework.Assert
 import junit.framework.TestCase
 
 class TaskTest : TestCase() {
@@ -92,5 +93,10 @@ class TaskTest : TestCase() {
         val tc =  Task("x 2000-12-12 $str")
         tc.markComplete("2010-12-12")
         assertEquals("x 2000-12-12 $str", tc.text )
+    }
+
+    fun testHidden() {
+        val test = "h:1"
+        Assert.assertEquals(test, Task(test).inFileFormat())
     }
 }

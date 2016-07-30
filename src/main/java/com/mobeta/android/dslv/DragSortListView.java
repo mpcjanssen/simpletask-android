@@ -43,7 +43,6 @@ import android.widget.*;
 import nl.mpcjanssen.simpletask.Logger;
 import nl.mpcjanssen.simpletask.R;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

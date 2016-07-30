@@ -4,7 +4,6 @@ import junit.framework.Assert
 import junit.framework.TestCase
 import nl.mpcjanssen.simpletask.sort.AlphabeticalComparator
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import org.luaj.vm2.LuaError
 import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue

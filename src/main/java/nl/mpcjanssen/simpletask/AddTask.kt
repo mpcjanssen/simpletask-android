@@ -5,30 +5,31 @@
  */
 package nl.mpcjanssen.simpletask
 
+
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.InputType
-
 import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.AbsListView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListView
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import nl.mpcjanssen.simpletask.remote.FileStore
-
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
-
-import nl.mpcjanssen.simpletask.task.TodoListItem
-import nl.mpcjanssen.simpletask.util.InputDialogListener
 import nl.mpcjanssen.simpletask.util.*
-
-
 import java.util.*
 
 
@@ -36,7 +37,7 @@ class AddTask : ThemedActivity() {
 
     private val share_text: String? = null
 
-    private val m_backup = ArrayList<TodoListItem>()
+    private val m_backup = ArrayList<TodoItem>()
 
     private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
@@ -289,7 +290,7 @@ class AddTask : ThemedActivity() {
 
 
         // Save
-        todoList.notifyChanged(FileStore, Config.todoFileName, Config.eol, TodoApplication.app, true)
+        todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
     }
 

@@ -542,7 +542,7 @@ interface KeyValueToken : TToken {
     override val value: Any?
     get() = valueStr
     override val text: String
-        get() = "$key:$value"
+        get() = "$key:$valueStr"
 }
 
 
@@ -563,7 +563,7 @@ data class RecurrenceToken(override val valueStr : String) : KeyValueToken {
 data class HiddenToken(override val valueStr : String) :KeyValueToken {
     override val key = "h"
     override val value: Boolean
-        get() = if (valueStr == "1") true else false
+        get() = valueStr == "1"
     override val type = TToken.HIDDEN
 }
 

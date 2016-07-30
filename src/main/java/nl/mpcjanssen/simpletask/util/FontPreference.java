@@ -7,10 +7,6 @@ package nl.mpcjanssen.simpletask.util;
  * you may not use this file except in compliance with the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class FontPreference extends DialogPreference implements DialogInterface.OnClickListener
 {

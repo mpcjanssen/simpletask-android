@@ -11,11 +11,11 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.task.TodoListItem
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.util.*
@@ -31,7 +31,7 @@ class AppWidgetService : RemoteViewsService() {
 data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.RemoteViewsFactory {
     private val log: Logger
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
-    var visibleTasks = ArrayList<TodoListItem>()
+    var visibleTasks = ArrayList<TodoItem>()
 
     init {
         log = Logger
@@ -55,10 +55,10 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     }
 
 
-    private fun createSelectedIntent(t: TodoListItem): Intent {
+    private fun createSelectedIntent(t: TodoItem): Intent {
         val target = Intent()
         getFilter().saveInIntent(target)
-        target.putExtra(Constants.INTENT_SELECTED_TASK, t.task.inFileFormat())
+        target.putExtra(Constants.INTENT_SELECTED_TASK_LINE, t.line)
         return target
     }
 
@@ -99,7 +99,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return null
     }
 
-    private fun getExtendedView(item: TodoListItem): RemoteViews {
+    private fun getExtendedView(item: TodoItem): RemoteViews {
         val filter = getFilter()
         val rv = RemoteViews(TodoApplication.app.packageName, R.layout.widget_list_item)
         val extended_widget = Config.prefs.getBoolean("widget_extended", true)

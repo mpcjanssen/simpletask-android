@@ -17,8 +17,7 @@ interface FileStoreInterface {
     fun logout()
     fun browseForNewFile(act: Activity, path: String, listener: FileSelectedListener, txtOnly: Boolean)
     @Throws(IOException::class)
-    fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String)
-
+    fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean = false)
     @Throws(IOException::class)
     fun appendTaskToFile(path: String, lines: List<String>, eol: String)
 
@@ -53,4 +52,8 @@ interface FileStoreInterface {
     fun pause(pause: Boolean) {
         // Do nothing by default
     }
+
+    fun  needsRefesh(currentVersion : String?): Boolean
+
+    fun getVersion(filename: String): String?
 }

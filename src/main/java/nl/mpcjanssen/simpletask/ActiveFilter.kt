@@ -3,14 +3,13 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.todayAsString
-import nl.mpcjanssen.simpletask.task.ByTextFilter
 import org.json.JSONObject
 import org.luaj.vm2.LuaError
-
 import java.util.*
 
 /**
@@ -220,12 +219,12 @@ class ActiveFilter (val moduleName : String) {
         useScript = false
     }
 
-    fun apply(items: List<TodoListItem>?): ArrayList<TodoListItem> {
+    fun apply(items: List<TodoItem>?): ArrayList<TodoItem> {
         if (useScript) {
             log.info(TAG, "Filtering with Lua $script")
         }
         val filter = AndFilter()
-        val matched = ArrayList<TodoListItem>()
+        val matched = ArrayList<TodoItem>()
         if (items == null) {
             return ArrayList()
         }

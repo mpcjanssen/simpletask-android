@@ -1,14 +1,14 @@
 package nl.mpcjanssen.simpletask
 
-import nl.mpcjanssen.simpletask.task.TodoListItem
+import nl.mpcjanssen.simpletask.dao.gen.TodoItem
 
 interface VisibleLine {
     val header: Boolean
-    val task : TodoListItem?
+    val task : TodoItem?
     val title: String?
 }
 
-data class TaskLine(override val task: TodoListItem) : VisibleLine {
+data class TaskLine(override val task: TodoItem) : VisibleLine {
     override val title  = null
     override val header = false
 

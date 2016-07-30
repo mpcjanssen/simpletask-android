@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 import android.view.ViewDebug;
-
 import nl.mpcjanssen.simpletask.R;
 
 /**
