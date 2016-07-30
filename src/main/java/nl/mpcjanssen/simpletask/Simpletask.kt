@@ -337,7 +337,7 @@ class Simpletask : ThemedActivity() {
             val line = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
             intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
             setIntent(intent)
-            if (line.equals(-1)) {
+            if (!line.equals(-1)) {
                 todoList.clearSelection()
                 TodoList.selectLine(line)
                 localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
