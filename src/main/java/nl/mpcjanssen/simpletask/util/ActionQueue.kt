@@ -45,7 +45,7 @@ class LoggingRunnable (val description: String, val runnable: Runnable) : Runnab
     }
 
     override fun run() {
-        log.info(TAG, "Executing action " + description)
+        log.info(TAG, "Executingdo action " + description)
         runnable.run()
     }
 }

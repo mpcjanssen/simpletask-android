@@ -205,9 +205,10 @@ object TodoList {
         })
     }
 
+    val selectionQuery = todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).build()
     var selectedTasks: List<TodoItem> = ArrayList()
         get() {
-            return todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).list()
+            return selectionQuery.list()
         }
 
 
@@ -337,12 +338,11 @@ object TodoList {
         items.forEach {
             it.selected = false
         }
-        todoItemsDao.updateInTx(items)
-
+        log.info(TAG, "Unselecting done")
     }
 
     fun clearSelection() {
-        unSelectTodoItems(todoItems.toList())
+        unSelectTodoItems(selectedTasks)
     }
 
     fun getTaskCount(): Long {
