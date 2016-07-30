@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
-import nl.mpcjanssen.simpletask.dao.gen.TodoItem
+import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join

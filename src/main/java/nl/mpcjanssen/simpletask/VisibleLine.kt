@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoItem
+import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
 
 interface VisibleLine {
     val header: Boolean

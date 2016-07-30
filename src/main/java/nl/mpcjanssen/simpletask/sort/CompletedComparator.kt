@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.sort
 
 
-import nl.mpcjanssen.simpletask.dao.gen.TodoItem
+import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
 import java.util.*
 
 class CompletedComparator : Comparator<TodoItem> {

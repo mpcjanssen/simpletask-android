@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.util
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.dao.gen.TodoItem
+import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
 
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*

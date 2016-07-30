@@ -34,8 +34,8 @@ import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoItem
-import nl.mpcjanssen.simpletask.dao.gen.TodoItemDao
+import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
+import nl.mpcjanssen.simpletask.dao.gentodo.TodoItemDao
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
