@@ -297,7 +297,7 @@ object TodoList {
             val completedTasks = tasksToArchive.filter { it.task.isCompleted() }
             try {
                 FileStore.appendTaskToFile(doneFileName, completedTasks.map { it.task.text }, eol)
-                todoItemsDao.deleteInTx(items)
+                todoItemsDao.deleteInTx(completedTasks)
                 notifyChanged(todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
