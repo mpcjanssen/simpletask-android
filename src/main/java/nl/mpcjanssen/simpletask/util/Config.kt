@@ -165,6 +165,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             return prefs.getInt(getString(R.string.datebar_relative_size), def) / 100.0f
         }
 
+    fun showCalendar(): Boolean {
+                return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
+        }
 
     val tasklistTextSize: Float?
         get() {

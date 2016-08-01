@@ -167,6 +167,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="datebar_relative_size" translatable="false">datebar_delta_sp</string>
     <string name="latest_changelog_shown" translatable="false">latest_changelog_shown</string>
     <string name="lua_config" translatable="false">lua_config</string>
+    <string name="ui_show_calendarview" translatable="false">ui_show_calendarview</string>
 </resources>
 
 
