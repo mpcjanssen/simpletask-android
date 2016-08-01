@@ -24,4 +24,8 @@
         android:key="@string/ui_drawer_fixed_landscape"
         android:summary="@string/drawer_fixed_landscape_summary"
         android:title="@string/drawer_fixed_landscape_title" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/ui_show_calendarview"
+        android:title="@string/show_calendarview_title" />
 </PreferenceScreen>

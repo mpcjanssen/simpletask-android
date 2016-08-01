@@ -581,6 +581,7 @@ class Simpletask : ThemedActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
+            @Suppress("DEPRECATION")
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
@@ -596,6 +597,9 @@ class Simpletask : ThemedActivity() {
                             today.month!! - 1,
                             today.day!!)
 
+                    val showCalendar = Config.showCalendar()
+                    dialog.datePicker.calendarViewShown = showCalendar
+                    dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
 
