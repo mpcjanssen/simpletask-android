@@ -1,11 +1,16 @@
 ﻿Changelog
 =========
 
-8.1.3
------
 
+
+8.2.0
+=====
+
+- Use a single thread for logging. Reduces memory usage.
+- Switch to database backed internal tasklist storage. Fixes Concurrent Modification exceptions.r
+- Restore calendar option for date entry setting on older devices.
 - All Lua is run in a single interpreter again.
-- Implement `extension` paramter for `onFilter` callback.
+- Implement `extension` parameter for `onFilter` callback.
 - Close right drawer when pressing Up navigation. Fixes #505.
 - Don't crash when trying to open URIs from tasks without any application handling the URI.
 - Reduce Lua filter logging.
