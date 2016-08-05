@@ -1,19 +1,28 @@
 package nl.mpcjanssen.simpletask
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import nl.mpcjanssen.simpletask.dao.gen.LogItem
 import nl.mpcjanssen.simpletask.dao.gen.LogItemDao
 import java.util.*
-import java.util.concurrent.Executors
 
 /*
  * Small logging wrapper to be able to swap loggers without
  * changing any code.
  */
 
-object Logger {
+object Logger : Thread() {
     private var dao: LogItemDao? = null
-    private var executor = Executors.newCachedThreadPool()
+    private var mHandler: Handler? = null
+    init {
+        start()
+    }
+    override fun run(): Unit {
+        Looper.prepare()
+        mHandler = Handler() // the Handler hooks up to the current Thread
+        Looper.loop()
+    }
 
     fun setDao (dao: LogItemDao) {
         this.dao = dao
@@ -21,7 +30,7 @@ object Logger {
 
 
     fun logInDB(severity: String, tag: String, s: String, throwable: Throwable? = null) {
-        executor.submit {
+        mHandler?.post {
             var throwableMessage: String = ""
             throwable?.let {
                 throwableMessage = Log.getStackTraceString(throwable)

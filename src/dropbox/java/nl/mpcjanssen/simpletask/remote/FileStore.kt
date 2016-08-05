@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 object FileStore : FileStoreInterface {
     override fun needsRefesh(currentVersion: String?): Boolean {
-        return !getVersion(Config.todoFileName).equals(localTodoRev)
+        return !getVersion(Config.todoFileName).equals(Config.currentVersionId)
     }
 
     override fun getVersion(filename: String): String {
@@ -46,7 +46,6 @@ object FileStore : FileStoreInterface {
     private val LOCAL_CONTENTS = "localContents"
     private val LOCAL_NAME = "localName"
     private val LOCAL_CHANGES_PENDING = "localChangesPending"
-    private val LOCAL_REVISION = "localRev"
     private val CACHE_PREFS = "dropboxMeta"
     private val OAUTH2_TOKEN = "dropboxToken"
 
@@ -124,7 +123,6 @@ object FileStore : FileStoreInterface {
         val edit = mPrefs.edit()
         edit.putString(LOCAL_NAME, fileName)
         edit.putString(LOCAL_CONTENTS, contents)
-        edit.putString(LOCAL_REVISION, rev)
         edit.commit()
     }
 
@@ -146,14 +144,6 @@ object FileStore : FileStoreInterface {
             val cm = mApp.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return netInfo != null && netInfo.isConnected
-        }
-
-    private val localTodoRev: String?
-        get() {
-            if (mPrefs == null) {
-                return ""
-            }
-            return mPrefs.getString(LOCAL_REVISION, null)
         }
 
     private fun setMDBApi(app: TodoApplication) {
@@ -235,7 +225,7 @@ object FileStore : FileStoreInterface {
                             if (entry.metadata == null || entry.metadata.rev == null) {
                                 throw DropboxException("Metadata (or rev) in entry is null " + entry)
                             }
-                            if (entry.metadata.rev == localTodoRev) {
+                            if (entry.metadata.rev == Config.currentVersionId) {
                                 log.info(TAG, "Remote file " + Config.todoFileName + " changed, rev: " + entry.metadata.rev + " same as local rev, not reloading")
                             } else {
                                 log.info(TAG, "Remote file " + Config.todoFileName + " changed, rev: " + entry.metadata.rev + " reloading")
@@ -471,7 +461,7 @@ object FileStore : FileStoreInterface {
         val contents = join(lines, eol) + eol
         val r = Runnable {
             var newName = path
-            var rev = localTodoRev
+            var rev = Config.currentVersionId
             try {
                 val toStore = contents.toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
