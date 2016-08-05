@@ -34,7 +34,11 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 object FileStore : FileStoreInterface {
     override fun needsRefesh(currentVersion: String?): Boolean {
-        return !getVersion(Config.todoFileName).equals(Config.currentVersionId)
+        try {
+            return !getVersion(Config.todoFileName).equals(Config.currentVersionId)
+        } catch (e : Exception) {
+            return false
+        }
     }
 
     override fun getVersion(filename: String): String {
