@@ -17,7 +17,7 @@ apply plugin: 'kotlin-android'
 
 
 android {
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "24.0.1"
     compileSdkVersion 24
 
     packagingOptions {
