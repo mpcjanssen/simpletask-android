@@ -288,10 +288,6 @@ object TodoList {
     fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoItem>?, eol: String) {
         ActionQueue.add("Archive", Runnable {
             val items = todoItems
-            if (items == null) {
-                log.error(TAG, "Trying to archive null todo list")
-                return@Runnable
-            }
             val tasksToArchive = tasks ?: items
 
             val completedTasks = tasksToArchive.filter { it.task.isCompleted() }
@@ -346,7 +342,7 @@ object TodoList {
     }
 
     fun getTaskCount(): Long {
-        val items = todoItems ?: return 0
+        val items = todoItems
         return items.filter { it.task.inFileFormat().isNotBlank() }.size.toLong()
     }
 
