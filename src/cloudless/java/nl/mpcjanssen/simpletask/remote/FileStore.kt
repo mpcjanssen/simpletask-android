@@ -30,8 +30,8 @@ object FileStore : FileStoreInterface {
         return File(filename).lastModified().toString()
     }
 
-    override fun needsRefesh(version : String?): Boolean {
-        return version?.toLong() ?: 0  < Config.todoFile.lastModified()
+    override fun needsRefesh(currentVersion : String?): Boolean {
+        return currentVersion?.toLong() ?: 0  < Config.todoFile.lastModified()
     }
 
     override val isOnline = true
@@ -147,8 +147,8 @@ object FileStore : FileStoreInterface {
         log.info(TAG, "Observer: modifying done")
     }
 
-    override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, showTxt: Boolean) {
-        val dialog = FileDialog(act, path, showTxt)
+    override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
+        val dialog = FileDialog(act, path, txtOnly)
         dialog.addFileListener(listener)
         dialog.createFileDialog(act, this)
     }

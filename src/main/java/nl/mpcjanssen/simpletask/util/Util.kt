@@ -445,7 +445,6 @@ fun readAsset(assets: AssetManager, name: String): String {
     val buf = StringBuilder()
     val input = assets.open(name)
     val `in` = BufferedReader(InputStreamReader(input))
-    var str: String
     `in`.forEachLine {
         buf.append(it).append("\n")
     }
