@@ -66,6 +66,19 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             prefs.edit().putString(getString(R.string.file_current_version_id), version).commit()
         }
 
+    var lastScrollPosition : Int
+        get() = prefs.getInt(getString(R.string.ui_last_scroll_position), -1)
+        set(position) {
+            prefs.edit().putInt(getString(R.string.ui_last_scroll_position), position).commit()
+        }
+
+    var lastScrollOffset : Int
+        get() = prefs.getInt(getString(R.string.ui_last_scroll_offset), -1)
+        set(position) {
+            prefs.edit().putInt(getString(R.string.ui_last_scroll_offset), position).commit()
+        }
+
+
     var luaConfig: String
         get() = prefs.getString(getString(R.string.lua_config), "")
         set(config) {
