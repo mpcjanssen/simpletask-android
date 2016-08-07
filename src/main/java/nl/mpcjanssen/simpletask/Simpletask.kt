@@ -417,6 +417,15 @@ class Simpletask : ThemedActivity() {
 
     override fun onPause() {
         FileStore.pause(true)
+        val manager = listView?.layoutManager as LinearLayoutManager?
+        if (manager!=null) {
+            val position = manager.findFirstVisibleItemPosition()
+            val firstItemView = manager.findViewByPosition(position)
+            val offset = firstItemView.top
+            Logger.info(TAG, "Saving scroll offset $position, $offset")
+            Config.lastScrollPosition = position
+            Config.lastScrollOffset = offset
+        }
         super.onPause()
     }
 
@@ -877,6 +886,7 @@ class Simpletask : ThemedActivity() {
             // Only change intent if it actually contains a filter
             setIntent(intent)
         }
+        Config.lastScrollPosition = -1
         log.info(TAG, "onNewIntent: " + intent)
 
     }
@@ -1462,6 +1472,14 @@ class Simpletask : ThemedActivity() {
                     updateConnectivityIndicator()
                     updateFilterBar()
                     showListViewProgress(false)
+                    if (Config.lastScrollPosition != -1) {
+                        val manager = listView?.layoutManager as LinearLayoutManager?
+                        val position = Config.lastScrollPosition
+                        val offset = Config.lastScrollOffset
+                        Logger.info(TAG, "Restoring scroll offset $position, $offset")
+                        manager?.scrollToPositionWithOffset(position, offset )
+                        Config.lastScrollPosition = -1
+                    }
                 }
             })
         }
