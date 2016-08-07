@@ -286,6 +286,10 @@ object TodoList {
         }
     }
 
+    fun update(items : List<TodoItem>) {
+        todoItemsDao.updateInTx(items)
+    }
+
     fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoItem>?, eol: String) {
         ActionQueue.add("Archive", Runnable {
             val items = todoItems

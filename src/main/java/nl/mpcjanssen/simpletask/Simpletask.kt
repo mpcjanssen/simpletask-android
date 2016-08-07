@@ -1628,6 +1628,7 @@ class Simpletask : ThemedActivity() {
                     }
                 }
             }
+            todoList.update(checkedTasks)
             todoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
             closeSelectionMode()
         }

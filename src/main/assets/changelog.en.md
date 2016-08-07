@@ -1,10 +1,14 @@
 ﻿Changelog
 =========
 
+8.2.1
+-----
 
+- Save scroll position of tasklist when editing, rotating or going to the background. Fixes #520.
+- Update completed items in the DB. Fixes #521.
 
 8.2.0
-=====
+-----
 
 - Use a single thread for logging. Reduces memory usage.
 - Switch to database backed internal tasklist storage. Fixes Concurrent Modification exceptions.r
