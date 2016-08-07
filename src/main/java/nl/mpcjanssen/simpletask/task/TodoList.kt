@@ -172,6 +172,7 @@ object TodoList {
         ActionQueue.add("Complete", Runnable {
             val task = item.task
             val extra = task.markComplete(todayAsString)
+            todoItemsDao.update(item)
             if (extra != null) {
                 add(extra, extraAtEnd)
             }
