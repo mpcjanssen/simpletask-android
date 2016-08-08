@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.createAlertDialog
+import nl.mpcjanssen.simpletask.util.shareText
 import org.luaj.vm2.LuaError
 
 class LuaConfigScreen : ThemedActivity() {
@@ -24,6 +25,7 @@ class LuaConfigScreen : ThemedActivity() {
         scriptEdit = findViewById(R.id.lua_config) as EditText
         val btnRun = findViewById(R.id.btn_run) as Button
         val btnHelp = findViewById(R.id.btn_help) as Button
+        val btnShare = findViewById(R.id.btn_share) as Button
         btnRun.setOnClickListener {
             try {
                 LuaInterpreter.evalScript(null, script())
@@ -36,6 +38,9 @@ class LuaConfigScreen : ThemedActivity() {
             val intent = Intent(this, HelpScreen::class.java)
             intent.putExtra(Constants.EXTRA_HELP_PAGE, "script")
             startActivityForResult(intent, 0)
+        }
+        btnShare.setOnClickListener {
+            shareText(this, getString(R.string.lua_config_screen), script())
         }
         scriptEdit.setText(Config.luaConfig)
     }
