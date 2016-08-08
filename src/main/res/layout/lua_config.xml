@@ -32,14 +32,19 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 />
-
+        <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/btn_share"
+                android:text="@string/share"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
         <Button
                 style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/btn_run"
                 android:text="@string/lua_run"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>
