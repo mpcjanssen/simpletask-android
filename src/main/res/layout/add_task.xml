@@ -22,6 +22,7 @@
             android:layout_gravity="top"
             android:padding="6dp"
             android:gravity="top"
+            android:scrollbars="vertical"
             android:background="@android:color/transparent"
             android:inputType="textCapSentences|textMultiLine" />
 
