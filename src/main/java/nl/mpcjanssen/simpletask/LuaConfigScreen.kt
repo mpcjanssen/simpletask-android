@@ -51,7 +51,6 @@ class LuaConfigScreen : ThemedActivity() {
 
     override fun onDestroy() {
         Config.luaConfig = script()
-        LuaInterpreter.evalScript(null, script())
         super.onDestroy()
     }
 
