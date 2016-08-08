@@ -56,6 +56,7 @@
 
     <style name="AppTheme.Black" parent="AppTheme">
         <item name="android:colorBackground">#FF000000</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
