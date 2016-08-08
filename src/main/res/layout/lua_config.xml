@@ -16,6 +16,7 @@
             android:layout_weight="1"
             android:gravity="top|start"
             android:inputType="text|textMultiLine"
+            android:scrollbars="vertical"
             />
 
     <LinearLayout
