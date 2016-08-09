@@ -67,12 +67,6 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:parentActivityName=".Preferences"
             android:label="@string/history">
         </activity>
-
-        <activity
-                android:name=".TaskDisplayActivity"
-                android:label="@string/task_select_parts" >
-        </activity>
-
         <activity
             android:name=".Preferences"
             android:parentActivityName=".Simpletask"

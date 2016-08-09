@@ -153,6 +153,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <!--suppress AndroidMissingOnClickHandler -->
             <ImageButton
                 android:id="@+id/btn_filter_add"
                 style="?android:attr/borderlessButtonStyle"
@@ -163,6 +164,7 @@
                 android:onClick="onAddFilterClick"
                 android:src="@drawable/content_new" />
 
+            <!--suppress AndroidMissingOnClickHandler -->
             <ImageButton
                 android:id="@+id/btn_filter_import"
                 style="?android:attr/borderlessButtonStyle"

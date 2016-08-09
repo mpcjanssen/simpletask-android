@@ -33,7 +33,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
@@ -51,7 +50,6 @@ class AddTaskBackground : Activity() {
         log = Logger
         log.debug(TAG, "onCreate()")
         super.onCreate(instance)
-        val m_app = this.application as TodoApplication
 
         val intent = intent
         val action = intent.action
