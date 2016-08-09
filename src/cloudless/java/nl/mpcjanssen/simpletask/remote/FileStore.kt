@@ -30,7 +30,7 @@ object FileStore : FileStoreInterface {
         return File(filename).lastModified().toString()
     }
 
-    override fun needsRefesh(currentVersion : String?): Boolean {
+    override fun needsRefresh(currentVersion : String?): Boolean {
         return currentVersion?.toLong() ?: 0  < Config.todoFile.lastModified()
     }
 
