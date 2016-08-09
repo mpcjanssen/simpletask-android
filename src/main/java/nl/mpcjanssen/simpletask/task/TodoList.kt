@@ -243,7 +243,7 @@ object TodoList {
     fun reload(backup: BackupInterface, lbm: LocalBroadcastManager, eol: String) {
         lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
         val filename = Config.todoFileName
-        if (FileStore.needsRefesh(Config.currentVersionId)) {
+        if (FileStore.needsRefresh(Config.currentVersionId)) {
             try {
                 todoItemsDao.database.beginTransaction()
                 todoItemsDao.deleteAll()

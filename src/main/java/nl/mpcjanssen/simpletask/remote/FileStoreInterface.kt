@@ -53,7 +53,7 @@ interface FileStoreInterface {
         // Do nothing by default
     }
 
-    fun  needsRefesh(currentVersion : String?): Boolean
+    fun needsRefresh(currentVersion : String?): Boolean
 
     fun getVersion(filename: String): String?
 }

@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * FileStore implementation backed by Dropbox
  */
 object FileStore : FileStoreInterface {
-    override fun needsRefesh(currentVersion: String?): Boolean {
+    override fun needsRefresh(currentVersion: String?): Boolean {
         try {
             return !getVersion(Config.todoFileName).equals(Config.currentVersionId)
         } catch (e : Exception) {
