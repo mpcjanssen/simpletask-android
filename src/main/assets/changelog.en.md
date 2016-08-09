@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+8.2.3
+-----
+
+- Initially hide filter bar so no `X` is displayed on first start.
+
 8.2.2
 -----
 
