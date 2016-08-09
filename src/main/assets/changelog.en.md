@@ -7,6 +7,7 @@
 - Add Lua config `Share` button.
 - Proper black theme on emulator and older devices. Fixes #524.
 - Merged: Add scrollbar in Lua config. Fixes #522. (#525 smichel17)
+- Commit updated items in the DB.
 
 8.2.1
 -----
