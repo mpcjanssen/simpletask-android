@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import hirondelle.date4j.DateTime
+import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
@@ -270,6 +271,7 @@ class AddTask : ThemedActivity() {
             if (m_backup.size > 0) {
                 // Don't modify create date for updated tasks
                 m_backup[0].task.update(task.text)
+                Daos.todoItemDao.update(m_backup[0])
                 m_backup.removeAt(0)
             } else {
                 val t: Task
