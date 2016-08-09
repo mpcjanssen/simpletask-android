@@ -87,7 +87,7 @@ object FileStore : FileStoreInterface {
         })
         t.start()
         mOnline = isOnline
-        setMDBApi(mApp)
+        setMDBApi()
     }
 
     private fun loadContentsFromCache(): String {
@@ -150,7 +150,7 @@ object FileStore : FileStoreInterface {
             return netInfo != null && netInfo.isConnected
         }
 
-    private fun setMDBApi(app: TodoApplication) {
+    private fun setMDBApi() {
         val app_secret: String
         var app_key: String
         if (mDBApi == null) {
@@ -181,7 +181,7 @@ object FileStore : FileStoreInterface {
             val longpoll_timeout = backoffFactor.toInt()
             var newBackoffSeconds = 0
             log.info(polltag, "Longpoll backoffSeconds: $backoffSeconds, pollFailures: $pollFailures")
-            var start_time = System.currentTimeMillis()
+            val start_time = System.currentTimeMillis()
             if (!continuePolling) {
                 log.info(polltag, "Longpoll stopping continue == false")
                 return@Runnable
@@ -792,7 +792,7 @@ object FileStore : FileStoreInterface {
 
 
 
-    fun getDefaultPath(app: TodoApplication): String {
+    fun getDefaultPath(): String {
         if (Config.fullDropBoxAccess) {
             return "/todo/todo.txt"
         } else {

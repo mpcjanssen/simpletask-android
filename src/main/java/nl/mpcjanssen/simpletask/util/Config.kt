@@ -233,14 +233,14 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() {
             var name = prefs.getString(getString(R.string.todo_file_key), null)
             if (name == null) {
-                name = FileStore.getDefaultPath(TodoApplication.app)
+                name = FileStore.getDefaultPath()
                 setTodoFile(name)
             }
             val todoFile = File(name)
             try {
                 return todoFile.canonicalPath
             } catch (e: IOException) {
-                return FileStore.getDefaultPath(TodoApplication.app)
+                return FileStore.getDefaultPath()
             }
 
         }
