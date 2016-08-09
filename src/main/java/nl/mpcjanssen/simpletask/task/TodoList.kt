@@ -32,6 +32,7 @@ package nl.mpcjanssen.simpletask.task
 import android.app.Activity
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
+import de.greenrobot.dao.query.Query
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
@@ -41,7 +42,6 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -206,7 +206,7 @@ object TodoList {
         })
     }
 
-    val selectionQuery = todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).build()
+    val selectionQuery : Query<TodoItem> = todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).build()
     var selectedTasks: List<TodoItem> = ArrayList()
         get() {
             return selectionQuery.list()
@@ -252,7 +252,7 @@ object TodoList {
                             TodoItem(line.toLong(), Task(text), false)
                         })
                 todoItemsDao.insertInTx(items)
-                todoItemsDao.database.setTransactionSuccessful();
+                todoItemsDao.database.setTransactionSuccessful()
                 Config.currentVersionId = FileStore.getVersion(filename)
 
             } catch (e: Exception) {

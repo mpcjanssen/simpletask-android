@@ -2,13 +2,10 @@ package nl.mpcjanssen.simpletask.lua
 
 import junit.framework.Assert
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.sort.AlphabeticalComparator
-import nl.mpcjanssen.simpletask.task.Task
 import org.luaj.vm2.LuaError
 import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.lib.jse.JsePlatform
-import java.util.*
 
 
 class TableTest : TestCase() {

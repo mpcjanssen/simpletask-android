@@ -39,7 +39,7 @@ class FilterSortFragment : Fragment() {
     private val onRemove = DragSortListView.RemoveListener { which -> adapter.remove(adapter.getItem(which)) }
     private var log: Logger? = null
 
-    protected // this DSLV xml declaration does not call for the use
+    private // this DSLV xml declaration does not call for the use
             // of the default DragSortController; therefore,
             // DSLVFragment has a buildController() method.
     val layout: Int
