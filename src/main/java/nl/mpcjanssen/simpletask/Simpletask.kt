@@ -420,7 +420,7 @@ class Simpletask : ThemedActivity() {
         val manager = listView?.layoutManager as LinearLayoutManager?
         if (manager!=null) {
             val position = manager.findFirstVisibleItemPosition()
-            val firstItemView = manager.findViewByPosition(position) as View?
+            val firstItemView = manager.findViewByPosition(position)
             val offset = firstItemView?.top ?: 0
             Logger.info(TAG, "Saving scroll offset $position, $offset")
             Config.lastScrollPosition = position
