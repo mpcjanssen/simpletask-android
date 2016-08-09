@@ -225,6 +225,9 @@ object FileStore : FileStoreInterface {
         /**
          * @return file dialog
          */
+
+        // Parameters are needed for dropbox version
+
         fun createFileDialog(ctx: Context?, fs: FileStoreInterface?): Dialog {
             val dialog: Dialog
             val builder = AlertDialog.Builder(activity)
@@ -364,7 +367,7 @@ object FileStore : FileStoreInterface {
 
 
 
-        fun getDefaultPath(app: TodoApplication): String {
+        fun getDefaultPath(): String {
             return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
         }
 
