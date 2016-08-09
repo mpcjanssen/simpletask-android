@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.TodoApplication
 
 
 class ConnectivityReceiver : BroadcastReceiver() {
