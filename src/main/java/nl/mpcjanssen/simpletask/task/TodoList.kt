@@ -63,6 +63,10 @@ object TodoList {
         log = Logger
     }
 
+    fun hasPendingAction () : Boolean {
+        return ActionQueue.hasPending()
+    }
+
 
     val todoItems: List<TodoItem>
     get() = todoItemsDao.loadAll()
