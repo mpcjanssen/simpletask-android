@@ -67,6 +67,12 @@ object TodoList {
         return ActionQueue.hasPending()
     }
 
+    // Wait until there are no more pending actions
+    fun settle() {
+        while (hasPendingAction()) {
+            Thread.sleep(10)
+        }
+    }
 
     val todoItems: List<TodoItem>
     get() = todoItemsDao.loadAll()
