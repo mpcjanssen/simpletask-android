@@ -25,29 +25,30 @@ public class TodoListTest {
     }
 
     @Test
-    public void testCompleteCommitted() {
+    public void testCompleteCommitted() throws InterruptedException {
         TodoList tl = TodoList.INSTANCE;
         tl.add(new Task("12344"),true,false);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Wait for actions to be executed
+        settleTodoList(tl);
         assertThat(1, is(tl.getTodoItems().size()));
         List<TodoItem> items = tl.getTodoItems();
         TodoItem first = items.get(0);
         assertThat("12344", is(first.getTask().getText()));
         tl.complete(first, true, true);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Wait for actions to be executed
+        settleTodoList(tl);
+
         // Clear cached value
         Daos.INSTANCE.getTodoItemDao().detach(first);
         items = tl.getTodoItems();
         first = items.get(0);
         assertThat(first.getTask().isCompleted(), is(true));
+    }
+
+    private void settleTodoList(TodoList tl) throws InterruptedException {
+        while (tl.hasPendingAction()) {
+            Thread.sleep(10);
+        }
     }
 }
 

@@ -15,6 +15,10 @@ object ActionQueue : Thread() {
         Looper.loop()
     }
 
+    fun hasPending () : Boolean {
+        return mHandler?.hasMessages(0) ?: false
+    }
+
     fun add(description: String, r: Runnable, silent: Boolean = false) {
         if (!silent) {
             log.info(TAG, "Adding to queue: $description")
