@@ -54,7 +54,7 @@ android {
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
-	        minifyEnabled true
+	    minifyEnabled true
             proguardFile "proguard.txt"
         }
     }
@@ -81,6 +81,7 @@ dependencies {
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'org.luaj:luaj-jse:3.0.1'
     testCompile 'junit:junit:4.12'
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile('com.android.support.test:runner:0.5') {
 	// Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
