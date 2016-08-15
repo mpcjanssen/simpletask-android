@@ -56,6 +56,7 @@ object Logger : Thread() {
 
     fun debug(tag: String, s: String) {
         Log.d(tag,s)
+        logInDB("d", tag,s)
     }
 
 

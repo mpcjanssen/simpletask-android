@@ -56,10 +56,7 @@ class TodoApplication : Application(),
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
-    lateinit var todoList: TodoList
     private lateinit var m_broadcastReceiver: BroadcastReceiver
-
-    private val log = Logger
 
     override fun onCreate() {
         app = this
@@ -67,8 +64,7 @@ class TodoApplication : Application(),
 
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
 
-        log.debug(TAG, "onCreate()")
-        log.info(TAG, "Started ${appVersion(this)}")
+
         setupUncaughtExceptionHandler()
 
         val intentFilter = IntentFilter()
@@ -78,7 +74,7 @@ class TodoApplication : Application(),
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                log.info(TAG, "Received broadcast ${intent.action}")
+                Logger.info(TAG, "Received broadcast ${intent.action}")
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
                     ActionQueue.add("Refresh UI", Runnable {
                         CalendarSync.syncLater()
@@ -86,11 +82,11 @@ class TodoApplication : Application(),
                         updateWidgets()
                     })
                 } else if (intent.action == Constants.BROADCAST_UPDATE_WIDGETS) {
-                    log.info(TAG, "Refresh widgets from broadcast")
+                    Logger.info(TAG, "Refresh widgets from broadcast")
                     redrawWidgets()
                     updateWidgets()
                 } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
-                    log.info(TAG, "File changed, reloading")
+                    Logger.info(TAG, "File changed, reloading")
                     ActionQueue.add("Reload from BROADCAST", Runnable {
                         loadTodoList()
                     })
@@ -99,9 +95,10 @@ class TodoApplication : Application(),
         }
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-        todoList = TodoList
 
-        log.info(TAG, "Created todolist {}" + todoList)
+        Logger.info(TAG, "Created todolist " + TodoList)
+        Logger.info(TAG, "onCreate()")
+        Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         ActionQueue.add("|Initial load", Runnable {
             loadTodoList()
@@ -116,7 +113,7 @@ class TodoApplication : Application(),
         // Handle all uncaught exceptions for logging.
         // After that call the default uncaught exception handler
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-            log.error(TAG, "Uncaught exception", throwable)
+            Logger.error(TAG, "Uncaught exception", throwable)
             androidUncaughtExceptionHandler.uncaughtException(thread, throwable)
         }
     }
@@ -144,7 +141,7 @@ class TodoApplication : Application(),
 
 
     override fun onTerminate() {
-        log.info(TAG, "De-registered receiver")
+        Logger.info(TAG, "De-registered receiver")
         localBroadCastManager.unregisterReceiver(m_broadcastReceiver)
         super.onTerminate()
     }
@@ -158,8 +155,8 @@ class TodoApplication : Application(),
     }
 
     fun loadTodoList() {
-        log.info(TAG, "Load todolist")
-        todoList.reload(this, localBroadCastManager, Config.eol)
+        Logger.info(TAG, "Load todolist")
+        TodoList.reload(this, localBroadCastManager, Config.eol)
 
     }
 
@@ -178,14 +175,14 @@ class TodoApplication : Application(),
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
-            log.info(TAG, "Updating widget: " + appWidgetId)
+            Logger.info(TAG, "Updating widget: " + appWidgetId)
         }
     }
 
     fun redrawWidgets() {
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
-        log.info(TAG, "Redrawing widgets ")
+        Logger.info(TAG, "Redrawing widgets ")
         if (appWidgetIds.size > 0) {
             MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
         }

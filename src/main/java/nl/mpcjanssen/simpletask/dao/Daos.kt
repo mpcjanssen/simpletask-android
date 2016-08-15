@@ -8,6 +8,7 @@ import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.dao.gen.*
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItemDao
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.util.shortAppVersion
 import java.text.SimpleDateFormat
 import nl.mpcjanssen.simpletask.dao.gentodo.DaoSession as TodoDaoSession
 import nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster as TodoDaoMaster
@@ -57,8 +58,8 @@ object Daos {
     }
 
     private fun logItemToString(entry: LogItem): String {
-        val format = SimpleDateFormat("HH:mm:ss.S", Locale.US)
-        return format.format(entry.timestamp) + "\t" + entry.severity + "\t" + entry.tag + "\t" + entry.message + "\t" + entry.exception
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US)
+        return format.format(entry.timestamp) + "\t" + shortAppVersion() + "\t" + entry.severity + "\t" + entry.tag + "\t" + entry.message + "\t" + entry.exception
     }
 
     fun cleanLogging() {

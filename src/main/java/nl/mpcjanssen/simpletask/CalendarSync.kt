@@ -37,6 +37,7 @@ import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
 import nl.mpcjanssen.simpletask.task.TToken
+import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
 import java.util.*
@@ -244,7 +245,7 @@ object CalendarSync {
                 }
             }
 
-            val tl = TodoApplication.app.todoList
+            val tl = TodoList
             val tasks = tl.todoItems
 
             setReminderDays(Config.reminderDays)

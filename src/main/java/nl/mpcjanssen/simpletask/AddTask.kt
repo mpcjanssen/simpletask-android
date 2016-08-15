@@ -249,7 +249,7 @@ class AddTask : ThemedActivity() {
 
 
     private fun saveTasksAndClose() {
-        val todoList = TodoApplication.app.todoList
+        val todoList = TodoList
         todoList.clearSelection()
         // strip line breaks
         textInputField = findViewById(R.id.taskText) as EditText
@@ -355,7 +355,7 @@ class AddTask : ThemedActivity() {
 
     private fun showTagMenu() {
         val items = TreeSet<String>()
-        val todoList = TodoApplication.app.todoList
+        val todoList = TodoList
         items.addAll(todoList.projects)
         // Also display contexts in tasks being added
         val tasks = getTasks()

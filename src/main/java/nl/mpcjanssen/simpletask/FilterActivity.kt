@@ -18,6 +18,7 @@ import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
+import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException
@@ -92,7 +93,7 @@ class FilterActivity : ThemedActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(m_app.todoList.contexts, Config.sortCaseSensitive(), "-"))
+                sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive(), "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
         arguments.putBoolean(INITIAL_NOT, mFilter.contextsNot)
         arguments.putString(TAB_TYPE, CONTEXT_TAB)
@@ -104,7 +105,7 @@ class FilterActivity : ThemedActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(m_app.todoList.projects, Config.sortCaseSensitive(), "-"))
+                sortWithPrefix(TodoList.projects, Config.sortCaseSensitive(), "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
         arguments.putBoolean(INITIAL_NOT, mFilter.projectsNot)
         arguments.putString(TAB_TYPE, PROJECT_TAB)
@@ -114,7 +115,7 @@ class FilterActivity : ThemedActivity() {
 
         // Fill arguments for fragment
         arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(m_app.todoList.priorities))
+        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(TodoList.priorities))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.priorities))
         arguments.putBoolean(INITIAL_NOT, mFilter.prioritiesNot)
         arguments.putString(TAB_TYPE, PRIO_TAB)
