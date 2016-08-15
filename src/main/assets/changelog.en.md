@@ -24,7 +24,7 @@
 -----
 
 - Use a single thread for logging. Reduces memory usage.
-- Switch to database backed internal tasklist storage. Fixes Concurrent Modification exceptions.r
+- Switch to database backed internal tasklist storage. Fixes Concurrent Modification exceptions.
 - Restore calendar option for date entry setting on older devices.
 - All Lua is run in a single interpreter again.
 - Implement `extension` parameter for `onFilter` callback.
