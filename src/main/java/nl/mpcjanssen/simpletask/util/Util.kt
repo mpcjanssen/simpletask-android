@@ -367,6 +367,10 @@ fun appVersion(ctx: Context): String {
     return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
 }
 
+fun shortAppVersion(): String {
+    return "${BuildConfig.FLAVOR.first()}${BuildConfig.VERSION_CODE}"
+}
+
 fun shareText(act: Activity, subject: String, text: String) {
 
     val shareIntent = Intent(android.content.Intent.ACTION_SEND)
