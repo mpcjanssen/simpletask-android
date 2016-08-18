@@ -79,6 +79,36 @@ Called for every task as part of filtering the todo list.
 * Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
 * You should define the onFilter function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onFilter` function will be undefined.
 
+### `onGroup (task, fields, extensions) -> string`
+
+Called for every task as part of filtering the todo list.
+
+### Parameters
+
+* `task`: The task as a string.
+* `fields`: Parts of the task converted to different types (such as a timestamp for `createdate`)
+    * `completed`: Boolean indicating if the task is completed.
+    * `completiondate`: The completion date in seconds of the task or `nil` if not set.
+    * `createdate`: The created date  in seconds of the task or `nil` if not set.
+    * `due`: The due date in seconds or `nil` if not set.
+    * `lists`: A table with the lists of the task as keys. `fields.lits` itself will never be `nil`
+    * `priority`: The priority of the task as string.
+    * `recurrence`: The recurrence pattern of the task as string or `nil` if not set.
+    * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
+    * `task`: The full task as string.
+    * `threshold`: The threshold date in seconds or `nil` if not set.
+* `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. There is only one entry for every key, this is to make use easier. If you need multiple `key:val` pairs with the same key, you can parse the task in Lua.
+
+### Returns
+
+* The group this task belongs to.
+
+### Notes
+
+* If there is a Lua error in the callback, it behaves as if it had returned `""`
+* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
+
+
 ### `onTextSearch (taskText, caseSensitive) -> boolean`
 
 Called for every task as when searching for text.
