@@ -13,6 +13,7 @@ object LuaInterpreter {
     private val TAG = "LuaInterpreter"
 
     val ON_FILTER_NAME = "onFilter"
+    val ON_GROUP_NAME = "onGroup"
     val ON_TEXTSEARCH_NAME = "onTextSearch"
     val CONFIG_THEME = "theme"
     val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
@@ -56,6 +57,24 @@ object LuaInterpreter {
             }
         }
         return true
+    }
+
+    fun onGroupCallback (moduleName : String, t: Task): String? {
+        val module = globals.get(moduleName).checktable()
+        if (module == LuaValue.NIL) {
+            return null
+        }
+        val callback = module.get(LuaInterpreter.ON_GROUP_NAME)
+        if (!callback.isnil()) {
+            val args = fillOnFilterVarargs(t)
+            try {
+                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
+                return result.tojstring()
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
+            }
+        }
+        return null
     }
 
     fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {

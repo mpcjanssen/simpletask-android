@@ -128,7 +128,17 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, firstSort: String, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+    val sorts = filter.getSort(Config.defaultSorts)
+    var firstGroupSortIndex = 0
+    if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
+        firstGroupSortIndex++
+        if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
+            firstGroupSortIndex++
+        }
+    }
+    val firstSort = sorts[firstGroupSortIndex]
+
     var header = ""
     var newHeader: String
     val result = ArrayList<VisibleLine>()
@@ -136,7 +146,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, firstSort: String, no_header: S
     var headerLine: HeaderLine? = null
     for (item in visibleTasks) {
         val t = item.task
-        newHeader = t.getHeader(firstSort, no_header)
+        val newHeader  = LuaInterpreter.onGroupCallback(filter.moduleName,t) ?: t.getHeader(firstSort, no_header)
         if (header != newHeader) {
             if (headerLine != null) {
                 headerLine.title += " ($count)"

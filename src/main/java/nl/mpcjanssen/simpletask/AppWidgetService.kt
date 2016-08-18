@@ -211,7 +211,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             return null
         }
 
-        // find index in the todolist of the clicked task
+        // find index in the to-do list of the clicked task
         val task = visibleTasks[position]
 
         return getExtendedView(task)

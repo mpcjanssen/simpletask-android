@@ -1445,18 +1445,7 @@ class Simpletask : ThemedActivity() {
                 visibleTasks = TodoList.getSortedTasks(activeFilter, sorts, Config.sortCaseSensitive())
                 val newVisibleLines = ArrayList<VisibleLine>()
 
-
-                var firstGroupSortIndex = 0
-                if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
-                    firstGroupSortIndex++
-                    if (sorts.size > 2 && sorts[1].contains("completed") || sorts[1].contains("future")) {
-                        firstGroupSortIndex++
-                    }
-                }
-
-
-                val firstSort = sorts[firstGroupSortIndex]
-                newVisibleLines.addAll(addHeaderLines(visibleTasks, firstSort, getString(R.string.no_header)))
+                newVisibleLines.addAll(addHeaderLines(visibleTasks, activeFilter, getString(R.string.no_header)))
                 runOnUiThread {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
