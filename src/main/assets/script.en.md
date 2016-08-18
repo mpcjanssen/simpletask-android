@@ -206,6 +206,15 @@ The 8.0.0 fuzzy search in Lua:
     end
 
 
+A group callback to group by list with custom empty header:
+
+    function onGroup(t,f,e)
+        if not next(f.lists) then
+            return "Inbox"
+        else
+            return next(f.lists)
+        end
+    end
 
 Learning Lua
 ============
