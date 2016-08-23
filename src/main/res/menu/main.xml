@@ -26,53 +26,52 @@ You should have received a copy of the GNU General Public License along with Tod
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:title="@string/filter"
-            android:id="@+id/filter"
-            android:orderInCategory="2"
-            android:icon="@drawable/ic_action_content_filter_list"
-            app:showAsAction="always" />
-
+        android:id="@+id/filter"
+        android:title="@string/filter"
+        android:icon="@drawable/ic_action_content_filter_list"
+        android:orderInCategory="2"
+        app:showAsAction="always"/>
     <item
-            android:title="@string/search"
-            android:id="@+id/search"
-            android:icon="@drawable/action_search"
-            app:showAsAction="ifRoom|collapseActionView"
-            app:actionViewClass="android.widget.SearchView" />
+        android:id="@+id/search"
+        android:title="@string/search"
+        android:icon="@drawable/action_search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
     <item
-            android:title="@string/share"
-            app:showAsAction="ifRoom"
-            android:icon="@drawable/share"
-            android:id="@+id/share" />
+        android:id="@+id/share"
+        android:title="@string/share"
+        android:icon="@drawable/share"
+        app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/preferences"
         android:title="@string/preferences"
-        app:showAsAction="never"
-        android:id="@+id/preferences" />
+        app:showAsAction="never"/>
     <item
+        android:id="@+id/archive"
         android:title="@string/archive"
-        app:showAsAction="never"
-        android:id="@+id/archive" />
+        app:showAsAction="never"/>
     <item
+        android:id="@+id/open_file"
         android:title="@string/open_file"
-        app:showAsAction="never"
-        android:id="@+id/open_file" />
+        app:showAsAction="never"/>
     <item
+        android:id="@+id/help"
         android:title="@string/help"
         app:showAsAction="never"
-        android:orderInCategory="1"
-        android:id="@+id/help" />
+        android:orderInCategory="1"/>
     <item
+        android:id="@+id/sync"
         android:title="@string/sync"
         app:showAsAction="never"
-        android:orderInCategory="1"
-        android:id="@+id/sync" />
+        android:orderInCategory="1"/>
     <item
+        android:id="@+id/open_lua"
         android:title="@string/lua_open_config"
-        app:showAsAction="never"
         android:orderInCategory="1"
-        android:id="@+id/open_lua" />
+        app:showAsAction="never"/>
     <item
-            android:title="@string/history"
-            app:showAsAction="never"
-            android:orderInCategory="1"
-            android:id="@+id/history" />
+        android:id="@+id/history"
+        android:title="@string/history"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
 </menu>

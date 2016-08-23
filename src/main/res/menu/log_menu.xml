@@ -5,7 +5,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/menu_share"
+            android:title="@string/share"
             android:orderInCategory="100"
-            app:showAsAction="always|withText"
-            android:title="@string/share"/>
+            app:showAsAction="always|withText"/>
 </menu>

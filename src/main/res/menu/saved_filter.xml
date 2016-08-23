@@ -5,22 +5,22 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_saved_filter_rename"
+        android:title="@string/rename_filter"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/rename_filter"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/menu_saved_filter_update"
+        android:title="@string/update_filter"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/update_filter"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/menu_saved_filter_shortcut"
+        android:title="@string/add_filter_shortcut"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/add_filter_shortcut"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/menu_saved_filter_delete"
+        android:title="@string/delete"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/delete"/>
+        app:showAsAction="never"/>
 </menu>
