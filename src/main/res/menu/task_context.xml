@@ -27,58 +27,43 @@ You should have received a copy of the GNU General Public License along with Tod
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:title="@string/update"
-            app:showAsAction="always"
             android:id="@+id/update"
-            android:icon="@drawable/edit"/>
+            android:title="@string/update"
+            android:icon="@drawable/ic_edit_white_24dp"
+            app:showAsAction="always"/>
     <item
-            android:title="@string/update_lists"
-            app:showAsAction="always"
-            android:icon="@drawable/ic_action_collections_view_as_list"
-            android:id="@+id/update_lists"/>
-    <item
-            android:title="@string/update_tags"
-            app:showAsAction="always"
-            android:icon="@drawable/ic_action_collections_new_label"
-            android:id="@+id/update_tags"/>
-    <item
-            android:title="@string/priority"
-            app:showAsAction="always"
             android:id="@+id/priority"
-            android:icon="@drawable/prio"/>
+            android:title="@string/priority"
+            android:icon="@drawable/ic_star_border_white_24dp"
+            app:showAsAction="always"/>
     <item
-            android:title="@string/add_to_calendar"
-            app:showAsAction="always"
-            android:icon="@drawable/ic_action_editor_insert_invitation"
-            android:id="@+id/calendar"/>
-    <item
-            android:title="@string/defer_due"
             android:id="@+id/defer_due"
-            app:showAsAction="never"/>
+            android:title="@string/defer_due"
+            android:icon="@drawable/ic_schedule_white_24dp"
+            app:showAsAction="always"/>
     <item
-            android:title="@string/defer_threshold"
             android:id="@+id/defer_threshold"
+            android:title="@string/defer_threshold"
+            android:icon="@drawable/ic_clock_start_white_24dp"
+            app:showAsAction="always"/>
+    <item
+            android:id="@+id/update_lists"
+            android:title="@string/update_lists"
+            android:icon="@drawable/ic_list_white_24dp"
+            app:showAsAction="always"/>
+    <item
+            android:id="@+id/update_tags"
+            android:title="@string/update_tags"
+            android:icon="@drawable/ic_label_outline_white_24dp"
+            app:showAsAction="always"/>
+    <item
+            android:id="@+id/complete"
+            android:title="@string/done"
+            android:icon="@drawable/complete"
             app:showAsAction="never"/>
     <item
-            android:title="@string/delete"
-            android:id="@+id/delete"
-            app:showAsAction="never"
-            android:icon="@drawable/delete"/>
-    <item
-            android:title="@string/archive"
-            android:id="@+id/archive"
-            app:showAsAction="never"
-            />
-    <item
-            android:title="@string/done"
-            android:id="@+id/complete"
-            android:icon="@drawable/complete"
-            app:showAsAction="never"
-            />
-    <item
+            android:id="@+id/uncomplete"
             android:title="@string/unComplete"
             android:icon="@drawable/uncomplete"
-            android:id="@+id/uncomplete"
-            app:showAsAction="never"
-            />
+            app:showAsAction="never"/>
 </menu>
