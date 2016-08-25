@@ -147,7 +147,7 @@ class Simpletask : ThemedActivity() {
         // Replace drawables if the theme is dark
         if (Config.isDarkTheme) {
             val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
-            actionBarClear?.setImageResource(R.drawable.ic_action_content_clear)
+            actionBarClear?.setImageResource(R.drawable.ic_close_white_24dp)
         } else {
             val btnFilterAdd = findViewById(R.id.btn_filter_add) as ImageButton?
             btnFilterAdd?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark))

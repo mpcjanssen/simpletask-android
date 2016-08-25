@@ -28,19 +28,19 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
         android:id="@+id/filter"
         android:title="@string/filter"
-        android:icon="@drawable/ic_action_content_filter_list"
+        android:icon="@drawable/ic_filter_list_white_24dp"
         android:orderInCategory="2"
         app:showAsAction="always"/>
     <item
         android:id="@+id/search"
         android:title="@string/search"
-        android:icon="@drawable/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
     <item
         android:id="@+id/share"
         android:title="@string/share"
-        android:icon="@drawable/share"
+        android:icon="@drawable/ic_share_white_24dp"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/preferences"

@@ -57,7 +57,7 @@ class FilterActivity : ThemedActivity() {
 
         setContentView(R.layout.filter)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
 
         var arguments: Bundle

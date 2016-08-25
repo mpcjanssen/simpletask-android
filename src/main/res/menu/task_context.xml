@@ -59,11 +59,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <item
             android:id="@+id/complete"
             android:title="@string/done"
-            android:icon="@drawable/complete"
             app:showAsAction="never"/>
     <item
             android:id="@+id/uncomplete"
             android:title="@string/unComplete"
-            android:icon="@drawable/uncomplete"
             app:showAsAction="never"/>
 </menu>
