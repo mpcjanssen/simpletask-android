@@ -74,7 +74,7 @@ class AddTask : ThemedActivity() {
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_action_content_clear)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton?
         fab?.setOnClickListener {
