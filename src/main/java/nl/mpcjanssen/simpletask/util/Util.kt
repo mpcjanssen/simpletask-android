@@ -146,7 +146,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header
     var headerLine: HeaderLine? = null
     for (item in visibleTasks) {
         val t = item.task
-        val newHeader  = LuaInterpreter.onGroupCallback(filter.moduleName,t) ?: t.getHeader(firstSort, no_header)
+        val newHeader  = LuaInterpreter.onGroupCallback(filter.moduleName,t) ?: t.getHeader(firstSort, no_header, filter)
         if (header != newHeader) {
             if (headerLine != null) {
                 headerLine.title += " ($count)"
