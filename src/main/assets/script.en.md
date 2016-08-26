@@ -215,6 +215,12 @@ A group callback to group by list with custom empty header:
             return next(f.lists)
         end
     end
+    
+Don't group at all and don't show any headers (regardless of sort order)
+
+    function onGroup()
+        return ""
+    end
 
 Learning Lua
 ============

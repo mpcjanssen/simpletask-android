@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
-                android:src="@drawable/content_new" />
+                android:src="@drawable/ic_add_white_24dp" />
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
@@ -162,7 +162,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/save_filter"
                 android:onClick="onAddFilterClick"
-                android:src="@drawable/content_new" />
+                android:src="@drawable/ic_add_white_24dp" />
 
             <!--suppress AndroidMissingOnClickHandler -->
             <ImageButton
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="onExportFilterClick"
-                android:src="@drawable/ic_action_navigation_more_vert" />
+                android:src="@drawable/ic_more_vert_white_24dp" />
         </LinearLayout>
 
 

@@ -113,7 +113,7 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
-                android:src="@drawable/content_new" />
+                android:src="@drawable/ic_add_white_24dp" />
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
@@ -156,7 +156,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_height="wrap_content"
             android:contentDescription="@string/add_filter_shortcut"
             android:onClick="onAddFilterClick"
-            android:src="@drawable/content_new" />
+            android:src="@drawable/ic_add_white_24dp" />
 
         <ListView
             android:id="@+id/right_drawer_list"

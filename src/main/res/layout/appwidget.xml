@@ -33,8 +33,8 @@
                 android:contentDescription="@string/config_widget"
                 android:enabled="true"
 
-                android:icon="@drawable/ic_action_action_settings"
-                android:src="@drawable/ic_action_action_settings" />
+                android:icon="@drawable/ic_settings_white_24dp"
+                android:src="@drawable/ic_settings_white_24dp" />
 
         <ImageButton
             android:layout_gravity="center"
@@ -48,8 +48,7 @@
             android:contentDescription="@string/addtask"
             android:enabled="true"
             
-            android:icon="@drawable/content_new"
-            android:src="@drawable/content_new" />
+            android:src="@drawable/ic_add_white_24dp" />
 
     </LinearLayout>
 

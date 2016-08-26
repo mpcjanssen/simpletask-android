@@ -5,27 +5,27 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_next"
+        android:title="@string/next"
         android:orderInCategory="100"
-        app:showAsAction="always|withText"
-        android:title="@string/next"/>
+        app:showAsAction="always|withText"/>
     <item
         android:id="@+id/menu_prev"
+        android:title="@string/prev"
         android:orderInCategory="100"
-        app:showAsAction="always|withText"
-        android:title="@string/prev"/>
+        app:showAsAction="always|withText"/>
     <item
         android:id="@+id/menu_share"
+        android:title="@string/share"
         android:orderInCategory="100"
-        app:showAsAction="always|withText"
-        android:title="@string/share"/>
+        app:showAsAction="always|withText"/>
     <item
-            android:id="@+id/menu_clear_database"
-            android:orderInCategory="100"
-            app:showAsAction="never"
-            android:title="@string/clear_database"/>
+        android:id="@+id/menu_clear_database"
+        android:title="@string/clear_database"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/menu_share_database"
-            android:orderInCategory="100"
-            app:showAsAction="never"
-            android:title="@string/share_database"/>
+        android:id="@+id/menu_share_database"
+        android:title="@string/share_database"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
 </menu>
