@@ -33,7 +33,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:clickable="true"
-            android:src="@drawable/ic_action_content_save"
+            android:src="@drawable/ic_save_white_24dp"
             app:layout_anchor="@id/taskText"
             app:layout_anchorGravity="right|end|bottom" />
     </FrameLayout>

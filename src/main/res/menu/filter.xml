@@ -4,13 +4,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/menu_filter_action"
+            android:title="@string/filter"
+            android:icon="@drawable/ic_done_white_24dp"
             android:orderInCategory="100"
-            app:showAsAction="always"
-            android:icon="@drawable/ic_action_navigation_accept"
-            android:title="@string/filter"/>
+            app:showAsAction="always"/>
     <item
             android:id="@+id/menu_filter_load_script"
+            android:title="Script from file"
             android:orderInCategory="200"
-            app:showAsAction="never"
-            android:title="Script from file"/>
+            app:showAsAction="never"/>
 </menu>
