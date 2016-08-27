@@ -48,6 +48,7 @@
             android:contentDescription="@string/addtask"
             android:enabled="true"
             
+            android:icon="@drawable/ic_add_white_24dp"
             android:src="@drawable/ic_add_white_24dp" />
 
     </LinearLayout>
