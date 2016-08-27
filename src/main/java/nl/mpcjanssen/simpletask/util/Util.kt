@@ -128,8 +128,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
-    val sorts = filter.getSort(Config.defaultSorts)
+fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
         firstGroupSortIndex++
@@ -146,7 +145,11 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header
     var headerLine: HeaderLine? = null
     for (item in visibleTasks) {
         val t = item.task
-        val newHeader  = LuaInterpreter.onGroupCallback(filter.moduleName,t) ?: t.getHeader(firstSort, no_header, filter)
+        val newHeader  = if (moduleName !=null ) {
+            LuaInterpreter.onGroupCallback(moduleName, t)
+        }   else {
+            null
+        } ?: t.getHeader(firstSort, no_header, createIsThreshold)
         if (header != newHeader) {
             if (headerLine != null) {
                 headerLine.title += " ($count)"
@@ -171,6 +174,11 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header
         result.removeAt(i - 1)
     }
     return result
+}
+
+fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+    val sorts = filter.getSort(Config.defaultSorts)
+    return addHeaderLines(visibleTasks,sorts,no_header, filter.createIsThreshold, filter.moduleName)
 }
 
 fun join(s: Collection<String>?, delimiter: String): String {

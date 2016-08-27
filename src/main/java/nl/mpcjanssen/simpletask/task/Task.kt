@@ -299,7 +299,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }.map {it.text}.joinToString(" ")
     }
 
-    fun getHeader(sort: String, empty: String, filter: ActiveFilter): String {
+    fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {
         if (sort.contains("by_context")) {
             if (lists.size > 0) {
                 return lists.first()
@@ -313,7 +313,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 return empty
             }
         } else if (sort.contains("by_threshold_date")) {
-            if (filter.createIsThreshold) {
+            if (createIsThreshold) {
                 return thresholdDate?:createDate?:empty
             } else {
                 return thresholdDate?:empty
