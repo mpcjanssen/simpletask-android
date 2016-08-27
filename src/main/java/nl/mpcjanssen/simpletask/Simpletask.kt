@@ -227,6 +227,7 @@ class Simpletask : ThemedActivity() {
             }
         }
         TodoList.selectTodoItems(selectedTasks)
+        refreshSelectionMode()
         m_adapter?.notifyDataSetChanged()
     }
 
