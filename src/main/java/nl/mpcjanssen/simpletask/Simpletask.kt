@@ -625,6 +625,7 @@ class Simpletask : ThemedActivity() {
                 TodoList.remove(t)
             }
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            refreshSelectionMode()
         }, R.string.delete_task_title)
     }
 
@@ -635,6 +636,7 @@ class Simpletask : ThemedActivity() {
                 showToastShort(this, "You have the done.txt file opened.")
             }
             TodoList.archive(FileStore, Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
+            refreshSelectionMode()
         }
         if (areYouSureDialog) {
             showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }, R.string.archive_task_title)
