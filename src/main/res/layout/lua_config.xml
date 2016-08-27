@@ -18,34 +18,4 @@
             android:inputType="text|textMultiLine"
             android:scrollbars="vertical"
             />
-
-    <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/btn_help"
-                android:text="@string/help"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                />
-        <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/btn_share"
-                android:text="@string/share"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-        <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/btn_run"
-                android:text="@string/lua_run"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-    </LinearLayout>
 </LinearLayout>
