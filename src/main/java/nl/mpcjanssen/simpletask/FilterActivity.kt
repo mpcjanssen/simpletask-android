@@ -70,7 +70,7 @@ class FilterActivity : ThemedActivity() {
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
 
-        mFilter = ActiveFilter(environment)
+        mFilter = ActiveFilter(FilterOptions(luaModule = environment))
         val context = applicationContext
         if (asWidgetConfigure) {
             if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {

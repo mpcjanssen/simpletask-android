@@ -12,10 +12,13 @@ import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
 
+
+data class FilterOptions(val luaModule: String, val showSelected : Boolean = false)
+
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter (val moduleName : String) {
+class ActiveFilter (val options : FilterOptions) {
     private val log: Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
@@ -231,11 +234,11 @@ class ActiveFilter (val moduleName : String) {
         val code = if (useScript) {script } else {null}
         val today = todayAsString
         try {
-            log.info(TAG, "Resetting onFilter callback in module $moduleName")
-            LuaInterpreter.clearOnFilter(moduleName)
-            LuaInterpreter.evalScript(moduleName, code)
+            log.info(TAG, "Resetting onFilter callback in module ${options.luaModule}")
+            LuaInterpreter.clearOnFilter(options.luaModule)
+            LuaInterpreter.evalScript(options.luaModule, code)
             for (item in items) {
-                if (item.selected ) {
+                if (options.showSelected && item.selected ) {
                     matched.add(item)
                     continue
                 }
@@ -255,7 +258,7 @@ class ActiveFilter (val moduleName : String) {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(moduleName, t)) {
+                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, t)) {
                         continue
                 }
                 matched.add(item)
@@ -287,7 +290,7 @@ class ActiveFilter (val moduleName : String) {
             }
 
             if (!isEmptyOrNull(search)) {
-                addFilter(ByTextFilter(moduleName, search, false))
+                addFilter(ByTextFilter(options.luaModule, search, false))
             }
         }
 

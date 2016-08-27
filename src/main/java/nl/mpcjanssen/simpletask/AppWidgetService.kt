@@ -45,7 +45,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     fun getFilter () : ActiveFilter {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
-        val filter = ActiveFilter(moduleName())
+        val filter = ActiveFilter(FilterOptions(luaModule = moduleName()))
         filter.initFromPrefs(preferences)
         val obj = JSONObject()
         filter.saveInJSON(obj)
