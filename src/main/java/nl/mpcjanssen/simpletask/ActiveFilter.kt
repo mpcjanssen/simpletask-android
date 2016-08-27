@@ -234,9 +234,11 @@ class ActiveFilter (val moduleName : String) {
             log.info(TAG, "Resetting onFilter callback in module $moduleName")
             LuaInterpreter.clearOnFilter(moduleName)
             LuaInterpreter.evalScript(moduleName, code)
-            var idx = -1
             for (item in items) {
-                idx++
+                if (item.selected ) {
+                    matched.add(item)
+                    continue
+                }
                 val t = item.task
                 if (this.hideCompleted && t.isCompleted()) {
                     continue

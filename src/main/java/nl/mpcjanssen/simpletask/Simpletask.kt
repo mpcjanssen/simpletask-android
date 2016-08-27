@@ -568,7 +568,6 @@ class Simpletask : ThemedActivity() {
         if (Config.isAutoArchive) {
             archiveTasks(null, false)
         }
-        closeSelectionMode()
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
@@ -580,7 +579,6 @@ class Simpletask : ThemedActivity() {
 
     private fun undoCompleteTasks(tasks: List<TodoItem>) {
         TodoList.undoComplete(tasks)
-        closeSelectionMode()
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
@@ -599,7 +597,6 @@ class Simpletask : ThemedActivity() {
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
                         TodoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
-                        closeSelectionMode()
                         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                     },
                             today.year!!,
@@ -613,7 +610,6 @@ class Simpletask : ThemedActivity() {
                 } else {
 
                     TodoList.defer(input, tasks, dateType)
-                    closeSelectionMode()
                     TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
 
                 }
@@ -628,7 +624,6 @@ class Simpletask : ThemedActivity() {
             for (t in tasks) {
                 TodoList.remove(t)
             }
-            closeSelectionMode()
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
         }, R.string.delete_task_title)
     }
@@ -640,7 +635,6 @@ class Simpletask : ThemedActivity() {
                 showToastShort(this, "You have the done.txt file opened.")
             }
             TodoList.archive(FileStore, Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
-            closeSelectionMode()
         }
         if (areYouSureDialog) {
             showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }, R.string.archive_task_title)
@@ -893,7 +887,6 @@ class Simpletask : ThemedActivity() {
     }
 
     private fun closeSelectionMode() {
-        TodoList.clearSelection()
         // listView.clearChoices()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val fab = findViewById(R.id.fab) as FloatingActionButton
@@ -901,6 +894,7 @@ class Simpletask : ThemedActivity() {
         toolbar.visibility = View.GONE
         TodoList.clearSelection()
         populateMainMenu(options_menu)
+        m_adapter!!.setFilteredTasks()
         //updateDrawers();
 
     }
@@ -936,7 +930,6 @@ class Simpletask : ThemedActivity() {
         mFilter!!.saveInIntent(intent)
         mFilter!!.saveInPrefs(Config.prefs)
         setIntent(intent)
-        closeSelectionMode()
         updateDrawers()
         m_adapter!!.setFilteredTasks()
     }
@@ -1156,6 +1149,7 @@ class Simpletask : ThemedActivity() {
         menu.clear()
         inflater.inflate(R.menu.task_context, toolbar.menu)
         populateSelectionMenu(this.options_menu)
+        setTitle("${TodoList.numSelected()}")
     }
 
     val listView: RecyclerView?
@@ -1295,7 +1289,6 @@ class Simpletask : ThemedActivity() {
                 taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 cb.setOnClickListener({
                     undoCompleteTasks(item)
-                    closeSelectionMode()
                     TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                 })
             } else {
@@ -1304,7 +1297,6 @@ class Simpletask : ThemedActivity() {
 
                 cb.setOnClickListener {
                     completeTasks(item)
-                    closeSelectionMode()
                     TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                 }
 
@@ -1350,7 +1342,8 @@ class Simpletask : ThemedActivity() {
                 } else {
                     TodoList.unSelectTodoItem(item)
                 }
-                if (TodoList.numSelected() < 1) {
+                val numSelected = TodoList.numSelected()
+                if (numSelected < 1) {
                     closeSelectionMode()
                 } else {
                     openSelectionMode()
@@ -1470,6 +1463,12 @@ class Simpletask : ThemedActivity() {
                         Logger.info(TAG, "Restoring scroll offset $position, $offset")
                         manager?.scrollToPositionWithOffset(position, offset )
                         Config.lastScrollPosition = -1
+                    }
+                    val numSelected = TodoList.numSelected()
+                    if (numSelected < 1) {
+                        setTitle(R.string.app_label)
+                    } else {
+                        setTitle("$numSelected")
                     }
                 }
             })
@@ -1621,7 +1620,6 @@ class Simpletask : ThemedActivity() {
             }
             TodoList.update(checkedTasks)
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
-            closeSelectionMode()
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
@@ -1685,7 +1683,6 @@ class Simpletask : ThemedActivity() {
             mFilter!!.saveInIntent(intent)
             mFilter!!.saveInPrefs(Config.prefs)
             setIntent(intent)
-            closeSelectionMode()
             m_adapter!!.setFilteredTasks()
         }
     }

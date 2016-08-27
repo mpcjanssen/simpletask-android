@@ -250,7 +250,6 @@ class AddTask : ThemedActivity() {
 
     private fun saveTasksAndClose() {
         val todoList = TodoList
-        todoList.clearSelection()
         // strip line breaks
         textInputField = findViewById(R.id.taskText) as EditText
         val input: String
