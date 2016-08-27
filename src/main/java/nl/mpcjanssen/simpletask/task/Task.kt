@@ -26,6 +26,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
+import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.util.addInterval
 
 import java.util.*
@@ -298,7 +299,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }.map {it.text}.joinToString(" ")
     }
 
-    fun getHeader(sort: String, empty: String): String {
+    fun getHeader(sort: String, empty: String, filter: ActiveFilter): String {
         if (sort.contains("by_context")) {
             if (lists.size > 0) {
                 return lists.first()
@@ -312,7 +313,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 return empty
             }
         } else if (sort.contains("by_threshold_date")) {
-            return thresholdDate?:empty
+            if (filter.createIsThreshold) {
+                return thresholdDate?:createDate?:empty
+            } else {
+                return thresholdDate?:empty
+            }
         } else if (sort.contains("by_prio")) {
             return priority.code
         } else if (sort.contains("by_due_date")) {
