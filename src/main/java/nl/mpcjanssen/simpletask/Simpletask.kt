@@ -254,7 +254,7 @@ class Simpletask : ThemedActivity() {
         mFilter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
 
         m_leftDrawerList = findViewById(R.id.left_drawer) as ListView
-        m_rightDrawerList = findViewById(R.id.right_drawer_list) as ListView
+        m_rightDrawerList = findViewById(R.id.right_drawer) as ListView
 
         m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout?
 
@@ -273,11 +273,13 @@ class Simpletask : ThemedActivity() {
                  */
                 override fun onDrawerClosed(view: View?) {
                     // setTitle(R.string.app_label);
+                    invalidateOptionsMenu()
                 }
 
                 /** Called when a drawer has settled in a completely open state.  */
                 override fun onDrawerOpened(drawerView: View?) {
-                    // setTitle(R.string.changelist);
+                    invalidateOptionsMenu()
+                    setTitle(R.string.filter_saved_prompt) // FIXME: move this to the right place
                 }
             }
 
@@ -436,9 +438,32 @@ class Simpletask : ThemedActivity() {
         if (TodoList.selectedTasks.size > 0) {
             openSelectionMode()
         } else {
-            populateMainMenu(menu)
+            /*val layout = m_drawerLayout
+            if (layout == null) {
+                log.warn(TAG, "Layout was null")
+            }*/
+            val layout = m_drawerLayout
+            if (layout == null) {
+                log.warn(TAG, "layout is null or something")
+                return false // FIXME: I just did this so it would compile
+            }
+            if (layout.isDrawerOpen(GravityCompat.START)) {
+                populateNavigationDrawerMenu(menu)
+            } else {
+                populateMainMenu(menu)
+            }
         }
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun populateNavigationDrawerMenu(menu: Menu?) {
+        if (menu == null) {
+            log.warn(TAG, "Menu was null")
+            return
+        }
+        menu.clear()
+        val inflater = menuInflater
+        inflater.inflate(R.menu.navigation_drawer, menu)
     }
 
     private fun populateSelectionMenu(menu: Menu?) {
@@ -723,6 +748,8 @@ class Simpletask : ThemedActivity() {
             R.id.archive -> archiveTasks(null, true)
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
+            R.id.btn_filter_add -> onAddFilterClick()
+            R.id.btn_filter_import -> onExportFilterClick()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -767,8 +794,11 @@ class Simpletask : ThemedActivity() {
      */
 
     @Suppress("UNUSED")
-    fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+    //fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+    fun onExportFilterClick() {
+        val v = findViewById(R.id.btn_filter_import)
         val popupMenu = PopupMenu(this@Simpletask, v)
+        // FIXME: Refactor to create a generic "create popup at action item" fun
         popupMenu.setOnMenuItemClickListener { item ->
             val menuId = item.itemId
             when (menuId) {
@@ -817,7 +847,8 @@ class Simpletask : ThemedActivity() {
      * Handle add filter click *
      */
     @Suppress("UNUSED")
-    fun onAddFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+    //fun onAddFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+    fun onAddFilterClick() {
         val alert = AlertDialog.Builder(this)
 
         alert.setTitle(R.string.save_filter)
@@ -960,7 +991,7 @@ class Simpletask : ThemedActivity() {
             mFilter!!.saveInPrefs(Config.prefs)
             m_adapter!!.setFilteredTasks()
             if (m_drawerLayout != null) {
-                m_drawerLayout!!.closeDrawer(GravityCompat.END)
+                m_drawerLayout!!.closeDrawer(GravityCompat.START)
             }
             updateDrawers()
         }
