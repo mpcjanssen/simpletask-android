@@ -312,6 +312,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="import_filter">Import</string>
     <string name="rename_filter">Rename</string>
     <string name="rename_filter_message">Enter new name of the saved filter:</string>
+    <string name="title_filter_drawer">Quick filter</string>
     <string name="update_filter">Update</string>
     <string name="create_widget">Create widget</string>
     <string name="config_widget">Configure widget</string>

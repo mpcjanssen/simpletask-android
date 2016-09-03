@@ -31,13 +31,14 @@ You should have received a copy of the GNU General Public License along with Tod
     android:orientation="horizontal">
 
     <!-- The navigation drawer -->
-
     <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="0dp"
+        android:id="@+id/nav_drawer"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_gravity="start"
         android:layout_weight="1"
         android:background="#111"
+        android:orientation="vertical"
         android:choiceMode="multipleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
@@ -126,16 +127,16 @@ You should have received a copy of the GNU General Public License along with Tod
             android:visibility="gone" />
     </LinearLayout>
 
-    <!-- The right navigation drawer -->
+    <!-- The quick filter drawer -->
     <ListView
-        android:id="@+id/right_drawer"
-        android:layout_width="match_parent"
+        android:id="@+id/filter_drawer"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_gravity="end"
         android:layout_weight="1"
+        android:layout_gravity="end"
         android:background="#111"
-        android:orientation="vertical"
         android:choiceMode="multipleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
+
 </LinearLayout>
