@@ -60,6 +60,10 @@ import android.R.id as androidId
 
 class Simpletask : ThemedActivity() {
 
+    enum class Mode {
+        NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
+    }
+
     var textSize: Float = 14.0F
 
     internal var options_menu: Menu? = null
@@ -148,12 +152,6 @@ class Simpletask : ThemedActivity() {
         if (Config.isDarkTheme) {
             val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
             actionBarClear?.setImageResource(R.drawable.ic_close_white_24dp)
-        } else {
-            val btnFilterAdd = findViewById(R.id.btn_filter_add) as ImageButton?
-            btnFilterAdd?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
-
-            val btnFilterImport = findViewById(R.id.btn_filter_import) as ImageButton?
-            btnFilterImport?.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
         }
         val versionCode = BuildConfig.VERSION_CODE
         if (m_app.isAuthenticated && Config.latestChangelogShown < versionCode) {
@@ -227,7 +225,7 @@ class Simpletask : ThemedActivity() {
             }
         }
         TodoList.selectTodoItems(selectedTasks)
-        refreshSelectionMode()
+        invalidateOptionsMenu()
         m_adapter?.notifyDataSetChanged()
     }
 
@@ -253,8 +251,8 @@ class Simpletask : ThemedActivity() {
 
         mFilter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
 
-        m_leftDrawerList = findViewById(R.id.left_drawer) as ListView
-        m_rightDrawerList = findViewById(R.id.right_drawer) as ListView
+        m_leftDrawerList = findViewById(R.id.filter_drawer) as ListView
+        m_rightDrawerList = findViewById(R.id.nav_drawer) as ListView
 
         m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout?
 
@@ -272,14 +270,12 @@ class Simpletask : ThemedActivity() {
                  * state.
                  */
                 override fun onDrawerClosed(view: View?) {
-                    // setTitle(R.string.app_label);
                     invalidateOptionsMenu()
                 }
 
                 /** Called when a drawer has settled in a completely open state.  */
                 override fun onDrawerOpened(drawerView: View?) {
                     invalidateOptionsMenu()
-                    setTitle(R.string.filter_saved_prompt) // FIXME: move this to the right place
                 }
             }
 
@@ -352,7 +348,7 @@ class Simpletask : ThemedActivity() {
             m_scrollPosition = m_adapter!!.getPosition(selectedTask)
 
         }
-        refreshSelectionMode()
+        invalidateOptionsMenu()
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { startAddTaskActivity() }
@@ -435,55 +431,100 @@ class Simpletask : ThemedActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
         this.options_menu = menu
-        if (TodoList.selectedTasks.size > 0) {
-            openSelectionMode()
+        if (menu == null) {
+            log.warn(TAG, "Menu was null")
         } else {
-            /*val layout = m_drawerLayout
-            if (layout == null) {
-                log.warn(TAG, "Layout was null")
-            }*/
-            val layout = m_drawerLayout
-            if (layout == null) {
-                log.warn(TAG, "layout is null or something")
-                return false // FIXME: I just did this so it would compile
-            }
-            if (layout.isDrawerOpen(GravityCompat.START)) {
-                populateNavigationDrawerMenu(menu)
-            } else {
-                populateMainMenu(menu)
+            menu.clear()
+            val inflater = menuInflater
+            val fab = findViewById(R.id.fab) as FloatingActionButton
+            when (activeMode()) {
+                Mode.NAV_DRAWER -> {
+                    inflater.inflate(R.menu.nav_drawer, menu)
+                    setTitle(R.string.filter_saved_prompt)
+                }
+                Mode.FILTER_DRAWER -> {
+                    inflater.inflate(R.menu.filter_drawer, menu)
+                    setTitle(R.string.title_filter_drawer)
+                }
+                Mode.SELECTION -> {
+                    inflater.inflate(R.menu.task_context_actionbar, menu)
+                    setTitle("${TodoList.numSelected()}")
+                    fab.visibility = View.GONE
+                    populateSelectionToolbar()
+                }
+                Mode.MAIN -> {
+                    inflater.inflate(R.menu.main, menu)
+                    populateSearch(menu)
+                    if (Config.showTodoPath()) {
+                        title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
+                    } else {
+                        setTitle(R.string.app_label)
+                    }
+                    fab.visibility = View.VISIBLE
+                    hideSelectionToolbar()
+                }
             }
         }
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun populateNavigationDrawerMenu(menu: Menu?) {
-        if (menu == null) {
-            log.warn(TAG, "Menu was null")
-            return
+    private fun activeMode(): Mode {
+        val layout = m_drawerLayout
+        if (layout == null) {
+            log.warn(TAG, "Layout was null")
+        } else {
+            if (layout.isDrawerOpen(GravityCompat.START)) return Mode.NAV_DRAWER
+            if (layout.isDrawerOpen(GravityCompat.END)) return Mode.FILTER_DRAWER
         }
-        menu.clear()
-        val inflater = menuInflater
-        inflater.inflate(R.menu.navigation_drawer, menu)
+        if (TodoList.selectedTasks.size!=0) return Mode.SELECTION
+        return Mode.MAIN
     }
 
-    private fun populateSelectionMenu(menu: Menu?) {
-        if (menu == null) {
-            log.warn(TAG, "Menu was null")
-            return
-        }
-        menu.clear()
-        val inflater = menuInflater
-        inflater.inflate(R.menu.task_context_actionbar, menu)
-    }
-    private fun populateMainMenu(menu: Menu?) {
+    private fun populateSelectionToolbar() {
 
-        if (menu == null) {
-            log.warn(TAG, "Menu was null")
-            return
-        }
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+            val checkedTasks = TodoList.selectedTasks
+            val menuId = item.itemId
+            val intent: Intent
+            when (menuId) {
+                R.id.complete -> completeTasks(checkedTasks)
+                R.id.uncomplete -> undoCompleteTasks(checkedTasks)
+                R.id.update -> startAddTaskActivity()
+                R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
+                R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
+                R.id.priority -> {
+                    prioritizeTasks(checkedTasks)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.update_lists -> {
+                    updateLists(checkedTasks)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.update_tags -> {
+                    updateTags(checkedTasks)
+                    return@OnMenuItemClickListener true
+                }
+            }
+            true
+        })
+        toolbar.visibility = View.VISIBLE
+        toolbar.popupTheme = Config.activeTheme
+        val menu = toolbar.menu
         menu.clear()
         val inflater = menuInflater
-        inflater.inflate(R.menu.main, menu)
+        inflater.inflate(R.menu.task_context, toolbar.menu)
+    }
+
+    private fun hideSelectionToolbar() {
+        // listView.clearChoices()
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar.visibility = View.GONE
+        m_adapter!!.setFilteredTasks()
+        //updateDrawers();
+    }
+
+    private fun populateSearch(menu: Menu) {
 
         if (!FileStore.supportsSync()) {
             val mItem = menu.findItem(R.id.sync)
@@ -575,7 +616,9 @@ class Simpletask : ThemedActivity() {
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
-            closeSelectionMode()
+            /* closeSelectionMode() */
+            TodoList.clearSelection()
+            invalidateOptionsMenu()
         })
         builder.show()
 
@@ -651,7 +694,7 @@ class Simpletask : ThemedActivity() {
                 TodoList.remove(t)
             }
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
-            refreshSelectionMode()
+            invalidateOptionsMenu()
         }, R.string.delete_task_title)
     }
 
@@ -662,7 +705,7 @@ class Simpletask : ThemedActivity() {
                 showToastShort(this, "You have the done.txt file opened.")
             }
             TodoList.archive(FileStore, Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
-            refreshSelectionMode()
+            invalidateOptionsMenu()
         }
         if (areYouSureDialog) {
             showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }, R.string.archive_task_title)
@@ -677,6 +720,8 @@ class Simpletask : ThemedActivity() {
         log.info(TAG, "onMenuItemSelected: " + item.itemId)
         when (item.itemId) {
             androidId.home -> {
+                // FIXME: A comment to explain this would be great
+                // I think it has to do with opening/closing the drawer
                 val toggle = m_drawerToggle ?: return true
                 val layout = m_drawerLayout ?: return true
 
@@ -750,6 +795,7 @@ class Simpletask : ThemedActivity() {
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.btn_filter_import -> onExportFilterClick()
+            R.id.clear_filter -> clearFilter()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -847,7 +893,6 @@ class Simpletask : ThemedActivity() {
      * Handle add filter click *
      */
     @Suppress("UNUSED")
-    //fun onAddFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
     fun onAddFilterClick() {
         val alert = AlertDialog.Builder(this)
 
@@ -902,7 +947,9 @@ class Simpletask : ThemedActivity() {
             }
         }
         if (TodoList.selectedTasks.size > 0) {
-            closeSelectionMode()
+            /* closeSelectionMode() */
+            TodoList.clearSelection()
+            invalidateOptionsMenu()
             val lay = listView?.layoutManager ?: return
             for ( i in 0..lay.childCount-1 ) {
                 val view = lay.getChildAt(i)
@@ -918,19 +965,6 @@ class Simpletask : ThemedActivity() {
         }
 
         super.onBackPressed()
-    }
-
-    private fun closeSelectionMode() {
-        // listView.clearChoices()
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.visibility = View.VISIBLE
-        toolbar.visibility = View.GONE
-        TodoList.clearSelection()
-        populateMainMenu(options_menu)
-        m_adapter!!.setFilteredTasks()
-        //updateDrawers();
-
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -1141,51 +1175,6 @@ class Simpletask : ThemedActivity() {
         startActivity(i)
     }
 
-    private fun openSelectionMode() {
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        if (options_menu == null) {
-            return
-        }
-        options_menu!!.clear()
-        val inflater = menuInflater
-
-
-        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
-            val checkedTasks = TodoList.selectedTasks
-            val menuId = item.itemId
-            val intent: Intent
-            when (menuId) {
-                R.id.complete -> completeTasks(checkedTasks)
-                R.id.uncomplete -> undoCompleteTasks(checkedTasks)
-                R.id.update -> startAddTaskActivity()
-                R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
-                R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
-                R.id.priority -> {
-                    prioritizeTasks(checkedTasks)
-                    return@OnMenuItemClickListener true
-                }
-                R.id.update_lists -> {
-                    updateLists(checkedTasks)
-                    return@OnMenuItemClickListener true
-                }
-                R.id.update_tags -> {
-                    updateTags(checkedTasks)
-                    return@OnMenuItemClickListener true
-                }
-            }
-            true
-        })
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.visibility = View.GONE
-        toolbar.visibility = View.VISIBLE
-        toolbar.popupTheme = Config.activeTheme
-        val menu = toolbar.menu
-        menu.clear()
-        inflater.inflate(R.menu.task_context, toolbar.menu)
-        populateSelectionMenu(this.options_menu)
-        setTitle("${TodoList.numSelected()}")
-    }
-
     val listView: RecyclerView?
         get() {
             val lv = findViewById(androidId.list)
@@ -1376,14 +1365,8 @@ class Simpletask : ThemedActivity() {
                 } else {
                     TodoList.unSelectTodoItem(item)
                 }
-                val numSelected = TodoList.numSelected()
-                if (numSelected < 1) {
-                    closeSelectionMode()
-                } else {
-                    openSelectionMode()
-                }
                 it.isActivated = newSelectedState
-
+                invalidateOptionsMenu()
             }
 
             view.setOnLongClickListener {
@@ -1482,11 +1465,6 @@ class Simpletask : ThemedActivity() {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
                     notifyDataSetChanged()
-                    if (Config.showTodoPath()) {
-                        title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
-                    } else {
-                        setTitle(R.string.app_label)
-                    }
                     updateConnectivityIndicator()
                     updateFilterBar()
                     showListViewProgress(false)
@@ -1499,11 +1477,7 @@ class Simpletask : ThemedActivity() {
                         Config.lastScrollPosition = -1
                     }
                     val numSelected = TodoList.numSelected()
-                    if (numSelected < 1) {
-                        setTitle(R.string.app_label)
-                    } else {
-                        setTitle("$numSelected")
-                    }
+                    invalidateOptionsMenu()
                 }
             })
         }
@@ -1545,14 +1519,6 @@ class Simpletask : ThemedActivity() {
             } else {
                 return 1
             }
-        }
-    }
-
-    private fun refreshSelectionMode() {
-        if (TodoList.selectedTasks.size!=0) {
-            openSelectionMode()
-        } else {
-            closeSelectionMode()
         }
     }
 

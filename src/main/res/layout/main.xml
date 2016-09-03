@@ -105,9 +105,9 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <!-- The right navigation drawer -->
+    <!-- The navigation drawer -->
     <ListView
-        android:id="@+id/right_drawer"
+        android:id="@+id/nav_drawer"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="start"
@@ -116,9 +116,9 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
 
-    <!-- The left navigation drawer -->
+    <!-- The quick filter drawer -->
     <ListView
-        android:id="@+id/left_drawer"
+        android:id="@+id/filter_drawer"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="end"
