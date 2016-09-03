@@ -124,50 +124,18 @@ You should have received a copy of the GNU General Public License along with Tod
             android:background="?attr/colorPrimary"
             android:theme="@style/AppTheme"
             android:visibility="gone" />
-
     </LinearLayout>
+
     <!-- The right navigation drawer -->
-    <LinearLayout
+    <ListView
         android:id="@+id/right_drawer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="end"
         android:layout_weight="1"
         android:background="#111"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/text1"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_blue_dark"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingBottom="5dip"
-            android:paddingTop="5dip"
-            android:text="@string/filter_saved_prompt"
-            android:textColor="@android:color/white" />
-
-        <!--suppress AndroidMissingOnClickHandler -->
-        <ImageButton
-            android:id="@+id/button"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/add_filter_shortcut"
-            android:onClick="onAddFilterClick"
-            android:src="@drawable/ic_add_white_24dp" />
-
-        <ListView
-            android:id="@+id/right_drawer_list"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:choiceMode="multipleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
-
-
-    </LinearLayout>
-
+        android:orientation="vertical"
+        android:choiceMode="multipleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
 </LinearLayout>
-
