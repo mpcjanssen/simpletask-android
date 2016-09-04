@@ -661,7 +661,7 @@ class Simpletask : ThemedActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
-            @Suppress("DEPRECATION")
+            /* @Suppress("DEPRECATION") */
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
@@ -821,7 +821,6 @@ class Simpletask : ThemedActivity() {
     /**
      * Handle clear filter click *
      */
-    @Suppress("UNUSED")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
     val savedFilters: ArrayList<ActiveFilter>
@@ -895,7 +894,6 @@ class Simpletask : ThemedActivity() {
     /**
      * Handle add filter click *
      */
-    @Suppress("UNUSED")
     fun onAddFilterClick() {
         val alert = AlertDialog.Builder(this)
 
