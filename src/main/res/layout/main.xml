@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/toolbar_background"
             android:theme="@style/AppTheme"
             android:visibility="gone" />
     </LinearLayout>
