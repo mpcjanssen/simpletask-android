@@ -348,7 +348,6 @@ class Simpletask : ThemedActivity() {
             m_scrollPosition = m_adapter!!.getPosition(selectedTask)
 
         }
-        invalidateOptionsMenu()
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { startAddTaskActivity() }
@@ -429,7 +428,7 @@ class Simpletask : ThemedActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
+        log.info(TAG, "Recreating options menu")
         this.options_menu = menu
         if (menu == null) {
             log.warn(TAG, "Menu was null")
@@ -520,7 +519,7 @@ class Simpletask : ThemedActivity() {
         // listView.clearChoices()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         toolbar.visibility = View.GONE
-        m_adapter!!.setFilteredTasks()
+        m_adapter?.setFilteredTasks()
         //updateDrawers();
     }
 
@@ -1476,8 +1475,6 @@ class Simpletask : ThemedActivity() {
                         manager?.scrollToPositionWithOffset(position, offset )
                         Config.lastScrollPosition = -1
                     }
-                    val numSelected = TodoList.numSelected()
-                    invalidateOptionsMenu()
                 }
             })
         }
