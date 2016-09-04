@@ -139,7 +139,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header:
     val firstSort = sorts[firstGroupSortIndex]
 
     var header = ""
-    var newHeader: String
+    /* var newHeader: String */
     val result = ArrayList<VisibleLine>()
     var count = 0
     var headerLine: HeaderLine? = null

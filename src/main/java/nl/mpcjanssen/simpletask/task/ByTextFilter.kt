@@ -29,7 +29,7 @@ import java.util.*
 
 /**
  * A filter that matches Tasks containing the specified text
-
+ *
  * @author Tim Barlotta
  */
 class ByTextFilter(val moduleName : String, searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
@@ -42,16 +42,16 @@ class ByTextFilter(val moduleName : String, searchText: String?, internal val is
         this.parts = this.casedText.split("\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
-    override fun apply(input: Task): Boolean {
-        val luaResult = LuaInterpreter.onTextSearchCallback(moduleName, input.text, text, isCaseSensitive)
+    override fun apply(task: Task): Boolean {
+        val luaResult = LuaInterpreter.onTextSearchCallback(moduleName, task.text, text, isCaseSensitive)
         if (luaResult != null) {
             return luaResult
         }
 
         val taskText = if (isCaseSensitive)
-            input.text
+            task.text
         else
-            input.text.toUpperCase(Locale.getDefault())
+            task.text.toUpperCase(Locale.getDefault())
 
         for (part in parts) {
             if (part.length > 0 && !taskText.contains(part))

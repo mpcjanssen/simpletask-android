@@ -227,8 +227,7 @@ object FileStore : FileStoreInterface {
          */
 
         // Parameters are needed for dropbox version
-
-        fun createFileDialog(ctx: Context?, fs: FileStoreInterface?): Dialog {
+        fun createFileDialog(@Suppress("UNUSED_PARAMETER") ctx: Context?, @Suppress("UNUSED_PARAMETER") fs: FileStoreInterface?): Dialog {
             val dialog: Dialog
             val builder = AlertDialog.Builder(activity)
 

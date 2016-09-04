@@ -708,7 +708,7 @@ class Simpletask : ThemedActivity() {
             if (Config.todoFileName == m_app.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
             }
-            TodoList.archive(FileStore, Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
+            TodoList.archive(Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
             invalidateOptionsMenu()
         }
         if (areYouSureDialog) {
@@ -844,7 +844,6 @@ class Simpletask : ThemedActivity() {
      */
 
     @Suppress("UNUSED")
-            //fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
     fun onExportFilterClick() {
         val v = findViewById(R.id.btn_filter_import)
         val popupMenu = PopupMenu(this@Simpletask, v)
@@ -951,7 +950,6 @@ class Simpletask : ThemedActivity() {
             }
         }
         if (TodoList.selectedTasks.size > 0) {
-            /* closeSelectionMode() */
             TodoList.clearSelection()
             invalidateOptionsMenu()
             val lay = listView?.layoutManager ?: return
