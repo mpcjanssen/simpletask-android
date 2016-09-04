@@ -26,7 +26,9 @@ You should have received a copy of the GNU General Public License along with Tod
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tablet_drawer_layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="fill_parent" android:divider="?android:listDivider"
+    android:dividerPadding="2.5dp"
+    android:showDividers="middle"
     android:baselineAligned="false"
     android:orientation="horizontal">
 
