@@ -430,40 +430,38 @@ class Simpletask : ThemedActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         log.info(TAG, "Recreating options menu")
         this.options_menu = menu
-        if (menu == null) {
-            log.warn(TAG, "Menu was null")
-        } else {
-            menu.clear()
-            val inflater = menuInflater
-            val fab = findViewById(R.id.fab) as FloatingActionButton
-            when (activeMode()) {
-                Mode.NAV_DRAWER -> {
-                    inflater.inflate(R.menu.nav_drawer, menu)
-                    setTitle(R.string.filter_saved_prompt)
+
+        menu.clear()
+        val inflater = menuInflater
+        val fab = findViewById(R.id.fab) as FloatingActionButton
+        when (activeMode()) {
+            Mode.NAV_DRAWER -> {
+                inflater.inflate(R.menu.nav_drawer, menu)
+                setTitle(R.string.filter_saved_prompt)
+            }
+            Mode.FILTER_DRAWER -> {
+                inflater.inflate(R.menu.filter_drawer, menu)
+                setTitle(R.string.title_filter_drawer)
+            }
+            Mode.SELECTION -> {
+                inflater.inflate(R.menu.task_context_actionbar, menu)
+                title = "${TodoList.numSelected()}"
+                fab.visibility = View.GONE
+                populateSelectionToolbar()
+            }
+            Mode.MAIN -> {
+                inflater.inflate(R.menu.main, menu)
+                populateSearch(menu)
+                if (Config.showTodoPath()) {
+                    title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
+                } else {
+                    setTitle(R.string.app_label)
                 }
-                Mode.FILTER_DRAWER -> {
-                    inflater.inflate(R.menu.filter_drawer, menu)
-                    setTitle(R.string.title_filter_drawer)
-                }
-                Mode.SELECTION -> {
-                    inflater.inflate(R.menu.task_context_actionbar, menu)
-                    setTitle("${TodoList.numSelected()}")
-                    fab.visibility = View.GONE
-                    populateSelectionToolbar()
-                }
-                Mode.MAIN -> {
-                    inflater.inflate(R.menu.main, menu)
-                    populateSearch(menu)
-                    if (Config.showTodoPath()) {
-                        title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
-                    } else {
-                        setTitle(R.string.app_label)
-                    }
-                    fab.visibility = View.VISIBLE
-                    hideSelectionToolbar()
-                }
+                fab.visibility = View.VISIBLE
+                hideSelectionToolbar()
             }
         }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -485,7 +483,6 @@ class Simpletask : ThemedActivity() {
         toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
             val checkedTasks = TodoList.selectedTasks
             val menuId = item.itemId
-            val intent: Intent
             when (menuId) {
                 R.id.complete -> completeTasks(checkedTasks)
                 R.id.uncomplete -> undoCompleteTasks(checkedTasks)
@@ -839,7 +836,7 @@ class Simpletask : ThemedActivity() {
      */
 
     @Suppress("UNUSED")
-    //fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
+            //fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
     fun onExportFilterClick() {
         val v = findViewById(R.id.btn_filter_import)
         val popupMenu = PopupMenu(this@Simpletask, v)
@@ -1371,21 +1368,21 @@ class Simpletask : ThemedActivity() {
             view.setOnLongClickListener {
                 val links = ArrayList<String>()
                 val actions = ArrayList<String>()
-                    val t = item.task
-                    for (link in t.links) {
-                        actions.add(ACTION_LINK)
-                        links.add(link)
-                    }
-                    for (number in t.phoneNumbers) {
-                        actions.add(ACTION_PHONE)
-                        links.add(number)
-                        actions.add(ACTION_SMS)
-                        links.add(number)
-                    }
-                    for (mail in t.mailAddresses) {
-                        actions.add(ACTION_MAIL)
-                        links.add(mail)
-                    }
+                val t = item.task
+                for (link in t.links) {
+                    actions.add(ACTION_LINK)
+                    links.add(link)
+                }
+                for (number in t.phoneNumbers) {
+                    actions.add(ACTION_PHONE)
+                    links.add(number)
+                    actions.add(ACTION_SMS)
+                    links.add(number)
+                }
+                for (mail in t.mailAddresses) {
+                    actions.add(ACTION_MAIL)
+                    links.add(mail)
+                }
                 if (actions.size != 0) {
 
 
@@ -1547,11 +1544,11 @@ class Simpletask : ThemedActivity() {
 
 
     private fun updateItemsDialog(title: String,
-                            checkedTasks: List<TodoItem>,
-                            allItems: ArrayList<String>,
-                            retrieveFromTask: (Task) -> SortedSet<String>,
-                            addToTask: (Task, String) -> Unit,
-                            removeFromTask: (Task, String) -> Unit
+                                  checkedTasks: List<TodoItem>,
+                                  allItems: ArrayList<String>,
+                                  retrieveFromTask: (Task) -> SortedSet<String>,
+                                  addToTask: (Task, String) -> Unit,
+                                  removeFromTask: (Task, String) -> Unit
     ) {
         val checkedTaskItems = ArrayList<HashSet<String>>()
         checkedTasks.forEach {
