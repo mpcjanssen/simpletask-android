@@ -42,7 +42,7 @@ class HelpScreen : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log = Logger
-        val m_app = application as TodoApplication
+        /* val m_app = application as TodoApplication */
         setTheme(Config.activeTheme)
         var page = "index." + getText(R.string.help_locale).toString() + ".md"
         val i = intent

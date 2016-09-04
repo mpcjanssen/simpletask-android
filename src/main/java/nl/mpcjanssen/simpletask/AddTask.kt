@@ -192,9 +192,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
 
-        if (selection != null && selection.size > 0) {
-            textInputField.setSelection(textInputField.text.length)
-        }
+        textInputField.setSelection(textInputField.text.length)
     }
 
 
