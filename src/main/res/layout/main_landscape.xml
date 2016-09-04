@@ -33,7 +33,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- The navigation drawer -->
     <ListView
         android:id="@+id/nav_drawer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_gravity="start"
         android:layout_weight="1"
