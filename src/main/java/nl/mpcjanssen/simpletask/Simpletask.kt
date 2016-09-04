@@ -144,6 +144,15 @@ class Simpletask : ThemedActivity() {
         setTheme(Config.activeTheme)
         if (Config.hasLandscapeDrawers()) {
             setContentView(R.layout.main_landscape)
+            val toolbar = findViewById(R.id.saved_filter_toolbar) as Toolbar
+            toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+                onOptionsItemSelected(item)
+            })
+            toolbar.popupTheme = Config.activeTheme
+            val menu = toolbar.menu
+            menu.clear()
+            val inflater = menuInflater
+            inflater.inflate(R.menu.nav_drawer, toolbar.menu)
         } else {
             setContentView(R.layout.main)
         }
@@ -461,7 +470,6 @@ class Simpletask : ThemedActivity() {
                 hideSelectionToolbar()
             }
         }
-
         return super.onCreateOptionsMenu(menu)
     }
 
