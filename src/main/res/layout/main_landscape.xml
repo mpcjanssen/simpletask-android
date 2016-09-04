@@ -31,17 +31,30 @@ You should have received a copy of the GNU General Public License along with Tod
     android:orientation="horizontal">
 
     <!-- The navigation drawer -->
-    <ListView
-        android:id="@+id/nav_drawer"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_gravity="start"
-        android:layout_weight="1"
-        android:background="#111"
-        android:orientation="vertical"
-        android:choiceMode="multipleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="start"
+            android:layout_weight="1">
+        <ListView
+                android:id="@+id/nav_drawer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:background="?android:colorBackground"
+                android:choiceMode="multipleChoice"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp" />
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/saved_filter_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/AppTheme"/>
+    </LinearLayout>
 
     <!-- The main content view -->
     <LinearLayout
@@ -122,6 +135,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:minHeight="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/AppTheme"
             android:visibility="gone" />
@@ -134,7 +148,7 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:layout_gravity="end"
-        android:background="#111"
+        android:background="?android:colorBackground"
         android:choiceMode="multipleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
