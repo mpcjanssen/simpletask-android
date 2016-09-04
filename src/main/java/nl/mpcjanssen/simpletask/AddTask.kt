@@ -192,9 +192,7 @@ class AddTask : ThemedActivity() {
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
 
-        if (selection != null && selection.size > 0) {
-            textInputField.setSelection(textInputField.text.length)
-        }
+        textInputField.setSelection(textInputField.text.length)
     }
 
 
@@ -305,7 +303,6 @@ class AddTask : ThemedActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
-            @Suppress("DEPRECATION")
             override fun onClick(input: String) {
                 if (input == "pick") {
                     /* Note on some Android versions the OnDateSetListener can fire twice

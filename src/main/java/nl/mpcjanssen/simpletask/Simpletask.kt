@@ -661,7 +661,7 @@ class Simpletask : ThemedActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
-            @Suppress("DEPRECATION")
+            /* @Suppress("DEPRECATION") */
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
@@ -708,7 +708,7 @@ class Simpletask : ThemedActivity() {
             if (Config.todoFileName == m_app.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
             }
-            TodoList.archive(FileStore, Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
+            TodoList.archive(Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
             invalidateOptionsMenu()
         }
         if (areYouSureDialog) {
@@ -821,7 +821,6 @@ class Simpletask : ThemedActivity() {
     /**
      * Handle clear filter click *
      */
-    @Suppress("UNUSED")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
     val savedFilters: ArrayList<ActiveFilter>
@@ -844,7 +843,6 @@ class Simpletask : ThemedActivity() {
      */
 
     @Suppress("UNUSED")
-            //fun onExportFilterClick(@Suppress("UNUSED_PARAMETER") v: View) {
     fun onExportFilterClick() {
         val v = findViewById(R.id.btn_filter_import)
         val popupMenu = PopupMenu(this@Simpletask, v)
@@ -896,7 +894,6 @@ class Simpletask : ThemedActivity() {
     /**
      * Handle add filter click *
      */
-    @Suppress("UNUSED")
     fun onAddFilterClick() {
         val alert = AlertDialog.Builder(this)
 
@@ -951,7 +948,6 @@ class Simpletask : ThemedActivity() {
             }
         }
         if (TodoList.selectedTasks.size > 0) {
-            /* closeSelectionMode() */
             TodoList.clearSelection()
             invalidateOptionsMenu()
             val lay = listView?.layoutManager ?: return
