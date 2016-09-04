@@ -303,7 +303,6 @@ class AddTask : ThemedActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
-            @Suppress("DEPRECATION")
             override fun onClick(input: String) {
                 if (input == "pick") {
                     /* Note on some Android versions the OnDateSetListener can fire twice
