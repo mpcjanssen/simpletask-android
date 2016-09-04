@@ -72,4 +72,7 @@
         <item name="colorAccent">#22BBEE</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
+
+    <color name="toolbar_background">#424242</color>
+
 </resources>
