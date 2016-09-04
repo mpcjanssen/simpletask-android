@@ -78,11 +78,11 @@ object TodoList {
     get() = todoItemsDao.loadAll()
 
     fun firstLine(): Long {
-        return todoItems?.map { it -> it.line }?.min() ?: 0
+        return todoItems.map { it -> it.line }.min() ?: 0
     }
 
     fun lastLine(): Long {
-        return todoItems?.map { it -> it.line }?.max() ?: 1
+        return todoItems.map { it -> it.line }.max() ?: 1
     }
 
     fun add(t: TodoItem, atEnd: Boolean) {
@@ -111,14 +111,14 @@ object TodoList {
 
 
     fun size(): Int {
-        return todoItems?.size ?: 0
+        return todoItems.size
     }
 
 
     val priorities: ArrayList<Priority>
         get() {
             val res = HashSet<Priority>()
-            todoItems?.forEach {
+            todoItems.forEach {
                 res.add(it.task.priority)
             }
             val ret = ArrayList(res)
@@ -133,7 +133,7 @@ object TodoList {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems?.forEach {
+            todoItems.forEach {
                 res.addAll(it.task.lists)
             }
             val newLists = ArrayList<String>()
@@ -149,7 +149,7 @@ object TodoList {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems?.forEach {
+            todoItems.forEach {
                 res.addAll(it.task.tags)
             }
             val newTags = ArrayList<String>()
@@ -300,7 +300,7 @@ object TodoList {
         todoItemsDao.updateInTx(items)
     }
 
-    fun archive(fileStore: FileStoreInterface, todoFilename: String, doneFileName: String, tasks: List<TodoItem>?, eol: String) {
+    fun archive(todoFilename: String, doneFileName: String, tasks: List<TodoItem>?, eol: String) {
         ActionQueue.add("Archive", Runnable {
             val items = todoItems
             val tasksToArchive = tasks ?: items
