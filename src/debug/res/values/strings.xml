@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Mark Janssen
+@license http://www.gnu.org/licenses/gpl.html
+@copyright 2016 Mark Janssen
+@copyright 2016 Stephen Michel
+-->
+<!--suppress ALL -->
+<resources>
+    <string name="app_label">Simpletask-DEBUG</string>
+</resources>
