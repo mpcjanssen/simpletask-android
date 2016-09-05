@@ -440,9 +440,10 @@ class Simpletask : ThemedActivity() {
         log.info(TAG, "Recreating options menu")
         this.options_menu = menu
 
-        menu.clear()
         val inflater = menuInflater
         val fab = findViewById(R.id.fab) as FloatingActionButton
+        val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
+
         when (activeMode()) {
             Mode.NAV_DRAWER -> {
                 inflater.inflate(R.menu.nav_drawer, menu)
@@ -455,6 +456,7 @@ class Simpletask : ThemedActivity() {
             Mode.SELECTION -> {
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
+                toggle.setDrawerIndicatorEnabled(false)
                 fab.visibility = View.GONE
                 populateSelectionToolbar()
             }
@@ -466,6 +468,7 @@ class Simpletask : ThemedActivity() {
                 } else {
                     setTitle(R.string.app_label)
                 }
+                toggle.setDrawerIndicatorEnabled(true)
                 fab.visibility = View.VISIBLE
                 hideSelectionToolbar()
             }
@@ -473,16 +476,33 @@ class Simpletask : ThemedActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * The ifDrawerOpen functions return true only if m_drawerLayout != null, so
+     * if this returns either _DRAWER, m_drawerLayout!!. calls are safe to make
+     */
     private fun activeMode(): Mode {
+        if (isNavDrawerOpen()) return Mode.NAV_DRAWER
+        if (isFilterDrawerOpen()) return Mode.FILTER_DRAWER
+        if (TodoList.selectedTasks.size!=0) return Mode.SELECTION
+        return Mode.MAIN
+    }
+
+    private fun isNavDrawerOpen(): Boolean {
         val layout = m_drawerLayout
         if (layout == null) {
             log.warn(TAG, "Layout was null")
-        } else {
-            if (layout.isDrawerOpen(GravityCompat.START)) return Mode.NAV_DRAWER
-            if (layout.isDrawerOpen(GravityCompat.END)) return Mode.FILTER_DRAWER
+            return false
         }
-        if (TodoList.selectedTasks.size!=0) return Mode.SELECTION
-        return Mode.MAIN
+        return layout.isDrawerOpen(GravityCompat.START)
+    }
+
+    private fun isFilterDrawerOpen(): Boolean {
+        val layout = m_drawerLayout
+        if (layout == null) {
+            log.warn(TAG, "Layout was null")
+            return false
+        }
+        return layout.isDrawerOpen(GravityCompat.END)
     }
 
     private fun populateSelectionToolbar() {
@@ -724,20 +744,23 @@ class Simpletask : ThemedActivity() {
         log.info(TAG, "onMenuItemSelected: " + item.itemId)
         when (item.itemId) {
             androidId.home -> {
-                // FIXME: A comment to explain this would be great
-                // I think it has to do with opening/closing the drawer
                 val toggle = m_drawerToggle ?: return true
-                val layout = m_drawerLayout ?: return true
 
-                if (layout.isDrawerOpen(GravityCompat.START)) {
-                    layout.closeDrawer(GravityCompat.START)
-                    return true
+                when (activeMode()) {
+                    Mode.NAV_DRAWER -> {
+                        m_drawerLayout!!.closeDrawer(GravityCompat.START)
+                    }
+                    Mode.FILTER_DRAWER -> {
+                        m_drawerLayout!!.closeDrawer(GravityCompat.END)
+                    }
+                    Mode.SELECTION -> {
+                        TodoList.clearSelection()
+                        invalidateOptionsMenu()
+                    }
+                    Mode.MAIN -> {
+                        toggle.onOptionsItemSelected(item)
+                    }
                 }
-                if (layout.isDrawerOpen(GravityCompat.END)) {
-                    layout.closeDrawer(GravityCompat.END)
-                    return true
-                }
-                toggle.onOptionsItemSelected(item)
                 return true
             }
             R.id.search -> {
@@ -937,34 +960,30 @@ class Simpletask : ThemedActivity() {
     }
 
     override fun onBackPressed() {
-        if (m_drawerLayout != null) {
-            if (m_drawerLayout!!.isDrawerOpen(GravityCompat.START)) {
+        when (activeMode()) {
+            Mode.NAV_DRAWER -> {
                 m_drawerLayout!!.closeDrawer(GravityCompat.START)
-                return
             }
-            if (m_drawerLayout!!.isDrawerOpen(GravityCompat.END)) {
+            Mode.FILTER_DRAWER -> {
                 m_drawerLayout!!.closeDrawer(GravityCompat.END)
-                return
+            }
+            Mode.SELECTION -> {
+                TodoList.clearSelection()
+                invalidateOptionsMenu()
+                val lay = listView?.layoutManager ?: return
+                for ( i in 0..lay.childCount-1 ) {
+                    val view = lay.getChildAt(i)
+                    view.isActivated = false
+                }
+            }
+            Mode.MAIN -> {
+                if (Config.backClearsFilter() && mFilter != null && mFilter!!.hasFilter()) {
+                    clearFilter()
+                    onNewIntent(intent)
+                }
             }
         }
-        if (TodoList.selectedTasks.size > 0) {
-            TodoList.clearSelection()
-            invalidateOptionsMenu()
-            val lay = listView?.layoutManager ?: return
-            for ( i in 0..lay.childCount-1 ) {
-                val view = lay.getChildAt(i)
-                view.isActivated = false
-            }
-
-            return
-        }
-        if (Config.backClearsFilter() && mFilter != null && mFilter!!.hasFilter()) {
-            clearFilter()
-            onNewIntent(intent)
-            return
-        }
-
-        super.onBackPressed()
+        return super.onBackPressed()
     }
 
     override fun onNewIntent(intent: Intent) {
