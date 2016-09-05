@@ -54,12 +54,14 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
+            resValue "string", "content_provider", "nl.mpcjanssen.simpletask.debug.provider"
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
-	    minifyEnabled true
+	        minifyEnabled true
             proguardFile "proguard.txt"
+            resValue "string", "content_provider", "nl.mpcjanssen.simpletask.provider"
         }
     }
     dexOptions {
