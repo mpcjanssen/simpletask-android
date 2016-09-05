@@ -26,7 +26,6 @@ android {
         exclude 'LICENSE.txt'
     }
 
-
     defaultConfig {
         versionName '8.2.2'
         versionCode 3047
@@ -51,6 +50,11 @@ android {
     }
 
     buildTypes {
+    
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
