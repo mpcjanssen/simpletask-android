@@ -977,13 +977,14 @@ class Simpletask : ThemedActivity() {
                 }
             }
             Mode.MAIN -> {
-                if (Config.backClearsFilter() && mFilter != null && mFilter!!.hasFilter()) {
-                    clearFilter()
-                    onNewIntent(intent)
+                if (!Config.backClearsFilter() ||  mFilter == null || !mFilter!!.hasFilter()) {
+                    return super.onBackPressed()
                 }
+                clearFilter()
+                onNewIntent(intent)
             }
         }
-        return super.onBackPressed()
+        return
     }
 
     override fun onNewIntent(intent: Intent) {
