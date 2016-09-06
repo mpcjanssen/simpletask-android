@@ -916,6 +916,7 @@ class Simpletask : ThemedActivity() {
             FileStore.writeFile(exportFile,jsonFilters.toString(2))
 	    showToastShort(this, "Filters exported")
 	} catch (e: Exception) {
+            log.error(TAG, "Export filteres failed", e)
 	    showToastLong(this, "Error exporting filters")
         }
     }
