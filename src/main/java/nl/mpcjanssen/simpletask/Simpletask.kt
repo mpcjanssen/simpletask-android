@@ -912,7 +912,12 @@ class Simpletask : ThemedActivity() {
             it.saveInJSON(jsonItem)
             jsonFilters.put(it.name,jsonItem)
         }
-        FileStore.writeFile(exportFile,jsonFilters.toString(2))
+	try {
+            FileStore.writeFile(exportFile,jsonFilters.toString(2))
+	    showToastShort(this, "Filters exported")
+	} catch (e: Exception) {
+	    showToastLong(this, "Error exporting filters")
+        }
     }
     /**
      * Handle add filter click *
