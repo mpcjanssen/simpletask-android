@@ -149,9 +149,9 @@ class Simpletask : ThemedActivity() {
         if (Config.hasLandscapeDrawers()) {
             setContentView(R.layout.main_landscape)
             val toolbar = findViewById(R.id.saved_filter_toolbar) as Toolbar
-            toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+            toolbar.setOnMenuItemClickListener{ item ->
                 onOptionsItemSelected(item)
-            })
+            }
             toolbar.popupTheme = Config.activeTheme
             val menu = toolbar.menu
             menu.clear()
@@ -463,9 +463,9 @@ class Simpletask : ThemedActivity() {
                 title = "${TodoList.numSelected()}"
                 toggle.setDrawerIndicatorEnabled(false)
                 fab.visibility = View.GONE
-                toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+                toolbar.setOnMenuItemClickListener { item ->
                     onOptionsItemSelected(item)
-                })
+                }
                 toolbar.visibility = View.VISIBLE
                 toolbar.popupTheme = Config.activeTheme
                 toolbar.menu.clear()
@@ -745,7 +745,6 @@ class Simpletask : ThemedActivity() {
             }
             R.id.context_archive -> archiveTasks(TodoList.selectedTasks, true)
             R.id.context_calendar -> {
-                val checkedTasks = TodoList.selectedTasks
                 var calendarTitle = getString(R.string.calendar_title)
                 var calendarDescription = ""
                 if (checkedTasks.size == 1) {
@@ -813,6 +812,7 @@ class Simpletask : ThemedActivity() {
     /**
      * Handle clear filter click *
      */
+    @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
     val savedFilters: ArrayList<ActiveFilter>
