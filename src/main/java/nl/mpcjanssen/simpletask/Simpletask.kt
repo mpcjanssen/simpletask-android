@@ -493,7 +493,7 @@ class Simpletask : ThemedActivity() {
             log.warn(TAG, "Layout was null")
             return false
         }
-        return layout.isDrawerOpen(GravityCompat.START)
+        return layout.isDrawerOpen(GravityCompat.END)
     }
 
     private fun isFilterDrawerOpen(): Boolean {
@@ -502,7 +502,7 @@ class Simpletask : ThemedActivity() {
             log.warn(TAG, "Layout was null")
             return false
         }
-        return layout.isDrawerOpen(GravityCompat.END)
+        return layout.isDrawerOpen(GravityCompat.START)
     }
 
     private fun populateSelectionToolbar() {
@@ -968,10 +968,10 @@ class Simpletask : ThemedActivity() {
     override fun onBackPressed() {
         when (activeMode()) {
             Mode.NAV_DRAWER -> {
-                m_drawerLayout!!.closeDrawer(GravityCompat.START)
+                m_drawerLayout!!.closeDrawer(GravityCompat.END)
             }
             Mode.FILTER_DRAWER -> {
-                m_drawerLayout!!.closeDrawer(GravityCompat.END)
+                m_drawerLayout!!.closeDrawer(GravityCompat.START)
             }
             Mode.SELECTION -> {
                 TodoList.clearSelection()
