@@ -939,7 +939,7 @@ class Simpletask : ThemedActivity() {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
                 saveFilterInPrefs(value, mFilter!!)
-                updateRightDrawer()
+                updateNavDrawer()
             }
         }
 
@@ -1022,11 +1022,11 @@ class Simpletask : ThemedActivity() {
     }
 
     private fun updateDrawers() {
-        updateLeftDrawer()
-        updateRightDrawer()
+        updateFilterDrawer()
+        updateNavDrawer()
     }
 
-    private fun updateRightDrawer() {
+    private fun updateNavDrawer() {
         val names = ArrayList<String>()
         val filters = savedFilters
         Collections.sort(filters) { f1, f2 -> f1.name!!.compareTo(f2.name!!, ignoreCase = true) }
@@ -1043,9 +1043,7 @@ class Simpletask : ThemedActivity() {
             setIntent(intent)
             mFilter!!.saveInPrefs(Config.prefs)
             m_adapter!!.setFilteredTasks()
-            if (m_drawerLayout != null) {
-                closeDrawer(FILTER_DRAWER)
-            }
+            closeDrawer(NAV_DRAWER)
             updateDrawers()
         }
         m_navDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
@@ -1104,7 +1102,7 @@ class Simpletask : ThemedActivity() {
         if (!deleted) {
             log.warn(TAG, "Failed to delete saved filter: " + deleted_filter.name!!)
         }
-        updateRightDrawer()
+        updateNavDrawer()
     }
 
     private fun updateSavedFilter(prefsName: String) {
@@ -1114,7 +1112,7 @@ class Simpletask : ThemedActivity() {
         val filterName = old_filter.name
         mFilter!!.name = filterName
         mFilter!!.saveInPrefs(filter_pref)
-        updateRightDrawer()
+        updateNavDrawer()
     }
 
     private fun renameSavedFilter(prefsName: String) {
@@ -1145,7 +1143,7 @@ class Simpletask : ThemedActivity() {
             } else {
                 old_filter.name = value
                 old_filter.saveInPrefs(filter_pref)
-                updateRightDrawer()
+                updateNavDrawer()
             }
         }
 
@@ -1155,7 +1153,7 @@ class Simpletask : ThemedActivity() {
     }
 
 
-    private fun updateLeftDrawer() {
+    private fun updateFilterDrawer() {
         val taskBag = TodoList
         val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, Config.sortCaseSensitive(), "@-")
         val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, Config.sortCaseSensitive(), "+-")
@@ -1700,6 +1698,7 @@ class Simpletask : ThemedActivity() {
             mFilter!!.saveInIntent(intent)
             mFilter!!.saveInPrefs(Config.prefs)
             setIntent(intent)
+            closeDrawer(FILTER_DRAWER)
             m_adapter!!.setFilteredTasks()
         }
     }
