@@ -470,7 +470,8 @@ class Simpletask : ThemedActivity() {
                 }
                 toggle.setDrawerIndicatorEnabled(true)
                 fab.visibility = View.VISIBLE
-                hideSelectionToolbar()
+                val toolbar = findViewById(R.id.toolbar) as Toolbar
+                toolbar.visibility = View.GONE
             }
         }
         return super.onCreateOptionsMenu(menu)
@@ -538,14 +539,6 @@ class Simpletask : ThemedActivity() {
         menu.clear()
         val inflater = menuInflater
         inflater.inflate(R.menu.task_context, toolbar.menu)
-    }
-
-    private fun hideSelectionToolbar() {
-        // listView.clearChoices()
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        toolbar.visibility = View.GONE
-        //m_adapter?.setFilteredTasks()
-        //updateDrawers();
     }
 
     private fun populateSearch(menu: Menu) {
