@@ -710,10 +710,10 @@ class Simpletask : ThemedActivity() {
             androidId.home -> {
                 when (activeMode()) {
                     Mode.NAV_DRAWER -> {
-                        closeDrawer(FILTER_DRAWER)
+                        closeDrawer(NAV_DRAWER)
                     }
                     Mode.FILTER_DRAWER -> {
-                        closeDrawer(NAV_DRAWER)
+                        closeDrawer(FILTER_DRAWER)
                     }
                     Mode.SELECTION -> {
                         TodoList.clearSelection()
