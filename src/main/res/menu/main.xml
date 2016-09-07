@@ -55,12 +55,12 @@ You should have received a copy of the GNU General Public License along with Tod
         android:title="@string/sync"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/open_lua"
-        android:title="@string/lua_open_config"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/history"
         android:title="@string/history"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/open_lua"
+        android:title="@string/lua_open_config"
         app:showAsAction="never"/>
     <item
         android:id="@+id/preferences"
