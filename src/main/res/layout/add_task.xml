@@ -50,54 +50,59 @@
         android:showDividers="middle">
 
 
-        <Button
+        <ImageButton
             android:id="@+id/btnContext"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="\@…"
+            android:contentDescription="\@…"
+            android:src="@drawable/ic_list_white_24dp"
             android:textColor="#FFFFFF" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnProject"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="+…"
+            android:src="@drawable/ic_label_outline_white_24dp"
+            android:contentDescription="+…"
             android:textColor="#FFFFFF" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnPrio"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="(.)"
+            android:src="@drawable/ic_star_border_white_24dp"
+            android:contentDescription="(.)"
             android:textColor="#FFFFFF" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnDue"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="due:…"
+            android:src="@drawable/ic_schedule_white_24dp"
+            android:contentDescription="due:…"
             android:textColor="#FFFFFF" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnThreshold"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="t:…"
+            android:contentDescription="t:…"
+            android:src="@drawable/ic_clock_start_white_24dp"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
