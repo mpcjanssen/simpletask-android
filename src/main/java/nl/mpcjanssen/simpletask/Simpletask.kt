@@ -73,9 +73,13 @@ class Simpletask : ThemedActivity() {
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
 
+    // Drawer side
+    private val NAV_DRAWER = GravityCompat.END
+    private val FILTER_DRAWER = GravityCompat.START
+
     // Drawer vars
-    private var m_leftDrawerList: ListView? = null
-    private var m_rightDrawerList: ListView? = null
+    private var m_filterDrawerList: ListView? = null
+    private var m_navDrawerList: ListView? = null
     private var m_drawerLayout: DrawerLayout? = null
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
@@ -260,13 +264,13 @@ class Simpletask : ThemedActivity() {
 
         mFilter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
 
-        m_leftDrawerList = findViewById(R.id.filter_drawer) as ListView
-        m_rightDrawerList = findViewById(R.id.nav_drawer) as ListView
+        m_filterDrawerList = findViewById(R.id.filter_drawer) as ListView
+        m_navDrawerList = findViewById(R.id.nav_drawer) as ListView
 
         m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout?
 
         // Set the list's click listener
-        m_leftDrawerList!!.onItemClickListener = DrawerItemClickListener()
+        m_filterDrawerList!!.onItemClickListener = DrawerItemClickListener()
 
         if (m_drawerLayout != null) {
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
@@ -477,32 +481,28 @@ class Simpletask : ThemedActivity() {
     }
 
     /**
-     * The ifDrawerOpen functions return true only if m_drawerLayout != null, so
+     * The isDrawerOpen functions return true only if m_drawerLayout != null, so
      * if this returns either _DRAWER, m_drawerLayout!!. calls are safe to make
      */
     private fun activeMode(): Mode {
-        if (isNavDrawerOpen()) return Mode.NAV_DRAWER
-        if (isFilterDrawerOpen()) return Mode.FILTER_DRAWER
+        if (isDrawerOpen(NAV_DRAWER)) return Mode.NAV_DRAWER
+        if (isDrawerOpen(FILTER_DRAWER)) return Mode.FILTER_DRAWER
         if (TodoList.selectedTasks.size!=0) return Mode.SELECTION
         return Mode.MAIN
     }
 
-    private fun isNavDrawerOpen(): Boolean {
+    private fun isDrawerOpen(drawer: Int): Boolean {
         val layout = m_drawerLayout
         if (layout == null) {
             log.warn(TAG, "Layout was null")
             return false
         }
-        return layout.isDrawerOpen(GravityCompat.END)
+        return layout.isDrawerOpen(drawer)
     }
 
-    private fun isFilterDrawerOpen(): Boolean {
-        val layout = m_drawerLayout
-        if (layout == null) {
-            log.warn(TAG, "Layout was null")
-            return false
-        }
-        return layout.isDrawerOpen(GravityCompat.START)
+    private fun closeDrawer(drawer: Int) {
+        val layout = m_drawerLayout ?: return
+        layout.closeDrawer(drawer)
     }
 
     private fun populateSelectionToolbar() {
@@ -748,10 +748,10 @@ class Simpletask : ThemedActivity() {
 
                 when (activeMode()) {
                     Mode.NAV_DRAWER -> {
-                        m_drawerLayout!!.closeDrawer(GravityCompat.START)
+                        closeDrawer(FILTER_DRAWER)
                     }
                     Mode.FILTER_DRAWER -> {
-                        m_drawerLayout!!.closeDrawer(GravityCompat.END)
+                        closeDrawer(NAV_DRAWER)
                     }
                     Mode.SELECTION -> {
                         TodoList.clearSelection()
@@ -968,10 +968,10 @@ class Simpletask : ThemedActivity() {
     override fun onBackPressed() {
         when (activeMode()) {
             Mode.NAV_DRAWER -> {
-                m_drawerLayout!!.closeDrawer(GravityCompat.END)
+                closeDrawer(NAV_DRAWER)
             }
             Mode.FILTER_DRAWER -> {
-                m_drawerLayout!!.closeDrawer(GravityCompat.START)
+                closeDrawer(FILTER_DRAWER)
             }
             Mode.SELECTION -> {
                 TodoList.clearSelection()
@@ -1040,10 +1040,10 @@ class Simpletask : ThemedActivity() {
         for (f in filters) {
             names.add(f.name!!)
         }
-        m_rightDrawerList!!.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
-        m_rightDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_NONE
-        m_rightDrawerList!!.isLongClickable = true
-        m_rightDrawerList!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        m_navDrawerList!!.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
+        m_navDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_NONE
+        m_navDrawerList!!.isLongClickable = true
+        m_navDrawerList!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             mFilter = filters[position]
             val intent = intent
             mFilter!!.saveInIntent(intent)
@@ -1051,11 +1051,11 @@ class Simpletask : ThemedActivity() {
             mFilter!!.saveInPrefs(Config.prefs)
             m_adapter!!.setFilteredTasks()
             if (m_drawerLayout != null) {
-                m_drawerLayout!!.closeDrawer(GravityCompat.START)
+                closeDrawer(FILTER_DRAWER)
             }
             updateDrawers()
         }
-        m_rightDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
+        m_navDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
             val filter = filters[position]
             val prefsName = filter.prefName!!
             val popupMenu = PopupMenu(this@Simpletask, view)
@@ -1172,26 +1172,26 @@ class Simpletask : ThemedActivity() {
                 Config.tagTerm,
                 decoratedProjects)
 
-        m_leftDrawerList!!.adapter = drawerAdapter
-        m_leftDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-        m_leftDrawerList!!.onItemClickListener = DrawerItemClickListener()
+        m_filterDrawerList!!.adapter = drawerAdapter
+        m_filterDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+        m_filterDrawerList!!.onItemClickListener = DrawerItemClickListener()
 
         for (context in mFilter!!.contexts) {
             val position = drawerAdapter.getIndexOf("@" + context)
             if (position != -1) {
-                m_leftDrawerList!!.setItemChecked(position, true)
+                m_filterDrawerList!!.setItemChecked(position, true)
             }
         }
 
         for (project in mFilter!!.projects) {
             val position = drawerAdapter.getIndexOf("+" + project)
             if (position != -1) {
-                m_leftDrawerList!!.setItemChecked(position, true)
+                m_filterDrawerList!!.setItemChecked(position, true)
             }
         }
-        m_leftDrawerList!!.setItemChecked(drawerAdapter.contextHeaderPosition, mFilter!!.contextsNot)
-        m_leftDrawerList!!.setItemChecked(drawerAdapter.projectsHeaderPosition, mFilter!!.projectsNot)
-        m_leftDrawerList!!.deferNotifyDataSetChanged()
+        m_filterDrawerList!!.setItemChecked(drawerAdapter.contextHeaderPosition, mFilter!!.contextsNot)
+        m_filterDrawerList!!.setItemChecked(drawerAdapter.projectsHeaderPosition, mFilter!!.projectsNot)
+        m_filterDrawerList!!.deferNotifyDataSetChanged()
     }
 
 
