@@ -446,6 +446,7 @@ class Simpletask : ThemedActivity() {
 
         val inflater = menuInflater
         val fab = findViewById(R.id.fab) as FloatingActionButton
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
 
         when (activeMode()) {
@@ -462,7 +463,13 @@ class Simpletask : ThemedActivity() {
                 title = "${TodoList.numSelected()}"
                 toggle.setDrawerIndicatorEnabled(false)
                 fab.visibility = View.GONE
-                populateSelectionToolbar()
+                toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+                    onOptionsItemSelected(item)
+                })
+                toolbar.visibility = View.VISIBLE
+                toolbar.popupTheme = Config.activeTheme
+                toolbar.menu.clear()
+                inflater.inflate(R.menu.task_context, toolbar.menu)
             }
             Mode.MAIN -> {
                 inflater.inflate(R.menu.main, menu)
@@ -474,7 +481,6 @@ class Simpletask : ThemedActivity() {
                 }
                 toggle.setDrawerIndicatorEnabled(true)
                 fab.visibility = View.VISIBLE
-                val toolbar = findViewById(R.id.toolbar) as Toolbar
                 toolbar.visibility = View.GONE
             }
         }
@@ -506,43 +512,7 @@ class Simpletask : ThemedActivity() {
         layout.closeDrawer(drawer)
     }
 
-    private fun populateSelectionToolbar() {
-
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
-            val checkedTasks = TodoList.selectedTasks
-            val menuId = item.itemId
-            when (menuId) {
-                R.id.complete -> completeTasks(checkedTasks)
-                R.id.uncomplete -> undoCompleteTasks(checkedTasks)
-                R.id.update -> startAddTaskActivity()
-                R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
-                R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
-                R.id.priority -> {
-                    prioritizeTasks(checkedTasks)
-                    return@OnMenuItemClickListener true
-                }
-                R.id.update_lists -> {
-                    updateLists(checkedTasks)
-                    return@OnMenuItemClickListener true
-                }
-                R.id.update_tags -> {
-                    updateTags(checkedTasks)
-                    return@OnMenuItemClickListener true
-                }
-            }
-            true
-        })
-        toolbar.visibility = View.VISIBLE
-        toolbar.popupTheme = Config.activeTheme
-        val menu = toolbar.menu
-        menu.clear()
-        val inflater = menuInflater
-        inflater.inflate(R.menu.task_context, toolbar.menu)
-    }
-
     private fun populateSearch(menu: Menu) {
-
         if (!FileStore.supportsSync()) {
             val mItem = menu.findItem(R.id.sync)
             mItem.isVisible = false
@@ -735,10 +705,9 @@ class Simpletask : ThemedActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         log.info(TAG, "onMenuItemSelected: " + item.itemId)
+        val checkedTasks = TodoList.selectedTasks
         when (item.itemId) {
             androidId.home -> {
-                val toggle = m_drawerToggle ?: return true
-
                 when (activeMode()) {
                     Mode.NAV_DRAWER -> {
                         closeDrawer(FILTER_DRAWER)
@@ -751,6 +720,7 @@ class Simpletask : ThemedActivity() {
                         invalidateOptionsMenu()
                     }
                     Mode.MAIN -> {
+                        val toggle = m_drawerToggle ?: return true
                         toggle.onOptionsItemSelected(item)
                     }
                 }
@@ -770,10 +740,8 @@ class Simpletask : ThemedActivity() {
                 shareText(this@Simpletask, "Simpletask list", shareText)
             }
             R.id.context_share -> {
-                if (TodoList.numSelected() > 0) {
-                    val shareText = selectedTasksAsString()
-                    shareText(this@Simpletask, "Simpletask tasks", shareText)
-                }
+                val shareText = selectedTasksAsString()
+                shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
             R.id.context_archive -> archiveTasks(TodoList.selectedTasks, true)
             R.id.context_calendar -> {
@@ -816,6 +784,14 @@ class Simpletask : ThemedActivity() {
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.btn_filter_import -> onExportFilterClick()
             R.id.clear_filter -> clearFilter()
+            R.id.complete -> completeTasks(checkedTasks)
+            R.id.uncomplete -> undoCompleteTasks(checkedTasks)
+            R.id.update -> startAddTaskActivity()
+            R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
+            R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
+            R.id.priority -> prioritizeTasks(checkedTasks)
+            R.id.update_lists -> updateLists(checkedTasks)
+            R.id.update_tags -> updateTags(checkedTasks)
             else -> return super.onOptionsItemSelected(item)
         }
         return true
