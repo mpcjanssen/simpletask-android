@@ -544,7 +544,7 @@ class Simpletask : ThemedActivity() {
         // listView.clearChoices()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         toolbar.visibility = View.GONE
-        m_adapter?.setFilteredTasks()
+        //m_adapter?.setFilteredTasks()
         //updateDrawers();
     }
 
