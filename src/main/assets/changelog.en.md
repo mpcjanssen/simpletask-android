@@ -8,7 +8,6 @@
 - Initially hide filter bar so no `X` is displayed on first start.
 - Merged: Fix typo. (#529 rutsky)
 - Add `onGroup` filter callback for #516, fixes #284.
-- Swap navigation and saved filter drawer.
 - Keep selected items visible regardless of filter. Fixes #43.
 - Merged: Fix grouping when `Create is threshold` is selected. Fixes #445. (#540 djibux)
 - Fix build. (mailed patch from LukeG)
