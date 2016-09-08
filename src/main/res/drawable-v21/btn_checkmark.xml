@@ -13,27 +13,33 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<animated-selector xmlns:android="http://schemas.android.com/apk/res/android"
-                   xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<animated-selector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <!-- The original name was btn_check_material_anim.xml -->
     <item
         android:id="@+id/indeterminate"
         app:state_indeterminate="true"
-        android:drawable="@drawable/ic_checkbox_indeterminate" />
+        android:drawable="@drawable/ic_checkbox_indeterminate"
+        />
     <item
         android:id="@+id/checked"
         android:state_checked="true"
-        android:drawable="@drawable/ic_checkbox_checked" />
+        android:drawable="@drawable/ic_checkbox_checked"
+        />
     <item
         android:id="@+id/unchecked"
-        android:drawable="@drawable/ic_checkbox_unchecked" />
+        android:drawable="@drawable/ic_checkbox_unchecked"
+        />
     <transition
         android:fromId="@+id/unchecked"
         android:toId="@+id/checked"
-        android:drawable="@drawable/ic_checkbox_unchecked_to_checked_animation" />
+        android:drawable="@drawable/ic_checkbox_unchecked_to_checked_animation"
+        />
     <transition
         android:fromId="@+id/checked"
         android:toId="@+id/unchecked"
-        android:drawable="@drawable/ic_checkbox_checked_to_unchecked_animation" />
+        android:drawable="@drawable/ic_checkbox_checked_to_unchecked_animation"
+        />
 </animated-selector>

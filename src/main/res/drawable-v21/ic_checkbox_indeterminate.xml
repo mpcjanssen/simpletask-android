@@ -14,23 +14,27 @@
      limitations under the License.
 -->
 
-<vector android:name="ic_checkbox_unchecked"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="32dp"
-        android:height="32dp"
-        android:tint="@color/control_checkable_material"
-        android:viewportHeight="48"
-        android:viewportWidth="48">
+<vector
+    android:name="ic_checkbox_unchecked"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:tint="@color/control_checkable_material"
+    android:viewportHeight="48"
+    android:viewportWidth="48"
+    >
     <group
         android:name="icon_null"
         android:scaleX="0.2"
         android:scaleY="0.2"
         android:translateX="24"
-        android:translateY="24">
+        android:translateY="24"
+        >
         <group
             android:name="check"
             android:scaleX="7.5"
-            android:scaleY="7.5">
+            android:scaleY="7.5"
+            >
             <path
                 android:name="check_path_merged"
                 android:fillColor="#FF000000"
@@ -49,16 +53,20 @@
                 M -4.5,-1.0
                 h 9
                 v 2
-                h -9 Z"/>
+                h -9 Z"
+                />
         </group>
+
         <group
             android:name="box_dilate"
             android:scaleX="7.5"
-            android:scaleY="7.5">
+            android:scaleY="7.5"
+            >
             <path
                 android:name="box_inner_merged"
                 android:fillColor="#FF000000"
-                android:pathData="M -7.0,-7.0 l 14.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,14.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l -14.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,-14.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z M 7.0,-9.0 c 0.0,0.0 -14.0,0.0 -14.0,0.0 c -1.1044921875,0.0 -2.0,0.8955078125 -2.0,2.0 c 0.0,0.0 0.0,14.0 0.0,14.0 c 0.0,1.1044921875 0.8955078125,2.0 2.0,2.0 c 0.0,0.0 14.0,0.0 14.0,0.0 c 1.1044921875,0.0 2.0,-0.8955078125 2.0,-2.0 c 0.0,0.0 0.0,-14.0 0.0,-14.0 c 0.0,-1.1044921875 -0.8955078125,-2.0 -2.0,-2.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z"/>
+                android:pathData="M -7.0,-7.0 l 14.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,14.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l -14.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,-14.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z M 7.0,-9.0 c 0.0,0.0 -14.0,0.0 -14.0,0.0 c -1.1044921875,0.0 -2.0,0.8955078125 -2.0,2.0 c 0.0,0.0 0.0,14.0 0.0,14.0 c 0.0,1.1044921875 0.8955078125,2.0 2.0,2.0 c 0.0,0.0 14.0,0.0 14.0,0.0 c 1.1044921875,0.0 2.0,-0.8955078125 2.0,-2.0 c 0.0,0.0 0.0,-14.0 0.0,-14.0 c 0.0,-1.1044921875 -0.8955078125,-2.0 -2.0,-2.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z"
+                />
         </group>
     </group>
 </vector>

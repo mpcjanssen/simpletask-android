@@ -23,27 +23,29 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tablet_drawer_layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" android:divider="?android:listDivider"
+    android:layout_height="fill_parent"
+    android:divider="?android:listDivider"
     android:dividerPadding="2.5dp"
     android:showDividers="middle"
     android:baselineAligned="false"
-    android:orientation="horizontal">
-
+    android:orientation="horizontal"
+    >
     <!-- The quick filter drawer -->
     <ListView
-            android:id="@+id/filter_drawer"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:layout_gravity="end"
-            android:background="?android:colorBackground"
-            android:choiceMode="multipleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
-
+        android:id="@+id/filter_drawer"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_gravity="end"
+        android:background="?android:colorBackground"
+        android:choiceMode="multipleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        />
     <!-- The main content view -->
     <LinearLayout
         android:id="@+id/home_root"
@@ -52,26 +54,26 @@ You should have received a copy of the GNU General Public License along with Tod
         android:layout_weight="2"
         android:divider="?android:attr/dividerVertical"
         android:orientation="vertical"
-        android:showDividers="middle">
-
+        android:showDividers="middle"
+        >
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
-
+            android:layout_weight="1"
+            >
             <LinearLayout
                 android:id="@+id/filtered_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                >
                 <LinearLayout
                     android:id="@+id/actionbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:showDividers="middle"
-                    android:visibility="visible">
-
+                    android:visibility="visible"
+                    >
                     <!--suppress AndroidMissingOnClickHandler -->
                     <ImageButton
                         android:id="@+id/actionbar_clear"
@@ -85,20 +87,22 @@ You should have received a copy of the GNU General Public License along with Tod
                         android:paddingLeft="2dip"
                         android:paddingRight="2dip"
                         android:paddingTop="0dip"
-                        android:src="@drawable/cancel_light" />
-
+                        android:src="@drawable/cancel_light"
+                        />
                     <TextView
                         android:id="@+id/filter_text"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical" />
+                        android:layout_gravity="center_vertical"
+                        />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
-                        android:id="@android:id/list"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:scrollbars="vertical"/>
+                    android:id="@android:id/list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:scrollbars="vertical"
+                    />
             </LinearLayout>
 
             <ProgressBar
@@ -107,15 +111,16 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:indeterminate="true"
-                android:visibility="gone" />
-
+                android:visibility="gone"
+                />
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_add_white_24dp" />
+                android:src="@drawable/ic_add_white_24dp"
+                />
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
@@ -126,34 +131,36 @@ You should have received a copy of the GNU General Public License along with Tod
             android:minHeight="?attr/actionBarSize"
             android:background="@color/toolbar_background"
             android:theme="@style/AppTheme"
-            android:visibility="gone" />
+            android:visibility="gone"
+            />
     </LinearLayout>
 
     <!-- The navigation drawer -->
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_gravity="start"
-            android:layout_weight="1">
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        >
         <ListView
-                android:id="@+id/nav_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:background="?android:colorBackground"
-                android:choiceMode="multipleChoice"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="0dp" />
+            android:id="@+id/nav_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:background="?android:colorBackground"
+            android:choiceMode="multipleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            />
         <android.support.v7.widget.Toolbar
-                android:id="@+id/saved_filter_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/toolbar_background"
-                android:theme="@style/AppTheme"/>
+            android:id="@+id/saved_filter_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/toolbar_background"
+            android:theme="@style/AppTheme"
+            />
     </LinearLayout>
-
-
 </LinearLayout>

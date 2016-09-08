@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen android:key="@string/calendar_sync_screen"
+<PreferenceScreen
+    android:key="@string/calendar_sync_screen"
     android:summary="@string/calendar_sync_screen_summary"
     android:title="@string/calendar_sync_screen_title"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <CheckBoxPreference
         android:key="@string/calendar_sync_dues"
-        android:title="@string/calendar_sync_dues_title"/>
+        android:title="@string/calendar_sync_dues_title"
+        />
     <CheckBoxPreference
         android:key="@string/calendar_sync_thresholds"
-        android:title="@string/calendar_sync_thresholds_title"/>
+        android:title="@string/calendar_sync_thresholds_title"
+        />
     <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
         android:key="@string/calendar_reminder_days"
         android:title="@string/calendar_reminder_days_title"
@@ -17,10 +21,12 @@
         android:max="7"
         robobunny:min="0"
         robobunny:unitsLeft=""
-        robobunny:unitsRight=""/>
+        robobunny:unitsRight=""
+        />
     <nl.mpcjanssen.simpletask.TimePreference
         android:key="@string/calendar_reminder_time"
         android:title="@string/calendar_reminder_time_title"
         android:summary="@string/calendar_reminder_time_summary"
-        android:defaultValue="720"/>
+        android:defaultValue="720"
+        />
 </PreferenceScreen>

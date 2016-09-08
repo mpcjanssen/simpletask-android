@@ -24,4 +24,5 @@
     style="?android:attr/listSeparatorTextViewStyle"
     android:gravity="center_vertical|center_horizontal"
     android:paddingTop="5dip"
-    android:paddingBottom="5dip" />
+    android:paddingBottom="5dip"
+    />
