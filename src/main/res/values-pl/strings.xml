@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -24,6 +25,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2013 Mark Janssen
 @copyright 2015 Vojtech Kral
 -->
+
 <!--suppress ALL -->
 <resources>
     <string name="invalid_context">Nieprawidłowa nazwa listy</string>
@@ -77,7 +79,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="cancel">Anuluj</string>
     <string name="clear_filter">Wyczyść filtr</string>
     <string name="write_failed">Nie udało się zapisać pliku!. Twoje zmiany NIE zostały zapisane.</string>
-
 
     <string name="tasktexthint">\@Przedyskutuj +Paris kwestię z +Hector @Troy\nPowiedz +Hector aby nie przewlekał @Troy\nPrzeglądaj +Simpletask ustawienia, aby usunać ten tekst @Phone</string>
 
@@ -240,11 +241,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sync_dialog_download">Pobierz na urządzenie</string>
     <string name="sync_upload_message">Wysyłanie todo.txt…</string>
     <string name="sync_download_message">Pobieranie todo.txt…</string>
+
     <!-- sync conflict dialog -->
     <string name="sync_conflict_dialog_title">Konflikt pliku</string>
     <string name="sync_conflict_dialog_msg">Oj! Jest nowsza wersja pliku todo.txt w Dropboxie. \nChcesz
         wysłać swoje lokalne zmiany lub pobrać wersję z Dropbox?
     </string>
+
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Zaloguj się do Dropboxa</string>
@@ -253,6 +256,7 @@ You should have received a copy of the GNU General Public License along with Tod
         możesz pobrać Simpletask Cloudless z Play Store.
         \nhttp://goo.gl/X1C55P
     </string>
+
     <!-- delete -->
     <string name="delete_task_title">Usuń Zadanie(a)</string>
     <string name="archive_task_title">Archiwizuj Zadanie(a)</string>
@@ -264,11 +268,12 @@ You should have received a copy of the GNU General Public License along with Tod
         wspóldzieliłeś Twoje zakończone zadania, jeżeli nie jesteś połączony z Dropboxem.\n
         Wszelkie zmiany, które nie zostały zsynchronizowane zostaną utracone po otworzeniu innego pliku.</string>
     <string name="delete_task_confirm">Usuń</string>
-    <!-- search -->
 
+    <!-- search -->
     <string name="clone_tags">Wstępne uzupełnianie</string>
     <string name="word_wrap">Zawijanie słów</string>
     <string name="search_hint">Wyszukaj todo.txt</string>
+
     <!-- sort -->
     <string name="sort_help">Przeciągnij i upuść, aby zmienić kolejność sortowania. Kliknij na elementy, aby zmienić kierunek sortowania.</string>
     <string name="file_order">Kolejność plików (nieposortowane)</string>
@@ -304,7 +309,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_show_prompt">Pokaż</string>
     <string name="filter_saved_prompt">Zapisane filtry</string>
 
-
     <!-- task parts -->
     <string name="task_select_parts">Wybierz części zadań</string>
     <string name="task_show_all">Wszystko</string>
@@ -324,10 +328,12 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Dodaj Zadanie</string>
+
     <!-- share -->
     <string name="share_addtask_name">Dodaj do Simpletask</string>
 
     <string name="none">żaden</string>
+
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d dni temu</string>
     <string name="dates_one_day_ago">1 dzień temu</string>
@@ -338,7 +344,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_weeks_ago">%d tygodni temu</string>
     <string name="dates_one_week_ago">1 tydzień temu</string>
 
-
     <string name="dates_one_week">1 tydzień</string>
     <string name="dates_two_weeks">2 tygodnie</string>
     <string name="dates_one_month">1 miesiąc</string>
@@ -346,7 +351,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_today">dzisiaj</string>
     <string name="date_pick">wybierz datę</string>
     <string name="dates_tomorrow">jutro</string>
-
 
     <string name="title_activity_filter">Filtr</string>
     <string name="selected">wybrany</string>
@@ -367,7 +371,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="input_new">Wprowadź nową</string>
     <string name="no_filter">Brak filtra</string>
     <string name="dropbox">Dropbox</string>
-
 
     <string name="save_filter">Zapisz obecny filtr</string>
     <string name="save_filter_message">Wprowadź nazwę dla obecnego filtru, która zostanie wyświetlona spośród zapisanych filtrów.</string>
@@ -400,7 +403,4 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="name">Nazwa</string>
     <string name="date">Data</string>
-
-
-
 </resources>

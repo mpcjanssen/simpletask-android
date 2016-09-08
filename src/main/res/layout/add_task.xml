@@ -7,14 +7,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:divider="?android:attr/dividerVertical"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    >
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="top">
-
+        android:gravity="top"
+        >
         <EditText
             android:id="@+id/taskText"
             android:layout_width="match_parent"
@@ -24,8 +24,8 @@
             android:gravity="top"
             android:scrollbars="vertical"
             android:background="@android:color/transparent"
-            android:inputType="textCapSentences|textMultiLine" />
-
+            android:inputType="textCapSentences|textMultiLine"
+            />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -35,9 +35,9 @@
             android:clickable="true"
             android:src="@drawable/ic_save_white_24dp"
             app:layout_anchor="@id/taskText"
-            app:layout_anchorGravity="right|end|bottom" />
+            app:layout_anchorGravity="right|end|bottom"
+            />
     </FrameLayout>
-
 
     <LinearLayout
         android:id="@+id/addbar"
@@ -47,9 +47,8 @@
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:padding="3sp"
-        android:showDividers="middle">
-
-
+        android:showDividers="middle"
+        >
         <ImageButton
             android:id="@+id/btnContext"
             style="?android:attr/borderlessButtonStyle"
@@ -59,8 +58,8 @@
             android:maxLines="1"
             android:contentDescription="\@…"
             android:src="@drawable/ic_list_white_24dp"
-            android:textColor="#FFFFFF" />
-
+            android:textColor="#FFFFFF"
+            />
         <ImageButton
             android:id="@+id/btnProject"
             style="?android:attr/borderlessButtonStyle"
@@ -70,8 +69,8 @@
             android:maxLines="1"
             android:src="@drawable/ic_label_outline_white_24dp"
             android:contentDescription="+…"
-            android:textColor="#FFFFFF" />
-
+            android:textColor="#FFFFFF"
+            />
         <ImageButton
             android:id="@+id/btnPrio"
             style="?android:attr/borderlessButtonStyle"
@@ -81,8 +80,8 @@
             android:maxLines="1"
             android:src="@drawable/ic_star_border_white_24dp"
             android:contentDescription="(.)"
-            android:textColor="#FFFFFF" />
-
+            android:textColor="#FFFFFF"
+            />
         <ImageButton
             android:id="@+id/btnDue"
             style="?android:attr/borderlessButtonStyle"
@@ -92,8 +91,8 @@
             android:maxLines="1"
             android:src="@drawable/ic_schedule_white_24dp"
             android:contentDescription="due:…"
-            android:textColor="#FFFFFF" />
-
+            android:textColor="#FFFFFF"
+            />
         <ImageButton
             android:id="@+id/btnThreshold"
             style="?android:attr/borderlessButtonStyle"
@@ -103,10 +102,7 @@
             android:maxLines="1"
             android:contentDescription="t:…"
             android:src="@drawable/ic_clock_start_white_24dp"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            />
     </LinearLayout>
-
 </LinearLayout>
-
-
-

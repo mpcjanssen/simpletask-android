@@ -23,4 +23,5 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    />
