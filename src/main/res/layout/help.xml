@@ -5,17 +5,18 @@
 -->
 
 <!--suppress ALL -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
     <WebView
-            android:id="@+id/help_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textSize="12pt"
-            android:paddingTop="15dp"
-            android:shadowRadius="1.0"
-            />
+        android:id="@+id/help_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textSize="12pt"
+        android:paddingTop="15dp"
+        android:shadowRadius="1.0"
+        />
 </LinearLayout>

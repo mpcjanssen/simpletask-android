@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:layout_weight="1">
-
+    android:layout_weight="1"
+    >
     <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:id="@+id/header"
-            android:background="#0099cc"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:id="@+id/header"
+        android:background="#0099cc"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        >
         <TextView
             android:id="@+id/title"
             style="@android:style/Widget.Holo.ActionButton.TextButton"
@@ -20,22 +22,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
             android:layout_weight="1"
-            android:paddingLeft="6dp" />
+            android:paddingLeft="6dp"
+            />
         <ImageButton
-                android:layout_gravity="center"
-                android:id="@+id/widgetconfig"
-                style="@android:style/Widget.Holo.ActionButton"
-                android:layout_width="36sp"
-                android:layout_height="36sp"
-                android:padding="2sp"
-                android:scaleType="centerCrop"
-                android:clickable="true"
-                android:contentDescription="@string/config_widget"
-                android:enabled="true"
-
-                android:icon="@drawable/ic_settings_white_24dp"
-                android:src="@drawable/ic_settings_white_24dp" />
-
+            android:layout_gravity="center"
+            android:id="@+id/widgetconfig"
+            style="@android:style/Widget.Holo.ActionButton"
+            android:layout_width="36sp"
+            android:layout_height="36sp"
+            android:padding="2sp"
+            android:scaleType="centerCrop"
+            android:clickable="true"
+            android:contentDescription="@string/config_widget"
+            android:enabled="true"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:src="@drawable/ic_settings_white_24dp"
+            />
         <ImageButton
             android:layout_gravity="center"
             android:id="@+id/widgetadd"
@@ -47,10 +49,9 @@
             android:clickable="true"
             android:contentDescription="@string/addtask"
             android:enabled="true"
-            
             android:icon="@drawable/ic_add_white_24dp"
-            android:src="@drawable/ic_add_white_24dp" />
-
+            android:src="@drawable/ic_add_white_24dp"
+            />
     </LinearLayout>
 
     <ListView
@@ -62,6 +63,6 @@
         android:dividerHeight="1dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:textColor="#000000" />
-
+        android:textColor="#000000"
+        />
 </LinearLayout>

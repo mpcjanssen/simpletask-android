@@ -14,14 +14,24 @@
      limitations under the License.
 -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:state_enabled="false"
-          android:alpha="0.28"
-          android:color="?attr/colorControlNormal" />
-    <item app:state_indeterminate="true"
-          android:color="?attr/colorControlNormal" />
-    <item android:state_checked="true"
-          android:color="?attr/colorControlActivated" />
-    <item android:color="?attr/colorControlNormal" />
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" 
+    >
+    <item
+        android:state_enabled="false"
+        android:alpha="0.28"
+        android:color="?attr/colorControlNormal"
+        />
+    <item
+        app:state_indeterminate="true"
+        android:color="?attr/colorControlNormal"
+        />
+    <item
+        android:state_checked="true"
+        android:color="?attr/colorControlActivated"
+        />
+    <item
+        android:color="?attr/colorControlNormal"
+        />
 </selector>

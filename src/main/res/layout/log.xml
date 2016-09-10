@@ -5,29 +5,30 @@
 -->
 
 <!--suppress ALL -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
     <TextView
-            android:id="@+id/versionInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        android:id="@+id/versionInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="vertical"/>
-
-
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        />
     <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/AppTheme"/>
-
+        android:id="@+id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme"
+        />
 </LinearLayout>
