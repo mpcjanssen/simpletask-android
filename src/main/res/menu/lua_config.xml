@@ -1,19 +1,24 @@
 <!--suppress ALL -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <item
         android:id="@+id/btn_run"
         android:title="@string/lua_run"
         android:icon="@drawable/ic_play_arrow_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/btn_share"
         android:title="@string/share"
         android:icon="@drawable/ic_share_white_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom"
+        />
     <item
         android:id="@+id/btn_help"
         android:title="@string/help"
         android:icon="@drawable/ic_help_white_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom"
+        />
 </menu>

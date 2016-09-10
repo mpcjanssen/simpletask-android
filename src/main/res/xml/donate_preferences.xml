@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen android:title="@string/about_settings_header"
-    android:key="about"
-    xmlns:android="http://schemas.android.com/apk/res/android">
 
+<PreferenceScreen
+    android:title="@string/about_settings_header"
+    android:key="about"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <Preference
         android:title="@string/donate_title"
         android:key="donate"
-        android:summary="@string/donate_summary">
+        android:summary="@string/donate_summary"
+        >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"/>
+            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"
+            />
     </Preference>
+
     <Preference
         android:title="@string/donate_title"
         android:key="donated"
-        android:summary="@string/donated_summary">
+        android:summary="@string/donated_summary"
+        >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"/>
+            android:data="https://play.google.com/store/apps/details?id=nl.mpcjanssen.simpletask.donate"
+            />
     </Preference>
 </PreferenceScreen>

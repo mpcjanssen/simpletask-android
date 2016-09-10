@@ -5,53 +5,68 @@
 -->
 
 <!--suppress ALL -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
     <GridLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:columnCount="2" android:rowCount="2">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:columnCount="2" android:rowCount="2"
+        >
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name" android:paddingRight="15dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:paddingRight="15dp"
+            />
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:id="@+id/name"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/name"
+            />
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date" android:paddingRight="15dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date"
+            android:paddingRight="15dp"
+            />
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:id="@+id/date"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/date"
+            />
     </GridLayout>
+
     <ImageView
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:id="@+id/imageView" android:background="#0099cc"/>
+            android:id="@+id/imageView"
+            android:background="#0099cc"
+            />
     <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:id="@+id/scrollbar"
-            android:layout_weight="1">
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/scrollbar"
+        android:layout_weight="1"
+        >
         <TextView
-                android:id="@+id/history_view"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:focusable="true"/>
-    </ScrollView>
-    <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/history_view"
             android:layout_width="fill_parent"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme"
-            android:background="?attr/colorPrimary"/>
+            android:layout_height="fill_parent"
+            android:focusable="true"
+            />
+    </ScrollView>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme"
+        android:background="?attr/colorPrimary"
+        />
 </LinearLayout>

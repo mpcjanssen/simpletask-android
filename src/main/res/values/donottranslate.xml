@@ -24,9 +24,9 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 @copyright 2015 Vojtech Kral
 -->
+
 <!--suppress ALL -->
 <resources>
-
     <string-array name="sort">
         <item>@string/completed</item>
         <item>@string/by_context</item>
@@ -40,6 +40,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>@string/by_threshold_date</item>
         <item>@string/by_completion_date</item>
     </string-array>
+
     <!-- will be prepended with "+!" or "-!" depending on direction -->
     <string-array name="sortKeys">
         <item>completed</item>
@@ -78,6 +79,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>Dark</item>
         <item>Black</item>
     </string-array>
+
     <string-array name="theme_values">
         <item>light_darkactionbar</item>
         <item>dark</item>
@@ -89,6 +91,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>Light</item>
         <item>Dark</item>
     </string-array>
+
     <string-array name="widget_theme_values">
         <item>light_darkactionbar</item>
         <item>dark</item>
@@ -101,6 +104,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>End: Very long...</item>
         <item>Marquee: Very long ta</item>
     </string-array>
+
     <string-array name="task_text_ellipsizing_values">
         <item>no_ellipsize</item>
         <item>start</item>
@@ -112,64 +116,60 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- Unlocalized Help names -->
     <string name="help_add_task" translatable="false">addtask</string>
 
-
-
     <!-- Preference keys -->
-    <string name="sort_complete_last_pref_key" translatable="false">todotxtsortcompletelast</string>
-    <string name="auto_archive_pref_key" translatable="false">todotxtautoarchive</string>
-    <string name="default_sort_pref_key" translatable="false">default_sort</string>
-    <string name="prepend_date_pref_key" translatable="false">todotxtprependdate</string>
-    <string name="line_breaks_pref_key" translatable="false">linebreakspref</string>
-    <string name="manual_sync_pref_key" translatable="false">workofflinepref</string>
-    <string name="resume_sync_pref_key" translatable="false">resumesyncpref</string>
-    <string name="font_size_delta_pref_key" translatable="false">fontsizedelta</string>
-    <string name="theme_pref_key" translatable="false">theme</string>
-    <string name="custom_font_size" translatable="false">custom_font_size</string>
-    <string name="widget_theme_pref_key" translatable="false">widget_theme</string>
+    <string name="sort_complete_last_pref_key"    translatable="false">todotxtsortcompletelast</string>
+    <string name="auto_archive_pref_key"          translatable="false">todotxtautoarchive</string>
+    <string name="default_sort_pref_key"          translatable="false">default_sort</string>
+    <string name="prepend_date_pref_key"          translatable="false">todotxtprependdate</string>
+    <string name="line_breaks_pref_key"           translatable="false">linebreakspref</string>
+    <string name="manual_sync_pref_key"           translatable="false">workofflinepref</string>
+    <string name="resume_sync_pref_key"           translatable="false">resumesyncpref</string>
+    <string name="font_size_delta_pref_key"       translatable="false">fontsizedelta</string>
+    <string name="theme_pref_key"                 translatable="false">theme</string>
+    <string name="custom_font_size"               translatable="false">custom_font_size</string>
+    <string name="widget_theme_pref_key"          translatable="false">widget_theme</string>
     <string name="task_text_ellipsizing_pref_key" translatable="false">task_text_ellipsizing</string>
-    <string name="widget_extended_pref_key" translatable="false">widget_extended</string>
-    <string name="taskview_extended_pref_key" translatable="false">taskview_extended</string>
-    <string name="dropbox_cat_key" translatable="false">dropbox_category</string>
-    <string name="behavior_cat_key" translatable="false">behavior_category</string>
-    <string name="experimental_cat_key" translatable="false">experimental</string>
-    <string name="clone_tags_key" translatable="false">clone_tags</string>
-    <string name="word_wrap_key" translatable="false">word_wrap</string>
-    <string name="color_due_date_key" translatable="false">color_due_date</string>
-    <string name="todo_file_key" translatable="false">todo_file</string>
-    <string name="back_key_saves_key" translatable="false">back_saves</string>
-    <string name="ui_drawer_fixed_landscape" translatable="false">ui_drawer_fixed_landscape</string>
-    <string name="ui_show_edittext_hints" translatable="false">ui_show_edittext_hints</string>
-    <string name="share_task_append_text" translatable="false">share_task_append_task</string>
-    <string name="local_file_root" translatable="false">local_file_root</string>
-    <string name="ui_show_confirmation_dialogs" translatable="false">ui_show_confirmation_dialogs</string>
-    <string name="widget_header_transparency" translatable="false">widget_header_transparency</string>
+    <string name="widget_extended_pref_key"       translatable="false">widget_extended</string>
+    <string name="taskview_extended_pref_key"     translatable="false">taskview_extended</string>
+    <string name="dropbox_cat_key"                translatable="false">dropbox_category</string>
+    <string name="behavior_cat_key"               translatable="false">behavior_category</string>
+    <string name="experimental_cat_key"           translatable="false">experimental</string>
+    <string name="clone_tags_key"                 translatable="false">clone_tags</string>
+    <string name="word_wrap_key"                  translatable="false">word_wrap</string>
+    <string name="color_due_date_key"             translatable="false">color_due_date</string>
+    <string name="todo_file_key"                  translatable="false">todo_file</string>
+    <string name="back_key_saves_key"             translatable="false">back_saves</string>
+    <string name="ui_drawer_fixed_landscape"      translatable="false">ui_drawer_fixed_landscape</string>
+    <string name="ui_show_edittext_hints"         translatable="false">ui_show_edittext_hints</string>
+    <string name="share_task_append_text"         translatable="false">share_task_append_task</string>
+    <string name="local_file_root"                translatable="false">local_file_root</string>
+    <string name="ui_show_confirmation_dialogs"   translatable="false">ui_show_confirmation_dialogs</string>
+    <string name="widget_header_transparency"     translatable="false">widget_header_transparency</string>
     <string name="widget_background_transparency" translatable="false">widget_background_transparency</string>
-    <string name="last_open_filter_tab" translatable="false">last_open_filter_tab</string>
-    <string name="capitalize_tasks" translatable="false">capitalize_tasks</string>
-    <string name="show_txt_only" translatable="false">show_txt_only</string>
-    <string name="calendar_sync_screen" translatable="false">calendar_sync_screen</string>
-    <string name="calendar_sync_dues" translatable="false">calendar_sync_dues</string>
-    <string name="calendar_sync_thresholds" translatable="false">calendar_sync_thresholds</string>
-    <string name="calendar_reminder_days" translatable="false">calendar_reminder_days</string>
-    <string name="calendar_reminder_time" translatable="false">calendar_reminder_time</string>
-    <string name="ui_sort_case_sensitive" translatable="false">ui_sort_case_sensitive</string>
+    <string name="last_open_filter_tab"           translatable="false">last_open_filter_tab</string>
+    <string name="capitalize_tasks"               translatable="false">capitalize_tasks</string>
+    <string name="show_txt_only"                  translatable="false">show_txt_only</string>
+    <string name="calendar_sync_screen"           translatable="false">calendar_sync_screen</string>
+    <string name="calendar_sync_dues"             translatable="false">calendar_sync_dues</string>
+    <string name="calendar_sync_thresholds"       translatable="false">calendar_sync_thresholds</string>
+    <string name="calendar_reminder_days"         translatable="false">calendar_reminder_days</string>
+    <string name="calendar_reminder_time"         translatable="false">calendar_reminder_time</string>
+    <string name="ui_sort_case_sensitive"         translatable="false">ui_sort_case_sensitive</string>
     <string name="ui_todotxt_terms">ui_todo_txt_terms</string>
-    <string name="show_todo_path" translatable="false">show_todo_path</string>
-    <string name="back_clears_filter" translatable="false">back_clears_filter</string>
-    <string name="keep_prio" translatable="false">todotxt_completion</string>
-    <string name="dropbox_full_access" translatable="false">dropbox_full_access</string>
-    <string name="share_task_show_edit" translatable="false">share_task_show_edit</string>
-    <string name="append_tasks_at_end" translatable="false">append_tasks_at_end</string>
-    <string name="file_current_version_id" translatable="false">file_current_version_id</string>
-    <string name="dropbox_latest_cursor" translatable="false">dropbox_latest_cursor</string>
-    <string name="font_size" translatable="false">font_size</string>
-    <string name="font_key" translatable="false">font_key</string>
-    <string name="datebar_relative_size" translatable="false">datebar_delta_sp</string>
-    <string name="latest_changelog_shown" translatable="false">latest_changelog_shown</string>
-    <string name="lua_config" translatable="false">lua_config</string>
-    <string name="ui_show_calendarview" translatable="false">ui_show_calendarview</string>
-    <string name="ui_last_scroll_position" translatable="false">ui_last_scroll_position</string>
-    <string name="ui_last_scroll_offset" translatable="false">ui_last_scroll_offset</string>
+    <string name="show_todo_path"                 translatable="false">show_todo_path</string>
+    <string name="back_clears_filter"             translatable="false">back_clears_filter</string>
+    <string name="keep_prio"                      translatable="false">todotxt_completion</string>
+    <string name="dropbox_full_access"            translatable="false">dropbox_full_access</string>
+    <string name="share_task_show_edit"           translatable="false">share_task_show_edit</string>
+    <string name="append_tasks_at_end"            translatable="false">append_tasks_at_end</string>
+    <string name="file_current_version_id"        translatable="false">file_current_version_id</string>
+    <string name="dropbox_latest_cursor"          translatable="false">dropbox_latest_cursor</string>
+    <string name="font_size"                      translatable="false">font_size</string>
+    <string name="font_key"                       translatable="false">font_key</string>
+    <string name="datebar_relative_size"          translatable="false">datebar_delta_sp</string>
+    <string name="latest_changelog_shown"         translatable="false">latest_changelog_shown</string>
+    <string name="lua_config"                     translatable="false">lua_config</string>
+    <string name="ui_show_calendarview"           translatable="false">ui_show_calendarview</string>
+    <string name="ui_last_scroll_position"        translatable="false">ui_last_scroll_position</string>
+    <string name="ui_last_scroll_offset"          translatable="false">ui_last_scroll_offset</string>
 </resources>
-
-
