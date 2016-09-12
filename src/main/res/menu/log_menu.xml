@@ -1,11 +1,14 @@
 <!--suppress ALL -->
 
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <item
-            android:id="@+id/menu_share"
-            android:title="@string/share"
-            android:orderInCategory="100"
-            app:showAsAction="always|withText"/>
+        android:id="@+id/menu_share"
+        android:title="@string/share"
+        android:orderInCategory="100"
+        app:showAsAction="always|withText"
+        />
 </menu>

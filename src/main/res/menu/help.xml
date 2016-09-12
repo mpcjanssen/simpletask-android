@@ -1,46 +1,55 @@
 <!--suppress ALL -->
 
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <item
         android:id="@+id/menu_simpletask"
         android:title="Overview"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_ui"
         android:title="User Interface"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_changelog"
         android:title="Changelog"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_intents"
         android:title="Intents"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_script"
         android:title="Scripting"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_myn"
         android:title="Tutorial: MYN"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_tracker"
         android:title="Log bug or feature request"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/menu_donate"
         android:title="Donate"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
 </menu>

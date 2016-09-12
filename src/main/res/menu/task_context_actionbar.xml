@@ -24,32 +24,38 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <!--suppress ALL -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <item
         android:id="@+id/context_select_all"
         android:title="@string/select_all"
         android:icon="@drawable/ic_select_all_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/context_share"
         android:title="@string/share"
         android:icon="@drawable/ic_share_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/context_calendar"
         android:title="@string/add_to_calendar"
         android:icon="@drawable/ic_insert_invitation_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/context_archive"
         android:title="@string/archive"
         android:icon="@drawable/ic_archive_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/context_delete"
         android:title="@string/delete"
         android:icon="@drawable/ic_delete_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        />
 </menu>

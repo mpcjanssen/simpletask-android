@@ -14,15 +14,20 @@
      limitations under the License.
 -->
 
-<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:drawable="@drawable/ic_checkbox_unchecked">
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_checkbox_unchecked"
+    >
     <target
         android:name="icon_null"
-        android:animation="@anim/ic_checkbox_to_checked_icon_null_animation" />
+        android:animation="@anim/ic_checkbox_to_checked_icon_null_animation"
+        />
     <target
         android:name="box_outer_merged"
-        android:animation="@anim/ic_checkbox_to_checked_box_outer_merged_animation" />
+        android:animation="@anim/ic_checkbox_to_checked_box_outer_merged_animation"
+        />
     <target
         android:name="box_inner_merged"
-        android:animation="@anim/ic_checkbox_to_checked_box_inner_merged_animation" />
+        android:animation="@anim/ic_checkbox_to_checked_box_inner_merged_animation"
+        />
 </animated-vector>
