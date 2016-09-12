@@ -72,31 +72,36 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // require restart with UI changes
-        if (    getString(R.string.theme_pref_key) == key ) {
-            onContentChanged()
-            val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
-            intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, AppearancePrefFragment::class.java.name)
-            localBroadcastManager.sendBroadcast(broadcastIntent)
-        }
-        if (getString(R.string.datebar_relative_size) == key ) {
-            val broadcastIntent = Intent(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
-            localBroadcastManager.sendBroadcast(broadcastIntent)
-        }
-        if ( getString(R.string.font_size) == key || getString(R.string.custom_font_size) == key ) {
-            val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
-            localBroadcastManager.sendBroadcast(broadcastIntent)
-        }
-        if (key.equals(getString(R.string.calendar_sync_dues)) ||
-                key.equals(getString(R.string.calendar_sync_thresholds))) {
-            if (Config.isSyncDues || Config.isSyncThresholds) {
-                /* Check for calendar permission */
-                val permissionCheck = ContextCompat.checkSelfPermission(app,
-                        Manifest.permission.WRITE_CALENDAR)
+        when (key) {
+            getString(R.string.theme_pref_key) -> {
+                onContentChanged()
+                val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
+                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, AppearancePrefFragment::class.java.name)
+                localBroadcastManager.sendBroadcast(broadcastIntent)
+            }
+            getString(R.string.datebar_relative_size) -> {
+                val broadcastIntent = Intent(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
+                localBroadcastManager.sendBroadcast(broadcastIntent)
+            }
+            getString(R.string.calendar_sync_dues) -> {
+                if (Config.isSyncDues) {
+                    /* Check for calendar permission */
+                    val permissionCheck = ContextCompat.checkSelfPermission(app,
+                    Manifest.permission.WRITE_CALENDAR)
 
-                if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(this,
-                            arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
+                    if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                        ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
+                    }
                 }
+            }
+            getString(R.string.custom_font_size) -> {
+                val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
+                localBroadcastManager.sendBroadcast(broadcastIntent)
+            }
+            getString(R.string.font_size) -> {
+                val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
+                localBroadcastManager.sendBroadcast(broadcastIntent)
             }
         }
     }

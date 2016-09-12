@@ -192,24 +192,12 @@ object CalendarSync {
         tasks.forEach {
             if (!it.task.isCompleted()) {
 
-                var dt: DateTime?
-                var text: String? = null
-
                 // Check due date:
                 if (m_sync_type and SYNC_TYPE_DUES != 0) {
-                    dt = it.task.dueDate?.toDateTime()
+                    val dt = it.task.dueDate?.toDateTime()
                     if (dt != null) {
-                        text = it.task.showParts(TASK_TOKENS)
+                        val text = it.task.showParts(TASK_TOKENS)
                         insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
-                    }
-                }
-                it.task.dueDate?.toDateTime()
-                // Check threshold date:
-                if (m_sync_type and SYNC_TYPE_THRESHOLDS != 0) {
-                    dt = it.task.thresholdDate?.toDateTime()
-                    if (dt != null) {
-                        if (text == null) text = it.task.showParts(TASK_TOKENS)
-                        insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                     }
                 }
             }
@@ -277,7 +265,6 @@ object CalendarSync {
         m_stpe = ScheduledThreadPoolExecutor(1)
         var syncType = 0
         if (Config.isSyncDues) syncType = syncType or SYNC_TYPE_DUES
-        if (Config.isSyncThresholds) syncType = syncType or SYNC_TYPE_THRESHOLDS
         setSyncType(syncType)
     }
 
@@ -288,11 +275,6 @@ object CalendarSync {
 
     fun setSyncDues(bool: Boolean) {
         val syncType = if (bool) m_sync_type or SYNC_TYPE_DUES else m_sync_type and SYNC_TYPE_DUES.inv()
-        setSyncType(syncType)
-    }
-
-    fun setSyncThresholds(bool: Boolean) {
-        val syncType = if (bool) m_sync_type or SYNC_TYPE_THRESHOLDS else m_sync_type and SYNC_TYPE_THRESHOLDS.inv()
         setSyncType(syncType)
     }
 
