@@ -31,8 +31,15 @@
         robobunny:unitsLeft=""
         robobunny:unitsRight="sp"
         />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/taskview_extended_pref_key"
+        android:summary="@string/taskview_extended_pref_summary"
+        android:title="@string/taskview_extended_pref_title"
+        />
     <com.robobunny.SeekBarPreference
         xmlns:robobunny="http://robobunny.com"
+        android:dependency="@string/taskview_extended_pref_key"
         android:defaultValue="80"
         android:key="@string/datebar_relative_size"
         android:max="100"
@@ -41,6 +48,13 @@
         robobunny:min="0"
         robobunny:unitsLeft=""
         robobunny:unitsRight="%"
+        />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/color_due_date_key"
+        android:summary="@string/color_due_pref_summary"
+        android:title="@string/color_due_pref_title"
+        android:dependency="@string/taskview_extended_pref_key"
         />
     <ListPreference
         android:defaultValue="no_ellipsize"
@@ -51,27 +65,9 @@
         android:title="@string/task_text_ellipsizing_pref_title"
         />
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/color_due_date_key"
-        android:summary="@string/color_due_pref_summary"
-        android:title="@string/color_due_pref_title"
-        />
-    <CheckBoxPreference
         android:defaultValue="false"
-        android:key="@string/ui_todotxt_terms"
-        android:summary="@string/todotxt_terms_summary"
-        android:title="@string/todotxt_terms_title"
-        />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/ui_show_edittext_hints"
-        android:summary="@string/show_edittext_hints_summary"
-        android:title="@string/show_edittext_hints_title"
-        />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/show_todo_path"
-        android:summary="@string/show_todo_path_summary"
-        android:title="@string/show_todo_path_title"
+        android:key="@string/ui_drawer_fixed_landscape"
+        android:summary="@string/drawer_fixed_landscape_summary"
+        android:title="@string/drawer_fixed_landscape_title"
         />
 </PreferenceScreen>

@@ -205,10 +205,12 @@ class AddTask : ThemedActivity() {
         val inflater = menuInflater
         inflater.inflate(R.menu.add_task, menu)
         // Set checkboxes
-        val mnuWordWrap = menu.findItem(R.id.menu_word_wrap)
-        mnuWordWrap.isChecked = Config.isWordWrap
-        val mnuPreFill = menu.findItem(R.id.menu_prefill_next)
-        mnuPreFill.isChecked = Config.isAddTagsCloneTags
+        val menuWordWrap = menu.findItem(R.id.menu_word_wrap)
+        menuWordWrap.isChecked = Config.isWordWrap
+        val menuPreFill = menu.findItem(R.id.menu_prefill_next)
+        menuPreFill.isChecked = Config.isAddTagsCloneTags
+        val menuShowHint = menu.findItem(R.id.menu_show_edittext_hint)
+        menuShowHint.isChecked = Config.isShowEditTextHint
         return true
     }
 
@@ -228,6 +230,12 @@ class AddTask : ThemedActivity() {
                 val newVal = !Config.isWordWrap
                 Config.isWordWrap = newVal
                 setWordWrap(newVal)
+                item.isChecked = !item.isChecked
+                return true
+            }
+            R.id.menu_show_edittext_hint -> {
+                Config.isShowEditTextHint =  !Config.isShowEditTextHint
+                Config.setEditTextHint(textInputField, R.string.tasktexthint)
                 item.isChecked = !item.isChecked
                 return true
             }

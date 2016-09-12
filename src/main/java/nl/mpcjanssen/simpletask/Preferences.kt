@@ -177,21 +177,10 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             updateFontSummary()
         }
     }
-    class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences)
-    class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
-    class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
 
-
-    class ConfigurationPrefFragment : PrefFragment(R.xml.configuration_preferences) {
+    class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences) {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            val rootPref = findPreference(getString(R.string.local_file_root)) as EditTextPreference
-            rootPref.valueInSummary()
-            rootPref.setOnPreferenceChangeListener { preference, any ->
-                preference.summary = getString(R.string.local_file_root_summary)
-                preference.valueInSummary(any)
-                true
-            }
             val appendTextPref = findPreference(getString(R.string.share_task_append_text)) as EditTextPreference
             appendTextPref.valueInSummary()
             appendTextPref.setOnPreferenceChangeListener { preference, any ->
@@ -202,9 +191,14 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
         }
     }
 
+    class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
+    class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
+    class ConfigurationPrefFragment : PrefFragment(R.xml.configuration_preferences)
+
     class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+
             val screen = preferenceScreen
             val toHide: Preference
             if (Config.hasDonated()) {
@@ -219,14 +213,18 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+
+            val rootPref = findPreference(getString(R.string.local_file_root)) as EditTextPreference
+            rootPref.valueInSummary()
+            rootPref.setOnPreferenceChangeListener { preference, any ->
+                preference.summary = getString(R.string.local_file_root_summary)
+                preference.valueInSummary(any)
+                true
+            }
+
             val debugPref = findPreference("debug_info")
             debugPref.setOnPreferenceClickListener {
                 startActivity(Intent(activity, DebugInfoScreen::class.java))
-                true
-            }
-            val historyPref = findPreference("share_history")
-            historyPref.setOnPreferenceClickListener {
-                startActivity(Intent(activity, HistoryScreen::class.java))
                 true
             }
         }
