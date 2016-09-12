@@ -29,24 +29,29 @@
 	@license http://www.gnu.org/licenses/gpl.html
 	@copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 	@copyright 2015 Vojtech Kral
---><!-- suppress ALL -->
+-->
+
+<!-- suppress ALL -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/show_txt_only"
         android:summary="@string/show_txt_only_summary"
-        android:title="@string/show_txt_only_pref_title" />
+        android:title="@string/show_txt_only_pref_title"
+        />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_sort_case_sensitive"
-        android:title="@string/sort_case_sensitive_title" />
+        android:title="@string/sort_case_sensitive_title"
+        />
     <Preference
         android:key="share_history"
         android:summary="@string/share_history"
-        android:title="@string/share_history_title" />
+        android:title="@string/share_history_title"
+        />
     <Preference
         android:key="debug_info"
         android:summary="View and share the application version and log for debugging purposes."
-        android:title="View Debug Information"/>
-
+        android:title="View Debug Information"
+        />
 </PreferenceScreen>

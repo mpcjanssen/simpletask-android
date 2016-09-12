@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?><!--suppress ALL -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="?android:attr/dividerVertical"
     android:showDividers="middle"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    >
     <CheckBox 
         android:id="@+id/cb_show_completed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_show_completed" />
-
+        android:text="@string/filter_show_completed"
+        />
     <CheckBox
         android:id="@+id/cb_show_future"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_show_future" />
+        android:text="@string/filter_show_future"
+        />
     <CheckBox
         android:id="@+id/cb_show_hidden"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_hidden_title" />
-
-
+        android:text="@string/show_hidden_title"
+        />
     <CheckBox
         android:id="@+id/cb_show_lists"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_show_lists" />
-
+        android:text="@string/filter_show_lists"
+        />
     <CheckBox
         android:id="@+id/cb_show_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_show_tags" />
-
-
+        android:text="@string/filter_show_tags"
+        />
     <CheckBox
-            android:id="@+id/cb_show_create_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_show_create_date" />
-
+        android:id="@+id/cb_show_create_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_show_create_date"
+        />
     <CheckBox
         android:id="@+id/cb_create_is_threshold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/use_create_as_threshold_title" />
+        android:text="@string/use_create_as_threshold_title"
+        />
 </LinearLayout>

@@ -24,6 +24,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2013 Mark Janssen
 @copyright 2015 Vojtech Kral
 -->
+
 <!--suppress ALL -->
 <resources>
     <string name="invalid_context">Ungültiger Listenname</string>
@@ -94,7 +95,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">Archivierung</string>
-   <string name="ARCHIVE_settings_summary">Einstellungen für die Archivierung erledigter Aufgaben in done.txt</string>
+    <string name="ARCHIVE_settings_summary">Einstellungen für die Archivierung erledigter Aufgaben in done.txt</string>
     <string name="auto_archive_pref_title">Autoarchivierung</string>
     <string name="auto_archive_pref_summary">Automatisches Archivieren von Aufgaben in done.txt nach Erledigung.</string>
     <string name="archive_now_pref_title">Jetzt archivieren</string>
@@ -204,10 +205,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_todo_path_title">Zeige Pfadnamen</string>
     <string name="show_todo_path_summary">Zeigt den Pfadnamen zur todo.txt-Datei. Verzeichnisnamen werden abgekürzt. /todo/home/todo.txt wird beispielweise gekürzt zu /t/h/todo.txt.</string>
 
-<string name="show_fast_scroll_title">Schnelles Scrollen</string>
+    <string name="show_fast_scroll_title">Schnelles Scrollen</string>
     <string name="show_fast_scroll_summary">Bei längerer Aufgabenliste zügiger scrollen.</string>
 
- <string name="todotxt_terms_title">todo.txt Begrifflichkeiten</string>
+    <string name="todotxt_terms_title">todo.txt Begrifflichkeiten</string>
     <string name="todotxt_terms_summary">Verwende die Begriffe \"context\" und \"project\" an Stelle von \"tag\" und \"list\" um Konformität zu den todo.txt-Begrifflichkeiten herzustellen.</string>
 
     <string name="about_settings_header">Über</string>
@@ -245,7 +246,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
     <string name="logout_message">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
         Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
-     <string name="dropbox_open">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
+    <string name="dropbox_open">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
         Alle nicht synchronisierten Änderungen sind nach dem Öffnen einer anderen Datei verloren.</string>
     <string name="delete_task_confirm">Löschen</string>
     <!-- search -->

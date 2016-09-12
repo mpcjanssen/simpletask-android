@@ -22,9 +22,12 @@ You should have received a copy of the GNU General Public License along with Tod
 @license http://www.gnu.org/licenses/gpl.html
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 -->
+
 <!--suppress ALL -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:id="@+id/widget_item_text"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:gravity="center_vertical"/>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_item_text"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    />

@@ -1,228 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="share_task_show_edit_pref_title">Editar tarea compartida</string>
-<string name="share_task_show_edit_summary">Permitir editar una tarea compartida (recibida) antes de salvarla.
-Deseleccione esto para que la tarea compartida se almacene sin intervención.</string>
+    <string name="share_task_show_edit_pref_title">Editar tarea compartida</string>
+    <string name="share_task_show_edit_summary">Permitir editar una tarea compartida (recibida) antes de salvarla.
+    Deseleccione esto para que la tarea compartida se almacene sin intervención.</string>
 
-<string name="capitalize_tasks_pref_title">Poner mayúscula a las tareas nuevas</string>
-<string name="back_saves_pref_title">Botón atrás</string>
-<string name="back_saves_summary">Salvar las tareas introducidas o aplicar el filtro al pulsar atrás.</string>
+    <string name="capitalize_tasks_pref_title">Poner mayúscula a las tareas nuevas</string>
+    <string name="back_saves_pref_title">Botón atrás</string>
+    <string name="back_saves_summary">Salvar las tareas introducidas o aplicar el filtro al pulsar atrás.</string>
 
-<string name="show_txt_only_pref_title">Mostrar solo archivos txt</string>
-<string name="show_txt_only_summary">Mostrar solo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
+    <string name="show_txt_only_pref_title">Mostrar solo archivos txt</string>
+    <string name="show_txt_only_summary">Mostrar solo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
 
-<string name="calendar_sync_screen_title">Recordatorios de calendario</string>
-<string name="calendar_sync_screen_summary">Automáticamente crear recordatorios de calendario para fechas de vencimiento y/o umbral.</string>
-<string name="calendar_sync_dues_title">Fechas de vencimiento</string>
-<string name="calendar_sync_thresholds_title">Fechas umbral</string>
-<string name="calendar_reminder_days_title">Anticipación de recordatorios</string>
-<string name="calendar_reminder_days_summary">Cuántos días antes de la fecha de vencimiento/umbral debe establecerse el recordatorio.</string>
-<string name="calendar_reminder_time_title">Hora de recordatorios</string>
-<string name="calendar_reminder_time_summary">A que hora de día debe establecerse el recordatorio.</string>
+    <string name="calendar_sync_screen_title">Recordatorios de calendario</string>
+    <string name="calendar_sync_screen_summary">Automáticamente crear recordatorios de calendario para fechas de vencimiento y/o umbral.</string>
+    <string name="calendar_sync_dues_title">Fechas de vencimiento</string>
+    <string name="calendar_sync_thresholds_title">Fechas umbral</string>
+    <string name="calendar_reminder_days_title">Anticipación de recordatorios</string>
+    <string name="calendar_reminder_days_summary">Cuántos días antes de la fecha de vencimiento/umbral debe establecerse el recordatorio.</string>
+    <string name="calendar_reminder_time_title">Hora de recordatorios</string>
+    <string name="calendar_reminder_time_summary">A que hora de día debe establecerse el recordatorio.</string>
 
-<string name="drawer_fixed_landscape_title">Abrir apartados apaisados</string>
-<string name="drawer_fixed_landscape_summary">Siempre abrir los apartados en modo apaisado.</string>
-
-
-<string name="widget_theme_pref_title">Tema de widgets</string>
-<string name="widget_theme_pref_summary">Cambiar el tema utilizado para los widgets</string>
-
-<string name="widget_header_transparency_title">Transparencia de la cabecera de los widgets</string>
-<string name="widget_background_transparency_title">Transparencia del fondo de los widgets</string>
-
-<string name="widget_extended_pref_title">Widget extendido</string>
-<string name="widget_extended_pref_summary">Mostrar las tareas en el widget con una línea separada para las fechas.</string>
-
-<string name="color_due_pref_title">Color de fechas de vencimiento</string>
-<string name="color_due_pref_summary">Color de las fechas de vencimiento basado en si vencen hoy, en el futuro o ya vencidas.</string>
-
-<string name="show_hidden_title">Mostrar tareas escondidas</string>
-<string name="show_hidden_summary">Mostrar tareas escondidas (h:1) para poder editarlas. Después de editarlas deseleccione este ajuste otra vez.</string>
-
-<string name="show_empty_lists_title">Mostrar los encabezamientos vacíos</string>
-<string name="show_empty_lists_summary">Mostrar un encabezamiento incluso si todas las tareas bajo el mismo están escondidas.</string>
-
-<string name="split_actionbar_pref_title">Usar barra de acción dividida</string>
-<string name="split_actionbar_pref_summary">Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla.
-Para disponer de más espacio de pantalla para la lista de tareas deseleccionar esto.</string>
-
-<string name="show_edittext_hints_title">Mostrar sugerencias</string>
-<string name="show_edittext_hints_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
-
-<string name="show_complete_checkbox_title">Mostrar la casilla de completada</string>
-<string name="show_complete_checkbox_summary">Mostrar la casilla delante de las tareas para marcarlas como completada o no.</string>
-
-<string name="show_confirmation_dialogs_title">Mostar diálogos de confirmación</string>
-<string name="show_confirmation_dialogs_summary">Mostrar un diálogo de confirmación antes de ejecutar acciones que no se pueden deshacer o acciones que puede resultar en pérdida de datos.
-Desactivar este ajuste si le molestan. De todos modos queda advertido.</string>
-
-<string name="show_calendarview_title">Usar calendario para la selección de fechas</string>
-
-<string name="sort_case_sensitive_title">Ordenar considerando mayúsculas</string>
-<string name="sort_case_sensitive_summary">Distinguir las mayúsculas al ordenar listas, etiquetas y filtros salvados.</string>
-
-<string name="about_settings_header">Acerca de</string>
-<string name="about_settings_summary">Información de la aplicación</string>
-<string name="visit_website_title">Ayuda</string>
-<string name="visit_website_summary">Visite el sitio web de Simpletask</string>
-<string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
-
-<string name="visit_tracker_title">Solicitar una característica o informar de un error</string>
-<string name="visit_tracker_summary">Solicitar una característica nueva o mejora o informar de un problema.</string>
-<string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
-
-        <!-- sync dialog -->
-<string name="sync_dialog_title">Sincronización Manual</string>
-<string name="sync_dialog_msg">Quieres subir o descargar su archivo ParaHacer.txt (todo.txt)?</string>
-<string name="sync_dialog_upload">Subir a Dropbox</string>
-<string name="sync_dialog_download">Descargar al dispositivo</string>
-<string name="sync_upload_message">Subiendo ParaHacer.txt (todo.txt)…</string>
-<string name="sync_download_message">Descargando ParaHacer.txt (todo.txt)…</string>
-        <!-- sync conflict dialog -->
-<string name="sync_conflict_dialog_title">Conflicto de archivos</string>
-<string name="sync_conflict_dialog_msg">Vaya! Hay una versión más reciente de su archivo ParaHacer.txt (todo.txt) en Dropbox. \nQuiere
-subir sus cambios locales, o descargar la versión de Dropbox?
-</string>
-        <!-- login -->
-<string name="first_title_word">Simpletask</string>
-<string name="login_screen_button">Registrarse en Dropbox</string>
-<string name="login_cloudless">Si no tiene una cuenta de dropbox o no quiere utilizarla para almacenar su lista ParaHacer (ToDo),
-puede descargar Simpletask Cloudless de la Tienda de Google.
-\nhttp://goo.gl/X1C55P
-</string>
-        <!-- delete -->
-<string name="delete_task_title">Eliminar Tarea(s)</string>
-<string name="archive_task_title">Archivar Tarea(s)</string>
-<string name="delete_task_message">Esto no se puede deshacer. Está seguro?</string>
-<string name="logout_message">Por favor, asegúrese de que ha sincronizado todos los cambios con dropbox o
-que ha compartido su lista completa de tareas, si no está conectado con dropbox.\n
-Cualquier cambio que no haya sido sincronizado se perderá después de desconectarse.</string>
-<string name="dropbox_open">Por favor, asegúrese de que ha sincronizado todos los cambios con dropbox o
-que ha compartido su lista completa de tareas, si no está conectado con dropbox.\n
-Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo diferente.</string>
-<string name="delete_task_confirm">Eliminar</string>
-        <!-- search -->
-
-<string name="clone_tags">Rellenar la próxima</string>
-<string name="word_wrap">Salto de línea automático</string>
-<string name="search_hint">Buscar ParaHacer.txt (todo.txt)</string>
-        <!-- sort -->
-<string name="sort_help">Arrastrar y soltar para cambiar el orden. Clic en cada elementos para cambiar el sentido.</string>
-<string name="file_order">Orden de archivo (no ordenadas)</string>
-<string name="alphabetical">Alfabético</string>
-<string name="by_prio">Por Prioridad</string>
-<string name="by_project">Por Etiqueta</string>
-<string name="by_context">Por Lista</string>
-<string name="completed">Completadas</string>
-<string name="by_creation_date">Por Fecha de Creación</string>
-<string name="in_future">Fecha umbral en el futuro</string>
-<string name="by_due_date">Por Fecha de Vencimiento</string>
-<string name="by_threshold_date">Por Fecha Umbral</string>
-
-        <!-- filter -->
-<string name="filter_select_all">Seleccionar todo</string>
-<string name="filter_clear_all">Quitar filtros</string>
-<string name="filter_invert">Invertir filtro</string>
-<string name="add_filter_shortcut">A la pantalla de inicio</string>
-<string name="rename_filter">Renombrar</string>
-<string name="rename_filter_message">Introducir nuevo nombre para el filtro salvado:</string>
-<string name="update_filter">Actualizar</string>
-<string name="create_widget">Crear widget</string>
-<string name="filter_show_completed">Mostrar tareas completadas</string>
-<string name="filter_show_future">Mostrar tareas con fecha umbral en el futuro</string>
-<string name="filter_show_lists">Mostrar listas en las tareas</string>
-<string name="filter_show_tags">Mostrar etiquetas en las tareas</string>
-
-<string name="filter_show_completed_short">Completadas</string>
-<string name="filter_show_future_short">Futuras</string>
-<string name="filter_show_prompt">Mostrar</string>
-<string name="filter_saved_prompt">Filtros salvados</string>
+    <string name="drawer_fixed_landscape_title">Abrir apartados apaisados</string>
+    <string name="drawer_fixed_landscape_summary">Siempre abrir los apartados en modo apaisado.</string>
 
 
-        <!-- task parts -->
-<string name="task_select_parts">Seleccionar partes de la tarea</string>
-<string name="task_show_all">Todo</string>
+    <string name="widget_theme_pref_title">Tema de widgets</string>
+    <string name="widget_theme_pref_summary">Cambiar el tema utilizado para los widgets</string>
 
-        <!-- title bar changes -->
-<string name="title_filter_applied">Filtrado por:</string>
-<string name="add_task_help_btn">Ayuda</string>
-<string name="priority_prompt">Prioridad</string>
-<string name="priority_short_prompt">Prio</string>
-<string name="project_prompt">Etiqueta</string>
-<string name="context_prompt">Lista</string>
+    <string name="widget_header_transparency_title">Transparencia de la cabecera de los widgets</string>
+    <string name="widget_background_transparency_title">Transparencia del fondo de los widgets</string>
 
-<string name="priority_format">(prio)</string>
+    <string name="widget_extended_pref_title">Widget extendido</string>
+    <string name="widget_extended_pref_summary">Mostrar las tareas en el widget con una línea separada para las fechas.</string>
 
-<string name="separator">Separador</string>
+    <string name="color_due_pref_title">Color de fechas de vencimiento</string>
+    <string name="color_due_pref_summary">Color de las fechas de vencimiento basado en si vencen hoy, en el futuro o ya vencidas.</string>
 
-        <!-- launcher shortcut -->
-<string name="shortcut_addtask_name">Añadir tarea</string>
-        <!-- share -->
-<string name="share_addtask_name">Añadir a Simpletask</string>
+    <string name="show_hidden_title">Mostrar tareas escondidas</string>
+    <string name="show_hidden_summary">Mostrar tareas escondidas (h:1) para poder editarlas. Después de editarlas deseleccione este ajuste otra vez.</string>
 
-<string name="none">ninguno</string>
-        <!-- Relative Dates -->
-<string name="dates_days_ago">hace %d días</string>
-<string name="dates_one_day_ago">hace 1 día</string>
-<string name="dates_years_ago">hace %d años</string>
-<string name="dates_one_year_ago">hace 1 año</string>
-<string name="dates_months_ago">hace %d meses</string>
-<string name="dates_one_month_ago">hace 1 mes</string>
-<string name="dates_weeks_ago">hace %d semanas</string>
-<string name="dates_one_week_ago">hace 1 semana</string>
+    <string name="show_empty_lists_title">Mostrar los encabezamientos vacíos</string>
+    <string name="show_empty_lists_summary">Mostrar un encabezamiento incluso si todas las tareas bajo el mismo están escondidas.</string>
 
+    <string name="split_actionbar_pref_title">Usar barra de acción dividida</string>
+    <string name="split_actionbar_pref_summary">Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla.
+    Para disponer de más espacio de pantalla para la lista de tareas deseleccionar esto.</string>
 
-<string name="dates_one_week">1 semana</string>
-<string name="dates_two_weeks">2 semanas</string>
-<string name="dates_one_month">1 mes</string>
+    <string name="show_edittext_hints_title">Mostrar sugerencias</string>
+    <string name="show_edittext_hints_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
 
-<string name="dates_today">hoy</string>
-<string name="date_pick">elegir fecha</string>
-<string name="dates_tomorrow">mañana</string>
+    <string name="show_complete_checkbox_title">Mostrar la casilla de completada</string>
+    <string name="show_complete_checkbox_summary">Mostrar la casilla delante de las tareas para marcarlas como completada o no.</string>
 
+    <string name="show_confirmation_dialogs_title">Mostar diálogos de confirmación</string>
+    <string name="show_confirmation_dialogs_summary">Mostrar un diálogo de confirmación antes de ejecutar acciones que no se pueden deshacer o acciones que puede resultar en pérdida de datos.
+    Desactivar este ajuste si le molestan. De todos modos queda advertido.</string>
 
-<string name="title_activity_filter">Filtrar</string>
-<string name="selected">seleccionada</string>
-<string name="no_context">Bandeja de entrada</string>
-<string name="no_project">Sin etiquetas</string>
-<string name="no_creation_date">Sin fecha de creación</string>
-<string name="no_threshold_date">Sin fecha umbral</string>
-<string name="no_header">Ninguno</string>
-<string name="no_prio">-</string>
-<string name="add_to_calendar">Añadir recordatorio</string>
-<string name="calendar_title">Recordatorio Simpletask</string>
-<string name="share_title">Tarea Simpletask</string>
-<string name="version_copied">Información sobre la versión copiada al portapapeles</string>
+    <string name="show_calendarview_title">Usar calendario para la selección de fechas</string>
 
-<string name="task_added">Tarea añadida a Simpletask</string>
-<string name="default_sort">Orden predeterminado</string>
-<string name="pull_to_refresh_refreshing_label">Sincronizando con dropbox…</string>
-<string name="no_filter">Ningún filtro</string>
-<string name="dropbox">Dropbox</string>
+    <string name="sort_case_sensitive_title">Ordenar considerando mayúsculas</string>
+    <string name="sort_case_sensitive_summary">Distinguir las mayúsculas al ordenar listas, etiquetas y filtros salvados.</string>
 
+    <string name="about_settings_header">Acerca de</string>
+    <string name="about_settings_summary">Información de la aplicación</string>
+    <string name="visit_website_title">Ayuda</string>
+    <string name="visit_website_summary">Visite el sitio web de Simpletask</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
 
-<string name="save_filter">Salvar el filtro actual</string>
-<string name="save_filter_message">Introducir el nombre para el filtro actual con que se mostrará en el apartado de filtros salvados</string>
+    <string name="visit_tracker_title">Solicitar una característica o informar de un error</string>
+    <string name="visit_tracker_summary">Solicitar una característica nueva o mejora o informar de un problema.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
 
-<string name="donate_title">Done</string>
-<string name="donate_summary">Done si le gusta simpletask. NOTA: la donación es voluntaria, simpletask siempre será libre.  </string>
-<string name="donated_summary">Gracias por su donación.  </string>
-<string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
-<string name="sort_reverse">Invertir orden</string>
+    <!-- sync dialog -->
+    <string name="sync_dialog_title">Sincronización Manual</string>
+    <string name="sync_dialog_msg">Quieres subir o descargar su archivo ParaHacer.txt (todo.txt)?</string>
+    <string name="sync_dialog_upload">Subir a Dropbox</string>
+    <string name="sync_dialog_download">Descargar al dispositivo</string>
+    <string name="sync_upload_message">Subiendo ParaHacer.txt (todo.txt)…</string>
+    <string name="sync_download_message">Descargando ParaHacer.txt (todo.txt)…</string>
 
-        <!-- Calendar sync -->
-<string name="calendar_disp_name">Recordatorios Simpletask</string>
-<string name="calendar_sync_desc_due">Due date reminder, generated automatically by Simpletask</string>
-<string name="calendar_sync_desc_thre">Threshold date reminder, generated automatically by Simpletask</string>
-<string name="calendar_exists_warning">Aviso: Ya existe un calendario con el mismo nombre, sobreescribiendolo…</string>
-<string name="calendar_write_error">Error: Could not write calendar</string>
+    <!-- sync conflict dialog -->
+    <string name="sync_conflict_dialog_title">Conflicto de archivos</string>
+    <string name="sync_conflict_dialog_msg">Vaya! Hay una versión más reciente de su archivo ParaHacer.txt (todo.txt) en Dropbox. \nQuiere
+    subir sus cambios locales, o descargar la versión de Dropbox?
+    </string>
 
-<string name="click_to_copy">Clic para copiar al portapapeles.</string>
+    <!-- login -->
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_screen_button">Registrarse en Dropbox</string>
+    <string name="login_cloudless">Si no tiene una cuenta de dropbox o no quiere utilizarla para almacenar su lista ParaHacer (ToDo),
+    puede descargar Simpletask Cloudless de la Tienda de Google.
+    \nhttp://goo.gl/X1C55P
+    </string>
 
-<string name="hello_world">Hola mundo!</string>
-<string name="action_settings">Ajustes</string>
+    <!-- delete -->
+    <string name="delete_task_title">Eliminar Tarea(s)</string>
+    <string name="archive_task_title">Archivar Tarea(s)</string>
+    <string name="delete_task_message">Esto no se puede deshacer. Está seguro?</string>
+    <string name="logout_message">Por favor, asegúrese de que ha sincronizado todos los cambios con dropbox o
+    que ha compartido su lista completa de tareas, si no está conectado con dropbox.\n
+    Cualquier cambio que no haya sido sincronizado se perderá después de desconectarse.</string>
+    <string name="dropbox_open">Por favor, asegúrese de que ha sincronizado todos los cambios con dropbox o
+    que ha compartido su lista completa de tareas, si no está conectado con dropbox.\n
+    Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo diferente.</string>
+    <string name="delete_task_confirm">Eliminar</string>
 
-        <!-- Spanish Help localisation -->
-<string name="help_locale">es</string>
+    <!-- search -->
+    <string name="clone_tags">Rellenar la próxima</string>
+    <string name="word_wrap">Salto de línea automático</string>
+    <string name="search_hint">Buscar ParaHacer.txt (todo.txt)</string>
+
+    <!-- sort -->
+    <string name="sort_help">Arrastrar y soltar para cambiar el orden. Clic en cada elementos para cambiar el sentido.</string>
+    <string name="file_order">Orden de archivo (no ordenadas)</string>
+    <string name="alphabetical">Alfabético</string>
+    <string name="by_prio">Por Prioridad</string>
+    <string name="by_project">Por Etiqueta</string>
+    <string name="by_context">Por Lista</string>
+    <string name="completed">Completadas</string>
+    <string name="by_creation_date">Por Fecha de Creación</string>
+    <string name="in_future">Fecha umbral en el futuro</string>
+    <string name="by_due_date">Por Fecha de Vencimiento</string>
+    <string name="by_threshold_date">Por Fecha Umbral</string>
+
+    <!-- filter -->
+    <string name="filter_select_all">Seleccionar todo</string>
+    <string name="filter_clear_all">Quitar filtros</string>
+    <string name="filter_invert">Invertir filtro</string>
+    <string name="add_filter_shortcut">A la pantalla de inicio</string>
+    <string name="rename_filter">Renombrar</string>
+    <string name="rename_filter_message">Introducir nuevo nombre para el filtro salvado:</string>
+    <string name="update_filter">Actualizar</string>
+    <string name="create_widget">Crear widget</string>
+    <string name="filter_show_completed">Mostrar tareas completadas</string>
+    <string name="filter_show_future">Mostrar tareas con fecha umbral en el futuro</string>
+    <string name="filter_show_lists">Mostrar listas en las tareas</string>
+    <string name="filter_show_tags">Mostrar etiquetas en las tareas</string>
+
+    <string name="filter_show_completed_short">Completadas</string>
+    <string name="filter_show_future_short">Futuras</string>
+    <string name="filter_show_prompt">Mostrar</string>
+    <string name="filter_saved_prompt">Filtros salvados</string>
+
+    <!-- task parts -->
+    <string name="task_select_parts">Seleccionar partes de la tarea</string>
+    <string name="task_show_all">Todo</string>
+
+    <!-- title bar changes -->
+    <string name="title_filter_applied">Filtrado por:</string>
+    <string name="add_task_help_btn">Ayuda</string>
+    <string name="priority_prompt">Prioridad</string>
+    <string name="priority_short_prompt">Prio</string>
+    <string name="project_prompt">Etiqueta</string>
+    <string name="context_prompt">Lista</string>
+
+    <string name="priority_format">(prio)</string>
+
+    <string name="separator">Separador</string>
+
+    <!-- launcher shortcut -->
+    <string name="shortcut_addtask_name">Añadir tarea</string>
+
+    <!-- share -->
+    <string name="share_addtask_name">Añadir a Simpletask</string>
+
+    <string name="none">ninguno</string>
+
+    <!-- Relative Dates -->
+    <string name="dates_days_ago">hace %d días</string>
+    <string name="dates_one_day_ago">hace 1 día</string>
+    <string name="dates_years_ago">hace %d años</string>
+    <string name="dates_one_year_ago">hace 1 año</string>
+    <string name="dates_months_ago">hace %d meses</string>
+    <string name="dates_one_month_ago">hace 1 mes</string>
+    <string name="dates_weeks_ago">hace %d semanas</string>
+    <string name="dates_one_week_ago">hace 1 semana</string>
+
+    <string name="dates_one_week">1 semana</string>
+    <string name="dates_two_weeks">2 semanas</string>
+    <string name="dates_one_month">1 mes</string>
+
+    <string name="dates_today">hoy</string>
+    <string name="date_pick">elegir fecha</string>
+    <string name="dates_tomorrow">mañana</string>
+
+    <string name="title_activity_filter">Filtrar</string>
+    <string name="selected">seleccionada</string>
+    <string name="no_context">Bandeja de entrada</string>
+    <string name="no_project">Sin etiquetas</string>
+    <string name="no_creation_date">Sin fecha de creación</string>
+    <string name="no_threshold_date">Sin fecha umbral</string>
+    <string name="no_header">Ninguno</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">Añadir recordatorio</string>
+    <string name="calendar_title">Recordatorio Simpletask</string>
+    <string name="share_title">Tarea Simpletask</string>
+    <string name="version_copied">Información sobre la versión copiada al portapapeles</string>
+
+    <string name="task_added">Tarea añadida a Simpletask</string>
+    <string name="default_sort">Orden predeterminado</string>
+    <string name="pull_to_refresh_refreshing_label">Sincronizando con dropbox…</string>
+    <string name="no_filter">Ningún filtro</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="save_filter">Salvar el filtro actual</string>
+    <string name="save_filter_message">Introducir el nombre para el filtro actual con que se mostrará en el apartado de filtros salvados</string>
+
+    <string name="donate_title">Done</string>
+    <string name="donate_summary">Done si le gusta simpletask. NOTA: la donación es voluntaria, simpletask siempre será libre.  </string>
+    <string name="donated_summary">Gracias por su donación.  </string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">Invertir orden</string>
+
+    <!-- Calendar sync -->
+    <string name="calendar_disp_name">Recordatorios Simpletask</string>
+    <string name="calendar_sync_desc_due">Due date reminder, generated automatically by Simpletask</string>
+    <string name="calendar_sync_desc_thre">Threshold date reminder, generated automatically by Simpletask</string>
+    <string name="calendar_exists_warning">Aviso: Ya existe un calendario con el mismo nombre, sobreescribiendolo…</string>
+    <string name="calendar_write_error">Error: Could not write calendar</string>
+
+    <string name="click_to_copy">Clic para copiar al portapapeles.</string>
+
+    <string name="hello_world">Hola mundo!</string>
+    <string name="action_settings">Ajustes</string>
+
+    <!-- Spanish Help localisation -->
+    <string name="help_locale">es</string>
 </resources>
-
