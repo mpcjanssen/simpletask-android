@@ -89,6 +89,10 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getBoolean(getString(R.string.word_wrap_key), true)
         set(bool) = prefs.edit().putBoolean(getString(R.string.word_wrap_key), bool).apply()
 
+    var isShowEditTextHint: Boolean
+        get() = prefs.getBoolean(getString(R.string.show_edittext_hint), true)
+        set(bool) = prefs.edit().putBoolean(getString(R.string.show_edittext_hint), bool).apply()
+
     fun showTodoPath(): Boolean {
         return prefs.getBoolean(getString(R.string.show_todo_path), false)
     }
@@ -121,10 +125,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun setEditTextHint(editText: EditText, resId: Int) {
-        if (prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
+        if (prefs.getBoolean(getString(R.string.show_edittext_hint), true)) {
             editText.setHint(resId)
         }
     }
+
 
     var isAddTagsCloneTags: Boolean
         get() = prefs.getBoolean(getString(R.string.clone_tags_key), false)
