@@ -93,6 +93,10 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getBoolean(getString(R.string.show_edittext_hint), true)
         set(bool) = prefs.edit().putBoolean(getString(R.string.show_edittext_hint), bool).apply()
 
+    var isCapitalizeTasks: Boolean
+        get() = prefs.getBoolean(getString(R.string.capitalize_tasks), true)
+        set(bool) = prefs.edit().putBoolean(getString(R.string.capitalize_tasks), bool).apply()
+
     fun showTodoPath(): Boolean {
         return prefs.getBoolean(getString(R.string.show_todo_path), false)
     }
@@ -127,6 +131,8 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     fun setEditTextHint(editText: EditText, resId: Int) {
         if (prefs.getBoolean(getString(R.string.show_edittext_hint), true)) {
             editText.setHint(resId)
+        } else {
+            editText.setHint(null)
         }
     }
 
@@ -285,7 +291,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
 
     fun hasCapitalizeTasks(): Boolean {
-        return prefs.getBoolean(getString(R.string.capitalize_tasks), false)
+        return isCapitalizeTasks
     }
 
     fun hasColorDueDates(): Boolean {

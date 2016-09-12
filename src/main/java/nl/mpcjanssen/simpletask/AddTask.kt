@@ -126,7 +126,7 @@ class AddTask : ThemedActivity() {
 
         var inputFlags = InputType.TYPE_CLASS_TEXT
 
-        if (Config.hasCapitalizeTasks()) {
+        if (Config.isCapitalizeTasks) {
             inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }
         textInputField.setRawInputType(inputFlags)
@@ -204,13 +204,20 @@ class AddTask : ThemedActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         val inflater = menuInflater
         inflater.inflate(R.menu.add_task, menu)
+
         // Set checkboxes
         val menuWordWrap = menu.findItem(R.id.menu_word_wrap)
         menuWordWrap.isChecked = Config.isWordWrap
+
         val menuPreFill = menu.findItem(R.id.menu_prefill_next)
         menuPreFill.isChecked = Config.isAddTagsCloneTags
+
         val menuShowHint = menu.findItem(R.id.menu_show_edittext_hint)
         menuShowHint.isChecked = Config.isShowEditTextHint
+
+        val menuCapitalizeTasks = menu.findItem(R.id.menu_capitalize_tasks)
+        menuCapitalizeTasks.isChecked = Config.isCapitalizeTasks
+
         return true
     }
 
@@ -219,32 +226,33 @@ class AddTask : ThemedActivity() {
         // Respond to the action bar's Up/Home button
             android.R.id.home -> {
                 finish()
-                return true
             }
             R.id.menu_prefill_next -> {
                 Config.isAddTagsCloneTags =  !Config.isAddTagsCloneTags
                 item.isChecked = !item.isChecked
-                return true
             }
             R.id.menu_word_wrap -> {
                 val newVal = !Config.isWordWrap
                 Config.isWordWrap = newVal
                 setWordWrap(newVal)
                 item.isChecked = !item.isChecked
-                return true
+            }
+            R.id.menu_capitalize_tasks -> {
+                Config.isCapitalizeTasks = !Config.isCapitalizeTasks
+                //FIXME: Change setting without recreating activity
+                item.isChecked = !item.isChecked
             }
             R.id.menu_show_edittext_hint -> {
-                Config.isShowEditTextHint =  !Config.isShowEditTextHint
+                Config.isShowEditTextHint = !Config.isShowEditTextHint
                 Config.setEditTextHint(textInputField, R.string.tasktexthint)
                 item.isChecked = !item.isChecked
-                return true
             }
             R.id.menu_help -> {
                 showHelp()
-                return true
             }
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun showHelp() {
