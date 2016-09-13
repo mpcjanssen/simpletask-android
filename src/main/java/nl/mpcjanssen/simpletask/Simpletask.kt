@@ -724,17 +724,12 @@ class Simpletask : ThemedActivity() {
                         toggle.onOptionsItemSelected(item)
                     }
                 }
-                return true
             }
-            R.id.search -> {
-            }
+            R.id.search -> { }
             R.id.preferences -> startPreferencesActivity()
             R.id.filter -> startFilterActivity()
-            R.id.context_delete -> deleteTasks(TodoList.selectedTasks)
-            R.id.context_select_all -> {
-                selectAllTasks()
-                return true
-            }
+            R.id.context_delete -> deleteTasks(checkedTasks)
+            R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
                 val shareText = TodoList.todoItems.map { it.task.inFileFormat() }.joinToString(separator = "\n")
                 shareText(this@Simpletask, "Simpletask list", shareText)
@@ -743,37 +738,8 @@ class Simpletask : ThemedActivity() {
                 val shareText = selectedTasksAsString()
                 shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
-            R.id.context_archive -> archiveTasks(TodoList.selectedTasks, true)
-            R.id.context_calendar -> {
-                var calendarTitle = getString(R.string.calendar_title)
-                var calendarDescription = ""
-                if (checkedTasks.size == 1) {
-                    // Set the task as title
-                    calendarTitle = checkedTasks[0].task.text
-                } else {
-                    // Set the tasks as description
-                    calendarDescription = selectedTasksAsString()
-
-                }
-                intent = Intent(Intent.ACTION_EDIT).setType(Constants.ANDROID_EVENT).putExtra(Events.TITLE, calendarTitle).putExtra(Events.DESCRIPTION, calendarDescription)
-                // Explicitly set start and end date/time.
-                // Some calendar providers need this.
-                val dueDate =  checkedTasks[0].task.dueDate
-                val calDate = if (checkedTasks.size == 1 && dueDate != null ) {
-                    val year = dueDate.substring(0,4).toInt()
-                    val month =  dueDate.substring(5,7).toInt()-1
-                    val day =  dueDate.substring(8,10).toInt()
-                    GregorianCalendar(year, month, day)
-                } else {
-                    GregorianCalendar()
-                }
-
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                        calDate.timeInMillis)
-                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                        calDate.timeInMillis + 60 * 60 * 1000)
-                startActivity(intent)
-            }
+            R.id.context_archive -> archiveTasks(checkedTasks, true)
+            R.id.context_calendar -> createCalendarAppointment(checkedTasks)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> FileStore.sync()
@@ -796,6 +762,37 @@ class Simpletask : ThemedActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun createCalendarAppointment(checkedTasks: List<TodoItem>) {
+        var calendarTitle = getString(R.string.calendar_title)
+        var calendarDescription = ""
+        if (checkedTasks.size == 1) {
+            // Set the task as title
+            calendarTitle = checkedTasks[0].task.text
+        } else {
+            // Set the tasks as description
+            calendarDescription = selectedTasksAsString()
+
+        }
+        intent = Intent(Intent.ACTION_EDIT).setType(Constants.ANDROID_EVENT).putExtra(Events.TITLE, calendarTitle).putExtra(Events.DESCRIPTION, calendarDescription)
+        // Explicitly set start and end date/time.
+        // Some calendar providers need this.
+        val dueDate =  checkedTasks[0].task.dueDate
+        val calDate = if (checkedTasks.size == 1 && dueDate != null ) {
+            val year = dueDate.substring(0,4).toInt()
+            val month =  dueDate.substring(5,7).toInt()-1
+            val day =  dueDate.substring(8,10).toInt()
+            GregorianCalendar(year, month, day)
+        } else {
+            GregorianCalendar()
+        }
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                calDate.timeInMillis)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                calDate.timeInMillis + 60 * 60 * 1000)
+        startActivity(intent)
     }
 
     private fun startAddTaskActivity() {
