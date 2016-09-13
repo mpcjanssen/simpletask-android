@@ -473,6 +473,10 @@ class Simpletask : ThemedActivity() {
             }
             Mode.MAIN -> {
                 inflater.inflate(R.menu.main, menu)
+                if (!FileStore.supportsSync()) {
+                    val mItem = menu.findItem(R.id.sync)
+                    mItem.isVisible = false
+                }
                 populateSearch(menu)
                 if (Config.showTodoPath()) {
                     title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
@@ -488,7 +492,7 @@ class Simpletask : ThemedActivity() {
     }
 
     /**
-     * The isDrawerOpen functions return true only if m_drawerLayout != null, so
+     * isDrawerOpen only returns true only if m_drawerLayout != null, so
      * if this returns either _DRAWER, m_drawerLayout!!. calls are safe to make
      */
     private fun activeMode(): Mode {
@@ -513,10 +517,6 @@ class Simpletask : ThemedActivity() {
     }
 
     private fun populateSearch(menu: Menu) {
-        if (!FileStore.supportsSync()) {
-            val mItem = menu.findItem(R.id.sync)
-            mItem.isVisible = false
-        }
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchMenu = menu.findItem(R.id.search)
 
