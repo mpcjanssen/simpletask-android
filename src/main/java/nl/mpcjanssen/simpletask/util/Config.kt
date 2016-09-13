@@ -33,9 +33,6 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val isSyncDues: Boolean
         get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_dues), false)
 
-    val isSyncThresholds: Boolean
-        get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false)
-
     val reminderDays: Int
         get() = prefs.getInt(getString(R.string.calendar_reminder_days), 1)
 
@@ -89,6 +86,14 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getBoolean(getString(R.string.word_wrap_key), true)
         set(bool) = prefs.edit().putBoolean(getString(R.string.word_wrap_key), bool).apply()
 
+    var isShowEditTextHint: Boolean
+        get() = prefs.getBoolean(getString(R.string.show_edittext_hint), true)
+        set(bool) = prefs.edit().putBoolean(getString(R.string.show_edittext_hint), bool).apply()
+
+    var isCapitalizeTasks: Boolean
+        get() = prefs.getBoolean(getString(R.string.capitalize_tasks), true)
+        set(bool) = prefs.edit().putBoolean(getString(R.string.capitalize_tasks), bool).apply()
+
     fun showTodoPath(): Boolean {
         return prefs.getBoolean(getString(R.string.show_todo_path), false)
     }
@@ -121,10 +126,13 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun setEditTextHint(editText: EditText, resId: Int) {
-        if (prefs.getBoolean(getString(R.string.ui_show_edittext_hints), true)) {
+        if (prefs.getBoolean(getString(R.string.show_edittext_hint), true)) {
             editText.setHint(resId)
+        } else {
+            editText.setHint(null)
         }
     }
+
 
     var isAddTagsCloneTags: Boolean
         get() = prefs.getBoolean(getString(R.string.clone_tags_key), false)
@@ -217,8 +225,6 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             TodoApplication.app.redrawWidgets()
         } else if (s == getString(R.string.calendar_sync_dues)) {
             CalendarSync.setSyncDues(isSyncDues)
-        } else if (s == getString(R.string.calendar_sync_thresholds)) {
-            CalendarSync.setSyncThresholds(isSyncThresholds)
         } else if (s == getString(R.string.calendar_reminder_days) || s == getString(R.string.calendar_reminder_time)) {
             CalendarSync.syncLater()
         }
@@ -280,7 +286,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
 
     fun hasCapitalizeTasks(): Boolean {
-        return prefs.getBoolean(getString(R.string.capitalize_tasks), false)
+        return isCapitalizeTasks
     }
 
     fun hasColorDueDates(): Boolean {
