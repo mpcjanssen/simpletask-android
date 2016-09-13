@@ -791,6 +791,8 @@ class Simpletask : ThemedActivity() {
             R.id.priority -> prioritizeTasks(checkedTasks)
             R.id.update_lists -> updateLists(checkedTasks)
             R.id.update_tags -> updateTags(checkedTasks)
+            R.id.menu_export_filter_export -> exportFilters(File(Config.todoFile.parent, "saved_filters.txt"))
+            R.id.menu_export_filter_import -> importFilters(File(Config.todoFile.parent, "saved_filters.txt"))
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -840,21 +842,13 @@ class Simpletask : ThemedActivity() {
         val popupMenu = PopupMenu(this@Simpletask, v)
         // FIXME: Refactor to create a generic "create popup at action item" fun
         popupMenu.setOnMenuItemClickListener { item ->
-            val menuId = item.itemId
-            when (menuId) {
-                R.id.menu_export_filter_export -> exportFilters(File(Config.todoFile.parent, "saved_filters.txt"))
-                R.id.menu_export_filter_import -> importFilters(File(Config.todoFile.parent, "saved_filters.txt"))
-                else -> {
-                }
-            }
-            true
+            onOptionsItemSelected(item)
         }
         val inflater = popupMenu.menuInflater
         inflater.inflate(R.menu.export_filter, popupMenu.menu)
         popupMenu.show()
-
-
     }
+
     fun importFilters (importFile: File) {
         val r = Runnable() {
             try {
