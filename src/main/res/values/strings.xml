@@ -125,18 +125,18 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="todotxt_creation_settings_header">Task Creation</string>
 
-    <string name="todotxt_ui_settings_header">User Interface</string>
+    <string name="todotxt_ui_settings_header">Features</string>
     <string name="todotxt_ui_settings_summary">Control what is being displayed</string>
     <string name="todotxt_behavior_settings_header">Behavior</string>
     <string name="todotxt_settings_summary">Application wide settings</string>
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
     </string>
-    <string name="keep_prio_header">Prio in completed tasks</string>
-    <string name="keep_prio_summary">Keep priorities in completed tasks. todo.txt removes priority on completion</string>
+    <string name="keep_prio_header">Keep priority in completed tasks</string>
+    <string name="keep_prio_summary">Todo.txt removes priority on completion</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date</string>
-    <string name="line_breaks_pref_title">Windows compatibility</string>
+    <string name="line_breaks_pref_title">Windows-friendly line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks</string>
     <string name="recur_from_original_date_pref_title">Recur task using original dates</string>
     <string name="recur_from_original_date_pref_summary">Increase the original dates in the task when creating the recurring task.
@@ -156,13 +156,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_show_edit_pref_title">Edit shared tasks</string>
     <string name="share_task_show_edit_summary">Edit tasks shared to Simpletask before saving them</string>
 
-    <string name="share_task_append_text_title">Background tag</string>
-    <string name="share_task_append_text_summary">Append text \"%s\" to tasks added in the background. For example setting \"+background\" will allow easy filtering to edit/review background added tasks.</string>
+    <string name="share_task_append_text_title">Background text</string>
+    <string name="share_task_append_text_summary">Append \"%s\" to tasks added in the background. Set a list or tag to allow easy filtering to view these tasks.</string>
 
     <string name="local_file_root_title">root:// directory</string>
     <string name="local_file_root_summary">%s</string>
 
-    <string name="capitalize_tasks_pref_title">Capitalize new tasks</string>
+    <string name="menu_capitalize_tasks">Capitalize</string>
     <string name="back_saves_pref_title">Back button</string>
     <string name="back_saves_summary">Save the entered todos or apply the filter when pressing back.</string>
 
@@ -170,8 +170,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_summary">Only show .txt files in the file selection dialog.</string>
 
     <string name="calendar_sync_screen_title">Calendar reminders</string>
-    <string name="calendar_sync_screen_summary">Automatically create calendar reminders for due and/or threshold dates.</string>
-    <string name="calendar_sync_dues_title">Due dates</string>
+    <string name="calendar_sync_screen_summary">Create calendar reminders for due dates.</string>
+    <string name="calendar_sync_dues_title">Calendar reminders (experimental)</string>
     <string name="calendar_sync_thresholds_title">Threshold dates</string>
     <string name="calendar_reminder_days_title">Days in advance</string>
     <string name="calendar_reminder_days_summary">How early to set the reminder</string>
@@ -196,8 +196,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="taskview_extended_pref_title">Show datebar</string>
     <string name="taskview_extended_pref_summary">Display dates on a separate line</string>
 
-    <string name="append_tasks_at_end_title">Append to list</string>
-    <string name="append_tasks_at_end_summary">Insert new tasks at the start of the file instead of the end</string>
+    <string name="append_tasks_at_end_title">Append to file</string>
+    <string name="append_tasks_at_end_summary">Insert new tasks at the start of the file</string>
 
     <string name="color_due_pref_title">Color due dates</string>
     <string name="color_due_pref_summary">Color due and threshold dates</string>
@@ -212,14 +212,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_summary">Use a split action bar so that menu buttons are at the bottom of the screen.
         For more screen estate for the todo list turn this off. </string>
 
-    <string name="show_edittext_hints_title">Show hints</string>
-    <string name="show_edittext_hints_summary">Show hints when adding tasks. Disable if you find these distracting.</string>
+    <string name="show_edittext_hint_title">Show hints</string>
+    <string name="show_edittext_hint_summary">Show hints when adding tasks. Disable if you find these distracting.</string>
 
     <string name="show_complete_checkbox_title">Show completion checkboxes</string>
     <string name="show_complete_checkbox_summary">Show the checkbox in front of the tasks to complete or uncomplete them.</string>
 
-    <string name="show_confirmation_dialogs_title">Show confirmation dialogs</string>
-    <string name="show_confirmation_dialogs_summary">Prompt before actions that are irreversible or can lead to data loss</string>
+    <string name="show_confirmation_dialogs_title">Confirmation dialogs</string>
+    <string name="show_confirmation_dialogs_summary">Prompt before archiving or deleting tasks</string>
 
     <string name="show_todo_path_title">Show file path</string>
     <string name="show_todo_path_summary">Show the path to the todo file. Directories are shortened to the first letter.</string>
@@ -247,6 +247,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_tracker_title">Request a feature or log a bug</string>
     <string name="visit_tracker_summary">Request a new feature or enhancement or report a problem.</string>
     <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="preference_title_debug_info">View debug log</string>
+    <string name="preference_summary_debug_info">View and share the application version and log.</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manual Sync</string>

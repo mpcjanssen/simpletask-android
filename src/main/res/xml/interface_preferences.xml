@@ -3,12 +3,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="@string/taskview_extended_pref_key"
-        android:summary="@string/taskview_extended_pref_summary"
-        android:title="@string/taskview_extended_pref_title"
-        />
-    <CheckBoxPreference
-        android:defaultValue="true"
         android:key="@string/ui_show_confirmation_dialogs"
         android:summary="@string/show_confirmation_dialogs_summary"
         android:title="@string/show_confirmation_dialogs_title"
@@ -26,13 +20,37 @@
         />
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="@string/ui_drawer_fixed_landscape"
-        android:summary="@string/drawer_fixed_landscape_summary"
-        android:title="@string/drawer_fixed_landscape_title"
+        android:key="@string/share_task_show_edit"
+        android:summary="@string/share_task_show_edit_summary"
+        android:title="@string/share_task_show_edit_pref_title"
+        />
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="@string/share_task_append_text"
+        android:summary="@string/share_task_append_text_summary"
+        android:title="@string/share_task_append_text_title"
         />
     <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/ui_show_calendarview"
-        android:title="@string/show_calendarview_title"
+        android:key="@string/calendar_sync_dues"
+        android:title="@string/calendar_sync_dues_title"
+        android:summary="@string/calendar_sync_screen_summary"
+        />
+    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+        android:key="@string/calendar_reminder_days"
+        android:title="@string/calendar_reminder_days_title"
+        android:summary="@string/calendar_reminder_days_summary"
+        android:defaultValue="0"
+        android:max="7"
+        robobunny:min="0"
+        robobunny:unitsLeft=""
+        robobunny:unitsRight=""
+        android:dependency="@string/calendar_sync_dues"
+        />
+    <nl.mpcjanssen.simpletask.TimePreference
+        android:key="@string/calendar_reminder_time"
+        android:title="@string/calendar_reminder_time_title"
+        android:summary="@string/calendar_reminder_time_summary"
+        android:defaultValue="720"
+        android:dependency="@string/calendar_sync_dues"
         />
 </PreferenceScreen>
