@@ -16,5 +16,20 @@
         android:title="@string/filter_import_export"
         android:icon="@drawable/ic_import_export_white_24dp"
         app:showAsAction="always"
-        />
+        >
+        <menu>
+            <item
+                android:id="@+id/menu_export_filter_import"
+                android:title="@string/import_filter"
+                android:orderInCategory="100"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_export_filter_export"
+                android:title="@string/export_filter"
+                android:orderInCategory="100"
+                app:showAsAction="never"
+                />
+        </menu>
+    </item>
 </menu>
