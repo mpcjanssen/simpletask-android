@@ -747,7 +747,6 @@ class Simpletask : ThemedActivity() {
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
-            R.id.btn_filter_import -> onExportFilterClick()
             R.id.clear_filter -> clearFilter()
             R.id.complete -> completeTasks(checkedTasks)
             R.id.uncomplete -> undoCompleteTasks(checkedTasks)
@@ -828,23 +827,6 @@ class Simpletask : ThemedActivity() {
             }
             return saved_filters
         }
-
-    /**
-     * Handle filter import and export
-     */
-
-    @Suppress("UNUSED")
-    fun onExportFilterClick() {
-        val v = findViewById(R.id.btn_filter_import)
-        val popupMenu = PopupMenu(this@Simpletask, v)
-        // FIXME: Refactor to create a generic "create popup at action item" fun
-        popupMenu.setOnMenuItemClickListener { item ->
-            onOptionsItemSelected(item)
-        }
-        val inflater = popupMenu.menuInflater
-        inflater.inflate(R.menu.export_filter, popupMenu.menu)
-        popupMenu.show()
-    }
 
     fun importFilters (importFile: File) {
         val r = Runnable() {
