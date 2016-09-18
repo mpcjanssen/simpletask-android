@@ -37,6 +37,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.Spannable
@@ -474,48 +475,77 @@ fun readAsset(assets: AssetManager, name: String): String {
     return buf.toString()
 }
 
-fun getRelativeThresholdDate(task: Task, ctx: Context): String? {
-    val date = task.thresholdDate
-    if (date != null) {
-        date.toDateTime()?.let {
-            return "T: " + RelativeDate.getRelativeDate(ctx, it)
+fun getRelativeThresholdDate(task: Task, app: TodoApplication): String? {
+    val date = task.thresholdDate ?: return null
+    return getRelativeDate(app, "T: ", date).toString()
+}
+
+fun getRelativeDueDate(task: Task, app: TodoApplication): SpannableString? {
+    val date = task.dueDate ?: return null
+    return getRelativeDate(app, "Due: ", date)
+}
+
+/**
+ * This method returns a String representing the relative date by comparing
+ * the Calendar being passed in to the date / time that it is right now. It
+ * will compute both past and future relative dates. E.g., "one day ago" and
+ * "one day from now".
+ *
+
+ *
+ * **NOTE:** If the calendar date relative to "now" is older
+ * than one day, we display the actual date in its default format as
+ * specified by this class. If you don't want to
+ * show the actual date, but you want to show the relative date for days,
+ * months, and years, you can add the other cases in by copying the logic
+ * for hours, minutes, seconds.
+
+ * @param then date to calculate difference to
+ * *
+ * @return String representing the relative date
+ */
+
+private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: String): SpannableString? {
+    val date = dateString.toDateTime() ?: return null
+    val now = DateTime.today(TimeZone.getDefault())
+    val days= date.numDaysFrom(now)
+
+    val months = days/ 31
+    val weeks = days/ 7
+    val years = days/ 365
+
+    val s = when {
+        app==null       -> now.format(Constants.DATE_FORMAT)
+        !date.lteq(now) -> date.toString()
+        years==1  -> app.getString(R.string.dates_one_year_ago)
+        years>1   -> app.getString(R.string.dates_years_ago, years)
+        months==1 -> app.getString(R.string.dates_one_month_ago)
+        months>1  -> app.getString(R.string.dates_months_ago, months)
+        weeks==1  -> app.getString(R.string.dates_one_week_ago)
+        weeks>1   -> app.getString(R.string.dates_weeks_ago, weeks)
+        days==1   -> app.getString(R.string.dates_one_day_ago)
+        days>1    -> app.getString(R.string.dates_days_ago, days)
+        days==0   -> app.getString(R.string.dates_today)
+        else      -> date.toString()
+    }
+
+    val ss = SpannableString(prefix + s)
+
+    if (Config.hasColorDueDates() && prefix=="Due: ") {
+        val dueTodayColor = ContextCompat.getColor(app, android.R.color.holo_green_light)
+        val overDueColor = ContextCompat.getColor(app, android.R.color.holo_red_light)
+        when {
+            days==0        -> setColor(ss, dueTodayColor)
+            date.lteq(now) -> setColor(ss, overDueColor)
         }
     }
-    return null
+
+    return ss
 }
 
-fun getRelativeDueDate(task: Task, application: TodoApplication, dueTodayColor: Int, overDueColor: Int, useColor: Boolean): SpannableString? {
-    val date = task.dueDate
-    if (date != null) {
-        date.toDateTime()?.let {
-            val relativeDate = RelativeDate.getRelativeDate(application, it)
-            val ss = SpannableString("Due: " + relativeDate)
-            if (date == application.today && useColor) {
-                setColor(ss, dueTodayColor)
-            } else if ((application.today.compareTo(date) > 0) && useColor) {
-                setColor(ss, overDueColor)
-            }
-            return ss
-        }
-    }
-    return null
-}
-
-
-private fun calculateRelativeAge(ctx: Context, dateString: String): String {
-    val date = dateString.toDateTime()
-    date?.let {
-        return RelativeDate.getRelativeDate(ctx, date)
-    }
-    return dateString
-}
-
-fun getRelativeAge(task: Task, ctx: Context): String? {
-    val date = task.createDate
-    date?.let {
-        return (calculateRelativeAge(ctx, date))
-    }
-    return null
+fun getRelativeAge(task: Task, app: TodoApplication): String? {
+    val date = task.createDate ?: return null
+    return getRelativeDate(app, "", date).toString()
 }
 
 fun initTaskWithFilter(task: Task, mFilter: ActiveFilter) {

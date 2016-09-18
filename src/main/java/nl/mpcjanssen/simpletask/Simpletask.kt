@@ -1292,11 +1292,9 @@ class Simpletask : ThemedActivity() {
             }
             cb.isChecked = completed
 
-            val relAge = getRelativeAge(task, TodoApplication.app)
-            val relDue = getRelativeDueDate(task, m_app, ContextCompat.getColor(m_app, android.R.color.holo_green_light),
-                    ContextCompat.getColor(m_app, android.R.color.holo_red_light),
-                    Config.hasColorDueDates())
-            val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
+            val relAge = getRelativeAge(task, m_app)
+            val relDue = getRelativeDueDate(task, m_app)
+            val relativeThresholdDate = getRelativeThresholdDate(task, m_app)
             if (!isEmptyOrNull(relAge) && !mFilter!!.hideCreateDate) {
                 taskAge.text = relAge
                 taskAge.visibility = View.VISIBLE
