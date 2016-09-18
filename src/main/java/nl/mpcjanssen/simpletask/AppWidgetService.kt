@@ -153,9 +153,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         rv.setTextViewText(R.id.tasktext, ss)
 
         val relAge = getRelativeAge(task, TodoApplication.app)
-        val relDue = getRelativeDueDate(task , TodoApplication.app, ContextCompat.getColor(TodoApplication.app,android.R.color.holo_green_light),
-                ContextCompat.getColor(TodoApplication.app,android.R.color.holo_red_light),
-                true)
+        val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relThres = getRelativeThresholdDate(task, TodoApplication.app)
         var anyDateShown = false
         if (!isEmptyOrNull(relAge) && !filter.hideCreateDate) {
