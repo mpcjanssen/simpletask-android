@@ -124,6 +124,7 @@ You should have received a copy of the GNU General Public License along with Tod
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
+            android:theme="@style/AppTheme"
             style="@style/simpleSelectionToolbar"
             android:id="@+id/toolbar"
             android:layout_width="fill_parent"

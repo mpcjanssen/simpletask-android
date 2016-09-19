@@ -9,7 +9,6 @@
 
     <color name="simple_accent">#ff00b1ed</color> 
     <color name="simple_accent_dark">#ff0099cc</color>
-    <!-- <color name="simple_accent_dark">#ff0089b7</color> -->
 
     <color name="white">#ffffff</color>
     <color name="black">#ff000000</color>
@@ -69,6 +68,5 @@
     <style name="launchScreen" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@color/simple_primary</item>
         <item name="colorPrimaryDark">@color/simple_primary_dark</item>
-        <item name="windowNoTitle">true</item>
     </style>
 </resources>
