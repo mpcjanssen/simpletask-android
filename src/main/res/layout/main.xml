@@ -98,13 +98,12 @@
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
+            style="@style/simpleSelectionToolbar"
             android:id="@+id/toolbar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:background="?android:colorControlActivated"
-            android:theme="@style/AppTheme"
             android:visibility="gone"
             />
     </LinearLayout>

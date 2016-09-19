@@ -34,7 +34,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -187,11 +186,6 @@ fun join(s: Collection<String>?, delimiter: String): String {
         return ""
     }
     return s.joinToString(delimiter)
-}
-
-fun getColorDrawable(ctx: Context, attr: Int): Drawable {
-    val color = ctx.obtainStyledAttributes(intArrayOf(attr))
-    return ContextCompat.getDrawable(ctx, color.getResourceId(0, 0))
 }
 
 fun setColor(ss: SpannableString, color: Int, s: String) {

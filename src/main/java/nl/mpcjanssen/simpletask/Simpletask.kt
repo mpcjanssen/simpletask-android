@@ -460,8 +460,11 @@ class Simpletask : ThemedActivity() {
                 setTitle(R.string.title_filter_drawer)
             }
             Mode.SELECTION -> {
-                val color = getColorDrawable(this, R.attr.colorControlActivated)
-                actionBar.setBackgroundDrawable(color)
+                val actionColor = ContextCompat.getDrawable(this, R.color.gray81)
+                actionBar.setBackgroundDrawable(actionColor)
+
+                /* window.setStatusBarColor(R.color.gray87) */
+
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
                 toggle.setDrawerIndicatorEnabled(false)
@@ -475,9 +478,15 @@ class Simpletask : ThemedActivity() {
                 inflater.inflate(R.menu.task_context, toolbar.menu)
             }
             Mode.MAIN -> {
-                val color = getColorDrawable(this, R.attr.colorPrimary)
-                actionBar.setBackgroundDrawable(color)
+                val a = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+                val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
+                actionBar.setBackgroundDrawable(colorPrimary)
+
+                /* val b = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimaryDark)) */
+                /* window.setStatusBarColor(b.getResourceId(0, R.color.simple_primary_dark)) */
+                
                 inflater.inflate(R.menu.main, menu)
+
                 if (!FileStore.supportsSync()) {
                     val mItem = menu.findItem(R.id.sync)
                     mItem.isVisible = false
