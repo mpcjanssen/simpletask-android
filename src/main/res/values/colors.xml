@@ -1,0 +1,17 @@
+<resources>
+    <color name="simple_primary_bright">#ff20b6e8</color>
+    <color name="simple_primary">#ff1b98c1</color>
+    <color name="simple_primary_dark">#ff157a9b</color> 
+
+    <color name="simple_alpha33">#5520b6e8</color>
+    <color name="simple_alpha_focus">#8820b6e8</color>
+
+    <color name="simple_accent">#ff00b1ed</color> 
+    <color name="simple_accent_dark">#ff0099cc</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="gray95">#ff111111</color>
+    <color name="gray87">#ff212121</color>
+    <color name="gray81">#ff303030</color>
+</resources>

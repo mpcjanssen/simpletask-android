@@ -99,7 +99,7 @@
 
         <android.support.v7.widget.Toolbar
             android:theme="@style/AppTheme"
-            style="@style/simpleSelectionToolbar"
+            style="@style/SimpleSelectionToolbar"
             android:id="@+id/toolbar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
