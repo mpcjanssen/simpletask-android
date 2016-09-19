@@ -294,9 +294,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun showParts(parts: Int): String {
-        return tokens.filter {
-            (it.type and parts) != 0
-        }.map {it.text}.joinToString(" ")
+        return tokens.filter { (it.type and parts) != 0 }
+                      .map {it.text}
+                       .joinToString(" ")
     }
 
     fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {

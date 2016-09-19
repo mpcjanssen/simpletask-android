@@ -1,88 +1,44 @@
 <resources>
-    <style name="FontSizeDefault">
-    </style>
+    <!-- Color pallette -->
+    <color name="white"             >#ffffff</color>
+    <color name="black"             >#000000</color>
+    <color name="simple_blue_500"   >#0099CC</color>
+    <color name="simple_blue_A200"   >#22BBEE</color>
 
-    <style name="FontSize12sp">
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="FontSize14sp">
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="FontSize16sp">
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="FontSize18sp">
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="FontSize20sp">
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="FontSize22sp">
-        <item name="android:textSize">22sp</item>
-    </style>
-
-    <style name="FontSize24sp">
-        <item name="android:textSize">24sp</item>
-    </style>
-
-     <style name="FontSize26sp">
-        <item name="android:textSize">26sp</item>
-    </style>
-
-    <style name="FontSize28sp">
-        <item name="android:textSize">28sp</item>
-    </style>
-
-    <style name="FontSize30sp">
-        <item name="android:textSize">30sp</item>
-    </style>
-
-    <style name="FontSize32sp">
-        <item name="android:textSize">32sp</item>
-    </style>
-
-    <style name="FontSize34sp">
-        <item name="android:textSize">34sp</item>
-    </style>
-
-    <style name="FontSize36sp">
-        <item name="android:textSize">36sp</item>
-    </style>
-
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">#22BBEE</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:background">#FFFFFF</item>
-    </style>
-
-    <style name="AppCompatAlertDialogStyleDark" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">#22BBEE</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:background">#000000</item>
-    </style>
-
-    <style name="AppTheme.Black" parent="AppTheme">
-        <item name="android:colorBackground">#FF000000</item>
-        <item name="android:windowBackground">@android:color/black</item>
-    </style>
-
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="colorPrimary">#0099CC</item>
-        <item name="colorAccent">#22BBEE</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
-    </style>
-
+    <!-- Light theme -->
     <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#0099CC</item>
-        <item name="colorAccent">#22BBEE</item>
+        <item name="colorPrimary">@color/simple_blue_500</item>
+        <item name="colorAccent">@color/simple_blue_A200</item>
+        <item name="colorControlActivated">@color/simple_blue_A200</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
-    <color name="toolbar_background">#424242</color>
+    <!-- Dark theme -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/simple_blue_500</item>
+        <item name="colorAccent">@color/simple_blue_A200</item>
+        <item name="colorControlActivated">@color/simple_blue_A200</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
+    </style>
+
+    <!-- Black theme -->
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="android:colorBackground">#FF000000</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <!-- Light dialog -->
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/simple_blue_A200</item>
+        <item name="android:textColorPrimary">@+color/black</item>
+        <item name="android:background">@+color/white</item>
+    </style>
+
+    <!-- Dark dialog -->
+    <style name="AppCompatAlertDialogStyleDark" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@+color/white</item>
+        <item name="android:background">@+color/black</item>
+    </style>
+
 </resources>
