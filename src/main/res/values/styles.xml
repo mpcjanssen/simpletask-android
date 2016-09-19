@@ -1,0 +1,17 @@
+<resources>
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/simple_accent</item>
+        <item name="android:textColorPrimary">@+color/black</item>
+        <item name="android:background">@+color/white</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyleDark" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/simple_accent</item>
+        <item name="android:textColorPrimary">@+color/white</item>
+        <item name="android:background">@+color/gray87</item>
+    </style>
+
+    <style name="SimpleSelectionToolbar">
+        <item name="android:background">@color/gray81</item>
+    </style>
+</resources>

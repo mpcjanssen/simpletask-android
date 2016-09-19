@@ -42,7 +42,7 @@ You should have received a copy of the GNU General Public License along with Sim
         android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_label"
-        android:theme="@style/launchScreen"
+        android:theme="@style/LaunchScreen"
         >
         <!-- tools:ignore="UnusedAttribute" -->
         <activity
