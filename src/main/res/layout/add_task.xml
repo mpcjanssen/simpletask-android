@@ -40,7 +40,7 @@
     </FrameLayout>
 
     <LinearLayout
-        style="@style/simpleSelectionToolbar"
+        style="@style/SimpleSelectionToolbar"
         android:id="@+id/addbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -142,20 +142,8 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         return prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
     }
 
-    private fun themeStringToId(theme: String): Int {
-        when (theme) {
-            "dark" -> return R.style.AppTheme
-            "black" -> return R.style.AppTheme_Black
-            "light_darkactionbar" -> return R.style.AppTheme_Light_DarkActionBar
-        }
-        return R.style.AppTheme_Light_DarkActionBar
-
-    }
-
-    val activeTheme: Int
-        get() {
-            return themeStringToId(activeThemeString)
-        }
+    // Takes an argument f, an expression that maps theme strings to IDs
+    val activeTheme = { f: (String) -> Int -> f(activeThemeString) }
 
     val isDarkTheme: Boolean
         get() {

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -25,7 +26,6 @@ import java.io.IOException
 import java.util.*
 
 class FilterActivity : ThemedActivity() {
-
 
     internal var asWidgetConfigure = false
     internal var asWidgetReConfigure = false
@@ -54,11 +54,12 @@ class FilterActivity : ThemedActivity() {
         log.info(TAG, "Called with intent: " + intent.toString())
         m_app = application as TodoApplication
 
-
         setContentView(R.layout.filter)
+        val toolbar = findViewById(R.id.toolbar_edit_filter) as Toolbar
+        /* this.setSupportActionBar(toolbar) */
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
-
 
         var arguments: Bundle
 

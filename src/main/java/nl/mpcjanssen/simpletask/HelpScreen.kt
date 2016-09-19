@@ -42,7 +42,6 @@ class HelpScreen : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log = Logger
-        setTheme(Config.activeTheme)
         var page = "index." + getText(R.string.help_locale).toString() + ".md"
         val i = intent
         if (i.hasExtra(Constants.EXTRA_HELP_PAGE)) {
