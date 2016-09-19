@@ -124,13 +124,12 @@ You should have received a copy of the GNU General Public License along with Tod
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
+            style="@style/simpleSelectionToolbar"
             android:id="@+id/toolbar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:background="?colorControlActivated"
-            android:theme="@style/AppTheme"
             android:visibility="gone"
             />
     </LinearLayout>
@@ -155,12 +154,11 @@ You should have received a copy of the GNU General Public License along with Tod
             android:dividerHeight="0dp"
             />
         <android.support.v7.widget.Toolbar
+            style="@style/simpleSelectionToolbar"
             android:id="@+id/saved_filter_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="?colorAccent"
-            android:theme="@style/AppTheme"
             />
     </LinearLayout>
 </LinearLayout>
