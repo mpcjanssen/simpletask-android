@@ -129,7 +129,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/toolbar_background"
+            android:background="?colorControlActivated"
             android:theme="@style/AppTheme"
             android:visibility="gone"
             />
@@ -159,7 +159,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/toolbar_background"
+            android:background="?colorAccent"
             android:theme="@style/AppTheme"
             />
     </LinearLayout>

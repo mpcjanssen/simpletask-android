@@ -448,6 +448,7 @@ class Simpletask : ThemedActivity() {
         val fab = findViewById(R.id.fab) as FloatingActionButton
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
+        val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
 
         when (activeMode()) {
             Mode.NAV_DRAWER -> {
@@ -459,6 +460,8 @@ class Simpletask : ThemedActivity() {
                 setTitle(R.string.title_filter_drawer)
             }
             Mode.SELECTION -> {
+                val color = getColorDrawable(this, R.attr.colorControlActivated)
+                actionBar.setBackgroundDrawable(color)
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
                 toggle.setDrawerIndicatorEnabled(false)
@@ -472,6 +475,8 @@ class Simpletask : ThemedActivity() {
                 inflater.inflate(R.menu.task_context, toolbar.menu)
             }
             Mode.MAIN -> {
+                val color = getColorDrawable(this, R.attr.colorPrimary)
+                actionBar.setBackgroundDrawable(color)
                 inflater.inflate(R.menu.main, menu)
                 if (!FileStore.supportsSync()) {
                     val mItem = menu.findItem(R.id.sync)
