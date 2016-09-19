@@ -148,7 +148,7 @@ class Simpletask : ThemedActivity() {
             setContentView(R.layout.main_landscape)
             val toolbar = findViewById(R.id.saved_filter_toolbar) as Toolbar
             toolbar.setOnMenuItemClickListener{ item ->
-            	onOptionsItemSelected(item)
+                onOptionsItemSelected(item)
             }
             val menu = toolbar.menu
             menu.clear()
