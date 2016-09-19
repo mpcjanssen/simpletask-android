@@ -65,4 +65,10 @@
     <style name="simpleSelectionToolbar">
         <item name="android:background">@color/gray81</item>
     </style>
+
+    <style name="launchScreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/simple_primary</item>
+        <item name="colorPrimaryDark">@color/simple_primary_dark</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>
