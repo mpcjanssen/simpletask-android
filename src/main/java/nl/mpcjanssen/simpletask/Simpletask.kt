@@ -147,7 +147,9 @@ class Simpletask : ThemedActivity() {
         if (Config.hasLandscapeDrawers()) {
             setContentView(R.layout.main_landscape)
             val toolbar = findViewById(R.id.saved_filter_toolbar) as Toolbar
-            toolbar.setOnMenuItemClickListener{ item -> onOptionsItemSelected(item) }
+            toolbar.setOnMenuItemClickListener{ item ->
+            	onOptionsItemSelected(item)
+            }
             val menu = toolbar.menu
             menu.clear()
             val inflater = menuInflater
