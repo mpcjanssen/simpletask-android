@@ -9,9 +9,9 @@ abstract class ThemedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(Config.activeTheme({ it ->
             when (it) {
-                "dark" -> R.style.AppTheme
-                "black" -> R.style.AppTheme_Black
-                else -> R.style.AppTheme_Light_DarkActionBar
+                "dark" -> R.style.AppTheme_NoActionBar
+                "black" -> R.style.AppTheme_Black_NoActionBar
+                else -> R.style.AppTheme_Light_NoActionBar
             }
         }))
 

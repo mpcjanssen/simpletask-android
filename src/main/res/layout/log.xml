@@ -29,6 +29,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="?attr/colorPrimary"
-        android:theme="@style/AppTheme"
         />
 </LinearLayout>
