@@ -8,7 +8,6 @@
     >
     <!-- The main content view -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/home_root"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -16,6 +15,13 @@
         android:orientation="vertical"
         android:showDividers="middle"
         >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_actionbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            />
         <View
             android:id="@+id/pendingchanges"
             android:layout_width="fill_parent"
@@ -98,7 +104,6 @@
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
-            android:theme="@style/AppTheme"
             style="@style/SimpleSelectionToolbar"
             android:id="@+id/toolbar"
             android:layout_width="fill_parent"

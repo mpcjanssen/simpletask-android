@@ -8,7 +8,7 @@
     <color name="simple_accent">#ff00b1ed</color> 
     <color name="simple_accent_dark">#ff0099cc</color>
 
-    <color name="white">#ffffff</color>
+    <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
     <color name="gray95">#ff111111</color>
     <color name="gray87">#ff212121</color>

@@ -56,15 +56,13 @@ class FilterActivity : ThemedActivity() {
 
         setContentView(R.layout.filter)
         val toolbar = findViewById(R.id.toolbar_edit_filter) as Toolbar
-        /* this.setSupportActionBar(toolbar) */
-
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
         var arguments: Bundle
 
         val intent = intent
-
         var environment: String = "mainui"
         if (intent.action != null) {
             asWidgetConfigure = getIntent().action == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
@@ -73,6 +71,7 @@ class FilterActivity : ThemedActivity() {
 
         mFilter = ActiveFilter(FilterOptions(luaModule = environment))
         val context = applicationContext
+
         if (asWidgetConfigure) {
             if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
                 asWidgetReConfigure = true

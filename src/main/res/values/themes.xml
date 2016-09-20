@@ -6,7 +6,7 @@
     </style>
 
     <!-- Light theme -->
-    <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/simple_primary</item>
         <item name="colorPrimaryDark">@color/simple_primary_dark</item>
         <item name="colorAccent">@color/simple_accent</item>
@@ -16,12 +16,18 @@
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
-    <style name="AppTheme.Light.DarkActionBar.Settings" parent="AppTheme.Light.DarkActionBar">
+    <style name="AppTheme.Light.DarkActionBar.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/simple_primary</item>
+        <item name="colorPrimaryDark">@color/simple_primary_dark</item>
+        <item name="colorAccent">@color/simple_accent</item>
         <item name="colorControlActivated">@color/simple_primary</item>
+            <!-- This isn't working right now, I think. -->
+            <item name="colorControlHighlight">@color/simple_alpha33</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
     <!-- Dark theme -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/simple_primary</item>
         <item name="colorPrimaryDark">@color/simple_primary_dark</item>
         <item name="colorAccent">@color/simple_accent</item>
@@ -32,19 +38,26 @@
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
     </style>
 
-    <style name="AppTheme.Settings" parent="AppTheme">
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/simple_primary</item>
+        <item name="colorPrimaryDark">@color/simple_primary_dark</item>
+        <item name="colorAccent">@color/simple_accent</item>
         <item name="colorControlActivated">@color/simple_primary</item>
+            <!-- This isn't working right now, I think. -->
+            <item name="colorControlHighlight">@color/simple_alpha33</item> 
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
     </style>
 
     <!-- Black theme -->
-    <style name="AppTheme.Black" parent="AppTheme">
+    <style name="AppTheme.Black.NoActionBar" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/gray95</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/simple_accent_dark</item>
         <item name="android:windowBackground">@color/black</item>
     </style>
 
-    <style name="AppTheme.Black.Settings" parent="AppTheme.Black">
+    <style name="AppTheme.Black.ActionBar" parent="AppTheme.ActionBar">
         <item name="colorControlActivated">@color/simple_primary_dark</item>
     </style>
 </resources>
