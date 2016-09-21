@@ -2,13 +2,13 @@
 
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
     <!-- The main content view -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/home_root"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -16,6 +16,15 @@
         android:orientation="vertical"
         android:showDividers="middle"
         >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_actionbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:background="?attr/colorPrimary"
+            />
         <View
             android:id="@+id/pendingchanges"
             android:layout_width="fill_parent"
@@ -98,13 +107,12 @@
         </FrameLayout>
 
         <android.support.v7.widget.Toolbar
+            style="@style/SimpleSelectionToolbar"
             android:id="@+id/toolbar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/toolbar_background"
-            android:theme="@style/AppTheme"
             android:visibility="gone"
             />
     </LinearLayout>

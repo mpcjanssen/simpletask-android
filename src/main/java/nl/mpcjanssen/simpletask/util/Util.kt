@@ -515,7 +515,6 @@ private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: St
     val years = days/ 365
 
     val s = when {
-        app==null       -> now.format(Constants.DATE_FORMAT)
         !date.lteq(now) -> date.toString()
         years==1  -> app.getString(R.string.dates_one_year_ago)
         years>1   -> app.getString(R.string.dates_years_ago, years)
