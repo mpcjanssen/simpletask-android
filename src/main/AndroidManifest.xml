@@ -20,82 +20,85 @@ You should have received a copy of the GNU General Public License along with Sim
 @copyright 2015 Vojtech Kral
 -->
 <!-- package name and version codes are overwritten by Gradle -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="nl.mpcjanssen.simpletask" >
-
+    package="nl.mpcjanssen.simpletask"
+    >
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true"
-        android:xlargeScreens="true" />
-
+        android:xlargeScreens="true"
+        />
     <application
-            android:name=".TodoApplication"
-            android:allowBackup="true"
-            android:fullBackupContent="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_label"
-            android:theme="@style/AppTheme.Light.DarkActionBar" tools:ignore="UnusedAttribute">
-
+        android:name=".TodoApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_label"
+        android:theme="@style/LaunchScreen"
+        >
+        <!-- tools:ignore="UnusedAttribute" -->
         <activity
             android:name=".HelpScreen"
             android:parentActivityName=".Simpletask"
             tools:ignore="UnusedAttribute"
-                android:label="@string/help">
-        </activity>
-
+            android:label="@string/help"
+            />
         <activity
             android:name=".LuaConfigScreen"
             android:parentActivityName=".Simpletask"
             tools:ignore="UnusedAttribute"
-            android:label="@string/lua_config_screen">
-        </activity>
-
+            android:label="@string/lua_config_screen"
+            />
         <activity
-                android:name=".DebugInfoScreen"
-                android:parentActivityName=".Preferences"
-                android:label="@string/debug_info"/>
+            android:name=".DebugInfoScreen"
+            android:parentActivityName=".Preferences"
+            android:label="@string/debug_info"
+            />
         <activity
-                android:name=".HistoryScreen"
-                android:parentActivityName=".Preferences"
-            android:label="@string/history">
-        </activity>
+            android:name=".HistoryScreen"
+            android:parentActivityName=".Preferences"
+            android:label="@string/history"
+            />
         <activity
             android:name=".Preferences"
             android:parentActivityName=".Simpletask"
-            android:label="@string/set_preferences" />
+            android:label="@string/set_preferences"
+            />
         <activity
             android:name=".AddTask"
             android:exported="true"
             android:taskAffinity="nl.mpcjanssen.simpletask.task_add"
             android:label="@string/addtask"
             android:windowSoftInputMode="adjustResize"
-            tools:ignore="UnusedAttribute" >
+            tools:ignore="UnusedAttribute"
+            >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.mpcjanssen.simpletask.Simpletask" />
-
+                android:value="nl.mpcjanssen.simpletask.Simpletask"
+                />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
         <!-- Implemented in Kotlin, so fix lint complaining about it -->
         <activity
-                tools:ignore="MissingRegistered"
-                android:name=".AddTaskBackground"
-                android:enabled="true"
-                android:theme="@android:style/Theme.NoDisplay"
-                android:taskAffinity="nl.mpcjanssen.simpletask.task_add_background"
-                android:exported="true">
+            tools:ignore="MissingRegistered"
+            android:name=".AddTaskBackground"
+            android:enabled="true"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:taskAffinity="nl.mpcjanssen.simpletask.task_add_background"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="nl.mpcjanssen.simpletask.BACKGROUND_TASK" />
@@ -105,16 +108,15 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name">
+            android:label="@string/shortcut_addtask_name"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
 
         <activity
             android:name=".Simpletask"
@@ -122,34 +124,36 @@ You should have received a copy of the GNU General Public License along with Sim
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="nl.mpcjanssen.simpletask.START_WITH_FILTER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.provider.calendar.action.HANDLE_CUSTOM_EVENT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.item/event" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"
+                />
         </activity>
+        
         <activity
             android:name=".FilterActivity"
             android:exported="true"
-            android:label="@string/title_activity_filter" >
+            android:label="@string/title_activity_filter"
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -159,43 +163,46 @@ You should have received a copy of the GNU General Public License along with Sim
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="nl.mpcjanssen.simpletask.ADD_TASK_FROM_WIDGET" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info" />
+                android:resource="@xml/appwidget_info"
+                />
         </receiver>
 
         <service
             android:name=".AppWidgetService"
             android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            />
         <receiver android:name="nl.mpcjanssen.simpletask.AlarmReceiver"/>
-
         <uses-library
             android:name="com.sec.android.app.multiwindow"
-            android:required="false" />
-
+            android:required="false"
+            />
         <meta-data
             android:name="com.sec.android.support.multiwindow"
-            android:value="true" />
+            android:value="true"
+            />
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
-            android:resource="@dimen/app_defaultsize_w" />
+            android:resource="@dimen/app_defaultsize_w"
+            />
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
-            android:resource="@dimen/app_defaultsize_h" />
+            android:resource="@dimen/app_defaultsize_h"
+            />
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
-            android:resource="@dimen/app_minimumsize_w" />
+            android:resource="@dimen/app_minimumsize_w"
+            />
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
-            android:resource="@dimen/app_minimumsize_h" />
-
-
+            android:resource="@dimen/app_minimumsize_h"
+            />
     </application>
-
 </manifest>

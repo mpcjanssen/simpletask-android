@@ -143,16 +143,13 @@ class Simpletask : ThemedActivity() {
         }
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
 
-
-        // Set the proper theme
-        setTheme(Config.activeTheme)
+        // Landscape mode
         if (Config.hasLandscapeDrawers()) {
             setContentView(R.layout.main_landscape)
             val toolbar = findViewById(R.id.saved_filter_toolbar) as Toolbar
             toolbar.setOnMenuItemClickListener{ item ->
                 onOptionsItemSelected(item)
             }
-            toolbar.popupTheme = Config.activeTheme
             val menu = toolbar.menu
             menu.clear()
             val inflater = menuInflater
@@ -160,6 +157,9 @@ class Simpletask : ThemedActivity() {
         } else {
             setContentView(R.layout.main)
         }
+
+        val actionToolBar = findViewById(R.id.main_actionbar) as Toolbar
+        setSupportActionBar(actionToolBar)
 
         // Replace drawables if the theme is dark
         if (Config.isDarkTheme) {
@@ -448,6 +448,7 @@ class Simpletask : ThemedActivity() {
         val fab = findViewById(R.id.fab) as FloatingActionButton
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
+        val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
 
         when (activeMode()) {
             Mode.NAV_DRAWER -> {
@@ -459,6 +460,11 @@ class Simpletask : ThemedActivity() {
                 setTitle(R.string.title_filter_drawer)
             }
             Mode.SELECTION -> {
+                val actionColor = ContextCompat.getDrawable(this, R.color.gray81)
+                actionBar.setBackgroundDrawable(actionColor)
+
+                /* window.setStatusBarColor(R.color.gray87) */
+
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
                 toggle.setDrawerIndicatorEnabled(false)
@@ -467,12 +473,19 @@ class Simpletask : ThemedActivity() {
                     onOptionsItemSelected(item)
                 }
                 toolbar.visibility = View.VISIBLE
-                toolbar.popupTheme = Config.activeTheme
                 toolbar.menu.clear()
                 inflater.inflate(R.menu.task_context, toolbar.menu)
             }
             Mode.MAIN -> {
+                val a = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+                val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
+                actionBar.setBackgroundDrawable(colorPrimary)
+
+                /* val b = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimaryDark)) */
+                /* window.setStatusBarColor(b.getResourceId(0, R.color.simple_primary_dark)) */
+                
                 inflater.inflate(R.menu.main, menu)
+
                 if (!FileStore.supportsSync()) {
                     val mItem = menu.findItem(R.id.sync)
                     mItem.isVisible = false
