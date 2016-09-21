@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -74,6 +75,9 @@ class AddTask : ThemedActivity() {
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
+        val toolbar = findViewById(R.id.addtask_actionbar) as Toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton?

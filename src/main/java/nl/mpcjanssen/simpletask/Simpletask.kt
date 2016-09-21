@@ -156,9 +156,10 @@ class Simpletask : ThemedActivity() {
             inflater.inflate(R.menu.nav_drawer, toolbar.menu)
         } else {
             setContentView(R.layout.main)
-            val toolbar = findViewById(R.id.main_actionbar) as Toolbar
-            setSupportActionBar(toolbar);
         }
+
+        val actionToolBar = findViewById(R.id.main_actionbar) as Toolbar
+        setSupportActionBar(actionToolBar)
 
         // Replace drawables if the theme is dark
         if (Config.isDarkTheme) {

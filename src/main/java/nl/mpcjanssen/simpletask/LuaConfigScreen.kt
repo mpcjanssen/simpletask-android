@@ -5,6 +5,8 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
+import android.support.v7.widget.Toolbar
 import android.widget.Button
 import android.widget.EditText
 import android.view.Menu
@@ -25,8 +27,20 @@ class LuaConfigScreen : ThemedActivity() {
         super.onCreate(savedInstanceState)
         m_app = application as TodoApplication
         setContentView(R.layout.lua_config)
+
+        val toolbar = findViewById(R.id.lua_config_actionbar) as Toolbar?
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+
         scriptEdit = findViewById(R.id.lua_config) as EditText
         scriptEdit.setText(Config.luaConfig)
+
+        val fab = findViewById(R.id.lua_config_fab) as FloatingActionButton?
+        fab?.setOnClickListener {
+            Config.luaConfig = script()
+            finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -41,7 +55,6 @@ class LuaConfigScreen : ThemedActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
             }
             R.id.btn_run -> {
                 try {
@@ -68,7 +81,6 @@ class LuaConfigScreen : ThemedActivity() {
     }
 
     override fun onDestroy() {
-        Config.luaConfig = script()
         super.onDestroy()
     }
 

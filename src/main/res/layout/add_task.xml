@@ -9,6 +9,15 @@
     android:divider="?android:attr/dividerVertical"
     android:orientation="vertical"
     >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/addtask_actionbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
