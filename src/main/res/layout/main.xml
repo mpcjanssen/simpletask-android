@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:background="?attr/colorPrimary"
             />
         <View

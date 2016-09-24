@@ -7,13 +7,7 @@ import nl.mpcjanssen.simpletask.util.Config
 abstract class ThemedActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(Config.activeTheme({ it ->
-            when (it) {
-                "dark" -> R.style.AppTheme_NoActionBar
-                "black" -> R.style.AppTheme_Black_NoActionBar
-                else -> R.style.AppTheme_Light_NoActionBar
-            }
-        }))
+        setTheme(Config.activeTheme)
 
         super.onCreate(savedInstanceState)
     }
