@@ -17,7 +17,7 @@
         <item name="actionOverflowButtonStyle">@style/WhiteActionButton</item>
     </style>
 
-    <style name="AppTheme.Light.DarkActionBar.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/simple_primary</item>
         <item name="colorPrimaryDark">@color/simple_primary_dark</item>
         <item name="colorAccent">@color/simple_accent</item>
