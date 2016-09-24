@@ -15,8 +15,6 @@
             <item name="colorControlHighlight">@color/simple_alpha33</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
         <item name="actionOverflowButtonStyle">@style/WhiteActionButton</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="AppTheme.Light.DarkActionBar.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
