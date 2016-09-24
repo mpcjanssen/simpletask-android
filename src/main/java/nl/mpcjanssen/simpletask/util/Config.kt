@@ -143,13 +143,38 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     // Takes an argument f, an expression that maps theme strings to IDs
-    val activeTheme = { f: (String) -> Int -> f(activeThemeString) }
+    val activeTheme: Int
+    get() {
+        return when (activeThemeString) {
+            "dark" -> R.style.AppTheme_NoActionBar
+            "black" -> R.style.AppTheme_Black_NoActionBar
+            else -> R.style.AppTheme_Light_NoActionBar
+        }
+    }
+
+    val activeActionBarTheme: Int
+    get() {
+        return when (activeThemeString) {
+            "dark" -> R.style.AppTheme_ActionBar
+            "black" -> R.style.AppTheme_Black_ActionBar
+            else -> R.style.AppTheme_Light_DarkActionBar_ActionBar
+        }
+    }
+
+    val activePopupTheme: Int
+    get() {
+        return if (isDarkTheme) {
+            R.style.AppTheme_ActionBar
+        } else {
+            R.style.AppTheme_Black_ActionBar
+        }
+    }
 
     val isDarkTheme: Boolean
         get() {
-            when (activeThemeString) {
-                "dark", "black" -> return true
-                else -> return false
+            return when (activeThemeString) {
+                "dark", "black" -> true
+                else -> false
             }
         }
 
