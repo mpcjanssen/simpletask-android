@@ -157,7 +157,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         return when (activeThemeString) {
             "dark" -> R.style.AppTheme_ActionBar
             "black" -> R.style.AppTheme_Black_ActionBar
-            else -> R.style.AppTheme_Light_DarkActionBar_ActionBar
+            else -> R.style.AppTheme_Light_DarkActionBar
         }
     }
 
