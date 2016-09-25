@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
@@ -48,9 +49,12 @@ class HelpScreen : ThemedActivity() {
             page = i.getStringExtra(Constants.EXTRA_HELP_PAGE) + "." + getText(R.string.help_locale).toString() + ".md"
         }
 
+        setContentView(R.layout.help)
+        val toolbar = findViewById(R.id.help_actionbar) as Toolbar
+        setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        setContentView(R.layout.help)
+
         wvHelp = findViewById(R.id.help_view) as WebView
         wvHelp!!.setWebViewClient(object : WebViewClient() {
             // Replacement is API >= 21 only
