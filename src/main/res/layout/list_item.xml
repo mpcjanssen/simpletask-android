@@ -24,7 +24,7 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 
 <!--suppress ALL -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
@@ -41,54 +41,50 @@ You should have received a copy of the GNU General Public License along with Tod
         android:clickable="true"
         android:id="@+id/checkBox"
         />
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/tasktext"
+        android:focusable="false"
         android:layout_width="fill_parent"
-        android:paddingLeft="4dip"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/checkBox"
+        android:paddingLeft="0dip"
+        android:paddingRight="4dip"
+        android:paddingTop="4dip"
+        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tasktext"
+        android:layout_toRightOf="@+id/checkBox"
+        android:id="@+id/datebar" 
         >
         <TextView
-            android:id="@+id/tasktext"
+            android:id="@+id/taskage"
             android:focusable="false"
-            android:layout_width="fill_parent"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:paddingLeft="0dip"
-            android:paddingRight="4dip"
-            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:layout_weight="1"
             />
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
+            android:id="@+id/taskdue"
+            android:focusable="false"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:id="@+id/datebar" 
-            >
-            <TextView
-                android:id="@+id/taskage"
-                android:focusable="false"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="0dip"
-                android:paddingBottom="4dip"
-                android:layout_weight="1"
-                />
-            <TextView
-                android:id="@+id/taskdue"
-                android:focusable="false"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dip"
-                android:paddingBottom="4dip"
-                android:layout_weight="1"
-                />
-            <TextView
-                android:id="@+id/taskthreshold"
-                android:focusable="false"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dip"
-                android:paddingBottom="4dip"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
+            android:paddingLeft="4dip"
+            android:paddingBottom="4dip"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/taskthreshold"
+            android:focusable="false"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dip"
+            android:paddingBottom="4dip"
+            android:layout_weight="1"
+            />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
