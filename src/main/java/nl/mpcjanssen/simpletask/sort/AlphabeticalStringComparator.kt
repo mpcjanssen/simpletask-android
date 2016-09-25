@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.sort
 
 import java.util.*
+import java.text.Collator
 
 
 class AlphabeticalStringComparator(caseSensitive: Boolean) : Comparator<String> {
@@ -19,11 +20,14 @@ class AlphabeticalStringComparator(caseSensitive: Boolean) : Comparator<String> 
         if (b == null) {
             b = ""
         }
-        if (bCaseSensitive) {
-            return a.compareTo(b)
-        } else {
 
-            return a.toUpperCase().compareTo(b.toUpperCase())
+        val collator = Collator.getInstance(Locale.getDefault()) as Collator
+
+        if (bCaseSensitive) {
+            collator.setStrength(Collator.TERTIARY)
+        } else {
+            collator.setStrength(Collator.SECONDARY)
         }
+        return collator.compare(a, b)
     }
 }
