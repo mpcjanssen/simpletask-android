@@ -17,7 +17,7 @@ object LuaInterpreter {
     val ON_TEXTSEARCH_NAME = "onTextSearch"
     val CONFIG_THEME = "theme"
     val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
-
+ 
     init {
 
         try {
@@ -41,14 +41,14 @@ object LuaInterpreter {
     }
 
 
-    fun onFilterCallback(moduleName : String, t: Task): Boolean {
+    fun onFilterCallback(moduleName : String, t: Task, createIsThreshold: Boolean): Boolean {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {
             return true
         }
         val onFilter = module.get(LuaInterpreter.ON_FILTER_NAME)
         if (!onFilter.isnil()) {
-            val args = fillOnFilterVarargs(t)
+            val args = fillOnFilterVarargs(t, createIsThreshold)
             try {
                 val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
                 return result.toboolean()
@@ -59,14 +59,14 @@ object LuaInterpreter {
         return true
     }
 
-    fun onGroupCallback (moduleName : String, t: Task): String? {
+    fun onGroupCallback (moduleName : String, t: Task, createIsThreshold: Boolean): String? {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {
             return null
         }
         val callback = module.get(LuaInterpreter.ON_GROUP_NAME)
         if (!callback.isnil()) {
-            val args = fillOnFilterVarargs(t)
+            val args = fillOnFilterVarargs(t, createIsThreshold)
             try {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
                 return result.tojstring()
@@ -110,14 +110,18 @@ object LuaInterpreter {
     }
 
     // Fill the arguments for the onFilter callback
-    fun fillOnFilterVarargs(t: Task): Varargs {
+    fun fillOnFilterVarargs(t: Task, createIsThreshold: Boolean): Varargs {
         val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat()))
         val fieldTable = LuaTable.tableOf()
         fieldTable.set("task", t.inFileFormat())
 
         fieldTable.set("due", dateStringToLuaLong(t.dueDate))
-        fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
+        if (createIsThreshold) {
+            fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate?:t.createDate))
+        } else {
+            fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
+        }
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
 
