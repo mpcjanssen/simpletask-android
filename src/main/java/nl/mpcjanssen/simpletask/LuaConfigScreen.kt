@@ -11,9 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.view.Menu
 import android.view.MenuItem
-import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.createAlertDialog
-import nl.mpcjanssen.simpletask.util.shareText
+import java.io.File
+import java.io.IOException
+import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.LuaError
 
 class LuaConfigScreen : ThemedActivity() {
@@ -56,7 +57,7 @@ class LuaConfigScreen : ThemedActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.btn_run -> {
+            R.id.lua_config_run -> {
                 try {
                     LuaInterpreter.evalScript(null, script())
                 } catch (e: LuaError) {
@@ -64,16 +65,48 @@ class LuaConfigScreen : ThemedActivity() {
                     createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
                 }
             }
-            R.id.btn_help -> {
+            R.id.lua_config_help -> {
                 val intent = Intent(this, HelpScreen::class.java)
                 intent.putExtra(Constants.EXTRA_HELP_PAGE, "script")
                 startActivityForResult(intent, 0)
             }
-            R.id.btn_share -> {
+            R.id.lua_config_share -> {
                 shareText(this, getString(R.string.lua_config_screen), script())
+            }
+            R.id.lua_config_import -> {
+                importLuaConfig(File(Config.todoFile.parent, "config.lua"))
+            }
+            R.id.lua_config_export -> {
+                exportLuaConfig(File(Config.todoFile.parent, "config.lua"))
             }
         }
         return true
+    }
+
+    private fun exportLuaConfig (exportFile: File) {
+        Config.luaConfig = script()
+	try {
+            FileStore.writeFile(exportFile, Config.luaConfig)
+	    showToastShort(this, "Lua config exported")
+	} catch (e: Exception) {
+            log.error(TAG, "Export lua config failed", e)
+	    showToastLong(this, "Error exporting lua config")
+        }
+    }
+
+    private fun importLuaConfig (importFile: File) {
+        val r = Runnable() {
+            try {
+                val contents = FileStore.readFile(importFile.canonicalPath, null)
+                Config.luaConfig = contents
+                showToastShort(this, "Lua config imported")
+            } catch (e: IOException) {
+                log.error(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
+                showToastLong(this, "Error reading file ${importFile.canonicalPath}")
+            }
+        }
+        Thread(r).start()
+        scriptEdit.setText(Config.luaConfig)
     }
 
     fun script () : String {
