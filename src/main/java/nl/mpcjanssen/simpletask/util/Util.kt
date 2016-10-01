@@ -451,14 +451,21 @@ fun showChangelogOverlay(act: Activity): Dialog? {
 
 fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     var html = ""
+    var markdown: String
     try {
-        var markdown = readAsset(ctxt.assets, name)
-        // Change issue numbers to links
-        markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
-        html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>"
+        markdown = readAsset(ctxt.assets, name)
     } catch (e: IOException) {
-        log.error(TAG, "Failed to load markdown asset: {}" + name, e)
+        val fallbackAsset = name.replace("\\.[a-z]{2}\\.md$".toRegex(), ".en.md")
+        log.warn(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
+        try {
+            markdown = readAsset(ctxt.assets, fallbackAsset)
+        } catch (e: IOException) {
+            markdown = "$name and fallback $fallbackAsset not found."
+        }
     }
+    // Change issue numbers to links
+    markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
+    html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>"
     return html
 }
 
