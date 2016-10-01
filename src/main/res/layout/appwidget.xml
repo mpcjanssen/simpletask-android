@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:id="@+id/header"
-        android:background="#0099cc"
+        android:background="@color/simple_primary"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         >
@@ -23,6 +23,7 @@
             android:layout_gravity="center_vertical|left"
             android:layout_weight="1"
             android:paddingLeft="6dp"
+            android:textColor="@color/white"
             />
         <ImageButton
             android:layout_gravity="center"
@@ -58,11 +59,11 @@
         android:id="@+id/widgetlv"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         android:divider="@android:drawable/divider_horizontal_bright"
         android:dividerHeight="1dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         />
 </LinearLayout>

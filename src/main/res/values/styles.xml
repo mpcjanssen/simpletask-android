@@ -17,6 +17,5 @@
 
     <style name="WhiteActionButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_white_24dp</item>
-        <item name="android:background">?attr/colorPrimary</item>
     </style>
 </resources>
