@@ -243,7 +243,13 @@ class AddTask : ThemedActivity() {
             }
             R.id.menu_capitalize_tasks -> {
                 Config.isCapitalizeTasks = !Config.isCapitalizeTasks
-                //FIXME: Change setting without recreating activity
+                var inputFlags = textInputField.inputType
+                if (Config.isCapitalizeTasks) {
+                    inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                } else {
+                    inputFlags = inputFlags and InputType.TYPE_TEXT_FLAG_CAP_SENTENCES.inv()
+                }
+                textInputField.setRawInputType(inputFlags)
                 item.isChecked = !item.isChecked
             }
             R.id.menu_show_edittext_hint -> {
