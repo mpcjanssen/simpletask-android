@@ -132,7 +132,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_show_edit_summary">Permette di modificare i Task condivisi prima di salvare.
         Deseleziona per salvare i Task condivisi senza intervento.</string>
 
-    <string name="capitalize_tasks_pref_title">Capitalizza nuovi Task</string>
+    <string name="menu_capitalize_tasks">Capitalizza nuovi Task</string>
     <string name="back_saves_pref_title">Bottone indietro</string>
     <string name="back_saves_summary">Salva i dati inseriti o applica il filtro quando si preme il bottone indietro.</string>
 
@@ -175,8 +175,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_summary">Usa una action bar divisa in modo che i bottoni dei menu siano in basso sullo schermo.
          Deseleziona per ottenere maggiore spazio nella schermata. </string>
 
-    <string name="show_edittext_hints_title">Mostra suggerimenti</string>
-    <string name="show_edittext_hints_summary">Mostra i suggerimenti nelle caselle di testo.</string>
+    <string name="show_edittext_hint_title">Mostra suggerimenti</string>
+    <string name="show_edittext_hint_summary">Mostra i suggerimenti nelle caselle di testo.</string>
 
     <string name="show_complete_checkbox_title">Checkbox per completati</string>
     <string name="show_complete_checkbox_summary">Mostra una checkbox davanti ai Task per permettere di selezionarne o meno il completamento.</string>

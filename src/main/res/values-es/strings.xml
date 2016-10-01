@@ -4,7 +4,7 @@
     <string name="share_task_show_edit_summary">Permitir editar una tarea compartida (recibida) antes de salvarla.
     Deseleccione esto para que la tarea compartida se almacene sin intervención.</string>
 
-    <string name="capitalize_tasks_pref_title">Poner mayúscula a las tareas nuevas</string>
+    <string name="menu_capitalize_tasks">Poner mayúscula a las tareas nuevas</string>
     <string name="back_saves_pref_title">Botón atrás</string>
     <string name="back_saves_summary">Salvar las tareas introducidas o aplicar el filtro al pulsar atrás.</string>
 
@@ -46,8 +46,8 @@
     <string name="split_actionbar_pref_summary">Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla.
     Para disponer de más espacio de pantalla para la lista de tareas deseleccionar esto.</string>
 
-    <string name="show_edittext_hints_title">Mostrar sugerencias</string>
-    <string name="show_edittext_hints_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
+    <string name="show_edittext_hint_title">Mostrar sugerencias</string>
+    <string name="show_edittext_hint_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
 
     <string name="show_complete_checkbox_title">Mostrar la casilla de completada</string>
     <string name="show_complete_checkbox_summary">Mostrar la casilla delante de las tareas para marcarlas como completada o no.</string>

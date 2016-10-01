@@ -138,7 +138,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben.
         Deaktiere dies für die Speicherung einer geteilten Aufgabe ohne Veränderung.</string>
 
-    <string name="capitalize_tasks_pref_title">Beginne neue Aufgaben mit Großbuchstaben</string>
+    <string name="menu_capitalize_tasks">Beginne neue Aufgaben mit Großbuchstaben</string>
     <string name="back_saves_pref_title">Zurück-Schaltfläche</string>
     <string name="back_saves_summary">Beim Betätigen von Zurück, werden eingegeben Aufgaben und Filter gespeichert.</string>
 
@@ -187,8 +187,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_summary">Verwende eine geteile Aktionsleiste damit die Schaltflächen am unteren Ende des Bildschirms sind.
         Für mehr Bilschirmfläche deaktiviere diese Option.</string>
 
-    <string name="show_edittext_hints_title">Zeige Hinweise</string>
-    <string name="show_edittext_hints_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
+    <string name="show_edittext_hint_title">Zeige Hinweise</string>
+    <string name="show_edittext_hint_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
 
     <string name="show_complete_checkbox_title">Zeige \"Fertig\"-Auswahlfeld</string>
     <string name="show_complete_checkbox_summary">Zeige ein Fertigstellungs-Auswahlfeld vor den Aufgaben.</string>

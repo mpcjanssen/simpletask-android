@@ -148,7 +148,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="local_file_root_summary">Główna ścieżka rozwiązania pliku root://.... linków.</string>
 
 
-    <string name="capitalize_tasks_pref_title">Nowe zadania pisane wielką literą</string>
+    <string name="menu_capitalize_tasks">Nowe zadania pisane wielką literą</string>
     <string name="back_saves_pref_title">Przycisk powrotu</string>
     <string name="back_saves_summary">Zapisz wprowadzone zadania lub zastosuj filtr po naciśnięciu przycisku z powrotem.</string>
 
@@ -196,8 +196,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="split_actionbar_pref_summary">Użyj opcji podziału z paska akcji, tak aby przyciski menu były w dolnej części ekranu.
         Aby uzyskać więcej powierzchni ekranu wyłącz daną opcję. </string>
 
-    <string name="show_edittext_hints_title">Pokaż wskazówki</string>
-    <string name="show_edittext_hints_summary">Pokaż wskazówki edycyjne w polu tekstowym. Jeżeli będzie irytowało Ciebie dane ustawienie, wyłącz je.</string>
+    <string name="show_edittext_hint_title">Pokaż wskazówki</string>
+    <string name="show_edittext_hint_summary">Pokaż wskazówki edycyjne w polu tekstowym. Jeżeli będzie irytowało Ciebie dane ustawienie, wyłącz je.</string>
 
     <string name="show_complete_checkbox_title">Pokaż pole wyboru \"Ukończone\"</string>
     <string name="show_complete_checkbox_summary">Pokaż pole wyboru ukończenia przed zadaniami.</string>
