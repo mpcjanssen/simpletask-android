@@ -15,6 +15,12 @@
         <item name="android:background">@color/gray81</item>
     </style>
 
+    <style name="SimpleActionBar">
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
     <style name="WhiteActionButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_white_24dp</item>
     </style>
