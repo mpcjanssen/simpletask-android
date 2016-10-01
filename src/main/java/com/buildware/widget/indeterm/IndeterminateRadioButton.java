@@ -181,7 +181,7 @@ public class IndeterminateRadioButton extends AppCompatRadioButton
          */
         private SavedState(Parcel in) {
             super(in);
-            indeterminate = (Boolean) in.readValue(null);
+            indeterminate = (Boolean) in.readValue(getClass().getClassLoader());
         }
 
         @Override
