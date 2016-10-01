@@ -71,8 +71,9 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        // require restart with UI changes
         when (key) {
+            getString(R.string.calendar_sync_dues) -> requestCalendarPermission()
+            getString(R.string.custom_font_size) -> requestCalendarPermission()
             getString(R.string.theme_pref_key) -> {
                 onContentChanged()
                 val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
@@ -83,25 +84,21 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 val broadcastIntent = Intent(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
             }
-            getString(R.string.calendar_sync_dues) -> {
-                if (Config.isSyncDues) {
-                    /* Check for calendar permission */
-                    val permissionCheck = ContextCompat.checkSelfPermission(app,
-                    Manifest.permission.WRITE_CALENDAR)
-
-                    if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                        ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
-                    }
-                }
-            }
-            getString(R.string.custom_font_size) -> {
-                val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
-                localBroadcastManager.sendBroadcast(broadcastIntent)
-            }
             getString(R.string.font_size) -> {
                 val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
+            }
+        }
+    }
+
+    private fun requestCalendarPermission() {
+        if (Config.isSyncDues || Config.isSyncThresholds) {
+            val permissionCheck = ContextCompat.checkSelfPermission(app,
+            Manifest.permission.WRITE_CALENDAR)
+
+            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
             }
         }
     }

@@ -10,6 +10,10 @@
         android:title="@string/todotxt_ui_settings_header"
         />
     <header
+        android:fragment="nl.mpcjanssen.simpletask.Preferences$CalendarPrefFragment"
+        android:title="@string/calendar_sync_screen_title"
+        />
+    <header
         android:fragment="nl.mpcjanssen.simpletask.Preferences$WidgetPrefFragment"
         android:title="@string/preference_widget"
         />
