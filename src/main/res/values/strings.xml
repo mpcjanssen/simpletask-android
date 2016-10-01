@@ -169,10 +169,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Show txt files only</string>
     <string name="show_txt_only_summary">Only show .txt files in the file selection dialog.</string>
 
-    <string name="calendar_sync_screen_title">Calendar reminders</string>
-    <string name="calendar_sync_screen_summary">Create calendar reminders for due dates.</string>
-    <string name="calendar_sync_dues_title">Calendar reminders (experimental)</string>
-    <string name="calendar_sync_thresholds_title">Threshold dates</string>
+    <string name="calendar_sync_screen_title">Notifications</string>
+    <string name="calendar_sync_screen_summary">Calendar reminders (experimental)</string>
+    <string name="calendar_sync_dues_title">Due date reminders</string>
+    <string name="calendar_sync_thresholds_title">Threshold date reminders</string>
     <string name="calendar_reminder_days_title">Days in advance</string>
     <string name="calendar_reminder_days_summary">How early to set the reminder</string>
     <string name="calendar_reminder_time_title">Reminder time</string>
