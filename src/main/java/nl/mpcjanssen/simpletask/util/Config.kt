@@ -33,6 +33,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val isSyncDues: Boolean
         get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_dues), false)
 
+    val isSyncThresholds: Boolean
+        get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false)
+
     val reminderDays: Int
         get() = prefs.getInt(getString(R.string.calendar_reminder_days), 1)
 
@@ -238,6 +241,8 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             TodoApplication.app.redrawWidgets()
         } else if (s == getString(R.string.calendar_sync_dues)) {
             CalendarSync.setSyncDues(isSyncDues)
+        } else if (s == getString(R.string.calendar_sync_thresholds)) {
+            CalendarSync.setSyncThresholds(isSyncThresholds)
         } else if (s == getString(R.string.calendar_reminder_days) || s == getString(R.string.calendar_reminder_time)) {
             CalendarSync.syncLater()
         }
