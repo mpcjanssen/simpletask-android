@@ -364,7 +364,7 @@ class Simpletask : ThemedActivity() {
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { startAddTaskActivity() }
-
+        invalidateOptionsMenu()
         updateDrawers()
     }
 
