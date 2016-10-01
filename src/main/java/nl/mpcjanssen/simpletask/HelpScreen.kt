@@ -17,7 +17,7 @@ import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.markdownAssetAsHtml
 import java.util.*
 
-class HelpScreen : ThemedActivity() {
+class HelpScreen : ThemedNoActionBarActivity() {
 
     private val history = Stack<String>()
 

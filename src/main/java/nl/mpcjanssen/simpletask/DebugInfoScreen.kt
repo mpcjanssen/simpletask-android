@@ -14,7 +14,7 @@ import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.shareText
 import java.util.*
 
-class DebugInfoScreen : ThemedActivity() {
+class DebugInfoScreen : ThemedActionBarActivity() {
 
     private var m_app: TodoApplication? = null
 
@@ -35,6 +35,7 @@ class DebugInfoScreen : ThemedActivity() {
         // specify an adapter (see also next example)
         val mAdapter = ArrayAdapter(this, R.layout.log_item, myDataset)
         mListView.adapter = mAdapter
+        initToolbar()
 
     }
 
@@ -45,7 +46,7 @@ class DebugInfoScreen : ThemedActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar

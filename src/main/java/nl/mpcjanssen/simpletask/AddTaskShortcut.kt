@@ -32,7 +32,7 @@ import android.content.Intent
 import android.os.Bundle
 
 
-class AddTaskShortcut : ThemedActivity() {
+class AddTaskShortcut : ThemedNoActionBarActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         val log = Logger

@@ -24,10 +24,10 @@
         android:scrollbars="vertical"
         />
     <android.support.v7.widget.Toolbar
+        style="@style/SimpleToolbar"
         android:id="@+id/toolbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?attr/colorPrimary"
         />
 </LinearLayout>

@@ -17,7 +17,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.LuaError
 
-class LuaConfigScreen : ThemedActivity() {
+class LuaConfigScreen : ThemedNoActionBarActivity() {
 
     private val log = Logger
     private lateinit var m_app : TodoApplication

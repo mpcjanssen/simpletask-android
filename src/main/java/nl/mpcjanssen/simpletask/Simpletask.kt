@@ -58,7 +58,7 @@ import java.util.*
 import android.R.id as androidId
 
 
-class Simpletask : ThemedActivity() {
+class Simpletask : ThemedNoActionBarActivity() {
 
     enum class Mode {
         NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN

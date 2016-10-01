@@ -25,7 +25,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-class FilterActivity : ThemedActivity() {
+class FilterActivity : ThemedNoActionBarActivity() {
 
     internal var asWidgetConfigure = false
     internal var asWidgetReConfigure = false
