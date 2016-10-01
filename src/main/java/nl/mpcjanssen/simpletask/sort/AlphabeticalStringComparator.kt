@@ -21,7 +21,7 @@ class AlphabeticalStringComparator(caseSensitive: Boolean) : Comparator<String> 
             b = ""
         }
 
-        val collator = Collator.getInstance(Locale.getDefault()) as Collator
+        val collator = Collator.getInstance(Locale.getDefault())
 
         if (bCaseSensitive) {
             collator.setStrength(Collator.TERTIARY)

@@ -105,6 +105,7 @@ class Simpletask : ThemedActivity() {
 
         textSize = Config.tasklistTextSize ?: textSize
         log.info(TAG, "Text size = $textSize")
+        setContentView(R.layout.main)
 
         localBroadcastManager = m_app.localBroadCastManager
 
@@ -142,9 +143,6 @@ class Simpletask : ThemedActivity() {
             }
         }
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
-
-
-        setContentView(R.layout.main)
 
         val actionToolBar = findViewById(R.id.main_actionbar) as Toolbar
         setSupportActionBar(actionToolBar)
