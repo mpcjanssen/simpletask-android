@@ -19,7 +19,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HistoryScreen : ThemedActivity() {
+class HistoryScreen : ThemedActionBarActivity() {
 
     private var log: Logger? = null
     private var m_cursor: Cursor? = null
@@ -40,6 +40,7 @@ class HistoryScreen : ThemedActivity() {
             setTitle(title)
         }
         setContentView(R.layout.history)
+        initToolbar()
         displayCurrent()
     }
 
@@ -77,7 +78,7 @@ class HistoryScreen : ThemedActivity() {
     private val databaseFile: File
         get() = File(Daos.daoSession.database.path)
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar

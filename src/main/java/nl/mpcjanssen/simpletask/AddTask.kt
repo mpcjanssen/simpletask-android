@@ -34,7 +34,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
 
-class AddTask : ThemedActivity() {
+class AddTask : ThemedNoActionBarActivity() {
 
     private val share_text: String? = null
 

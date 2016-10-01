@@ -11,7 +11,7 @@
         <item name="android:background">@+color/gray87</item>
     </style>
 
-    <style name="SimpleSelectionToolbar">
+    <style name="SimpleToolbar">
         <item name="android:background">@color/gray81</item>
     </style>
 
