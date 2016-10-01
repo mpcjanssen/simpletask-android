@@ -15,11 +15,10 @@
             <item name="colorControlHighlight">@color/simple_alpha33</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
         <item name="actionOverflowButtonStyle">@style/WhiteActionButton</item>
-        <item name="android:textColorPrimary">@color/white</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <style name="AppTheme.Light.DarkActionBar.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/simple_primary</item>
         <item name="colorPrimaryDark">@color/simple_primary_dark</item>
         <item name="colorAccent">@color/simple_accent</item>
@@ -39,6 +38,7 @@
             <item name="colorControlHighlight">@color/simple_alpha33</item> 
         <item name="android:textColorPrimary">@color/white</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyleDark</item>
+        <item name="actionOverflowButtonStyle">@style/WhiteActionButton</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="Theme.AppCompat">
