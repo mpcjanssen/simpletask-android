@@ -4,21 +4,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <item
-        android:id="@+id/btn_run"
+        android:id="@+id/lua_config_run"
         android:title="@string/lua_run"
         android:icon="@drawable/ic_play_arrow_white_24dp"
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/btn_share"
-        android:title="@string/share"
-        android:icon="@drawable/ic_share_white_24dp"
-        app:showAsAction="ifRoom"
-        />
-    <item
-        android:id="@+id/btn_help"
+        android:id="@+id/lua_config_help"
         android:title="@string/help"
         android:icon="@drawable/ic_help_white_24dp"
         app:showAsAction="ifRoom"
         />
+    <item
+        android:id="@+id/lua_config_import_export"
+        android:title="@string/filter_import_export"
+        android:icon="@drawable/ic_import_export_white_24dp"
+        app:showAsAction="always"
+        >
+        <menu>
+            <item
+                android:id="@+id/lua_config_import"
+                android:title="@string/import_filter"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/lua_config_export"
+                android:title="@string/lua_config_export"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/lua_config_share"
+                android:title="@string/lua_config_share"
+                app:showAsAction="never"
+                />
+        </menu>
+    </item>
 </menu>
