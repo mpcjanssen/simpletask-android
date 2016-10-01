@@ -75,7 +75,6 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
             android:name=".AddTask"
             android:exported="true"
-            android:taskAffinity="nl.mpcjanssen.simpletask.task_add"
             android:label="@string/addtask"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="UnusedAttribute"
@@ -97,7 +96,6 @@ You should have received a copy of the GNU General Public License along with Sim
             android:name=".AddTaskBackground"
             android:enabled="true"
             android:theme="@android:style/Theme.NoDisplay"
-            android:taskAffinity="nl.mpcjanssen.simpletask.task_add_background"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
