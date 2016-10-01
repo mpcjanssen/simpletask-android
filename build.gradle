@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.0.3'
+    ext.kotlin_version = '1.0.4'
     ext.android_support_version = '24.2.0'
     repositories {
         jcenter()
@@ -37,9 +37,11 @@ android {
     productFlavors {
         dropbox {
             applicationId 'nl.mpcjanssen.todotxtholo'
+	    manifestPlaceholders = [ providerFlavour:"dropbox"]
         }
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
+	    manifestPlaceholders = [ providerFlavour:"cloudless"]
         }
     }
 
@@ -54,14 +56,14 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            resValue "string", "content_provider", "nl.mpcjanssen.simpletask.debug.provider"
+	    manifestPlaceholders = [ provider:"nl.mpcjanssen.simpletask.debug.provider"]
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
 	        minifyEnabled true
             proguardFile "proguard.txt"
-            resValue "string", "content_provider", "nl.mpcjanssen.simpletask.provider"
+	    manifestPlaceholders = [ provider:"nl.mpcjanssen.simpletask.provider"]
         }
     }
     dexOptions {
@@ -113,7 +115,7 @@ if (project.hasProperty('storeFile') &&
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = '2.14.1'
 }
 
 allprojects {

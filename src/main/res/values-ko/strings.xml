@@ -105,7 +105,7 @@
     <string name="share_task_show_edit_summary">공유 일정을 저장하기 전에 편집할 수 있도록 함.
         간섭 없이 공유 일정을 저장하려면 이 설정을 해제하세요.</string>
 
-    <string name="capitalize_tasks_pref_title">새로운 일정 대문자화</string>
+    <string name="menu_capitalize_tasks">새로운 일정 대문자화</string>
     <string name="back_saves_pref_title">뒤로 가기 버튼</string>
     <string name="back_saves_summary">뒤로 가기 버튼을 누를 때 이전까지 입력한 일정을 저장하거나 필터를 적용</string>
 
@@ -146,8 +146,8 @@
     <string name="split_actionbar_pref_title">분리된 액션 바 사용</string>
     <string name="split_actionbar_pref_summary">메뉴 버튼이 바닥에 위치하도록 분리된 액션 바 사용. 일정 목록을 넓게 보려면 이 설정을 해제하세요.</string>
 
-    <string name="show_edittext_hints_title">힌트 표시</string>
-    <string name="show_edittext_hints_summary">일정 편집 방법의 예시를 표시. 거슬리면 이 설정을 해제하세요.</string>
+    <string name="show_edittext_hint_title">힌트 표시</string>
+    <string name="show_edittext_hint_summary">일정 편집 방법의 예시를 표시. 거슬리면 이 설정을 해제하세요.</string>
 
     <string name="show_complete_checkbox_title">완료 체크박스 표시</string>
     <string name="show_complete_checkbox_summary">일정을 완료 혹은 되돌릴 수 있는 체크박스들을 일정 앞에 표시</string>
