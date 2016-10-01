@@ -34,14 +34,11 @@ import android.widget.Button
 import com.dropbox.client2.DropboxAPI
 import com.dropbox.client2.android.AndroidAuthSession
 import com.dropbox.client2.session.AppKeyPair
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.Simpletask
-import nl.mpcjanssen.simpletask.ThemedActivity
-import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.Config
 
 
-class LoginScreen : ThemedActivity() {
+class LoginScreen : ThemedNoActionBarActivity() {
 
     private lateinit var m_app: TodoApplication
     private lateinit var m_broadcastReceiver: BroadcastReceiver
