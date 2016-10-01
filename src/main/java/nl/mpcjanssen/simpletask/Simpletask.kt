@@ -480,6 +480,7 @@ class Simpletask : ThemedActivity() {
                 val a = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
                 val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
                 actionBar.setBackgroundDrawable(colorPrimary)
+                a.recycle()
 
                 /* val b = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimaryDark)) */
                 /* window.setStatusBarColor(b.getResourceId(0, R.color.simple_primary_dark)) */

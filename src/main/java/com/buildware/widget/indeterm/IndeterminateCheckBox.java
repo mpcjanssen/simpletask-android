@@ -195,7 +195,7 @@ public class IndeterminateCheckBox extends AppCompatCheckBox
          */
         private SavedState(Parcel in) {
             super(in);
-            indeterminate = (boolean)in.readValue(null);
+            indeterminate = (boolean) in.readValue(getClass().getClassLoader());
         }
 
         @Override
