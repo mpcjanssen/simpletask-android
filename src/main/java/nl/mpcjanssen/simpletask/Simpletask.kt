@@ -616,9 +616,7 @@ class Simpletask : ThemedActivity() {
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
-            /* closeSelectionMode() */
-            TodoList.clearSelection()
-            invalidateOptionsMenu()
+            closeSelectionMode()
         })
         builder.show()
 
@@ -729,8 +727,7 @@ class Simpletask : ThemedActivity() {
                         closeDrawer(FILTER_DRAWER)
                     }
                     Mode.SELECTION -> {
-                        TodoList.clearSelection()
-                        invalidateOptionsMenu()
+                        closeSelectionMode()
                     }
                     Mode.MAIN -> {
                         val toggle = m_drawerToggle ?: return true
@@ -929,13 +926,7 @@ class Simpletask : ThemedActivity() {
                 closeDrawer(FILTER_DRAWER)
             }
             Mode.SELECTION -> {
-                TodoList.clearSelection()
-                invalidateOptionsMenu()
-                val lay = listView?.layoutManager ?: return
-                for ( i in 0..lay.childCount-1 ) {
-                    val view = lay.getChildAt(i)
-                    view.isActivated = false
-                }
+                closeSelectionMode()
             }
             Mode.MAIN -> {
                 if (!Config.backClearsFilter() ||  mFilter == null || !mFilter!!.hasFilter()) {
@@ -946,6 +937,12 @@ class Simpletask : ThemedActivity() {
             }
         }
         return
+    }
+
+    private fun closeSelectionMode() {
+        TodoList.clearSelection()
+        invalidateOptionsMenu()
+        m_adapter?.notifyDataSetChanged()
     }
 
     override fun onNewIntent(intent: Intent) {
