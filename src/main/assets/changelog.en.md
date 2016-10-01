@@ -5,18 +5,18 @@
 -----
 
 - Removed tablet view for now. It needs a complete redesign.
-- Promoted 8.2.3 beta to 8.3.0 because of major UI overhaul courtesy of smichel17.
+- Lots of UI changes. Many thanks to smichel17 for implementing them. 
 - Don't refilter task list when closing drawers or selection for #568.
-- Multiple code cleanups (thanks to smichel17)
 - Close filter drawer after selecting an item.
 - Close drawers when pressing back.
 - Updated icons and menus (smichel17)
 - Reorganized some settings (smichel17)
-- Allow changing of task capitalization from AddTask screen. (smichel17)
+- Allow changing task capitalization and hint visibility from AddTask screen. (smichel17)
 - Locale-aware sort order. fixes #584 (smichel17)
 - add lua config import/export for #601 (smichel17)
 - Redraw list when selection mode closes. Fixes #582.
 - Fallback to `en` help assets if not translation exists. Fixes #606.
+- Code cleanup (smichel17)
 
 8.2.3
 -----
