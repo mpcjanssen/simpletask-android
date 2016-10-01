@@ -34,7 +34,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
 
-class AddTask : ThemedNoActionBarActivity() {
+class AddTask : ThemedActionBarActivity() {
 
     private val share_text: String? = null
 
@@ -75,8 +75,6 @@ class AddTask : ThemedNoActionBarActivity() {
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
-        val toolbar = findViewById(R.id.addtask_actionbar) as Toolbar
-        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 

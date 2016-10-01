@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
@@ -17,7 +16,7 @@ import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.markdownAssetAsHtml
 import java.util.*
 
-class HelpScreen : ThemedNoActionBarActivity() {
+class HelpScreen : ThemedActionBarActivity() {
 
     private val history = Stack<String>()
 
@@ -50,8 +49,6 @@ class HelpScreen : ThemedNoActionBarActivity() {
         }
 
         setContentView(R.layout.help)
-        val toolbar = findViewById(R.id.help_actionbar) as Toolbar
-        setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
