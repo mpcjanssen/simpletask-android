@@ -417,4 +417,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="lua_error">Lua Fehler</string>
     <string name="lua_open_config">Lua Konfiguration</string>
     <string name="lua_run">Ausführen</string>
+
+    <!-- Default Help localisation -->
+    <string name="help_locale">de</string>
 </resources>

@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+8.3.0
+-----
+
+- Promoted 8.2.3 beta to 8.3.0 because of major UI overhaul courtesy of smichel17.
+
+
 8.2.3
 -----
 
