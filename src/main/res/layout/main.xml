@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        style="@style/SimpleActionBar"
+        style="@style/SimpleToolbar"
         />
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -86,7 +86,7 @@
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
-                style="@style/SimpleToolbar"
+                style="@style/SimpleSelectionBar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
