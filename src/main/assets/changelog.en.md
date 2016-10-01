@@ -4,6 +4,7 @@
 8.3.0
 -----
 
+- Removed tablet view for now. It needs a complete redesign.
 - Promoted 8.2.3 beta to 8.3.0 because of major UI overhaul courtesy of smichel17.
 - Don't refilter task list when closing drawers or selection for #568.
 - Multiple code cleanups (thanks to smichel17)
