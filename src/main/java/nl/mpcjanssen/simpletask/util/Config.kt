@@ -305,10 +305,4 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     fun hasColorDueDates(): Boolean {
         return prefs.getBoolean(getString(R.string.color_due_date_key), true)
     }
-
-    fun hasLandscapeDrawers(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_drawer_fixed_landscape), false) && TodoApplication.app.resources.getBoolean(R.bool.is_landscape)
-    }
-
-
 }

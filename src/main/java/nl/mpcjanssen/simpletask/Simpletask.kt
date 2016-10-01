@@ -143,20 +143,8 @@ class Simpletask : ThemedActivity() {
         }
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
 
-        // Landscape mode
-        if (Config.hasLandscapeDrawers()) {
-            setContentView(R.layout.main_landscape)
-            val toolbar = findViewById(R.id.saved_filter_toolbar) as Toolbar
-            toolbar.setOnMenuItemClickListener{ item ->
-                onOptionsItemSelected(item)
-            }
-            val menu = toolbar.menu
-            menu.clear()
-            val inflater = menuInflater
-            inflater.inflate(R.menu.nav_drawer, toolbar.menu)
-        } else {
-            setContentView(R.layout.main)
-        }
+
+        setContentView(R.layout.main)
 
         val actionToolBar = findViewById(R.id.main_actionbar) as Toolbar
         setSupportActionBar(actionToolBar)
