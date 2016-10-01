@@ -139,7 +139,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="color_due_date_key"             translatable="false">color_due_date</string>
     <string name="todo_file_key"                  translatable="false">todo_file</string>
     <string name="back_key_saves_key"             translatable="false">back_saves</string>
-    <string name="ui_drawer_fixed_landscape"      translatable="false">ui_drawer_fixed_landscape</string>
     <string name="show_edittext_hint"            translatable="false">show_edittext_hint</string>
     <string name="share_task_append_text"         translatable="false">share_task_append_task</string>
     <string name="local_file_root"                translatable="false">local_file_root</string>
