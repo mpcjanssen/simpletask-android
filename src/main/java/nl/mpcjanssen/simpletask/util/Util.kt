@@ -465,7 +465,7 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     }
     // Change issue numbers to links
     markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
-    html = "<html><head><link rel='stylesheet' type='text/css' href='css/style.css'></head><body>" + Processor.process(markdown) + "</body></html>"
+    html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + Processor.process(markdown) + "</body></html>"
     return html
 }
 
