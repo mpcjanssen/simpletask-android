@@ -30,9 +30,4 @@
         android:summary="@string/share_task_append_text_summary"
         android:title="@string/share_task_append_text_title"
         />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/ui_show_calendarview"
-        android:title="@string/show_calendarview_title"
-        />
 </PreferenceScreen>
