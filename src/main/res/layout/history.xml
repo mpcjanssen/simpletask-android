@@ -45,7 +45,7 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:id="@+id/imageView"
-            android:background="#0099cc"
+            android:background="?attr/colorPrimary"
             />
     <ScrollView
         android:layout_width="fill_parent"
