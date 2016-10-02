@@ -446,7 +446,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 setTitle(R.string.title_filter_drawer)
             }
             Mode.SELECTION -> {
-                val actionColor = ContextCompat.getDrawable(this, R.color.gray81)
+                val actionColor = ContextCompat.getDrawable(this, R.color.gray74)
                 actionBar.setBackgroundDrawable(actionColor)
 
                 /* window.setStatusBarColor(R.color.gray87) */

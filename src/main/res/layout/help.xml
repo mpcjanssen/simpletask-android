@@ -5,26 +5,12 @@
 -->
 
 <!--suppress ALL -->
-<LinearLayout
+<WebView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/help_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/help_actionbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="?attr/colorPrimary"
-        />
-    <WebView
-        android:id="@+id/help_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="12pt"
-        android:paddingTop="15dp"
-        android:shadowRadius="1.0"
-        />
-</LinearLayout>
+    android:textSize="12pt"
+    android:paddingTop="15dp"
+    android:shadowRadius="1.0"
+    />
