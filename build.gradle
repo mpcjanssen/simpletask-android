@@ -27,8 +27,8 @@ android {
     }
 
     defaultConfig {
-        versionName '8.2.3'
-        versionCode 3050
+        versionName '8.3.0'
+        versionCode 3051
 	minSdkVersion 14
         targetSdkVersion 24
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
