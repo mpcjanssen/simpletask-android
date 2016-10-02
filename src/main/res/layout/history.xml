@@ -7,12 +7,12 @@
 <!--suppress ALL -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     >
     <GridLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" android:columnCount="2" android:rowCount="2"
         >
         <TextView
@@ -42,21 +42,21 @@
     </GridLayout>
 
     <ImageView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:id="@+id/imageView"
             android:background="?attr/colorPrimary"
             />
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/scrollbar"
         android:layout_weight="1"
         >
         <TextView
             android:id="@+id/history_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:focusable="true"
             />
     </ScrollView>
@@ -64,7 +64,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/SimpleToolbar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         />
