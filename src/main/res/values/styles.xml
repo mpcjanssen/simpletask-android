@@ -18,6 +18,6 @@
     </style>
 
     <style name="SimpleSelectionBar" parent="SimpleToolbar">
-        <item name="android:background">@color/gray81</item>
+        <item name="android:background">@color/gray74</item>
     </style>
 </resources>
