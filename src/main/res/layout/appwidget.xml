@@ -2,14 +2,14 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_weight="1"
     >
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:id="@+id/header"
         android:background="@color/simple_primary"
         android:layout_height="wrap_content"
@@ -57,8 +57,8 @@
 
     <ListView
         android:id="@+id/widgetlv"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white"
         android:divider="@android:drawable/divider_horizontal_bright"
         android:dividerHeight="1dp"

@@ -2,14 +2,14 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_weight="1"
     >
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:background="@color/black"
         android:id="@+id/header"
         android:layout_height="wrap_content"
@@ -57,14 +57,14 @@
 
     <ImageView
         android:layout_height="1sp"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:background="@color/simple_primary"
         tools:ignore="ContentDescription,SmallSp"
         />
     <ListView
         android:id="@+id/widgetlv"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/black"
         android:divider="@color/gray81"
         android:dividerHeight="1dp"
