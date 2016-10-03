@@ -1642,7 +1642,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             mFilter!!.saveInIntent(intent)
             mFilter!!.saveInPrefs(Config.prefs)
             setIntent(intent)
-            closeDrawer(FILTER_DRAWER)
             m_adapter!!.setFilteredTasks()
         }
     }
