@@ -23,14 +23,12 @@
             robobunny:min="0"
             robobunny:unitsLeft=""
             robobunny:unitsRight=""
-            android:dependency="@string/calendar_sync_dues"
             />
         <nl.mpcjanssen.simpletask.TimePreference
             android:key="@string/calendar_reminder_time"
             android:title="@string/calendar_reminder_time_title"
             android:summary="@string/calendar_reminder_time_summary"
             android:defaultValue="720"
-            android:dependency="@string/calendar_sync_dues"
             />
     </PreferenceCategory>
 </PreferenceScreen>
