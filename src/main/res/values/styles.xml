@@ -20,4 +20,12 @@
     <style name="SimpleSelectionBar" parent="SimpleToolbar">
         <item name="android:background">@color/gray74</item>
     </style>
+
+    <style name="DarkPopupMenu" parent="@style/Theme.AppCompat">
+        <item name="android:popupBackground">@color/gray87</item>
+    </style>
+
+    <style name="BlackPopupTheme" parent="@style/ThemeOverlay.AppCompat">
+        <item name="android:colorBackground">@color/gray87</item>
+    </style>
 </resources>
