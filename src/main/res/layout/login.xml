@@ -27,13 +27,13 @@ You should have received a copy of the GNU General Public License along with Tod
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loginbackground"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     >
     <TextView
         android:id="@+id/title"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/first_title_word"
         android:textSize="12pt"
@@ -44,7 +44,7 @@ You should have received a copy of the GNU General Public License along with Tod
         />
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
         <Button
@@ -67,7 +67,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <TextView
         android:id="@+id/cloudless"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_cloudless"
         android:paddingTop="15dp"

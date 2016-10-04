@@ -3,7 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/widget_frame"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="5dp"
     android:paddingLeft="15dp"
@@ -32,7 +32,7 @@
         />
     <LinearLayout
         android:id="@+id/seekBarPrefBarContainer"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/seekBarPrefUnitsRight"
@@ -40,7 +40,7 @@
         >
         <SeekBar
             android:id="@+id/seekBarPrefSeekBar"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
     </LinearLayout>
