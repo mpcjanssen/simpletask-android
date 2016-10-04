@@ -53,16 +53,6 @@
             android:src="@drawable/ic_add_white_24dp"
             />
     </LinearLayout>
-
-<<<<<<< HEAD
-    <ImageView
-        android:layout_height="1sp"
-        android:layout_width="match_parent"
-        android:background="@color/simple_primary"
-        tools:ignore="ContentDescription,SmallSp"
-        />
-=======
->>>>>>> cf8c99498b2843c33547f781289b1bd043fb13f5
     <ListView
         android:id="@+id/widgetlv"
         android:layout_width="match_parent"
