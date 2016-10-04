@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 
 import java.io.File;
@@ -40,12 +41,13 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         if (theme.equals("dark")) {
             view = new RemoteViews(ctx.getPackageName(), R.layout.appwidget_dark);
-            listColor = new ColorDrawable(0xFF000000);
-            headerColor = new ColorDrawable(0xFF000000);
+
+            listColor = new ColorDrawable(ContextCompat.getColor(ctx, R.color.black));
+            headerColor = new ColorDrawable(ContextCompat.getColor(ctx, R.color.gray87));
         } else {
 		    view = new RemoteViews(ctx.getPackageName(), R.layout.appwidget);
-            listColor = new ColorDrawable(0xFFFFFFFF);
-            headerColor = new ColorDrawable(0xFF0099CC);
+            listColor = new ColorDrawable(ContextCompat.getColor(ctx, R.color.white));
+            headerColor = new ColorDrawable(ContextCompat.getColor(ctx, R.color.simple_primary));
         }
 
         int header_transparency = appPreferences.getInt("widget_header_transparency", 0);
