@@ -1,47 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/widget_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="5dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp" 
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingRight="?android:attr/scrollbarSize"
     >
-    <TextView
-        android:id="@+id/seekBarPrefUnitsRight"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" 
-        />
-    <TextView
-        android:id="@+id/seekBarPrefValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/seekBarPrefUnitsRight"
-        android:gravity="right" 
-        />
-    <TextView
-        android:id="@+id/seekBarPrefUnitsLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/seekBarPrefValue"
-        />
-    <LinearLayout
-        android:id="@+id/seekBarPrefBarContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/seekBarPrefUnitsRight"
-        android:orientation="horizontal" 
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
         >
-        <SeekBar
-            android:id="@+id/seekBarPrefSeekBar"
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:layout_alignParentTop="true"
+            />
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@android:id/title"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="4"
+            />
+        <LinearLayout
+            android:id="@+id/seekBarPrefBarContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_below="@android:id/summary"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="6dp"
+            >
+            <SeekBar
+                android:id="@+id/seekBarPrefSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/seekBarPrefUnitsRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/seekBarPrefBarContainer"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="20dp"
             />
-    </LinearLayout>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/seekBarPrefValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/seekBarPrefBarContainer"
+            android:layout_toStartOf="@id/seekBarPrefUnitsRight"
+            android:layout_marginBottom="20dp"
+            />
+    </RelativeLayout>
+</LinearLayout>
