@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
             android:layout_toStartOf="@+id/seekBarPrefValue"
+            android:layout_alignParentStart="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:maxLines="4"
             />
@@ -60,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/seekBarPrefBarContainer"
             android:layout_alignParentEnd="true"
+            <!-- allows us to be slightly inside the seekbar container's margin -->
             android:layout_marginBottom="20dp"
             />
         <TextView
@@ -69,7 +71,7 @@
             android:layout_alignBottom="@id/seekBarPrefBarContainer"
             android:layout_toStartOf="@id/seekBarPrefUnitsRight"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="20dp"
+            android:layout_toBottomOf="@id/seekBarPrefUnitsRight"
             />
     </RelativeLayout>
 </LinearLayout>
