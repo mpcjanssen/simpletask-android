@@ -8,19 +8,20 @@
     android:paddingRight="?android:attr/scrollbarSize"
     >
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="6dp"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
-        android:layout_weight="1"
         android:gravity="center_vertical"
         >
         <TextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/seekBarPrefValue"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
@@ -33,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
+            android:layout_toStartOf="@+id/seekBarPrefValue"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:maxLines="4"
             />
@@ -66,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/seekBarPrefBarContainer"
             android:layout_toStartOf="@id/seekBarPrefUnitsRight"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="20dp"
             />
     </RelativeLayout>
