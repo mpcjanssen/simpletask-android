@@ -4,6 +4,7 @@ import android.content.Context
 import com.getpebble.android.kit.PebbleKit
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver
 import com.getpebble.android.kit.util.PebbleDictionary
+import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.TodoList
 import java.util.*
 
@@ -20,7 +21,7 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
         log.debug(TAG, "receiveData...")
 
 
-        val line_val=data?.getInteger(AppKeyRequestData);
+        val line_val=data?.getInteger(AppKeyReceiveLine);
         if (line_val == null || line_val > Int.MAX_VALUE) {
             log.warn(TAG, "Line number null or too large, cannot send to Pebble: " + line_val)
 
@@ -55,7 +56,10 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
             val item = items.get(line);
             val dict = PebbleDictionary()
 
-            val text = item.task.text
+            // just get the text portion out for now
+            val tokensToShow = TToken.ALL and TToken.TEXT
+            // TODO(bk) need to trim this to a maximum length
+            val text = item.task.showParts(tokensToShow)
 
             dict.addInt32(AppKeyReceiveLine, line);
             dict.addString(AppKeyReceiveName, text)
@@ -72,8 +76,6 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
 
     companion object {
         val appUuid = UUID.fromString("a6c5b8ef-0b0e-4db2-8ebe-32a363699065")
-
-        val AppKeyRequestData=0;
 
         val AppKeyReceiveLine=0;
         val AppKeyReceiveName=1;
