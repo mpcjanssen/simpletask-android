@@ -41,6 +41,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import com.getpebble.android.kit.PebbleKit
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
@@ -84,6 +85,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
     internal var m_scrollPosition = 0
+
+    // Pebble
 
     private var log = Logger
 
@@ -408,6 +411,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onResume() {
         super.onResume()
+        PebbleKit.registerReceivedDataHandler(applicationContext, pebbleReceiver)
         FileStore.pause(false)
         handleIntent()
     }
@@ -1660,5 +1664,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
         val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
         private val TAG = "Simpletask"
+
+        private val pebbleReceiver = PebbleReceiver(PebbleReceiver.appUuid)
     }
 }
