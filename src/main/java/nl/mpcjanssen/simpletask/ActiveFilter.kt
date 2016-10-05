@@ -258,7 +258,7 @@ class ActiveFilter (val options : FilterOptions) {
                 if (!filter.apply(t)) {
                     continue
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, t)) {
+                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, t, createIsThreshold)) {
                         continue
                 }
                 matched.add(item)

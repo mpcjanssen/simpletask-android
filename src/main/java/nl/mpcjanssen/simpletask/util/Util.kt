@@ -146,7 +146,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header:
     for (item in visibleTasks) {
         val t = item.task
         val newHeader  = if (moduleName !=null ) {
-            LuaInterpreter.onGroupCallback(moduleName, t)
+            LuaInterpreter.onGroupCallback(moduleName, t, createIsThreshold)
         }   else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
