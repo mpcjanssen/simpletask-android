@@ -76,7 +76,7 @@ class HistoryScreen : ThemedActionBarActivity() {
     }
 
     private val databaseFile: File
-        get() = File(Daos.daoSession.database.path)
+        get() = File(Daos.backupDao.database.path)
 
     fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

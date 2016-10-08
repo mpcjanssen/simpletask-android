@@ -28,7 +28,7 @@ class DebugInfoScreen : ThemedActionBarActivity() {
 
         val myDataset = ArrayList<String>()
         m_app = application as TodoApplication
-        for (line in Daos.logItemsDesc()) {
+        for (line in Logger.logItemsDesc()) {
             myDataset.add(line)
         }
 
@@ -42,7 +42,7 @@ class DebugInfoScreen : ThemedActionBarActivity() {
 
 
     private fun sendLog() {
-        shareText(this@DebugInfoScreen, "${appVersion(this)} log",  Daos.logAsText())
+        shareText(this@DebugInfoScreen, "${appVersion(this)} log",  Logger.logAsText())
     }
 
 
