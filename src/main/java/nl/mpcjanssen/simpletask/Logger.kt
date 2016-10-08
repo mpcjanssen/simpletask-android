@@ -22,7 +22,13 @@ import java.util.*
 object Logger {
 
     init {
-        EventBus.getDefault().register(this);
+        // Initialize the event bus. Wrap in catch to prevent test suite errors.
+        // (Event Bus doesn't work in non instrumentation tests)
+        try {
+            EventBus.getDefault().register(this);
+        } catch (ex : RuntimeException) {
+            // Do nothing
+        }
     }
 
     val dao: LogItemDao by lazy {
@@ -84,6 +90,7 @@ object Logger {
 
     fun debug(tag: String, s: String, ex: Throwable) {
         Log.d(tag,s,ex)
+        logInDB("d", tag,s,ex)
     }
 
     fun logItemsDesc () : List<String> {
