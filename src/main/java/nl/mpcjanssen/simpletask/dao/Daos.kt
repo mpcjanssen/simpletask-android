@@ -3,40 +3,39 @@ package nl.mpcjanssen.simpletask.dao
 
 import android.database.Cursor
 import de.greenrobot.dao.converter.PropertyConverter
-import nl.mpcjanssen.simpletask.Logger
+
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.dao.gen.*
+import nl.mpcjanssen.simpletask.dao.genbackup.DaoMaster as BackupDaoMaster
+import nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster as TodoDaoMaster
+import nl.mpcjanssen.simpletask.dao.genlog.DaoMaster as LogDaoMaster
+
+import nl.mpcjanssen.simpletask.dao.genbackup.TodoFile
+import nl.mpcjanssen.simpletask.dao.genbackup.TodoFileDao
+
+
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItemDao
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.shortAppVersion
-import java.text.SimpleDateFormat
-import nl.mpcjanssen.simpletask.dao.gentodo.DaoSession as TodoDaoSession
-import nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster as TodoDaoMaster
+
 
 import java.util.*
 
 object Daos {
-    internal val daoSession: DaoSession
-    val logDao: LogItemDao
-    val backupDao: TodoFileDao
-    val todoItemDao: TodoItemDao
-    init {
-        val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
-        val logDb = helper.writableDatabase
-        val daoMaster = DaoMaster(logDb)
-        daoSession = daoMaster.newSession()
-        logDao = daoSession.logItemDao
-        backupDao = daoSession.todoFileDao
-        Logger.setDao(logDao)
-
-
-        val todoHelper = TodoDaoMaster.DevOpenHelper(TodoApplication.app, "todolist.db", null)
-        val todoDb = todoHelper.writableDatabase
-        val todoMaster = TodoDaoMaster(todoDb)
-        val todoSession = todoMaster.newSession()
-        todoItemDao = todoSession.todoItemDao
-
+    val backupDao: TodoFileDao by lazy {
+        val helper = BackupDaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
+        val db = helper.writableDatabase
+        val master = BackupDaoMaster(db)
+        val session = master.newSession()
+        session.todoFileDao
     }
+    val todoItemDao: TodoItemDao by lazy {
+        val helper = TodoDaoMaster.DevOpenHelper(TodoApplication.app, "todolist.db", null)
+        val db = helper.writableDatabase
+        val master = TodoDaoMaster(db)
+        val session = master.newSession()
+        session.todoItemDao
+    }
+
+
 
     fun backup (file : TodoFile) {
         backupDao.insertOrReplace(file)
@@ -45,34 +44,10 @@ object Daos {
         backupDao.queryBuilder().where(TodoFileDao.Properties.Date.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
     }
 
-    fun logItemsDesc () : List<String> {
-        return logDao.queryBuilder().orderDesc(LogItemDao.Properties.Id).list().map { it -> logItemToString(it) }
-    }
 
-    fun logAsText () : String {
-        val logContents = StringBuilder()
-        for (item in logDao.loadAll()) {
-            logContents.append(logItemToString(item)).append("\n")
-        }
-        return logContents.toString()
-    }
-
-    private fun logItemToString(entry: LogItem): String {
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US)
-        return format.format(entry.timestamp) + "\t" + shortAppVersion() + "\t" + entry.severity + "\t" + entry.tag + "\t" + entry.message + "\t" + entry.exception
-    }
-
-    fun cleanLogging() {
-        val now = Date()
-        val removeBefore = Date(now.time - 24 * 60 * 60 * 1000)
-        val oldLogCount = logDao.count()
-        logDao.queryBuilder().where(LogItemDao.Properties.Timestamp.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
-        val logCount = logDao.count()
-        Logger.info(Daos.javaClass.simpleName, "Cleared " + (oldLogCount - logCount) + " old log items")
-    }
 
     fun initHistoryCursor (): Cursor {
-        val builder = daoSession.todoFileDao.queryBuilder()
+        val builder = backupDao.queryBuilder()
         return builder.buildCursor().query()
     }
 }

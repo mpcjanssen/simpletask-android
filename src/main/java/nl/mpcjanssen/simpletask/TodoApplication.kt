@@ -37,7 +37,7 @@ import android.appwidget.AppWidgetManager
 import android.content.*
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile
+import nl.mpcjanssen.simpletask.dao.genbackup.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
