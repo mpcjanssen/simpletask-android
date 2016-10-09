@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import com.getpebble.android.kit.PebbleKit
+import com.getpebble.android.kit.PebbleKit.PebbleAckReceiver
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver
 import com.getpebble.android.kit.util.PebbleDictionary
 import nl.mpcjanssen.simpletask.task.TToken
@@ -20,40 +21,25 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
     override fun receiveData(context: Context?, transactionId: Int, data: PebbleDictionary?) {
         log.debug(TAG, "receiveData...")
 
+        val messageTypeRequest = data?.getInteger(0); // hardcoded to be field 0
 
-        val line_val=data?.getInteger(AppKeyReceiveLine);
-        if (line_val == null || line_val > Int.MAX_VALUE) {
-            log.warn(TAG, "Line number null or too large, cannot send to Pebble: " + line_val)
+        PebbleKit.sendAckToPebble(context, transactionId);
 
-            // A new AppMessage was received, tell Pebble rejected
-            log.debug(TAG, "Sending ack...")
-            PebbleKit.sendNackToPebble(context, transactionId);
-            log.debug(TAG, "Ack sent")
-        } else {
-            val line: Int = line_val.toInt()
-            log.info(TAG, "Expected type MESSAGE_KEY_RequestData=0, sending data for row " + line);
-            val items = TodoList.todoItems
-            // TODO(bk) apply filter/sort
+        when(messageTypeRequest) {
+            MessageTypeRequestAllTasks -> requestAllTasks(context, transactionId, data)
+            else -> log.debug(TAG, "Bad requestType: " + messageTypeRequest)
+        }
 
-            if (line >= items.size) {
-                log.debug(TAG, "No more items to send...")
+    }
 
-                // A new AppMessage was received, tell Pebble
-                log.debug(TAG, "Sending ack...")
-                PebbleKit.sendNackToPebble(context, transactionId);
-                log.debug(TAG, "Nack sent")
+    fun requestAllTasks(context: Context?, transactionId: Int, data: PebbleDictionary?) {
+        val pebbleIsConnected = PebbleKit.isWatchConnected(context)
+        val pebbleAppMessageSupported = PebbleKit.areAppMessagesSupported(context)
+        log.debug(TAG, "Is watch connected? " + pebbleIsConnected)
+        log.debug(TAG, "Is message supported? " + pebbleAppMessageSupported)
 
 
-                return;
-            }
-
-            // A new AppMessage was received, tell Pebble
-            log.debug(TAG, "Sending ack...")
-            PebbleKit.sendAckToPebble(context, transactionId);
-            log.debug(TAG, "Ack sent")
-
-
-            val item = items.get(line);
+        for (item in TodoList.todoItems) {
             val dict = PebbleDictionary()
 
             // just get the text portion out for now
@@ -61,24 +47,34 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
             // TODO(bk) need to trim this to a maximum length
             val text = item.task.showParts(tokensToShow)
 
-            dict.addInt32(AppKeyReceiveLine, line);
-            dict.addString(AppKeyReceiveName, text)
+            dict.addInt32(0, MessageTypeResponseTask);
+            dict.addInt32(MessageTypeResponseTaskLine, item.line.toInt());
+            dict.addString(MessageTypeResponseTaskName, text)
 
-            val pebbleIsConnected = PebbleKit.isWatchConnected(context)
-            val pebbleAppMessageSupported = PebbleKit.areAppMessagesSupported(context)
-            log.debug(TAG, "Is watch connected? " + pebbleIsConnected)
-            log.debug(TAG, "Is message supported? " + pebbleAppMessageSupported)
-
-            log.debug(TAG, "Sending task: " + item.line + "=" + item.task.text+" with UUID: "+ appUuid);
+            log.debug(TAG, "Sending task: " + item.line + "=" + text+" with UUID: "+ appUuid);
             PebbleKit.sendDataToPebble(context, appUuid, dict)
+
+            // TODO(bk) this is complete crap -- need to figure out how to send the next txn after the ack
+            // but there is no context which is carried over from this sendDataToPebble call to the ack callback (llama!)
+            Thread.sleep(500);
         }
+
     }
 
     companion object {
         val appUuid = UUID.fromString("a6c5b8ef-0b0e-4db2-8ebe-32a363699065")
 
-        val AppKeyReceiveLine=0;
-        val AppKeyReceiveName=1;
+        // Watch to Phone request types (field 0)
+        val MessageTypeRequestAllTasks:Long=0;
+        val MessageTypeRequestCompleteTask=1;
+
+
+        // Phone to Watch Response Types (field 0)
+        val MessageTypeResponseTask=0;
+
+        // Fields: MessageTypeResponseTask=0
+        val MessageTypeResponseTaskLine=1;
+        val MessageTypeResponseTaskName=2;
 
         private val TAG = "PebbleReceiver"
     }

@@ -411,23 +411,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        // register Pebble handlers
         PebbleKit.registerReceivedDataHandler(applicationContext, pebbleReceiver)
-        PebbleKit.registerReceivedAckHandler(applicationContext,
-                object : PebbleKit.PebbleAckReceiver(PebbleReceiver.appUuid) {
+        PebbleKit.registerReceivedAckHandler(applicationContext, pebbleAckReceiver)
+        PebbleKit.registerReceivedNackHandler(applicationContext, pebbleNackReceiver)
 
-                    override fun receiveAck(context: Context, i: Int) {
-                        log.debug(TAG, "ack from pebble: "+i);
-                    }
-
-                })
-        PebbleKit.registerReceivedNackHandler(applicationContext,
-                object : PebbleKit.PebbleNackReceiver(PebbleReceiver.appUuid) {
-
-                    override fun receiveNack(context: Context, i: Int) {
-                        log.debug(TAG, "nack from pebble: "+i);
-                    }
-
-                })
         FileStore.pause(false)
         handleIntent()
     }
@@ -1682,5 +1671,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         private val TAG = "Simpletask"
 
         private val pebbleReceiver = PebbleReceiver(PebbleReceiver.appUuid)
+        private val pebbleAckReceiver = PebbleAckReceiver(PebbleReceiver.appUuid)
+        private val pebbleNackReceiver = PebbleNackReceiver(PebbleReceiver.appUuid)
     }
 }
