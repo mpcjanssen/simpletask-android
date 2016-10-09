@@ -16,7 +16,6 @@ import java.util.*
 
 class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid) {
 
-    private var log = Logger
 
     override fun receiveData(context: Context?, transactionId: Int, data: PebbleDictionary?) {
         log.debug(TAG, "receiveData...")
@@ -38,8 +37,25 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
         log.debug(TAG, "Is watch connected? " + pebbleIsConnected)
         log.debug(TAG, "Is message supported? " + pebbleAppMessageSupported)
 
+        nextTask=0;
+        sendNextTask(context);
 
-        for (item in TodoList.todoItems) {
+    }
+
+    companion object {
+        val appUuid = UUID.fromString("a6c5b8ef-0b0e-4db2-8ebe-32a363699065")
+
+        val log = Logger
+
+        @JvmStatic var nextTask=0;
+        @JvmStatic fun sendNextTask(context: Context?) {
+            if (TodoList.todoItems.size <= nextTask) {
+                log.debug(TAG, "No more tasks to send at "+ nextTask);
+                return;
+            }
+            val item=TodoList.todoItems.get(nextTask);
+            nextTask++;
+
             val dict = PebbleDictionary()
 
             // just get the text portion out for now
@@ -52,22 +68,13 @@ class PebbleReceiver(subscribedUuid: UUID?) : PebbleDataReceiver(subscribedUuid)
             dict.addString(MessageTypeResponseTaskName, text)
 
             log.debug(TAG, "Sending task: " + item.line + "=" + text+" with UUID: "+ appUuid);
-            PebbleKit.sendDataToPebble(context, appUuid, dict)
-
-            // TODO(bk) this is complete crap -- need to figure out how to send the next txn after the ack
-            // but there is no context which is carried over from this sendDataToPebble call to the ack callback (llama!)
-            Thread.sleep(500);
+            PebbleKit.sendDataToPebbleWithTransactionId(context, appUuid, dict, 42)
         }
 
-    }
-
-    companion object {
-        val appUuid = UUID.fromString("a6c5b8ef-0b0e-4db2-8ebe-32a363699065")
 
         // Watch to Phone request types (field 0)
         val MessageTypeRequestAllTasks:Long=0;
         val MessageTypeRequestCompleteTask=1;
-
 
         // Phone to Watch Response Types (field 0)
         val MessageTypeResponseTask=0;

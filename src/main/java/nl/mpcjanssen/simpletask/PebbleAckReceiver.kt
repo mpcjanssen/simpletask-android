@@ -13,6 +13,8 @@ class PebbleAckReceiver(subscribedUuid: UUID?) : PebbleKit.PebbleAckReceiver(sub
 
     override fun receiveAck(context: Context?, transactionId: Int) {
         log.debug(TAG, "ack from pebble: "+transactionId);
+        if (transactionId==42)
+            PebbleReceiver.sendNextTask(context);
     }
 
     companion object {
