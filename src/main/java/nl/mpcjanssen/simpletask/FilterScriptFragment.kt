@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.AppCompatSpinner
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ class FilterScriptFragment : Fragment() {
     private var txtScript: EditText? = null
     private var cbUseScript: CheckBox? = null
     private var txtTestTask: EditText? = null
-    private var spnCallback: AppCompatSpinner? = null
+    private var spnCallback: Spinner? = null
     private val log: Logger = Logger
 
 
@@ -49,7 +48,7 @@ class FilterScriptFragment : Fragment() {
         cbUseScript = layout.findViewById(R.id.cb_use_script) as CheckBox
         txtScript = layout.findViewById(R.id.txt_script) as EditText
         txtTestTask = layout.findViewById(R.id.txt_testtask) as EditText
-        spnCallback = layout.findViewById(R.id.spnCallback) as AppCompatSpinner
+        spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
         val callbacks = arrayOf<String>(LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME)
         val spnAdapter = ArrayAdapter(activity,R.layout.spinner_item,callbacks)
