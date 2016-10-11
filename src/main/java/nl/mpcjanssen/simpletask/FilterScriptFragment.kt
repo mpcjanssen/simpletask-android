@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,7 +99,7 @@ class FilterScriptFragment : Fragment() {
     private fun testOnGroupCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         if (!script.trim { it <= ' ' }.isEmpty()) {
             snackBar.setText("Group: " + LuaInterpreter.evalScript(environment, script).onGroupCallback(environment, t))
-            barView.setBackgroundColor(activity.getColor(R.color.gray74))
+            barView.setBackgroundColor(ContextCompat.getColor(activity,R.color.gray74))
         } else {
             snackBar.setText("Callback not defined")
             barView.setBackgroundColor(0xffe53935.toInt())
