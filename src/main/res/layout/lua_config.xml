@@ -15,7 +15,6 @@
         android:id="@+id/lua_config"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:gravity="top|start"
         android:inputType="text|textMultiLine"
         android:scrollbars="vertical"

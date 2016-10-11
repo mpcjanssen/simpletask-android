@@ -17,6 +17,7 @@ import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
 import android.content.res.Configuration
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
@@ -463,10 +464,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                 inflater.inflate(R.menu.task_context, toolbar.menu)
             }
             Mode.MAIN -> {
-                val a = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+                val a : TypedArray = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
                 val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
-                actionBar.setBackgroundDrawable(colorPrimary)
                 a.recycle()
+                actionBar.setBackgroundDrawable(colorPrimary)
+
 
                 /* val b = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimaryDark)) */
                 /* window.setStatusBarColor(b.getResourceId(0, R.color.simple_primary_dark)) */
