@@ -37,13 +37,13 @@ You should have received a copy of the GNU General Public License along with Sim
         android:xlargeScreens="true"
         />
     <application
-            android:name=".TodoApplication"
-            android:allowBackup="true"
-            android:fullBackupContent="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_label"
-            android:theme="@style/LaunchScreen"
-            android:supportsRtl="true"
+        android:name=".TodoApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_label"
+        android:theme="@style/LaunchScreen"
+        android:supportsRtl="true"
         >
         <!-- tools:ignore="UnusedAttribute" -->
         <activity
@@ -59,20 +59,23 @@ You should have received a copy of the GNU General Public License along with Sim
             android:label="@string/lua_config_screen"
             />
         <activity
-                android:name=".DebugInfoScreen"
-                android:parentActivityName=".Preferences"
-                android:label="@string/debug_info"
-                tools:ignore="UnusedAttribute"/>
+            android:name=".DebugInfoScreen"
+            android:parentActivityName=".Preferences"
+            android:label="@string/debug_info"
+            tools:ignore="UnusedAttribute"
+            />
         <activity
-                android:name=".HistoryScreen"
-                android:parentActivityName=".Preferences"
-                android:label="@string/history"
-                tools:ignore="UnusedAttribute"/>
+            android:name=".HistoryScreen"
+            android:parentActivityName=".Preferences"
+            android:label="@string/history"
+            tools:ignore="UnusedAttribute"
+            />
         <activity
-                android:name=".Preferences"
-                android:parentActivityName=".Simpletask"
-                android:label="@string/set_preferences"
-                tools:ignore="UnusedAttribute"/>
+            android:name=".Preferences"
+            android:parentActivityName=".Simpletask"
+            android:label="@string/set_preferences"
+            tools:ignore="UnusedAttribute"
+            />
         <activity
             android:name=".AddTask"
             android:exported="true"
@@ -80,7 +83,6 @@ You should have received a copy of the GNU General Public License along with Sim
             android:windowSoftInputMode="adjustResize"
             tools:ignore="UnusedAttribute"
             >
-
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -97,7 +99,8 @@ You should have received a copy of the GNU General Public License along with Sim
             android:name=".AddTaskBackground"
             android:enabled="true"
             android:theme="@android:style/Theme.NoDisplay"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="nl.mpcjanssen.simpletask.BACKGROUND_TASK" />
@@ -120,7 +123,8 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
             android:name=".Simpletask"
             android:exported="true"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -147,7 +151,7 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:resource="@xml/searchable"
                 />
         </activity>
-        
+
         <activity
             android:name=".FilterActivity"
             android:exported="true"
