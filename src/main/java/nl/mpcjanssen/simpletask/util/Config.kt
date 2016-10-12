@@ -106,10 +106,6 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         return prefs.getBoolean(getString(R.string.back_clears_filter), false)
     }
 
-    fun sortCaseSensitive(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
-    }
-
     val eol: String
         get() {
             if (prefs.getBoolean(getString(R.string.line_breaks_pref_key), true)) {

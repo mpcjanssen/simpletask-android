@@ -74,11 +74,6 @@
         android:key="@string/line_breaks_pref_key"
         android:title="@string/line_breaks_pref_title"
         />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/ui_sort_case_sensitive"
-        android:title="@string/sort_case_sensitive_title"
-        />
     <EditTextPreference
         android:defaultValue="/sdcard/"
         android:key="@string/local_file_root"

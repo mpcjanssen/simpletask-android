@@ -35,6 +35,7 @@ class ActiveFilter (val options : FilterOptions) {
     var hideTags = false
     var hideCreateDate = false
     var createIsThreshold = false
+    var sortCaseSensitive = false
     var useScript: Boolean = false
     var script: String? = null
     var scriptTestTask: String? = null
@@ -69,6 +70,7 @@ class ActiveFilter (val options : FilterOptions) {
         json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
         json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
         json.put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
+        json.put(INTENT_SORT_CASE_SENSITIVE, sortCaseSensitive)
         json.put(INTENT_SCRIPT_FILTER, script)
         json.put(INTENT_USE_SCRIPT_FILTER, useScript)
         json.put(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
@@ -98,18 +100,13 @@ class ActiveFilter (val options : FilterOptions) {
         projectsNot = json.optBoolean(INTENT_PROJECTS_FILTER_NOT)
         contextsNot = json.optBoolean(INTENT_CONTEXTS_FILTER_NOT)
         hideCompleted = json.optBoolean(INTENT_HIDE_COMPLETED_FILTER)
-        hideFuture = json.optBoolean(
-                INTENT_HIDE_FUTURE_FILTER)
-        hideLists = json.optBoolean(
-                INTENT_HIDE_LISTS_FILTER)
-        hideTags = json.optBoolean(
-                INTENT_HIDE_TAGS_FILTER)
-        hideCreateDate = json.optBoolean(
-                INTENT_HIDE_CREATE_DATE_FILTER)
-        hideHidden = json.optBoolean(
-                INTENT_HIDE_HIDDEN_FILTER)
-        createIsThreshold = json.optBoolean(
-                INTENT_CREATE_AS_THRESHOLD)
+        hideFuture = json.optBoolean(INTENT_HIDE_FUTURE_FILTER)
+        hideLists = json.optBoolean(INTENT_HIDE_LISTS_FILTER)
+        hideTags = json.optBoolean(INTENT_HIDE_TAGS_FILTER)
+        hideCreateDate = json.optBoolean(INTENT_HIDE_CREATE_DATE_FILTER)
+        hideHidden = json.optBoolean(INTENT_HIDE_HIDDEN_FILTER)
+        createIsThreshold = json.optBoolean(INTENT_CREATE_AS_THRESHOLD)
+        sortCaseSensitive = json.optBoolean(INTENT_SORT_CASE_SENSITIVE)
         search = json.optString(SearchManager.QUERY)
         if (sorts != null && sorts != "") {
             m_sorts = ArrayList(
@@ -338,6 +335,7 @@ class ActiveFilter (val options : FilterOptions) {
         const val INTENT_HIDE_CREATE_DATE_FILTER = "HIDECREATEDATE"
 
         const val INTENT_CREATE_AS_THRESHOLD = "CREATEISTHRESHOLD"
+        const val INTENT_SORT_CASE_SENSITIVE = "SORTCASESENSITIVE"
 
         const val INTENT_USE_SCRIPT_FILTER = "USE_SCRIPT"
         const val INTENT_LUA_MODULE = "MODULE"

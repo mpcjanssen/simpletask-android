@@ -153,7 +153,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_thresholds"       translatable="false">calendar_sync_thresholds</string>
     <string name="calendar_reminder_days"         translatable="false">calendar_reminder_days</string>
     <string name="calendar_reminder_time"         translatable="false">calendar_reminder_time</string>
-    <string name="ui_sort_case_sensitive"         translatable="false">ui_sort_case_sensitive</string>
     <string name="ui_todotxt_terms">ui_todo_txt_terms</string>
     <string name="show_todo_path"                 translatable="false">show_todo_path</string>
     <string name="back_clears_filter"             translatable="false">back_clears_filter</string>
