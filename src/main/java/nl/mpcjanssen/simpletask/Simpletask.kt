@@ -480,7 +480,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     mItem.isVisible = false
                 }
                 populateSearch(menu)
-                if (Config.showTodoPath()) {
+                if (Config.showTodoPath) {
                     title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
                 } else {
                     setTitle(R.string.app_label)
@@ -619,7 +619,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun completeTasks(tasks: List<TodoItem>) {
         for (t in tasks) {
-            TodoList.complete(t, Config.hasKeepPrio(), Config.hasAppendAtEnd())
+            TodoList.complete(t, Config.hasKeepPrio, Config.hasAppendAtEnd)
         }
         if (Config.isAutoArchive) {
             archiveTasks(null, false)
@@ -659,7 +659,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                             today.month!! - 1,
                             today.day!!)
 
-                    val showCalendar = Config.showCalendar()
+                    val showCalendar = Config.showCalendar
                     dialog.datePicker.calendarViewShown = showCalendar
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
@@ -918,7 +918,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 closeSelectionMode()
             }
             Mode.MAIN -> {
-                if (!Config.backClearsFilter() ||  mFilter == null || !mFilter!!.hasFilter()) {
+                if (!Config.backClearsFilter ||  mFilter == null || !mFilter!!.hasFilter()) {
                     return super.onBackPressed()
                 }
                 clearFilter()
@@ -1103,8 +1103,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun updateFilterDrawer() {
         val taskBag = TodoList
-        val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, Config.sortCaseSensitive(), "@-")
-        val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, Config.sortCaseSensitive(), "+-")
+        val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, Config.sortCaseSensitive, "@-")
+        val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, Config.sortCaseSensitive, "+-")
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
@@ -1211,13 +1211,13 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             val task = item.task
 
-            if (!Config.hasExtendedTaskView()) {
+            if (!Config.hasExtendedTaskView) {
                 val taskBar = view.findViewById(R.id.datebar)
                 taskBar.visibility = View.GONE
             }
             var tokensToShow = TToken.ALL
             // Hide dates if we have a date bar
-            if (Config.hasExtendedTaskView()) {
+            if (Config.hasExtendedTaskView) {
                 tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
                 tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
                 tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
@@ -1420,7 +1420,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 log.info(TAG, "setFilteredTasks called: " + TodoList)
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(Config.defaultSorts)
-                visibleTasks = TodoList.getSortedTasks(activeFilter, sorts, Config.sortCaseSensitive())
+                visibleTasks = TodoList.getSortedTasks(activeFilter, sorts, Config.sortCaseSensitive)
                 val newVisibleLines = ArrayList<VisibleLine>()
 
                 newVisibleLines.addAll(addHeaderLines(visibleTasks, activeFilter, getString(R.string.no_header)))
@@ -1593,7 +1593,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         updateItemsDialog(
                 Config.listTerm,
                 checkedTasks,
-                sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive(), null),
+                sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive, null),
                 {task -> task.lists},
                 {task, list -> task.addList(list)},
                 {task, list -> task.removeList(list)}
@@ -1604,7 +1604,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         updateItemsDialog(
                 Config.tagTerm,
                 checkedTasks,
-                sortWithPrefix(TodoList.projects, Config.sortCaseSensitive(), null),
+                sortWithPrefix(TodoList.projects, Config.sortCaseSensitive, null),
                 {task -> task.tags},
                 {task, tag -> task.addTag(tag)},
                 {task, tag -> task.removeTag(tag)}
