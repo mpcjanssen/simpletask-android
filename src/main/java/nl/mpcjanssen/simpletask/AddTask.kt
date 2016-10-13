@@ -190,11 +190,8 @@ class AddTask : ThemedActionBarActivity() {
         findViewById(R.id.btnContext)?.setOnClickListener { showListMenu() }
         findViewById(R.id.btnProject)?.setOnClickListener { showTagMenu() }
         findViewById(R.id.btnPrio)?.setOnClickListener { showPriorityMenu() }
-
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
-
-        textInputField.setSelection(textInputField.text.length)
     }
 
 
