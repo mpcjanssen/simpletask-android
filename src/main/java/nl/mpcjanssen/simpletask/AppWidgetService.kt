@@ -81,7 +81,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val comp = MultiComparator(filter.getSort(
                 Config.defaultSorts),
                 TodoApplication.app.today,
-                Config.sortCaseSensitive(),
+                filter.sortCaseSensitive,
                 filter.createIsThreshold)
         Collections.sort(visibleTasks, comp)
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks")

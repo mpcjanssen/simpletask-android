@@ -93,7 +93,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive(), "-"))
+                sortWithPrefix(TodoList.contexts, mFilter.sortCaseSensitive, "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
         arguments.putBoolean(INITIAL_NOT, mFilter.contextsNot)
         arguments.putString(TAB_TYPE, CONTEXT_TAB)
@@ -105,7 +105,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                sortWithPrefix(TodoList.projects, Config.sortCaseSensitive(), "-"))
+                sortWithPrefix(TodoList.projects, mFilter.sortCaseSensitive, "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
         arguments.putBoolean(INITIAL_NOT, mFilter.projectsNot)
         arguments.putString(TAB_TYPE, PROJECT_TAB)
@@ -132,6 +132,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.hideCreateDate)
         arguments.putBoolean(ActiveFilter.INTENT_HIDE_HIDDEN_FILTER, mFilter.hideHidden)
         arguments.putBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
+        arguments.putBoolean(ActiveFilter.INTENT_SORT_CASE_SENSITIVE, mFilter.sortCaseSensitive)
         arguments.putString(TAB_TYPE, OTHER_TAB)
         val otherTab = FilterOtherFragment()
         otherTab.arguments = arguments
@@ -262,6 +263,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                     mFilter.hideCreateDate = of.hideCreateDate
                     mFilter.hideHidden = of.hideHidden
                     mFilter.createIsThreshold = of.createAsThreshold
+                    mFilter.sortCaseSensitive = of.sortCaseSensitive
                 }
                 CONTEXT_TAB -> {
                     val lf = f as FilterListFragment

@@ -243,9 +243,9 @@ object TodoList {
         })
     }
 
-    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoItem> {
+    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>): List<TodoItem> {
         val filteredTasks = filter.apply(todoItems)
-        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
+        val comp = MultiComparator(sorts, TodoApplication.app.today, filter.sortCaseSensitive, filter.createIsThreshold)
         Collections.sort(filteredTasks, comp)
         return filteredTasks
     }

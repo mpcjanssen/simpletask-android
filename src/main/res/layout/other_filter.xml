@@ -52,4 +52,10 @@
         android:layout_height="wrap_content"
         android:text="@string/use_create_as_threshold_title"
         />
+    <CheckBox
+        android:id="@+id/cb_sort_case_sensitive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_case_sensitive_title"
+        />
 </LinearLayout>

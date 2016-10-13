@@ -1103,8 +1103,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun updateFilterDrawer() {
         val taskBag = TodoList
-        val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, Config.sortCaseSensitive(), "@-")
-        val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, Config.sortCaseSensitive(), "+-")
+        val activeFilter = mFilter ?: return
+        val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, activeFilter.sortCaseSensitive, "@-")
+        val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, activeFilter.sortCaseSensitive, "+-")
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
@@ -1420,7 +1421,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 log.info(TAG, "setFilteredTasks called: " + TodoList)
                 val activeFilter = mFilter ?: return@Runnable
                 val sorts = activeFilter.getSort(Config.defaultSorts)
-                visibleTasks = TodoList.getSortedTasks(activeFilter, sorts, Config.sortCaseSensitive())
+                visibleTasks = TodoList.getSortedTasks(activeFilter, sorts)
                 val newVisibleLines = ArrayList<VisibleLine>()
 
                 newVisibleLines.addAll(addHeaderLines(visibleTasks, activeFilter, getString(R.string.no_header)))
@@ -1590,10 +1591,11 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateLists(checkedTasks: List<TodoItem>) {
+        val activeFilter = mFilter ?: return
         updateItemsDialog(
                 Config.listTerm,
                 checkedTasks,
-                sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive(), null),
+                sortWithPrefix(TodoList.contexts, activeFilter.sortCaseSensitive, null),
                 {task -> task.lists},
                 {task, list -> task.addList(list)},
                 {task, list -> task.removeList(list)}
@@ -1601,10 +1603,11 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateTags(checkedTasks: List<TodoItem>) {
+        val activeFilter = mFilter ?: return
         updateItemsDialog(
                 Config.tagTerm,
                 checkedTasks,
-                sortWithPrefix(TodoList.projects, Config.sortCaseSensitive(), null),
+                sortWithPrefix(TodoList.projects, activeFilter.sortCaseSensitive, null),
                 {task -> task.tags},
                 {task, tag -> task.addTag(tag)},
                 {task, tag -> task.removeTag(tag)}

@@ -41,6 +41,7 @@ class AddTask : ThemedActionBarActivity() {
     private val m_backup = ArrayList<TodoItem>()
 
     private lateinit var textInputField: EditText
+    private lateinit var mFilter : ActiveFilter
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
     private val log = Logger
@@ -53,7 +54,7 @@ class AddTask : ThemedActionBarActivity() {
         // Config.loadTodoList(true)
 
         val intent = intent
-        val mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
+        mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
         mFilter.initFromIntent(intent)
 
         val intentFilter = IntentFilter()
@@ -388,7 +389,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = sortWithPrefix(items, Config.sortCaseSensitive(), null)
+        val projects = sortWithPrefix(items, mFilter.sortCaseSensitive, null)
 
         val builder = AlertDialog.Builder(this)
         @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -469,7 +470,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = sortWithPrefix(items, Config.sortCaseSensitive(), null)
+        val lists = sortWithPrefix(items, mFilter.sortCaseSensitive, null)
 
         val builder = AlertDialog.Builder(this)
         @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
