@@ -1020,8 +1020,8 @@ class Simpletask : ThemedNoActionBarActivity() {
             mFilter!!.saveInIntent(intent)
             setIntent(intent)
             mFilter!!.saveInPrefs(Config.prefs)
-            m_adapter!!.setFilteredTasks()
             closeDrawer(NAV_DRAWER)
+            closeSelectionMode()
             updateDrawers()
         }
         m_navDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
