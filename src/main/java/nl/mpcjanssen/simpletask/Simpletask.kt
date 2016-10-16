@@ -42,6 +42,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import com.buildware.widget.indeterm.IndeterminateCheckBox
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
@@ -462,6 +463,37 @@ class Simpletask : ThemedNoActionBarActivity() {
                 toolbar.visibility = View.VISIBLE
                 toolbar.menu.clear()
                 inflater.inflate(R.menu.task_context, toolbar.menu)
+
+                val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
+                val cb = cbItem.actionView as IndeterminateCheckBox
+                val selectedTasks = TodoList.selectedTasks
+                val initialCompleteTasks = ArrayList<TodoItem>()
+                val initialIncompleteTasks = ArrayList<TodoItem>()
+                var cbState: Boolean?
+                cbState = selectedTasks.get(0).task.isCompleted()
+
+                selectedTasks.forEach {
+                    if (it.task.isCompleted()) {
+                        initialCompleteTasks.add(it)
+                        if (!(cbState ?: false)) { cbState = null }
+                    } else {
+                        initialIncompleteTasks.add(it)
+                        if (cbState ?: true) { cbState = null }
+                    }
+                }
+
+                cb.setIndeterminateUsed(cbState==null)
+                cb.state = cbState
+                cb.setOnStateChangedListener { indeterminateCheckBox, b ->
+                    when (b) {
+                        true -> completeTasks(selectedTasks)
+                        false -> uncompleteTasks(selectedTasks)
+                        null -> {
+                            completeTasks(initialCompleteTasks)
+                            uncompleteTasks(initialIncompleteTasks)
+                        }
+                    }
+                }
             }
             Mode.MAIN -> {
                 val a : TypedArray = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
@@ -605,7 +637,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
-            closeSelectionMode()
         })
         builder.show()
 
@@ -627,14 +658,14 @@ class Simpletask : ThemedNoActionBarActivity() {
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
-    private fun undoCompleteTasks(task: TodoItem) {
+    private fun uncompleteTasks(task: TodoItem) {
         val tasks = ArrayList<TodoItem>()
         tasks.add(task)
-        undoCompleteTasks(tasks)
+        uncompleteTasks(tasks)
     }
 
-    private fun undoCompleteTasks(tasks: List<TodoItem>) {
-        TodoList.undoComplete(tasks)
+    private fun uncompleteTasks(tasks: List<TodoItem>) {
+        TodoList.uncomplete(tasks)
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
@@ -747,8 +778,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()
-            R.id.complete -> completeTasks(checkedTasks)
-            R.id.uncomplete -> undoCompleteTasks(checkedTasks)
             R.id.update -> startAddTaskActivity()
             R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
             R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
@@ -932,6 +961,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         TodoList.clearSelection()
         invalidateOptionsMenu()
         m_adapter?.notifyDataSetChanged()
+        m_adapter?.setFilteredTasks()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -1276,7 +1306,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 cb.setOnClickListener({
-                    undoCompleteTasks(item)
+                    uncompleteTasks(item)
+                    // Update the tri state checkbox
+                    if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
                     TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                 })
             } else {
@@ -1285,6 +1317,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                 cb.setOnClickListener {
                     completeTasks(item)
+                    // Update the tri state checkbox
+                    if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
                     TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
                 }
 
