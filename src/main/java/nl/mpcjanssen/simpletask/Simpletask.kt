@@ -341,7 +341,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val line = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
             intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
             setIntent(intent)
-            if (!line.equals(-1)) {
+            if (line > -1) {
                 TodoList.clearSelection()
                 TodoList.selectLine(line)
                 localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
@@ -459,7 +459,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
-                toggle.setDrawerIndicatorEnabled(false)
+                toggle.isDrawerIndicatorEnabled = false
                 fab.visibility = View.GONE
                 toolbar.setOnMenuItemClickListener { item ->
                     onOptionsItemSelected(item)
@@ -500,15 +500,14 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
             }
             Mode.MAIN -> {
-                val a : TypedArray = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
-                val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
-                a.recycle()
-                actionBar.setBackgroundDrawable(colorPrimary)
+                val a : TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+                try {
+                    val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
+                    actionBar.setBackgroundDrawable(colorPrimary)
+                } finally {
+                    a.recycle()
+                }
 
-
-                /* val b = this.obtainStyledAttributes(intArrayOf(R.attr.colorPrimaryDark)) */
-                /* window.setStatusBarColor(b.getResourceId(0, R.color.simple_primary_dark)) */
-                
                 inflater.inflate(R.menu.main, menu)
 
                 if (!FileStore.supportsSync()) {
@@ -521,7 +520,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else {
                     setTitle(R.string.app_label)
                 }
-                toggle.setDrawerIndicatorEnabled(true)
+                toggle.isDrawerIndicatorEnabled = true
                 fab.visibility = View.VISIBLE
                 toolbar.visibility = View.GONE
             }
@@ -679,7 +678,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
-            /* @Suppress("DEPRECATION") */
+            /* Supress showCalendar deprecation message. It works fine on older devices
+             * and newer devices don't really have an alternative */
+            @Suppress("DEPRECATION")
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
