@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.remote
 
-
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -21,7 +20,10 @@ import com.dropbox.client2.exception.DropboxUnlinkedException
 import com.dropbox.client2.jsonextract.JsonExtractionException
 import com.dropbox.client2.jsonextract.JsonThing
 import com.dropbox.client2.session.AppKeyPair
-import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.Constants
+import nl.mpcjanssen.simpletask.Logger
+import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
 import java.net.SocketTimeoutException
@@ -35,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 object FileStore : FileStoreInterface {
     override fun needsRefresh(currentVersion: String?): Boolean {
         try {
-            return !getVersion(Config.todoFileName).equals(Config.currentVersionId)
+            return getVersion(Config.todoFileName) != Config.currentVersionId
         } catch (e : Exception) {
             return false
         }
@@ -316,8 +318,8 @@ object FileStore : FileStoreInterface {
             return tasks
         } else {
             try {
-                val openFileStream: DropboxAPI.DropboxInputStream
-                val fileInfo: DropboxAPI.DropboxFileInfo
+                var openFileStream: DropboxAPI.DropboxInputStream
+                var fileInfo: DropboxAPI.DropboxFileInfo
                 try {
                     openFileStream = mDBApi!!.getFileStream(path, null)
                     fileInfo = openFileStream.fileInfo
@@ -365,7 +367,7 @@ object FileStore : FileStoreInterface {
     private fun tasksFromCache(): List<String> {
         val result = CopyOnWriteArrayList<String>()
         val contents = loadContentsFromCache()
-        for (line in contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
+        for (line in contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()) {
             result.add(line)
         }
         return result
@@ -757,7 +759,7 @@ object FileStore : FileStoreInterface {
                         d.add(entry.fileName())
                     } else {
                         if (txtOnly) {
-                            if (!File(entry.fileName()).extension.equals("txt")) {
+                            if (File(entry.fileName()).extension != "txt") {
                                 continue
                             }
                         }
