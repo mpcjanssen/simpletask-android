@@ -62,8 +62,8 @@ import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
 
-    private const val EDIT: Boolean = true
-    private const val ADD: Boolean = false
+    private val EDIT: Boolean = true
+    private val ADD: Boolean = false
 
     enum class Mode {
         NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
