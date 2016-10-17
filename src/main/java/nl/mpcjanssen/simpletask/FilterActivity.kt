@@ -199,14 +199,15 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 finish()
                 return true
             }
-            R.id.menu_filter_action -> if (asWidgetConfigure) {
-                askWidgetName()
-            } else if (asWidgetReConfigure) {
-                updateWidget()
-                finish()
-            } else {
-                applyFilter()
-            }
+            R.id.menu_filter_action ->
+                if (asWidgetConfigure) {
+                    askWidgetName()
+                } else if (asWidgetReConfigure) {
+                    updateWidget()
+                    finish()
+                } else {
+                    applyFilter()
+                }
             R.id.menu_filter_load_script -> openScript(object : FileStoreInterface.FileReadListener {
                 override fun fileRead(contents: String?) {
                     runOnMainThread(

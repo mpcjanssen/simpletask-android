@@ -59,8 +59,10 @@ import java.io.IOException
 import java.util.*
 import android.R.id as androidId
 
-
 class Simpletask : ThemedNoActionBarActivity() {
+
+    private const val EDIT: Boolean = true
+    private const val ADD: Boolean = false
 
     enum class Mode {
         NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
@@ -296,6 +298,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show search or filter results
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
+            TodoList.clearSelection()
             mFilter!!.initFromIntent(intent)
             log.info(TAG, "handleIntent: launched with filter" + mFilter!!)
             val extras = intent.extras
@@ -351,7 +354,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { startAddTaskActivity() }
+        fab.setOnClickListener { startAddTaskActivity(ADD) }
         invalidateOptionsMenu()
         updateDrawers()
     }
@@ -778,7 +781,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()
-            R.id.update -> startAddTaskActivity()
+            R.id.update -> startAddTaskActivity(EDIT)
             R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
             R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
             R.id.priority -> prioritizeTasks(checkedTasks)
@@ -822,9 +825,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         startActivity(intent)
     }
 
-    private fun startAddTaskActivity() {
+    private fun startAddTaskActivity(isEdit: Boolean) {
         log.info(TAG, "Starting addTask activity")
         val intent = Intent(this, AddTask::class.java)
+        intent.putExtra(Constants.EXTRA_EDIT, isEdit)
         mFilter!!.saveInIntent(intent)
         startActivity(intent)
     }
