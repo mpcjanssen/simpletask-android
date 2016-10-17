@@ -10,17 +10,41 @@
     android:paddingRight="16dp"
     android:showDividers="middle"
     >
+
     <CheckBox
         android:id="@+id/cb_use_script"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Use script"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnTest"
+            style="?android:attr/buttonStyle"
+            android:text="Test"
+            />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spnCallback"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
         <EditText
             android:id="@+id/txt_testtask"
             android:layout_width="0dp"
@@ -30,13 +54,7 @@
             android:hint="Test task"
             android:gravity="top|left"
             />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnTest"
-            style="?android:attr/buttonStyle"
-            android:text="Test"
-            />
+
     </LinearLayout>
 
     <TextView
@@ -44,6 +62,7 @@
         android:layout_height="wrap_content"
         android:text="Script"
         />
+
     <EditText
         android:id="@+id/txt_script"
         android:layout_width="match_parent"

@@ -77,7 +77,7 @@ Called for every task as part of filtering the todo list.
 
 * If there is a Lua error in the callback, it behaves as if it had returned `true`
 * Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
-* You should define the onFilter function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onFilter` function will be undefined.
+* You should define the `onFilter` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onFilter` function will be undefined.
 
 ### `onGroup (task, fields, extensions) -> string`
 
@@ -107,6 +107,7 @@ Called for every task as part of filtering the todo list.
 
 * If there is a Lua error in the callback, it behaves as if it had returned `""`
 * Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
+* You should define the `onGroup` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onGroup` function will be undefined.
 
 
 ### `onTextSearch (taskText, caseSensitive) -> boolean`

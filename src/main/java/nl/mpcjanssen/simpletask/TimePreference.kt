@@ -36,8 +36,8 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
     private var m_minutes = 0
     private var m_picker: android.widget.TimePicker? = null
 
-    // Constructor is used from other_preferences.xmles.xml
-    @SuppressWarnings("unused")
+    // Constructor is used from other_preferences.xml
+    @Suppress("unused")
     constructor(ctx: Context) : this(ctx, null) {
     }
 
@@ -53,12 +53,24 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
         return picker
     }
 
+    /*
+        Picker handling changed in new versions of Android.
+        For now keep using the old version, will updated if it breaks.
+     */
+    @Suppress("DEPRECATION")
     override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
-        m_picker!!.currentHour = m_minutes / 60
-        m_picker!!.currentMinute = m_minutes % 60
+        m_picker?.apply {
+            currentHour = m_minutes / 60
+            currentMinute = m_minutes % 60
+        }
     }
 
+    /*
+    Picker handling changed in new versions of Android.
+    For now keep using the old version, will updated if it breaks.
+ */
+    @Suppress("DEPRECATION")
     override fun onDialogClosed(positiveResult: Boolean) {
         super.onDialogClosed(positiveResult)
 
