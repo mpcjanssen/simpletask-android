@@ -74,7 +74,7 @@ fun getString (resId : Int) : String {
 
 fun showConfirmationDialog(cxt: Context, msgid: Int,
                            okListener: DialogInterface.OnClickListener, titleid: Int) {
-    val show = Config.showConfirmationDialogs()
+    val show = Config.showConfirmationDialogs
 
     val builder = AlertDialog.Builder(cxt)
     builder.setTitle(titleid)
@@ -450,7 +450,6 @@ fun showChangelogOverlay(act: Activity): Dialog? {
 
 
 fun markdownAssetAsHtml(ctxt: Context, name: String): String {
-    var html = ""
     var markdown: String
     try {
         markdown = readAsset(ctxt.assets, name)
@@ -465,7 +464,7 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     }
     // Change issue numbers to links
     markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
-    html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + Processor.process(markdown) + "</body></html>"
+    val html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + Processor.process(markdown) + "</body></html>"
     return html
 }
 
@@ -537,7 +536,7 @@ private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: St
 
     val ss = SpannableString(prefix + s)
 
-    if (Config.hasColorDueDates() && prefix=="Due: ") {
+    if (Config.hasColorDueDates && prefix=="Due: ") {
         val dueTodayColor = ContextCompat.getColor(app, android.R.color.holo_green_light)
         val overDueColor = ContextCompat.getColor(app, android.R.color.holo_red_light)
         when {

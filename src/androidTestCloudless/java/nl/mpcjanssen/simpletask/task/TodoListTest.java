@@ -1,10 +1,5 @@
 package nl.mpcjanssen.simpletask.task;
 
-import android.support.test.filters.SmallTest;
-import android.support.test.runner.AndroidJUnit4;
-import de.greenrobot.dao.AbstractDaoSession;
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import nl.mpcjanssen.simpletask.dao.Daos;
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem;
 import org.junit.Before;
@@ -14,7 +9,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest

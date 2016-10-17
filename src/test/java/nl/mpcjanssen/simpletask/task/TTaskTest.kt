@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask.task
 
-import junit.framework.Assert
+import org.junit.Assert
 import junit.framework.TestCase
 
 class TaskTest : TestCase() {
