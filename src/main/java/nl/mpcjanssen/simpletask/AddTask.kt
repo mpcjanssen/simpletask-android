@@ -16,7 +16,6 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -45,7 +44,11 @@ class AddTask : ThemedActionBarActivity() {
     private var localBroadcastManager: LocalBroadcastManager? = null
     private val log = Logger
 
-
+    /*
+        Deprecated functions still work fine.
+        For now keep using the old version, will updated if it breaks.
+     */
+    @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
         log.debug(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
@@ -273,7 +276,7 @@ class AddTask : ThemedActionBarActivity() {
         if (Config.isShowEditTextHint) {
             textInputField.setHint(R.string.tasktexthint)
         } else {
-            textInputField.setHint(null)
+            textInputField.hint = null
         }
     }
 
@@ -334,6 +337,11 @@ class AddTask : ThemedActionBarActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
+            /*
+                Deprecated functions still work fine.
+                For now keep using the old version, will updated if it breaks.
+            */
+            @Suppress("DEPRECATION")
             override fun onClick(input: String) {
                 if (input == "pick") {
                     /* Note on some Android versions the OnDateSetListener can fire twice
