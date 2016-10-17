@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask.lua
 
-import junit.framework.Assert
+import org.junit.Assert
 import junit.framework.TestCase
 import org.luaj.vm2.LuaError
 import org.luaj.vm2.LuaTable
