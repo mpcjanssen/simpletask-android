@@ -62,6 +62,9 @@ import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
 
+    private const val EDIT: Boolean = true
+    private const val ADD: Boolean = false
+
     enum class Mode {
         NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
     }
@@ -296,6 +299,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show search or filter results
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
+            TodoList.clearSelection()
             mFilter!!.initFromIntent(intent)
             log.info(TAG, "handleIntent: launched with filter" + mFilter!!)
             val extras = intent.extras
@@ -351,7 +355,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { startAddTaskActivity() }
+        fab.setOnClickListener { startAddTaskActivity(ADD) }
         invalidateOptionsMenu()
         updateDrawers()
     }
@@ -778,7 +782,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()
-            R.id.update -> startAddTaskActivity()
+            R.id.update -> startAddTaskActivity(EDIT)
             R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
             R.id.defer_threshold -> deferTasks(checkedTasks, DateType.THRESHOLD)
             R.id.priority -> prioritizeTasks(checkedTasks)
@@ -822,9 +826,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         startActivity(intent)
     }
 
-    private fun startAddTaskActivity() {
+    private fun startAddTaskActivity(isEdit: Boolean) {
         log.info(TAG, "Starting addTask activity")
         val intent = Intent(this, AddTask::class.java)
+        intent.putExtra(Constants.EXTRA_EDIT, isEdit)
         mFilter!!.saveInIntent(intent)
         startActivity(intent)
     }
@@ -848,7 +853,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val filterIds = saved_filter_ids.getStringSet("ids", HashSet<String>())
             for (id in filterIds) {
                 val filter_pref = getSharedPreferences(id, Context.MODE_PRIVATE)
-                val filter = ActiveFilter(FilterOptions(luaModule = "mainui"))
+                val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
                 filter.initFromPrefs(filter_pref)
                 filter.prefName = id
                 saved_filters.add(filter)
@@ -862,7 +867,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val contents = FileStore.readFile(importFile.canonicalPath, null)
                 val jsonFilters = JSONObject(contents)
                 jsonFilters.keys().forEach {
-                    val filter = ActiveFilter(FilterOptions(luaModule = "mainui"))
+                    val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
                     filter.initFromJSON(jsonFilters.getJSONObject(it))
                     saveFilterInPrefs(it,filter)
                 }
@@ -1020,8 +1025,8 @@ class Simpletask : ThemedNoActionBarActivity() {
             mFilter!!.saveInIntent(intent)
             setIntent(intent)
             mFilter!!.saveInPrefs(Config.prefs)
-            m_adapter!!.setFilteredTasks()
             closeDrawer(NAV_DRAWER)
+            closeSelectionMode()
             updateDrawers()
         }
         m_navDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
@@ -1071,7 +1076,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         ids.remove(prefsName)
         saved_filters.edit().putStringSet("ids", ids).apply()
         val filter_prefs = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val deleted_filter = ActiveFilter(FilterOptions(luaModule = "mainui"))
+        val deleted_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
         deleted_filter.initFromPrefs(filter_prefs)
         filter_prefs.edit().clear().apply()
         val prefs_path = File(this.filesDir, "../shared_prefs")
@@ -1085,7 +1090,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun updateSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui"))
+        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         mFilter!!.name = filterName
@@ -1095,7 +1100,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun renameSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui"))
+        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         val alert = AlertDialog.Builder(this)

@@ -242,6 +242,7 @@ object TodoList {
         ActionQueue.add("Add/Edit tasks", Runnable {
             log.info(TAG, "Starting addTask activity")
             val intent = Intent(act, AddTask::class.java)
+            intent.putExtra(Constants.EXTRA_EDIT, true) //true ->  edit, not add
             act.startActivity(intent)
         })
     }
