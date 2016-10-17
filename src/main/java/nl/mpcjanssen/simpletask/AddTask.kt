@@ -53,6 +53,9 @@ class AddTask : ThemedActionBarActivity() {
         // Config.loadTodoList(true)
 
         val intent = intent
+        val isEdit = intent.getBooleanExtra(Constants.EXTRA_EDIT, false)
+        if (!isEdit) TodoList.clearSelection()
+
         val mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
         mFilter.initFromIntent(intent)
 
