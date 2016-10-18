@@ -21,6 +21,7 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
@@ -455,7 +456,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val actionColor = ContextCompat.getDrawable(this, R.color.gray74)
                 actionBar.setBackgroundDrawable(actionColor)
 
-                /* window.setStatusBarColor(R.color.gray87) */
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    window.statusBarColor = ContextCompat.getColor(this, R.color.gray87)
+                }
 
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
@@ -500,10 +503,13 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
             }
             Mode.MAIN -> {
-                val a : TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+                val a : TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
                 try {
                     val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
                     actionBar.setBackgroundDrawable(colorPrimary)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        window.statusBarColor = ContextCompat.getColor(this, a.getResourceId(1, 0))
+                    }
                 } finally {
                     a.recycle()
                 }
