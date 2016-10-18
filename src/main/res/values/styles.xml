@@ -14,7 +14,6 @@
     <style name="SimpleToolbar">
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:elevation" tools:ignore="NewApi">4dp</item>
     </style>
 
     <style name="SimpleSelectionBar" parent="SimpleToolbar">
