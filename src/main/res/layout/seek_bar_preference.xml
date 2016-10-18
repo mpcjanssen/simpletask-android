@@ -1,42 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- We can probably make this support RTL layouts on sdk>17 and still work on
+     old sdk by including both Left/Right and Start/End margins, padding, etc.
+     Using hard coded LTR for the moment just to be sure it works. -->
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/widget_frame"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="RtlHardcoded"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="5dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp" 
+    android:minHeight="?attr/listPreferredItemHeightSmall"
+    android:gravity="center_vertical"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:clipToPadding="false"
     >
     <TextView
-        android:id="@+id/seekBarPrefUnitsRight"
+        android:id="@android:id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" 
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/seekBarPrefValue"
+        android:maxLines="1"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:ellipsize="marquee"
         />
     <TextView
         android:id="@+id/seekBarPrefValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/seekBarPrefUnitsRight"
-        android:gravity="right" 
+        android:layout_alignBottom="@android:id/title"
+        android:layout_toLeftOf="@+id/seekBarPrefUnitsRight"
+        android:layout_marginLeft="16dp"
         />
     <TextView
-        android:id="@+id/seekBarPrefUnitsLeft"
+        android:id="@+id/seekBarPrefUnitsRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/seekBarPrefValue"
+        android:layout_alignBottom="@id/seekBarPrefValue"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
         />
     <LinearLayout
         android:id="@+id/seekBarPrefBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/seekBarPrefUnitsRight"
-        android:orientation="horizontal" 
+        android:orientation="horizontal"
+        android:layout_below="@id/seekBarPrefValue"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="-4dp"
+        android:layout_marginRight="-4dp"
         >
         <SeekBar
             android:id="@+id/seekBarPrefSeekBar"
@@ -44,4 +61,20 @@
             android:layout_height="wrap_content"
             />
     </LinearLayout>
+
+    <!-- When we stop supporting API<21, swap this in:
+         android:textAppearance="?android:attr/textAppearanceListItemSecondary" -->
+    <TextView
+        android:id="@android:id/summary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekBarPrefBarContainer"
+        android:layout_alignLeft="@android:id/title"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="6dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary"
+        android:maxLines="10"
+        android:ellipsize="end"
+        />
 </RelativeLayout>
