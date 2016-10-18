@@ -38,6 +38,11 @@
         android:drawable="@drawable/ic_checkbox_unchecked_to_checked_animation"
         />
     <transition
+        android:fromId="@+id/indeterminate"
+        android:toId="@+id/checked"
+        android:drawable="@drawable/ic_checkbox_unchecked_to_checked_animation"
+        />
+    <transition
         android:fromId="@+id/checked"
         android:toId="@+id/unchecked"
         android:drawable="@drawable/ic_checkbox_checked_to_unchecked_animation"
