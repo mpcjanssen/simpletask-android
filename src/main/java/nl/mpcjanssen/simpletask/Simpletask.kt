@@ -439,6 +439,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         val inflater = menuInflater
         val fab = findViewById(R.id.fab) as FloatingActionButton
+        val selection_fab = findViewById(R.id.selection_fab) as FloatingActionButton
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
         val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
@@ -501,6 +502,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                         }
                     }
                 }
+
+                selection_fab.visibility = View.VISIBLE
+                selection_fab.setOnClickListener {
+                    createCalendarAppointment(selectedTasks) }
             }
             Mode.MAIN -> {
                 val a : TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
@@ -528,6 +533,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
                 toggle.isDrawerIndicatorEnabled = true
                 fab.visibility = View.VISIBLE
+                selection_fab.visibility = View.GONE
                 toolbar.visibility = View.GONE
             }
         }
@@ -780,7 +786,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
             R.id.context_archive -> archiveTasks(checkedTasks, true)
-            R.id.context_calendar -> createCalendarAppointment(checkedTasks)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> FileStore.sync()
