@@ -354,8 +354,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         }
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { startAddTaskActivity(ADD) }
+        val fab_add = findViewById(R.id.fab_add) as FloatingActionButton
+        fab_add.setOnClickListener { startAddTaskActivity(ADD) }
+        val fab_clear = findViewById(R.id.fab_clear) as FloatingActionButton
+        fab_clear.setOnClickListener { closeSelectionMode() }
         invalidateOptionsMenu()
         updateDrawers()
     }
@@ -437,7 +439,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         this.options_menu = menu
 
         val inflater = menuInflater
-        val fab = findViewById(R.id.fab) as FloatingActionButton
+        val fab_add = findViewById(R.id.fab_add) as FloatingActionButton
+        val fab_clear = findViewById(R.id.fab_clear) as FloatingActionButton
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
         val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
@@ -460,7 +463,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 inflater.inflate(R.menu.task_context_actionbar, menu)
                 title = "${TodoList.numSelected()}"
                 toggle.isDrawerIndicatorEnabled = false
-                fab.visibility = View.GONE
+                fab_add.visibility = View.GONE
+                fab_clear.visibility = View.VISIBLE
                 toolbar.setOnMenuItemClickListener { item ->
                     onOptionsItemSelected(item)
                 }
@@ -521,7 +525,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     setTitle(R.string.app_label)
                 }
                 toggle.isDrawerIndicatorEnabled = true
-                fab.visibility = View.VISIBLE
+                fab_add.visibility = View.VISIBLE
+                fab_clear.visibility = View.GONE
                 toolbar.visibility = View.GONE
             }
         }
