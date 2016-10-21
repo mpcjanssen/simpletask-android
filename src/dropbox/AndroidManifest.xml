@@ -56,8 +56,8 @@ You should have received a copy of the GNU General Public License along with Sim
         </receiver>
         <provider 
             android:exported="true"
-            android:name="nl.mpcjanssen.simpletask.CachedFileProvider" 
-	    android:authorities="${provider}.${providerFlavour}" tools:ignore="ExportedContentProvider">
+            android:name="nl.mpcjanssen.simpletask.CachedFileProvider"
+            android:authorities="${applicationId}.provider.${providerFlavour}" tools:ignore="ExportedContentProvider">
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
     </application>

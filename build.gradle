@@ -37,11 +37,11 @@ android {
     productFlavors {
         dropbox {
             applicationId 'nl.mpcjanssen.todotxtholo'
-	    manifestPlaceholders = [ providerFlavour:"dropbox"]
+	        manifestPlaceholders = [ providerFlavour:"dropbox"]
         }
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
-	    manifestPlaceholders = [ providerFlavour:"cloudless"]
+            manifestPlaceholders = [ providerFlavour:"cloudless"]
         }
     }
 
@@ -56,14 +56,14 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-	    manifestPlaceholders = [ provider:"nl.mpcjanssen.simpletask.debug.provider"]
+	    manifestPlaceholders = [ providerBuildType:"debug"]
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
 	        minifyEnabled true
             proguardFile "proguard.txt"
-	    manifestPlaceholders = [ provider:"nl.mpcjanssen.simpletask.provider"]
+	    manifestPlaceholders = [ providerBuildType:"release"]
         }
     }
     dexOptions {
