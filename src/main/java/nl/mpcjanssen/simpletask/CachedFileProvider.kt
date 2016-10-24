@@ -10,6 +10,7 @@ import android.os.ParcelFileDescriptor
 
 import java.io.File
 import java.io.FileNotFoundException
+import java.util.jar.Manifest
 
 class CachedFileProvider : ContentProvider() {
 
@@ -94,6 +95,6 @@ class CachedFileProvider : ContentProvider() {
         private val TAG = CachedFileProvider::class.java.simpleName
 
         // The authority is the symbolic name for the provider class
-        const val  AUTHORITY = BuildConfig.APPLICATION_ID + ".provider"
+        const val  AUTHORITY = BuildConfig.APPLICATION_ID + ".provider." + BuildConfig.FLAVOR
     }
 }

@@ -22,13 +22,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         prefs.registerOnSharedPreferenceChangeListener(this)
     }
 
-    fun useTodoTxtTerms(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
-    }
+    val useTodoTxtTerms: Boolean
+        get() =  prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
 
-    fun showTxtOnly(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_txt_only), false)
-    }
+    val showTxtOnly: Boolean
+        get() =  prefs.getBoolean(getString(R.string.show_txt_only), false)
 
     val isSyncDues: Boolean
         get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_dues), false)
@@ -44,7 +42,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     val listTerm: String
         get() {
-            if (useTodoTxtTerms()) {
+            if (useTodoTxtTerms) {
                 return getString(R.string.context_prompt_todotxt)
             } else {
                 return getString(R.string.context_prompt)
@@ -53,7 +51,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     val tagTerm: String
         get() {
-            if (useTodoTxtTerms()) {
+            if (useTodoTxtTerms) {
                 return getString(R.string.project_prompt_todotxt)
             } else {
                 return getString(R.string.project_prompt)
@@ -97,18 +95,15 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getBoolean(getString(R.string.capitalize_tasks), true)
         set(bool) = prefs.edit().putBoolean(getString(R.string.capitalize_tasks), bool).apply()
 
-    fun showTodoPath(): Boolean {
-        return prefs.getBoolean(getString(R.string.show_todo_path), false)
-    }
+    val showTodoPath: Boolean
+        get() =  prefs.getBoolean(getString(R.string.show_todo_path), false)
 
 
-    fun backClearsFilter(): Boolean {
-        return prefs.getBoolean(getString(R.string.back_clears_filter), false)
-    }
+    val backClearsFilter: Boolean
+        get() =  prefs.getBoolean(getString(R.string.back_clears_filter), false)
 
-    fun sortCaseSensitive(): Boolean {
-        return prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
-    }
+    val sortCaseSensitive: Boolean
+        get() =  prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
 
     val eol: String
         get() {
@@ -128,22 +123,12 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun setEditTextHint(editText: EditText, resId: Int) {
-        if (prefs.getBoolean(getString(R.string.show_edittext_hint), true)) {
-            editText.setHint(resId)
-        } else {
-            editText.setHint(null)
-        }
-    }
-
-
     var isAddTagsCloneTags: Boolean
         get() = prefs.getBoolean(getString(R.string.clone_tags_key), false)
         set(bool) = prefs.edit().putBoolean(getString(R.string.clone_tags_key), bool).apply()
 
-    fun hasAppendAtEnd(): Boolean {
-        return prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
-    }
+    val hasAppendAtEnd: Boolean
+        get() =  prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
 
     // Takes an argument f, an expression that maps theme strings to IDs
     val activeTheme: Int
@@ -202,9 +187,8 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             return prefs.getInt(getString(R.string.datebar_relative_size), def) / 100.0f
         }
 
-    fun showCalendar(): Boolean {
-                return prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
-        }
+    val showCalendar: Boolean
+        get() =  prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
 
     val tasklistTextSize: Float?
         get() {
@@ -220,18 +204,15 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             return font_size.toFloat()
         }
 
-    fun hasShareTaskShowsEdit(): Boolean {
-        return prefs.getBoolean(getString(R.string.share_task_show_edit), false)
-    }
+    val hasShareTaskShowsEdit: Boolean
+        get() =  prefs.getBoolean(getString(R.string.share_task_show_edit), false)
 
-    fun hasExtendedTaskView(): Boolean {
-        return prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
-    }
+    val hasExtendedTaskView: Boolean
+        get() =  prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
 
 
-    fun showConfirmationDialogs() : Boolean {
-        return prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
-    }
+    val showConfirmationDialogs : Boolean
+        get() =  prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
         if (s == getString(R.string.widget_theme_pref_key) ||
@@ -283,13 +264,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val isAutoArchive: Boolean
         get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
 
-    fun hasPrependDate(): Boolean {
-        return prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
-    }
+    val hasPrependDate: Boolean
+        get() =  prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
 
-    fun hasKeepPrio(): Boolean {
-        return prefs.getBoolean(getString(R.string.keep_prio), true)
-    }
+    val hasKeepPrio: Boolean
+        get() =  prefs.getBoolean(getString(R.string.keep_prio), true)
 
     val shareAppendText: String
         get() = prefs.getString(getString(R.string.share_task_append_text), "")
@@ -303,11 +282,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val localFileRoot: String
         get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
 
-    fun hasCapitalizeTasks(): Boolean {
-        return isCapitalizeTasks
-    }
+    val hasCapitalizeTasks: Boolean
+        get() = isCapitalizeTasks
 
-    fun hasColorDueDates(): Boolean {
-        return prefs.getBoolean(getString(R.string.color_due_date_key), true)
-    }
+    val hasColorDueDates: Boolean
+        get() =  prefs.getBoolean(getString(R.string.color_due_date_key), true)
 }

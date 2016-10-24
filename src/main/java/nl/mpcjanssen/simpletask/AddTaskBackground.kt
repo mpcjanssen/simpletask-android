@@ -111,7 +111,7 @@ class AddTaskBackground : Activity() {
         val addedTasks = ArrayList<Task>()
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
-        if (Config.hasShareTaskShowsEdit()) {
+        if (Config.hasShareTaskShowsEdit) {
             todoList.clearSelection()
         }
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
@@ -125,18 +125,18 @@ class AddTaskBackground : Activity() {
                 text = taskText
             }
             val t: Task
-            if (Config.hasPrependDate()) {
+            if (Config.hasPrependDate) {
                 t = Task(text, DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT))
             } else {
                 t = Task(text)
             }
-            todoList.add(t, Config.hasAppendAtEnd(),Config.hasShareTaskShowsEdit())
+            todoList.add(t, Config.hasAppendAtEnd,Config.hasShareTaskShowsEdit)
             addedTasks.add(t)
         }
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
         showToastShort(TodoApplication.app, R.string.task_added)
-        if (Config.hasShareTaskShowsEdit()) {
+        if (Config.hasShareTaskShowsEdit) {
             todoList.startAddTaskActivity(this)
         }
     }

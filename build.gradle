@@ -1,11 +1,11 @@
 buildscript {
     ext.kotlin_version = '1.0.4'
-    ext.android_support_version = '24.2.0'
+    ext.android_support_version = '25.0.0'
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
@@ -17,8 +17,8 @@ apply plugin: 'com.getkeepsafe.dexcount'
 
 
 android {
-    buildToolsVersion "24.0.1"
-    compileSdkVersion 24
+    buildToolsVersion "25.0.0"
+    compileSdkVersion 25
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -30,18 +30,18 @@ android {
         versionName '8.3.0'
         versionCode 3052
 	minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     productFlavors {
         dropbox {
             applicationId 'nl.mpcjanssen.todotxtholo'
-	    manifestPlaceholders = [ providerFlavour:"dropbox"]
+	        manifestPlaceholders = [ providerFlavour:"dropbox"]
         }
         cloudless {
             applicationId 'nl.mpcjanssen.simpletask'
-	    manifestPlaceholders = [ providerFlavour:"cloudless"]
+            manifestPlaceholders = [ providerFlavour:"cloudless"]
         }
     }
 
@@ -56,14 +56,14 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-	    manifestPlaceholders = [ provider:"nl.mpcjanssen.simpletask.debug.provider"]
+	    manifestPlaceholders = [ providerBuildType:"debug"]
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
 	        minifyEnabled true
             proguardFile "proguard.txt"
-	    manifestPlaceholders = [ provider:"nl.mpcjanssen.simpletask.provider"]
+	    manifestPlaceholders = [ providerBuildType:"release"]
         }
     }
     dexOptions {

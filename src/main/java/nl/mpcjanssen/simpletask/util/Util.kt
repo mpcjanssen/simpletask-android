@@ -74,7 +74,7 @@ fun getString (resId : Int) : String {
 
 fun showConfirmationDialog(cxt: Context, msgid: Int,
                            okListener: DialogInterface.OnClickListener, titleid: Int) {
-    val show = Config.showConfirmationDialogs()
+    val show = Config.showConfirmationDialogs
 
     val builder = AlertDialog.Builder(cxt)
     builder.setTitle(titleid)
@@ -536,7 +536,7 @@ private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: St
 
     val ss = SpannableString(prefix + s)
 
-    if (Config.hasColorDueDates() && prefix=="Due: ") {
+    if (Config.hasColorDueDates && prefix=="Due: ") {
         val dueTodayColor = ContextCompat.getColor(app, android.R.color.holo_green_light)
         val overDueColor = ContextCompat.getColor(app, android.R.color.holo_red_light)
         when {
