@@ -1293,11 +1293,11 @@ class Simpletask : ThemedNoActionBarActivity() {
             val priorityColor: Int
             val priority = task.priority
             when (priority) {
-                Priority.A -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_red_dark)
-                Priority.B -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_orange_dark)
-                Priority.C -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_green_dark)
-                Priority.D -> priorityColor = ContextCompat.getColor(m_app, android.R.color.holo_blue_dark)
-                else -> priorityColor = ContextCompat.getColor(m_app, android.R.color.darker_gray)
+                Priority.A -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_red_dark)
+                Priority.B -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_orange_dark)
+                Priority.C -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_green_dark)
+                Priority.D -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_blue_dark)
+                else -> priorityColor = ContextCompat.getColor(m_app, R.color.gray67)
             }
             setColor(ss, priorityColor, priority.inFileFormat())
             val completed = task.isCompleted()
