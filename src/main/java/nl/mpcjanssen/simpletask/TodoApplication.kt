@@ -207,7 +207,7 @@ class TodoApplication : Application(),
                         switchTodoFile(file)
                     }
                 },
-                Config.showTxtOnly())
+                Config.showTxtOnly)
     }
 
     val doneFileName: String
@@ -221,7 +221,7 @@ class TodoApplication : Application(),
     }
 
     fun getSortString(key: String): String {
-        if (Config.useTodoTxtTerms()) {
+        if (Config.useTodoTxtTerms) {
             if ("by_context" == key) {
                 return getString(R.string.by_context_todotxt)
             }

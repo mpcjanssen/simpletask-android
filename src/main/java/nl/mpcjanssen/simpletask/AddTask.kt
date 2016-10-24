@@ -16,7 +16,6 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -45,7 +44,11 @@ class AddTask : ThemedActionBarActivity() {
     private var localBroadcastManager: LocalBroadcastManager? = null
     private val log = Logger
 
-
+    /*
+        Deprecated functions still work fine.
+        For now keep using the old version, will updated if it breaks.
+     */
+    @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
         log.debug(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
@@ -53,6 +56,9 @@ class AddTask : ThemedActionBarActivity() {
         // Config.loadTodoList(true)
 
         val intent = intent
+        val isEdit = intent.getBooleanExtra(Constants.EXTRA_EDIT, false)
+        if (!isEdit) TodoList.clearSelection()
+
         val mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
         mFilter.initFromIntent(intent)
 
@@ -85,7 +91,7 @@ class AddTask : ThemedActionBarActivity() {
 
         // text
         textInputField = findViewById(R.id.taskText) as EditText
-        Config.setEditTextHint(textInputField, R.string.tasktexthint)
+        setHint()
 
         if (share_text != null) {
             textInputField.setText(share_text)
@@ -190,11 +196,8 @@ class AddTask : ThemedActionBarActivity() {
         findViewById(R.id.btnContext)?.setOnClickListener { showListMenu() }
         findViewById(R.id.btnProject)?.setOnClickListener { showTagMenu() }
         findViewById(R.id.btnPrio)?.setOnClickListener { showPriorityMenu() }
-
         findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
-
-        textInputField.setSelection(textInputField.text.length)
     }
 
 
@@ -252,7 +255,7 @@ class AddTask : ThemedActionBarActivity() {
             }
             R.id.menu_show_edittext_hint -> {
                 Config.isShowEditTextHint = !Config.isShowEditTextHint
-                Config.setEditTextHint(textInputField, R.string.tasktexthint)
+                setHint()
                 item.isChecked = !item.isChecked
             }
             R.id.menu_help -> {
@@ -269,6 +272,13 @@ class AddTask : ThemedActionBarActivity() {
         startActivity(i)
     }
 
+    private fun setHint() {
+        if (Config.isShowEditTextHint) {
+            textInputField.setHint(R.string.tasktexthint)
+        } else {
+            textInputField.hint = null
+        }
+    }
 
     private fun saveTasksAndClose() {
         val todoList = TodoList
@@ -296,12 +306,12 @@ class AddTask : ThemedActionBarActivity() {
                 m_backup.removeAt(0)
             } else {
                 val t: Task
-                if (Config.hasPrependDate()) {
+                if (Config.hasPrependDate) {
                     t = Task(task.text, todayAsString)
                 } else {
                     t = task
                 }
-                todoList.add(t, Config.hasAppendAtEnd())
+                todoList.add(t, Config.hasAppendAtEnd)
             }
         }
 
@@ -327,6 +337,11 @@ class AddTask : ThemedActionBarActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
+            /*
+                Deprecated functions still work fine.
+                For now keep using the old version, will updated if it breaks.
+            */
+            @Suppress("DEPRECATION")
             override fun onClick(input: String) {
                 if (input == "pick") {
                     /* Note on some Android versions the OnDateSetListener can fire twice
@@ -343,7 +358,7 @@ class AddTask : ThemedActionBarActivity() {
                             today.month!! - 1,
                             today.day!!)
 
-                    val showCalendar = Config.showCalendar()
+                    val showCalendar = Config.showCalendar
                     dialog.datePicker.calendarViewShown = showCalendar
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
@@ -388,7 +403,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = sortWithPrefix(items, Config.sortCaseSensitive(), null)
+        val projects = sortWithPrefix(items, Config.sortCaseSensitive, null)
 
         val builder = AlertDialog.Builder(this)
         @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -469,7 +484,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = sortWithPrefix(items, Config.sortCaseSensitive(), null)
+        val lists = sortWithPrefix(items, Config.sortCaseSensitive, null)
 
         val builder = AlertDialog.Builder(this)
         @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)

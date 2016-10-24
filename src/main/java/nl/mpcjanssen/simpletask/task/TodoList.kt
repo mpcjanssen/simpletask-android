@@ -166,7 +166,7 @@ object TodoList {
         get() = prefixItems("+", projects)
 
 
-    fun undoComplete(items: List<TodoItem>) {
+    fun uncomplete(items: List<TodoItem>) {
         ActionQueue.add("Uncomplete", Runnable {
             items.forEach {
                 it.task.markIncomplete()
@@ -175,10 +175,13 @@ object TodoList {
         })
     }
 
-    fun complete(item: TodoItem,
-                 keepPrio: Boolean,
-                 extraAtEnd: Boolean) {
+    fun complete(items: List<TodoItem>, keepPrio: Boolean, extraAtEnd: Boolean) {
+        for (item in items) {
+            complete(item, keepPrio, extraAtEnd)
+        }
+    }
 
+    fun complete(item: TodoItem, keepPrio: Boolean, extraAtEnd: Boolean) {
         ActionQueue.add("Complete", Runnable {
             val task = item.task
             val extra = task.markComplete(todayAsString)
@@ -239,6 +242,7 @@ object TodoList {
         ActionQueue.add("Add/Edit tasks", Runnable {
             log.info(TAG, "Starting addTask activity")
             val intent = Intent(act, AddTask::class.java)
+            intent.putExtra(Constants.EXTRA_EDIT, true) //true ->  edit, not add
             act.startActivity(intent)
         })
     }
