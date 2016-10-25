@@ -43,7 +43,7 @@
                     android:id="@+id/offline"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@android:color/holo_orange_light"
+                    android:background="@color/simple_orange_light"
                     android:visibility="gone"
                     android:elevation="3dp"
                     tools:ignore="UnusedAttribute"

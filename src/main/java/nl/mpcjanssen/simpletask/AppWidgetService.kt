@@ -138,11 +138,11 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
 
         val prioColor: Int
         when (task.priority) {
-            Priority.A -> prioColor = ContextCompat.getColor(TodoApplication.app,android.R.color.holo_red_dark)
-            Priority.B -> prioColor = ContextCompat.getColor(TodoApplication.app,android.R.color.holo_orange_dark)
-            Priority.C -> prioColor = ContextCompat.getColor(TodoApplication.app,android.R.color.holo_green_dark)
-            Priority.D -> prioColor = ContextCompat.getColor(TodoApplication.app,android.R.color.holo_blue_dark)
-            else -> prioColor = ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray)
+            Priority.A -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_red_dark)
+            Priority.B -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_orange_dark)
+            Priority.C -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_green_dark)
+            Priority.D -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_blue_dark)
+            else -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.gray67)
         }
         if (prioColor != 0) {
             setColor(ss, prioColor, task.priority.inFileFormat())
@@ -188,17 +188,17 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     }
 
     private fun itemForLightTheme(rv: RemoteViews) {
-        rv.setTextColor(R.id.tasktext, ContextCompat.getColor(TodoApplication.app,android.R.color.black))
-        rv.setTextColor(R.id.taskage, ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray))
-        rv.setTextColor(R.id.taskdue, ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray))
-        rv.setTextColor(R.id.taskthreshold, ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray))
+        rv.setTextColor(R.id.tasktext, ContextCompat.getColor(TodoApplication.app, R.color.black))
+        rv.setTextColor(R.id.taskage, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
+        rv.setTextColor(R.id.taskdue, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
+        rv.setTextColor(R.id.taskthreshold, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
     }
 
     private fun itemForDarkTheme(rv: RemoteViews) {
-        rv.setTextColor(R.id.tasktext, ContextCompat.getColor(TodoApplication.app,android.R.color.white))
-        rv.setTextColor(R.id.taskage, ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray))
-        rv.setTextColor(R.id.taskdue, ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray))
-        rv.setTextColor(R.id.taskthreshold, ContextCompat.getColor(TodoApplication.app,android.R.color.darker_gray))
+        rv.setTextColor(R.id.tasktext, ContextCompat.getColor(TodoApplication.app, R.color.white))
+        rv.setTextColor(R.id.taskage, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
+        rv.setTextColor(R.id.taskdue, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
+        rv.setTextColor(R.id.taskthreshold, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
     }
 
     override fun getViewAt(position: Int): RemoteViews? {
