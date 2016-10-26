@@ -118,7 +118,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
-                    archiveTasks(null, false)
+                    archiveTasks()
                 } else {
                     if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                         log.info(TAG, "Logging out from Dropbox")
@@ -662,7 +662,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             TodoList.complete(t, Config.hasKeepPrio, Config.hasAppendAtEnd)
         }
         if (Config.isAutoArchive) {
-            archiveTasks(null, false)
+            archiveTasks()
         }
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
@@ -718,26 +718,36 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun deleteTasks(tasks: List<TodoItem>) {
-        showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i ->
+        val numTasks = tasks.size
+        var title = getString(R.string.delete_task_title)
+                    .replaceFirst(Regex("%s"), numTasks.toString())
+        val delete = DialogInterface.OnClickListener { dialogInterface, i ->
             for (t in tasks) {
                 TodoList.remove(t)
             }
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
             invalidateOptionsMenu()
-        }, R.string.delete_task_title)
+        }
+
+        showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
-    private fun archiveTasks(tasksToArchive: List<TodoItem>?, areYouSureDialog: Boolean) {
-
+    private fun archiveTasks() { archiveTasks(TodoList.completedTasks, false) }
+    private fun archiveTasks(tasks: List<TodoItem>, showDialog: Boolean = true) {
         val archiveAction = {
             if (Config.todoFileName == m_app.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
             }
-            TodoList.archive(Config.todoFileName, m_app.doneFileName, tasksToArchive, Config.eol)
+            TodoList.archive(Config.todoFileName, m_app.doneFileName, tasks, Config.eol)
             invalidateOptionsMenu()
         }
-        if (areYouSureDialog) {
-            showConfirmationDialog(this, R.string.delete_task_message, DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }, R.string.archive_task_title)
+
+        if (showDialog) {
+            val numTasks = tasks.size.toString()
+            var title = getString(R.string.archive_task_title)
+                         .replaceFirst(Regex("%s"), numTasks)
+            val archive = DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }
+            showConfirmationDialog(this, R.string.delete_task_message, archive, title)
         } else {
             archiveAction()
         }
@@ -779,12 +789,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val shareText = selectedTasksAsString()
                 shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
-            R.id.context_archive -> archiveTasks(checkedTasks, true)
+            R.id.context_archive -> archiveTasks(checkedTasks)
             R.id.context_calendar -> createCalendarAppointment(checkedTasks)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> FileStore.sync()
-            R.id.archive -> archiveTasks(null, true)
+            R.id.archive -> archiveTasks(TodoList.completedTasks)
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
