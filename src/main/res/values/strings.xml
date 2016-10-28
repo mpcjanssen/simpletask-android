@@ -274,8 +274,8 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
 
     <!-- delete -->
-    <string name="delete_task_title">Delete Task(s)</string>
-    <string name="archive_task_title">Archive Task(s)</string>
+    <string name="delete_task_title">Delete %s Task(s)</string>
+    <string name="archive_task_title">Archive %s Task(s)</string>
     <string name="delete_task_message">This cannot be undone. Are you sure?</string>
     <string name="logout_message">Please make sure you have synced all changes with dropbox or
         shared your complete task list if not connected to dropbox.\n
