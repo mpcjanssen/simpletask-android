@@ -72,12 +72,28 @@ fun getString (resId : Int) : String {
     return TodoApplication.app.getString(resId)
 }
 
-fun showConfirmationDialog(cxt: Context, msgid: Int,
-                           okListener: DialogInterface.OnClickListener, titleid: Int) {
-    val show = Config.showConfirmationDialogs
-
+fun showConfirmationDialog(cxt:        Context,
+                           msgid:      Int,
+                           okListener: DialogInterface.OnClickListener,
+                           titleid:    Int) {
     val builder = AlertDialog.Builder(cxt)
     builder.setTitle(titleid)
+    showConfirmationDialog(msgid, okListener, builder)
+}
+
+fun showConfirmationDialog(cxt:        Context,
+                           msgid:      Int,
+                           okListener: DialogInterface.OnClickListener,
+                           title:      CharSequence) {
+    val builder = AlertDialog.Builder(cxt)
+    builder.setTitle(title)
+    showConfirmationDialog(msgid, okListener, builder)
+}
+
+private fun showConfirmationDialog(msgid:      Int,
+                           okListener: DialogInterface.OnClickListener,
+                           builder:    AlertDialog.Builder) {
+    val show = Config.showConfirmationDialogs
     builder.setMessage(msgid)
     builder.setPositiveButton(android.R.string.ok, okListener)
     builder.setNegativeButton(android.R.string.cancel, null)
@@ -515,13 +531,10 @@ private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: St
     val date = dateString.toDateTime() ?: return null
     val now = DateTime.today(TimeZone.getDefault())
     val days= date.numDaysFrom(now)
-
-    val months = days/ 31
-    val weeks = days/ 7
-    val years = days/ 365
-
+    val months = days/31
+    val weeks = days/7
+    val years = days/365
     val s = when {
-        !date.lteq(now) -> date.toString()
         years==1  -> app.getString(R.string.dates_one_year_ago)
         years>1   -> app.getString(R.string.dates_years_ago, years)
         months==1 -> app.getString(R.string.dates_one_month_ago)
@@ -531,17 +544,20 @@ private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: St
         days==1   -> app.getString(R.string.dates_one_day_ago)
         days>1    -> app.getString(R.string.dates_days_ago, days)
         days==0   -> app.getString(R.string.dates_today)
+        days==-1   -> app.getString(R.string.dates_tomorrow)
         else      -> date.toString()
     }
 
     val ss = SpannableString(prefix + s)
 
     if (Config.hasColorDueDates && prefix=="Due: ") {
-        val dueTodayColor = ContextCompat.getColor(app, android.R.color.holo_green_light)
-        val overDueColor = ContextCompat.getColor(app, android.R.color.holo_red_light)
+        val dueTodayColor = ContextCompat.getColor(app, R.color.simple_green_light)
+        val overDueColor = ContextCompat.getColor(app, R.color.simple_red_light)
+        val dueTomorrowColor = ContextCompat.getColor(app, R.color.simple_blue_light)
         when {
             days==0        -> setColor(ss, dueTodayColor)
             date.lteq(now) -> setColor(ss, overDueColor)
+            days==-1       -> setColor(ss, dueTomorrowColor)
         }
     }
 
