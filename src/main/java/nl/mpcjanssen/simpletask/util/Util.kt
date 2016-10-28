@@ -72,12 +72,28 @@ fun getString (resId : Int) : String {
     return TodoApplication.app.getString(resId)
 }
 
-fun showConfirmationDialog(cxt: Context, msgid: Int,
-                           okListener: DialogInterface.OnClickListener, titleid: Int) {
-    val show = Config.showConfirmationDialogs
-
+fun showConfirmationDialog(cxt:        Context,
+                           msgid:      Int,
+                           okListener: DialogInterface.OnClickListener,
+                           titleid:    Int) {
     val builder = AlertDialog.Builder(cxt)
     builder.setTitle(titleid)
+    showConfirmationDialog(msgid, okListener, builder)
+}
+
+fun showConfirmationDialog(cxt:        Context,
+                           msgid:      Int,
+                           okListener: DialogInterface.OnClickListener,
+                           title:      CharSequence) {
+    val builder = AlertDialog.Builder(cxt)
+    builder.setTitle(title)
+    showConfirmationDialog(msgid, okListener, builder)
+}
+
+private fun showConfirmationDialog(msgid:      Int,
+                           okListener: DialogInterface.OnClickListener,
+                           builder:    AlertDialog.Builder) {
+    val show = Config.showConfirmationDialogs
     builder.setMessage(msgid)
     builder.setPositiveButton(android.R.string.ok, okListener)
     builder.setNegativeButton(android.R.string.cancel, null)
