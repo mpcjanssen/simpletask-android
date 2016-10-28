@@ -796,7 +796,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
             R.id.context_archive -> archiveTasks(checkedTasks)
-            R.id.context_calendar -> createCalendarAppointment(checkedTasks)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> FileStore.sync()
