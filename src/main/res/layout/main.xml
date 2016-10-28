@@ -31,23 +31,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 >
-                <View
-                    android:id="@+id/pendingchanges"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="#FF0000"
-                    android:visibility="gone"
-                    android:elevation="3dp"
-                    tools:ignore="UnusedAttribute"/>
-                <View
-                    android:id="@+id/offline"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/simple_orange_light"
-                    android:visibility="gone"
-                    android:elevation="3dp"
-                    tools:ignore="UnusedAttribute"
-                    />
                 <LinearLayout
                     android:id="@+id/filtered_view"
                     android:layout_width="match_parent"
