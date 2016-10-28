@@ -41,12 +41,6 @@ You should have received a copy of the GNU General Public License along with Tod
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/context_calendar"
-        android:title="@string/add_to_calendar"
-        android:icon="@drawable/ic_insert_invitation_white_24dp"
-        app:showAsAction="always"
-        />
-    <item
         android:id="@+id/context_archive"
         android:title="@string/archive"
         android:icon="@drawable/ic_archive_white_24dp"
