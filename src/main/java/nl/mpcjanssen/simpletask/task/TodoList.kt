@@ -368,8 +368,10 @@ object TodoList {
 
     fun selectLine(line : Long ) {
         val item = todoItemsDao.load(line)
-        item.selected = true
-        todoItemsDao.update(item)
+        item?.let {
+            item.selected = true
+            todoItemsDao.update(item)
+        }
     }
 
 
