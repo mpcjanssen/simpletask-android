@@ -225,6 +225,11 @@ object TodoList {
             return selectionQuery.list()
         }
 
+    var completedTasks: List<TodoItem> = ArrayList()
+        get() {
+            return todoItems.filter { it.task.isCompleted() }
+        }
+
 
     fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
@@ -304,15 +309,11 @@ object TodoList {
         todoItemsDao.updateInTx(items)
     }
 
-    fun archive(todoFilename: String, doneFileName: String, tasks: List<TodoItem>?, eol: String) {
+    fun archive(todoFilename: String, doneFileName: String, tasks: List<TodoItem>, eol: String) {
         ActionQueue.add("Archive", Runnable {
-            val items = todoItems
-            val tasksToArchive = tasks ?: items
-
-            val completedTasks = tasksToArchive.filter { it.task.isCompleted() }
             try {
-                FileStore.appendTaskToFile(doneFileName, completedTasks.map { it.task.text }, eol)
-                todoItemsDao.deleteInTx(completedTasks)
+                FileStore.appendTaskToFile(doneFileName, tasks.map { it.task.text }, eol)
+                todoItemsDao.deleteInTx(tasks)
                 notifyChanged(todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
