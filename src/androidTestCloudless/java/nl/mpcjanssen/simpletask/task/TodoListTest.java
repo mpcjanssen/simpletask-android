@@ -1,5 +1,7 @@
 package nl.mpcjanssen.simpletask.task;
 
+import android.support.test.filters.SmallTest;
+import android.support.test.runner.AndroidJUnit4;
 import nl.mpcjanssen.simpletask.dao.Daos;
 import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem;
 import org.junit.Before;
