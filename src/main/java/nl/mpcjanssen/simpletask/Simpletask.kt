@@ -1388,6 +1388,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     TodoList.selectTodoItem(item)
                 } else {
                     TodoList.unSelectTodoItem(item)
+                    m_adapter?.setFilteredTasks()
                 }
                 it.isActivated = newSelectedState
                 invalidateOptionsMenu()
