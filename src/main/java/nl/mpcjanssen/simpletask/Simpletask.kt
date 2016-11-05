@@ -664,9 +664,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun completeTasks(tasks: List<TodoItem>) {
-        for (t in tasks) {
-            TodoList.complete(t, Config.hasKeepPrio, Config.hasAppendAtEnd)
-        }
+        TodoList.complete(tasks, Config.hasKeepPrio, Config.hasAppendAtEnd)
         if (Config.isAutoArchive) {
             archiveTasks()
         }
