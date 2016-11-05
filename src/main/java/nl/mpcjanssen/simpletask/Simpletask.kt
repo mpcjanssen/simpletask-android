@@ -301,7 +301,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show search or filter results
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
-            TodoList.clearSelection()
             mFilter!!.initFromIntent(intent)
             log.info(TAG, "handleIntent: launched with filter" + mFilter!!)
             val extras = intent.extras
@@ -325,16 +324,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             mFilter!!.initFromPrefs(Config.prefs)
         }
 
-        // If we were started from the widget, select the pushed task
-        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-            val line = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
-            intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-            setIntent(intent)
-            if (!line.equals(-1)) {
-                TodoList.clearSelection()
-                TodoList.selectLine(line)
-            }
-        }
         // Initialize Adapter
         if (m_adapter == null) {
             m_adapter = TaskAdapter(layoutInflater)
