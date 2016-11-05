@@ -325,6 +325,16 @@ class Simpletask : ThemedNoActionBarActivity() {
             mFilter!!.initFromPrefs(Config.prefs)
         }
 
+        // If we were started from the widget, select the pushed task
+        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
+            val line = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+            intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
+            setIntent(intent)
+            if (!line.equals(-1)) {
+                TodoList.clearSelection()
+                TodoList.selectLine(line)
+            }
+        }
         // Initialize Adapter
         if (m_adapter == null) {
             m_adapter = TaskAdapter(layoutInflater)

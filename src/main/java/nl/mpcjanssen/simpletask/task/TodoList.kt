@@ -371,7 +371,5 @@ object TodoList {
             todoItemsDao.update(item)
         }
     }
-
-
 }
 
