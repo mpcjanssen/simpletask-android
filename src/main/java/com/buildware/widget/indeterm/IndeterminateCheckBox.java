@@ -222,23 +222,4 @@ public class IndeterminateCheckBox extends AppCompatCheckBox
             }
         };
     }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-
-        SavedState ss = new SavedState(superState);
-
-        ss.indeterminate = getState();
-        return ss;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = (SavedState) state;
-
-        super.onRestoreInstanceState(ss.getSuperState());
-        setState(ss.indeterminate);
-        requestLayout();
-    }
 }
