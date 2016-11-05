@@ -474,7 +474,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 inflater.inflate(R.menu.task_context, toolbar.menu)
 
                 val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
-                val cb = cbItem.actionView as IndeterminateCheckBox
+                val cb = cbItem.actionView.findViewById(R.id.indeterm_checkbox) as IndeterminateCheckBox
                 val selectedTasks = TodoList.selectedTasks
                 val initialCompleteTasks = ArrayList<TodoItem>()
                 val initialIncompleteTasks = ArrayList<TodoItem>()
@@ -493,14 +493,26 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                 cb.setIndeterminateUsed(cbState==null)
                 cb.state = cbState
-                cb.setOnStateChangedListener { indeterminateCheckBox, b ->
-                    when (b) {
-                        true -> completeTasks(selectedTasks)
-                        false -> uncompleteTasks(selectedTasks)
-                        null -> {
-                            completeTasks(initialCompleteTasks)
-                            uncompleteTasks(initialIncompleteTasks)
-                        }
+                val completionView = cb.parent as RelativeLayout
+                completionView.setOnClickListener { view ->
+                    log.info(TAG, "Clicked on completion checkbox, state: ${cbState}")
+                    when (cbState) {
+                        false -> completeTasks(selectedTasks)
+                        true -> uncompleteTasks(selectedTasks)
+                      null -> {
+                          val popup = PopupMenu(this, view)
+                          val inflater = popup.menuInflater
+                          inflater.inflate(R.menu.completion_popup, popup.menu)
+                          popup.show()
+                          popup.setOnMenuItemClickListener { item ->
+                              val menuId = item.itemId
+                              when (menuId) {
+                                  R.id.complete -> completeTasks(selectedTasks)
+                                  R.id.uncomplete -> uncompleteTasks(selectedTasks)
+                              }
+                              return@setOnMenuItemClickListener true
+                          }
+                      }
                     }
                 }
 
