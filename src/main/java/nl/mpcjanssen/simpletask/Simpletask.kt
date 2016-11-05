@@ -132,6 +132,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                             return
                         }
                         m_adapter!!.setFilteredTasks()
+                        invalidateOptionsMenu()
                         updateDrawers()
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
                         showListViewProgress(true)
@@ -478,7 +479,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val initialCompleteTasks = ArrayList<TodoItem>()
                 val initialIncompleteTasks = ArrayList<TodoItem>()
                 var cbState: Boolean?
-                cbState = selectedTasks.get(0).task.isCompleted()
+                cbState = selectedTasks.getOrNull(0)?.task?.isCompleted()
 
                 selectedTasks.forEach {
                     if (it.task.isCompleted()) {
