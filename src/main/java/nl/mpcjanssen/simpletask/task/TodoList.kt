@@ -176,21 +176,17 @@ object TodoList {
     }
 
     fun complete(items: List<TodoItem>, keepPrio: Boolean, extraAtEnd: Boolean) {
-        for (item in items) {
-            complete(item, keepPrio, extraAtEnd)
-        }
-    }
-
-    fun complete(item: TodoItem, keepPrio: Boolean, extraAtEnd: Boolean) {
         ActionQueue.add("Complete", Runnable {
-            val task = item.task
-            val extra = task.markComplete(todayAsString)
-            todoItemsDao.update(item)
-            if (extra != null) {
-                add(extra, extraAtEnd)
-            }
-            if (!keepPrio) {
-                task.priority = Priority.NONE
+            for (item in items) {
+                val task = item.task
+                val extra = task.markComplete(todayAsString)
+                todoItemsDao.update(item)
+                if (extra != null) {
+                    add(extra, extraAtEnd)
+                }
+                if (!keepPrio) {
+                    task.priority = Priority.NONE
+                }
             }
         })
     }
