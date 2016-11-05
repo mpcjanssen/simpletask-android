@@ -218,7 +218,7 @@ object TodoList {
     val selectionQuery : Query<TodoItem> = todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).build()
     var selectedTasks: List<TodoItem> = ArrayList()
         get() {
-            return selectionQuery.list()
+            return selectionQuery.forCurrentThread().list()
         }
 
     var completedTasks: List<TodoItem> = ArrayList()
@@ -229,6 +229,8 @@ object TodoList {
 
     fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
+        // TODO: Make this a setting
+        clearSelection()
         ActionQueue.add("Notified changed", Runnable {
             if (save) {
                 save(FileStore, todoName, backup, eol)
