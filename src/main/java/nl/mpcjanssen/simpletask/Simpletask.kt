@@ -494,7 +494,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 cb.state = cbState
                 val completionView = cb.parent as RelativeLayout
                 completionView.setOnClickListener { view ->
-                    log.info(TAG, "Clicked on completion checkbox, state: ${cbState}")
+                    log.info(TAG, "Clicked on completion checkbox, state: $cbState")
                     when (cbState) {
                         false -> completeTasks(selectedTasks)
                         true -> uncompleteTasks(selectedTasks)
@@ -700,7 +700,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             titleId = R.string.defer_threshold
         }
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
-            /* Supress showCalendar deprecation message. It works fine on older devices
+            /* Suppress showCalendar deprecation message. It works fine on older devices
              * and newer devices don't really have an alternative */
             @Suppress("DEPRECATION")
             override fun onClick(input: String) {
@@ -735,7 +735,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun deleteTasks(tasks: List<TodoItem>) {
         val numTasks = tasks.size
-        var title = getString(R.string.delete_task_title)
+        val title = getString(R.string.delete_task_title)
                     .replaceFirst(Regex("%s"), numTasks.toString())
         val delete = DialogInterface.OnClickListener { dialogInterface, i ->
             for (t in tasks) {
@@ -760,7 +760,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         if (showDialog) {
             val numTasks = tasks.size.toString()
-            var title = getString(R.string.archive_task_title)
+            val title = getString(R.string.archive_task_title)
                          .replaceFirst(Regex("%s"), numTasks)
             val archive = DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }
             showConfirmationDialog(this, R.string.delete_task_message, archive, title)
@@ -923,7 +923,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             FileStore.writeFile(exportFile,jsonFilters.toString(2))
 	    showToastShort(this, "Filters exported")
 	} catch (e: Exception) {
-            log.error(TAG, "Export filteres failed", e)
+            log.error(TAG, "Export filters failed", e)
 	    showToastLong(this, "Error exporting filters")
         }
     }
@@ -1666,9 +1666,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Config.listTerm,
                 checkedTasks,
                 sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive, null),
-                {task -> task.lists},
-                {task, list -> task.addList(list)},
-                {task, list -> task.removeList(list)}
+                Task::lists,
+                Task::addList,
+                Task::removeList
         )
     }
 
@@ -1677,9 +1677,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Config.tagTerm,
                 checkedTasks,
                 sortWithPrefix(TodoList.projects, Config.sortCaseSensitive, null),
-                {task -> task.tags},
-                {task, tag -> task.addTag(tag)},
-                {task, tag -> task.removeTag(tag)}
+                Task::tags,
+                Task::addTag,
+                Task::removeTag
         )
     }
 
