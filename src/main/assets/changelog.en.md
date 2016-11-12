@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+8.3.1
+-----
+
+- Add testing of Lua callbacks besides `onFilter`.
+- Merged: Code and changes and UI tweaks. (smichel17)
+- Merged: AddTask cursor placement consistency (smichel17). Fixes #651.
+- Reverted, show selected tasks regardless of filter until a proper way to implement it is done.
+- Changed behavior of completion checkbox with multiple tasks selected.
+- Select tasks when clicking on widget. Fixes #681.
+
 8.3.0
 -----
 
