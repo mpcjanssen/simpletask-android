@@ -500,8 +500,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                         true -> uncompleteTasks(selectedTasks)
                       null -> {
                           val popup = PopupMenu(this, view)
-                          val inflater = popup.menuInflater
-                          inflater.inflate(R.menu.completion_popup, popup.menu)
+                          val menuInflater = popup.menuInflater
+                          menuInflater.inflate(R.menu.completion_popup, popup.menu)
                           popup.show()
                           popup.setOnMenuItemClickListener { item ->
                               val menuId = item.itemId
