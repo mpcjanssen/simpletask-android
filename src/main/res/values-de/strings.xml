@@ -135,7 +135,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="share_task_show_edit_pref_title">Geteilte Aufgabe editieren</string>
     <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben.
-        Deaktiere dies für die Speicherung einer geteilten Aufgabe ohne Veränderung.</string>
+ Deaktiviere dies für die Speicherung einer geteilten Aufgabe ohne Veränderung.</string>
 
     <string name="menu_capitalize_tasks">Beginne neue Aufgaben mit Großbuchstaben</string>
     <string name="back_saves_pref_title">Zurück-Schaltfläche</string>
