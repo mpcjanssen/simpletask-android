@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -24,7 +24,6 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2013 Mark Janssen
 @copyright 2015 Vojtech Kral
 -->
-
 <!--suppress ALL -->
 <resources>
     <string name="invalid_context">Ungültiger Listenname</string>
@@ -380,7 +379,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_history">Anzeigen und weitergeben der internen Datenbank zur Wiedererstellung.</string>
     <string name="share_history_title">Todo-Verlauf</string>
     <string name="task_action">Aktion</string>
-    <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert!</string>
+    <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert.</string>
     <string name="by_completion_date">Nach Fertigstellungsdatum</string>
     <string name="clear_database">Datenbank leeren</string>
     <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
