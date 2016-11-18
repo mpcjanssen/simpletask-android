@@ -1,17 +1,11 @@
 package nl.mpcjanssen.simpletask.remote
 
-
 import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Environment
-import android.os.FileObserver
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -30,8 +24,8 @@ object FileStore : FileStoreInterface {
         return File(filename).lastModified().toString()
     }
 
-    override fun needsRefresh(currentVersion : String?): Boolean {
-        return currentVersion?.toLong() ?: 0  < Config.todoFile.lastModified()
+    override fun needsRefresh(currentVersion: String?): Boolean {
+        return currentVersion?.toLong() ?: 0 < Config.todoFile.lastModified()
     }
 
     override val isOnline = true
@@ -94,7 +88,7 @@ object FileStore : FileStoreInterface {
         } finally {
             isLoading = false
         }
-        setWatching(path)
+        setWatching(TodoApplication.app, path)
         return result
     }
 
@@ -102,7 +96,7 @@ object FileStore : FileStoreInterface {
 
     }
 
-    override fun writeFile(file: File, contents: String ) {
+    override fun writeFile(file: File, contents: String) {
         log.info(TAG, "Writing file to  ${file.canonicalPath}")
         file.writeText(contents)
     }
@@ -110,7 +104,7 @@ object FileStore : FileStoreInterface {
     override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
         log.info(TAG, "Reading file: {}" + file)
         isLoading = true
-        val contents : String
+        val contents: String
         val lines = File(file).readLines()
         contents = join(lines, "\n")
         isLoading = false
@@ -131,20 +125,14 @@ object FileStore : FileStoreInterface {
 
     }
 
-    @Synchronized private fun setWatching(path: String) {
+    @Synchronized private fun setWatching(caller: Context, path: String) {
 
-        log.info(TAG, "Observer: adding {} " + File(path).parentFile.absolutePath)
-        val obs = observer
-        if (obs != null && path == obs.path) {
-            log.warn(TAG, "Observer: already watching: {}")
-            return
-        } else if (obs != null) {
-            log.warn(TAG, "Observer: already watching different path: {}" + obs.path)
-            obs.ignoreEvents(true)
-            obs.stopWatching()
-        }
-        observer = TodoObserver(path)
-        log.info(TAG, "Observer: modifying done")
+        log.info(TAG, "Starting observe service on $path")
+        val i = Intent(caller, FileWatchService::class.java)
+        i.putExtra(FileWatchService.pathExtra, path)
+        caller.startService(i)
+
+
     }
 
     override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
@@ -153,7 +141,7 @@ object FileStore : FileStoreInterface {
         dialog.createFileDialog(act, this)
     }
 
-    @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean) {
+    @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean) {
         log.info(TAG, "Saving tasks to file: {}" + path)
         backup?.backup(path, join(lines, "\n"))
         val obs = observer
@@ -167,7 +155,7 @@ object FileStore : FileStoreInterface {
                 }
 
             } catch (e: IOException) {
-                log.error(TAG, "Saving $path failed" ,e)
+                log.error(TAG, "Saving $path failed", e)
                 e.printStackTrace()
             } finally {
                 obs?.delayedStartListen(1000)
@@ -311,63 +299,100 @@ object FileStore : FileStoreInterface {
     }
 
     override fun logout() {
+
+    }
+    fun getDefaultPath(): String {
+        return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
+    }
+}
+
+class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
+    private val TAG = "FileWatchService"
+    private val bm: LocalBroadcastManager = LocalBroadcastManager.getInstance(TodoApplication.app)
+    private val fileName: String
+    private var log = Logger
+    private var ignoreEvents: Boolean = false
+    private val handler: Handler
+
+    private val delayedEnable = Runnable {
+        log.info(TAG, "Observer: Delayed enabling events for: " + path)
+        ignoreEvents(false)
     }
 
-    private class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
-        private val fileName: String
-        private var log =  Logger
-        private var ignoreEvents: Boolean = false
-        private val handler: Handler
+    init {
+        this.startWatching()
+        this.fileName = File(path).name
+        log.info(TAG, "Observer: creating observer on: {}")
+        this.ignoreEvents = false
+        this.handler = Handler(Looper.getMainLooper())
 
-        private val delayedEnable = Runnable {
-            log.info(TAG, "Observer: Delayed enabling events for: " + path)
-            ignoreEvents(false)
-        }
+    }
 
-        init {
-            this.startWatching()
-            this.fileName = File(path).name
-            log.info(TAG, "Observer: creating observer on: {}")
-            this.ignoreEvents = false
-            this.handler = Handler(Looper.getMainLooper())
+    fun ignoreEvents(ignore: Boolean) {
+        log.info(TAG, "Observer: observing events on " + this.path + "? ignoreEvents: " + ignore)
+        this.ignoreEvents = ignore
+    }
 
-        }
-
-        fun ignoreEvents(ignore: Boolean) {
-            log.info(TAG, "Observer: observing events on " + this.path + "? ignoreEvents: " + ignore)
-            this.ignoreEvents = ignore
-        }
-
-        override fun onEvent(event: Int, eventPath: String?) {
-            if (eventPath != null && eventPath == fileName) {
-                log.debug(TAG, "Observer event: $path:$event")
-                if (event == FileObserver.CLOSE_WRITE ||
-                        event == FileObserver.MODIFY ||
-                        event == FileObserver.MOVED_TO) {
-                    if (ignoreEvents) {
-                        log.info(TAG, "Observer: ignored event on: " + path)
-                    } else {
-                        log.info(TAG, "File changed {}" + path)
-                        broadcastFileChanged(bm)
-                    }
+    override fun onEvent(event: Int, eventPath: String?) {
+        if (eventPath != null && eventPath == fileName) {
+            log.debug(TAG, "Observer event: $path:$event")
+            if (event == FileObserver.CLOSE_WRITE ||
+                    event == FileObserver.MODIFY ||
+                    event == FileObserver.MOVED_TO) {
+                if (ignoreEvents) {
+                    log.info(TAG, "Observer: ignored event on: " + path)
+                } else {
+                    log.info(TAG, "File changed {}" + path)
+                    broadcastFileChanged(bm)
                 }
             }
-
         }
 
-        fun delayedStartListen(ms: Int) {
-            // Cancel any running timers
-            handler.removeCallbacks(delayedEnable)
-            // Reschedule
-            log.info(TAG, "Observer: Adding delayed enabling to queue")
-            handler.postDelayed(delayedEnable, ms.toLong())
-        }
+    }
+
+    fun delayedStartListen(ms: Int) {
+        // Cancel any running timers
+        handler.removeCallbacks(delayedEnable)
+        // Reschedule
+        Logger.info(TAG, "Observer: Adding delayed enabling to queue")
+        handler.postDelayed(delayedEnable, ms.toLong())
     }
 
 
+}
 
-        fun getDefaultPath(): String {
-            return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
+class FileWatchService : Service() {
+    var observer: TodoObserver? = null
+    val TAG = "FileWatchService"
+
+    override fun onBind(p0: Intent?): IBinder {
+        throw UnsupportedOperationException("not implemented")
+    }
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Logger.info(TAG, "Received start id $startId: $intent")
+        val path =  intent.getStringExtra(pathExtra)
+        Logger.info(TAG, "Path = $path")
+        setWatching(path)
+        return Service.START_STICKY
+    }
+
+    @Synchronized private fun setWatching(path: String) {
+        Logger.info(TAG, "Observer: adding folder watcher on ${File(path).parentFile.absolutePath}")
+        val obs = observer
+        if (obs != null && path == obs.path) {
+            Logger.warn(TAG, "Observer: already watching: $path")
+            return
+        } else if (obs != null) {
+            Logger.warn(TAG, "Observer: already watching different path: ${obs.path}")
+            obs.ignoreEvents(true)
+            obs.stopWatching()
         }
+        observer = TodoObserver(path)
+        Logger.info(TAG, "Observer: modifying done")
+    }
 
+    companion object {
+        val pathExtra = "path"
+    }
 }

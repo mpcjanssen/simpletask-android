@@ -30,5 +30,8 @@ You should have received a copy of the GNU General Public License along with Sim
 	    android:authorities="${applicationId}.provider.${providerFlavour}" tools:ignore="ExportedContentProvider">
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
+
+        <service android:name="nl.mpcjanssen.simpletask.remote.FileWatchService"
+        android:exported="false"/>
     </application>
 </manifest>
