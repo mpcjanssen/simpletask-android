@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -26,7 +25,6 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2015 Vojtech Kral
 -->
 <!--suppress ALL -->
-
 <resources>
     <string name="invalid_context">Invalid list name</string>
     <string name="invalid_project">Invalid tag name</string>
@@ -85,17 +83,20 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="filter_name_empty">No name specified, not adding filter</string>
     <string name="widget_name_empty">No widget name specified, not adding widget</string>
-    <string name="add_task_help">Add or update a task to the task list. When adding tasks,
-        each line is a separate task for quick adding.\n
-        <b>Priority</b>\n
-        start the line with (.), like (A)\n
-        <b>Tags</b>
-        start with a + sign, like +Kitchen\n
-        <b>Lists</b>
-        start with an @ sign, like @home\n
-        A task can include any number of tags or be on multiple
-        lists.
-    </string>
+    <string name="add_task_help">Add or update a task to the task list. When adding tasks, each line is a separate task for quick adding.
+
+ <b>Priority</b>
+
+ start the line with (.), like (A)
+
+ <b>Tags</b>
+ start with a + sign, like +Kitchen
+
+ <b>Lists</b>
+ start with an @ sign, like @home
+
+ A task can include any number of tags or be on multiple lists.
+ </string>
 
     <!-- other_preferences -->
     <string name="preference_appearance">Appearance</string>
@@ -130,8 +131,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="todotxt_behavior_settings_header">Behavior</string>
     <string name="todotxt_settings_summary">Application wide settings</string>
     <string name="sort_complete_last_pref_title">Show completed last</string>
-    <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list
-    </string>
+    <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list</string>
     <string name="keep_prio_header">Keep priority in completed tasks</string>
     <string name="keep_prio_summary">Todo.txt removes priority on completion</string>
     <string name="prepend_date_pref_title">Date new tasks</string>
