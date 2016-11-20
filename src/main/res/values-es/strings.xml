@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="share_task_show_edit_pref_title">Editar tarea compartida</string>
-    <string name="share_task_show_edit_summary">Permitir editar una tarea compartida (recibida) antes de salvarla.
-    Deseleccione esto para que la tarea compartida se almacene sin intervención.</string>
+    <string name="share_task_show_edit_summary">Editar tareas compartidas a Simpletask antes de guardarlas</string>
 
     <string name="menu_capitalize_tasks">Poner mayúscula a las tareas nuevas</string>
     <string name="back_saves_pref_title">Botón atrás</string>
@@ -18,7 +17,7 @@
     <string name="calendar_reminder_days_title">Anticipación de recordatorios</string>
     <string name="calendar_reminder_days_summary">Cuántos días antes de la fecha de vencimiento/umbral debe establecerse el recordatorio.</string>
     <string name="calendar_reminder_time_title">Hora de recordatorios</string>
-    <string name="calendar_reminder_time_summary">A que hora de día debe establecerse el recordatorio.</string>
+    <string name="calendar_reminder_time_summary">A qué hora del día debe establecerse el recordatorio</string>
 
     <string name="drawer_fixed_landscape_title">Abrir apartados apaisados</string>
     <string name="drawer_fixed_landscape_summary">Siempre abrir los apartados en modo apaisado.</string>
@@ -31,7 +30,7 @@
     <string name="widget_background_transparency_title">Transparencia del fondo de los widgets</string>
 
     <string name="widget_extended_pref_title">Widget extendido</string>
-    <string name="widget_extended_pref_summary">Mostrar las tareas en el widget con una línea separada para las fechas.</string>
+    <string name="widget_extended_pref_summary">Mostrar fechas en una línea separada</string>
 
     <string name="color_due_pref_title">Color de fechas de vencimiento</string>
     <string name="color_due_pref_summary">Color de las fechas de vencimiento basado en si vencen hoy, en el futuro o ya vencidas.</string>
@@ -226,4 +225,201 @@
 
     <!-- Spanish Help localisation -->
     <string name="help_locale">es</string>
+<string name="invalid_project">Nombre de etiqueta no válido</string>
+    <string name="app_label">Simpletask</string>
+    <string name="invalid_context">Nombre de lista no válido</string>
+    <string name="added_task">Tarea agregada</string>
+    <string name="add_task_failed">No se pudo agregar la tarea</string>
+    <string name="save_task">Guardar tarea</string>
+    <string name="update_task_failed">No se pudo actualizar la tarea</string>
+    <string name="sort">Ordenar</string>
+    <string name="script">Script</string>
+    <string name="filter">Filtro</string>
+    <string name="main_no_items">No hay tareas para mostrar.</string>
+    <string name="set_preferences">Configuración</string>
+    <string name="preferences">Configuración</string>
+    <string name="archive">Archivar</string>
+    <string name="help">Ayuda</string>
+    <string name="history">Historial</string>
+    <string name="debug_info">Información de depuración</string>
+    <string name="log">Registro</string>
+    <string name="next">Siguiente</string>
+    <string name="prev">Anterior</string>
+    <string name="open_file">Abrir archivo \"todo\"</string>
+    <string name="sync">Refrescar</string>
+    <string name="changelist">Seleccionar una lista</string>
+    <string name="search">Buscar</string>
+    <string name="add">Agregar</string>
+    <string name="task">Tarea</string>
+    <string name="addtask">Agregar una tarea</string>
+    <string name="updatetask">Actualizar tarea</string>
+    <string name="viewtask">Ver Tarea</string>
+    <string name="clear_database">Borrar base de datos</string>
+    <string name="done">Completar</string>
+    <string name="priority">Priorizar</string>
+    <string name="select_priority">Seleccionar prioridad</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="add_list_or_tag">Agregar listas y tareas</string>
+    <string name="update_lists">Actualizar listas</string>
+    <string name="update_tags">Actualizar etiquetas</string>
+    <string name="remove_list_or_tag">Quitar listas y tareas</string>
+    <string name="update">Actualizar</string>
+    <string name="delete">Borrar</string>
+    <string name="defer_due">Establecer fecha(s) de vencimiento</string>
+    <string name="defer_threshold">Establecer fecha(s) de vencimiento</string>
+    <string name="insert_due">Insertar fecha de vencimiento</string>
+    <string name="insert_threshold">Insertar fecha umbral</string>
+    <string name="share">Compartir</string>
+    <string name="share_database">Compartir base de datos</string>
+    <string name="unComplete">Deshacer completada</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="clear_filter">Quitar filtro</string>
+    <string name="write_failed">¡Error al escribir el archivo! Sus cambios NO fueron guardados.</string>
+
+    <string name="tasktexthint">\@Discutir con +Héctor la cuestión de +París @Troy.
+Decirle a +Héctor que no sea un pesado @Troy.
+Buscar en las configuraciones de +Simpletask cómo quitar este texto @Teléfono</string>
+
+    <string name="filter_name_empty">Nombre no especificado. No se agregó el filtro</string>
+    <string name="widget_name_empty">Nombre no especificado. No se agregó el widget</string>
+    <string name="add_task_help">Agregar o actualizar una tarea en la lista de tareas. Al agregar tareas, para una adición rápida, cada línea corresponde a una tarea por separado.
+ 
+<b>Prioridad</b>
+Al comienzo de la línea con (.), como en (A)
+
+<b>Etiquetas</b>
+Comienzan con un signo +, como en +Cocina
+
+<b>Listas</b>
+Comienzan con un signo @, como en @Casa
+
+Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas.
+ </string>
+
+    <string name="preference_appearance">Apariencia</string>
+    <string name="preference_interface">Interfaz</string>
+    <string name="preference_widget">Widget</string>
+    <string name="preference_other">Otras configuraciones</string>
+
+    <string name="ARCHIVE_settings_header">Archivar</string>
+    <string name="ARCHIVE_settings_summary">Configuración para el archivado de tareas completadas en done.txt</string>
+    <string name="auto_archive_pref_title">Archivado automático</string>
+    <string name="auto_archive_pref_summary">Archivar tareas inmediatamente al completarlas.</string>
+    <string name="archive_now_pref_title">Archivar ahora</string>
+    <string name="archive_now_pref_summary">Mover tareas completadas desde todo.txt hacia done.txt.</string>
+    <string name="dropbox_logout_pref_title">Cerrar sesión</string>
+    <string name="dropbox_logout_pref_summary">Cerrar sesión de Dropbox.</string>
+    <string name="TODOTXTPATH_title">Ubicación del archivo</string>
+    <string name="TODOTXTPATH_summary">La carpeta de Dropbox donde se almacena todo.txt.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Configuración de la sincronización con Dropbox</string>
+
+    <string name="todotxt_features_settings_header">Características</string>
+    <string name="todotxt_features_settings_summary">Habilitar o deshabilitar características</string>
+
+    <string name="todotxt_configuration_settings_header">Configuración</string>
+    <string name="todotxt_configuration_settings_summary">Configurar el comportamiento de la aplicación</string>
+
+    <string name="todotxt_creation_settings_header">Creación de tareas</string>
+
+    <string name="todotxt_ui_settings_header">Características</string>
+    <string name="todotxt_ui_settings_summary">Controlar lo que se muestra</string>
+    <string name="todotxt_behavior_settings_header">Funcionamiento</string>
+    <string name="todotxt_settings_summary">Configuración general de la aplicación</string>
+    <string name="sort_complete_last_pref_title">Mostrar completadas al final</string>
+    <string name="sort_complete_last_pref_summary">Mostrar siempre las tareas completadas al final de la lista</string>
+    <string name="keep_prio_header">Mantener prioridad en tareas completadas</string>
+    <string name="keep_prio_summary">Todo.txt elimina la prioridad al completar la tarea</string>
+    <string name="prepend_date_pref_title">Fecha de tareas nuevas</string>
+    <string name="prepend_date_pref_summary">Agregar automáticamente fecha de creación</string>
+    <string name="line_breaks_pref_title">Saltos de línea al estilo Windows</string>
+    <string name="line_breaks_pref_summary">Usar saltos de línea al estilo de Windows</string>
+    <string name="recur_from_original_date_pref_title">Tareas recurrentes utilizando las fechas originales</string>
+    <string name="recur_from_original_date_pref_summary">Incrementar las fechas originales de la tarea al crear tareas recurrentes.
+Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string>
+    <string name="swipe_complete_pref_title">Deslizar para completar</string>
+    <string name="swipe_complete_pref_summary">Deslizar sobre una tarea para completarla.</string>
+    <string name="manual_sync_pref_title">Sincronización manual</string>
+    <string name="manual_sync_pref_summary">No subir automáticamente a Dropbox cada cambio.</string>
+    <string name="resume_sync_pref_title">Reanudar la sincronización</string>
+    <string name="resume_sync_pref_summary">Sincronizar con Dropbox al iniciar la aplicación.</string>
+    <string name="font_size_delta_pref_title">Personalizar el tamaño de fuente</string>
+    <string name="datebar_relative_size_summary">Tamaño de la barra de fechas relativo</string>
+    <string name="font_size_delta_pref_summary">Cambiar el tamaño de la fuente.</string>
+    <string name="theme_pref_title">Tema</string>
+    <string name="theme_pref_summary">Cambiar el tema utilizado por la aplicación.</string>
+
+    <string name="share_task_append_text_title">Texto al compartir</string>
+    <string name="share_task_append_text_summary">Agregar \"%s\" s tareas agregadas en segundo plano.</string>
+
+    <string name="local_file_root_title">Directorio raíz</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="task_text_ellipsizing_pref_title">Abreviación del texto de la tarea</string>
+    <string name="cleartask"/>
+    <string name="task_text_ellipsizing_pref_summary">Acortar el texto de la tarea en la ventana principal si ocupa más de dos líneas.</string>
+
+    <string name="taskview_extended_pref_title">Mostrar barra de fechas</string>
+    <string name="taskview_extended_pref_summary">Mostrar fechas en una línea separada</string>
+
+    <string name="append_tasks_at_end_title">Añadir al archivo</string>
+    <string name="append_tasks_at_end_summary">Insertar tareas nuevas al final del archivo</string>
+
+    <string name="show_todo_path_title">Mostrar ruta al archivo todo</string>
+    <string name="show_todo_path_summary">Los nombres de directorios son abreviados a su primera letra</string>
+
+    <string name="show_fast_scroll_title">Desplazamiento rápido</string>
+    <string name="show_fast_scroll_summary">Usar desplazamiento rápido si la lista de tareas se hace más larga</string>
+
+    <string name="use_create_as_threshold_title">Fecha de creación es la fecha umbral</string>
+    <string name="use_create_backup_summary">Al ordenar, usar la fecha de creación de la tarea como fecha umbral si ésta no está establecida</string>
+
+    <string name="todotxt_terms_title">Usar términos todo.txt</string>
+    <string name="todotxt_terms_summary">Contexto y proyecto en lugar de lista y etiqueta</string>
+
+    <string name="preference_title_debug_info">Ver registro de depuración</string>
+    <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación.</string>
+
+    <string name="login_folder_screen_button">Iniciar sesión en Dropbox
+(Acceso a la carpeta de la aplicación)</string>
+    <string name="by_project_todotxt">Por Proyecto</string>
+    <string name="by_context_todotxt">Por Contexto</string>
+    <string name="by_completion_date">Por Fecha de Finalización</string>
+	
+    <string name="export_filter">Exportar</string>
+    <string name="import_filter">Importar</string>
+    <string name="title_filter_drawer">Filtro rápido</string>
+    <string name="config_widget">Configurar widget</string>
+    <string name="filter_show_create_date">Mostrar antigüedad de las tareas</string>
+
+    <string name="project_prompt_todotxt">Proyecto</string>
+    <string name="context_prompt_todotxt">Contexto</string>
+    <string name="keep">mantener</string>
+    <string name="all">todo</string>
+
+    <string name="input_new">"Nueva entrada "</string>
+    <string name="filter_import_export">Importar/exportar filtros</string>
+
+    <string name="share_history">Ver y compartir la base de datos interna del historial de todo.txt para su recuperación.</string>
+    <string name="share_history_title">Historial de tareas</string>
+
+    <string name="task_action">Acción</string>
+
+    <string name="name">Nombre</string>
+    <string name="date">Fecha</string>
+    <string name="back_clears_filter_title">Botón \"Atrás\" quita el filtro</string>
+    <string name="back_clears_filter_summary">El botón \"Atrás\" elimina el filtro aplicado antes de salir de la aplicación</string>
+    <string name="experimental_title">Experimental</string>
+    <string name="experimental_summary">Habilitar características experimentales</string>
+
+    <string name="lua_error">Error de Lua</string>
+    <string name="lua_config_screen">Configuración de Lua</string>
+    <string name="lua_run">Ejecutar</string>
+    <string name="lua_config_import_export">Importar/exportar configuración de Lua</string>
+    <string name="lua_config_export">Guardar y exportar</string>
+    <string name="lua_config_import">Importar</string>
+    <string name="lua_config_share">Compartir</string>
+    <string name="lua_open_config">Configuración de Lua</string>
 </resources>
