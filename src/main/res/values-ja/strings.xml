@@ -1,2 +1,405 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">無効なリスト名</string>
+    <string name="invalid_project">無効なタグ名</string>
+    <string name="app_label">シンプルタスク</string>
+    <string name="added_task">タスクを追加しました</string>
+    <string name="add_task_failed">タスクを追加できませんでした</string>
+    <string name="save_task">タスクを保存</string>
+    <string name="update_task_failed">タスクを更新できませんでした</string>
+    <string name="sort">並べ替え</string>
+    <string name="script">スクリプト</string>
+    <string name="filter">フィルター</string>
+    <string name="main_no_items">表示するタスクはありません。</string>
+    <string name="set_preferences">設定</string>
+    <string name="preferences">設定</string>
+    <string name="archive">アーカイブ</string>
+    <string name="help">ヘルプ</string>
+    <string name="history">履歴</string>
+    <string name="debug_info">デバッグ情報</string>
+    <string name="log">ログ</string>
+    <string name="next">次へ</string>
+    <string name="prev">前へ</string>
+    <string name="open_file">ToDo ファイルを開く</string>
+    <string name="sync">更新</string>
+    <string name="changelist">リストを選択</string>
+    <string name="search">検索</string>
+    <string name="add">追加</string>
+    <string name="task">タスク</string>
+    <string name="addtask">タスクを追加</string>
+    <string name="updatetask">更新</string>
+    <string name="viewtask">タスクの表示</string>
+    <string name="cleartask">タスクをクリア</string>
+    <string name="clear_database">データベースを空にする</string>
+    <string name="done">完了</string>
+    <string name="priority">優先順位を付ける</string>
+    <string name="select_priority">優先度を選択</string>
+    <string name="select_all">すべて選択</string>
+    <string name="add_list_or_tag">リストやタグを追加</string>
+    <string name="update_lists">リストを更新</string>
+    <string name="update_tags">タグを更新</string>
+    <string name="remove_list_or_tag">リストやタグを削除</string>
+    <string name="update">更新</string>
+    <string name="delete">削除</string>
+    <string name="defer_due">期限日を設定</string>
+    <string name="defer_threshold">期日を設定</string>
+    <string name="insert_due">期限日を挿入</string>
+    <string name="insert_threshold">期日を挿入</string>
+    <string name="share">共有</string>
+    <string name="share_database">データベースを共有</string>
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="clear_filter">フィルターをクリア</string>
+    <string name="write_failed">ファイルの書き込みに失敗しました! 変更内容は保存されませんでした。</string>
+
+    <string name="filter_name_empty">名前が指定されていません。フィルターを追加しません</string>
+    <string name="widget_name_empty">ウィジェット名が指定されていません。ウィジェットを追加しません</string>
+    <string name="add_task_help">タスクリストに、タスクを追加または更新します。タスクを追加するとき、それぞれの行がクイック追加する別のタスクです。
+
+ <b>優先順位</b>
+
+ (A) のように、行が (.) で始まります
+
+ <b>タグ</b>
+ +キッチン のように、+ 記号で始まります
+
+ <b>リスト</b>
+ @自宅 のように、@ 記号で始まります
+
+ タスクは、任意の数のタグを含めたり、複数のリストに入れることができます。
+ </string>
+
+    <string name="preference_appearance">外観</string>
+    <string name="preference_interface">インターフェイス</string>
+    <string name="preference_widget">ウィジェット</string>
+    <string name="preference_other">その他</string>
+
+    <string name="ARCHIVE_settings_header">アーカイブ</string>
+    <string name="ARCHIVE_settings_summary">done.txt 中の完了したタスクのアーカイブの設定</string>
+    <string name="auto_archive_pref_title">自動アーカイブ</string>
+    <string name="auto_archive_pref_summary">完了時にすぐにタスクをアーカイブします。</string>
+    <string name="archive_now_pref_title">今すぐアーカイブ</string>
+    <string name="archive_now_pref_summary">完了したタスクを todo.txt から done.txt に移動します。</string>
+    <string name="dropbox_logout_pref_title">ログアウト</string>
+    <string name="dropbox_logout_pref_summary">Dropbox のログアウト。</string>
+    <string name="TODOTXTPATH_title">ファイルの場所</string>
+    <string name="TODOTXTPATH_summary">todo.txt が格納されている Dropbox フォルダー。</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Dropbox の同期の設定</string>
+
+    <string name="todotxt_features_settings_header">機能</string>
+    <string name="todotxt_features_settings_summary">機能を有効または無効にします</string>
+
+    <string name="todotxt_configuration_settings_header">構成</string>
+    <string name="todotxt_configuration_settings_summary">アプリの動作を構成します</string>
+
+    <string name="todotxt_creation_settings_header">タスクの作成</string>
+
+    <string name="todotxt_ui_settings_header">機能</string>
+    <string name="todotxt_ui_settings_summary">表示するものを制御します</string>
+    <string name="todotxt_behavior_settings_header">動作</string>
+    <string name="todotxt_settings_summary">アプリケーション全体の設定</string>
+    <string name="sort_complete_last_pref_title">最後に完了したものを表示</string>
+    <string name="sort_complete_last_pref_summary">常に完了したタスクをリストの下部に表示します</string>
+    <string name="keep_prio_header">完了したタスクの優先順位を維持</string>
+    <string name="keep_prio_summary">完了時に todo.txt の優先順位を削除します</string>
+    <string name="prepend_date_pref_title">日付の新しいタスク</string>
+    <string name="prepend_date_pref_summary">自動的に作成日時を追加します</string>
+    <string name="line_breaks_pref_title">Windows 向けの改行</string>
+    <string name="line_breaks_pref_summary">Windows 向けの改行を使用します</string>
+    <string name="recur_from_original_date_pref_title">元の日付を使用してタスクを繰り返し</string>
+    <string name="recur_from_original_date_pref_summary">定期的なタスクを作成するとき、タスクの元の日付を増やします。
+ チェックを外すと、今日を基準にして新しい日付を設定します。</string>
+    <string name="swipe_complete_pref_title">スワイプすると完了</string>
+    <string name="swipe_complete_pref_summary">タスクをスワイプして、タスクを完了します。</string>
+    <string name="manual_sync_pref_title">手動で同期</string>
+    <string name="manual_sync_pref_summary">すべての変更を自動的に Dropbox にアップロードしません。</string>
+    <string name="resume_sync_pref_title">同期を再開</string>
+    <string name="resume_sync_pref_summary">アプリを開くとき Dropbox と同期します。</string>
+    <string name="font_size_delta_pref_title">カスタム フォントサイズ</string>
+    <string name="datebar_relative_size_summary">日付バーのサイズに相対します</string>
+    <string name="font_size_delta_pref_summary">フォントサイズを変更します。</string>
+    <string name="theme_pref_title">テーマ</string>
+    <string name="theme_pref_summary">アプリケーションに使用するテーマを変更します。</string>
+
+    <string name="share_task_show_edit_pref_title">共有タスクを編集</string>
+    <string name="share_task_show_edit_summary">保存する前に Simpletask に共有したタスクを編集します</string>
+
+    <string name="share_task_append_text_title">バックグラウンドのテキスト</string>
+    <string name="share_task_append_text_summary">バックグラウンドで追加されたタスクに \"%s\" を追加します。</string>
+
+    <string name="local_file_root_title">ルート:// ディレクトリー</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="menu_capitalize_tasks">大文字にする</string>
+    <string name="back_saves_pref_title">戻るボタン</string>
+    <string name="back_saves_summary">戻るを押したときに、入力した ToDo を保存またはフィルターを適用します。</string>
+
+    <string name="show_txt_only_pref_title">txt ファイルのみ表示</string>
+    <string name="show_txt_only_summary">ファイル選択ダイアログで .txt ファイルのみを表示します。</string>
+
+    <string name="calendar_sync_screen_title">通知</string>
+    <string name="calendar_sync_screen_summary">カレンダーのリマインダー (実験的)</string>
+    <string name="calendar_sync_dues_title">期限日のリマインダー</string>
+    <string name="calendar_sync_thresholds_title">期日のリマインダー</string>
+    <string name="calendar_reminder_days_title">日前</string>
+    <string name="calendar_reminder_days_summary">どのくらい前にリマインダーを設定するか</string>
+    <string name="calendar_reminder_time_title">リマインダー時刻</string>
+    <string name="calendar_reminder_time_summary">リマインダーを設定する時刻</string>
+
+    <string name="drawer_fixed_landscape_title">横向きドロワーを開く</string>
+    <string name="drawer_fixed_landscape_summary">常に横向きでドロワーを開きます。</string>
+
+    <string name="widget_theme_pref_title">テーマ</string>
+    <string name="widget_theme_pref_summary">ウィジェットに使用するテーマを変更します。</string>
+
+    <string name="task_text_ellipsizing_pref_title">タスク テキストの省略</string>
+    <string name="task_text_ellipsizing_pref_summary">タスク テキストが 2 行以上の場合、メイン ウィンドウで省略します。</string>
+
+    <string name="widget_header_transparency_title">ヘッダーの透明度</string>
+    <string name="widget_background_transparency_title">背景の透明度</string>
+
+    <string name="widget_extended_pref_title">日付バーを表示</string>
+    <string name="widget_extended_pref_summary">別の行に日付を表示します</string>
+
+    <string name="taskview_extended_pref_title">日付バーを表示</string>
+    <string name="taskview_extended_pref_summary">別の行に日付を表示します</string>
+
+    <string name="append_tasks_at_end_title">ファイルに追加</string>
+    <string name="append_tasks_at_end_summary">新しいタスクをファイルの最後に挿入します</string>
+
+    <string name="color_due_pref_title">期限日に色をつける</string>
+    <string name="color_due_pref_summary">期限日と期日に色をつけます</string>
+
+    <string name="show_hidden_title">非表示のタスクを表示</string>
+    <string name="show_hidden_summary">編集できるように、非表示 (h:1) タスクを表示します。編集後、この設定を再度オフにします。</string>
+
+    <string name="show_empty_lists_title">空のヘッダーを表示</string>
+    <string name="show_empty_lists_summary">ヘッダー以下のすべてのタスクが非表示の場合も、ヘッダーを表示します。</string>
+
+    <string name="split_actionbar_pref_title">分割アクションバーを使用する</string>
+    <string name="split_actionbar_pref_summary">"分割アクションバーを使用すると、メニュー ボタンが、画面の下部に表示されます。
+ 画面に Todo リストを多く表示したい場合は、これをオフにします。 "</string>
+
+    <string name="show_edittext_hint_title">ヒントの表示</string>
+    <string name="show_edittext_hint_summary">タスクを追加するとき、ヒントを表示します。紛らわしい場合は無効にします。</string>
+
+    <string name="show_complete_checkbox_title">完了のチェック ボックスを表示</string>
+    <string name="show_complete_checkbox_summary">タスクの前にチェック ボックスを表示して、完了または未完了にします。</string>
+
+    <string name="show_confirmation_dialogs_title">確認ダイアログ</string>
+    <string name="show_confirmation_dialogs_summary">タスクをアーカイブまたは削除する前にプロンプトを表示します</string>
+
+    <string name="show_todo_path_title">todo ファイルへのパスを表示</string>
+    <string name="show_todo_path_summary">ディレクトリーは、最初の文字に短縮されます</string>
+
+    <string name="show_fast_scroll_title">高速スクロール</string>
+    <string name="show_fast_scroll_summary">ToDo リストが長い場合は、高速スクロールを使用します</string>
+
+    <string name="show_calendarview_title">日付入力用カレンダーを使用する</string>
+
+    <string name="sort_case_sensitive_title">並べ替えは、大文字小文字を区別</string>
+    <string name="sort_case_sensitive_summary">リスト、タグ、保存されているフィルターを並べ替えるときに、大文字小文字を区別します。</string>
+
+    <string name="use_create_as_threshold_title">作成は期日</string>
+    <string name="use_create_backup_summary">並べ替え処理では、期日が設定されていない場合に、期日としてタスクの作成日を使用します</string>
+
+    <string name="todotxt_terms_summary">リストとタグではなく、コンテキストとプロジェクト</string>
+
+    <string name="todotxt_terms_title">todo.txt 条件を使用する</string>
+    <string name="about_settings_header">アプリについて</string>
+    <string name="about_settings_summary">アプリケーション情報</string>
+    <string name="visit_website_title">ヘルプ</string>
+    <string name="visit_website_summary">Simpletask のウェブサイトを訪問します</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+
+    <string name="visit_tracker_title">機能のリクエストやバグの記録</string>
+    <string name="visit_tracker_summary">新機能や機能の拡張をリクエストしたり、問題を報告します。</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="preference_title_debug_info">デバッグ ログの表示</string>
+    <string name="preference_summary_debug_info">アプリケーションのバージョンとログを表示し、共有します。</string>
+
+    <string name="sync_dialog_title">手動で同期</string>
+    <string name="sync_dialog_msg">todo.txt ファイルをアップロードまたはダウンロードしますか?</string>
+    <string name="sync_dialog_upload">Dropbox にアップロード</string>
+    <string name="sync_dialog_download">デバイスにダウンロード</string>
+    <string name="sync_upload_message">todo.txt をアップロードしています…</string>
+    <string name="sync_download_message">todo.txt をダウンロードしています…</string>
+
+    <string name="sync_conflict_dialog_title">ファイルの競合</string>
+    <string name="sync_conflict_dialog_msg">"おっと! Dropbox に、新しいバージョンの todo.txt ファイルがあります。
+ローカルの変更をアップロードするか、または Dropbox バージョンをダウンロードしますか?
+ "</string>
+
+    <string name="first_title_word">シンプルタスク</string>
+    <string name="login_screen_button">Dropbox にログイン</string>
+    <string name="login_folder_screen_button">Dropbox にログイン
+(アプリ フォルダー アクセス)</string>
+    <string name="login_cloudless">"Dropbox のアカウントを持っていないか、それを使用して todo リストを格納したくない場合、
+シンプルタスク クラウドを Play ストアからダウンロードできます。
+ 
+http://goo.gl/X1C55P
+ "</string>
+
+    <string name="delete_task_title">%s タスクを削除</string>
+    <string name="archive_task_title">%s タスクをアーカイブ</string>
+    <string name="delete_task_message">これは元に戻すことができません。よろしいですか?</string>
+    <string name="logout_message">Dropbox とすべての変更を同期したか、または Dropbox に接続されていない場合、完了タスク リストを共有したかを確認してください。
+
+ ログアウト後、同期されていない変更は失われます。</string>
+     <string name="dropbox_open">Dropbox とすべての変更を同期したか、または Dropbox に接続されてい場合、完了タスク リストを共有したかを確認してください。
+
+ 別のファイルを開いた後、同期されていない変更は失われます。</string>
+    <string name="delete_task_confirm">削除</string>
+
+    <string name="clone_tags">事前入力</string>
+    <string name="word_wrap">ワードラップ</string>
+    <string name="search_hint">todo.txt を検索します</string>
+
+    <string name="sort_help">ドラッグ・アンド・ドロップして並べ替えの順序を変更します。項目をクリックして並べ替えの向きを変更します。</string>
+    <string name="file_order">ファイルの順序 (並べ替えなし)</string>
+    <string name="alphabetical">アルファベット順</string>
+    <string name="by_prio">優先順位順</string>
+    <string name="by_project">タグ順</string>
+    <string name="by_context">リスト順</string>
+    <string name="by_project_todotxt">プロジェクト順</string>
+    <string name="by_context_todotxt">コンテキスト順</string>
+    <string name="completed">完了</string>
+    <string name="by_creation_date">作成日順</string>
+    <string name="in_future">将来の期日</string>
+    <string name="by_due_date">期限日順</string>
+    <string name="by_threshold_date">期日順</string>
+    <string name="by_completion_date">完了日順</string>
+	
+    <string name="filter_select_all">すべて選択</string>
+    <string name="filter_clear_all">フィルターをクリア</string>
+    <string name="filter_invert">フィルターを反転</string>
+    <string name="add_filter_shortcut">ホーム画面へ</string>
+    <string name="export_filter">エクスポート</string>
+    <string name="import_filter">インポート</string>
+    <string name="rename_filter">名前を変更</string>
+    <string name="rename_filter_message">保存されたフィルターの新しい名前を入力:</string>
+    <string name="title_filter_drawer">クイック フィルター</string>
+    <string name="update_filter">更新</string>
+    <string name="create_widget">ウィジェットを作成</string>
+    <string name="config_widget">ウィジェットを構成</string>
+    <string name="filter_show_completed">完了したタスクを表示</string>
+    <string name="filter_show_future">タスクと将来の期日を表示</string>
+    <string name="filter_show_lists">タスクのリストを表示</string>
+    <string name="filter_show_tags">タスクのタグの表示</string>
+    <string name="filter_show_create_date">タスクの年齢を表示</string>
+
+    <string name="filter_show_completed_short">完了</string>
+    <string name="filter_show_future_short">将来</string>
+    <string name="filter_show_prompt">表示</string>
+    <string name="filter_saved_prompt">保存したフィルター</string>
+
+    <string name="task_select_parts">タスクのパートを選択</string>
+    <string name="task_show_all">すべて</string>
+
+    <string name="title_filter_applied">フィルター オン:</string>
+    <string name="add_task_help_btn">ヘルプ</string>
+    <string name="priority_prompt">優先順位</string>
+    <string name="priority_short_prompt">優先</string>
+    <string name="project_prompt">タグ</string>
+    <string name="context_prompt">リスト</string>
+    <string name="project_prompt_todotxt">プロジェクト</string>
+    <string name="context_prompt_todotxt">コンテキスト</string>
+    <string name="priority_format">(優先)</string>
+
+    <string name="separator">区切り</string>
+
+    <string name="shortcut_addtask_name">タスクを追加</string>
+    <string name="share_addtask_name">Simpletask に追加</string>
+
+    <string name="none">なし</string>
+    <string name="keep">保持</string>
+    <string name="all">すべて</string>
+
+    <string name="dates_days_ago">%d 日前</string>
+    <string name="dates_one_day_ago">1 日前</string>
+    <string name="dates_years_ago">%d 年前</string>
+    <string name="dates_one_year_ago">1 年前</string>
+    <string name="dates_months_ago">%d ヶ月前</string>
+    <string name="dates_one_month_ago">1 ヶ月前</string>
+    <string name="dates_weeks_ago">%d 週間前</string>
+    <string name="dates_one_week_ago">1 週間前</string>
+
+    <string name="dates_one_week">1 週間</string>
+    <string name="dates_two_weeks">2 週間</string>
+    <string name="dates_one_month">1 ヶ月</string>
+
+    <string name="dates_today">今日</string>
+    <string name="date_pick">日付を選択</string>
+    <string name="dates_tomorrow">明日</string>
+
+    <string name="title_activity_filter">フィルター</string>
+    <string name="selected">選択済</string>
+    <string name="no_context">受信トレイ</string>
+    <string name="no_project">タグなし</string>
+    <string name="no_creation_date">作成日なし</string>
+    <string name="no_threshold_date">期日なし</string>
+    <string name="no_header">なし</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">リマインダーを追加</string>
+    <string name="calendar_title">Simpletask リマインダー</string>
+    <string name="share_title">Simpletask タスク</string>
+    <string name="version_copied">バージョン情報をクリップボードにコピーしました</string>
+
+    <string name="task_added">タスクを Simpletask に追加しました</string>
+    <string name="default_sort">デフォルトの並べ替え</string>
+    <string name="pull_to_refresh_refreshing_label">Dropbox と同期しています…</string>
+    <string name="input_new">"新しく入力 "</string>
+    <string name="no_filter">フィルターなし</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="save_filter">現在のフィルターを保存</string>
+    <string name="save_filter_message">保存済みフィルターのドロワーに表示される、現在のフィルターの名前を入力します。</string>
+
+    <string name="filter_import_export">フィルターのインポート/エクスポート</string>
+
+    <string name="donate_title">寄付</string>
+    <string name="donate_summary">"シンプルタスクを気に入って頂けたら寄付をお願いします。注: 寄付は自発的なもので、シンプルタスクは常に無料です。 "</string>
+    <string name="donated_summary">"寄付をいただき、ありがとうございます。 "</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">逆順に並べ替え</string>
+
+    <string name="calendar_disp_name">Simpletask リマインダー</string>
+    <string name="calendar_sync_desc_due">Simpletask によって自動的に生成される、期限日リマインダー</string>
+    <string name="calendar_sync_desc_thre">Simpletask によって自動的に生成される、期日リマインダー</string>
+    <string name="calendar_exists_warning">警告: 同じ名前のカレンダーが既に存在します。上書きしています...</string>
+    <string name="calendar_write_error">エラー: カレンダーを書き込めませんでした</string>
+
+    <string name="click_to_copy">クリックしてクリップボードにコピーします。</string>
+
+    <string name="share_history">回復のため内部 todo.txt 履歴データベースを表示および共有します。</string>
+    <string name="share_history_title">Todo 履歴</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">設定</string>
+
+    <string name="help_locale">ja</string>
+
+    <string name="task_action">アクション</string>
+
+    <string name="name">名前</string>
+    <string name="date">日付</string>
+    <string name="back_clears_filter_title">戻るでフィルターをクリア</string>
+    <string name="back_clears_filter_summary">戻るボタンで、アプリを終了する前にフィルターをクリアします</string>
+    <string name="experimental_title">実験的</string>
+    <string name="experimental_summary">実験的な機能を有効にします</string>
+
+    <string name="lua_error">Lua エラー</string>
+    <string name="lua_config_screen">Lua の構成</string>
+    <string name="lua_run">実行</string>
+    <string name="lua_config_import_export">Lua 構成のインポート/エクスポート</string>
+    <string name="lua_config_export">保存とエクスポート</string>
+    <string name="lua_config_import">インポート</string>
+    <string name="lua_config_share">共有</string>
+    <string name="lua_open_config">Lua の設定</string>
+<string name="unComplete">取り消し完了</string>
+    <string name="tasktexthint">+ヘクトール と +パリ の問題を @議論 @Troy
++ヘクトール に、そんなドラッグはできないと伝える @Troy
++Simpletask の設定をレビューして、このテキストを削除する @Phone</string>
+
+    </resources>
