@@ -358,7 +358,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="local_file_root_summary">%s</string>
 
     <string name="task_text_ellipsizing_pref_title">Abreviación del texto de la tarea</string>
-    <string name="cleartask"/>
+    <string name="cleartask">Limpiar tarea</string>
     <string name="task_text_ellipsizing_pref_summary">Acortar el texto de la tarea en la ventana principal si ocupa más de dos líneas.</string>
 
     <string name="taskview_extended_pref_title">Mostrar barra de fechas</string>
