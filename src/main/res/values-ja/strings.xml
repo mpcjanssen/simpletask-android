@@ -19,8 +19,8 @@
     <string name="log">ログ</string>
     <string name="next">次へ</string>
     <string name="prev">前へ</string>
-    <string name="open_file">ToDo ファイルを開く</string>
-    <string name="sync">更新</string>
+    <string name="open_file">todo ファイルを開く</string>
+    <string name="sync">リフレッシュ</string>
     <string name="changelist">リストを選択</string>
     <string name="search">検索</string>
     <string name="add">追加</string>
