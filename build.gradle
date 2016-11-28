@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.0.4'
-    ext.android_support_version = '25.0.0'
+    ext.android_support_version = '25.0.1'
     repositories {
         jcenter()
     }
@@ -17,7 +17,7 @@ apply plugin: 'kotlin-android'
 
 
 android {
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
     compileSdkVersion 25
 
     packagingOptions {
