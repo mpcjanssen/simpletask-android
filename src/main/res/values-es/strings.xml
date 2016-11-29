@@ -281,8 +281,8 @@
 Decirle a +Héctor que no sea un pesado @Troy.
 Buscar en las configuraciones de +Simpletask cómo quitar este texto @Teléfono</string>
 
-    <string name="filter_name_empty">Nombre no especificado. No se agregó el filtro</string>
-    <string name="widget_name_empty">Nombre no especificado. No se agregó el widget</string>
+    <string name="filter_name_empty">Nombre no especificado. No se creó el filtro</string>
+    <string name="widget_name_empty">Nombre no especificado. No se creo el widget</string>
     <string name="add_task_help">Agregar o actualizar una tarea en la lista de tareas. Al agregar tareas, para una adición rápida, cada línea corresponde a una tarea por separado.
  
 <b>Prioridad</b>
