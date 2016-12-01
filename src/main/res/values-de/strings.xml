@@ -111,20 +111,19 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="todotxt_behavior_settings_header">Verhalten</string>
     <string name="todotxt_settings_summary">Einstellungen für die gesamte Anwendung</string>
     <string name="sort_complete_last_pref_title">Zeige erledigte zuletzt</string>
-    <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste
-    </string>
+    <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste</string>
     <string name="keep_prio_header">Priorität in abgeschlossenen Aufgaben</string>
-    <string name="keep_prio_summary">Behalte Prioritäten in abgeschlossenen Aufgaben. Deaktiviere dies um die todo.txt App Verhalten wiederherzustellen.</string>
+    <string name="keep_prio_summary">Behalte Prioritäten in abgeschlossenen Aufgaben. Deaktiviere dies um das todo.txt App Verhalten wiederherzustellen.</string>
     <string name="prepend_date_pref_title">Zeitstempel für neue Aufgaben</string>
-    <string name="prepend_date_pref_summary">Automatisches Hinzufügen des Erstellungsdatums einer neuen Aufgabe.</string>
+    <string name="prepend_date_pref_summary">Erstellungsdatum automatisch hinzufügen</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
-    <string name="line_breaks_pref_summary">Windows-freundliche Umbrüche in Textdateien verwenden.</string>
+    <string name="line_breaks_pref_summary">Windows-Zeilenumbrüche in Textdateien verwenden.</string>
     <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Daten</string>
     <string name="recur_from_original_date_pref_summary">Setze das Datum von wiederholten Aufgabe relativ zum Ursprungsdatum.
         Deaktivieren um das neue Datum relativ zu heute zu setzen.</string>
     <string name="swipe_complete_pref_title">Wischen zum Fertigstellen</string>
     <string name="swipe_complete_pref_summary">Wische über eine Aufgabe zum Fertigstellen.</string>
-    <string name="manual_sync_pref_title">Manuelle Synchronisation.</string>
+    <string name="manual_sync_pref_title">Manuelle Synchronisation</string>
     <string name="manual_sync_pref_summary">Nicht jede Änderung automatisch zu Dropbox hochladen.</string>
     <string name="resume_sync_pref_title">Sync wiederaufnehmen</string>
     <string name="resume_sync_pref_summary">Sync mit Dropbox wenn die App geöffnet wird.</string>
@@ -174,7 +173,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_text_ellipsizing_pref_summary">Aufgabentext im Hauptfenster kürzen, wenn er mehr als zwei Zeilen einnimmt.</string>
     
     <string name="color_due_pref_title">Farbe der Fälligkeitsdaten</string>
-    <string name="color_due_pref_summary">Farbe der Fälligkeitsdaten anpassen (heute, zukünftig oder überfällig).</string>
+    <string name="color_due_pref_summary">Farbe der Fälligkeits- und Anfangsdaten anpassen (heute, zukünftig oder überfällig).</string>
 
     <string name="show_hidden_title">Zeige versteckte Aufgaben</string>
     <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben um sie zu editieren. Nach dem Editieren deaktiviere diese Einstellung wieder.</string>
@@ -332,7 +331,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="no_context">Eingang</string>
     <string name="no_project">Keine Kategorie</string>
     <string name="no_creation_date">Kein Erstellungstatum</string>
-    <string name="no_threshold_date">Kein Zeitlimit</string>
+    <string name="no_threshold_date">Kein Anfangsdatum</string>
     <string name="no_header">Kein</string>
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Erinnerung hinzufügen</string>
@@ -358,7 +357,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- Calendar sync -->
     <string name="calendar_disp_name">Simpletask Erinnerungen</string>
     <string name="calendar_sync_desc_due">Erinnerung an das Fälligkeitsdatum, automatisch erstellt von Simpletask</string>
-    <string name="calendar_sync_desc_thre">Erinnerung an der Anfangsdatum, automatisch erstellt von Simpletask</string>
+    <string name="calendar_sync_desc_thre">Erinnerung an das Anfangsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_exists_warning">Warnung: ein Kalender identischen Namens existiert bereits. Überschreibe...</string>
     <string name="calendar_write_error">Fehler: Kann Kalender nicht schrieben</string>
 
@@ -386,8 +385,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="none">kein</string>
     <string name="taskview_extended_pref_summary">Aufgaben im Hauptfenster mit separater Zeile für Datum zeigen.</string>
     <string name="taskview_extended_pref_title">Datumszeile im Hauptfenster</string>
-    <string name="use_create_backup_summary">Beim Sortieren Erstellungsdatum der Aufgabe verwenden, wenn kein Fälligkeitsdatum angegeben.</string>
-    <string name="use_create_as_threshold_title">Erstellungsdatum als Fälligkeit</string>
+    <string name="use_create_backup_summary">Beim Sortieren Erstellungsdatum der Aufgabe verwenden, wenn kein Anfangsdatum angegeben.</string>
+    <string name="use_create_as_threshold_title">Erstellungsdatum als Anfangsdatum</string>
     <string name="local_file_root_summary">Stammverzeichnis, von dem aus root:// Links aufgelöst werden</string>
     <string name="local_file_root_title">Datei-Link Stammverzeichnis</string>
     <string name="all">alle</string>
@@ -419,4 +418,14 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <!-- Default Help localisation -->
     <string name="help_locale">de</string>
-</resources>
+<string name="title_filter_drawer">Schnellfilter</string>
+    <string name="filter_import_export">Import-/Export-Filter</string>
+
+    <string name="lua_config_import_export">Im-/Export Lua-Konfiguration</string>
+    <string name="lua_config_export">Speichern und Export</string>
+    <string name="lua_config_import">Import</string>
+    <string name="lua_config_share">Teilen</string>
+    <string name="preference_title_debug_info">Debug-Log ansehen</string>
+    <string name="preference_summary_debug_info">App-Version und Log ansehen und versenden.</string>
+
+    </resources>
