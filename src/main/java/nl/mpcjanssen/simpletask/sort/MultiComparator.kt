@@ -54,7 +54,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
         }
     }
 
-    override fun compare(o1: TodoItem, o2: TodoItem): Int {
+    override fun compare(o1: TodoItem?, o2: TodoItem?): Int {
         return comparators?.compare(o1, o2)?:defaultComparator.compare(o1,o2)
     }
 }
