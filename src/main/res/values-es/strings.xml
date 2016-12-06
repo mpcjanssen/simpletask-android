@@ -11,11 +11,11 @@
     <string name="show_txt_only_summary">Mostrar solo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
 
     <string name="calendar_sync_screen_title">Recordatorios de calendario</string>
-    <string name="calendar_sync_screen_summary">Automáticamente crear recordatorios de calendario para fechas de vencimiento y/o umbral.</string>
+    <string name="calendar_sync_screen_summary">Recordatorios de calendario (experimental)</string>
     <string name="calendar_sync_dues_title">Fechas de vencimiento</string>
     <string name="calendar_sync_thresholds_title">Fechas umbral</string>
     <string name="calendar_reminder_days_title">Anticipación de recordatorios</string>
-    <string name="calendar_reminder_days_summary">Cuántos días antes de la fecha de vencimiento/umbral debe establecerse el recordatorio.</string>
+    <string name="calendar_reminder_days_summary">Días de anticipación</string>
     <string name="calendar_reminder_time_title">Hora de recordatorios</string>
     <string name="calendar_reminder_time_summary">A qué hora del día debe establecerse el recordatorio</string>
 
@@ -24,7 +24,7 @@
 
 
     <string name="widget_theme_pref_title">Tema de widgets</string>
-    <string name="widget_theme_pref_summary">Cambiar el tema utilizado para los widgets</string>
+    <string name="widget_theme_pref_summary">Cambiar el tema utilizado para los widgets.</string>
 
     <string name="widget_header_transparency_title">Transparencia de la cabecera de los widgets</string>
     <string name="widget_background_transparency_title">Transparencia del fondo de los widgets</string>
@@ -33,7 +33,7 @@
     <string name="widget_extended_pref_summary">Mostrar fechas en una línea separada</string>
 
     <string name="color_due_pref_title">Color de fechas de vencimiento</string>
-    <string name="color_due_pref_summary">Color de las fechas de vencimiento basado en si vencen hoy, en el futuro o ya vencidas.</string>
+    <string name="color_due_pref_summary">Color de las fechas de vencimiento/umbral</string>
 
     <string name="show_hidden_title">Mostrar tareas escondidas</string>
     <string name="show_hidden_summary">Mostrar tareas escondidas (h:1) para poder editarlas. Después de editarlas deseleccione este ajuste otra vez.</string>
@@ -42,8 +42,8 @@
     <string name="show_empty_lists_summary">Mostrar un encabezamiento incluso si todas las tareas bajo el mismo están escondidas.</string>
 
     <string name="split_actionbar_pref_title">Usar barra de acción dividida</string>
-    <string name="split_actionbar_pref_summary">Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla.
-    Para disponer de más espacio de pantalla para la lista de tareas deseleccionar esto.</string>
+    <string name="split_actionbar_pref_summary">"Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla.
+Para disponer de más espacio de pantalla para la lista de tareas deseleccionar esta opción. "</string>
 
     <string name="show_edittext_hint_title">Mostrar sugerencias</string>
     <string name="show_edittext_hint_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
@@ -52,8 +52,7 @@
     <string name="show_complete_checkbox_summary">Mostrar la casilla delante de las tareas para marcarlas como completada o no.</string>
 
     <string name="show_confirmation_dialogs_title">Mostar diálogos de confirmación</string>
-    <string name="show_confirmation_dialogs_summary">Mostrar un diálogo de confirmación antes de ejecutar acciones que no se pueden deshacer o acciones que puede resultar en pérdida de datos.
-    Desactivar este ajuste si le molestan. De todos modos queda advertido.</string>
+    <string name="show_confirmation_dialogs_summary">Preguntar antes de archivar o borrar tareas</string>
 
     <string name="show_calendarview_title">Usar calendario para la selección de fechas</string>
 
@@ -149,11 +148,11 @@
     <string name="title_filter_applied">Filtrado por:</string>
     <string name="add_task_help_btn">Ayuda</string>
     <string name="priority_prompt">Prioridad</string>
-    <string name="priority_short_prompt">Prio</string>
+    <string name="priority_short_prompt">Prioridad</string>
     <string name="project_prompt">Etiqueta</string>
     <string name="context_prompt">Lista</string>
 
-    <string name="priority_format">(prio)</string>
+    <string name="priority_format">(prioridad)</string>
 
     <string name="separator">Separador</string>
 
@@ -203,7 +202,7 @@
     <string name="dropbox">Dropbox</string>
 
     <string name="save_filter">Salvar el filtro actual</string>
-    <string name="save_filter_message">Introducir el nombre para el filtro actual con que se mostrará en el apartado de filtros salvados</string>
+    <string name="save_filter_message">"Introduzca el nombre  con el que se mostrará el filtro en el cajón de filtros guardados."</string>
 
     <string name="donate_title">Done</string>
     <string name="donate_summary">Done si le gusta simpletask. NOTA: la donación es voluntaria, simpletask siempre será libre.  </string>
@@ -213,10 +212,10 @@
 
     <!-- Calendar sync -->
     <string name="calendar_disp_name">Recordatorios Simpletask</string>
-    <string name="calendar_sync_desc_due">Due date reminder, generated automatically by Simpletask</string>
-    <string name="calendar_sync_desc_thre">Threshold date reminder, generated automatically by Simpletask</string>
+    <string name="calendar_sync_desc_due">Recordatorio de fecha de vencimiento generado automáticamente por Simpletask</string>
+    <string name="calendar_sync_desc_thre">Recordatorio de fecha umbral generado automáticamente por Simpletask</string>
     <string name="calendar_exists_warning">Aviso: Ya existe un calendario con el mismo nombre, sobreescribiendolo…</string>
-    <string name="calendar_write_error">Error: Could not write calendar</string>
+    <string name="calendar_write_error">Error: no se pudo escribir el calendario</string>
 
     <string name="click_to_copy">Clic para copiar al portapapeles.</string>
 
@@ -245,7 +244,7 @@
     <string name="log">Registro</string>
     <string name="next">Siguiente</string>
     <string name="prev">Anterior</string>
-    <string name="open_file">Abrir archivo \"todo\"</string>
+    <string name="open_file">Abrir archivo de tareas</string>
     <string name="sync">Refrescar</string>
     <string name="changelist">Seleccionar una lista</string>
     <string name="search">Buscar</string>
@@ -255,8 +254,8 @@
     <string name="updatetask">Actualizar tarea</string>
     <string name="viewtask">Ver Tarea</string>
     <string name="clear_database">Borrar base de datos</string>
-    <string name="done">Completar</string>
-    <string name="priority">Priorizar</string>
+    <string name="done">Completa</string>
+    <string name="priority">Asignar prioridad</string>
     <string name="select_priority">Seleccionar prioridad</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="add_list_or_tag">Agregar listas y tareas</string>
@@ -371,7 +370,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="show_todo_path_summary">Los nombres de directorios son abreviados a su primera letra</string>
 
     <string name="show_fast_scroll_title">Desplazamiento rápido</string>
-    <string name="show_fast_scroll_summary">Usar desplazamiento rápido si la lista de tareas se hace más larga</string>
+    <string name="show_fast_scroll_summary">Usar desplazamiento rápido si la lista de tareas es demasiado larga</string>
 
     <string name="use_create_as_threshold_title">Fecha de creación es la fecha umbral</string>
     <string name="use_create_backup_summary">Al ordenar, usar la fecha de creación de la tarea como fecha umbral si ésta no está establecida</string>
@@ -411,7 +410,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="date">Fecha</string>
     <string name="back_clears_filter_title">Botón \"Atrás\" quita el filtro</string>
     <string name="back_clears_filter_summary">El botón \"Atrás\" elimina el filtro aplicado antes de salir de la aplicación</string>
-    <string name="experimental_title">Experimental</string>
+    <string name="experimental_title">Características experimentales</string>
     <string name="experimental_summary">Habilitar características experimentales</string>
 
     <string name="lua_error">Error de Lua</string>
