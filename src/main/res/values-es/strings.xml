@@ -253,7 +253,7 @@ Para disponer de más espacio de pantalla para la lista de tareas deseleccionar 
     <string name="addtask">Agregar una tarea</string>
     <string name="updatetask">Actualizar tarea</string>
     <string name="viewtask">Ver Tarea</string>
-    <string name="clear_database">Borrar base de datos</string>
+    <string name="clear_database">Vaciar base de datos</string>
     <string name="done">Completa</string>
     <string name="priority">Asignar prioridad</string>
     <string name="select_priority">Seleccionar prioridad</string>
@@ -350,14 +350,14 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="theme_pref_title">Tema</string>
     <string name="theme_pref_summary">Cambiar el tema utilizado por la aplicación.</string>
 
-    <string name="share_task_append_text_title">Texto al compartir</string>
+    <string name="share_task_append_text_title">Texto agregado al compartir una tarea</string>
     <string name="share_task_append_text_summary">Agregar \"%s\" s tareas agregadas en segundo plano.</string>
 
     <string name="local_file_root_title">Directorio raíz</string>
     <string name="local_file_root_summary">%s</string>
 
     <string name="task_text_ellipsizing_pref_title">Abreviación del texto de la tarea</string>
-    <string name="cleartask">Limpiar tarea</string>
+    <string name="cleartask">Quitar tarea</string>
     <string name="task_text_ellipsizing_pref_summary">Acortar el texto de la tarea en la ventana principal si ocupa más de dos líneas.</string>
 
     <string name="taskview_extended_pref_title">Mostrar barra de fechas</string>
