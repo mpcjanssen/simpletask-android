@@ -1,2 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Невірна назва списку</string>
+    <string name="invalid_project">Невірна назва мітки</string>
+    <string name="app_label">Simpletask</string>
+    <string name="added_task">Додана задача</string>
+    <string name="add_task_failed">Не можу додати задачу</string>
+    <string name="save_task">Зберегти задачу</string>
+    <string name="update_task_failed">Не вдалося оновити задачу</string>
+    <string name="sort">Сортування</string>
+    <string name="script">Сценарій</string>
+    <string name="filter">Фільтр</string>
+    <string name="main_no_items">Немає задач для відображення.</string>
+    <string name="set_preferences">Налаштування</string>
+    <string name="preferences">Налаштування</string>
+    <string name="archive">Архів</string>
+    <string name="help">Допомога</string>
+    <string name="history">Історія</string>
+    <string name="debug_info">Інформація для відладки</string>
+    <string name="log">Журнал</string>
+    <string name="next">Наступне</string>
+    <string name="prev">Попереднє</string>
+    <string name="open_file">Відкрити todo-файл</string>
+    <string name="sync">Оновити</string>
+    <string name="changelist">Обрати список</string>
+    <string name="search">Пошук</string>
+    <string name="add">Додати</string>
+    <string name="task">Задача</string>
+    <string name="addtask">Додати задачу</string>
+    <string name="updatetask">Оновити задачу</string>
+    <string name="viewtask">Переглянути</string>
+    <string name="cleartask">Очистити задачу</string>
+    <string name="clear_database">Очистити БД</string>
+    <string name="done">Виконано</string>
+    <string name="priority">Пріоритет</string>
+    <string name="select_priority">Обрати пріоритет</string>
+    <string name="select_all">Обрати усі</string>
+    <string name="add_list_or_tag">Додати списки і мітки</string>
+    <string name="update_lists">Оновити списки</string>
+    <string name="update_tags">Оновити мітки</string>
+    <string name="remove_list_or_tag">Прибрати списки і мітки</string>
+    <string name="update">Оновити</string>
+    <string name="delete">Видалити</string>
+    <string name="defer_due">Встановити кінцеву дату</string>
+    <string name="defer_threshold">Встановити дату очікування</string>
+    <string name="insert_due">Вставити кінцеву дату</string>
+    <string name="insert_threshold">Вставити дату очікування</string>
+    <string name="share">Поділитися</string>
+    <string name="share_database">Поділитися БД</string>
+    <string name="unComplete">Скасувати завершення</string>
+    <string name="ok">Гаразд</string>
+    <string name="cancel">Скасувати</string>
+    <string name="clear_filter">Очистити фільтр</string>
+    <string name="write_failed">Помилка запису файлу! Ваші зміни НЕ ЗБЕРЕЖЕНО.</string>
+
+    <string name="tasktexthint"/>
+
+    <string name="filter_name_empty">Ім\'я не вказано, фільтр не додано</string>
+    <string name="widget_name_empty">Ім\'я віджету не вказано, тому його не додано</string>
+    <string name="add_task_help"><b>Priority</b>
+
+ start the line with (.), like (A)
+
+ <b>Tags</b>
+ start with a + sign, like +Kitchen
+
+ <b>Lists</b>
+ start with an @ sign, like @home
+
+ A task can include any number of tags or be on multiple lists.
+ </string>
+
+    <string name="preference_appearance">Зовнішній вигляд</string>
+    <string name="preference_interface">Інтерфейс</string>
+    <string name="preference_widget">Віджет</string>
+    <string name="preference_other">Інше</string>
+
+    <string name="ARCHIVE_settings_header">Архівування</string>
+    <string name="ARCHIVE_settings_summary">"Налаштування архівування виконаних задач в  done.txt"</string>
+    <string name="auto_archive_pref_title">Автоархівування</string>
+    <string name="auto_archive_pref_summary">Архівувати задачі негайно після завершення.</string>
+    <string name="archive_now_pref_title">Архівувати зараз</string>
+    <string name="archive_now_pref_summary">"Перемістити завершені задачі з  todo.txt до done.txt."</string>
+    <string name="dropbox_logout_pref_title">Вийти</string>
+    <string name="dropbox_logout_pref_summary">Вийти з Dropbox.</string>
+    <string name="TODOTXTPATH_title">Розташування файлу</string>
+    <string name="TODOTXTPATH_summary">Тека Dropbox, де розміщено todo.txt.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header"/>
+    <string name="DROPBOX_settings_summary">Налаштування синхронізації через Dropbox</string>
+
+    <string name="todotxt_features_settings_header">Можливості</string>
+    <string name="todotxt_features_settings_summary">Ввімкнути чи вимкнути можливості</string>
+
+    <string name="todotxt_configuration_settings_header">Налаштування</string>
+    <string name="todotxt_configuration_settings_summary">Налаштувати поведінку додатку</string>
+
+    <string name="todotxt_creation_settings_header">Створення задачі</string>
+
+    <string name="todotxt_ui_settings_header">Можливості</string>
+    <string name="todotxt_ui_settings_summary">Визначення того, що відображатиметься</string>
+    <string name="todotxt_behavior_settings_header">Поведінка</string>
+    </resources>
