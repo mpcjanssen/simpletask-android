@@ -91,8 +91,10 @@ class AddTaskBackground : Activity() {
             }
         } else {
             val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            log.info(TAG, "Added link to content: ${imageUri.toString()}")
-            addBackgroundTask(imageUri.toString(), append_text)
+            imageUri?.let {
+                log.info(TAG, "Added link to content: ${imageUri.toString()}")
+                addBackgroundTask(imageUri.toString(), append_text)
+            }
         }
     }
 
