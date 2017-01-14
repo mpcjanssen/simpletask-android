@@ -228,8 +228,8 @@
     <string name="login_cloudless">Se não tem conta no Dropbox ou não quer nele arquivar seu arquivo de dados,         você pode baixar o Simpletask Cloudless no f-droid.\nhttps://f-droid.org/app/nl.mpcjanssen.simpletask</string>
 
     <!-- delete -->
-    <string name="delete_task_title">Apagar % tarefa(s)</string>
-    <string name="archive_task_title">Arquivar % tarefa(s)</string>
+    <string name="delete_task_title">Apagar %s tarefa(s)</string>
+    <string name="archive_task_title">Arquivar %s tarefa(s)</string>
     <string name="delete_task_message">Impossível desfazer. Tem certeza?</string>
     <string name="logout_message">Certifique-se de que todas as mudanças feitas estão sincronizadas no Dropbox ou         que sua lista de tarefas completadas foi compartilhada (se não houver conexão com o Dropbox).\n        Quaisquer mudanças não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
      <string name="dropbox_open">Certifique-se de que todas as mudanças feitas estão sincronizadas no Dropbox ou         que sua lista de tarefas completadas foi compartilhada (se não houver conexão com o Dropbox).\n        Quaisquer mudanças não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
@@ -307,13 +307,13 @@
     <string name="all">todos</string>
 
     <!-- Relative Dates -->
-    <string name="dates_days_ago">% dias atrás</string>
+    <string name="dates_days_ago">%d dias atrás</string>
     <string name="dates_one_day_ago">1 dia atrás</string>
-    <string name="dates_years_ago">% anos atrás</string>
+    <string name="dates_years_ago">%d anos atrás</string>
     <string name="dates_one_year_ago">1 ano atrás</string>
-    <string name="dates_months_ago">% meses atrás</string>
+    <string name="dates_months_ago">%d meses atrás</string>
     <string name="dates_one_month_ago">1 mês atrás</string>
-    <string name="dates_weeks_ago">% semanas atrás</string>
+    <string name="dates_weeks_ago">%d semanas atrás</string>
     <string name="dates_one_week_ago">1 semana atrás</string>
 
     <string name="dates_one_week">1 semana</string>
