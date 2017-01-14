@@ -1,0 +1,393 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="invalid_context">Nome de lista inválido</string>
+    <string name="invalid_project">Nome de projeto inválido</string>
+    <string name="app_label">Simpletask</string>
+    <string name="added_task">Tarefa adicionada</string>
+    <string name="add_task_failed">Impossível adicionar a tarefa</string>
+    <string name="save_task">Salvar tarefa</string>
+    <string name="update_task_failed">Impossível atualizar tarefa</string>
+    <string name="sort">Organizar</string>
+    <string name="script">Script</string>
+    <string name="filter">Filtro</string>
+    <string name="main_no_items">Sem tarefas a exibir</string>
+    <string name="set_preferences">Configurações</string>
+    <string name="preferences">Configurações</string>
+    <string name="archive">Arquivar</string>
+    <string name="help">Ajuda</string>
+    <string name="history">Histórico</string>
+    <string name="debug_info">Informações de depuração</string>
+    <string name="log">Histórico de erros</string>
+    <string name="next">Próximo</string>
+    <string name="prev">Anterior</string>
+    <string name="open_file">Abrir arquivo todo</string>
+    <string name="sync">Atualizar</string>
+    <string name="changelist">Escolher lista</string>
+    <string name="search">Procurar</string>
+    <string name="add">Adicionar</string>
+    <string name="task">Tarefa</string>
+    <string name="addtask">Incluir tarefa</string>
+    <string name="updatetask">Atualizar</string>
+    <string name="viewtask">Ver tarefa</string>
+    <string name="cleartask">Apagar tarefa</string>
+    <string name="clear_database">Arquivo vazio</string>
+    <string name="done">Completado</string>
+    <string name="priority">Priorizar</string>
+    <string name="select_priority">Selecionar prioridade</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="add_list_or_tag">Adicionar listas e projetos</string>
+    <string name="update_lists">Atualizar listas</string>
+    <string name="update_tags">Atualizar projetos</string>
+    <string name="remove_list_or_tag">Remover listas e projetos</string>
+    <string name="update">Atualizar</string>
+    <string name="delete">Apagar</string>
+    <string name="defer_due">Definir prazo(s)</string>
+    <string name="defer_threshold">Definir data(s) limiare(s)</string>
+    <string name="insert_due">Inserir prazo</string>
+    <string name="insert_threshold">Inserir data limiar</string>
+    <string name="share">Compartilhar</string>
+    <string name="share_database">Compartilhar base de dados</string>
+    <string name="unComplete">Desfazer completar</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancelar</string>
+    <string name="clear_filter">Limpar filtro</string>
+    <string name="write_failed">Falha na gravação do arquivo. As mudanças NÃO foram salvas!</string>
+
+    <string name="tasktexthint">\@discutir +macartismo com +Pepe @altruísmo\nDizer ao +Pepe para discursar sobre @altruísmo\nRevisar a +tradução do +Simpletask para @telefone</string>
+
+    <string name="filter_name_empty">Sem especificação de nome, filtro não adicionado</string>
+    <string name="widget_name_empty">Impossível adicionar um widget sem nome</string>
+    <string name="add_task_help">Adicionar ou atualizar tarefa para a lista. Quando adicionar tarefas, para adição rápida, cada linha é uma tarefa individual.   &lt;b &gt;Prioridade&lt;/b&gt;   comece a linha com (.), como (A)   &lt;b &gt;Projetos&lt;/b&gt;  comece com +, como +culinária   &lt;b &gt;Listas&lt;/b&gt;  comece com @, como @casa   Uma tarefa pode ter diversos projetos e inúmeras listas.</string>
+
+    <!-- other_preferences -->
+    <string name="preference_appearance">Aparência</string>
+    <string name="preference_interface">Interface</string>
+    <string name="preference_widget">Widget</string>
+    <string name="preference_other">Outro</string>
+
+    <string name="ARCHIVE_settings_header">Arquivar</string>
+    <string name="ARCHIVE_settings_summary">Configuração para arquivamento em done.txt</string>
+    <string name="auto_archive_pref_title">Arquivamentos automático</string>
+    <string name="auto_archive_pref_summary">Arquivar tarefas ao completá-las.</string>
+    <string name="archive_now_pref_title">Arquivar já</string>
+    <string name="archive_now_pref_summary">Mover tarefas completadas de todo.txt para done.txt.</string>
+    <string name="dropbox_logout_pref_title">Sair</string>
+    <string name="dropbox_logout_pref_summary">Sair do Dropbox.</string>
+    <string name="TODOTXTPATH_title">Local do arquivo</string>
+    <string name="TODOTXTPATH_summary">Pasta do todo.txt no Dropbox.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Configuração para sincronização no Dropbox</string>
+
+    <string name="todotxt_features_settings_header">Funções</string>
+    <string name="todotxt_features_settings_summary">Habilitar ou desabilitar funções</string>
+
+    <string name="todotxt_configuration_settings_header">Configuração</string>
+    <string name="todotxt_configuration_settings_summary">Configuração de comportamento</string>
+
+    <string name="todotxt_creation_settings_header">Criação da tarefa</string>
+
+    <string name="todotxt_ui_settings_header">Funções</string>
+    <string name="todotxt_ui_settings_summary">Controlar exibição</string>
+    <string name="todotxt_behavior_settings_header">Comportamento</string>
+    <string name="todotxt_settings_summary">Configurações gerais do aplicativo</string>
+    <string name="sort_complete_last_pref_title">Exibir tarefas completadas</string>
+    <string name="sort_complete_last_pref_summary">Sempre exibir tarefas completadas no fim da lista</string>
+    <string name="keep_prio_header">Manter a prioridade nas tarefas completadas</string>
+    <string name="keep_prio_summary">Remover a prioridade quando completadas as tarefas no todo.txt</string>
+    <string name="prepend_date_pref_title">Datar novas tarefas</string>
+    <string name="prepend_date_pref_summary">Incluir data de criação automaticamente</string>
+    <string name="line_breaks_pref_title">Quebra de linha do Windows</string>
+    <string name="line_breaks_pref_summary">Usar quebra de linha do Windows</string>
+    <string name="recur_from_original_date_pref_title">Recorrer tarefas usando a data original</string>
+    <string name="recur_from_original_date_pref_summary">Modificar a data original de criação nas tarefas recorrentes.\nDesmarque para atualizar a data de criação para hoje.</string>
+    <string name="swipe_complete_pref_title">Deslizar para completar</string>
+    <string name="swipe_complete_pref_summary">Deslizar sobre as tarefas para completá-las.</string>
+    <string name="manual_sync_pref_title">Sincronização manual</string>
+    <string name="manual_sync_pref_summary">Não carregar automaticamente alterações para o Dropbox.</string>
+    <string name="resume_sync_pref_title">Continuar sincronização</string>
+    <string name="resume_sync_pref_summary">Sincronizar com o Dropbox quando abrir o arquivo.</string>
+    <string name="font_size_delta_pref_title">Configurar o tamanho da fonte</string>
+    <string name="datebar_relative_size_summary">Barra de datas proporcional</string>
+    <string name="font_size_delta_pref_summary">Mudar tamanho da fonte.</string>
+    <string name="theme_pref_title">Tema</string>
+    <string name="theme_pref_summary">Trocar tema do aplicativo.</string>
+
+    <string name="share_task_show_edit_pref_title">Editar tarefas compartilhadas</string>
+    <string name="share_task_show_edit_summary">Editar tarefas compartilhadas para o Simpletask antes de as salvar</string>
+
+    <string name="share_task_append_text_title">Texto de segundo plano</string>
+    <string name="share_task_append_text_summary">Anexar \"%s\" às tarefas em segundo plano.</string>
+
+    <string name="local_file_root_title">raiz:// pasta</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="menu_capitalize_tasks">Capitalizar</string>
+    <string name="back_saves_pref_title">Botão voltar</string>
+    <string name="back_saves_summary">Salvar tarefas inseridas ou aplicar filtro quando voltar.</string>
+
+    <string name="show_txt_only_pref_title">Exibir somente arquivos txt</string>
+    <string name="show_txt_only_summary">Somente exibir arquivos .txt na caixa de seleção.</string>
+
+    <string name="calendar_sync_screen_title">Notificações</string>
+    <string name="calendar_sync_screen_summary">Lembretes na agenda (experimental)</string>
+    <string name="calendar_sync_dues_title">Lembretes de prazo</string>
+    <string name="calendar_sync_thresholds_title">Lembretes de data limiar</string>
+    <string name="calendar_reminder_days_title">Dias de antecedência</string>
+    <string name="calendar_reminder_days_summary">Antecedência do lembrete</string>
+    <string name="calendar_reminder_time_title">Hora do lembrete</string>
+    <string name="calendar_reminder_time_summary">Hora do lembrete</string>
+
+    <string name="drawer_fixed_landscape_title">Abrir landscape drawers</string>
+    <string name="drawer_fixed_landscape_summary">Sempre abrir drawers em modo paisagem.</string>
+
+    <string name="widget_theme_pref_title">Tema</string>
+    <string name="widget_theme_pref_summary">Outro tema para os widgets</string>
+
+    <string name="task_text_ellipsizing_pref_title">Usando elipse</string>
+    <string name="task_text_ellipsizing_pref_summary">Usar elipse quando o texto da tarefa tomar mais de duas linhas.</string>
+
+    <string name="widget_header_transparency_title">Transparência do cabeçalho</string>
+    <string name="widget_background_transparency_title">Transparência</string>
+
+    <string name="widget_extended_pref_title">Exibir barra de datas</string>
+    <string name="widget_extended_pref_summary">Exibir datas numa linha diferente</string>
+
+    <string name="taskview_extended_pref_title">Exibir barra de datas</string>
+    <string name="taskview_extended_pref_summary">Exibir datas numa outra linha</string>
+
+    <string name="append_tasks_at_end_title">Anexar ao arquivo</string>
+    <string name="append_tasks_at_end_summary">Inserir novas tarefas no fim do arquivo</string>
+
+    <string name="color_due_pref_title">Colorir prazos</string>
+    <string name="color_due_pref_summary">Colorir prazos e datas limiares</string>
+
+    <string name="show_hidden_title">Exibir tarefas ocultas</string>
+    <string name="show_hidden_summary">Exibir tarefas ocultas (h:1) para editá-las. Após, desmarque esta opção.</string>
+
+    <string name="show_empty_lists_title">Exibir cabeçalhos vazios</string>
+    <string name="show_empty_lists_summary">Exibir cabeçalho mesmo que todas as tarefas sob ele estejam ocultas.</string>
+
+    <string name="split_actionbar_pref_title">Usar barra de separação</string>
+    <string name="split_actionbar_pref_summary">Usar barra dividida para que os menus fiquem no inferior da tela. Para melhor disposição da tela desabilite.</string>
+
+    <string name="show_edittext_hint_title">Exibir dicas</string>
+    <string name="show_edittext_hint_summary">Exibir dicas na adição de tarefas. Desabilite se quiser.</string>
+
+    <string name="show_complete_checkbox_title">Exibir caixas de completamento</string>
+    <string name="show_complete_checkbox_summary">Exibir caixa diante das tarefas para (des)completá-las.</string>
+
+    <string name="show_confirmation_dialogs_title">Diálogos de confirmação</string>
+    <string name="show_confirmation_dialogs_summary">Perguntar antes de arquivar ou apagar tarefas</string>
+
+    <string name="show_todo_path_title">Exibir caminho do arquivo todo</string>
+    <string name="show_todo_path_summary">Representar pastas pela primeira letra</string>
+
+    <string name="show_fast_scroll_title">Arrastamento rápido</string>
+    <string name="show_fast_scroll_summary">Usar arrastamento rápido em listas grandes</string>
+
+    <string name="show_calendarview_title">Usar o calendário para datar</string>
+
+    <string name="sort_case_sensitive_title">Considerar maiúsculas</string>
+    <string name="sort_case_sensitive_summary">Considerar maiúsculas na organização de listas, projetos e filtros salvos.</string>
+
+    <string name="use_create_as_threshold_title">Data de criação como data limiar</string>
+    <string name="use_create_backup_summary">Quando organizar, usar a data de criação como data limiar se não houver outra data inserida</string>
+
+    <string name="todotxt_terms_title">Usar padrões todo.txt</string>
+    <string name="todotxt_terms_summary">Contexto e projeto em vez de lista e projeto</string>
+
+    <string name="about_settings_header">Sobre</string>
+    <string name="about_settings_summary">Informações do app</string>
+    <string name="visit_website_title">Ajuda</string>
+    <string name="visit_website_summary">Visitar site do Simpletask</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+
+    <string name="visit_tracker_title">Solicite uma função ou relatório de erro</string>
+    <string name="visit_tracker_summary">Solicite uma nova função ou aperfeiçoamento ou informe um problema.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="preference_title_debug_info">Ver histórico de erros</string>
+    <string name="preference_summary_debug_info">Ver e compartilhar versão e histórico de erros.</string>
+
+    <!-- sync dialog -->
+    <string name="sync_dialog_title">Sincronização manual</string>
+    <string name="sync_dialog_msg">Quer baixar ou carregar seu arquivo todo.txt?</string>
+    <string name="sync_dialog_upload">Carregar para o Dropbox</string>
+    <string name="sync_dialog_download">Baixar para o celular</string>
+    <string name="sync_upload_message">Carregando todo.txt...</string>
+    <string name="sync_download_message">Baixando todo.txt...</string>
+
+    <!-- sync conflict dialog -->
+    <string name="sync_conflict_dialog_title">Conflito de arquivos</string>
+    <string name="sync_conflict_dialog_msg">Opa! Há uma nova versão do arquivo todo.txt no Dropbox.\nPretende         carregar o arquivo local ou o remoto?</string>
+
+    <!-- login -->
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_screen_button">Entrar no Dropbox</string>
+    <string name="login_folder_screen_button">Entrar no Dropbox\n(Pasta do aplicativo)</string>
+    <string name="login_cloudless">Se não tem conta no Dropbox ou não quer nele arquivar seu arquivo de dados,         você pode baixar o Simpletask Cloudless no f-droid.\nhttps://f-droid.org/app/nl.mpcjanssen.simpletask</string>
+
+    <!-- delete -->
+    <string name="delete_task_title">Apagar % tarefa(s)</string>
+    <string name="archive_task_title">Arquivar % tarefa(s)</string>
+    <string name="delete_task_message">Impossível desfazer. Tem certeza?</string>
+    <string name="logout_message">Certifique-se de que todas as mudanças feitas estão sincronizadas no Dropbox ou         que sua lista de tarefas completadas foi compartilhada (se não houver conexão com o Dropbox).\n        Quaisquer mudanças não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
+     <string name="dropbox_open">Certifique-se de que todas as mudanças feitas estão sincronizadas no Dropbox ou         que sua lista de tarefas completadas foi compartilhada (se não houver conexão com o Dropbox).\n        Quaisquer mudanças não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
+    <string name="delete_task_confirm">Apagar</string>
+
+    <!-- search -->
+    <string name="clone_tags">Clonar projetos</string>
+    <string name="word_wrap">Encapsulamento</string>
+    <string name="search_hint">Procurar todo.txt</string>
+
+    <!-- sort -->
+    <string name="sort_help">Arrastar e soltar para trocar a ordem de organização. Clicar nos itens para mudar a ordem.</string>
+    <string name="file_order">Ordem no arquivo (sem ordem)</string>
+    <string name="alphabetical">Alfabética</string>
+    <string name="by_prio">Por prioridade</string>
+    <string name="by_project">Por projeto</string>
+    <string name="by_context">Por lista</string>
+    <string name="by_project_todotxt">Por projeto</string>
+    <string name="by_context_todotxt">Por contexto</string>
+    <string name="completed">Completadas</string>
+    <string name="by_creation_date">Por criação</string>
+    <string name="in_future">Data limiar para o futuro</string>
+    <string name="by_due_date">Por prazo</string>
+    <string name="by_threshold_date">Por data limiar</string>
+    <string name="by_completion_date">Por data de cumprimento</string>
+	
+    <!-- filter -->
+    <string name="filter_select_all">Selecionar tudo</string>
+    <string name="filter_clear_all">Limpar filtro</string>
+    <string name="filter_invert">Inverter filtro</string>
+    <string name="add_filter_shortcut">Ao início</string>
+    <string name="export_filter">Exportar</string>
+    <string name="import_filter">Importar</string>
+    <string name="rename_filter">Renomear</string>
+    <string name="rename_filter_message">Entrar novo nome para este filtro:</string>
+    <string name="title_filter_drawer">Filtro rápido</string>
+    <string name="update_filter">Atualizar</string>
+    <string name="create_widget">Criar widget</string>
+    <string name="config_widget">Configurar widget</string>
+    <string name="filter_show_completed">Exibir tarefas completadas</string>
+    <string name="filter_show_future">Exibir tarefas com datas limiares para o futuro</string>
+    <string name="filter_show_lists">Exibir as listas das tarefas</string>
+    <string name="filter_show_tags">Exibir projetos nas tarefas</string>
+    <string name="filter_show_create_date">Exibir idade das tarefas</string>
+
+    <string name="filter_show_completed_short">Completadas</string>
+    <string name="filter_show_future_short">Futuro</string>
+    <string name="filter_show_prompt">Exibir</string>
+    <string name="filter_saved_prompt">Filtros salvos</string>
+
+    <!-- task parts -->
+    <string name="task_select_parts">Selecionar partes das tarefas</string>
+    <string name="task_show_all">Tudo</string>
+
+    <!-- title bar changes -->
+    <string name="title_filter_applied">Filtrado como:</string>
+    <string name="add_task_help_btn">Ajuda</string>
+    <string name="priority_prompt">Prioridade</string>
+    <string name="priority_short_prompt">Prio</string>
+    <string name="project_prompt">Projeto</string>
+    <string name="context_prompt">Lista</string>
+    <string name="project_prompt_todotxt">Projeto</string>
+    <string name="context_prompt_todotxt">Contexto</string>
+    <string name="priority_format">(prio)</string>
+
+    <string name="separator">Separador</string>
+
+    <!-- launcher shortcut -->
+    <string name="shortcut_addtask_name">Inserir tarefa</string>
+    <!-- share -->
+    <string name="share_addtask_name">Adicionar no Simpletask</string>
+
+    <string name="none">nenhum</string>
+    <string name="keep">Manter</string>
+    <string name="all">todos</string>
+
+    <!-- Relative Dates -->
+    <string name="dates_days_ago">% dias atrás</string>
+    <string name="dates_one_day_ago">1 dia atrás</string>
+    <string name="dates_years_ago">% anos atrás</string>
+    <string name="dates_one_year_ago">1 ano atrás</string>
+    <string name="dates_months_ago">% meses atrás</string>
+    <string name="dates_one_month_ago">1 mês atrás</string>
+    <string name="dates_weeks_ago">% semanas atrás</string>
+    <string name="dates_one_week_ago">1 semana atrás</string>
+
+    <string name="dates_one_week">1 semana</string>
+    <string name="dates_two_weeks">2 semanas</string>
+    <string name="dates_one_month">1 mês</string>
+
+    <string name="dates_today">hoje</string>
+    <string name="date_pick">escolher data</string>
+    <string name="dates_tomorrow">amanhã</string>
+
+    <string name="title_activity_filter">Filtro</string>
+    <string name="selected">selecionado</string>
+    <string name="no_context">Entrada</string>
+    <string name="no_project">Sem projeto</string>
+    <string name="no_creation_date">Sem data de criação</string>
+    <string name="no_threshold_date">Sem data limiar</string>
+    <string name="no_header">Nenhum</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">Incluir lembrete</string>
+    <string name="calendar_title">Lembrete do Simpletask</string>
+    <string name="share_title">Tarefa Simpletask</string>
+    <string name="version_copied">Informações de versão copiadas</string>
+
+    <string name="task_added">Tarefa adicionada ao Simpletask</string>
+    <string name="default_sort">Disposição padrão</string>
+    <string name="pull_to_refresh_refreshing_label">Sincronizando com o Dropbox</string>
+    <string name="input_new">Inserir nova</string>
+    <string name="no_filter">Sem filtro</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="save_filter">Salvar filtro atual</string>
+    <string name="save_filter_message">Entrar nome do filtro atual, para exibi-lo no painel de filtros salvos.</string>
+
+    <string name="filter_import_export">Importar/exportar filtros</string>
+
+    <string name="donate_title">Doar</string>
+    <string name="donate_summary">Doe se gostar do Simpletask. NOTA: Doações são voluntárias - o Simpletask sempre será gratuito.</string>
+    <string name="donated_summary">Obrigado pela doação!</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">Organização reversa</string>
+
+    <!-- Calendar sync -->
+    <string name="calendar_disp_name">Lembretes do Simpletask</string>
+    <string name="calendar_sync_desc_due">Lembrete de prazo, gerado automaticamente pelo Simpletask</string>
+    <string name="calendar_sync_desc_thre">Lembrete de data limiar, gerado automaticamente pelo Simpletask</string>
+    <string name="calendar_exists_warning">Aviso: Calendário com mesmo nome, sobrescrevendo...</string>
+    <string name="calendar_write_error">Erro: impossível escrever na agenda</string>
+
+    <string name="click_to_copy">Toque para copiar para a área de transferência.</string>
+
+    <string name="share_history">Ver e compartilhar histórico interno do todo.txt para recuperação.</string>
+    <string name="share_history_title">Histórico</string>
+
+    <string name="hello_world">Olá mundo!</string>
+    <string name="action_settings">Configurações</string>
+
+    <!-- Default Help localisation -->
+    <string name="help_locale">Inglês</string>
+
+    <string name="task_action">Ação</string>
+
+    <string name="name">Nome</string>
+    <string name="date">Data</string>
+    <string name="back_clears_filter_title">Voltar limpa o filtro</string>
+    <string name="back_clears_filter_summary">O botão voltar limpa o filtro ao sair</string>
+    <string name="experimental_title">Experimental</string>
+    <string name="experimental_summary">Habilitar funções experimentais</string>
+
+    <string name="lua_error">Erro de lua</string>
+    <string name="lua_config_screen">Configuração de lua</string>
+    <string name="lua_run">Executar</string>
+    <string name="lua_config_import_export">Importar/exportar config. de lua</string>
+    <string name="lua_config_export">Salvar e exportar</string>
+    <string name="lua_config_import">Importar</string>
+    <string name="lua_config_share">Compartilhar</string>
+    <string name="lua_open_config">Configuração de lua</string>
+</resources>
