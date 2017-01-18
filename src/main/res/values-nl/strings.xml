@@ -158,7 +158,7 @@ Kijk de +Simpletask-instellingen na en verwijder deze tekst @Phone</string>
     <string name="widget_theme_pref_title">Thema</string>
     <string name="widget_theme_pref_summary">Wijzig het door de widgets gebruikte thema.</string>
 
-    <string name="task_text_ellipsizing_pref_title">Taaktekstellips</string>
+    <string name="task_text_ellipsizing_pref_title">Taaktekst-inkorting</string>
     <string name="task_text_ellipsizing_pref_summary">Taaktekst elipseren in het hoofdvenster als er meer dan 2 regels zijn.</string>
 
     <string name="widget_header_transparency_title">Koptransparantie</string>
