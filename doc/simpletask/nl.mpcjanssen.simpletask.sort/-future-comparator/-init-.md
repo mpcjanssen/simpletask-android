@@ -1,0 +1,5 @@
+[simpletask](../../index.md) / [nl.mpcjanssen.simpletask.sort](../index.md) / [FutureComparator](index.md) / [&lt;init&gt;](.)
+
+# &lt;init&gt;
+
+`FutureComparator(today: String)`

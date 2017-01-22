@@ -131,7 +131,7 @@ allprojects {
 
 dokka {
     moduleName = 'simpletask'
-    outputFormat = 'html'
+    outputFormat = 'markdown'
     outputDirectory = "doc"
     processConfigurations = ['compile', 'extra']
     includes = ['README.md']

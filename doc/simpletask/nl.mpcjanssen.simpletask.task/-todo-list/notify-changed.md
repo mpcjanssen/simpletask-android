@@ -1,0 +1,5 @@
+[simpletask](../../index.md) / [nl.mpcjanssen.simpletask.task](../index.md) / [TodoList](index.md) / [notifyChanged](.)
+
+# notifyChanged
+
+`fun notifyChanged(todoName: String, eol: String, backup: `[`BackupInterface`](../../nl.mpcjanssen.simpletask.remote/-backup-interface/index.md)`?, save: Boolean): Unit` [(source)](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/task/TodoList.kt#L230)
