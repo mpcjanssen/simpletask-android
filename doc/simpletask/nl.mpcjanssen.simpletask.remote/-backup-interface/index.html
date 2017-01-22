@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BackupInterface - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.remote</a>&nbsp;/&nbsp;<a href=".">BackupInterface</a><br/>
+<br/>
+<h1>BackupInterface</h1>
+<code><span class="keyword">interface </span><span class="identifier">BackupInterface</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/remote/BackupInterface.kt#L8">(source)</a>
+<p>Interface definition of the storage backend used.</p>
+<p>Uses events to communicate with the application. Currently supported are SYNC_START, SYNC_DONE and FILE_CHANGED.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="backup.html">backup</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">backup</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.BackupInterface$backup(kotlin.String, kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.BackupInterface$backup(kotlin.String, kotlin.String)/contents">contents</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="../../nl.mpcjanssen.simpletask/-todo-application/index.html">TodoApplication</a></td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">TodoApplication</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Application</span><span class="symbol">, </span><a href="../-file-store-interface/-file-change-listener/index.html"><span class="identifier">FileChangeListener</span></a><span class="symbol">, </span><span class="identifier">BackupInterface</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
