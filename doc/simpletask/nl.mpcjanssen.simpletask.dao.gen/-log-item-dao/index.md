@@ -1,0 +1,28 @@
+[simpletask](../../index.md) / [nl.mpcjanssen.simpletask.dao.gen](../index.md) / [LogItemDao](.)
+
+# LogItemDao
+
+`open class LogItemDao : AbstractDao<`[`LogItem`](../-log-item/index.md)`, Long>` [(source)](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/dao/gen/LogItemDao.java#L17)
+
+DAO for table "LOG_ITEM".
+
+### Types
+
+| [Properties](-properties/index.md) | `open class Properties`<br>Properties of entity LogItem. Can be used for QueryBuilder and for referencing column names. |
+
+### Constructors
+
+| [&lt;init&gt;](-init-.md) | `LogItemDao(config: DaoConfig)`<br>`LogItemDao(config: DaoConfig, daoSession: `[`DaoSession`](../-dao-session/index.md)`)` |
+
+### Properties
+
+| [TABLENAME](-t-a-b-l-e-n-a-m-e.md) | `static val TABLENAME: String` |
+
+### Functions
+
+| [createTable](create-table.md) | `open static fun createTable(db: SQLiteDatabase, ifNotExists: Boolean): Unit`<br>Creates the underlying database table. |
+| [dropTable](drop-table.md) | `open static fun dropTable(db: SQLiteDatabase, ifExists: Boolean): Unit`<br>Drops the underlying database table. |
+| [getKey](get-key.md) | `open fun getKey(entity: `[`LogItem`](../-log-item/index.md)`): Long` |
+| [readEntity](read-entity.md) | `open fun readEntity(cursor: Cursor, offset: Int): `[`LogItem`](../-log-item/index.md)<br>`open fun readEntity(cursor: Cursor, entity: `[`LogItem`](../-log-item/index.md)`, offset: Int): Unit` |
+| [readKey](read-key.md) | `open fun readKey(cursor: Cursor, offset: Int): Long` |
+
