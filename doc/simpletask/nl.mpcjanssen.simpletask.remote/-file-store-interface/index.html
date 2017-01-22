@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>FileStoreInterface - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.remote</a>&nbsp;/&nbsp;<a href=".">FileStoreInterface</a><br/>
+<br/>
+<h1>FileStoreInterface</h1>
+<code><span class="keyword">interface </span><span class="identifier">FileStoreInterface</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/remote/FileStoreInterface.kt#L11">(source)</a>
+<p>Interface definition of the storage backend used.</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-file-change-listener/index.html">FileChangeListener</a></td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">FileChangeListener</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-file-read-listener/index.html">FileReadListener</a></td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">FileReadListener</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-file-selected-listener/index.html">FileSelectedListener</a></td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">FileSelectedListener</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="is-authenticated.html">isAuthenticated</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">isAuthenticated</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="is-loading.html">isLoading</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">isLoading</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="is-online.html">isOnline</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">isOnline</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="type.html">type</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="append-task-to-file.html">appendTaskToFile</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">appendTaskToFile</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$appendTaskToFile(kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String)/path">path</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$appendTaskToFile(kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String)/lines">lines</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$appendTaskToFile(kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String)/eol">eol</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="browse-for-new-file.html">browseForNewFile</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">browseForNewFile</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$browseForNewFile(android.app.Activity, kotlin.String, nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileSelectedListener, kotlin.Boolean)/act">act</span><span class="symbol">:</span>&nbsp;<span class="identifier">Activity</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$browseForNewFile(android.app.Activity, kotlin.String, nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileSelectedListener, kotlin.Boolean)/path">path</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$browseForNewFile(android.app.Activity, kotlin.String, nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileSelectedListener, kotlin.Boolean)/listener">listener</span><span class="symbol">:</span>&nbsp;<a href="-file-selected-listener/index.html"><span class="identifier">FileSelectedListener</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$browseForNewFile(android.app.Activity, kotlin.String, nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileSelectedListener, kotlin.Boolean)/txtOnly">txtOnly</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="changes-pending.html">changesPending</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">changesPending</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-version.html">getVersion</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getVersion</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$getVersion(kotlin.String)/filename">filename</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-write-permission.html">getWritePermission</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getWritePermission</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$getWritePermission(android.app.Activity, kotlin.Int)/act">act</span><span class="symbol">:</span>&nbsp;<span class="identifier">Activity</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$getWritePermission(android.app.Activity, kotlin.Int)/activityResult">activityResult</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="load-tasks-from-file.html">loadTasksFromFile</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">loadTasksFromFile</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$loadTasksFromFile(kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String)/path">path</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$loadTasksFromFile(kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String)/backup">backup</span><span class="symbol">:</span>&nbsp;<a href="../-backup-interface/index.html"><span class="identifier">BackupInterface</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$loadTasksFromFile(kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String)/eol">eol</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="logout.html">logout</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">logout</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="needs-refresh.html">needsRefresh</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">needsRefresh</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$needsRefresh(kotlin.String)/currentVersion">currentVersion</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="pause.html">pause</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">pause</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$pause(kotlin.Boolean)/pause">pause</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="read-file.html">readFile</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">readFile</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$readFile(kotlin.String, nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileReadListener)/file">file</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$readFile(kotlin.String, nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileReadListener)/fileRead">fileRead</span><span class="symbol">:</span>&nbsp;<a href="-file-read-listener/index.html"><span class="identifier">FileReadListener</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="save-tasks-to-file.html">saveTasksToFile</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">saveTasksToFile</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$saveTasksToFile(kotlin.String, kotlin.collections.List((kotlin.String)), nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String, kotlin.Boolean)/path">path</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$saveTasksToFile(kotlin.String, kotlin.collections.List((kotlin.String)), nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String, kotlin.Boolean)/lines">lines</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$saveTasksToFile(kotlin.String, kotlin.collections.List((kotlin.String)), nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String, kotlin.Boolean)/backup">backup</span><span class="symbol">:</span>&nbsp;<a href="../-backup-interface/index.html"><span class="identifier">BackupInterface</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$saveTasksToFile(kotlin.String, kotlin.collections.List((kotlin.String)), nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String, kotlin.Boolean)/eol">eol</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$saveTasksToFile(kotlin.String, kotlin.collections.List((kotlin.String)), nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.String, kotlin.Boolean)/updateVersion">updateVersion</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="start-login.html">startLogin</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">startLogin</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$startLogin(android.app.Activity)/caller">caller</span><span class="symbol">:</span>&nbsp;<span class="identifier">Activity</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="supports-sync.html">supportsSync</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">supportsSync</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="sync.html">sync</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">sync</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="write-file.html">writeFile</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">writeFile</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$writeFile(java.io.File, kotlin.String)/file">file</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html"><span class="identifier">File</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.remote.FileStoreInterface$writeFile(java.io.File, kotlin.String)/contents">contents</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

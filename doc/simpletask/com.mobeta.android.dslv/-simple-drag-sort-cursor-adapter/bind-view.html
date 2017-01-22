@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SimpleDragSortCursorAdapter.bindView - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">com.mobeta.android.dslv</a>&nbsp;/&nbsp;<a href="index.html">SimpleDragSortCursorAdapter</a>&nbsp;/&nbsp;<a href=".">bindView</a><br/>
+<br/>
+<h1>bindView</h1>
+<a name="com.mobeta.android.dslv.SimpleDragSortCursorAdapter$bindView(android.view.View, android.content.Context, android.database.Cursor)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">bindView</span><span class="symbol">(</span><span class="identifier">@NonNull</span> <span class="identifier" id="com.mobeta.android.dslv.SimpleDragSortCursorAdapter$bindView(android.view.View, android.content.Context, android.database.Cursor)/view">view</span><span class="symbol">:</span>&nbsp;<span class="identifier">@NonNull</span> <span class="identifier">View</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.SimpleDragSortCursorAdapter$bindView(android.view.View, android.content.Context, android.database.Cursor)/context">context</span><span class="symbol">:</span>&nbsp;<span class="identifier">Context</span><span class="symbol">, </span><span class="identifier">@NonNull</span> <span class="identifier" id="com.mobeta.android.dslv.SimpleDragSortCursorAdapter$bindView(android.view.View, android.content.Context, android.database.Cursor)/cursor">cursor</span><span class="symbol">:</span>&nbsp;<span class="identifier">@NonNull</span> <span class="identifier">Cursor</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/com/mobeta/android/dslv/SimpleDragSortCursorAdapter.java#L144">(source)</a>
+<p>Binds all of the field names passed into the "to" parameter of the constructor with their corresponding cursor columns as specified in the "from" parameter. Binding occurs in two phases. First, if a android.widget.SimpleCursorAdapter.ViewBinder is available, <code><a href="#">ViewBinder#setViewValue(android.view.View, android.database.Cursor, int)</a></code> is invoked. If the returned value is true, binding has occured. If the returned value is false and the view to bind is a TextView, <code><a href="#">#setViewText(TextView, String)</a></code> is invoked. If the returned value is false and the view to bind is an ImageView, <code><a href="#">#setViewImage(ImageView, String)</a></code> is invoked. If no appropriate binding can be found, an IllegalStateException is thrown.</p>
+<h3>Exceptions</h3>
+
+<p><a name="IllegalStateException"></a>
+<code>IllegalStateException</code> - if binding cannot occur
+<p><strong>See Also</strong><br/>
+<a href="#">android.widget.CursorAdapter#bindView(android.view.View,
+     *      android.content.Context, android.database.Cursor)</a><a href="get-view-binder.html">#getViewBinder()</a>#setViewBinder(android.widget.SimpleCursorAdapter.ViewBinder)<a href="#">#setViewImage(ImageView, String)</a><a href="#">#setViewText(TextView, String)</a></p>
+</BODY>
+</HTML>
