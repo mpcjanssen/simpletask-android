@@ -1,0 +1,216 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Simpletask - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask</a>&nbsp;/&nbsp;<a href=".">Simpletask</a><br/>
+<br/>
+<h1>Simpletask</h1>
+<code><span class="keyword">class </span><span class="identifier">Simpletask</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-themed-no-action-bar-activity/index.html"><span class="identifier">ThemedNoActionBarActivity</span></a></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/Simpletask.kt#L64">(source)</a>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-mode/index.html">Mode</a></td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">Mode</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-task-adapter/index.html">TaskAdapter</a></td>
+<td>
+<code><span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">TaskAdapter</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-task-view-holder/index.html">TaskViewHolder</a></td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">TaskViewHolder</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-init-.html">&lt;init&gt;</a></td>
+<td>
+<code><span class="identifier">Simpletask</span><span class="symbol">(</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="list-view.html">listView</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">listView</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="saved-filters.html">savedFilters</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">savedFilters</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../-active-filter/index.html"><span class="identifier">ActiveFilter</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="text-size.html">textSize</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">textSize</span><span class="symbol">: </span><span class="identifier">Float</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="create-filter-shortcut.html">createFilterShortcut</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createFilterShortcut</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$createFilterShortcut(nl.mpcjanssen.simpletask.ActiveFilter)/filter">filter</span><span class="symbol">:</span>&nbsp;<a href="../-active-filter/index.html"><span class="identifier">ActiveFilter</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="export-filters.html">exportFilters</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">exportFilters</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$exportFilters(java.io.File)/exportFile">exportFile</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html"><span class="identifier">File</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="import-filters.html">importFilters</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">importFilters</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$importFilters(java.io.File)/importFile">importFile</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html"><span class="identifier">File</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-activity-result.html">onActivityResult</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onActivityResult</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onActivityResult(kotlin.Int, kotlin.Int, android.content.Intent)/requestCode">requestCode</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onActivityResult(kotlin.Int, kotlin.Int, android.content.Intent)/resultCode">resultCode</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onActivityResult(kotlin.Int, kotlin.Int, android.content.Intent)/data">data</span><span class="symbol">:</span>&nbsp;<span class="identifier">Intent</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-add-filter-click.html">onAddFilterClick</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onAddFilterClick</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Handle add filter click *</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="on-back-pressed.html">onBackPressed</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onBackPressed</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-clear-click.html">onClearClick</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onClearClick</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onClearClick(android.view.View)/v">v</span><span class="symbol">:</span>&nbsp;<span class="identifier">View</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Handle clear filter click *</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="on-configuration-changed.html">onConfigurationChanged</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onConfigurationChanged</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onConfigurationChanged(android.content.res.Configuration)/newConfig">newConfig</span><span class="symbol">:</span>&nbsp;<span class="identifier">Configuration</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-create.html">onCreate</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onCreate</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onCreate(android.os.Bundle)/savedInstanceState">savedInstanceState</span><span class="symbol">:</span>&nbsp;<span class="identifier">Bundle</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-create-options-menu.html">onCreateOptionsMenu</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onCreateOptionsMenu</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onCreateOptionsMenu(android.view.Menu)/menu">menu</span><span class="symbol">:</span>&nbsp;<span class="identifier">Menu</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-destroy.html">onDestroy</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onDestroy</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-new-intent.html">onNewIntent</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onNewIntent</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onNewIntent(android.content.Intent)/intent">intent</span><span class="symbol">:</span>&nbsp;<span class="identifier">Intent</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-options-item-selected.html">onOptionsItemSelected</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onOptionsItemSelected</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onOptionsItemSelected(android.view.MenuItem)/item">item</span><span class="symbol">:</span>&nbsp;<span class="identifier">MenuItem</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-pause.html">onPause</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onPause</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-post-create.html">onPostCreate</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onPostCreate</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onPostCreate(android.os.Bundle)/savedInstanceState">savedInstanceState</span><span class="symbol">:</span>&nbsp;<span class="identifier">Bundle</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-request-permissions-result.html">onRequestPermissionsResult</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onRequestPermissionsResult</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onRequestPermissionsResult(kotlin.Int, kotlin.Array((kotlin.String)), kotlin.IntArray)/requestCode">requestCode</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onRequestPermissionsResult(kotlin.Int, kotlin.Array((kotlin.String)), kotlin.IntArray)/permissions">permissions</span><span class="symbol">:</span>&nbsp;<span class="identifier">Array</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$onRequestPermissionsResult(kotlin.Int, kotlin.Array((kotlin.String)), kotlin.IntArray)/grantResults">grantResults</span><span class="symbol">:</span>&nbsp;<span class="identifier">IntArray</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-resume.html">onResume</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onResume</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-search-requested.html">onSearchRequested</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onSearchRequested</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="show-list-view-progress.html">showListViewProgress</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">showListViewProgress</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.Simpletask$showListViewProgress(kotlin.Boolean)/show">show</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="start-filter-activity.html">startFilterActivity</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">startFilterActivity</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-u-r-i_-b-a-s-e.html">URI_BASE</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">URI_BASE</span><span class="symbol">: </span><span class="identifier">Uri</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-u-r-i_-s-e-a-r-c-h.html">URI_SEARCH</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">URI_SEARCH</span><span class="symbol">: </span><span class="identifier">Uri</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

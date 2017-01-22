@@ -1,0 +1,243 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TodoList - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.task</a>&nbsp;/&nbsp;<a href=".">TodoList</a><br/>
+<br/>
+<h1>TodoList</h1>
+<code><span class="keyword">object </span><span class="identifier">TodoList</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/task/TodoList.kt#L54">(source)</a>
+<p>Implementation of the in memory representation of the todo list</p>
+<p><strong>Author</strong><br/>
+Mark Janssen</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="completed-tasks.html">completedTasks</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">completedTasks</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="contexts.html">contexts</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">contexts</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="decorated-contexts.html">decoratedContexts</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">decoratedContexts</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="decorated-projects.html">decoratedProjects</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">decoratedProjects</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="priorities.html">priorities</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">priorities</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../-priority/index.html"><span class="identifier">Priority</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="projects.html">projects</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">projects</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="selected-tasks.html">selectedTasks</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">selectedTasks</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="selection-query.html">selectionQuery</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">selectionQuery</span><span class="symbol">: </span><span class="identifier">Query</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="todo-items.html">todoItems</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">todoItems</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="todo-items-dao.html">todoItemsDao</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">todoItemsDao</span><span class="symbol">: </span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item-dao/index.html"><span class="identifier">TodoItemDao</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="add.html">add</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">add</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$add(nl.mpcjanssen.simpletask.dao.gentodo.TodoItem, kotlin.Boolean)/t">t</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$add(nl.mpcjanssen.simpletask.dao.gentodo.TodoItem, kotlin.Boolean)/atEnd">atEnd</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code><br/>
+<code><span class="keyword">fun </span><span class="identifier">add</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$add(nl.mpcjanssen.simpletask.task.Task, kotlin.Boolean, kotlin.Boolean)/t">t</span><span class="symbol">:</span>&nbsp;<a href="../-task/index.html"><span class="identifier">Task</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$add(nl.mpcjanssen.simpletask.task.Task, kotlin.Boolean, kotlin.Boolean)/atEnd">atEnd</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$add(nl.mpcjanssen.simpletask.task.Task, kotlin.Boolean, kotlin.Boolean)/select">select</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="archive.html">archive</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">archive</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$archive(kotlin.String, kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.String)/todoFilename">todoFilename</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$archive(kotlin.String, kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.String)/doneFileName">doneFileName</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$archive(kotlin.String, kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.String)/tasks">tasks</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$archive(kotlin.String, kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.String)/eol">eol</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="clear-selection.html">clearSelection</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">clearSelection</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="complete.html">complete</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">complete</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$complete(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.Boolean, kotlin.Boolean)/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$complete(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.Boolean, kotlin.Boolean)/keepPrio">keepPrio</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$complete(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), kotlin.Boolean, kotlin.Boolean)/extraAtEnd">extraAtEnd</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="defer.html">defer</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">defer</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$defer(kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), nl.mpcjanssen.simpletask.DateType)/deferString">deferString</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$defer(kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), nl.mpcjanssen.simpletask.DateType)/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$defer(kotlin.String, kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), nl.mpcjanssen.simpletask.DateType)/dateType">dateType</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask/-date-type/index.html"><span class="identifier">DateType</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="first-line.html">firstLine</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">firstLine</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Long</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-sorted-tasks.html">getSortedTasks</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getSortedTasks</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$getSortedTasks(nl.mpcjanssen.simpletask.ActiveFilter, java.util.ArrayList((kotlin.String)), kotlin.Boolean)/filter">filter</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask/-active-filter/index.html"><span class="identifier">ActiveFilter</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$getSortedTasks(nl.mpcjanssen.simpletask.ActiveFilter, java.util.ArrayList((kotlin.String)), kotlin.Boolean)/sorts">sorts</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$getSortedTasks(nl.mpcjanssen.simpletask.ActiveFilter, java.util.ArrayList((kotlin.String)), kotlin.Boolean)/caseSensitive">caseSensitive</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-task-count.html">getTaskCount</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getTaskCount</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Long</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="has-pending-action.html">hasPendingAction</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">hasPendingAction</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="is-selected.html">isSelected</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">isSelected</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$isSelected(nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)/item">item</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="last-line.html">lastLine</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">lastLine</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Long</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="notify-changed.html">notifyChanged</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">notifyChanged</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$notifyChanged(kotlin.String, kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.Boolean)/todoName">todoName</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$notifyChanged(kotlin.String, kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.Boolean)/eol">eol</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$notifyChanged(kotlin.String, kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.Boolean)/backup">backup</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.remote/-backup-interface/index.html"><span class="identifier">BackupInterface</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$notifyChanged(kotlin.String, kotlin.String, nl.mpcjanssen.simpletask.remote.BackupInterface, kotlin.Boolean)/save">save</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="num-selected.html">numSelected</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">numSelected</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Long</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="prioritize.html">prioritize</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">prioritize</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$prioritize(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), nl.mpcjanssen.simpletask.task.Priority)/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$prioritize(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)), nl.mpcjanssen.simpletask.task.Priority)/prio">prio</span><span class="symbol">:</span>&nbsp;<a href="../-priority/index.html"><span class="identifier">Priority</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="reload.html">reload</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">reload</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$reload(nl.mpcjanssen.simpletask.remote.BackupInterface, , kotlin.String)/backup">backup</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.remote/-backup-interface/index.html"><span class="identifier">BackupInterface</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$reload(nl.mpcjanssen.simpletask.remote.BackupInterface, , kotlin.String)/lbm">lbm</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$reload(nl.mpcjanssen.simpletask.remote.BackupInterface, , kotlin.String)/eol">eol</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="remove.html">remove</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">remove</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$remove(nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)/item">item</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="select-line.html">selectLine</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">selectLine</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$selectLine(kotlin.Long)/line">line</span><span class="symbol">:</span>&nbsp;<span class="identifier">Long</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="select-todo-item.html">selectTodoItem</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">selectTodoItem</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$selectTodoItem(nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)/item">item</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="select-todo-items.html">selectTodoItems</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">selectTodoItems</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$selectTodoItems(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)))/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="settle.html">settle</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">settle</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="size.html">size</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">size</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="start-add-task-activity.html">startAddTaskActivity</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">startAddTaskActivity</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$startAddTaskActivity(android.app.Activity)/act">act</span><span class="symbol">:</span>&nbsp;<span class="identifier">Activity</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="un-select-todo-item.html">unSelectTodoItem</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">unSelectTodoItem</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$unSelectTodoItem(nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)/item">item</span><span class="symbol">:</span>&nbsp;<a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="un-select-todo-items.html">unSelectTodoItems</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">unSelectTodoItems</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$unSelectTodoItems(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)))/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="uncomplete.html">uncomplete</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">uncomplete</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$uncomplete(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)))/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="update.html">update</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">update</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.TodoList$update(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)))/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

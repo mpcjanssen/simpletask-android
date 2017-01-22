@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>IndeterminateRadioButton - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">com.buildware.widget.indeterm</a>&nbsp;/&nbsp;<a href=".">IndeterminateRadioButton</a><br/>
+<br/>
+<h1>IndeterminateRadioButton</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">IndeterminateRadioButton</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">AppCompatRadioButton</span><span class="symbol">, </span><a href="../-indeterminate-checkable/index.html"><span class="identifier">IndeterminateCheckable</span></a></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/com/buildware/widget/indeterm/IndeterminateRadioButton.java#L19">(source)</a>
+<p>A RadioButton with additional 3rd "indeterminate" state. By default it is in "determinate" (checked or unchecked) state.</p>
+<p><strong>Author</strong><br/>
+Svetlozar Kostadinov (sevarbg@gmail.com)</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-on-state-changed-listener/index.html">OnStateChangedListener</a></td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">OnStateChangedListener</span></code>
+<p>Interface definition for a callback to be invoked when the checked state changed.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-init-.html">&lt;init&gt;</a></td>
+<td>
+<code><span class="identifier">IndeterminateRadioButton</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$<init>(android.content.Context)/context">context</span><span class="symbol">:</span>&nbsp;<span class="identifier">Context</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">IndeterminateRadioButton</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$<init>(android.content.Context, android.util.AttributeSet)/context">context</span><span class="symbol">:</span>&nbsp;<span class="identifier">Context</span><span class="symbol">, </span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$<init>(android.content.Context, android.util.AttributeSet)/attrs">attrs</span><span class="symbol">:</span>&nbsp;<span class="identifier">AttributeSet</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">IndeterminateRadioButton</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/context">context</span><span class="symbol">:</span>&nbsp;<span class="identifier">Context</span><span class="symbol">, </span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/attrs">attrs</span><span class="symbol">:</span>&nbsp;<span class="identifier">AttributeSet</span><span class="symbol">, </span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/defStyleAttr">defStyleAttr</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="get-accessibility-class-name.html">getAccessibilityClassName</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getAccessibilityClassName</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">CharSequence</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-state.html">getState</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getState</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="is-indeterminate.html">isIndeterminate</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">isIndeterminate</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-restore-instance-state.html">onRestoreInstanceState</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onRestoreInstanceState</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$onRestoreInstanceState(android.os.Parcelable)/state">state</span><span class="symbol">:</span>&nbsp;<span class="identifier">Parcelable</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="on-save-instance-state.html">onSaveInstanceState</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onSaveInstanceState</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Parcelable</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="set-checked.html">setChecked</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setChecked</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$setChecked(kotlin.Boolean)/checked">checked</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="set-indeterminate.html">setIndeterminate</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setIndeterminate</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$setIndeterminate(kotlin.Boolean)/indeterminate">indeterminate</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="set-indeterminate-used.html">setIndeterminateUsed</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setIndeterminateUsed</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$setIndeterminateUsed(kotlin.Boolean)/bool">bool</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="set-on-state-changed-listener.html">setOnStateChangedListener</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setOnStateChangedListener</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$setOnStateChangedListener(com.buildware.widget.indeterm.IndeterminateRadioButton.OnStateChangedListener)/listener">listener</span><span class="symbol">:</span>&nbsp;<a href="-on-state-changed-listener/index.html"><span class="identifier">OnStateChangedListener</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Register a callback to be invoked when the indeterminate or checked state changes. The standard <code>OnCheckedChangedListener</code> will still be called prior to OnStateChangedListener.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="set-state.html">setState</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setState</span><span class="symbol">(</span><span class="identifier" id="com.buildware.widget.indeterm.IndeterminateRadioButton$setState(kotlin.Boolean)/state">state</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="toggle.html">toggle</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">toggle</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
