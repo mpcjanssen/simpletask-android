@@ -1,0 +1,249 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Task - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.task</a>&nbsp;/&nbsp;<a href=".">Task</a><br/>
+<br/>
+<h1>Task</h1>
+<code><span class="keyword">class </span><span class="identifier">Task</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/task/Task.kt#L35">(source)</a>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-init-.html">&lt;init&gt;</a></td>
+<td>
+<code><span class="identifier">Task</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$<init>(kotlin.String)/text">text</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">Task</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$<init>(kotlin.String, kotlin.String)/text">text</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$<init>(kotlin.String, kotlin.String)/defaultPrependedDate">defaultPrependedDate</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="completion-date.html">completionDate</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">completionDate</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="create-date.html">createDate</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">createDate</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="due-date.html">dueDate</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">dueDate</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="extensions.html">extensions</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">extensions</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><span class="identifier">Pair</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">,</span>&nbsp;<span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="links.html">links</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">links</span><span class="symbol">: </span><span class="identifier">Set</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="lists.html">lists</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">lists</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/SortedSet.html"><span class="identifier">SortedSet</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="mail-addresses.html">mailAddresses</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">mailAddresses</span><span class="symbol">: </span><span class="identifier">Set</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="phone-numbers.html">phoneNumbers</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">phoneNumbers</span><span class="symbol">: </span><span class="identifier">Set</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="priority.html">priority</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">priority</span><span class="symbol">: </span><a href="../-priority/index.html"><span class="identifier">Priority</span></a></code></td>
+</tr>
+<tr>
+<td>
+<a href="recurrence-pattern.html">recurrencePattern</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">recurrencePattern</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="tags.html">tags</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">tags</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/SortedSet.html"><span class="identifier">SortedSet</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="text.html">text</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">text</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="threshold-date.html">thresholdDate</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">thresholdDate</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="tokens.html">tokens</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">tokens</span><span class="symbol">: </span><span class="identifier">List</span><span class="symbol">&lt;</span><a href="../-t-token/index.html"><span class="identifier">TToken</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="add-list.html">addList</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addList</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$addList(kotlin.String)/listName">listName</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="add-tag.html">addTag</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addTag</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$addTag(kotlin.String)/tagName">tagName</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="defer-due-date.html">deferDueDate</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">deferDueDate</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$deferDueDate(kotlin.String, kotlin.String)/deferString">deferString</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$deferDueDate(kotlin.String, kotlin.String)/deferFromDate">deferFromDate</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="defer-threshold-date.html">deferThresholdDate</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">deferThresholdDate</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$deferThresholdDate(kotlin.String, kotlin.String)/deferString">deferString</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$deferThresholdDate(kotlin.String, kotlin.String)/deferFromDate">deferFromDate</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="equals.html">equals</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">equals</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$equals(kotlin.Any)/other">other</span><span class="symbol">:</span>&nbsp;<span class="identifier">Any</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-header.html">getHeader</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getHeader</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$getHeader(kotlin.String, kotlin.String, kotlin.Boolean)/sort">sort</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$getHeader(kotlin.String, kotlin.String, kotlin.Boolean)/empty">empty</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$getHeader(kotlin.String, kotlin.String, kotlin.Boolean)/createIsThreshold">createIsThreshold</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hash-code.html">hashCode</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">hashCode</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="in-file-format.html">inFileFormat</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">inFileFormat</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="in-future.html">inFuture</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">inFuture</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$inFuture(kotlin.String)/today">today</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="is-completed.html">isCompleted</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">isCompleted</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="is-hidden.html">isHidden</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">isHidden</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="mark-complete.html">markComplete</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">markComplete</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$markComplete(kotlin.String)/dateStr">dateStr</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Task</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="mark-incomplete.html">markIncomplete</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">markIncomplete</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="remove-list.html">removeList</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeList</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$removeList(kotlin.String)/list">list</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="remove-tag.html">removeTag</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeTag</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$removeTag(kotlin.String)/tag">tag</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="show-parts.html">showParts</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">showParts</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$showParts(kotlin.Int)/parts">parts</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="update.html">update</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">update</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task$update(kotlin.String)/rawText">rawText</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-d-a-t-e_-f-o-r-m-a-t.html">DATE_FORMAT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">DATE_FORMAT</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-t-a-g.html">TAG</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">TAG</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="parse.html">parse</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">parse</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.task.Task.Companion$parse(kotlin.String)/text">text</span><span class="symbol">:</span>&nbsp;<span class="identifier">String</span><span class="symbol">)</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../-t-token/index.html"><span class="identifier">TToken</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,5 +1,0 @@
-[simpletask](../../../index.md) / [nl.mpcjanssen.simpletask.adapters](../../index.md) / [ItemDialogAdapter](../index.md) / [ViewHolder](index.md) / [mCheckBox](.)
-
-# mCheckBox
-
-`var mCheckBox: `[`IndeterminateCheckBox`](../../../com.buildware.widget.indeterm/-indeterminate-check-box/index.md) [(source)](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/adapters/ItemDialogAdapter.kt#L39)

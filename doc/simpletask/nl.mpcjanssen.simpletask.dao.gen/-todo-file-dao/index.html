@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TodoFileDao - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.dao.gen</a>&nbsp;/&nbsp;<a href=".">TodoFileDao</a><br/>
+<br/>
+<h1>TodoFileDao</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">TodoFileDao</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">AbstractDao</span><span class="symbol">&lt;</span><a href="../-todo-file/index.html"><span class="identifier">TodoFile</span></a><span class="symbol">,</span>&nbsp;<span class="identifier">String</span><span class="symbol">&gt;</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/dao/gen/TodoFileDao.java#L17">(source)</a>
+<p>DAO for table "TODO_FILE".</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-properties/index.html">Properties</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">Properties</span></code>
+<p>Properties of entity TodoFile. Can be used for QueryBuilder and for referencing column names.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-init-.html">&lt;init&gt;</a></td>
+<td>
+<code><span class="identifier">TodoFileDao</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$<init>(de.greenrobot.dao.internal.DaoConfig)/config">config</span><span class="symbol">:</span>&nbsp;<span class="identifier">DaoConfig</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">TodoFileDao</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$<init>(de.greenrobot.dao.internal.DaoConfig, nl.mpcjanssen.simpletask.dao.gen.DaoSession)/config">config</span><span class="symbol">:</span>&nbsp;<span class="identifier">DaoConfig</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$<init>(de.greenrobot.dao.internal.DaoConfig, nl.mpcjanssen.simpletask.dao.gen.DaoSession)/daoSession">daoSession</span><span class="symbol">:</span>&nbsp;<a href="../-dao-session/index.html"><span class="identifier">DaoSession</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-t-a-b-l-e-n-a-m-e.html">TABLENAME</a></td>
+<td>
+<code><span class="keyword">static</span> <span class="keyword">val </span><span class="identifier">TABLENAME</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="create-table.html">createTable</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">static</span> <span class="keyword">fun </span><span class="identifier">createTable</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$createTable(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/db">db</span><span class="symbol">:</span>&nbsp;<span class="identifier">SQLiteDatabase</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$createTable(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/ifNotExists">ifNotExists</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Creates the underlying database table.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="drop-table.html">dropTable</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">static</span> <span class="keyword">fun </span><span class="identifier">dropTable</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$dropTable(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/db">db</span><span class="symbol">:</span>&nbsp;<span class="identifier">SQLiteDatabase</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$dropTable(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/ifExists">ifExists</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Drops the underlying database table.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="get-key.html">getKey</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getKey</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$getKey(nl.mpcjanssen.simpletask.dao.gen.TodoFile)/entity">entity</span><span class="symbol">:</span>&nbsp;<a href="../-todo-file/index.html"><span class="identifier">TodoFile</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="read-entity.html">readEntity</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">readEntity</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readEntity(android.database.Cursor, kotlin.Int)/cursor">cursor</span><span class="symbol">:</span>&nbsp;<span class="identifier">Cursor</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readEntity(android.database.Cursor, kotlin.Int)/offset">offset</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-todo-file/index.html"><span class="identifier">TodoFile</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">readEntity</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readEntity(android.database.Cursor, nl.mpcjanssen.simpletask.dao.gen.TodoFile, kotlin.Int)/cursor">cursor</span><span class="symbol">:</span>&nbsp;<span class="identifier">Cursor</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readEntity(android.database.Cursor, nl.mpcjanssen.simpletask.dao.gen.TodoFile, kotlin.Int)/entity">entity</span><span class="symbol">:</span>&nbsp;<a href="../-todo-file/index.html"><span class="identifier">TodoFile</span></a><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readEntity(android.database.Cursor, nl.mpcjanssen.simpletask.dao.gen.TodoFile, kotlin.Int)/offset">offset</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="read-key.html">readKey</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">readKey</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readKey(android.database.Cursor, kotlin.Int)/cursor">cursor</span><span class="symbol">:</span>&nbsp;<span class="identifier">Cursor</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gen.TodoFileDao$readKey(android.database.Cursor, kotlin.Int)/offset">offset</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
