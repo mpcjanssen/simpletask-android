@@ -6,12 +6,10 @@ import de.greenrobot.dao.converter.PropertyConverter
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.dao.gen.*
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItemDao
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.shortAppVersion
 import java.text.SimpleDateFormat
-import nl.mpcjanssen.simpletask.dao.gentodo.DaoSession as TodoDaoSession
-import nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster as TodoDaoMaster
+
 
 import java.util.*
 
@@ -19,7 +17,6 @@ object Daos {
     internal val daoSession: DaoSession
     val logDao: LogItemDao
     val backupDao: TodoFileDao
-    val todoItemDao: TodoItemDao
     init {
         val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
         val logDb = helper.writableDatabase
@@ -29,12 +26,6 @@ object Daos {
         backupDao = daoSession.todoFileDao
         Logger.setDao(logDao)
 
-
-        val todoHelper = TodoDaoMaster.DevOpenHelper(TodoApplication.app, "todolist.db", null)
-        val todoDb = todoHelper.writableDatabase
-        val todoMaster = TodoDaoMaster(todoDb)
-        val todoSession = todoMaster.newSession()
-        todoItemDao = todoSession.todoItemDao
 
     }
 

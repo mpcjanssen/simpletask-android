@@ -3,14 +3,20 @@ package nl.mpcjanssen.simpletask.util
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.JsonReader
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoItem
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.util.*
 
 object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)!!
@@ -287,4 +293,31 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     val hasColorDueDates: Boolean
         get() =  prefs.getBoolean(getString(R.string.color_due_date_key), true)
+
+    var todoList : ArrayList<TodoItem>?
+        get() {
+            val jsonString = prefs.getString(getString(R.string.cached_todo_file), null)
+            if (jsonString == null) {
+                return null
+            }
+            val list = ArrayList<TodoItem>()
+            val json = JSONArray(jsonString)
+            for (i in 0..json.length()-1) {
+                val item = TodoItem(i.toLong(), Task(json.getJSONObject(i).getString("task")),false)
+                list.add(item)
+            }
+            return list
+        }
+        set(items: ArrayList<TodoItem>?) {
+            if (items == null) return
+            val jsonArray = JSONArray()
+            items.forEachIndexed { i, todoItem ->
+                val value = JSONObject()
+                value.put("task", todoItem.task.inFileFormat())
+                jsonArray.put(i,value)
+            }
+            val editor = prefs.edit()
+            editor.putString(getString(R.string.cached_todo_file), jsonArray.toString())
+            editor.apply()
+        }
 }
