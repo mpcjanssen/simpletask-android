@@ -34,6 +34,7 @@ import android.net.Uri
 import android.os.Bundle
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
@@ -110,12 +111,12 @@ class AddTaskBackground : Activity() {
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val todoList = TodoList
-        val addedTasks = ArrayList<Task>()
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
         if (Config.hasShareTaskShowsEdit) {
             todoList.clearSelection()
         }
+        val items = ArrayList<TodoItem>()
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
             if (taskText.trim({ it <= ' ' }).isEmpty()) {
                 continue
@@ -132,9 +133,9 @@ class AddTaskBackground : Activity() {
             } else {
                 t = Task(text)
             }
-            todoList.add(t, Config.hasAppendAtEnd,Config.hasShareTaskShowsEdit)
-            addedTasks.add(t)
+            items.add(TodoItem(1, t, Config.hasShareTaskShowsEdit))
         }
+        todoList.add(items, Config.hasAppendAtEnd)
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
         showToastShort(TodoApplication.app, R.string.task_added)
