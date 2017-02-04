@@ -35,8 +35,7 @@ import android.support.v4.content.LocalBroadcastManager
 import de.greenrobot.dao.query.Query
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItemDao
+
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
@@ -45,6 +44,8 @@ import nl.mpcjanssen.simpletask.util.*
 import java.io.IOException
 import java.util.*
 
+
+data class TodoItem(val line: Long, val task: Task, var selected: Boolean )
 
 /**
  * Implementation of the in memory representation of the todo list
@@ -56,10 +57,9 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    var todoItemsDao = Daos.todoItemDao
+    val todoItems = Config.todoList ?: ArrayList<TodoItem>()
 
     init {
-
         log = Logger
     }
 
@@ -74,26 +74,15 @@ object TodoList {
         }
     }
 
-    val todoItems: List<TodoItem>
-    get() = todoItemsDao.loadAll()
-
-    fun firstLine(): Long {
-        return todoItems.map { it -> it.line }.min() ?: 0
-    }
-
-    fun lastLine(): Long {
-        return todoItems.map { it -> it.line }.max() ?: 1
-    }
-
     fun add(t: TodoItem, atEnd: Boolean) {
         ActionQueue.add("Add task", Runnable {
             log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
             if (atEnd) {
-                t.line = lastLine() + 1
+                todoItems.add(t)
             } else {
-                t.line = firstLine() - 1
+                todoItems.add(0,t)
             }
-            todoItemsDao.insert(t)
+            Config.todoList = todoItems
         })
     }
 
@@ -105,7 +94,8 @@ object TodoList {
 
     fun remove(item: TodoItem) {
         ActionQueue.add("Remove", Runnable {
-            todoItemsDao.delete(item)
+            todoItems.remove(item)
+            Config.todoList = todoItems
         })
     }
 
@@ -171,7 +161,7 @@ object TodoList {
             items.forEach {
                 it.task.markIncomplete()
             }
-            todoItemsDao.updateInTx(items)
+            Config.todoList = todoItems
         })
     }
 
@@ -180,7 +170,6 @@ object TodoList {
             for (item in items) {
                 val task = item.task
                 val extra = task.markComplete(todayAsString)
-                todoItemsDao.update(item)
                 if (extra != null) {
                     add(extra, extraAtEnd)
                 }
@@ -188,6 +177,7 @@ object TodoList {
                     task.priority = Priority.NONE
                 }
             }
+            Config.todoList = todoItems
         })
     }
 
@@ -197,7 +187,7 @@ object TodoList {
             for (item in items) {
                 item.task.priority = prio
             }
-            todoItemsDao.updateInTx(items)
+            Config.todoList = todoItems
         })
 
     }
@@ -211,14 +201,13 @@ object TodoList {
                     DateType.THRESHOLD -> taskToDefer.deferThresholdDate(deferString, todayAsString)
                 }
             }
-            todoItemsDao.updateInTx(items)
+            Config.todoList = todoItems
         })
     }
 
-    val selectionQuery : Query<TodoItem> = todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).build()
     var selectedTasks: List<TodoItem> = ArrayList()
         get() {
-            return selectionQuery.forCurrentThread().list()
+            return todoItems.filter {it.selected}
         }
 
     var completedTasks: List<TodoItem> = ArrayList()
@@ -262,14 +251,12 @@ object TodoList {
         val filename = Config.todoFileName
         if (FileStore.needsRefresh(Config.currentVersionId)) {
             try {
-                todoItemsDao.database.beginTransaction()
-                todoItemsDao.deleteAll()
+                todoItems.clear()
                 val items = ArrayList<TodoItem>(
                         FileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
                             TodoItem(line.toLong(), Task(text), false)
                         })
-                todoItemsDao.insertInTx(items)
-                todoItemsDao.database.setTransactionSuccessful()
+                todoItems.addAll(items)
                 Config.currentVersionId = FileStore.getVersion(filename)
 
             } catch (e: Exception) {
@@ -278,8 +265,6 @@ object TodoList {
             } catch (e: IOException) {
                 log.error(TAG, "TodoList load failed: {}" + filename, e)
                 showToastShort(TodoApplication.app, "Loading of todo file failed")
-            } finally {
-                todoItemsDao.database.endTransaction()
             }
             log.info(TAG, "TodoList loaded, refresh UI")
         } else {
@@ -303,15 +288,14 @@ object TodoList {
         }
     }
 
-    fun update(items : List<TodoItem>) {
-        todoItemsDao.updateInTx(items)
-    }
-
     fun archive(todoFilename: String, doneFileName: String, tasks: List<TodoItem>, eol: String) {
         ActionQueue.add("Archive", Runnable {
             try {
                 FileStore.appendTaskToFile(doneFileName, tasks.map { it.task.text }, eol)
-                todoItemsDao.deleteInTx(tasks)
+                tasks.forEach {
+                    todoItems.remove(it)
+                }
+                Config.todoList = todoItems
                 notifyChanged(todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -325,7 +309,7 @@ object TodoList {
     }
 
     fun numSelected(): Long {
-        return todoItemsDao.queryBuilder().where(TodoItemDao.Properties.Selected.eq(true)).count()
+        return todoItems.filter { it.selected }.count().toLong()
     }
 
 
@@ -336,7 +320,6 @@ object TodoList {
         items.forEach {
             it.selected = true
         }
-        todoItemsDao.updateInTx(items)
     }
 
     fun selectTodoItem(item: TodoItem) {
@@ -352,7 +335,6 @@ object TodoList {
         items.forEach {
             it.selected = false
         }
-        todoItemsDao.updateInTx(items)
     }
 
     fun clearSelection() {
@@ -365,11 +347,14 @@ object TodoList {
     }
 
     fun selectLine(line : Long ) {
-        val item = todoItemsDao.load(line)
+        val item = todoItems.find {it.line == line}
         item?.let {
             item.selected = true
-            todoItemsDao.update(item)
         }
+    }
+
+    fun  update(checkedTasks: List<TodoItem>) {
+        Config.todoList = todoItems
     }
 }
 
