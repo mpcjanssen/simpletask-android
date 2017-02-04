@@ -74,13 +74,13 @@ object TodoList {
         }
     }
 
-    fun add(t: TodoItem, atEnd: Boolean) {
+    fun add(items: List<TodoItem>, atEnd: Boolean) {
         ActionQueue.add("Add task", Runnable {
-            log.debug(TAG, "Adding task of length {} into {} atEnd " + t.task.inFileFormat().length + " " + atEnd)
+            log.debug(TAG, "Adding task ${items.size} atEnd: $atEnd ")
             if (atEnd) {
-                todoItems.add(t)
+                todoItems.addAll(items)
             } else {
-                todoItems.add(0,t)
+                todoItems.addAll(0,items)
             }
             Config.todoList = todoItems
         })
@@ -88,7 +88,7 @@ object TodoList {
 
     fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
         val newItem = TodoItem(0, t, select)
-        add(newItem, atEnd)
+        add(listOf(newItem), atEnd)
     }
 
 
@@ -219,7 +219,6 @@ object TodoList {
     fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
         // TODO: Make this a setting
-        clearSelection()
         ActionQueue.add("Notified changed", Runnable {
             if (save) {
                 save(FileStore, todoName, backup, eol)
