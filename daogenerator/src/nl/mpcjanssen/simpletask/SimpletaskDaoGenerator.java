@@ -17,12 +17,12 @@ public class SimpletaskDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         Schema schema = new Schema(1012, "nl.mpcjanssen.simpletask.dao.gen");
-        Schema todoSchema = new Schema(1, "nl.mpcjanssen.simpletask.dao.gentodo");
+
 
         addEntities(schema);
-        todoSchema(todoSchema);
+
         new DaoGenerator().generateAll(schema, "src/main/java");
-        new DaoGenerator().generateAll(todoSchema, "src/main/java");
+
     }
 
     private static void addEntities(Schema schema) {
@@ -46,12 +46,5 @@ public class SimpletaskDaoGenerator {
         entry.addStringProperty("contents").notNull().primaryKey();
         entry.addStringProperty("name").notNull();
         entry.addDateProperty("date").notNull();
-    }
-
-    private static void todoSchema(Schema schema) {
-        Entity entry = schema.addEntity("TodoItem");
-        entry.addLongProperty("line").notNull().primaryKey();
-        entry.addStringProperty("task").customType("nl.mpcjanssen.simpletask.task.Task", "nl.mpcjanssen.simpletask.dao.TaskPropertyConverter");
-        entry.addBooleanProperty("selected").notNull();
     }
 }
