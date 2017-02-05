@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.0.6'
+    ext.dokka_version = '0.9.13'
     ext.android_support_version = '25.0.1'
     repositories {
         jcenter()
@@ -7,12 +8,14 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${dokka_version}"
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka-android'
 // apply plugin: 'com.getkeepsafe.dexcount'
 
 
@@ -124,4 +127,18 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
+}
+
+dokka {
+    moduleName = 'simpletask'
+    outputFormat = 'html'
+    outputDirectory = "doc"
+    processConfigurations = ['compile', 'extra']
+    includes = ['README.md']
+    linkMapping {
+        dir = "src/main/java"
+        url = "https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java"
+        suffix = "#L"
+    }
+    sourceDirs = files('src/main/java')
 }

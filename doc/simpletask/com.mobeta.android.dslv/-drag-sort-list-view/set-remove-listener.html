@@ -1,0 +1,19 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DragSortListView.setRemoveListener - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">com.mobeta.android.dslv</a>&nbsp;/&nbsp;<a href="index.html">DragSortListView</a>&nbsp;/&nbsp;<a href=".">setRemoveListener</a><br/>
+<br/>
+<h1>setRemoveListener</h1>
+<a name="com.mobeta.android.dslv.DragSortListView$setRemoveListener(com.mobeta.android.dslv.DragSortListView.RemoveListener)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setRemoveListener</span><span class="symbol">(</span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$setRemoveListener(com.mobeta.android.dslv.DragSortListView.RemoveListener)/l">l</span><span class="symbol">:</span>&nbsp;<a href="-remove-listener/index.html"><span class="identifier">RemoveListener</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/com/mobeta/android/dslv/DragSortListView.java#L2520">(source)</a>
+<p>Probably a no-brainer, but make sure that your remove listener calls <code><a href="#">BaseAdapter#notifyDataSetChanged()</a></code> or something like it. When an item removal occurs, DragSortListView relies on a redraw of all the items to recover invisible views and such. Strictly speaking, if you remove something, your dataset has changed...</p>
+<h3>Parameters</h3>
+
+<p><a name="l"></a>
+<code>l</code> - 
+</BODY>
+</HTML>
