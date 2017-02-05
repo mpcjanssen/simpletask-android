@@ -238,7 +238,7 @@ class ActiveFilter (val options : FilterOptions) {
             LuaInterpreter.clearOnFilter(options.luaModule)
             LuaInterpreter.evalScript(options.luaModule, code)
             for (item in items) {
-                if (options.showSelected && item.selected ) {
+                if (options.showSelected && TodoList.isSelected(item) ) {
                     matched.add(item)
                     continue
                 }

@@ -304,7 +304,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             val json = JSONArray(jsonString)
             for (i in 0..json.length()-1) {
                 val obj = json.getJSONObject(i);
-                val item = TodoItem(i.toLong(), Task(obj.getString("task")), obj.optBoolean("selected", false))
+                val item = TodoItem(i.toLong(), Task(obj.getString("task")))
                 list.add(item)
             }
             return list
@@ -315,7 +315,6 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             items.forEachIndexed { i, todoItem ->
                 val value = JSONObject()
                 value.put("task", todoItem.task.inFileFormat())
-                value.put("selected", todoItem.selected)
                 jsonArray.put(i,value)
             }
             val editor = prefs.edit()
