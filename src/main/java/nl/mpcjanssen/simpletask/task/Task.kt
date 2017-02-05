@@ -26,7 +26,7 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import nl.mpcjanssen.simpletask.ActiveFilter
+
 import nl.mpcjanssen.simpletask.util.addInterval
 
 import java.util.*
@@ -88,25 +88,25 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
     var completionDate: String? = null
-        get() = getFirstToken<CompletedDateToken>()?.value ?: null
+        get() = getFirstToken<CompletedDateToken>()?.value
 
     var createDate: String?
-        get() = getFirstToken<CreateDateToken>()?.value ?: null
-        set(newDate: String?) {
+        get() = getFirstToken<CreateDateToken>()?.value
+        set(newDate) {
             val temp = ArrayList<TToken>()
-            if (tokens.size > 0 && (tokens.first() is CompletedToken)) {
+            if (tokens.isNotEmpty() && (tokens.first() is CompletedToken)) {
                 temp.add(tokens[0])
                 tokens = tokens.drop(1)
-                if (tokens.size > 0 && tokens.first() is CompletedDateToken) {
+                if (tokens.isNotEmpty() && tokens.first() is CompletedDateToken) {
                     temp.add(tokens.first())
                     tokens = tokens.drop(1)
                 }
             }
-            if (tokens.size > 0 && tokens[0] is PriorityToken) {
+            if (tokens.isNotEmpty() && tokens[0] is PriorityToken) {
                 temp.add(tokens.first())
                 tokens = tokens.drop(1)
             }
-            if (tokens.size > 0 && tokens[0] is CreateDateToken) {
+            if (tokens.isNotEmpty() && tokens[0] is CreateDateToken) {
                 tokens = tokens.drop(1)
             }
             newDate?.let {
@@ -117,8 +117,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
     var dueDate: String?
-        get() = getFirstToken<DueDateToken>()?.valueStr ?: null
-        set(dateStr: String?) {
+        get() = getFirstToken<DueDateToken>()?.valueStr
+        set(dateStr) {
             if (dateStr.isNullOrEmpty()) {
                 tokens = tokens.filter { it !is DueDateToken }
             } else {
@@ -127,8 +127,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
     var thresholdDate: String?
-        get() = getFirstToken<ThresholdDateToken>()?.valueStr ?: null
-        set(dateStr: String?) {
+        get() = getFirstToken<ThresholdDateToken>()?.valueStr
+        set(dateStr) {
             if (dateStr.isNullOrEmpty()) {
                 tokens = tokens.filter { it !is ThresholdDateToken }
             } else {
@@ -138,9 +138,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     var priority: Priority
         get() = getFirstToken<PriorityToken>()?.value ?: Priority.NONE
-        set(prio: Priority) {
+        set(prio) {
             if (prio == Priority.NONE) {
-                tokens = tokens.filter { if (it is PriorityToken) false else true }
+                tokens = tokens.filter { it !is PriorityToken }
             } else if (tokens.any { it is PriorityToken }) {
                 upsertToken(PriorityToken(prio.inFileFormat()))
             } else {
@@ -179,13 +179,13 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun removeTag(tag: String) {
         tokens = tokens.filter {
-            if ((it is TagToken) && it.value == tag) false else true
+            !((it is TagToken) && it.value == tag)
         }
     }
 
     fun removeList(list: String) {
         tokens = tokens.filter {
-            if ((it is ListToken) && (it.value == list)) false else true
+            !((it is ListToken) && (it.value == list))
         }
     }
 
@@ -280,7 +280,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun inFuture(today: String): Boolean {
         val date = thresholdDate
         date?.let {
-            return date.compareTo(today) > 0
+            return date > today
         }
         return false
     }
@@ -371,7 +371,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_EXT = Regex("(.+):(.+)")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
-        private val MATCH_PHONE_NUMBER = Regex("[0\\+]?[0-9,#]{4,}")
+        private val MATCH_PHONE_NUMBER = Regex("[0+]?[0-9,#]{4,}")
         private val MATCH_URI = Regex("[a-z]+://(\\S+)")
         private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
