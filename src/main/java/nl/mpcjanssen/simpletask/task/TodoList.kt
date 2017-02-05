@@ -32,9 +32,7 @@ package nl.mpcjanssen.simpletask.task
 import android.app.Activity
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
-import de.greenrobot.dao.query.Query
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.dao.Daos
 
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -45,7 +43,7 @@ import java.io.IOException
 import java.util.*
 
 
-data class TodoItem(val line: Long, val task: Task, var selected: Boolean )
+data class TodoItem(val line: Long, val task: Task)
 
 /**
  * Implementation of the in memory representation of the todo list
@@ -58,6 +56,7 @@ object TodoList {
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
     val todoItems = Config.todoList ?: ArrayList<TodoItem>()
+    val selectedItems = HashSet<TodoItem>()
 
     init {
         log = Logger
@@ -74,7 +73,15 @@ object TodoList {
         }
     }
 
-    fun add(items: List<TodoItem>, atEnd: Boolean) {
+    private fun changeSelection(items: List<TodoItem>, select : Boolean) {
+        if (select) {
+            selectedItems.addAll(items)
+        } else {
+            selectedItems.removeAll(items)
+        }
+    }
+
+    fun add(items: List<TodoItem>, atEnd: Boolean, select: Boolean = false) {
         ActionQueue.add("Add task", Runnable {
             log.debug(TAG, "Adding task ${items.size} atEnd: $atEnd ")
             if (atEnd) {
@@ -82,13 +89,14 @@ object TodoList {
             } else {
                 todoItems.addAll(0,items)
             }
+            changeSelection(items, select)
             Config.todoList = todoItems
         })
     }
 
     fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
-        val newItem = TodoItem(0, t, select)
-        add(listOf(newItem), atEnd)
+        val newItem = TodoItem(0, t)
+        add(listOf(newItem), atEnd, select)
     }
 
 
@@ -207,7 +215,7 @@ object TodoList {
 
     var selectedTasks: List<TodoItem> = ArrayList()
         get() {
-            return todoItems.filter {it.selected}
+            return selectedItems.toList()
         }
 
     var completedTasks: List<TodoItem> = ArrayList()
@@ -253,9 +261,10 @@ object TodoList {
                 todoItems.clear()
                 val items = ArrayList<TodoItem>(
                         FileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
-                            TodoItem(line.toLong(), Task(text), false)
+                            TodoItem(line.toLong(), Task(text))
                         })
                 todoItems.addAll(items)
+                clearSelection()
                 Config.currentVersionId = FileStore.getVersion(filename)
 
             } catch (e: Exception) {
@@ -304,11 +313,11 @@ object TodoList {
     }
 
     fun isSelected(item: TodoItem): Boolean {
-        return item.selected
+        return selectedItems.indexOf(item) > -1
     }
 
-    fun numSelected(): Long {
-        return todoItems.filter { it.selected }.count().toLong()
+    fun numSelected(): Int {
+        return selectedItems.size
     }
 
 
@@ -316,9 +325,9 @@ object TodoList {
 
 
     fun selectTodoItems(items: List<TodoItem>) {
-        items.forEach {
-            it.selected = true
-        }
+        ActionQueue.add("Select", Runnable {
+            selectedItems.addAll(items)
+        })
     }
 
     fun selectTodoItem(item: TodoItem) {
@@ -331,13 +340,15 @@ object TodoList {
     }
 
     fun unSelectTodoItems(items: List<TodoItem>) {
-        items.forEach {
-            it.selected = false
-        }
+        ActionQueue.add("Unselect", Runnable {
+            selectedItems.removeAll(items)
+        })
     }
 
     fun clearSelection() {
-        unSelectTodoItems(selectedTasks)
+        ActionQueue.add("Clear selection", Runnable {
+            selectedItems.clear()
+        })
     }
 
     fun getTaskCount(): Long {
@@ -348,7 +359,7 @@ object TodoList {
     fun selectLine(line : Long ) {
         val item = todoItems.find {it.line == line}
         item?.let {
-            item.selected = true
+            selectTodoItem(item)
         }
     }
 
