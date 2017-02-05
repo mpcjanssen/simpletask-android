@@ -231,8 +231,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
         }
         TodoList.selectTodoItems(selectedTasks)
-        invalidateOptionsMenu()
-        m_adapter?.notifyDataSetChanged()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
