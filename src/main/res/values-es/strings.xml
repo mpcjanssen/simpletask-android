@@ -3,12 +3,12 @@
     <string name="share_task_show_edit_pref_title">Editar tarea compartida</string>
     <string name="share_task_show_edit_summary">Editar tareas compartidas a Simpletask antes de guardarlas</string>
 
-    <string name="menu_capitalize_tasks">Poner mayúscula a las tareas nuevas</string>
+    <string name="menu_capitalize_tasks">Tareas nuevas en mayúsculas</string>
     <string name="back_saves_pref_title">Botón atrás</string>
     <string name="back_saves_summary">Salvar las tareas introducidas o aplicar el filtro al pulsar atrás.</string>
 
-    <string name="show_txt_only_pref_title">Mostrar solo archivos txt</string>
-    <string name="show_txt_only_summary">Mostrar solo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
+    <string name="show_txt_only_pref_title">Mostrar sólo archivos txt</string>
+    <string name="show_txt_only_summary">Mostrar sólo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
 
     <string name="calendar_sync_screen_title">Recordatorios de calendario</string>
     <string name="calendar_sync_screen_summary">Recordatorios de calendario (experimental)</string>
@@ -29,7 +29,7 @@
     <string name="widget_header_transparency_title">Transparencia de la cabecera de los widgets</string>
     <string name="widget_background_transparency_title">Transparencia del fondo de los widgets</string>
 
-    <string name="widget_extended_pref_title">Widget extendido</string>
+    <string name="widget_extended_pref_title">Mostrar barra de fechas</string>
     <string name="widget_extended_pref_summary">Mostrar fechas en una línea separada</string>
 
     <string name="color_due_pref_title">Color de fechas de vencimiento</string>
@@ -86,30 +86,28 @@ Para disponer de más espacio de pantalla para la lista de tareas deseleccionar 
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Registrarse en Dropbox</string>
-    <string name="login_cloudless">Si no tiene una cuenta de dropbox o no quiere utilizarla para almacenar su lista ParaHacer (ToDo),
-    puede descargar Simpletask Cloudless de la Tienda de Google.
-    \nhttp://goo.gl/X1C55P
-    </string>
+    <string name="login_cloudless">"Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google.
+http://goo.gl/X1C55P
+ "</string>
 
     <!-- delete -->
-    <string name="delete_task_title">Eliminar Tarea(s)</string>
-    <string name="archive_task_title">Archivar Tarea(s)</string>
-    <string name="delete_task_message">Esto no se puede deshacer. Está seguro?</string>
-    <string name="logout_message">Por favor, asegúrese de que ha sincronizado todos los cambios con dropbox o
-    que ha compartido su lista completa de tareas, si no está conectado con dropbox.\n
-    Cualquier cambio que no haya sido sincronizado se perderá después de desconectarse.</string>
-    <string name="dropbox_open">Por favor, asegúrese de que ha sincronizado todos los cambios con dropbox o
-    que ha compartido su lista completa de tareas, si no está conectado con dropbox.\n
-    Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo diferente.</string>
+    <string name="delete_task_title">Eliminar %s tarea(s)</string>
+    <string name="archive_task_title">Archivar %s tarea(s)</string>
+    <string name="delete_task_message">Esto no se puede deshacer. ¿Está seguro?</string>
+    <string name="logout_message">Por favor, si no está conectado con Dropbox, asegúrese de haber sincronizado todos los cambios o que ha compartido su lista de tareas completa.
+Cualquier cambio que no haya sido sincronizado se perderá después de desconectarse.</string>
+    <string name="dropbox_open">Por favor,si no está conectado con Dropbox, asegúrese de que ha sincronizado todos los cambios o que ha compartido su lista de tareas completa.
+Cualquier cambio que no haya sido sincronizado se perderá al abrir un archivo diferente.</string>
     <string name="delete_task_confirm">Eliminar</string>
 
     <!-- search -->
     <string name="clone_tags">Rellenar la próxima</string>
-    <string name="word_wrap">Salto de línea automático</string>
-    <string name="search_hint">Buscar ParaHacer.txt (todo.txt)</string>
+    <string name="word_wrap">Ajuste de línea automático</string>
+    <string name="search_hint">Buscar...</string>
 
     <!-- sort -->
-    <string name="sort_help">Arrastrar y soltar para cambiar el orden. Clic en cada elementos para cambiar el sentido.</string>
+    <string name="sort_help">Arrastrar y soltar para cambiar el orden.
+Toque en un elemento para cambiar el sentido de ordenamiento.</string>
     <string name="file_order">Orden de archivo (no ordenadas)</string>
     <string name="alphabetical">Alfabético</string>
     <string name="by_prio">Por Prioridad</string>
@@ -205,7 +203,7 @@ Para disponer de más espacio de pantalla para la lista de tareas deseleccionar 
     <string name="save_filter_message">"Introduzca el nombre  con el que se mostrará el filtro en el cajón de filtros guardados."</string>
 
     <string name="donate_title">Done</string>
-    <string name="donate_summary">Done si le gusta simpletask. NOTA: la donación es voluntaria, simpletask siempre será libre.  </string>
+    <string name="donate_summary">"Si le gusta Simpletask, puede hacer una donación. NOTA: la donación es voluntaria, Simpletask siempre será libre. "</string>
     <string name="donated_summary">Gracias por su donación.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Invertir orden</string>
@@ -304,7 +302,7 @@ Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas.
     <string name="ARCHIVE_settings_header">Archivar</string>
     <string name="ARCHIVE_settings_summary">Configuración para el archivado de tareas completadas en done.txt</string>
     <string name="auto_archive_pref_title">Archivado automático</string>
-    <string name="auto_archive_pref_summary">Archivar tareas inmediatamente al completarlas.</string>
+    <string name="auto_archive_pref_summary">Archivar tareas inmediatamente al completarlas</string>
     <string name="archive_now_pref_title">Archivar ahora</string>
     <string name="archive_now_pref_summary">Mover tareas completadas desde todo.txt hacia done.txt.</string>
     <string name="dropbox_logout_pref_title">Cerrar sesión</string>
@@ -344,14 +342,14 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="manual_sync_pref_summary">No subir automáticamente a Dropbox cada cambio.</string>
     <string name="resume_sync_pref_title">Reanudar la sincronización</string>
     <string name="resume_sync_pref_summary">Sincronizar con Dropbox al iniciar la aplicación.</string>
-    <string name="font_size_delta_pref_title">Personalizar el tamaño de fuente</string>
-    <string name="datebar_relative_size_summary">Tamaño de la barra de fechas relativo</string>
+    <string name="font_size_delta_pref_title">Cambiar el tamaño de fuente</string>
+    <string name="datebar_relative_size_summary">Tamaño relativo de la barra de fechas</string>
     <string name="font_size_delta_pref_summary">Cambiar el tamaño de la fuente.</string>
     <string name="theme_pref_title">Tema</string>
     <string name="theme_pref_summary">Cambiar el tema utilizado por la aplicación.</string>
 
     <string name="share_task_append_text_title">Texto agregado al compartir una tarea</string>
-    <string name="share_task_append_text_summary">Agregar \"%s\" s tareas agregadas en segundo plano.</string>
+    <string name="share_task_append_text_summary">Agregar \"%s\" a las tareas agregadas en segundo plano</string>
 
     <string name="local_file_root_title">Directorio raíz</string>
     <string name="local_file_root_summary">%s</string>
@@ -366,7 +364,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="append_tasks_at_end_title">Añadir al archivo</string>
     <string name="append_tasks_at_end_summary">Insertar tareas nuevas al final del archivo</string>
 
-    <string name="show_todo_path_title">Mostrar ruta al archivo todo</string>
+    <string name="show_todo_path_title">Mostrar ruta al archivo todo.txt</string>
     <string name="show_todo_path_summary">Los nombres de directorios son abreviados a su primera letra</string>
 
     <string name="show_fast_scroll_title">Desplazamiento rápido</string>
@@ -379,7 +377,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="todotxt_terms_summary">Contexto y proyecto en lugar de lista y etiqueta</string>
 
     <string name="preference_title_debug_info">Ver registro de depuración</string>
-    <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación.</string>
+    <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación</string>
 
     <string name="login_folder_screen_button">Iniciar sesión en Dropbox
 (Acceso a la carpeta de la aplicación)</string>
