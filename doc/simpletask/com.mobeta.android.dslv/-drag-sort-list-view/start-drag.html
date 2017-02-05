@@ -1,0 +1,46 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DragSortListView.startDrag - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">com.mobeta.android.dslv</a>&nbsp;/&nbsp;<a href="index.html">DragSortListView</a>&nbsp;/&nbsp;<a href=".">startDrag</a><br/>
+<br/>
+<h1>startDrag</h1>
+
+<p><a name="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">startDrag</span><span class="symbol">(</span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/position">position</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/dragFlags">dragFlags</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/deltaX">deltaX</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/deltaY">deltaY</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/com/mobeta/android/dslv/DragSortListView.java#L2203">(source)</a>
+<p>Start a drag of item at <code>position</code> using the registered FloatViewManager. Calls through to <code><a href="#">#startDrag(int,View,int,int,int)</a></code> after obtaining the floating View from the FloatViewManager.</p>
+<h3>Parameters</h3>
+
+<p><a name="position"></a>
+<code>position</code> - Item to drag.
+<p><a name="dragFlags"></a>
+<code>dragFlags</code> - Flags that restrict some movements of the floating View. For example, set <code>dragFlags |= ~<code><a href="-d-r-a-g_-n-e-g_-x.html">#DRAG_NEG_X</a></code></code> to allow dragging the floating View in all directions except off the screen to the left.
+<p><a name="deltaX"></a>
+<code>deltaX</code> - Offset in x of the touch coordinate from the left edge of the floating View (i.e. touch-x minus float View left).
+<p><a name="deltaY"></a>
+<code>deltaY</code> - Offset in y of the touch coordinate from the top edge of the floating View (i.e. touch-y minus float View top).
+<p><strong>Return</strong><br/>
+True if the drag was started, false otherwise. This <code>startDrag</code> will fail if we are not currently in a touch event, there is no registered FloatViewManager, or the FloatViewManager returns a null View.</p>
+
+<p><a name="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, android.view.View, kotlin.Int, kotlin.Int, kotlin.Int)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">startDrag</span><span class="symbol">(</span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, android.view.View, kotlin.Int, kotlin.Int, kotlin.Int)/position">position</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier">@Nullable</span> <span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, android.view.View, kotlin.Int, kotlin.Int, kotlin.Int)/floatView">floatView</span><span class="symbol">:</span>&nbsp;<span class="identifier">@Nullable</span> <span class="identifier">View</span><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, android.view.View, kotlin.Int, kotlin.Int, kotlin.Int)/dragFlags">dragFlags</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, android.view.View, kotlin.Int, kotlin.Int, kotlin.Int)/deltaX">deltaX</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="com.mobeta.android.dslv.DragSortListView$startDrag(kotlin.Int, android.view.View, kotlin.Int, kotlin.Int, kotlin.Int)/deltaY">deltaY</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/com/mobeta/android/dslv/DragSortListView.java#L2236">(source)</a>
+<p>Start a drag of item at <code>position</code> without using a FloatViewManager.</p>
+<h3>Parameters</h3>
+
+<p><a name="position"></a>
+<code>position</code> - Item to drag.
+<p><a name="floatView"></a>
+<code>floatView</code> - Floating View.
+<p><a name="dragFlags"></a>
+<code>dragFlags</code> - Flags that restrict some movements of the floating View. For example, set <code>dragFlags |= ~<code><a href="-d-r-a-g_-n-e-g_-x.html">#DRAG_NEG_X</a></code></code> to allow dragging the floating View in all directions except off the screen to the left.
+<p><a name="deltaX"></a>
+<code>deltaX</code> - Offset in x of the touch coordinate from the left edge of the floating View (i.e. touch-x minus float View left).
+<p><a name="deltaY"></a>
+<code>deltaY</code> - Offset in y of the touch coordinate from the top edge of the floating View (i.e. touch-y minus float View top).
+<p><strong>Return</strong><br/>
+True if the drag was started, false otherwise. This <code>startDrag</code> will fail if we are not currently in a touch event, <code>floatView</code> is null, or there is a drag in progress.</p>
+</BODY>
+</HTML>

@@ -1,0 +1,390 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ActiveFilter - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask</a>&nbsp;/&nbsp;<a href=".">ActiveFilter</a><br/>
+<br/>
+<h1>ActiveFilter</h1>
+<code><span class="keyword">class </span><span class="identifier">ActiveFilter</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/ActiveFilter.kt#L21">(source)</a>
+<p>Active filter, has methods for serialization in several formats</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-init-.html">&lt;init&gt;</a></td>
+<td>
+<code><span class="identifier">ActiveFilter</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$<init>(nl.mpcjanssen.simpletask.FilterOptions)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../-filter-options/index.html"><span class="identifier">FilterOptions</span></a><span class="symbol">)</span></code>
+<p>Active filter, has methods for serialization in several formats</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="contexts.html">contexts</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">contexts</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="contexts-not.html">contextsNot</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">contextsNot</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="create-is-threshold.html">createIsThreshold</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">createIsThreshold</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hide-completed.html">hideCompleted</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">hideCompleted</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hide-create-date.html">hideCreateDate</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">hideCreateDate</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hide-future.html">hideFuture</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">hideFuture</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hide-hidden.html">hideHidden</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">hideHidden</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hide-lists.html">hideLists</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">hideLists</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="hide-tags.html">hideTags</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">hideTags</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="name.html">name</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">name</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="options.html">options</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">options</span><span class="symbol">: </span><a href="../-filter-options/index.html"><span class="identifier">FilterOptions</span></a></code></td>
+</tr>
+<tr>
+<td>
+<a href="pref-name.html">prefName</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">prefName</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="priorities.html">priorities</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">priorities</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.task/-priority/index.html"><span class="identifier">Priority</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="priorities-not.html">prioritiesNot</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">prioritiesNot</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="projects.html">projects</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">projects</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="projects-not.html">projectsNot</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">projectsNot</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="proposed-name.html">proposedName</a></td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">proposedName</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="script.html">script</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">script</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="script-test-task.html">scriptTestTask</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">scriptTestTask</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="search.html">search</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">search</span><span class="symbol">: </span><span class="identifier">String</span><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="use-script.html">useScript</a></td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">useScript</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="apply.html">apply</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">apply</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$apply(kotlin.collections.List((nl.mpcjanssen.simpletask.dao.gentodo.TodoItem)))/items">items</span><span class="symbol">:</span>&nbsp;<span class="identifier">List</span><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../../nl.mpcjanssen.simpletask.dao.gentodo/-todo-item/index.html"><span class="identifier">TodoItem</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="clear.html">clear</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">clear</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-sort.html">getSort</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getSort</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getSort(kotlin.Array((kotlin.String)))/defaultSort">defaultSort</span><span class="symbol">:</span>&nbsp;<span class="identifier">Array</span><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="get-title.html">getTitle</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getTitle</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/visible">visible</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/total">total</span><span class="symbol">:</span>&nbsp;<span class="identifier">Long</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/prio">prio</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/tag">tag</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/list">list</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/search">search</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/script">script</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/filterApplied">filterApplied</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$getTitle(kotlin.Int, kotlin.Long, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence, kotlin.CharSequence)/noFilter">noFilter</span><span class="symbol">:</span>&nbsp;<span class="identifier">CharSequence</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="has-filter.html">hasFilter</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">hasFilter</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Boolean</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="init-from-intent.html">initFromIntent</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">initFromIntent</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$initFromIntent(android.content.Intent)/intent">intent</span><span class="symbol">:</span>&nbsp;<span class="identifier">Intent</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="init-from-j-s-o-n.html">initFromJSON</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">initFromJSON</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$initFromJSON(org.json.JSONObject)/json">json</span><span class="symbol">:</span>&nbsp;<span class="identifier">JSONObject</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="init-from-prefs.html">initFromPrefs</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">initFromPrefs</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$initFromPrefs(android.content.SharedPreferences)/prefs">prefs</span><span class="symbol">:</span>&nbsp;<span class="identifier">SharedPreferences</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="save-in-intent.html">saveInIntent</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">saveInIntent</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$saveInIntent(android.content.Intent)/target">target</span><span class="symbol">:</span>&nbsp;<span class="identifier">Intent</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="save-in-j-s-o-n.html">saveInJSON</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">saveInJSON</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$saveInJSON(org.json.JSONObject)/json">json</span><span class="symbol">:</span>&nbsp;<span class="identifier">JSONObject</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="save-in-prefs.html">saveInPrefs</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">saveInPrefs</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$saveInPrefs(android.content.SharedPreferences)/prefs">prefs</span><span class="symbol">:</span>&nbsp;<span class="identifier">SharedPreferences</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="set-sort.html">setSort</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setSort</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.ActiveFilter$setSort(java.util.ArrayList((kotlin.String)))/sort">sort</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><span class="identifier">String</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="to-string.html">toString</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-c-o-n-t-e-x-t-s_-f-i-l-t-e-r.html">INTENT_CONTEXTS_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_CONTEXTS_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-c-o-n-t-e-x-t-s_-f-i-l-t-e-r_-n-o-t.html">INTENT_CONTEXTS_FILTER_NOT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_CONTEXTS_FILTER_NOT</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-c-r-e-a-t-e_-a-s_-t-h-r-e-s-h-o-l-d.html">INTENT_CREATE_AS_THRESHOLD</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_CREATE_AS_THRESHOLD</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-e-x-t-r-a_-d-e-l-i-m-i-t-e-r-s.html">INTENT_EXTRA_DELIMITERS</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_EXTRA_DELIMITERS</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-h-i-d-e_-c-o-m-p-l-e-t-e-d_-f-i-l-t-e-r.html">INTENT_HIDE_COMPLETED_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_HIDE_COMPLETED_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-h-i-d-e_-c-r-e-a-t-e_-d-a-t-e_-f-i-l-t-e-r.html">INTENT_HIDE_CREATE_DATE_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_HIDE_CREATE_DATE_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-h-i-d-e_-f-u-t-u-r-e_-f-i-l-t-e-r.html">INTENT_HIDE_FUTURE_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_HIDE_FUTURE_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-h-i-d-e_-h-i-d-d-e-n_-f-i-l-t-e-r.html">INTENT_HIDE_HIDDEN_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_HIDE_HIDDEN_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-h-i-d-e_-l-i-s-t-s_-f-i-l-t-e-r.html">INTENT_HIDE_LISTS_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_HIDE_LISTS_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-h-i-d-e_-t-a-g-s_-f-i-l-t-e-r.html">INTENT_HIDE_TAGS_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_HIDE_TAGS_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-j-s-o-n.html">INTENT_JSON</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_JSON</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-l-u-a_-m-o-d-u-l-e.html">INTENT_LUA_MODULE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_LUA_MODULE</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-p-r-i-o-r-i-t-i-e-s_-f-i-l-t-e-r.html">INTENT_PRIORITIES_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_PRIORITIES_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-p-r-i-o-r-i-t-i-e-s_-f-i-l-t-e-r_-n-o-t.html">INTENT_PRIORITIES_FILTER_NOT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_PRIORITIES_FILTER_NOT</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-p-r-o-j-e-c-t-s_-f-i-l-t-e-r.html">INTENT_PROJECTS_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_PROJECTS_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-p-r-o-j-e-c-t-s_-f-i-l-t-e-r_-n-o-t.html">INTENT_PROJECTS_FILTER_NOT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_PROJECTS_FILTER_NOT</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-s-c-r-i-p-t_-f-i-l-t-e-r.html">INTENT_SCRIPT_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_SCRIPT_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-s-c-r-i-p-t_-t-e-s-t_-t-a-s-k_-f-i-l-t-e-r.html">INTENT_SCRIPT_TEST_TASK_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_SCRIPT_TEST_TASK_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-s-o-r-t_-o-r-d-e-r.html">INTENT_SORT_ORDER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_SORT_ORDER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-t-i-t-l-e.html">INTENT_TITLE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_TITLE</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-i-n-t-e-n-t_-u-s-e_-s-c-r-i-p-t_-f-i-l-t-e-r.html">INTENT_USE_SCRIPT_FILTER</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">INTENT_USE_SCRIPT_FILTER</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-n-o-r-m-a-l_-s-o-r-t.html">NORMAL_SORT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">NORMAL_SORT</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-r-e-v-e-r-s-e-d_-s-o-r-t.html">REVERSED_SORT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">REVERSED_SORT</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-s-o-r-t_-s-e-p-a-r-a-t-o-r.html">SORT_SEPARATOR</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">SORT_SEPARATOR</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

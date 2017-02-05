@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DaoMaster - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.dao.gentodo</a>&nbsp;/&nbsp;<a href=".">DaoMaster</a><br/>
+<br/>
+<h1>DaoMaster</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">DaoMaster</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">AbstractDaoMaster</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/dao/gentodo/DaoMaster.java#L17">(source)</a>
+<p>Master of DAO (schema version 1): knows all DAOs.</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-dev-open-helper/index.html">DevOpenHelper</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">DevOpenHelper</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-open-helper/index.html"><span class="identifier">OpenHelper</span></a></code>
+<p>WARNING: Drops all table on Upgrade! Use only during development.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="-open-helper/index.html">OpenHelper</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">OpenHelper</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">SQLiteOpenHelper</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-init-.html">&lt;init&gt;</a></td>
+<td>
+<code><span class="identifier">DaoMaster</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster$<init>(android.database.sqlite.SQLiteDatabase)/db">db</span><span class="symbol">:</span>&nbsp;<span class="identifier">SQLiteDatabase</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-s-c-h-e-m-a_-v-e-r-s-i-o-n.html">SCHEMA_VERSION</a></td>
+<td>
+<code><span class="keyword">static</span> <span class="keyword">val </span><span class="identifier">SCHEMA_VERSION</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="create-all-tables.html">createAllTables</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">static</span> <span class="keyword">fun </span><span class="identifier">createAllTables</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster$createAllTables(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/db">db</span><span class="symbol">:</span>&nbsp;<span class="identifier">SQLiteDatabase</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster$createAllTables(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/ifNotExists">ifNotExists</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Creates underlying database table using DAOs.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="drop-all-tables.html">dropAllTables</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">static</span> <span class="keyword">fun </span><span class="identifier">dropAllTables</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster$dropAllTables(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/db">db</span><span class="symbol">:</span>&nbsp;<span class="identifier">SQLiteDatabase</span><span class="symbol">, </span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster$dropAllTables(android.database.sqlite.SQLiteDatabase, kotlin.Boolean)/ifExists">ifExists</span><span class="symbol">:</span>&nbsp;<span class="identifier">Boolean</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Unit</span></code>
+<p>Drops underlying database table using DAOs.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="new-session.html">newSession</a></td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">newSession</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-dao-session/index.html"><span class="identifier">DaoSession</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">newSession</span><span class="symbol">(</span><span class="identifier" id="nl.mpcjanssen.simpletask.dao.gentodo.DaoMaster$newSession(de.greenrobot.dao.identityscope.IdentityScopeType)/type">type</span><span class="symbol">:</span>&nbsp;<span class="identifier">IdentityScopeType</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-dao-session/index.html"><span class="identifier">DaoSession</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

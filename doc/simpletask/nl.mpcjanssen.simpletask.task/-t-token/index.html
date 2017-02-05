@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TToken - simpletask</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">simpletask</a>&nbsp;/&nbsp;<a href="../index.html">nl.mpcjanssen.simpletask.task</a>&nbsp;/&nbsp;<a href=".">TToken</a><br/>
+<br/>
+<h1>TToken</h1>
+<code><span class="keyword">interface </span><span class="identifier">TToken</span></code> <a href="https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/java/nl/mpcjanssen/simpletask/task/Task.kt#L465">(source)</a>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="text.html">text</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">text</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="type.html">type</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="value.html">value</a></td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">value</span><span class="symbol">: </span><span class="identifier">Any</span><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="-a-l-l.html">ALL</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">ALL</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-c-o-m-p-l-e-t-e-d.html">COMPLETED</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">COMPLETED</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-c-o-m-p-l-e-t-e-d_-d-a-t-e.html">COMPLETED_DATE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">COMPLETED_DATE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-c-r-e-a-t-i-o-n_-d-a-t-e.html">CREATION_DATE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">CREATION_DATE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-d-u-e_-d-a-t-e.html">DUE_DATE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">DUE_DATE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-e-x-t-e-n-s-i-o-n.html">EXTENSION</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">EXTENSION</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-h-i-d-d-e-n.html">HIDDEN</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">HIDDEN</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-l-i-n-k.html">LINK</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">LINK</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-l-i-s-t.html">LIST</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">LIST</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-m-a-i-l.html">MAIL</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">MAIL</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-p-h-o-n-e.html">PHONE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">PHONE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-p-r-i-o.html">PRIO</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">PRIO</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-r-e-c-u-r-r-e-n-c-e.html">RECURRENCE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">RECURRENCE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-t-e-x-t.html">TEXT</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">TEXT</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-t-h-r-e-s-h-o-l-d_-d-a-t-e.html">THRESHOLD_DATE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">THRESHOLD_DATE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-t-t-a-g.html">TTAG</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">TTAG</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="-w-h-i-t-e_-s-p-a-c-e.html">WHITE_SPACE</a></td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">WHITE_SPACE</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<a href="../-completed-token/index.html">CompletedToken</a></td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CompletedToken</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TToken</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="../-key-value-token/index.html">KeyValueToken</a></td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">KeyValueToken</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TToken</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="../-list-token/index.html">ListToken</a></td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ListToken</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TToken</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="../-priority-token/index.html">PriorityToken</a></td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PriorityToken</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TToken</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="../-string-value-token/index.html">StringValueToken</a></td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">StringValueToken</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TToken</span></code></td>
+</tr>
+<tr>
+<td>
+<a href="../-tag-token/index.html">TagToken</a></td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TagToken</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TToken</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
