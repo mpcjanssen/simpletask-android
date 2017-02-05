@@ -278,6 +278,7 @@ object TodoList {
         } else {
             log.info(TAG, "Todolist reload not needed, refresh UI")
         }
+        Config.todoList = todoItems
         notifyChanged(filename, eol, backup, false)
     }
 
@@ -327,6 +328,7 @@ object TodoList {
     fun selectTodoItems(items: List<TodoItem>) {
         ActionQueue.add("Select", Runnable {
             selectedItems.addAll(items)
+            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         })
     }
 
@@ -342,12 +344,14 @@ object TodoList {
     fun unSelectTodoItems(items: List<TodoItem>) {
         ActionQueue.add("Unselect", Runnable {
             selectedItems.removeAll(items)
+            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         })
     }
 
     fun clearSelection() {
         ActionQueue.add("Clear selection", Runnable {
             selectedItems.clear()
+            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         })
     }
 

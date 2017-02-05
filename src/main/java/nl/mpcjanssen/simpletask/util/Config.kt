@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.util
 
 import android.annotation.SuppressLint
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.JsonReader
@@ -15,7 +16,9 @@ import nl.mpcjanssen.simpletask.task.TodoItem
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.charset.Charset
 import java.util.*
 
 object Config : SharedPreferences.OnSharedPreferenceChangeListener {
@@ -296,29 +299,30 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     var todoList : ArrayList<TodoItem>?
         get() {
-            val jsonString = prefs.getString(getString(R.string.cached_todo_file), null)
-            if (jsonString == null) {
+            try {
+                val ctxt = TodoApplication.app
+                val stream = ctxt.openFileInput("cachedtodo.txt")
+                val reader = stream.reader(Charset.forName("UTF-8"))
+                val result = ArrayList<TodoItem>()
+                result.addAll(reader.readLines().mapIndexed
+                    { i, line ->  TodoItem(i.toLong(), Task(line))})
+                reader.close()
+                stream.close()
+                return result
+
+            } catch (e: FileNotFoundException) {
                 return null
             }
-            val list = ArrayList<TodoItem>()
-            val json = JSONArray(jsonString)
-            for (i in 0..json.length()-1) {
-                val obj = json.getJSONObject(i);
-                val item = TodoItem(i.toLong(), Task(obj.getString("task")))
-                list.add(item)
-            }
-            return list
+
         }
-        set(items: ArrayList<TodoItem>?) {
+        set(items) {
             if (items == null) return
-            val jsonArray = JSONArray()
-            items.forEachIndexed { i, todoItem ->
-                val value = JSONObject()
-                value.put("task", todoItem.task.inFileFormat())
-                jsonArray.put(i,value)
-            }
-            val editor = prefs.edit()
-            editor.putString(getString(R.string.cached_todo_file), jsonArray.toString())
-            editor.apply()
+            val ctxt = TodoApplication.app
+            val stream = ctxt.openFileOutput("cachedtodo.txt", MODE_PRIVATE)
+            val writer = stream.writer(Charset.forName("UTF-8"))
+            writer.write(items.map { it.task.inFileFormat() }.joinToString("\n"))
+            writer.close()
+            stream.close()
+
         }
 }
