@@ -254,7 +254,7 @@ http://goo.gl/X1C55P
 
     <string name="clone_tags">事前入力</string>
     <string name="word_wrap">ワードラップ</string>
-    <string name="search_hint">todo.txt を検索します</string>
+    <string name="search_hint">検索...</string>
 
     <string name="sort_help">ドラッグ・アンド・ドロップして並べ替えの順序を変更します。項目をクリックして並べ替えの向きを変更します。</string>
     <string name="file_order">ファイルの順序 (並べ替えなし)</string>
