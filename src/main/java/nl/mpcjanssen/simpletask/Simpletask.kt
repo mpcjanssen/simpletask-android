@@ -125,8 +125,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         FileStore.logout()
                         finish()
                         startActivity(intent)
-                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI ||
-                            receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         textSize = Config.tasklistTextSize ?: textSize
                         if (m_adapter == null) {
@@ -135,6 +134,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                         m_adapter!!.setFilteredTasks()
                         invalidateOptionsMenu()
                         updateDrawers()
+                    } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                        m_adapter?.notifyDataSetChanged()
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
                         showListViewProgress(true)
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {

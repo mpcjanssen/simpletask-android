@@ -328,7 +328,7 @@ object TodoList {
     fun selectTodoItems(items: List<TodoItem>) {
         ActionQueue.add("Select", Runnable {
             selectedItems.addAll(items)
-            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+            broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         })
     }
 
@@ -344,14 +344,14 @@ object TodoList {
     fun unSelectTodoItems(items: List<TodoItem>) {
         ActionQueue.add("Unselect", Runnable {
             selectedItems.removeAll(items)
-            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+            broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         })
     }
 
     fun clearSelection() {
         ActionQueue.add("Clear selection", Runnable {
             selectedItems.clear()
-            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+            broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         })
     }
 
