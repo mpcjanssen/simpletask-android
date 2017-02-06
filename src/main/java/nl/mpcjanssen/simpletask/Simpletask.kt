@@ -125,7 +125,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                         FileStore.logout()
                         finish()
                         startActivity(intent)
-                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
+                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI ||
+                            receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                         log.info(TAG, "Updating UI because of broadcast")
                         textSize = Config.tasklistTextSize ?: textSize
                         if (m_adapter == null) {
@@ -1391,7 +1392,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                     TodoList.selectTodoItem(item)
                 } else {
                     TodoList.unSelectTodoItem(item)
-                    m_adapter?.setFilteredTasks()
                 }
                 it.isActivated = newSelectedState
                 invalidateOptionsMenu()
