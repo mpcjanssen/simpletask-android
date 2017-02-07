@@ -226,13 +226,13 @@ object TodoList {
 
     fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
-        // TODO: Make this a setting
         ActionQueue.add("Notified changed", Runnable {
             if (save) {
                 save(FileStore, todoName, backup, eol)
             }
             mLists = null
             mTags = null
+            clearSelection()
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         })
     }

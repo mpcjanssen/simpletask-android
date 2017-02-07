@@ -136,13 +136,11 @@ class AddTaskBackground : Activity() {
             items.add(TodoItem(1, t))
         }
         todoList.add(items, Config.hasAppendAtEnd)
-        if (Config.hasShareTaskShowsEdit) {
-            todoList.selectTodoItems(items)
-        } else {
-            todoList.unSelectTodoItems(items)
-        }
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
+        if (Config.hasShareTaskShowsEdit) {
+            todoList.selectTodoItems(items)
+        }
         showToastShort(TodoApplication.app, R.string.task_added)
         if (Config.hasShareTaskShowsEdit) {
             todoList.startAddTaskActivity(this)
