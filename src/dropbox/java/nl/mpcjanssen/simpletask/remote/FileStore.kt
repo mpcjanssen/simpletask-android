@@ -594,9 +594,6 @@ object FileStore : FileStoreInterface {
         return true
     }
 
-    override val type: Int
-        get() = Constants.STORE_DROPBOX
-
 
     fun changedConnectionState() {
         val prevOnline = mOnline

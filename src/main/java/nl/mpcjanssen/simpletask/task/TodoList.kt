@@ -51,7 +51,7 @@ class TodoItem(val line: Long, val task: Task)
  * @author Mark Janssen
  */
 object TodoList {
-    private val log: Logger
+    private val log: Logger = Logger
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
@@ -59,26 +59,15 @@ object TodoList {
     val selectedItems = HashSet<TodoItem>()
     val pendingEdits = ArrayList<TodoItem>()
 
-    init {
-        log = Logger
-    }
-
     fun hasPendingAction () : Boolean {
         return ActionQueue.hasPending()
     }
 
     // Wait until there are no more pending actions
+    @Suppress("unused") // Used in test suite
     fun settle() {
         while (hasPendingAction()) {
             Thread.sleep(10)
-        }
-    }
-
-    private fun changeSelection(items: List<TodoItem>, select : Boolean) {
-        if (select) {
-            selectedItems.addAll(items)
-        } else {
-            selectedItems.removeAll(items)
         }
     }
 
@@ -89,7 +78,7 @@ object TodoList {
             } else {
                 todoItems.addAll(0,items)
             }
-            Config.todoList = todoItems
+            updateCache()
         })
     }
 
@@ -102,7 +91,7 @@ object TodoList {
     fun remove(item: TodoItem) {
         ActionQueue.add("Remove", Runnable {
             todoItems.remove(item)
-            Config.todoList = todoItems
+            updateCache()
         })
     }
 
@@ -168,7 +157,7 @@ object TodoList {
             items.forEach {
                 it.task.markIncomplete()
             }
-            Config.todoList = todoItems
+            updateCache()
         })
     }
 
@@ -184,7 +173,7 @@ object TodoList {
                     task.priority = Priority.NONE
                 }
             }
-            Config.todoList = todoItems
+            updateCache()
         })
     }
 
@@ -194,7 +183,7 @@ object TodoList {
             for (item in items) {
                 item.task.priority = prio
             }
-            Config.todoList = todoItems
+            updateCache()
         })
 
     }
@@ -208,7 +197,7 @@ object TodoList {
                     DateType.THRESHOLD -> taskToDefer.deferThresholdDate(deferString, todayAsString)
                 }
             }
-            Config.todoList = todoItems
+            updateCache()
         })
     }
 
@@ -276,7 +265,7 @@ object TodoList {
         } else {
             log.info(TAG, "Todolist reload not needed, refresh UI")
         }
-        Config.todoList = todoItems
+        updateCache()
         notifyChanged(filename, eol, backup, false)
     }
 
@@ -302,7 +291,7 @@ object TodoList {
                 tasks.forEach {
                     todoItems.remove(it)
                 }
-                Config.todoList = todoItems
+                updateCache()
                 notifyChanged(todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -365,7 +354,7 @@ object TodoList {
         }
     }
 
-    fun  update(checkedTasks: List<TodoItem>) {
+    fun updateCache() {
         Config.todoList = todoItems
     }
 

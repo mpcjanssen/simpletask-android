@@ -296,7 +296,6 @@ class AddTask : ThemedActionBarActivity() {
             if (m_backup.size > 0) {
                 // Don't modify create date for updated tasks
                 m_backup[0].task.update(task.text)
-                TodoList.update(listOf(m_backup[0]))
                 m_backup.removeAt(0)
             } else {
                 val t: Task
@@ -309,7 +308,7 @@ class AddTask : ThemedActionBarActivity() {
             }
         }
 
-        // Remove remaining tasks that where selected for update
+        // Remove remaining tasks that where selected for updateCache
         for (t in m_backup) {
             todoList.remove(t)
         }

@@ -110,6 +110,7 @@ fun showToastShort(cxt: Context, resid: Int) {
     runOnMainThread(Runnable { Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show() })
 }
 
+@Suppress("unused")
 fun showToastLong(cxt: Context, resid: Int) {
     runOnMainThread(Runnable { Toast.makeText(cxt, resid, Toast.LENGTH_LONG).show() })
 }
@@ -522,7 +523,7 @@ fun getRelativeDueDate(task: Task, app: TodoApplication): SpannableString? {
  * months, and years, you can add the other cases in by copying the logic
  * for hours, minutes, seconds.
 
- * @param then date to calculate difference to
+ * @param dateString date to calculate difference to
  * *
  * @return String representing the relative date
  */
