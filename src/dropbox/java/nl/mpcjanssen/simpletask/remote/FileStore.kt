@@ -65,7 +65,7 @@ object FileStore : FileStoreInterface {
         }
     }
 
-    private val log: Logger
+    private val log: Logger = Logger
     private val mPrefs: SharedPreferences?
     // In the class declaration section:
     private var mDBApi: DropboxAPI<AndroidAuthSession>? = null
@@ -79,7 +79,6 @@ object FileStore : FileStoreInterface {
     private val mApp = TodoApplication.app
 
     init {
-        log = Logger
         mPrefs = mApp.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
         // Set up the message queue
         val t = Thread(Runnable {
@@ -367,9 +366,7 @@ object FileStore : FileStoreInterface {
     private fun tasksFromCache(): List<String> {
         val result = CopyOnWriteArrayList<String>()
         val contents = loadContentsFromCache()
-        for (line in contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()) {
-            result.add(line)
-        }
+        result += contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()
         return result
     }
 
@@ -529,9 +526,7 @@ object FileStore : FileStoreInterface {
                 }
 
                 // Then append
-                for (t in lines) {
-                    doneContents.add(t)
-                }
+                doneContents += lines
                 val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
 
@@ -647,10 +642,10 @@ object FileStore : FileStoreInterface {
     /**
      * @param activity activity to display the file dialog.
      * *
-     * @param pathName intial path shown in the file dialog
+     * @param pathName initial path shown in the file dialog
      */
     class FileDialog(private val activity: Activity, pathName: String, private val txtOnly: Boolean) {
-        private val log: Logger
+        private val log: Logger = Logger
         private var fileList: Array<String>? = null
         private val entryHash = HashMap<String, DropboxAPI.Entry>()
         private var currentPath: File? = null
@@ -661,7 +656,6 @@ object FileStore : FileStoreInterface {
 
 
         init {
-            log = Logger
             currentPath = File(pathName)
 
         }
@@ -674,7 +668,7 @@ object FileStore : FileStoreInterface {
 
             val api = (fs as FileStore).mDBApi ?: return
 
-            // Use an asynctask because we need to manage the UI
+            // Use an async task because we need to manage the UI
             Thread(Runnable {
                 loadFileList(act, api, currentPath ?: File("/"))
                 loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
