@@ -57,6 +57,7 @@ object TodoList {
     private var mTags: ArrayList<String>? = null
     val todoItems = Config.todoList ?: ArrayList<TodoItem>()
     val selectedItems = HashSet<TodoItem>()
+    val pendingEdits = ArrayList<TodoItem>()
 
     init {
         log = Logger
@@ -236,10 +237,9 @@ object TodoList {
     }
 
     fun startAddTaskActivity(act: Activity) {
-        ActionQueue.add("Add/Edit tasks", Runnable {
+        ActionQueue.add("Start add/edit task activity", Runnable {
             log.info(TAG, "Starting addTask activity")
             val intent = Intent(act, AddTask::class.java)
-            intent.putExtra(Constants.EXTRA_EDIT, true)
             act.startActivity(intent)
         })
     }
@@ -367,6 +367,18 @@ object TodoList {
 
     fun  update(checkedTasks: List<TodoItem>) {
         Config.todoList = todoItems
+    }
+
+    fun editTasks(from: Activity, tasks: List<TodoItem>) {
+        ActionQueue.add("Clear selection", Runnable {
+            pendingEdits.addAll(tasks)
+            startAddTaskActivity(from)
+        })
+    }
+    fun clearPendingEdits() {
+        ActionQueue.add("Clear selection", Runnable {
+            pendingEdits.clear()
+        })
     }
 }
 

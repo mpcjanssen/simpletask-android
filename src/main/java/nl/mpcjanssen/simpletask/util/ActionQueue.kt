@@ -3,6 +3,9 @@ package nl.mpcjanssen.simpletask.util
 import android.os.Handler
 import android.os.Looper
 
+
+
+
 object ActionQueue : Thread() {
     private var mHandler: Handler? = null
     private val TAG = ActionQueue::class.java.simpleName
@@ -31,13 +34,24 @@ object ActionQueue : Thread() {
             }
         }
         if (!silent) {
-            log.info(TAG, "Adding to queue: $description")
+            log.info(TAG, "Adding to queue: $description" )
             mHandler?.post(LoggingRunnable(description, r))
         } else {
             mHandler?.post (r)
         }
 
     }
+    private fun buildStackTraceString(elements: Array<StackTraceElement>) : String {
+        val sb = StringBuilder();
+        elements.reverse()
+        elements.forEach {
+            sb.append("\n" + it.toString());
+        }
+        return sb.toString();
+    }
+
+
+// at your check point
 }
 
 class LoggingRunnable (val description: String, val runnable: Runnable) : Runnable {

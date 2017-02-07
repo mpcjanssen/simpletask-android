@@ -36,6 +36,7 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.util.ActionQueue
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
@@ -134,13 +135,10 @@ class AddTaskBackground : Activity() {
         }
         todoList.add(items, Config.hasAppendAtEnd)
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
-        finish()
         showToastShort(TodoApplication.app, R.string.task_added)
         if (Config.hasShareTaskShowsEdit) {
-            todoList.selectTodoItems(items)
-            todoList.startAddTaskActivity(this)
+            todoList.editTasks(this,items)
         }
-
+        finish()
     }
-
 }
