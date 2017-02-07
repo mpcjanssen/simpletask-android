@@ -36,7 +36,6 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.ActionQueue
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
@@ -94,12 +93,11 @@ class AddTaskBackground : Activity() {
         } else {
             val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             imageUri?.let {
-                log.info(TAG, "Added link to content: ${imageUri.toString()}")
+                log.info(TAG, "Added link to content: $imageUri")
                 addBackgroundTask(imageUri.toString(), append_text)
             }
         }
     }
-
 
 
     private fun noteToSelf(intent: Intent, append_text: String) {
@@ -115,11 +113,11 @@ class AddTaskBackground : Activity() {
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
         val items = ArrayList<TodoItem>()
-        for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
+        for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()) {
             if (taskText.trim({ it <= ' ' }).isEmpty()) {
                 continue
             }
-            var text : String
+            var text: String
             if (!appendText.isEmpty()) {
                 text = taskText + " " + appendText
             } else {
@@ -137,7 +135,7 @@ class AddTaskBackground : Activity() {
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         showToastShort(TodoApplication.app, R.string.task_added)
         if (Config.hasShareTaskShowsEdit) {
-            todoList.editTasks(this,items)
+            todoList.editTasks(this, items)
         }
         finish()
     }
