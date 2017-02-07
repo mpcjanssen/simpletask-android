@@ -1666,7 +1666,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             MainFilter.saveInIntent(intent)
             MainFilter.saveInPrefs(Config.prefs)
             setIntent(intent)
-            TodoList.clearSelection()
+            // TodoList.clearSelection()
             m_adapter!!.setFilteredTasks()
         }
     }
