@@ -319,7 +319,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         listView?.adapter = this.m_adapter
 
-
+        val fab = findViewById(R.id.fab) as FloatingActionButton
+        fab.setOnClickListener { startAddTaskActivity() }
+        invalidateOptionsMenu()
+        updateDrawers()
 
         // If we were started from the widget, select the pushed task
         // and scroll to its position
@@ -328,9 +331,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
             setIntent(intent)
             if (line > -1) {
-                TodoList.clearSelection()
                 TodoList.selectLine(line)
-                localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
             }
         }
         val selection = TodoList.selectedTasks
@@ -338,11 +339,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             val selectedTask = selection[0]
             m_scrollPosition = m_adapter!!.getPosition(selectedTask)
         }
-
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { startAddTaskActivity() }
-        invalidateOptionsMenu()
-        updateDrawers()
     }
 
     private fun updateConnectivityIndicator() {
@@ -1462,7 +1458,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 runOnUiThread {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
-                    TodoList.clearSelection()
                     notifyDataSetChanged()
                     updateConnectivityIndicator()
                     updateFilterBar()
@@ -1671,6 +1666,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             MainFilter.saveInIntent(intent)
             MainFilter.saveInPrefs(Config.prefs)
             setIntent(intent)
+            TodoList.clearSelection()
             m_adapter!!.setFilteredTasks()
         }
     }

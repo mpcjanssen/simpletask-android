@@ -319,8 +319,10 @@ object TodoList {
         })
     }
 
-    fun selectTodoItem(item: TodoItem) {
-        selectTodoItems(listOf(item))
+    fun selectTodoItem(item: TodoItem?) {
+        item?.let {
+            selectTodoItems(listOf(item))
+        }
     }
 
 
@@ -347,11 +349,9 @@ object TodoList {
         return items.filter { it.task.inFileFormat().isNotBlank() }.size.toLong()
     }
 
-    fun selectLine(line : Long ) {
-        val item = todoItems.find {it.line == line}
-        item?.let {
-            selectTodoItem(item)
-        }
+    fun selectLine(selectedLine : Long ) {
+        clearSelection()
+        selectTodoItem(todoItems.find {selectedLine == it.line})
     }
 
     fun updateCache() {
