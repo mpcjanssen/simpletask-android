@@ -1462,6 +1462,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 runOnUiThread {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
+                    TodoList.clearSelection()
                     notifyDataSetChanged()
                     updateConnectivityIndicator()
                     updateFilterBar()
