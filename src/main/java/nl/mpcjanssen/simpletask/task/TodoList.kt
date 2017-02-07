@@ -43,7 +43,7 @@ import java.io.IOException
 import java.util.*
 
 
-data class TodoItem(val line: Long, val task: Task)
+class TodoItem(val line: Long, val task: Task)
 
 /**
  * Implementation of the in memory representation of the todo list
@@ -81,22 +81,20 @@ object TodoList {
         }
     }
 
-    fun add(items: List<TodoItem>, atEnd: Boolean, select: Boolean = false) {
-        ActionQueue.add("Add task", Runnable {
-            log.debug(TAG, "Adding task ${items.size} atEnd: $atEnd ")
+    fun add(items: List<TodoItem>, atEnd: Boolean) {
+        ActionQueue.add("Add task ${items.size} atEnd: $atEnd", Runnable {
             if (atEnd) {
                 todoItems.addAll(items)
             } else {
                 todoItems.addAll(0,items)
             }
-            changeSelection(items, select)
             Config.todoList = todoItems
         })
     }
 
-    fun add(t: Task, atEnd: Boolean, select: Boolean = false) {
+    fun add(t: Task, atEnd: Boolean) {
         val newItem = TodoItem(0, t)
-        add(listOf(newItem), atEnd, select)
+        add(listOf(newItem), atEnd)
     }
 
 
@@ -241,7 +239,7 @@ object TodoList {
         ActionQueue.add("Add/Edit tasks", Runnable {
             log.info(TAG, "Starting addTask activity")
             val intent = Intent(act, AddTask::class.java)
-            intent.putExtra(Constants.EXTRA_EDIT, true) //true ->  edit, not add
+            intent.putExtra(Constants.EXTRA_EDIT, true)
             act.startActivity(intent)
         })
     }
