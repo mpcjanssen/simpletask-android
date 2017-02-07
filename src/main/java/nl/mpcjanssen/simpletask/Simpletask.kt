@@ -1640,7 +1640,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     }
                 }
             }
-            TodoList.update(checkedTasks)
+            TodoList.updateCache()
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }

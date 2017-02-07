@@ -131,7 +131,7 @@ class TodoApplication : Application(),
         calendar.set(Calendar.MINUTE, 2)
         calendar.set(Calendar.SECOND, 0)
 
-        Logger.info(TAG, "Scheduling daily UI update alarm, first at ${calendar.time}")
+        Logger.info(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
         val pi = PendingIntent.getBroadcast(this, 0,
                 Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
         val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -183,7 +183,7 @@ class TodoApplication : Application(),
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
         Logger.info(TAG, "Redrawing widgets ")
-        if (appWidgetIds.size > 0) {
+        if (appWidgetIds.isNotEmpty()) {
             MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
         }
     }

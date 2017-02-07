@@ -28,7 +28,7 @@ way.
 
 Create a filter with the `@work` and `@home` items checked.  Initially this
 will work. However when you create an item with list `@shop` which is also
-a next action, you will have to update the next action filter.  So it
+a next action, you will have to updateCache the next action filter.  So it
 is easy to miss next actions like this.
 
 ### The 'right' way

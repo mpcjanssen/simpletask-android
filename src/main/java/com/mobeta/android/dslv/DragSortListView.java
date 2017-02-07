@@ -886,7 +886,7 @@ public class DragSortListView extends ListView {
      * item is at y-coord top. Assumes that current item heights
      * are consistent with current float view location and
      * thus expanded positions and slide fraction. i.e. Should not be
-     * called between update of expanded positions/slide fraction
+     * called between updateCache of expanded positions/slide fraction
      * and layoutChildren.
      *
      * @param position 
@@ -2579,7 +2579,7 @@ public class DragSortListView extends ListView {
      * adapter which does not have stable IDs (see
      * {@link ListAdapter#hasStableIds()}). This is because without IDs, the
      * ListView has no way of knowing which items have moved where, and cannot
-     * update the check state accordingly.
+     * updateCache the check state accordingly.
      * <p>
      * A word of warning about a "feature" in Android that you may run into when
      * dealing with movable list items: for an adapter that <em>does</em> have
@@ -2664,7 +2664,7 @@ public class DragSortListView extends ListView {
      * underlying adapter which does not have stable IDs (see
      * {@link ListAdapter#hasStableIds()}). This is because without IDs, the
      * ListView has no way of knowing which items have moved where, and cannot
-     * update the check state accordingly.
+     * updateCache the check state accordingly.
      * 
      * See also further comments on {@link #moveCheckState(int, int)}.
      * 

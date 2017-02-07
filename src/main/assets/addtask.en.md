@@ -1,4 +1,4 @@
-This screen allows you to add new tasks or update existing ones. Every line in the text box will become one task. There are two checkboxes:
+This screen allows you to add new tasks or updateCache existing ones. Every line in the text box will become one task. There are two checkboxes:
 
 * Word wrap: Should long lines be wrapped or run off to the right.
 * Pre-fill next: When checked, pressing next (or enter) on the keyboard will prefill the next line with the

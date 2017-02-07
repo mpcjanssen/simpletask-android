@@ -60,15 +60,6 @@ object Constants {
 
     // Android OS specific constants
     const val ANDROID_EVENT = "vnd.android.cursor.item/event"
-
-    // Supported backends
-    const val STORE_DROPBOX = 0
-    const val STORE_SDCARD = 1
-
-    // Help pages
-    const val HELP_INDEX = "index.en.md"
-    const val HELP_ADD_TASK = "addtask.en.md"
-
 }
 
 enum class DateType {

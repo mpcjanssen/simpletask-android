@@ -96,8 +96,8 @@
 - Add black theme for application.
 - Restore last active filter tab.
 - Greatly improve selection performance. Fixes #491.
-- When selection active, update the selected state of task when closing it with the back button. Fixes #491.
-- Removed last visual task update artifacts. Fixes #474.
+- When selection active, updateCache the selected state of task when closing it with the back button. Fixes #491.
+- Removed last visual task updateCache artifacts. Fixes #474.
 
 8.0.6
 -----
@@ -147,7 +147,7 @@
 
 - Added application wide configuration using Lua. Fixes #349. See help for details.
 
-- Re-use filter export format (JSON) to store active filter in preferences. This will reset the filter after the update.
+- Re-use filter export format (JSON) to store active filter in preferences. This will reset the filter after the updateCache.
 - Recreate activity when some changing preferences, fixes #435.
 - Sort checked tags and lists to top when updating. Implements #180.
 - Added a font size between large and huge.
@@ -162,7 +162,7 @@
 - Improved task filtering visual feedback.
 - Open Donate URL with Intent so it also works without internet permissions on cloudless.
 - Add checkbox to enable or disable filter script, prevent clearing script when clearing filter.
-- Merged settings update (#442 smichel17)
+- Merged settings updateCache (#442 smichel17)
 - Improve cloudless file handling logging
 - Updated Kotlin to 1.0.3.
 - Proper logging ordering in debug info.
@@ -181,7 +181,7 @@
 7.2.2
 -----
 
-- Fix completely broken update lists and tags when scrolling occurs. Fixes #426.
+- Fix completely broken updateCache lists and tags when scrolling occurs. Fixes #426.
 
 7.2.1
 -----
@@ -192,7 +192,7 @@
 -----
 
 - Don't poll Dropbox when app is in background. Improves battery usage and fixes #424.
-- Don't update filter when renaming. Fixes #425.
+- Don't updateCache filter when renaming. Fixes #425.
 - Allow toggle back to indeterminate state when changing tags or lists. Fixes #405.
 - Reorganized settings thanks to smichel17. Fixes #401.
 - Updated icons to new material colors and sizes.
@@ -664,7 +664,7 @@
 5.2.15
 ------
 
-- Only update menu if it is actually initialized. Should fix crash on 5.1.
+- Only updateCache menu if it is actually initialized. Should fix crash on 5.1.
 
 5.2.14
 ------
@@ -808,12 +808,12 @@
 -----
 
 - Don't pass invalid filenames to Dropbox, should fix crash with archiving on Dropbox.
-- Don't try to update the widgets if we are not authenticated on Dropbox.
+- Don't try to updateCache the widgets if we are not authenticated on Dropbox.
 
 5.0.9
 -----
 
-- Don't update UI if loading the file from Dropbox failed. Fixes infinite loops and crashes when not authenticated.
+- Don't updateCache UI if loading the file from Dropbox failed. Fixes infinite loops and crashes when not authenticated.
 
 5.0.8
 -----
@@ -1089,7 +1089,7 @@
 4.0.0
 -----
 
--   Big update which should make starting with Simpletask more intuitive:
+-   Big updateCache which should make starting with Simpletask more intuitive:
 -   Merged tag and list navigation drawer into the left drawer.
 -   Click tag or list header to invert the filter.
 -   Right drawer with favourite filters.
