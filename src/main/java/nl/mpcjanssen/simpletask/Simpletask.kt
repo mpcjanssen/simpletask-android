@@ -132,6 +132,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         updateDrawers()
                     } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                         m_adapter?.notifyDataSetChanged()
+                        invalidateOptionsMenu()
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
                         showListViewProgress(true)
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
