@@ -238,14 +238,10 @@ class TodoApplication : Application(),
         return values[index]
     }
 
-
-
     companion object {
-
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
         lateinit var  app : TodoApplication
-
     }
 
     var today: String = todayAsString

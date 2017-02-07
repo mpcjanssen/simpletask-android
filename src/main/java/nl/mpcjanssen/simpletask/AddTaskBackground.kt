@@ -113,9 +113,6 @@ class AddTaskBackground : Activity() {
         val todoList = TodoList
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
-        if (Config.hasShareTaskShowsEdit) {
-            todoList.clearSelection()
-        }
         val items = ArrayList<TodoItem>()
         for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
             if (taskText.trim({ it <= ' ' }).isEmpty()) {
@@ -138,13 +135,12 @@ class AddTaskBackground : Activity() {
         todoList.add(items, Config.hasAppendAtEnd)
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
-        if (Config.hasShareTaskShowsEdit) {
-            todoList.selectTodoItems(items)
-        }
         showToastShort(TodoApplication.app, R.string.task_added)
         if (Config.hasShareTaskShowsEdit) {
+            todoList.selectTodoItems(items)
             todoList.startAddTaskActivity(this)
         }
+
     }
 
 }

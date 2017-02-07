@@ -20,9 +20,6 @@ object ActionQueue : Thread() {
     }
 
     fun add(description: String, r: Runnable, silent: Boolean = false) {
-        if (!silent) {
-            log.info(TAG, "Adding to queue: $description")
-        }
         while (mHandler == null) {
             if (!silent) {
                 log.debug(TAG, "Queue handler is null, waiting")
@@ -34,10 +31,12 @@ object ActionQueue : Thread() {
             }
         }
         if (!silent) {
+            log.info(TAG, "Adding to queue: $description")
             mHandler?.post(LoggingRunnable(description, r))
         } else {
             mHandler?.post (r)
         }
+
     }
 }
 
