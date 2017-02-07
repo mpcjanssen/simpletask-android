@@ -41,17 +41,14 @@ object ActionQueue : Thread() {
         }
 
     }
-    private fun buildStackTraceString(elements: Array<StackTraceElement>) : String {
-        val sb = StringBuilder();
-        elements.reverse()
-        elements.forEach {
-            sb.append("\n" + it.toString());
-        }
-        return sb.toString();
-    }
-
-
-// at your check point
+//    private fun buildStackTraceString(elements: Array<StackTraceElement>) : String {
+//        val sb = StringBuilder();
+//        elements.reverse()
+//        elements.forEach {
+//            sb.append("\n" + it.toString());
+//        }
+//        return sb.toString();
+//    }
 }
 
 class LoggingRunnable (val description: String, val runnable: Runnable) : Runnable {
