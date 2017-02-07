@@ -55,8 +55,6 @@ class AddTask : ThemedActionBarActivity() {
         // Config.loadTodoList(true)
 
         val intent = intent
-        val isEdit = intent.getBooleanExtra(Constants.EXTRA_EDIT, false)
-        if (!isEdit) TodoList.clearSelection()
 
         val mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
         mFilter.initFromIntent(intent)
@@ -99,10 +97,9 @@ class AddTask : ThemedActionBarActivity() {
         var iniTask: Task? = null
         setTitle(R.string.addtask)
 
-        val selection = TodoList.selectedTasks
-        m_backup.addAll(selection)
-        if (selection.isNotEmpty()) {
-            val preFillString = join(selection.map {it.task.inFileFormat()}, "\n")
+        m_backup.addAll(TodoList.pendingEdits)
+        if (m_backup.isNotEmpty()) {
+            val preFillString = join(m_backup.map {it.task.inFileFormat()}, "\n")
             textInputField.setText(preFillString)
             setTitle(R.string.updatetask)
         } else {
@@ -319,6 +316,7 @@ class AddTask : ThemedActionBarActivity() {
 
 
         // Save
+        TodoList.clearPendingEdits()
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
     }

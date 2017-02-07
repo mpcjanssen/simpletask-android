@@ -142,8 +142,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                         showListViewProgress(false)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
                         updateConnectivityIndicator()
-                    } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
-                        handleIntent()
                     } else if ( receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                             receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                         recreate()
@@ -855,10 +853,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startAddTaskActivity(isEdit: Boolean) {
         log.info(TAG, "Starting addTask activity")
-        val intent = Intent(this, AddTask::class.java)
-        intent.putExtra(Constants.EXTRA_EDIT, isEdit)
         MainFilter.saveInIntent(intent)
-        startActivity(intent)
+        TodoList.editTasks(this,TodoList.selectedTasks)
     }
 
     private fun startPreferencesActivity() {
