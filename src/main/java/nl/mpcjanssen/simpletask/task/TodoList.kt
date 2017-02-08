@@ -220,7 +220,6 @@ object TodoList {
             }
             mLists = null
             mTags = null
-            clearSelection()
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         })
     }
@@ -338,7 +337,7 @@ object TodoList {
     }
 
     fun clearSelection() {
-        ActionQueue.add("Clear selection", Runnable {
+        ActionQueue.add("Clear selection", r = Runnable {
             selectedItems.clear()
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         })
