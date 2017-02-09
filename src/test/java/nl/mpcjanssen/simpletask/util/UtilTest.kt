@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.util
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
+import nl.mpcjanssen.simpletask.task.TodoItem
 
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
@@ -14,7 +14,7 @@ class UtilTest : TestCase() {
         tasks.add(Task("@College h:1"))
         val items = ArrayList<TodoItem>()
         for (t in tasks) {
-            items.add(TodoItem(0, t, false))
+            items.add(TodoItem(0, t))
         }
         assertEquals(6, addHeaderLines(items, ArrayList(listOf<String>("by_context")) , "none", false, null).size)
 

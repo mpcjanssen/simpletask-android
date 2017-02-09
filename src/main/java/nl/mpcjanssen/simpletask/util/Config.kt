@@ -1,16 +1,25 @@
 package nl.mpcjanssen.simpletask.util
 
 import android.annotation.SuppressLint
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.JsonReader
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoItem
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.charset.Charset
+import java.util.*
 
 object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)!!
@@ -287,4 +296,33 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     val hasColorDueDates: Boolean
         get() =  prefs.getBoolean(getString(R.string.color_due_date_key), true)
+
+    var todoList : ArrayList<TodoItem>?
+        get() {
+            try {
+                val ctxt = TodoApplication.app
+                val stream = ctxt.openFileInput("cachedtodo.txt")
+                val reader = stream.reader(Charset.forName("UTF-8"))
+                val result = ArrayList<TodoItem>()
+                result.addAll(reader.readLines().mapIndexed
+                    { i, line ->  TodoItem(i.toLong(), Task(line))})
+                reader.close()
+                stream.close()
+                return result
+
+            } catch (e: FileNotFoundException) {
+                return null
+            }
+
+        }
+        set(items) {
+            if (items == null) return
+            val ctxt = TodoApplication.app
+            val stream = ctxt.openFileOutput("cachedtodo.txt", MODE_PRIVATE)
+            val writer = stream.writer(Charset.forName("UTF-8"))
+            writer.write(items.map { it.task.inFileFormat() }.joinToString("\n"))
+            writer.close()
+            stream.close()
+
+        }
 }

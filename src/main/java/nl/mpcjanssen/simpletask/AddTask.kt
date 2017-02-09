@@ -24,8 +24,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
+import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
@@ -56,8 +55,6 @@ class AddTask : ThemedActionBarActivity() {
         // Config.loadTodoList(true)
 
         val intent = intent
-        val isEdit = intent.getBooleanExtra(Constants.EXTRA_EDIT, false)
-        if (!isEdit) TodoList.clearSelection()
 
         val mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
         mFilter.initFromIntent(intent)
@@ -100,14 +97,13 @@ class AddTask : ThemedActionBarActivity() {
         var iniTask: Task? = null
         setTitle(R.string.addtask)
 
-        val selection = TodoList.selectedTasks
-        m_backup.addAll(selection)
-        if (selection.size > 0) {
-            val preFillString = join(selection.map {it.task.inFileFormat()}, "\n")
+        m_backup.addAll(TodoList.pendingEdits)
+        if (m_backup.isNotEmpty()) {
+            val preFillString = join(m_backup.map {it.task.inFileFormat()}, "\n")
             textInputField.setText(preFillString)
             setTitle(R.string.updatetask)
         } else {
-            if (textInputField.text.length == 0) {
+            if (textInputField.text.isEmpty()) {
                 iniTask = Task("")
                 initTaskWithFilter(iniTask, mFilter)
             }
@@ -172,10 +168,9 @@ class AddTask : ThemedActionBarActivity() {
                         line = precedingText
                     }
                     val t = Task(line)
-                    val tags = LinkedHashSet<String>()
-                    for (ctx in t.lists) {
-                        tags.add("@" + ctx)
-                    }
+                    val tags = t.lists
+                            .map { "@" + it }
+                            .toMutableSet()
                     for (prj in t.tags) {
                         tags.add("+" + prj)
                     }
@@ -284,8 +279,7 @@ class AddTask : ThemedActionBarActivity() {
         val todoList = TodoList
         // strip line breaks
         textInputField = findViewById(R.id.taskText) as EditText
-        val input: String
-        input = textInputField.text.toString()
+        val input: String = textInputField.text.toString()
 
         // Don't add empty tasks
         if (input.trim { it <= ' ' }.isEmpty()) {
@@ -302,7 +296,6 @@ class AddTask : ThemedActionBarActivity() {
             if (m_backup.size > 0) {
                 // Don't modify create date for updated tasks
                 m_backup[0].task.update(task.text)
-                Daos.todoItemDao.update(m_backup[0])
                 m_backup.removeAt(0)
             } else {
                 val t: Task
@@ -315,13 +308,14 @@ class AddTask : ThemedActionBarActivity() {
             }
         }
 
-        // Remove remaining tasks that where selected for update
+        // Remove remaining tasks that where selected for updateCache
         for (t in m_backup) {
             todoList.remove(t)
         }
 
 
         // Save
+        TodoList.clearPendingEdits()
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finish()
     }
@@ -388,6 +382,7 @@ class AddTask : ThemedActionBarActivity() {
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun showTagMenu() {
         val items = TreeSet<String>()
         val todoList = TodoList
@@ -406,7 +401,7 @@ class AddTask : ThemedActionBarActivity() {
         val projects = sortWithPrefix(items, Config.sortCaseSensitive, null)
 
         val builder = AlertDialog.Builder(this)
-        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
+        val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
         builder.setView(view)
         val lv = view.findViewById(R.id.listView) as ListView
         val ed = view.findViewById(R.id.editText) as EditText
@@ -448,11 +443,7 @@ class AddTask : ThemedActionBarActivity() {
     private fun showPriorityMenu() {
         val builder = AlertDialog.Builder(this)
         val priorities = Priority.values()
-        val priorityCodes = ArrayList<String>()
-
-        for (priority in priorities) {
-            priorityCodes.add(priority.code)
-        }
+        val priorityCodes = priorities.mapTo(ArrayList<String>()) { it.code }
 
         builder.setItems(priorityCodes.toArray<String>(arrayOfNulls<String>(priorityCodes.size))
         ) { arg0, which -> replacePriority(priorities[which].code) }
@@ -466,9 +457,10 @@ class AddTask : ThemedActionBarActivity() {
 
     private fun getTasks() : MutableList<Task> {
         val input = textInputField.text.toString()
-        return input.split("\r\n|\r|\n".toRegex()).map{Task(it)}.toMutableList()
+        return input.split("\r\n|\r|\n".toRegex()).map(::Task).toMutableList()
     }
 
+    @SuppressLint("InflateParams")
     private fun showListMenu() {
         val items = TreeSet<String>()
 
@@ -487,7 +479,7 @@ class AddTask : ThemedActionBarActivity() {
         val lists = sortWithPrefix(items, Config.sortCaseSensitive, null)
 
         val builder = AlertDialog.Builder(this)
-        @SuppressLint("InflateParams") val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
+        val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
         builder.setView(view)
         val lv = view.findViewById(R.id.listView) as ListView
         val ed = view.findViewById(R.id.editText) as EditText
@@ -528,11 +520,9 @@ class AddTask : ThemedActionBarActivity() {
 
     private fun initListViewSelection(lv: ListView, lvAdapter: ArrayAdapter<String>, selectedItems: Set<String>) {
         for (i in 0..lvAdapter.count - 1) {
-            for (item in selectedItems) {
-                if (item == lvAdapter.getItem(i)) {
-                    lv.setItemChecked(i, true)
-                }
-            }
+            selectedItems
+                    .filter { it == lvAdapter.getItem(i) }
+                    .forEach { lv.setItemChecked(i, true) }
         }
     }
 
@@ -543,11 +533,7 @@ class AddTask : ThemedActionBarActivity() {
         }
 
         val chars = textInputField.text.subSequence(0, selectionStart)
-        var line = 0
-        for (i in 0..chars.length - 1) {
-            if (chars[i] == '\n') line++
-
-        }
+        val line = (0..chars.length - 1).count { chars[it] == '\n' }
         return line
     }
 

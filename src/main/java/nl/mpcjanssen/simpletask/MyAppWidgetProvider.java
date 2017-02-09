@@ -112,7 +112,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
-            // Need to update the listView to redraw the listItems when
+            // Need to updateCache the listView to redraw the listItems when
             // Changing the theme
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widgetlv);
 		}

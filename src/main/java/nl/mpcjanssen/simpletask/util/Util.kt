@@ -50,7 +50,7 @@ import android.widget.Toast
 import com.github.rjeschke.txtmark.Processor
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
+import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.*
@@ -110,6 +110,7 @@ fun showToastShort(cxt: Context, resid: Int) {
     runOnMainThread(Runnable { Toast.makeText(cxt, resid, Toast.LENGTH_SHORT).show() })
 }
 
+@Suppress("unused")
 fun showToastLong(cxt: Context, resid: Int) {
     runOnMainThread(Runnable { Toast.makeText(cxt, resid, Toast.LENGTH_LONG).show() })
 }
@@ -522,7 +523,7 @@ fun getRelativeDueDate(task: Task, app: TodoApplication): SpannableString? {
  * months, and years, you can add the other cases in by copying the logic
  * for hours, minutes, seconds.
 
- * @param then date to calculate difference to
+ * @param dateString date to calculate difference to
  * *
  * @return String representing the relative date
  */
@@ -616,6 +617,10 @@ fun broadcastFileChanged(broadcastManager: LocalBroadcastManager) {
 
 fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+}
+
+fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
 }
 
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {

@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask.sort
 
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
+import nl.mpcjanssen.simpletask.task.TodoItem
 import java.util.*
 import kotlin.comparisons.then
 

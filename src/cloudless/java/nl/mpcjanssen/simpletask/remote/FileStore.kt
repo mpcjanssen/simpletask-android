@@ -177,9 +177,6 @@ object FileStore : FileStoreInterface {
         })
     }
 
-    override val type: Int
-        get() = Constants.STORE_SDCARD
-
     override fun getWritePermission(act: Activity, activityResult: Int): Boolean {
 
         val permissionCheck = ContextCompat.checkSelfPermission(act,

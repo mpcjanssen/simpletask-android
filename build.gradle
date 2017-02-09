@@ -87,23 +87,22 @@ dependencies {
     compile "com.android.support:design:$android_support_version"
     compile "com.android.support:appcompat-v7:$android_support_version"
     compile "com.android.support:recyclerview-v7:$android_support_version"
-    compile "de.greenrobot:greendao:2.1.0"
+    compile 'de.greenrobot:greendao:2.1.0'
     compile 'com.github.rjeschke:txtmark:0.11'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'org.luaj:luaj-jse:3.0.1'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile('com.android.support.test:runner:0.5') {
-	// Necessary if your app targets Marshmallow (since the test runner
+        // Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
-        exclude group: 'com.android.support', module: 'support-annotations'    
+        exclude group: 'com.android.support', module: 'support-annotations'
     }
     androidTestCompile('com.android.support.test:rules:0.5') {
-	// Necessary if your app targets Marshmallow (since the test runner
+        // Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
-        exclude group: 'com.android.support', module: 'support-annotations'    
+        exclude group: 'com.android.support', module: 'support-annotations'
     }
-
 }
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
