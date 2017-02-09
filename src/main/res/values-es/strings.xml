@@ -4,8 +4,8 @@
     <string name="share_task_show_edit_summary">Editar tareas compartidas a Simpletask antes de guardarlas</string>
 
     <string name="menu_capitalize_tasks">Tareas nuevas en mayúsculas</string>
-    <string name="back_saves_pref_title">Botón Atrás</string>
-    <string name="back_saves_summary">Guardar las tareas introducidas o aplicar el filtro al pulsar Atrás.</string>
+    <string name="back_saves_pref_title">Botón ATRÁS</string>
+    <string name="back_saves_summary">Guardar las tareas introducidas o aplicar el filtro al pulsar ATRÁS.</string>
 
     <string name="show_txt_only_pref_title">Sólo mostrar archivos txt</string>
     <string name="show_txt_only_summary">Mostrar sólo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
@@ -199,8 +199,8 @@ Toque en un elemento para cambiar el sentido de ordenamiento.</string>
     <string name="no_filter">Ningún filtro</string>
     <string name="dropbox">Dropbox</string>
 
-    <string name="save_filter">Guardar el filtro actual</string>
-    <string name="save_filter_message">Introduzca un nombre para el filtro actual, que será mostrado en el cajón de filtros guardados.</string>
+    <string name="save_filter">Guardar filtro</string>
+    <string name="save_filter_message">Introduzca un nombre para el filtro:</string>
 
     <string name="donate_title">Donar</string>
     <string name="donate_summary">"Si le gusta Simpletask, puede hacer una donación. NOTA: la donación es voluntaria, Simpletask siempre será gratis (es decir, sin cargo). "</string>
@@ -245,7 +245,7 @@ Toque en un elemento para cambiar el sentido de ordenamiento.</string>
     <string name="open_file">Abrir archivo de tareas</string>
     <string name="sync">Actualizar</string>
     <string name="changelist">Seleccionar una lista</string>
-    <string name="search">Buscar</string>
+    <string name="search">Búsqueda</string>
     <string name="add">Agregar</string>
     <string name="task">Tarea</string>
     <string name="addtask">Agregar una tarea</string>
@@ -406,8 +406,8 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
 
     <string name="name">Nombre</string>
     <string name="date">Fecha</string>
-    <string name="back_clears_filter_title">Botón \"Atrás\" quita el filtro</string>
-    <string name="back_clears_filter_summary">El botón \"Atrás\" elimina el filtro actual antes de salir de la aplicación</string>
+    <string name="back_clears_filter_title">Botón \"ATRÁS\" quita el filtro</string>
+    <string name="back_clears_filter_summary">El botón \"ATRÁS\" elimina el filtro actual antes de salir de la aplicación</string>
     <string name="experimental_title">Características experimentales</string>
     <string name="experimental_summary">Habilitar características experimentales</string>
 
