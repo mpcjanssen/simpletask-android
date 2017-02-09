@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
-import nl.mpcjanssen.simpletask.dao.gentodo.TodoItem
+
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join
@@ -238,7 +238,7 @@ class ActiveFilter (val options : FilterOptions) {
             LuaInterpreter.clearOnFilter(options.luaModule)
             LuaInterpreter.evalScript(options.luaModule, code)
             for (item in items) {
-                if (options.showSelected && item.selected ) {
+                if (options.showSelected && TodoList.isSelected(item) ) {
                     matched.add(item)
                     continue
                 }
