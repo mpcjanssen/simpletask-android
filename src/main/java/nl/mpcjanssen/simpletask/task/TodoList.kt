@@ -57,7 +57,7 @@ object TodoList {
     private var mTags: ArrayList<String>? = null
     val todoItems = Config.todoList ?: ArrayList<TodoItem>()
     val selectedItems = HashSet<TodoItem>()
-    val pendingEdits = ArrayList<TodoItem>()
+    val pendingEdits = LinkedHashSet<TodoItem>()
 
     fun hasPendingAction () : Boolean {
         return ActionQueue.hasPending()
