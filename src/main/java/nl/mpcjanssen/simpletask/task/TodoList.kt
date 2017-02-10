@@ -145,11 +145,11 @@ object TodoList {
         }
 
 
-    val decoratedContexts: ArrayList<String>
-        get() = prefixItems("@", contexts)
+    val decoratedContexts: List<String>
+        get() = contexts.map {"@"+it}
 
-    val decoratedProjects: ArrayList<String>
-        get() = prefixItems("+", projects)
+    val decoratedProjects: List<String>
+        get() = projects.map {"+"+it}
 
 
     fun uncomplete(items: List<TodoItem>) {

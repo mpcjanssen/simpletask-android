@@ -286,14 +286,6 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
     return newDate
 }
 
-fun prefixItems(prefix: String, items: ArrayList<String>): ArrayList<String> {
-    val result = ArrayList<String>()
-    for (item in items) {
-        result.add(prefix + item)
-    }
-    return result
-}
-
 fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     val checks = listView.checkedItemPositions
     val items = ArrayList<String>()
