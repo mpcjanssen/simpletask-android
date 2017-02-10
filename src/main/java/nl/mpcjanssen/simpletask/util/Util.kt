@@ -50,7 +50,6 @@ import android.widget.Toast
 import com.github.rjeschke.txtmark.Processor
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.*
@@ -146,7 +145,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
         firstGroupSortIndex++
@@ -161,7 +160,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header:
     var count = 0
     var headerLine: HeaderLine? = null
     for (item in visibleTasks) {
-        val t = item.task
+        val t = item
         val newHeader  = if (moduleName !=null ) {
             LuaInterpreter.onGroupCallback(moduleName, t)
         }   else {
@@ -193,7 +192,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header:
     return result
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
     return addHeaderLines(visibleTasks,sorts,no_header, filter.createIsThreshold, filter.options.luaModule)
 }

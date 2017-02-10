@@ -10,7 +10,6 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoItem
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -293,14 +292,14 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val hasColorDueDates: Boolean
         get() =  prefs.getBoolean(getString(R.string.color_due_date_key), true)
 
-    var todoList : ArrayList<TodoItem>?
+    var todoList : ArrayList<Task>?
         get() {
             try {
                 val ctxt = TodoApplication.app
                 val stream = ctxt.openFileInput("cachedtodo.txt")
                 val reader = stream.reader(Charset.forName("UTF-8"))
-                val result = ArrayList<TodoItem>()
-                result.addAll(reader.readLines().map{line ->  TodoItem(Task(line))})
+                val result = ArrayList<Task>()
+                result.addAll(reader.readLines().map{line ->  Task(line)})
                 reader.close()
                 stream.close()
                 return result
@@ -315,7 +314,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             val ctxt = TodoApplication.app
             val stream = ctxt.openFileOutput("cachedtodo.txt", MODE_PRIVATE)
             val writer = stream.writer(Charset.forName("UTF-8"))
-            writer.write(items.map { it.task.inFileFormat() }.joinToString("\n"))
+            writer.write(items.map { it.inFileFormat() }.joinToString("\n"))
             writer.close()
             stream.close()
 

@@ -47,7 +47,6 @@ import com.buildware.widget.indeterm.IndeterminateCheckBox
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
@@ -210,7 +209,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
         TodoList.selectedTasks.forEach {
-            result.add(it.task.inFileFormat())
+            result.add(it.inFileFormat())
         }
         return join(result, "\n")
     }
@@ -219,7 +218,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val selectedTasks = m_adapter!!.visibleLines
                 .filterNot(VisibleLine::header)
                 .map { it.task!! }
-        TodoList.selectTodoItems(selectedTasks)
+        TodoList.selectTasks(selectedTasks)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -331,10 +330,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                 intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
                 setIntent(intent)
                 if (position > -1) {
-                    val itemAtPosition = adapter.getNthTodoItem(position)
+                    val itemAtPosition = adapter.getNthTask(position)
                     itemAtPosition?.let {
                         TodoList.clearSelection()
-                        TodoList.selectTodoItem(itemAtPosition)
+                        TodoList.selectTask(itemAtPosition)
                     }
                 }
             }
@@ -373,7 +372,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         } else {
             actionbar.visibility = View.GONE
         }
-        val count = if (m_adapter != null) m_adapter!!.countVisibleTodoItems else 0
+        val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
         val total = TodoList.getTaskCount()
 
         filterText.text = MainFilter.getTitle(
@@ -462,13 +461,13 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
                 val cb = cbItem.actionView.findViewById(R.id.indeterm_checkbox) as IndeterminateCheckBox
                 val selectedTasks = TodoList.selectedTasks
-                val initialCompleteTasks = ArrayList<TodoItem>()
-                val initialIncompleteTasks = ArrayList<TodoItem>()
+                val initialCompleteTasks = ArrayList<Task>()
+                val initialIncompleteTasks = ArrayList<Task>()
                 var cbState: Boolean?
-                cbState = selectedTasks.getOrNull(0)?.task?.isCompleted()
+                cbState = selectedTasks.getOrNull(0)?.isCompleted()
 
                 selectedTasks.forEach {
-                    if (it.task.isCompleted()) {
+                    if (it.isCompleted()) {
                         initialCompleteTasks.add(it)
                         if (!(cbState ?: false)) { cbState = null }
                     } else {
@@ -626,19 +625,18 @@ class Simpletask : ThemedNoActionBarActivity() {
         val text = StringBuilder()
         m_adapter!!.visibleLines
                 .filterNot { it.header }
-                .mapNotNull { it.task }
-                .forEach { text.append(it.task.showParts(format)).append("\n") }
+                .forEach { text.append(it.task?.showParts(format)).append("\n") }
         shareText(this, "Simpletask list", text.toString())
     }
 
 
-    private fun prioritizeTasks(tasks: List<TodoItem>) {
+    private fun prioritizeTasks(tasks: List<Task>) {
         val strings = Priority.rangeInCode(Priority.NONE, Priority.Z)
         val priorityArr = strings.toTypedArray()
 
         var priorityIdx = 0
         if (tasks.size == 1) {
-            priorityIdx = strings.indexOf(tasks[0].task.priority.code)
+            priorityIdx = strings.indexOf(tasks[0].priority.code)
         }
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
@@ -652,13 +650,13 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     }
 
-    private fun completeTasks(task: TodoItem) {
-        val tasks = ArrayList<TodoItem>()
+    private fun completeTasks(task: Task) {
+        val tasks = ArrayList<Task>()
         tasks.add(task)
         completeTasks(tasks)
     }
 
-    private fun completeTasks(tasks: List<TodoItem>) {
+    private fun completeTasks(tasks: List<Task>) {
         TodoList.complete(tasks, Config.hasKeepPrio, Config.hasAppendAtEnd)
         if (Config.isAutoArchive) {
             archiveTasks()
@@ -666,18 +664,18 @@ class Simpletask : ThemedNoActionBarActivity() {
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
-    private fun uncompleteTasks(task: TodoItem) {
-        val tasks = ArrayList<TodoItem>()
+    private fun uncompleteTasks(task: Task) {
+        val tasks = ArrayList<Task>()
         tasks.add(task)
         uncompleteTasks(tasks)
     }
 
-    private fun uncompleteTasks(tasks: List<TodoItem>) {
+    private fun uncompleteTasks(tasks: List<Task>) {
         TodoList.uncomplete(tasks)
         TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
-    private fun deferTasks(tasks: List<TodoItem>, dateType: DateType) {
+    private fun deferTasks(tasks: List<Task>, dateType: DateType) {
         var titleId = R.string.defer_due
         if (dateType === DateType.THRESHOLD) {
             titleId = R.string.defer_threshold
@@ -716,7 +714,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         d.show()
     }
 
-    private fun deleteTasks(tasks: List<TodoItem>) {
+    private fun deleteTasks(tasks: List<Task>) {
         val numTasks = tasks.size
         val title = getString(R.string.delete_task_title)
                     .replaceFirst(Regex("%s"), numTasks.toString())
@@ -732,7 +730,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun archiveTasks() { archiveTasks(TodoList.completedTasks, false) }
-    private fun archiveTasks(tasks: List<TodoItem>, showDialog: Boolean = true) {
+    private fun archiveTasks(tasks: List<Task>, showDialog: Boolean = true) {
         val archiveAction = {
             if (Config.todoFileName == m_app.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
@@ -781,7 +779,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
-                val shareText = TodoList.todoItems.map { it.task.inFileFormat() }.joinToString(separator = "\n")
+                val shareText = TodoList.todoItems.map(Task::inFileFormat).joinToString(separator = "\n")
                 shareText(this@Simpletask, "Simpletask list", shareText)
             }
             R.id.context_share -> {
@@ -810,12 +808,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         return true
     }
 
-    private fun createCalendarAppointment(checkedTasks: List<TodoItem>) {
+    private fun createCalendarAppointment(checkedTasks: List<Task>) {
         var calendarTitle = getString(R.string.calendar_title)
         var calendarDescription = ""
         if (checkedTasks.size == 1) {
             // Set the task as title
-            calendarTitle = checkedTasks[0].task.text
+            calendarTitle = checkedTasks[0].text
         } else {
             // Set the tasks as description
             calendarDescription = selectedTasksAsString()
@@ -824,7 +822,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         intent = Intent(Intent.ACTION_EDIT).setType(Constants.ANDROID_EVENT).putExtra(Events.TITLE, calendarTitle).putExtra(Events.DESCRIPTION, calendarDescription)
         // Explicitly set start and end date/time.
         // Some calendar providers need this.
-        val dueDate =  checkedTasks[0].task.dueDate
+        val dueDate =  checkedTasks[0].dueDate
         val calDate = if (checkedTasks.size == 1 && dueDate != null ) {
             val year = dueDate.substring(0,4).toInt()
             val month =  dueDate.substring(5,7).toInt()-1
@@ -1248,7 +1246,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val taskThreshold = view.findViewById(R.id.taskthreshold) as TextView
             val cbCompleted = view.findViewById(R.id.checkBox) as CheckBox
 
-            val task = item.task
+            val task = item
 
             if (!Config.hasExtendedTaskView) {
                 val taskBar = view.findViewById(R.id.datebar)
@@ -1362,9 +1360,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                 val newSelectedState = !TodoList.isSelected(item)
                 if (newSelectedState) {
-                    TodoList.selectTodoItem(item)
+                    TodoList.selectTask(item)
                 } else {
-                    TodoList.unSelectTodoItem(item)
+                    TodoList.unSelectTask(item)
                 }
                 it.isActivated = newSelectedState
                 invalidateOptionsMenu()
@@ -1373,7 +1371,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             view.setOnLongClickListener {
                 val links = ArrayList<String>()
                 val actions = ArrayList<String>()
-                val t = item.task
+                val t = item
                 for (link in t.links) {
                     actions.add(ACTION_LINK)
                     links.add(link)
@@ -1454,7 +1452,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 runOnUiThread {
                     showListViewProgress(true)
                 }
-                val visibleTasks: List<TodoItem>
+                val visibleTasks: List<Task>
                 log.info(TAG, "setFilteredTasks called: " + TodoList)
                 val sorts = MainFilter.getSort(Config.defaultSorts)
                 visibleTasks = TodoList.getSortedTasks(MainFilter, sorts, Config.sortCaseSensitive)
@@ -1481,7 +1479,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
 
-        val countVisibleTodoItems: Int
+        val countVisibleTasks: Int
             get() {
                return visibleLines.count { !it.header }
             }
@@ -1489,12 +1487,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         /*
         ** Get the adapter position for task
         */
-        fun getPosition(task: TodoItem): Int {
+        fun getPosition(task: Task): Int {
             val line = TaskLine(task = task)
             return visibleLines.indexOf(line)
         }
 
-        fun getNthTodoItem(n: Int) : TodoItem? {
+        fun getNthTask(n: Int) : Task? {
             return visibleLines.filter {!it.header}.getOrNull(n)?.task
         }
 
@@ -1546,7 +1544,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     @SuppressLint("InflateParams")
     private fun updateItemsDialog(title: String,
-                                  checkedTasks: List<TodoItem>,
+                                  checkedTasks: List<Task>,
                                   allItems: ArrayList<String>,
                                   retrieveFromTask: (Task) -> SortedSet<String>,
                                   addToTask: (Task, String) -> Unit,
@@ -1555,7 +1553,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val checkedTaskItems = ArrayList<HashSet<String>>()
         checkedTasks.forEach {
             val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(it.task))
+            items.addAll(retrieveFromTask.invoke(it))
             checkedTaskItems.add(items)
         }
 
@@ -1593,7 +1591,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val newText = ed.text.toString()
             if (newText.isNotEmpty()) {
                 checkedTasks.forEach {
-                    addToTask(it.task,newText)
+                    addToTask(it,newText)
                 }
             }
             val updatedValues = itemAdapter.currentState
@@ -1601,12 +1599,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                 when (updatedValues[i] ) {
                     false -> {
                         checkedTasks.forEach {
-                            removeFromTask(it.task,sortedAllItems[i])
+                            removeFromTask(it,sortedAllItems[i])
                         }
                     }
                     true -> {
                         checkedTasks.forEach {
-                            addToTask(it.task,sortedAllItems[i])
+                            addToTask(it,sortedAllItems[i])
                         }
                     }
                 }
@@ -1621,7 +1619,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         dialog.show()
     }
 
-    private fun updateLists(checkedTasks: List<TodoItem>) {
+    private fun updateLists(checkedTasks: List<Task>) {
         updateItemsDialog(
                 Config.listTerm,
                 checkedTasks,
@@ -1632,7 +1630,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         )
     }
 
-    private fun updateTags(checkedTasks: List<TodoItem>) {
+    private fun updateTags(checkedTasks: List<Task>) {
         updateItemsDialog(
                 Config.tagTerm,
                 checkedTasks,
