@@ -46,7 +46,7 @@ import java.util.*
 class TodoItem(val task: Task)
 
 /**
- * Implementation of the in memory representation of the todo list
+ * Implementation of the in memory representation of the Todo list
 
  * @author Mark Janssen
  */
@@ -167,11 +167,11 @@ object TodoList {
                 val task = item.task
                 val extra = task.markComplete(todayAsString)
                 if (extra != null) {
-                    val item = TodoItem(extra)
+                    val newItem = TodoItem(extra)
                     if (extraAtEnd) {
-                        todoItems.add(item)
+                        todoItems.add(newItem)
                     } else {
-                        todoItems.add(0,item)
+                        todoItems.add(0,newItem)
                     }
                 }
                 if (!keepPrio) {
