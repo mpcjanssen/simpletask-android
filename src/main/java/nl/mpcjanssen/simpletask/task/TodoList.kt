@@ -89,6 +89,7 @@ object TodoList {
         ActionQueue.add("Remove", Runnable {
             todoItems.remove(t)
             selectedItems.remove(t)
+            pendingEdits.remove(t)
             updateCache()
         })
     }
