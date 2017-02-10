@@ -167,7 +167,12 @@ object TodoList {
                 val task = item.task
                 val extra = task.markComplete(todayAsString)
                 if (extra != null) {
-                    add(extra, extraAtEnd)
+                    val item = TodoItem(0, extra)
+                    if (extraAtEnd) {
+                        todoItems.add(item)
+                    } else {
+                        todoItems.add(0,item)
+                    }
                 }
                 if (!keepPrio) {
                     task.priority = Priority.NONE
