@@ -214,6 +214,8 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val hasExtendedTaskView: Boolean
         get() =  prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
 
+    val showCompleteCheckbox: Boolean
+        get() =  prefs.getBoolean(getString(R.string.ui_complete_checkbox), true)
 
     val showConfirmationDialogs : Boolean
         get() =  prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
