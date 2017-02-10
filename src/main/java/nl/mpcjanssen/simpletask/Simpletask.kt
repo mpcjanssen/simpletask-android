@@ -1248,6 +1248,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             val task = item
 
+            if (Config.showCompleteCheckbox) {
+                cbCompleted.visibility = View.VISIBLE
+            } else {
+                cbCompleted.visibility = View.GONE
+            }
+
             if (!Config.hasExtendedTaskView) {
                 val taskBar = view.findViewById(R.id.datebar)
                 taskBar.visibility = View.GONE
