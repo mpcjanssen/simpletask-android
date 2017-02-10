@@ -244,7 +244,7 @@ object TodoList {
         if (!comp.fileOrder) {
             filteredTasks.reverse()
         }
-        comp.comparators.forEach {
+        comp.comparator?.let {
             Collections.sort(filteredTasks,it)
         }
         return filteredTasks

@@ -87,7 +87,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         if (!comp.fileOrder) {
             visibleTasks.reverse()
         }
-        comp.comparators.forEach {
+        comp.comparator?.let {
             Collections.sort(visibleTasks,it)
         }
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks")

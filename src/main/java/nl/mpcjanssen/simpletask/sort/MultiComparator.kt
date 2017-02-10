@@ -8,7 +8,8 @@ import java.util.*
 import kotlin.comparisons.then
 
 class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean)  {
-    val comparators = ArrayList<Comparator<TodoItem>>()
+    var comparator : Comparator<TodoItem>? = null
+
 
     var fileOrder = true
 
@@ -53,7 +54,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
             if (reverse) {
                 comp =  CompReverser(comp)
             }
-            comparators.add(comp)
+            comparator = comparator?.then(comp) ?:  comp
         }
     }
 
