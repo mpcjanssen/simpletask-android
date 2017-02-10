@@ -91,6 +91,7 @@ object TodoList {
     fun remove(item: TodoItem) {
         ActionQueue.add("Remove", Runnable {
             todoItems.remove(item)
+            selectedItems.remove(item)
             updateCache()
         })
     }
