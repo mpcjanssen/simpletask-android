@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.util.JsonReader
-import android.widget.EditText
 import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
@@ -13,8 +11,6 @@ import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoItem
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -284,7 +280,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     var latestChangelogShown: Int
         get() = prefs.getInt(getString(R.string.latest_changelog_shown), 0)
-        set(versionCode: Int) {
+        set(versionCode) {
             prefs.edit().putInt(getString(R.string.latest_changelog_shown), versionCode).commit()
         }
 
@@ -304,8 +300,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
                 val stream = ctxt.openFileInput("cachedtodo.txt")
                 val reader = stream.reader(Charset.forName("UTF-8"))
                 val result = ArrayList<TodoItem>()
-                result.addAll(reader.readLines().mapIndexed
-                    { i, line ->  TodoItem(i.toLong(), Task(line))})
+                result.addAll(reader.readLines().map{line ->  TodoItem(Task(line))})
                 reader.close()
                 stream.close()
                 return result
