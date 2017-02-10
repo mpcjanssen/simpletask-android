@@ -395,6 +395,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onResume() {
         super.onResume()
+        log.info(TAG, "onResume")
         FileStore.pause(false)
         handleIntent()
     }
@@ -1444,7 +1445,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            ActionQueue.add("setFilterTasks", Runnable {
+            ActionQueue.add("setFilteredTasks", Runnable {
                 runOnUiThread {
                     showListViewProgress(true)
                 }
