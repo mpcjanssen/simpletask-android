@@ -11,11 +11,8 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.sort.MultiComparator
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.util.*
@@ -31,7 +28,7 @@ class AppWidgetService : RemoteViewsService() {
 data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.RemoteViewsFactory {
     private val log: Logger
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
-    var visibleTasks = ArrayList<TodoItem>()
+    var visibleTasks = ArrayList<Task>()
 
     init {
         log = Logger
@@ -105,11 +102,11 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return null
     }
 
-    private fun getExtendedView(item: TodoItem, position: Int): RemoteViews {
+    private fun getExtendedView(item: Task, position: Int): RemoteViews {
         val filter = getFilter()
         val rv = RemoteViews(TodoApplication.app.packageName, R.layout.widget_list_item)
         val extended_widget = Config.prefs.getBoolean("widget_extended", true)
-        val task = item.task
+        val task = item
 
         var tokensToShow = TToken.ALL
         tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()

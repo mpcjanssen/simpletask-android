@@ -35,8 +35,8 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.*
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.TToken
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
@@ -185,30 +185,30 @@ object CalendarSync {
         }
     }
 
-    private fun insertEvts(calID: Long, tasks: List<TodoItem>?) {
+    private fun insertEvts(calID: Long, tasks: List<Task>?) {
         if (tasks == null) {
             return
         }
         tasks.forEach {
-            if (!it.task.isCompleted()) {
+            if (!it.isCompleted()) {
 
                 var dt: DateTime?
                 var text: String? = null
 
                 // Check due date:
                 if (m_sync_type and SYNC_TYPE_DUES != 0) {
-                    dt = it.task.dueDate?.toDateTime()
+                    dt = it.dueDate?.toDateTime()
                     if (dt != null) {
-                        text = it.task.showParts(TASK_TOKENS)
+                        text = it.showParts(TASK_TOKENS)
                         insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
                     }
                 }
-                it.task.dueDate?.toDateTime()
+                it.dueDate?.toDateTime()
                 // Check threshold date:
                 if (m_sync_type and SYNC_TYPE_THRESHOLDS != 0) {
-                    dt = it.task.thresholdDate?.toDateTime()
+                    dt = it.thresholdDate?.toDateTime()
                     if (dt != null) {
-                        if (text == null) text = it.task.showParts(TASK_TOKENS)
+                        if (text == null) text = it.showParts(TASK_TOKENS)
                         insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                     }
                 }

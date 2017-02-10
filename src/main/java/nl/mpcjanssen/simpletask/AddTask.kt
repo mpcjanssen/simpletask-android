@@ -24,7 +24,6 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
@@ -36,7 +35,7 @@ class AddTask : ThemedActionBarActivity() {
 
     private val share_text: String? = null
 
-    private val m_backup = ArrayList<TodoItem>()
+    private val m_backup = ArrayList<Task>()
 
     private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
@@ -99,7 +98,7 @@ class AddTask : ThemedActionBarActivity() {
 
         m_backup.addAll(TodoList.pendingEdits)
         if (m_backup.isNotEmpty()) {
-            val preFillString = join(m_backup.map {it.task.inFileFormat()}, "\n")
+            val preFillString = join(m_backup.map(Task::inFileFormat), "\n")
             textInputField.setText(preFillString)
             setTitle(R.string.updatetask)
         } else {
@@ -295,7 +294,7 @@ class AddTask : ThemedActionBarActivity() {
         for (task in enteredTasks) {
             if (m_backup.size > 0) {
                 // Don't modify create date for updated tasks
-                m_backup[0].task.update(task.text)
+                m_backup[0].update(task.text)
                 m_backup.removeAt(0)
             } else {
                 val t: Task
