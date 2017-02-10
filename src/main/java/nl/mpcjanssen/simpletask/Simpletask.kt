@@ -324,24 +324,26 @@ class Simpletask : ThemedNoActionBarActivity() {
         updateDrawers()
 
         // If we were started from the widget, select the pushed task
-        // and scroll to its position
-        if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-            val position = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
-            intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-            setIntent(intent)
-            if (position > -1) {
-                val itemAtPosition = adapter.getNthTodoItem(position)
-                itemAtPosition?.let {
-                    TodoList.clearSelection()
-                    TodoList.selectTodoItem(itemAtPosition)
+        // next scroll to the first selected item
+        ActionQueue.add("Scroll selection", Runnable {
+            if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
+                val position = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+                intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
+                setIntent(intent)
+                if (position > -1) {
+                    val itemAtPosition = adapter.getNthTodoItem(position)
+                    itemAtPosition?.let {
+                        TodoList.clearSelection()
+                        TodoList.selectTodoItem(itemAtPosition)
+                    }
                 }
             }
-        }
-        val selection = TodoList.selectedTasks
-        if (selection.isNotEmpty()) {
-            val selectedTask = selection[0]
-            m_scrollPosition = m_adapter!!.getPosition(selectedTask)
-        }
+            val selection = TodoList.selectedTasks
+            if (selection.isNotEmpty()) {
+                val selectedTask = selection[0]
+                m_scrollPosition = adapter.getPosition(selectedTask)
+            }
+        })
     }
 
     private fun updateConnectivityIndicator() {
