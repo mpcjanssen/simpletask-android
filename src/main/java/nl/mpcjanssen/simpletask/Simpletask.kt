@@ -309,10 +309,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             MainFilter.initFromPrefs(Config.prefs)
         }
 
-        // Initialize Adapter
-        if (m_adapter == null) {
-            m_adapter = TaskAdapter(layoutInflater)
-        }
+        val adapter = m_adapter ?: TaskAdapter(layoutInflater)
+        m_adapter = adapter
+
         m_adapter!!.setFilteredTasks()
 
         listView?.layoutManager = LinearLayoutManager(this)
@@ -327,11 +326,15 @@ class Simpletask : ThemedNoActionBarActivity() {
         // If we were started from the widget, select the pushed task
         // and scroll to its position
         if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-            val line = intent.getLongExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+            val position = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
             intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
             setIntent(intent)
-            if (line > -1) {
-                TodoList.selectLine(line)
+            if (position > -1) {
+                val itemAtPosition = adapter.getNthTodoItem(position)
+                itemAtPosition?.let {
+                    TodoList.clearSelection()
+                    TodoList.selectTodoItem(itemAtPosition)
+                }
             }
         }
         val selection = TodoList.selectedTasks
@@ -1485,8 +1488,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         ** Get the adapter position for task
         */
         fun getPosition(task: TodoItem): Int {
-            val line = TaskLine(task)
+            val line = TaskLine(task = task)
             return visibleLines.indexOf(line)
+        }
+
+        fun getNthTodoItem(n: Int) : TodoItem? {
+            return visibleLines.filter {!it.header}.getOrNull(n)?.task
         }
 
 

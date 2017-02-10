@@ -55,10 +55,10 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     }
 
 
-    private fun createSelectedIntent(t: TodoItem): Intent {
+    private fun createSelectedIntent(position: Int): Intent {
         val target = Intent()
         getFilter().saveInIntent(target)
-        target.putExtra(Constants.INTENT_SELECTED_TASK_LINE, t.line)
+        target.putExtra(Constants.INTENT_SELECTED_TASK_LINE, position)
         return target
     }
 
@@ -73,7 +73,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         
         val items = TodoList.todoItems
         visibleTasks.clear()
-        val filter = getFilter() 
+        val filter = getFilter()
 
         for (t in filter.apply(items)) {
             visibleTasks.add(t)
@@ -83,7 +83,13 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
                 TodoApplication.app.today,
                 Config.sortCaseSensitive,
                 filter.createIsThreshold)
-        Collections.sort(visibleTasks, comp)
+
+        if (!comp.fileOrder) {
+            visibleTasks.reverse()
+        }
+        comp.comparators.forEach {
+            Collections.sort(visibleTasks,it)
+        }
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks")
     }
 
@@ -99,7 +105,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return null
     }
 
-    private fun getExtendedView(item: TodoItem): RemoteViews {
+    private fun getExtendedView(item: TodoItem, position: Int): RemoteViews {
         val filter = getFilter()
         val rv = RemoteViews(TodoApplication.app.packageName, R.layout.widget_list_item)
         val extended_widget = Config.prefs.getBoolean("widget_extended", true)
@@ -183,7 +189,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             //rv.setViewPadding(R.id.tasktext,
             //        4, 4, 4, 0);
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(item))
+        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(position))
         return rv
     }
 
@@ -212,7 +218,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         // find index in the to-do list of the clicked task
         val task = visibleTasks[position]
 
-        return getExtendedView(task)
+        return getExtendedView(task,position)
     }
 
 

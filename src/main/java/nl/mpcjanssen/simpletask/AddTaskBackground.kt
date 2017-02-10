@@ -129,7 +129,7 @@ class AddTaskBackground : Activity() {
             } else {
                 t = Task(text)
             }
-            items.add(TodoItem(1, t))
+            items.add(TodoItem(t))
         }
         todoList.add(items, Config.hasAppendAtEnd)
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)

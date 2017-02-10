@@ -43,7 +43,7 @@ import java.io.IOException
 import java.util.*
 
 
-class TodoItem(val line: Long, val task: Task)
+class TodoItem(val task: Task)
 
 /**
  * Implementation of the in memory representation of the todo list
@@ -83,7 +83,7 @@ object TodoList {
     }
 
     fun add(t: Task, atEnd: Boolean) {
-        val newItem = TodoItem(0, t)
+        val newItem = TodoItem(t)
         add(listOf(newItem), atEnd)
     }
 
@@ -167,7 +167,7 @@ object TodoList {
                 val task = item.task
                 val extra = task.markComplete(todayAsString)
                 if (extra != null) {
-                    val item = TodoItem(0, extra)
+                    val item = TodoItem(extra)
                     if (extraAtEnd) {
                         todoItems.add(item)
                     } else {
@@ -240,7 +240,12 @@ object TodoList {
     fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoItem> {
         val filteredTasks = filter.apply(todoItems)
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
-        Collections.sort(filteredTasks, comp)
+        if (!comp.fileOrder) {
+            filteredTasks.reverse()
+        }
+        comp.comparators.forEach {
+            Collections.sort(filteredTasks,it)
+        }
         return filteredTasks
     }
 
@@ -252,7 +257,7 @@ object TodoList {
                 todoItems.clear()
                 val items = ArrayList<TodoItem>(
                         FileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
-                            TodoItem(line.toLong(), Task(text))
+                            TodoItem(Task(text))
                         })
                 todoItems.addAll(items)
                 clearSelection()
@@ -275,9 +280,8 @@ object TodoList {
 
 
     private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
-        val items = todoItems
         try {
-            val lines = items.sortedBy {it.line}.map {
+            val lines = todoItems.map {
                 it.task.inFileFormat()
             }
 
@@ -351,11 +355,6 @@ object TodoList {
     fun getTaskCount(): Long {
         val items = todoItems
         return items.filter { it.task.inFileFormat().isNotBlank() }.size.toLong()
-    }
-
-    fun selectLine(selectedLine : Long ) {
-        clearSelection()
-        selectTodoItem(todoItems.find {selectedLine == it.line})
     }
 
     fun updateCache() {
