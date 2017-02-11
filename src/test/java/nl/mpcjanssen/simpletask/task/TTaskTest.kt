@@ -23,7 +23,8 @@ class TaskTest : TestCase() {
     }
 
     fun testEquals() {
-        assertTrue(Task("a")==Task("a"))
+	// Tasks are only equal if they are the same object    
+        assertFalse(Task("a")==Task("a"))
         assertFalse(Task("a")==Task("A"))
     }
 
