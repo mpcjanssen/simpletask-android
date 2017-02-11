@@ -1145,9 +1145,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
     private fun updateFilterDrawer() {
-        val taskBag = TodoList
-        val decoratedContexts = sortWithPrefix(taskBag.decoratedContexts, Config.sortCaseSensitive, "@-")
-        val decoratedProjects = sortWithPrefix(taskBag.decoratedProjects, Config.sortCaseSensitive, "+-")
+        val decoratedContexts = alfaSortList(TodoList.contexts, Config.sortCaseSensitive, prefix="-").map { "@" + it}
+        val decoratedProjects = alfaSortList(TodoList.projects, Config.sortCaseSensitive, prefix="-").map { "+" + it}
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
@@ -1574,9 +1573,9 @@ class Simpletask : ThemedNoActionBarActivity() {
         allItems.removeAll(onSomeTasks)
 
         val sortedAllItems = ArrayList<String>()
-        sortedAllItems += onAllTasks.sorted()
-        sortedAllItems += onSomeTasks.sorted()
-        sortedAllItems += allItems.sorted()
+        sortedAllItems += alfaSortList(onAllTasks, Config.sortCaseSensitive)
+        sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
+        sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
 
         val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
         val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
@@ -1629,7 +1628,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         updateItemsDialog(
                 Config.listTerm,
                 checkedTasks,
-                sortWithPrefix(TodoList.contexts, Config.sortCaseSensitive, null),
+                TodoList.contexts,
                 Task::lists,
                 Task::addList,
                 Task::removeList
@@ -1640,7 +1639,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         updateItemsDialog(
                 Config.tagTerm,
                 checkedTasks,
-                sortWithPrefix(TodoList.projects, Config.sortCaseSensitive, null),
+                TodoList.projects,
                 Task::tags,
                 Task::addTag,
                 Task::removeTag
