@@ -1593,12 +1593,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         builder.setView(view)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            val newText = ed.text.toString()
-            if (newText.isNotEmpty()) {
-                checkedTasks.forEach {
-                    addToTask(it,newText)
-                }
-            }
             val updatedValues = itemAdapter.currentState
             for (i in 0..updatedValues.lastIndex) {
                 when (updatedValues[i] ) {
@@ -1612,6 +1606,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                             addToTask(it,sortedAllItems[i])
                         }
                     }
+                }
+            }
+            val newText = ed.text.toString()
+            if (newText.isNotEmpty()) {
+                checkedTasks.forEach {
+                    addToTask(it,newText)
                 }
             }
             TodoList.updateCache()

@@ -418,9 +418,7 @@ class AddTask : ThemedActionBarActivity() {
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
-            if (!newText.isEmpty()) {
-                task.addTag(newText)
-            }
+
             for (i in 0..lvAdapter.count-1) {
                 val tag =  lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
@@ -429,6 +427,11 @@ class AddTask : ThemedActionBarActivity() {
                     task.removeTag(tag)
                 }
             }
+
+            if (!newText.isEmpty()) {
+                task.addTag(newText)
+            }
+
 
             if (idx != -1) {
                 tasks[idx] = task
@@ -496,10 +499,6 @@ class AddTask : ThemedActionBarActivity() {
         initListViewSelection(lv, lvAdapter, task.lists)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            val newText = ed.text.toString()
-            if (!newText.isEmpty()) {
-                task.addList(newText)
-            }
             for (i in 0..lvAdapter.count-1) {
                 val list =  lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
@@ -507,6 +506,10 @@ class AddTask : ThemedActionBarActivity() {
                 } else {
                     task.removeList(list)
                 }
+            }
+            val newText = ed.text.toString()
+            if (!newText.isEmpty()) {
+                task.addList(newText)
             }
             if (idx != -1) {
                 tasks[idx] = task
