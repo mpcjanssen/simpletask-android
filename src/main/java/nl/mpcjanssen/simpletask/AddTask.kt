@@ -402,7 +402,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = sortWithPrefix(items, Config.sortCaseSensitive, null)
+        val projects = alfaSortList(items, Config.sortCaseSensitive)
 
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -480,7 +480,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = sortWithPrefix(items, Config.sortCaseSensitive, null)
+        val lists = alfaSortList(items, Config.sortCaseSensitive)
 
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)

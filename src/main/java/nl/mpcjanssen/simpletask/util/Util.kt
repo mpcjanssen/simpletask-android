@@ -371,7 +371,7 @@ fun createCachedDatabase(context: Context, dbFile: File) {
     copyFile(dbFile, cacheFile)
 }
 
-fun sortWithPrefix(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
+fun alfaSortList(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
     val result = ArrayList<String>()
     result.addAll(items)
     Collections.sort(result, AlphabeticalStringComparator(caseSensitive))
@@ -381,10 +381,10 @@ fun sortWithPrefix(items: List<String>, caseSensitive: Boolean, prefix: String?)
     return result
 }
 
-fun sortWithPrefix(items: Set<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
+fun alfaSortList(items: Set<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
     val temp = ArrayList<String>()
     temp.addAll(items)
-    return sortWithPrefix(temp, caseSensitive, prefix)
+    return alfaSortList(temp, caseSensitive, prefix)
 }
 
 fun appVersion(ctx: Context): String {
