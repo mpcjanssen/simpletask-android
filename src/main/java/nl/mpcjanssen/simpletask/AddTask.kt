@@ -195,6 +195,11 @@ class AddTask : ThemedActionBarActivity() {
     }
 
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+    }
+
     fun setWordWrap(bool: Boolean) {
         textInputField.setHorizontallyScrolling(!bool)
     }
@@ -633,6 +638,12 @@ class AddTask : ThemedActionBarActivity() {
         }
         textInputField.text.replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length)
+    }
+
+
+    public override fun onPause() {
+
+        super.onPause()
     }
 
     public override fun onDestroy() {
