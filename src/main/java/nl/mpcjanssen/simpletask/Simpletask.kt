@@ -459,12 +459,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                 inflater.inflate(R.menu.task_context, toolbar.menu)
 
                 val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
-                val cb = cbItem.actionView.findViewById(R.id.indeterm_checkbox) as IndeterminateCheckBox
                 val selectedTasks = TodoList.selectedTasks
                 val initialCompleteTasks = ArrayList<Task>()
                 val initialIncompleteTasks = ArrayList<Task>()
                 var cbState: Boolean?
                 cbState = selectedTasks.getOrNull(0)?.isCompleted()
+
 
                 selectedTasks.forEach {
                     if (it.isCompleted()) {
@@ -475,30 +475,33 @@ class Simpletask : ThemedNoActionBarActivity() {
                         if (cbState ?: true) { cbState = null }
                     }
                 }
+                when (cbState) {
+                    null -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+                    false -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
+                    true -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
+                }
 
-                cb.setIndeterminateUsed(cbState==null)
-                cb.state = cbState
-                val completionView = cb.parent as RelativeLayout
-                completionView.setOnClickListener { view ->
+                cbItem.setOnMenuItemClickListener { menu ->
                     log.info(TAG, "Clicked on completion checkbox, state: $cbState")
                     when (cbState) {
                         false -> completeTasks(selectedTasks)
                         true -> uncompleteTasks(selectedTasks)
                       null -> {
-                          val popup = PopupMenu(this, view)
+                          val popup = PopupMenu(this, toolbar)
                           val menuInflater = popup.menuInflater
                           menuInflater.inflate(R.menu.completion_popup, popup.menu)
                           popup.show()
-                          popup.setOnMenuItemClickListener { item ->
+                          popup.setOnMenuItemClickListener popup@ { item ->
                               val menuId = item.itemId
                               when (menuId) {
                                   R.id.complete -> completeTasks(selectedTasks)
                                   R.id.uncomplete -> uncompleteTasks(selectedTasks)
                               }
-                              return@setOnMenuItemClickListener true
+                              return@popup true
                           }
                       }
                     }
+                    return@setOnMenuItemClickListener true
                 }
 
                 selection_fab.visibility = View.VISIBLE
