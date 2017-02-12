@@ -277,7 +277,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() =  prefs.getBoolean(getString(R.string.keep_prio), true)
 
     val shareAppendText: String
-        get() = prefs.getString(getString(R.string.share_task_append_text), "")
+        get() = prefs.getString(getString(R.string.share_task_append_text), " +background")
 
     var latestChangelogShown: Int
         get() = prefs.getInt(getString(R.string.latest_changelog_shown), 0)

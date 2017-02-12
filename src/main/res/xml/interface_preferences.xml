@@ -25,7 +25,7 @@
         android:title="@string/share_task_show_edit_pref_title"
         />
     <EditTextPreference
-        android:defaultValue=""
+        android:defaultValue=" +background"
         android:key="@string/share_task_append_text"
         android:summary="@string/share_task_append_text_summary"
         android:title="@string/share_task_append_text_title"
