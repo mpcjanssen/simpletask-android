@@ -226,12 +226,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
                 s == getString(R.string.widget_background_transparency) ||
                 s == getString(R.string.widget_header_transparency)) {
             TodoApplication.app.redrawWidgets()
-        } else if (s == getString(R.string.calendar_sync_dues)) {
-            CalendarSync.setSyncDues(isSyncDues)
-        } else if (s == getString(R.string.calendar_sync_thresholds)) {
-            CalendarSync.setSyncThresholds(isSyncThresholds)
-        } else if (s == getString(R.string.calendar_reminder_days) || s == getString(R.string.calendar_reminder_time)) {
-            CalendarSync.syncLater()
+        } else if (s == getString(R.string.calendar_sync_dues) ||
+                   s == getString(R.string.calendar_sync_thresholds) ||
+                s == getString(R.string.calendar_reminder_days) ||
+                s == getString(R.string.calendar_reminder_time)) {
+            CalendarSync.updatedSyncTypes()
         }
     }
 
