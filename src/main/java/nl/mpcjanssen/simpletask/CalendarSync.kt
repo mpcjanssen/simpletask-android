@@ -25,6 +25,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -35,8 +36,8 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.*
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.TToken
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
@@ -85,11 +86,11 @@ object CalendarSync {
 
     private val m_sync_runnable: SyncRunnable
     private val m_cr: ContentResolver
-    private var m_sync_type: Int = 0
     private var m_rem_margin = 1440
     private var m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0)
     private val m_stpe: ScheduledThreadPoolExecutor
 
+    @SuppressLint("Recycle")
     private fun findCalendar(): Long {
         val projection = arrayOf(Calendars._ID, Calendars.NAME)
         val selection = Calendars.NAME + " = ?"
@@ -99,10 +100,10 @@ object CalendarSync {
                 Manifest.permission.WRITE_CALENDAR)
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            if (m_sync_type == 0) {
-                return -1
-            } else {
+            if (Config.isSyncDues || Config.isSyncThresholds) {
                 throw IllegalStateException("no calendar access")
+            } else {
+                return -1
             }
         }
 
@@ -131,6 +132,7 @@ object CalendarSync {
     }
 
     private fun removeCalendar() {
+        log.debug(TAG, "Removing Simpletask calendar")
         val selection = Calendars.NAME + " = ?"
         val args = arrayOf(CAL_NAME)
         try {
@@ -185,30 +187,31 @@ object CalendarSync {
         }
     }
 
-    private fun insertEvts(calID: Long, tasks: List<TodoItem>?) {
+    @SuppressLint("NewApi")
+    private fun insertEvts(calID: Long, tasks: List<Task>?) {
         if (tasks == null) {
             return
         }
         tasks.forEach {
-            if (!it.task.isCompleted()) {
+            if (!it.isCompleted()) {
 
                 var dt: DateTime?
                 var text: String? = null
 
                 // Check due date:
-                if (m_sync_type and SYNC_TYPE_DUES != 0) {
-                    dt = it.task.dueDate?.toDateTime()
+                if (Config.isSyncDues) {
+                    dt = it.dueDate?.toDateTime()
                     if (dt != null) {
-                        text = it.task.showParts(TASK_TOKENS)
+                        text = it.showParts(TASK_TOKENS)
                         insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
                     }
                 }
-                it.task.dueDate?.toDateTime()
+                it.dueDate?.toDateTime()
                 // Check threshold date:
-                if (m_sync_type and SYNC_TYPE_THRESHOLDS != 0) {
-                    dt = it.task.thresholdDate?.toDateTime()
+                if (Config.isSyncThresholds) {
+                    dt = it.thresholdDate?.toDateTime()
                     if (dt != null) {
-                        if (text == null) text = it.task.showParts(TASK_TOKENS)
+                        if (text == null) text = it.showParts(TASK_TOKENS)
                         insertEvt(calID, dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                     }
                 }
@@ -224,11 +227,15 @@ object CalendarSync {
     }
 
     private fun sync() {
+        log.debug(TAG,"Syncing Simpletask calendar")
         try {
             var calID = findCalendar()
 
-            if (m_sync_type == 0) {
-                if (calID >= 0) removeCalendar()
+            if (!Config.isSyncThresholds && !Config.isSyncDues) {
+                if (calID >= 0) {
+                    log.debug(TAG, "Calendar sync not enabled")
+                    removeCalendar()
+                }
                 return
             }
 
@@ -240,6 +247,7 @@ object CalendarSync {
                     // OR it allows to write calendar but disallows reading it (2).
                     // Either way, we cannot continue, but before bailing,
                     // try to remove Calendar in case we're here because of (2).
+                    log.debug(TAG, "No access to Simpletask calendar")
                     removeCalendar()
                     throw IllegalStateException("Calendar nor added")
                 }
@@ -256,17 +264,10 @@ object CalendarSync {
             insertEvts(calID, tasks)
         } catch (e: Exception) {
             log.error(TAG, "Calendar error", e)
-            m_sync_type = 0
         }
     }
 
-    private fun setSyncType(syncType: Int) {
-        if (syncType == m_sync_type) return
-        if (!TodoApplication.atLeastAPI(16)) {
-            m_sync_type = 0
-            return
-        }
-        m_sync_type = syncType
+    fun updatedSyncTypes() {
         syncLater()
     }
 
@@ -275,25 +276,11 @@ object CalendarSync {
         m_sync_runnable = SyncRunnable()
         m_cr = TodoApplication.app.contentResolver
         m_stpe = ScheduledThreadPoolExecutor(1)
-        var syncType = 0
-        if (Config.isSyncDues) syncType = syncType or SYNC_TYPE_DUES
-        if (Config.isSyncThresholds) syncType = syncType or SYNC_TYPE_THRESHOLDS
-        setSyncType(syncType)
     }
 
     fun syncLater() {
         m_stpe.queue.clear()
         m_stpe.schedule(m_sync_runnable, SYNC_DELAY_MS.toLong(), TimeUnit.MILLISECONDS)
-    }
-
-    fun setSyncDues(bool: Boolean) {
-        val syncType = if (bool) m_sync_type or SYNC_TYPE_DUES else m_sync_type and SYNC_TYPE_DUES.inv()
-        setSyncType(syncType)
-    }
-
-    fun setSyncThresholds(bool: Boolean) {
-        val syncType = if (bool) m_sync_type or SYNC_TYPE_THRESHOLDS else m_sync_type and SYNC_TYPE_THRESHOLDS.inv()
-        setSyncType(syncType)
     }
 
     fun setReminderDays(days: Int) {

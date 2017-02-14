@@ -24,7 +24,6 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
@@ -36,7 +35,7 @@ class AddTask : ThemedActionBarActivity() {
 
     private val share_text: String? = null
 
-    private val m_backup = ArrayList<TodoItem>()
+    private val m_backup = ArrayList<Task>()
 
     private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
@@ -99,7 +98,7 @@ class AddTask : ThemedActionBarActivity() {
 
         m_backup.addAll(TodoList.pendingEdits)
         if (m_backup.isNotEmpty()) {
-            val preFillString = join(m_backup.map {it.task.inFileFormat()}, "\n")
+            val preFillString = join(m_backup.map(Task::inFileFormat), "\n")
             textInputField.setText(preFillString)
             setTitle(R.string.updatetask)
         } else {
@@ -195,6 +194,11 @@ class AddTask : ThemedActionBarActivity() {
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
     }
 
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+    }
 
     fun setWordWrap(bool: Boolean) {
         textInputField.setHorizontallyScrolling(!bool)
@@ -295,7 +299,7 @@ class AddTask : ThemedActionBarActivity() {
         for (task in enteredTasks) {
             if (m_backup.size > 0) {
                 // Don't modify create date for updated tasks
-                m_backup[0].task.update(task.text)
+                m_backup[0].update(task.text)
                 m_backup.removeAt(0)
             } else {
                 val t: Task
@@ -398,7 +402,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = sortWithPrefix(items, Config.sortCaseSensitive, null)
+        val projects = alfaSortList(items, Config.sortCaseSensitive)
 
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -414,9 +418,7 @@ class AddTask : ThemedActionBarActivity() {
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
-            if (!newText.isEmpty()) {
-                task.addTag(newText)
-            }
+
             for (i in 0..lvAdapter.count-1) {
                 val tag =  lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
@@ -425,6 +427,11 @@ class AddTask : ThemedActionBarActivity() {
                     task.removeTag(tag)
                 }
             }
+
+            if (!newText.isEmpty()) {
+                task.addTag(newText)
+            }
+
 
             if (idx != -1) {
                 tasks[idx] = task
@@ -476,7 +483,7 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = sortWithPrefix(items, Config.sortCaseSensitive, null)
+        val lists = alfaSortList(items, Config.sortCaseSensitive)
 
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
@@ -492,10 +499,6 @@ class AddTask : ThemedActionBarActivity() {
         initListViewSelection(lv, lvAdapter, task.lists)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            val newText = ed.text.toString()
-            if (!newText.isEmpty()) {
-                task.addList(newText)
-            }
             for (i in 0..lvAdapter.count-1) {
                 val list =  lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
@@ -503,6 +506,10 @@ class AddTask : ThemedActionBarActivity() {
                 } else {
                     task.removeList(list)
                 }
+            }
+            val newText = ed.text.toString()
+            if (!newText.isEmpty()) {
+                task.addList(newText)
             }
             if (idx != -1) {
                 tasks[idx] = task
@@ -634,6 +641,12 @@ class AddTask : ThemedActionBarActivity() {
         }
         textInputField.text.replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length)
+    }
+
+
+    public override fun onPause() {
+
+        super.onPause()
     }
 
     public override fun onDestroy() {

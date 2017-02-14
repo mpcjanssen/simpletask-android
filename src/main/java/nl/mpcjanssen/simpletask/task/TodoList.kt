@@ -43,10 +43,8 @@ import java.io.IOException
 import java.util.*
 
 
-class TodoItem(val line: Long, val task: Task)
-
 /**
- * Implementation of the in memory representation of the todo list
+ * Implementation of the in memory representation of the Todo list
 
  * @author Mark Janssen
  */
@@ -55,9 +53,9 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    val todoItems = Config.todoList ?: ArrayList<TodoItem>()
-    val selectedItems = HashSet<TodoItem>()
-    val pendingEdits = ArrayList<TodoItem>()
+    val todoItems = Config.todoList ?: ArrayList<Task>()
+    val selectedItems = HashSet<Task>()
+    val pendingEdits = LinkedHashSet<Task>()
 
     fun hasPendingAction () : Boolean {
         return ActionQueue.hasPending()
@@ -71,7 +69,7 @@ object TodoList {
         }
     }
 
-    fun add(items: List<TodoItem>, atEnd: Boolean) {
+    fun add(items: List<Task>, atEnd: Boolean) {
         ActionQueue.add("Add task ${items.size} atEnd: $atEnd", Runnable {
             if (atEnd) {
                 todoItems.addAll(items)
@@ -83,14 +81,15 @@ object TodoList {
     }
 
     fun add(t: Task, atEnd: Boolean) {
-        val newItem = TodoItem(0, t)
-        add(listOf(newItem), atEnd)
+        add(listOf(t), atEnd)
     }
 
 
-    fun remove(item: TodoItem) {
+    fun remove(t: Task) {
         ActionQueue.add("Remove", Runnable {
-            todoItems.remove(item)
+            todoItems.remove(t)
+            selectedItems.remove(t)
+            pendingEdits.remove(t)
             updateCache()
         })
     }
@@ -105,7 +104,7 @@ object TodoList {
         get() {
             val res = HashSet<Priority>()
             todoItems.forEach {
-                res.add(it.task.priority)
+                res.add(it.priority)
             }
             val ret = ArrayList(res)
             Collections.sort(ret)
@@ -120,7 +119,7 @@ object TodoList {
             }
             val res = HashSet<String>()
             todoItems.forEach {
-                res.addAll(it.task.lists)
+                res.addAll(it.lists)
             }
             val newLists = ArrayList<String>()
             newLists.addAll(res)
@@ -136,7 +135,7 @@ object TodoList {
             }
             val res = HashSet<String>()
             todoItems.forEach {
-                res.addAll(it.task.tags)
+                res.addAll(it.tags)
             }
             val newTags = ArrayList<String>()
             newTags.addAll(res)
@@ -145,29 +144,32 @@ object TodoList {
         }
 
 
-    val decoratedContexts: ArrayList<String>
-        get() = prefixItems("@", contexts)
+    val decoratedContexts: List<String>
+        get() = contexts.map {"@"+it}
 
-    val decoratedProjects: ArrayList<String>
-        get() = prefixItems("+", projects)
+    val decoratedProjects: List<String>
+        get() = projects.map {"+"+it}
 
 
-    fun uncomplete(items: List<TodoItem>) {
+    fun uncomplete(items: List<Task>) {
         ActionQueue.add("Uncomplete", Runnable {
             items.forEach {
-                it.task.markIncomplete()
+                it.markIncomplete()
             }
             updateCache()
         })
     }
 
-    fun complete(items: List<TodoItem>, keepPrio: Boolean, extraAtEnd: Boolean) {
+    fun complete(tasks: List<Task>, keepPrio: Boolean, extraAtEnd: Boolean) {
         ActionQueue.add("Complete", Runnable {
-            for (item in items) {
-                val task = item.task
+            for (task in tasks) {
                 val extra = task.markComplete(todayAsString)
                 if (extra != null) {
-                    add(extra, extraAtEnd)
+                    if (extraAtEnd) {
+                        todoItems.add(extra)
+                    } else {
+                        todoItems.add(0,extra)
+                    }
                 }
                 if (!keepPrio) {
                     task.priority = Priority.NONE
@@ -178,37 +180,34 @@ object TodoList {
     }
 
 
-    fun prioritize(items: List<TodoItem>, prio: Priority) {
+    fun prioritize(tasks: List<Task>, prio: Priority) {
         ActionQueue.add("Complete", Runnable {
-            for (item in items) {
-                item.task.priority = prio
-            }
+            tasks.map{it.priority = prio}
             updateCache()
         })
 
     }
 
-    fun defer(deferString: String, items: List<TodoItem>, dateType: DateType) {
+    fun defer(deferString: String, tasks: List<Task>, dateType: DateType) {
         ActionQueue.add("Defer", Runnable {
-            items.forEach {
-                val taskToDefer = it.task
+            tasks.forEach {
                 when (dateType) {
-                    DateType.DUE -> taskToDefer.deferDueDate(deferString, todayAsString)
-                    DateType.THRESHOLD -> taskToDefer.deferThresholdDate(deferString, todayAsString)
+                    DateType.DUE -> it.deferDueDate(deferString, todayAsString)
+                    DateType.THRESHOLD -> it.deferThresholdDate(deferString, todayAsString)
                 }
             }
             updateCache()
         })
     }
 
-    var selectedTasks: List<TodoItem> = ArrayList()
+    var selectedTasks: List<Task> = ArrayList()
         get() {
             return selectedItems.toList()
         }
 
-    var completedTasks: List<TodoItem> = ArrayList()
+    var completedTasks: List<Task> = ArrayList()
         get() {
-            return todoItems.filter { it.task.isCompleted() }
+            return todoItems.filter { it.isCompleted() }
         }
 
 
@@ -232,10 +231,15 @@ object TodoList {
         })
     }
 
-    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<TodoItem> {
+    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<Task> {
         val filteredTasks = filter.apply(todoItems)
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
-        Collections.sort(filteredTasks, comp)
+        if (!comp.fileOrder) {
+            filteredTasks.reverse()
+        }
+        comp.comparator?.let {
+            Collections.sort(filteredTasks,it)
+        }
         return filteredTasks
     }
 
@@ -245,9 +249,9 @@ object TodoList {
         if (FileStore.needsRefresh(Config.currentVersionId)) {
             try {
                 todoItems.clear()
-                val items = ArrayList<TodoItem>(
-                        FileStore.loadTasksFromFile(filename, backup, eol).mapIndexed { line, text ->
-                            TodoItem(line.toLong(), Task(text))
+                val items = ArrayList<Task>(
+                        FileStore.loadTasksFromFile(filename, backup, eol).map { text ->
+                            Task(text)
                         })
                 todoItems.addAll(items)
                 clearSelection()
@@ -270,10 +274,9 @@ object TodoList {
 
 
     private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
-        val items = todoItems
         try {
-            val lines = items.sortedBy {it.line}.map {
-                it.task.inFileFormat()
+            val lines = todoItems.map {
+                it.inFileFormat()
             }
 
             log.info(TAG, "Saving todo list, size ${lines.size}")
@@ -283,10 +286,10 @@ object TodoList {
         }
     }
 
-    fun archive(todoFilename: String, doneFileName: String, tasks: List<TodoItem>, eol: String) {
+    fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>, eol: String) {
         ActionQueue.add("Archive", Runnable {
             try {
-                FileStore.appendTaskToFile(doneFileName, tasks.map { it.task.text }, eol)
+                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
                 tasks.forEach {
                     todoItems.remove(it)
                 }
@@ -299,7 +302,7 @@ object TodoList {
         })
     }
 
-    fun isSelected(item: TodoItem): Boolean {
+    fun isSelected(item: Task): Boolean {
         return selectedItems.indexOf(item) > -1
     }
 
@@ -311,25 +314,25 @@ object TodoList {
     internal val TAG = TodoList::class.java.simpleName
 
 
-    fun selectTodoItems(items: List<TodoItem>) {
+    fun selectTasks(items: List<Task>) {
         ActionQueue.add("Select", Runnable {
             selectedItems.addAll(items)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         })
     }
 
-    fun selectTodoItem(item: TodoItem?) {
+    fun selectTask(item: Task?) {
         item?.let {
-            selectTodoItems(listOf(item))
+            selectTasks(listOf(item))
         }
     }
 
 
-    fun unSelectTodoItem(item: TodoItem) {
-        unSelectTodoItems(listOf(item))
+    fun unSelectTask(item: Task) {
+        unSelectTasks(listOf(item))
     }
 
-    fun unSelectTodoItems(items: List<TodoItem>) {
+    fun unSelectTasks(items: List<Task>) {
         ActionQueue.add("Unselect", Runnable {
             selectedItems.removeAll(items)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
@@ -345,19 +348,14 @@ object TodoList {
 
     fun getTaskCount(): Long {
         val items = todoItems
-        return items.filter { it.task.inFileFormat().isNotBlank() }.size.toLong()
-    }
-
-    fun selectLine(selectedLine : Long ) {
-        clearSelection()
-        selectTodoItem(todoItems.find {selectedLine == it.line})
+        return items.filter { it.inFileFormat().isNotBlank() }.size.toLong()
     }
 
     fun updateCache() {
         Config.todoList = todoItems
     }
 
-    fun editTasks(from: Activity, tasks: List<TodoItem>) {
+    fun editTasks(from: Activity, tasks: List<Task>) {
         ActionQueue.add("Clear selection", Runnable {
             pendingEdits.addAll(tasks)
             startAddTaskActivity(from)
