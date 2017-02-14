@@ -47,11 +47,12 @@ import android.view.Window
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.github.rjeschke.txtmark.Processor
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
@@ -61,6 +62,9 @@ val TAG = "Util"
 val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
+
+val mdParser: Parser = Parser.builder().build()
+val htmlRenderer : HtmlRenderer = HtmlRenderer.builder().build()
 
 fun runOnMainThread(r: Runnable) {
     val handler = Handler(Looper.getMainLooper())
@@ -472,7 +476,9 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     }
     // Change issue numbers to links
     markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
-    val html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + Processor.process(markdown) + "</body></html>"
+    val document = mdParser.parse(markdown)
+
+    val html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + htmlRenderer.render(document) + "</body></html>"
     return html
 }
 
