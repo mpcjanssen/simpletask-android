@@ -222,12 +222,12 @@ class ActiveFilter (val options : FilterOptions) {
         useScript = false
     }
 
-    fun apply(items: List<TodoItem>?): ArrayList<TodoItem> {
+    fun apply(items: List<Task>?): ArrayList<Task> {
         if (useScript) {
             log.info(TAG, "Filtering with Lua $script")
         }
         val filter = AndFilter()
-        val matched = ArrayList<TodoItem>()
+        val matched = ArrayList<Task>()
         if (items == null) {
             return ArrayList()
         }
@@ -242,7 +242,7 @@ class ActiveFilter (val options : FilterOptions) {
                     matched.add(item)
                     continue
                 }
-                val t = item.task
+                val t = item
                 if (this.hideCompleted && t.isCompleted()) {
                     continue
                 }

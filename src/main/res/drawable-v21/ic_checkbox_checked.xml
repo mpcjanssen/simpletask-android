@@ -21,7 +21,7 @@
     android:viewportWidth="48"
     android:height="32dp"
     android:viewportHeight="48"
-    android:tint="@color/white"
+    android:tint="@color/control_checkable_material"
     >
     <group
         android:name="icon_null"

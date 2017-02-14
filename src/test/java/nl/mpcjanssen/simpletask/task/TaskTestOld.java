@@ -17,8 +17,8 @@ public class TaskTestOld extends TestCase {
         Task c = new Task( "Test abcd ");
         Task d = new Task("Test abcd");
         assertFalse(b.equals(c));
-        assertTrue(b.equals(d));
-        assertTrue(a.equals(b));
+        assertTrue(d.equals(d));
+        assertFalse(a.equals(b));
     }
     
 

@@ -4,17 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.util.JsonReader
-import android.widget.EditText
 import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoItem
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -219,6 +214,8 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val hasExtendedTaskView: Boolean
         get() =  prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
 
+    val showCompleteCheckbox: Boolean
+        get() =  prefs.getBoolean(getString(R.string.ui_complete_checkbox), true)
 
     val showConfirmationDialogs : Boolean
         get() =  prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
@@ -229,12 +226,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
                 s == getString(R.string.widget_background_transparency) ||
                 s == getString(R.string.widget_header_transparency)) {
             TodoApplication.app.redrawWidgets()
-        } else if (s == getString(R.string.calendar_sync_dues)) {
-            CalendarSync.setSyncDues(isSyncDues)
-        } else if (s == getString(R.string.calendar_sync_thresholds)) {
-            CalendarSync.setSyncThresholds(isSyncThresholds)
-        } else if (s == getString(R.string.calendar_reminder_days) || s == getString(R.string.calendar_reminder_time)) {
-            CalendarSync.syncLater()
+        } else if (s == getString(R.string.calendar_sync_dues) ||
+                   s == getString(R.string.calendar_sync_thresholds) ||
+                s == getString(R.string.calendar_reminder_days) ||
+                s == getString(R.string.calendar_reminder_time)) {
+            CalendarSync.updatedSyncTypes()
         }
     }
 
@@ -280,11 +276,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() =  prefs.getBoolean(getString(R.string.keep_prio), true)
 
     val shareAppendText: String
-        get() = prefs.getString(getString(R.string.share_task_append_text), "")
+        get() = prefs.getString(getString(R.string.share_task_append_text), " +background")
 
     var latestChangelogShown: Int
         get() = prefs.getInt(getString(R.string.latest_changelog_shown), 0)
-        set(versionCode: Int) {
+        set(versionCode) {
             prefs.edit().putInt(getString(R.string.latest_changelog_shown), versionCode).commit()
         }
 
@@ -297,15 +293,14 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val hasColorDueDates: Boolean
         get() =  prefs.getBoolean(getString(R.string.color_due_date_key), true)
 
-    var todoList : ArrayList<TodoItem>?
+    var todoList : ArrayList<Task>?
         get() {
             try {
                 val ctxt = TodoApplication.app
                 val stream = ctxt.openFileInput("cachedtodo.txt")
                 val reader = stream.reader(Charset.forName("UTF-8"))
-                val result = ArrayList<TodoItem>()
-                result.addAll(reader.readLines().mapIndexed
-                    { i, line ->  TodoItem(i.toLong(), Task(line))})
+                val result = ArrayList<Task>()
+                result.addAll(reader.readLines().map{line ->  Task(line)})
                 reader.close()
                 stream.close()
                 return result
@@ -320,7 +315,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             val ctxt = TodoApplication.app
             val stream = ctxt.openFileOutput("cachedtodo.txt", MODE_PRIVATE)
             val writer = stream.writer(Charset.forName("UTF-8"))
-            writer.write(items.map { it.task.inFileFormat() }.joinToString("\n"))
+            writer.write(items.map { it.inFileFormat() }.joinToString("\n"))
             writer.close()
             stream.close()
 

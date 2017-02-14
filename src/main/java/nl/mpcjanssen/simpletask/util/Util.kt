@@ -47,12 +47,12 @@ import android.view.Window
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.github.rjeschke.txtmark.Processor
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
 import nl.mpcjanssen.simpletask.task.Task
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
 import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
@@ -62,6 +62,9 @@ val TAG = "Util"
 val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
+
+val mdParser: Parser = Parser.builder().build()
+val htmlRenderer : HtmlRenderer = HtmlRenderer.builder().build()
 
 fun runOnMainThread(r: Runnable) {
     val handler = Handler(Looper.getMainLooper())
@@ -146,7 +149,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
         firstGroupSortIndex++
@@ -161,7 +164,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header:
     var count = 0
     var headerLine: HeaderLine? = null
     for (item in visibleTasks) {
-        val t = item.task
+        val t = item
         val newHeader  = if (moduleName !=null ) {
             LuaInterpreter.onGroupCallback(moduleName, t)
         }   else {
@@ -193,7 +196,7 @@ fun addHeaderLines(visibleTasks: List<TodoItem>, sorts: List<String>, no_header:
     return result
 }
 
-fun addHeaderLines(visibleTasks: List<TodoItem>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
     return addHeaderLines(visibleTasks,sorts,no_header, filter.createIsThreshold, filter.options.luaModule)
 }
@@ -286,14 +289,6 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
     return newDate
 }
 
-fun prefixItems(prefix: String, items: ArrayList<String>): ArrayList<String> {
-    val result = ArrayList<String>()
-    for (item in items) {
-        result.add(prefix + item)
-    }
-    return result
-}
-
 fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     val checks = listView.checkedItemPositions
     val items = ArrayList<String>()
@@ -380,7 +375,7 @@ fun createCachedDatabase(context: Context, dbFile: File) {
     copyFile(dbFile, cacheFile)
 }
 
-fun sortWithPrefix(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
+fun alfaSortList(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
     val result = ArrayList<String>()
     result.addAll(items)
     Collections.sort(result, AlphabeticalStringComparator(caseSensitive))
@@ -390,10 +385,10 @@ fun sortWithPrefix(items: List<String>, caseSensitive: Boolean, prefix: String?)
     return result
 }
 
-fun sortWithPrefix(items: Set<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
+fun alfaSortList(items: Set<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
     val temp = ArrayList<String>()
     temp.addAll(items)
-    return sortWithPrefix(temp, caseSensitive, prefix)
+    return alfaSortList(temp, caseSensitive, prefix)
 }
 
 fun appVersion(ctx: Context): String {
@@ -481,7 +476,9 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     }
     // Change issue numbers to links
     markdown = markdown.replace("(\\s)(#)([0-9]+)".toRegex(), "$1[$2$3](https://github.com/mpcjanssen/simpletask-android/issues/$3)")
-    val html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + Processor.process(markdown) + "</body></html>"
+    val document = mdParser.parse(markdown)
+
+    val html = "<html><head><link rel='stylesheet' type='text/css' href='css/light.css'></head><body>" + htmlRenderer.render(document) + "</body></html>"
     return html
 }
 
