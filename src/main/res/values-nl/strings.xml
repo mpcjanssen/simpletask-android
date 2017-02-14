@@ -40,8 +40,8 @@
     <string name="remove_list_or_tag">Lijsten en labels verwijderen</string>
     <string name="update">Bijwerken</string>
     <string name="delete">Verwijderen</string>
-    <string name="defer_due">Vervaldatum(s) instellen</string>
-    <string name="defer_threshold">Drempeldatum(s) instellen</string>
+    <string name="defer_due">Vervaldatum instellen</string>
+    <string name="defer_threshold">Drempeldatum instellen</string>
     <string name="insert_due">Vervaldatum invoeren</string>
     <string name="insert_threshold">Drempeldatum invoeren</string>
     <string name="share">Delen</string>
@@ -262,7 +262,7 @@ http://goo.gl/X1C55P
 
     <string name="clone_tags">Automatisch invullen</string>
     <string name="word_wrap">Woordomslag</string>
-    <string name="search_hint">Todo.txt doorzoeken</string>
+    <string name="search_hint">Zoeken...</string>
 
     <string name="sort_help">Gebruik slepen-en-neerzetten om de sorteervolgorde te wijzigen. Druk op de items om de sorteerrichting te wijzigen.</string>
     <string name="file_order">Bestandsvolgorde (ongesorteerd)</string>
