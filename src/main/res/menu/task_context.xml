@@ -62,12 +62,12 @@ You should have received a copy of the GNU General Public License along with Tod
         android:id="@+id/defer_due"
         android:title="@string/defer_due"
         android:icon="@drawable/ic_schedule_white_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/defer_threshold"
         android:title="@string/defer_threshold"
         android:icon="@drawable/ic_clock_start_white_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         />
 </menu>

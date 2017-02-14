@@ -2,4 +2,5 @@
 
 <resources>
     <item format="float" name="disabledAlpha" type="dimen">0.30</item>
+    <string name="overflowOnSmallScreen">ifRoom</string>
 </resources>
