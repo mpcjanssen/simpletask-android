@@ -157,7 +157,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     }
 
-    class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences), SharedPreferences.OnSharedPreferenceChangeListener {
+    class AppearancePrefFragment : PrefFragment(R.xml.appearance_preferences)/*, SharedPreferences.OnSharedPreferenceChangeListener {
         val fonts = FontManager.enumerateFonts()
         override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
             if (activity.getString(R.string.font_key).equals(key)) {
@@ -179,6 +179,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             updateFontSummary()
         }
     }
+    */
 
     class InterfacePrefFragment : PrefFragment(R.xml.interface_preferences) {
         override fun onCreate(savedInstanceState: Bundle?) {
