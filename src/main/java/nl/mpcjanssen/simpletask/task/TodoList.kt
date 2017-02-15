@@ -53,11 +53,20 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    val todoItems = Config.todoList ?: ArrayList<Task>()
+    val todoItems: ArrayList<Task>
+        get() {
+            val current = Config.todoList
+            if (current != null) {
+                return current
+            } else {
+                TodoApplication.app.loadTodoList()
+                return ArrayList<Task>()
+            }
+        }
     val selectedItems = HashSet<Task>()
     val pendingEdits = LinkedHashSet<Task>()
 
-    fun hasPendingAction () : Boolean {
+    fun hasPendingAction(): Boolean {
         return ActionQueue.hasPending()
     }
 
@@ -74,7 +83,7 @@ object TodoList {
             if (atEnd) {
                 todoItems.addAll(items)
             } else {
-                todoItems.addAll(0,items)
+                todoItems.addAll(0, items)
             }
             updateCache()
         })
@@ -145,10 +154,10 @@ object TodoList {
 
 
     val decoratedContexts: List<String>
-        get() = contexts.map {"@"+it}
+        get() = contexts.map { "@" + it }
 
     val decoratedProjects: List<String>
-        get() = projects.map {"+"+it}
+        get() = projects.map { "+" + it }
 
 
     fun uncomplete(items: List<Task>) {
@@ -168,7 +177,7 @@ object TodoList {
                     if (extraAtEnd) {
                         todoItems.add(extra)
                     } else {
-                        todoItems.add(0,extra)
+                        todoItems.add(0, extra)
                     }
                 }
                 if (!keepPrio) {
@@ -182,7 +191,7 @@ object TodoList {
 
     fun prioritize(tasks: List<Task>, prio: Priority) {
         ActionQueue.add("Complete", Runnable {
-            tasks.map{it.priority = prio}
+            tasks.map { it.priority = prio }
             updateCache()
         })
 
@@ -238,7 +247,7 @@ object TodoList {
             filteredTasks.reverse()
         }
         comp.comparator?.let {
-            Collections.sort(filteredTasks,it)
+            Collections.sort(filteredTasks, it)
         }
         return filteredTasks
     }
@@ -361,6 +370,7 @@ object TodoList {
             startAddTaskActivity(from)
         })
     }
+
     fun clearPendingEdits() {
         ActionQueue.add("Clear selection", Runnable {
             pendingEdits.clear()
