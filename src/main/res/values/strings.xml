@@ -428,9 +428,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="back_clears_filter_title">Back clears filter</string>
-    <string name="back_clears_filter_summary">Back button clears the filter before exiting the app</string>
+    <string name="back_clears_filter_summary">Back button clears the filter before exiting the application.</string>
     <string name="experimental_title">Experimental</string>
     <string name="experimental_summary">Enable experimental features</string>
+
+    <string name="keep_selection_title">Keep selection</string>
+    <string name="keep_selection_summary">Keep task selection after changes.</string>
+
 
     <string name="lua_error">Lua error</string>
     <string name="lua_config_screen">Lua configuration</string>

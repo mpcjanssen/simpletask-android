@@ -43,7 +43,6 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
-import com.buildware.widget.indeterm.IndeterminateCheckBox
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
@@ -1682,7 +1681,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             MainFilter.saveInIntent(intent)
             MainFilter.saveInPrefs(Config.prefs)
             setIntent(intent)
-            // TodoList.clearSelection()
+            if (!Config.hasKeepSelection) {
+                TodoList.clearSelection()
+            }
             m_adapter!!.setFilteredTasks()
         }
     }

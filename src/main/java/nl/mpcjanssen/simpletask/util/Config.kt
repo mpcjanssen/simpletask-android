@@ -272,6 +272,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val hasPrependDate: Boolean
         get() =  prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
 
+    val hasKeepSelection: Boolean
+        get() =  prefs.getBoolean(getString(R.string.keep_selection), false)
+
     val hasKeepPrio: Boolean
         get() =  prefs.getBoolean(getString(R.string.keep_prio), true)
 
