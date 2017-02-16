@@ -41,6 +41,7 @@ object FileStore : FileStoreInterface {
     init {
         log = Logger
         log.info(TAG, "onCreate")
+        log.info(TAG, "Default path: ${getDefaultPath()}")
         observer = null
         this.bm = LocalBroadcastManager.getInstance(TodoApplication.app)
 
@@ -299,7 +300,7 @@ object FileStore : FileStoreInterface {
 
     }
     fun getDefaultPath(): String {
-        return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
+        return "${Environment.getExternalStorageDirectory()}/Android/data/nl.mpcjanssen.simpletask/todo.txt"
     }
 }
 
