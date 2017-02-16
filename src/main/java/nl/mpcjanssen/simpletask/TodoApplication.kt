@@ -157,7 +157,6 @@ class TodoApplication : Application(),
     fun loadTodoList() {
         Logger.info(TAG, "Load todolist")
         TodoList.reload(this, localBroadCastManager, Config.eol)
-
     }
 
 
