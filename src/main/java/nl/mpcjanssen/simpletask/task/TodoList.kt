@@ -217,6 +217,9 @@ object TodoList {
             if (save) {
                 save(FileStore, todoName, backup, eol)
             }
+            if (!Config.hasKeepSelection) {
+                TodoList.clearSelection()
+            }
             mLists = null
             mTags = null
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
