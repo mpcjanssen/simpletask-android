@@ -295,29 +295,20 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     var todoList : ArrayList<Task>?
         get() {
-            try {
-                val ctxt = TodoApplication.app
-                val stream = ctxt.openFileInput("cachedtodo.txt")
-                val reader = stream.reader(Charset.forName("UTF-8"))
+                val cachedContents = prefs.getString(getString(R.string.cached_todo_file), null)
+                if (cachedContents == null) {
+                    return null
+                }
                 val result = ArrayList<Task>()
-                result.addAll(reader.readLines().map{line ->  Task(line)})
-                reader.close()
-                stream.close()
+                result.addAll(cachedContents.lines().map{line ->  Task(line)})
                 return result
-
-            } catch (e: FileNotFoundException) {
-                return null
-            }
-
         }
         set(items) {
-            if (items == null) return
-            val ctxt = TodoApplication.app
-            val stream = ctxt.openFileOutput("cachedtodo.txt", MODE_PRIVATE)
-            val writer = stream.writer(Charset.forName("UTF-8"))
-            writer.write(items.map { it.inFileFormat() }.joinToString("\n"))
-            writer.close()
-            stream.close()
-
+            items?.let {
+                val contents = items.map { it.inFileFormat() }.joinToString("\n")
+                val edit = prefs.edit()
+                edit.putString(getString(R.string.cached_todo_file), contents)
+                edit.commit()
+            }
         }
 }

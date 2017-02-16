@@ -53,16 +53,7 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    val todoItems: ArrayList<Task>
-        get() {
-            val current = Config.todoList
-            if (current != null) {
-                return current
-            } else {
-                TodoApplication.app.loadTodoList()
-                return ArrayList<Task>()
-            }
-        }
+    val todoItems = ArrayList<Task>()
     val selectedItems = HashSet<Task>()
     val pendingEdits = LinkedHashSet<Task>()
 
@@ -253,9 +244,11 @@ object TodoList {
     }
 
     fun reload(backup: BackupInterface, lbm: LocalBroadcastManager, eol: String) {
+        if (!FileStore.isAuthenticated) return
         lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
         val filename = Config.todoFileName
-        if (FileStore.needsRefresh(Config.currentVersionId)) {
+        val cached = Config.todoList
+        if (cached == null || FileStore.needsRefresh(Config.currentVersionId)) {
             try {
                 todoItems.clear()
                 val items = ArrayList<Task>(
@@ -263,6 +256,7 @@ object TodoList {
                             Task(text)
                         })
                 todoItems.addAll(items)
+                updateCache()
                 clearSelection()
                 Config.currentVersionId = FileStore.getVersion(filename)
 
@@ -273,11 +267,12 @@ object TodoList {
                 log.error(TAG, "TodoList load failed: {}" + filename, e)
                 showToastShort(TodoApplication.app, "Loading of todo file failed")
             }
-            log.info(TAG, "TodoList loaded, refresh UI")
+            log.info(TAG, "TodoList loaded from storage")
         } else {
-            log.info(TAG, "Todolist reload not needed, refresh UI")
+            log.info(TAG, "Todolist not changed, loaded from cache")
+            todoItems.clear()
+            todoItems.addAll(cached)
         }
-        updateCache()
         notifyChanged(filename, eol, backup, false)
     }
 
