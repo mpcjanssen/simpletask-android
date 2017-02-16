@@ -87,9 +87,7 @@ class TodoApplication : Application(),
                     updateWidgets()
                 } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
                     Logger.info(TAG, "File changed, reloading")
-                    ActionQueue.add("Reload from BROADCAST", Runnable {
-                        loadTodoList()
-                    })
+                    loadTodoList("from BROADCAST")
                 }
             }
         }
@@ -100,9 +98,7 @@ class TodoApplication : Application(),
         Logger.info(TAG, "onCreate()")
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
-        ActionQueue.add("|Initial load", Runnable {
-            loadTodoList()
-        })
+        loadTodoList("Initial load")
     }
 
 
@@ -148,15 +144,11 @@ class TodoApplication : Application(),
 
     fun switchTodoFile(newTodo: String) {
         Config.setTodoFile(newTodo)
-        ActionQueue.add("Reload from file switch", Runnable {
-            loadTodoList()
-        })
-
+        loadTodoList("from file switch")
     }
 
-    fun loadTodoList() {
-        Logger.info(TAG, "Load todolist")
-        TodoList.reload(this, localBroadCastManager, Config.eol)
+    fun loadTodoList(reason: String) {
+        TodoList.reload(this, localBroadCastManager, Config.eol, reason = reason)
     }
 
 
@@ -164,9 +156,8 @@ class TodoApplication : Application(),
         newName?.let {
             Config.setTodoFile(newName)
         }
-        ActionQueue.add("Reload from fileChanged()", Runnable {
-            loadTodoList()
-        })
+        loadTodoList("from fileChanged")
+
     }
 
 
