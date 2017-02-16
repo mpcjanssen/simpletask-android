@@ -393,7 +393,7 @@ http://goo.gl/X1C55P
     <string name="name">Naam</string>
     <string name="date">Datum</string>
     <string name="back_clears_filter_title">Terug wist filter</string>
-    <string name="back_clears_filter_summary">Terugknop wist het filter alvorens de app af te sluiten</string>
+    <string name="back_clears_filter_summary">Terugknop wist het filter alvorens de applicatie af te sluiten.</string>
     <string name="experimental_title">Experimenteel</string>
     <string name="experimental_summary">Experimentele mogelijkheden inschakelen</string>
 
@@ -405,4 +405,8 @@ http://goo.gl/X1C55P
     <string name="lua_config_import">Importeren</string>
     <string name="lua_config_share">Delen</string>
     <string name="lua_open_config">Lua-instellingen</string>
-</resources>
+<string name="keep_selection_title">Selectie behouden</string>
+    <string name="keep_selection_summary">Taakselectie behouden na wijzigingen.</string>
+
+
+    </resources>
