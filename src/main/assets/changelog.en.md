@@ -1,6 +1,26 @@
 ﻿Changelog
 =========
 
+9.0.0
+-----
+
+- Use overflow for task context menu on smaller devices. Fixes #686.
+- Replace markdown rendering library with much faster version.
+- Add background tag by default for better discoverability of the feature.
+- Remove edit on share, use background tag instead and edit from main UI.
+- Many small bug and perfomance fixes.
+- Always add the tag or list from the textbox. Fixes #708.
+- Use consistent list and tag sort in drawers and menus. Fixes #239.
+- Restore completion checkbox setting. Fixes #526.
+- Save recurred tasks when completing. Fixes #689.
+- Use indeterminate images in task context bar to fix light theme checkboxes. Fixes #690.
+- Make a setting to keep selection after changes.
+- Don't clear selection after changes.
+- Don't use a database backend for caching the todos. It complicates the code.
+- Reduce spacing in drawes. Fixes #703.
+- Updated translations from weblate (Many thanks to: Michal Čihař, naofum, David Di Santi, wldmr, amjr, Heimen Stoffels, luisfsr)
+
+
 8.3.1
 -----
 
