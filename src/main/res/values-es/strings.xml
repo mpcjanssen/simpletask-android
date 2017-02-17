@@ -252,7 +252,7 @@ Toque en un elemento para cambiar el sentido de ordenamiento.</string>
     <string name="updatetask">Actualizar tarea</string>
     <string name="viewtask">Ver Tarea</string>
     <string name="clear_database">Vaciar base de datos</string>
-    <string name="done">Completa</string>
+    <string name="done">Completar</string>
     <string name="priority">Asignar prioridad</string>
     <string name="select_priority">Seleccionar prioridad</string>
     <string name="select_all">Seleccionar todo</string>
@@ -407,7 +407,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="name">Nombre</string>
     <string name="date">Fecha</string>
     <string name="back_clears_filter_title">Botón \"ATRÁS\" quita el filtro</string>
-    <string name="back_clears_filter_summary">El botón \"ATRÁS\" elimina el filtro actual antes de salir de la aplicación</string>
+    <string name="back_clears_filter_summary">El botón \"ATRÁS\" elimina el filtro actual antes de salir de la aplicación.</string>
     <string name="experimental_title">Características experimentales</string>
     <string name="experimental_summary">Habilitar características experimentales</string>
 
@@ -419,4 +419,8 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="lua_config_import">Importar</string>
     <string name="lua_config_share">Compartir</string>
     <string name="lua_open_config">Configuración Lua</string>
-</resources>
+<string name="keep_selection_summary">Mantener seleccionadas las tareas luego de aplicar cambios.</string>
+
+
+    <string name="keep_selection_title">Mantener selección</string>
+    </resources>
