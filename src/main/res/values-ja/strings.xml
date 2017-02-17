@@ -385,7 +385,7 @@ http://goo.gl/X1C55P
     <string name="name">名前</string>
     <string name="date">日付</string>
     <string name="back_clears_filter_title">戻るでフィルターをクリア</string>
-    <string name="back_clears_filter_summary">戻るボタンで、アプリを終了する前にフィルターをクリアします</string>
+    <string name="back_clears_filter_summary">戻るボタンで、アプリケーションを終了する前にフィルターをクリアします。</string>
     <string name="experimental_title">実験的</string>
     <string name="experimental_summary">実験的な機能を有効にします</string>
 
@@ -401,5 +401,9 @@ http://goo.gl/X1C55P
     <string name="tasktexthint">+ヘクトール と +パリ の問題を @議論 @Troy
 +ヘクトール に、そんなドラッグはできないと伝える @Troy
 +Simpletask の設定をレビューして、このテキストを削除する @Phone</string>
+
+    <string name="keep_selection_title">選択を残す</string>
+    <string name="keep_selection_summary">変更した後、タスクの選択を維持します。</string>
+
 
     </resources>
