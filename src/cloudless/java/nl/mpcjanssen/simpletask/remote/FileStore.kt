@@ -305,7 +305,7 @@ object FileStore : FileStoreInterface {
 
     }
     fun getDefaultPath(): String {
-        return "${Environment.getExternalStorageDirectory()}/Android/data/nl.mpcjanssen.simpletask/todo.txt"
+        return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
     }
 }
 
