@@ -70,7 +70,7 @@ object FileStore : FileStoreInterface {
         fileOperationsQueue!!.post(r)
     }
 
-    @Synchronized override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
+    override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
         log.info(TAG, "Loading tasks")
         val result = CopyOnWriteArrayList<String>()
         isLoading = true
@@ -89,7 +89,7 @@ object FileStore : FileStoreInterface {
         } finally {
             isLoading = false
         }
-        setWatching(TodoApplication.app, path)
+        setWatching(path)
         return result
     }
 
@@ -126,14 +126,19 @@ object FileStore : FileStoreInterface {
 
     }
 
-    @Synchronized private fun setWatching(caller: Context, path: String) {
-
-        log.info(TAG, "Starting observe service on $path")
-        val i = Intent(caller, FileWatchService::class.java)
-        i.putExtra(FileWatchService.pathExtra, path)
-        caller.startService(i)
-
-
+    private fun setWatching(path: String) {
+        Logger.info(TAG, "Observer: adding folder watcher on ${File(path).parentFile.absolutePath}")
+        val obs = observer
+        if (obs != null && path == obs.path) {
+            Logger.warn(TAG, "Observer: already watching: $path")
+            return
+        } else if (obs != null) {
+            Logger.warn(TAG, "Observer: already watching different path: ${obs.path}")
+            obs.ignoreEvents(true)
+            obs.stopWatching()
+        }
+        observer = TodoObserver(path)
+        Logger.info(TAG, "Observer: modifying done")
     }
 
     override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
@@ -144,11 +149,11 @@ object FileStore : FileStoreInterface {
 
     @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean) {
         log.info(TAG, "Saving tasks to file: {}" + path)
-        backup?.backup(path, join(lines, "\n"))
-        val obs = observer
-        obs?.ignoreEvents(true)
 
         queueRunnable("Save ${lines.size} lines to file " + path, Runnable {
+            backup?.backup(path, join(lines, "\n"))
+            val obs = observer
+            obs?.ignoreEvents(true)
             try {
                 writeToFile(join(lines, eol) + eol, File(path), false)
                 if (updateVersion) {
@@ -357,41 +362,4 @@ class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolu
     }
 
 
-}
-
-class FileWatchService : Service() {
-    var observer: TodoObserver? = null
-    val TAG = "FileWatchService"
-
-    override fun onBind(p0: Intent?): IBinder {
-        throw UnsupportedOperationException("not implemented")
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Logger.info(TAG, "Received start id $startId: $intent")
-        val path =  intent?.getStringExtra(pathExtra)
-        Logger.info(TAG, "Path = $path")
-        setWatching(path)
-        return Service.START_STICKY
-    }
-
-    @Synchronized private fun setWatching(path: String?) {
-        val path = path ?: Config.todoFileName
-        Logger.info(TAG, "Observer: adding folder watcher on ${File(path).parentFile.absolutePath}")
-        val obs = observer
-        if (obs != null && path == obs.path) {
-            Logger.warn(TAG, "Observer: already watching: $path")
-            return
-        } else if (obs != null) {
-            Logger.warn(TAG, "Observer: already watching different path: ${obs.path}")
-            obs.ignoreEvents(true)
-            obs.stopWatching()
-        }
-        observer = TodoObserver(path)
-        Logger.info(TAG, "Observer: modifying done")
-    }
-
-    companion object {
-        val pathExtra = "path"
-    }
 }
