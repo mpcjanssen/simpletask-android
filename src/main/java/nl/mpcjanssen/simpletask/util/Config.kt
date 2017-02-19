@@ -27,10 +27,10 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     val useTodoTxtTerms: Boolean
-        get() =  prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
+        get() = prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
 
     val showTxtOnly: Boolean
-        get() =  prefs.getBoolean(getString(R.string.show_txt_only), false)
+        get() = prefs.getBoolean(getString(R.string.show_txt_only), false)
 
     val isSyncDues: Boolean
         get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_dues), false)
@@ -62,19 +62,19 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             }
         }
 
-    var currentVersionId : String?
+    var currentVersionId: String?
         get() = prefs.getString(getString(R.string.file_current_version_id), null)
         set(version) {
             prefs.edit().putString(getString(R.string.file_current_version_id), version).commit()
         }
 
-    var lastScrollPosition : Int
+    var lastScrollPosition: Int
         get() = prefs.getInt(getString(R.string.ui_last_scroll_position), -1)
         set(position) {
             prefs.edit().putInt(getString(R.string.ui_last_scroll_position), position).commit()
         }
 
-    var lastScrollOffset : Int
+    var lastScrollOffset: Int
         get() = prefs.getInt(getString(R.string.ui_last_scroll_offset), -1)
         set(position) {
             prefs.edit().putInt(getString(R.string.ui_last_scroll_offset), position).commit()
@@ -100,14 +100,14 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         set(bool) = prefs.edit().putBoolean(getString(R.string.capitalize_tasks), bool).apply()
 
     val showTodoPath: Boolean
-        get() =  prefs.getBoolean(getString(R.string.show_todo_path), false)
+        get() = prefs.getBoolean(getString(R.string.show_todo_path), false)
 
 
     val backClearsFilter: Boolean
-        get() =  prefs.getBoolean(getString(R.string.back_clears_filter), false)
+        get() = prefs.getBoolean(getString(R.string.back_clears_filter), false)
 
     val sortCaseSensitive: Boolean
-        get() =  prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
+        get() = prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
 
     val eol: String
         get() {
@@ -132,35 +132,35 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         set(bool) = prefs.edit().putBoolean(getString(R.string.clone_tags_key), bool).apply()
 
     val hasAppendAtEnd: Boolean
-        get() =  prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
+        get() = prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
 
     // Takes an argument f, an expression that maps theme strings to IDs
     val activeTheme: Int
-    get() {
-        return when (activeThemeString) {
-            "dark" -> R.style.AppTheme_NoActionBar
-            "black" -> R.style.AppTheme_Black_NoActionBar
-            else -> R.style.AppTheme_Light_NoActionBar
+        get() {
+            return when (activeThemeString) {
+                "dark" -> R.style.AppTheme_NoActionBar
+                "black" -> R.style.AppTheme_Black_NoActionBar
+                else -> R.style.AppTheme_Light_NoActionBar
+            }
         }
-    }
 
     val activeActionBarTheme: Int
-    get() {
-        return when (activeThemeString) {
-            "dark" -> R.style.AppTheme_ActionBar
-            "black" -> R.style.AppTheme_Black_ActionBar
-            else -> R.style.AppTheme_Light_DarkActionBar
+        get() {
+            return when (activeThemeString) {
+                "dark" -> R.style.AppTheme_ActionBar
+                "black" -> R.style.AppTheme_Black_ActionBar
+                else -> R.style.AppTheme_Light_DarkActionBar
+            }
         }
-    }
 
     val activePopupTheme: Int
-    get() {
-        return if (isDarkTheme) {
-            R.style.AppTheme_ActionBar
-        } else {
-            R.style.AppTheme_Black_ActionBar
+        get() {
+            return if (isDarkTheme) {
+                R.style.AppTheme_ActionBar
+            } else {
+                R.style.AppTheme_Black_ActionBar
+            }
         }
-    }
 
     val isDarkTheme: Boolean
         get() {
@@ -192,7 +192,7 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
     val showCalendar: Boolean
-        get() =  prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
+        get() = prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
 
     val tasklistTextSize: Float?
         get() {
@@ -209,16 +209,16 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
     val hasShareTaskShowsEdit: Boolean
-        get() =  prefs.getBoolean(getString(R.string.share_task_show_edit), false)
+        get() = prefs.getBoolean(getString(R.string.share_task_show_edit), false)
 
     val hasExtendedTaskView: Boolean
-        get() =  prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
+        get() = prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
 
     val showCompleteCheckbox: Boolean
-        get() =  prefs.getBoolean(getString(R.string.ui_complete_checkbox), true)
+        get() = prefs.getBoolean(getString(R.string.ui_complete_checkbox), true)
 
-    val showConfirmationDialogs : Boolean
-        get() =  prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
+    val showConfirmationDialogs: Boolean
+        get() = prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
         if (s == getString(R.string.widget_theme_pref_key) ||
@@ -227,13 +227,12 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
                 s == getString(R.string.widget_header_transparency)) {
             TodoApplication.app.redrawWidgets()
         } else if (s == getString(R.string.calendar_sync_dues) ||
-                   s == getString(R.string.calendar_sync_thresholds) ||
+                s == getString(R.string.calendar_sync_thresholds) ||
                 s == getString(R.string.calendar_reminder_days) ||
                 s == getString(R.string.calendar_reminder_time)) {
             CalendarSync.updatedSyncTypes()
         }
     }
-
 
 
     val defaultSorts: Array<String>
@@ -271,13 +270,13 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
 
     val hasPrependDate: Boolean
-        get() =  prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
+        get() = prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
 
     val hasKeepSelection: Boolean
-        get() =  prefs.getBoolean(getString(R.string.keep_selection), false)
+        get() = prefs.getBoolean(getString(R.string.keep_selection), false)
 
     val hasKeepPrio: Boolean
-        get() =  prefs.getBoolean(getString(R.string.keep_prio), true)
+        get() = prefs.getBoolean(getString(R.string.keep_prio), true)
 
     val shareAppendText: String
         get() = prefs.getString(getString(R.string.share_task_append_text), " +background")
@@ -295,24 +294,19 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = isCapitalizeTasks
 
     val hasColorDueDates: Boolean
-        get() =  prefs.getBoolean(getString(R.string.color_due_date_key), true)
+        get() = prefs.getBoolean(getString(R.string.color_due_date_key), true)
 
-    var todoList : ArrayList<Task>?
+    var todoList: ArrayList<Task>?
         get() {
-                val cachedContents = prefs.getString(getString(R.string.cached_todo_file), null)
-                if (cachedContents == null) {
-                    return null
-                }
-                val result = ArrayList<Task>()
-                result.addAll(cachedContents.lines().map{line ->  Task(line)})
-                return result
+            val cachedContents = prefs.getString(getString(R.string.cached_todo_file), null) ?: return null
+            return ArrayList<Task>().apply {
+                addAll(cachedContents.lines().map { line -> Task(line) })
+            }
         }
         set(items) {
             items?.let {
                 val contents = items.map { it.inFileFormat() }.joinToString("\n")
-                val edit = prefs.edit()
-                edit.putString(getString(R.string.cached_todo_file), contents)
-                edit.commit()
+                prefs.edit().putString(getString(R.string.cached_todo_file), contents).commit()
             }
         }
 }
