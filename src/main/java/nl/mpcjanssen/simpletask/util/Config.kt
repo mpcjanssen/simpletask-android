@@ -260,10 +260,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("CommitPrefEdits")
     fun setTodoFile(todo: String) {
-        val edit = prefs.edit()
-        edit.putString(getString(R.string.todo_file_key), todo)
-        edit.remove(getString(R.string.file_current_version_id))
-        edit.commit()
+        with(prefs.edit()) {
+            putString(getString(R.string.todo_file_key), todo)
+            remove(getString(R.string.file_current_version_id))
+            commit()
+        }
     }
 
     val isAutoArchive: Boolean
