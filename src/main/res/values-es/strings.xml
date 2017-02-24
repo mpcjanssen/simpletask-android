@@ -106,8 +106,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="search_hint">Buscar...</string>
 
     <!-- sort -->
-    <string name="sort_help">Arrastrar y soltar para cambiar el orden.
-Toque en un elemento para cambiar el sentido de ordenamiento.</string>
+    <string name="sort_help">Arrastrar y soltar para cambiar el orden. Toque un elemento para invertir el sentido de ordenamiento.</string>
     <string name="file_order">Orden de archivo (no ordenadas)</string>
     <string name="alphabetical">Alfabético</string>
     <string name="by_prio">Por Prioridad</string>
@@ -125,7 +124,7 @@ Toque en un elemento para cambiar el sentido de ordenamiento.</string>
     <string name="filter_invert">Invertir filtro</string>
     <string name="add_filter_shortcut">A la pantalla de inicio</string>
     <string name="rename_filter">Renombrar</string>
-    <string name="rename_filter_message">Introducir nuevo nombre para el filtro guardado:</string>
+    <string name="rename_filter_message">Introducir nuevo nombre para el filtro:</string>
     <string name="update_filter">Actualizar</string>
     <string name="create_widget">Crear widget</string>
     <string name="filter_show_completed">Mostrar tareas completadas</string>
@@ -248,7 +247,7 @@ Toque en un elemento para cambiar el sentido de ordenamiento.</string>
     <string name="search">Búsqueda</string>
     <string name="add">Agregar</string>
     <string name="task">Tarea</string>
-    <string name="addtask">Agregar una tarea</string>
+    <string name="addtask">Agregar una Tarea</string>
     <string name="updatetask">Actualizar tarea</string>
     <string name="viewtask">Ver Tarea</string>
     <string name="clear_database">Vaciar base de datos</string>
