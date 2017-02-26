@@ -133,7 +133,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="resume_sync_pref_title">Sync wiederaufnehmen</string>
     <string name="resume_sync_pref_summary">Sync mit Dropbox wenn die App geöffnet wird.</string>
     <string name="font_size_delta_pref_title">Schriftgröße ändern</string>
-    <string name="font_size_delta_pref_summary">Schriftgröße ändern. Verwende negative Einheiten um die Fontgröße zu verringern</string>
+    <string name="font_size_delta_pref_summary">Schriftgröße ändern. Verwende negative Einheiten um die Fontgröße zu verringern.</string>
     <string name="theme_pref_title">Anwendungs-Theme</string>
     <string name="theme_pref_summary">Anwendungs-Theme ändern</string>
 
@@ -187,8 +187,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_empty_lists_summary">Zeige die Kopfzeile auch wenn alle Aufgaben unter dieser Kopfzeile versteckt sind.</string>
 
     <string name="split_actionbar_pref_title">Verwende geteilte Aktionsleiste</string>
-    <string name="split_actionbar_pref_summary">Verwende eine geteile Aktionsleiste damit die Schaltflächen am unteren Ende des Bildschirms sind.
-        Für mehr Bilschirmfläche deaktiviere diese Option.</string>
+    <string name="split_actionbar_pref_summary">"Verwende eine geteile Aktionsleiste damit die Schaltflächen am unteren Ende des Bildschirms sind.
+ Für mehr Bilschirmfläche deaktiviere diese Option. "</string>
 
     <string name="show_edittext_hint_title">Zeige Hinweise</string>
     <string name="show_edittext_hint_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
@@ -352,7 +352,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="save_filter">Aktuellen Filter speichern</string>
-    <string name="save_filter_message">Gib den Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird</string>
+    <string name="save_filter_message">Gib den Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird.</string>
 
     <string name="donate_title">Spenden</string>
     <string name="donate_summary">Spenden Sie, wenn Ihnen Simpletask gefällt.\nHinweis: Spenden sind freiwillig, Simpletask wird immer kostenlos verfügbar bleiben. </string>
@@ -386,7 +386,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert.</string>
     <string name="by_completion_date">Nach Fertigstellungsdatum</string>
     <string name="clear_database">Datenbank leeren</string>
-    <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
+    <string name="donated_summary">"Vielen Dank für Ihre Spende. "</string>
     <string name="none">kein</string>
     <string name="taskview_extended_pref_summary">Aufgaben im Hauptfenster mit separater Zeile für Datum zeigen.</string>
     <string name="taskview_extended_pref_title">Datumszeile im Hauptfenster</string>
