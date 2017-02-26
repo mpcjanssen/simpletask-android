@@ -82,15 +82,20 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_name_empty">Kein Name angegeben, es wird kein Filter hinzugefügt</string>
     <string name="widget_name_empty">Kein Widgetname angegeben, es wird kein Widget hinzugefügt</string>
     <string name="add_task_help">Hinzufügen oder Aktualisieren einer Aufgabe in der Aufgabenliste. Um schnelles Hinzufügen zu ermöglichen, 
-        entspricht jede Zeile einer separaten Aufgabe.\n
-        <b>Priorität</b>\n
-        Beginne die Zeile mit (.), wie (A)\n
-        <b>Kategorien</b>
-        Beginne mit einem + Zeichen, wie +Küche\n
-        <b>Listen</b>
-        Beginne mit einem @ Zeichen, wie @zuhause\n
-        Eine Aufgabe kann eine beliebige Anzahl Kategorien beinhalten und zu beliebig vielen Listen gehören.
-    </string>
+ entspricht jede Zeile einer separaten Aufgabe.
+
+ <b>Priorität</b>
+
+ Beginne die Zeile mit (.), wie (A)
+
+ <b>Kategorien</b>
+ Beginne mit einem + Zeichen, wie +Küche
+
+ <b>Listen</b>
+ Beginne mit einem @ Zeichen, wie @zuhause
+
+ Eine Aufgabe kann eine beliebige Anzahl Kategorien beinhalten und zu beliebig vielen Listen gehören.
+ </string>
 
     <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">Archivierung</string>
@@ -251,7 +256,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="clone_tags">Vorausfüllen</string>
     <string name="word_wrap">Zeilenumbruch</string>
-    <string name="search_hint">Durchsuche todo.txt</string>
+    <string name="search_hint">Suche...</string>
     <!-- sort -->
     <string name="sort_help">Ziehen und Ablegen um die Reihenfolge zu ändern, Einträge antippen um die Sortierrichtung zu ändern.</string>
     <string name="alphabetical">Alphabetisch</string>
@@ -427,5 +432,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="lua_config_share">Teilen</string>
     <string name="preference_title_debug_info">Debug-Log ansehen</string>
     <string name="preference_summary_debug_info">App-Version und Log ansehen und versenden.</string>
+
+    <string name="keep_selection_title">Auswahl behalten</string>
+    <string name="keep_selection_summary">Auswahl bleibt nach Änderungen aktiv.</string>
+
 
     </resources>
