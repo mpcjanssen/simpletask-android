@@ -41,8 +41,8 @@
     <string name="remove_list_or_tag">Remover listas e projetos</string>
     <string name="update">Atualizar</string>
     <string name="delete">Apagar</string>
-    <string name="defer_due">Definir prazo(s)</string>
-    <string name="defer_threshold">Definir data(s) limiare(s)</string>
+    <string name="defer_due">Definir prazo</string>
+    <string name="defer_threshold">Definir data limiar</string>
     <string name="insert_due">Inserir prazo</string>
     <string name="insert_threshold">Inserir data limiar</string>
     <string name="share">Compartilhar</string>
@@ -238,7 +238,7 @@
     <!-- search -->
     <string name="clone_tags">Clonar projetos</string>
     <string name="word_wrap">Encapsulamento</string>
-    <string name="search_hint">Procurar todo.txt</string>
+    <string name="search_hint">Procurar...</string>
 
     <!-- sort -->
     <string name="sort_help">Arrastar e soltar para trocar a ordem de organização. Clicar nos itens para mudar a ordem.</string>
@@ -378,7 +378,7 @@
     <string name="name">Nome</string>
     <string name="date">Data</string>
     <string name="back_clears_filter_title">Voltar limpa o filtro</string>
-    <string name="back_clears_filter_summary">O botão voltar limpa o filtro ao sair</string>
+    <string name="back_clears_filter_summary">O botão voltar limpa o filtro ao sair do aplicativo.</string>
     <string name="experimental_title">Experimental</string>
     <string name="experimental_summary">Habilitar funções experimentais</string>
 
@@ -390,4 +390,8 @@
     <string name="lua_config_import">Importar</string>
     <string name="lua_config_share">Compartilhar</string>
     <string name="lua_open_config">Configuração de lua</string>
-</resources>
+<string name="keep_selection_title">Manter seleção</string>
+    <string name="keep_selection_summary">Manter tarefas selecionadas após aplicar as mudanças.</string>
+
+
+    </resources>
