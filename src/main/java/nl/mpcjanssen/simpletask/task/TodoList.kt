@@ -76,8 +76,7 @@ object TodoList {
             } else {
                 todoItems.addAll(0, items)
             }
-            updateCache()
-        })
+                    })
     }
 
     fun add(t: Task, atEnd: Boolean) {
@@ -90,8 +89,7 @@ object TodoList {
             todoItems.remove(t)
             selectedItems.remove(t)
             pendingEdits.remove(t)
-            updateCache()
-        })
+                    })
     }
 
 
@@ -156,8 +154,7 @@ object TodoList {
             items.forEach {
                 it.markIncomplete()
             }
-            updateCache()
-        })
+                    })
     }
 
     fun complete(tasks: List<Task>, keepPrio: Boolean, extraAtEnd: Boolean) {
@@ -175,16 +172,14 @@ object TodoList {
                     task.priority = Priority.NONE
                 }
             }
-            updateCache()
-        })
+                    })
     }
 
 
     fun prioritize(tasks: List<Task>, prio: Priority) {
         ActionQueue.add("Complete", Runnable {
             tasks.map { it.priority = prio }
-            updateCache()
-        })
+                    })
 
     }
 
@@ -196,8 +191,7 @@ object TodoList {
                     DateType.THRESHOLD -> it.deferThresholdDate(deferString, todayAsString)
                 }
             }
-            updateCache()
-        })
+                    })
     }
 
     var selectedTasks: List<Task> = ArrayList()
@@ -291,6 +285,7 @@ object TodoList {
 
             log.info(TAG, "Saving todo list, size ${lines.size}")
             fileStore.saveTasksToFile(todoFileName, lines, backup, eol = eol, updateVersion = true)
+            updateCache()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -303,7 +298,6 @@ object TodoList {
                 tasks.forEach {
                     todoItems.remove(it)
                 }
-                updateCache()
                 notifyChanged(todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -366,7 +360,7 @@ object TodoList {
     }
 
     fun editTasks(from: Activity, tasks: List<Task>) {
-        ActionQueue.add("Clear selection", Runnable {
+        ActionQueue.add("Edit tasks", Runnable {
             pendingEdits.addAll(tasks)
             startAddTaskActivity(from)
         })
