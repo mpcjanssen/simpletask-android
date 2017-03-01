@@ -1,6 +1,15 @@
 ﻿Changelog
 =========
 
+9.0.1
+-----
+
+- Merged: Updated Portuguese translation (luisfsr)
+- Merged: Updated German translation (Thomas Radünz)
+- Always update cache when saving todo list. Fixes #726.
+- `needRefresh` should be true if the todo.txt doesn't exist. Fixes #729.
+- Pass a pre-fill string to the AddTask activity instead of the active filter. Fixes #728.
+
 9.0.0
 -----
 
