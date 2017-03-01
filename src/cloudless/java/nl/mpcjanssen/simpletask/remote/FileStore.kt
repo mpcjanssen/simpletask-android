@@ -25,6 +25,10 @@ object FileStore : FileStoreInterface {
     }
 
     override fun needsRefresh(currentVersion: String?): Boolean {
+        val lastModified =  Config.todoFile.lastModified()
+        if (lastModified == 0L ) {
+            return true
+        }
         return currentVersion?.toLong() ?: 0 < Config.todoFile.lastModified()
     }
 
