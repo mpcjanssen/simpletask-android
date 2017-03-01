@@ -29,7 +29,7 @@ object FileStore : FileStoreInterface {
         if (lastModified == 0L ) {
             return true
         }
-        return currentVersion?.toLong() ?: 0 < Config.todoFile.lastModified()
+        return currentVersion?.toLong() ?: 0 < lastModified
     }
 
     override val isOnline = true
