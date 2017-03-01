@@ -51,12 +51,6 @@ class AddTask : ThemedActionBarActivity() {
         log.debug(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
-        // Config.loadTodoList(true)
-
-        val intent = intent
-
-        val mFilter = ActiveFilter(FilterOptions(luaModule = "addtask"))
-        mFilter.initFromIntent(intent)
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
@@ -93,37 +87,16 @@ class AddTask : ThemedActionBarActivity() {
             textInputField.setText(share_text)
         }
 
-        var iniTask: Task? = null
         setTitle(R.string.addtask)
 
         m_backup.addAll(TodoList.pendingEdits)
-        if (m_backup.isNotEmpty()) {
-            val preFillString = join(m_backup.map(Task::inFileFormat), "\n")
-            textInputField.setText(preFillString)
+        val preFillString = if (m_backup.isNotEmpty()) {
             setTitle(R.string.updatetask)
+            join(m_backup.map(Task::inFileFormat), "\n")
         } else {
-            if (textInputField.text.isEmpty()) {
-                iniTask = Task("")
-                initTaskWithFilter(iniTask, mFilter)
-            }
-
-            if (iniTask != null && iniTask.tags.size == 1) {
-                val ps = iniTask.tags
-                val project = ps.first()
-                if (project != "-") {
-                    textInputField.append(" +" + project)
-                }
-            }
-
-
-            if (iniTask != null && iniTask.lists.size == 1) {
-                val cs = iniTask.lists
-                val context = cs.first()
-                if (context != "-") {
-                    textInputField.append(" @" + context)
-                }
-            }
+            intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT) ?: ""
         }
+        textInputField.setText(preFillString)
         // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
         // like Swype where ENTER keyCode is not generated.
 

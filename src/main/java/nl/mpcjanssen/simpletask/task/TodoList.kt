@@ -220,10 +220,11 @@ object TodoList {
         })
     }
 
-    fun startAddTaskActivity(act: Activity) {
+    fun startAddTaskActivity(act: Activity, prefill: String) {
         ActionQueue.add("Start add/edit task activity", Runnable {
             log.info(TAG, "Starting addTask activity")
             val intent = Intent(act, AddTask::class.java)
+            intent.putExtra(Constants.EXTRA_PREFILL_TEXT, prefill)
             act.startActivity(intent)
         })
     }
@@ -359,10 +360,10 @@ object TodoList {
         Config.todoList = todoItems
     }
 
-    fun editTasks(from: Activity, tasks: List<Task>) {
+    fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         ActionQueue.add("Edit tasks", Runnable {
             pendingEdits.addAll(tasks)
-            startAddTaskActivity(from)
+            startAddTaskActivity(from, prefill)
         })
     }
 
