@@ -58,6 +58,8 @@ object Constants {
     const val EXTRA_WIDGET_RECONFIGURE = "widgetreconfigure"
     const val EXTRA_WIDGET_ID = "widgetid"
 
+    const val EXTRA_PREFILL_TEXT = "prefill_text"
+
     // Android OS specific constants
     const val ANDROID_EVENT = "vnd.android.cursor.item/event"
 }

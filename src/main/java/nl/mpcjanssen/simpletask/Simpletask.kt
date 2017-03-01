@@ -843,8 +843,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
-        MainFilter.saveInIntent(intent)
-        TodoList.editTasks(this,TodoList.selectedTasks)
+        val prefillLists = if (MainFilter.contexts.size == 1) "@${MainFilter.contexts[0]}" else ""
+        val prefillTags = if (MainFilter.projects.size == 1) "+${MainFilter.projects[0]}" else ""
+        val preFill = " $prefillLists $prefillTags"
+        TodoList.editTasks(this,TodoList.selectedTasks, preFill.trimEnd())
     }
 
     private fun startPreferencesActivity() {
