@@ -199,8 +199,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="append_tasks_at_end_title">Append to file</string>
     <string name="append_tasks_at_end_summary">Insert new tasks at the end of the file</string>
 
-    <string name="color_due_pref_title">Color due dates</string>
-    <string name="color_due_pref_summary">Color due and threshold dates</string>
+    <string name="color_due_pref_title">Color</string>
+    <string name="color_due_pref_summary">Due and threshold dates</string>
 
     <string name="show_hidden_title">Show hidden tasks</string>
     <string name="show_hidden_summary">Show hidden (h:1) tasks so you can edit them. After editing, uncheck this setting again.</string>
