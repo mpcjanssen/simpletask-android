@@ -21,7 +21,7 @@ public class SimpletaskDaoGenerator {
 
         addEntities(schema);
 
-        new DaoGenerator().generateAll(schema, "../src/main/java");
+        new DaoGenerator().generateAll(schema, "../app/src/main/java");
 
     }
 
