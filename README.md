@@ -1,7 +1,7 @@
 Simpletask
 ==========
 
-See [here](./src/main/assets/index.en.md) for more informations
+See [here](./src/main/assets/index.en.md) for more information.
 
 #Cloudless
 
