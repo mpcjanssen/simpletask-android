@@ -84,11 +84,11 @@ object TodoList {
     }
 
 
-    fun remove(t: Task) {
+    fun removeAll(tasks: List<Task>) {
         ActionQueue.add("Remove", Runnable {
-            todoItems.remove(t)
-            selectedItems.remove(t)
-            pendingEdits.remove(t)
+            todoItems.removeAll(tasks)
+            selectedItems.removeAll(tasks)
+            pendingEdits.removeAll(tasks)
                     })
     }
 
@@ -292,13 +292,12 @@ object TodoList {
         }
     }
 
-    fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>, eol: String) {
+    fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>?, eol: String) {
         ActionQueue.add("Archive", Runnable {
             try {
-                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
-                tasks.forEach {
-                    todoItems.remove(it)
-                }
+                val tasksToDelete = tasks ?: completedTasks
+                FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
+                removeAll(tasksToDelete)
                 notifyChanged(todoFilename, eol, null, true)
             } catch (e: IOException) {
                 e.printStackTrace()
