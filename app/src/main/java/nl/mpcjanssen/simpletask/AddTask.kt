@@ -286,9 +286,7 @@ class AddTask : ThemedActionBarActivity() {
         }
 
         // Remove remaining tasks that where selected for updateCache
-        for (t in m_backup) {
-            todoList.remove(t)
-        }
+        todoList.removeAll(m_backup)
 
 
         // Save

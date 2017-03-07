@@ -721,9 +721,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val title = getString(R.string.delete_task_title)
                     .replaceFirst(Regex("%s"), numTasks.toString())
         val delete = DialogInterface.OnClickListener { dialogInterface, i ->
-            for (t in tasks) {
-                TodoList.remove(t)
-            }
+            TodoList.removeAll(tasks)
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
             invalidateOptionsMenu()
         }
@@ -731,8 +729,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
-    private fun archiveTasks() { archiveTasks(TodoList.completedTasks, false) }
-    private fun archiveTasks(tasks: List<Task>, showDialog: Boolean = true) {
+    private fun archiveTasks() { archiveTasks(null, false) }
+    private fun archiveTasks(tasks: List<Task>?, showDialog: Boolean = true) {
         val archiveAction = {
             if (Config.todoFileName == m_app.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
@@ -742,7 +740,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         if (showDialog) {
-            val numTasks = tasks.size.toString()
+            val numTasks = (tasks ?: TodoList.completedTasks).size.toString()
             val title = getString(R.string.archive_task_title)
                          .replaceFirst(Regex("%s"), numTasks)
             val archive = DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }
@@ -792,7 +790,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> FileStore.sync()
-            R.id.archive -> archiveTasks(TodoList.completedTasks)
+            R.id.archive -> archiveTasks()
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
