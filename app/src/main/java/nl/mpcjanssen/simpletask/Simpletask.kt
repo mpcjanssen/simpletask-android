@@ -789,7 +789,10 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.context_archive -> archiveTasks(checkedTasks)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
-            R.id.sync -> FileStore.sync()
+            R.id.sync -> {
+                Config.clearCache()
+                FileStore.sync()
+            }
             R.id.archive -> archiveTasks()
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))

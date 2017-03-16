@@ -20,6 +20,7 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 object FileStore : FileStoreInterface {
+    private val mApp = TodoApplication.app
     override fun getVersion(filename: String): String {
         return File(filename).lastModified().toString()
     }
@@ -98,7 +99,7 @@ object FileStore : FileStoreInterface {
     }
 
     override fun sync() {
-
+        broadcastFileChanged(mApp.localBroadCastManager)
     }
 
     override fun writeFile(file: File, contents: String) {
@@ -118,7 +119,7 @@ object FileStore : FileStoreInterface {
     }
 
     override fun supportsSync(): Boolean {
-        return false
+        return true
     }
 
     override fun changesPending(): Boolean {

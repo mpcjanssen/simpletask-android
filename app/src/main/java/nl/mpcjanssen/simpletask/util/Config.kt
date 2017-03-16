@@ -266,6 +266,11 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
+    fun clearCache() {
+        todoList = null
+        currentVersionId = null
+    }
+
     val isAutoArchive: Boolean
         get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
 
@@ -304,7 +309,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             }
         }
         set(items) {
-            items?.let {
+            if (items == null) {
+                prefs.edit().remove(getString(R.string.cached_todo_file))
+            } else {
                 val contents = items.map { it.inFileFormat() }.joinToString("\n")
                 prefs.edit().putString(getString(R.string.cached_todo_file), contents).commit()
             }
