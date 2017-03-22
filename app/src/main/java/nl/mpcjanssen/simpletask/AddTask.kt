@@ -202,7 +202,7 @@ class AddTask : ThemedActionBarActivity() {
         when (item.itemId) {
         // Respond to the action bar's Up/Home button
             android.R.id.home -> {
-                finish()
+                finishEdit()
             }
             R.id.menu_prefill_next -> {
                 Config.isAddTagsCloneTags =  !Config.isAddTagsCloneTags
@@ -290,8 +290,12 @@ class AddTask : ThemedActionBarActivity() {
 
 
         // Save
-        TodoList.clearPendingEdits()
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
+        finishEdit()
+    }
+
+    private fun finishEdit() {
+        TodoList.clearPendingEdits()
         finish()
     }
 
