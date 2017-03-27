@@ -116,7 +116,7 @@ object TodoList {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems.forEach {
+            todoItems.toMutableList().forEach {
                 res.addAll(it.lists)
             }
             val newLists = ArrayList<String>()
@@ -132,7 +132,7 @@ object TodoList {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems.forEach {
+            todoItems.toMutableList().forEach {
                 res.addAll(it.tags)
             }
             val newTags = ArrayList<String>()
