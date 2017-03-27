@@ -4,10 +4,10 @@
     <string name="invalid_project">Nome de etiqueta inválido</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">Tarefa adicionada</string>
-    <string name="add_task_failed">Impossível adicionar a tarefa</string>
+    <string name="add_task_failed">Impossível adicionar tarefa</string>
     <string name="save_task">Salvar tarefa</string>
     <string name="update_task_failed">Impossível atualizar tarefa</string>
-    <string name="sort">Organizar</string>
+    <string name="sort">Ordenar</string>
     <string name="script">Script</string>
     <string name="filter">Filtro</string>
     <string name="main_no_items">Sem tarefas a exibir.</string>
@@ -30,8 +30,8 @@
     <string name="updatetask">Atualizar</string>
     <string name="viewtask">Ver tarefa</string>
     <string name="cleartask">Apagar tarefa</string>
-    <string name="clear_database">Arquivo vazio</string>
-    <string name="done">Completado</string>
+    <string name="clear_database">Esvaziar base de dados</string>
+    <string name="done">Completar</string>
     <string name="priority">Priorizar</string>
     <string name="select_priority">Selecionar prioridade</string>
     <string name="select_all">Selecionar tudo</string>
@@ -42,9 +42,9 @@
     <string name="update">Atualizar</string>
     <string name="delete">Apagar</string>
     <string name="defer_due">Definir prazo</string>
-    <string name="defer_threshold">Definir data limiar</string>
+    <string name="defer_threshold">Definir data limite</string>
     <string name="insert_due">Inserir prazo</string>
-    <string name="insert_threshold">Inserir data limiar</string>
+    <string name="insert_threshold">Inserir data limite</string>
     <string name="share">Compartilhar</string>
     <string name="share_database">Compartilhar base de dados</string>
     <string name="unComplete">Desfazer completar</string>
@@ -109,7 +109,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="manual_sync_pref_title">Sincronização manual</string>
     <string name="manual_sync_pref_summary">Não carregar automaticamente alterações para o Dropbox.</string>
     <string name="resume_sync_pref_title">Continuar sincronização</string>
-    <string name="resume_sync_pref_summary">Sincronizar com o Dropbox quando abrir o arquivo.</string>
+    <string name="resume_sync_pref_summary">Sincronizar com o Dropbox ao abrir o aplicativo.</string>
     <string name="font_size_delta_pref_title">Configurar o tamanho da fonte</string>
     <string name="datebar_relative_size_summary">Barra de datas proporcional</string>
     <string name="font_size_delta_pref_summary">Mudar tamanho da fonte.</string>
@@ -129,7 +129,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="back_saves_pref_title">Botão voltar</string>
     <string name="back_saves_summary">Salvar tarefas inseridas ou aplicar filtro quando voltar.</string>
 
-    <string name="show_txt_only_pref_title">Exibir somente arquivos txt</string>
+    <string name="show_txt_only_pref_title">Exibir somente arquivos .txt</string>
     <string name="show_txt_only_summary">Somente exibir arquivos .txt na caixa de seleção.</string>
 
     <string name="calendar_sync_screen_title">Notificações</string>
@@ -215,7 +215,7 @@ Para melhor disposição da tela desabilite. "</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Sincronização manual</string>
-    <string name="sync_dialog_msg">Quer baixar (download) ou carregar (upload) seu arquivo todo.txt?</string>
+    <string name="sync_dialog_msg">NÃO ESTÁ SENDO USADO EM NENHUM LUGAR DO APP???</string>
     <string name="sync_dialog_upload">Carregar para o Dropbox</string>
     <string name="sync_dialog_download">Baixar para o celular</string>
     <string name="sync_upload_message">Carregando todo.txt...</string>
@@ -223,13 +223,19 @@ Para melhor disposição da tela desabilite. "</string>
 
     <!-- sync conflict dialog -->
     <string name="sync_conflict_dialog_title">Conflito de arquivos</string>
-    <string name="sync_conflict_dialog_msg">Opa! Há uma nova versão do arquivo todo.txt no Dropbox.\nPretende         carregar o arquivo local ou o remoto?</string>
+    <string name="sync_conflict_dialog_msg">"Opa! Há uma nova versão do arquivo todo.txt no Dropbox.
+Pretende carregar o arquivo local ou o remoto?
+ "</string>
 
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Entrar no Dropbox</string>
     <string name="login_folder_screen_button">Entrar no Dropbox\n(Pasta do aplicativo)</string>
-    <string name="login_cloudless">Se não tem conta no Dropbox ou não quer nele arquivar seu arquivo de dados,         você pode baixar o Simpletask Cloudless no f-droid.\nhttps://f-droid.org/app/nl.mpcjanssen.simpletask</string>
+    <string name="login_cloudless">"Se não tem conta no Dropbox ou não quer usá-lo para armazenar sua lista de tarefas, 
+ você pode baixar o Simpletask Cloudless no f-droid.
+
+https://f-droid.org/app/nl.mpcjanssen.simpletask
+ "</string>
 
     <!-- delete -->
     <string name="delete_task_title">Apagar %s tarefa(s)</string>
