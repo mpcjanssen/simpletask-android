@@ -173,8 +173,8 @@ Kijk de +Simpletask-instellingen na en verwijder deze tekst @Phone</string>
     <string name="append_tasks_at_end_title">Bijvoegen bij bestand</string>
     <string name="append_tasks_at_end_summary">Nieuwe taken invoegen aan het eind van het bestand</string>
 
-    <string name="color_due_pref_title">Vervaldatums voorzien van kleur</string>
-    <string name="color_due_pref_summary">Verval- en drempeldatums voorzien van kleur</string>
+    <string name="color_due_pref_title">Kleur</string>
+    <string name="color_due_pref_summary">Verval- en drempeldatums</string>
 
     <string name="show_hidden_title">Verborgen taken weergeven</string>
     <string name="show_hidden_summary">Verborgen (h:1) taken weergeven zodat u ze kunt bewerken. Vink deze instelling uit als u klaar bent met bewerken.</string>

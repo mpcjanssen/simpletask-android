@@ -168,8 +168,8 @@
     <string name="append_tasks_at_end_title">ファイルに追加</string>
     <string name="append_tasks_at_end_summary">新しいタスクをファイルの最後に挿入します</string>
 
-    <string name="color_due_pref_title">期限日に色をつける</string>
-    <string name="color_due_pref_summary">期限日と期日に色をつけます</string>
+    <string name="color_due_pref_title">色</string>
+    <string name="color_due_pref_summary">期限日と期日</string>
 
     <string name="show_hidden_title">非表示のタスクを表示</string>
     <string name="show_hidden_summary">編集できるように、非表示 (h:1) タスクを表示します。編集後、この設定を再度オフにします。</string>

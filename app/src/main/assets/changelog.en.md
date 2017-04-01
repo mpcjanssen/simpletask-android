@@ -1,6 +1,22 @@
 ﻿Changelog
 =========
 
+9.0.2
+-----
+
+- Merged: Updated Japanese translation (naofum).
+- Merged: Updated Dutch translation (vistausss).
+- Shallow copy the todolist before filter or looping over it. Prevents Concurrent Modification Exceptions.
+- Merged: Fix README headers. (smichel17)
+- Clear tasks to edit when closing AddTask. Fixes #738.
+- Allow forced refresh for cloudless as workaround for #735.
+- Merged: Fix link in README. (rodrigoaguilera)
+- Fixed auto archive issues.
+- Reorganized sources to standard.
+- Merged: clean up phrasing of Color preference (smichel)
+- Merged: Add buttons to get the app (Poussinou)
+
+
 9.0.1
 -----
 
