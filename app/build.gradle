@@ -28,8 +28,8 @@ android {
     }
 
     defaultConfig {
-        versionName '9.0.1'
-        versionCode 3055
+        versionName '9.0.2'
+        versionCode 3056
 	minSdkVersion 14
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
