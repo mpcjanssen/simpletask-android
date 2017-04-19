@@ -1,2 +1,115 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Nom de liste invalide</string>
+    <string name="invalid_project">Nom de balise invalide</string>
+    <string name="app_label">Simpletask</string>
+    <string name="added_task">Tâche ajoutée</string>
+    <string name="add_task_failed">Impossible d\'ajouter la tâche</string>
+    <string name="save_task">Enregistrez la tâche</string>
+    <string name="update_task_failed">Impossible de mettre à jour la tâche</string>
+    <string name="sort">Trier</string>
+    <string name="script">Script</string>
+    <string name="filter">Filtre</string>
+    <string name="main_no_items">Aucune tâche à afficher.</string>
+    <string name="set_preferences">Paramètres</string>
+    <string name="preferences">Paramètres</string>
+    <string name="archive">Archiver</string>
+    <string name="help">Aide</string>
+    <string name="history">Historique</string>
+    <string name="debug_info">Informations de débogage</string>
+    <string name="log">Journal</string>
+    <string name="next">Suivant</string>
+    <string name="prev">Précédent</string>
+    <string name="open_file">Ouvrir le fichier todo</string>
+    <string name="sync">Actualiser</string>
+    <string name="changelist">Sélectionner une liste</string>
+    <string name="search">Recherche</string>
+    <string name="add">Ajouter</string>
+    <string name="task">Tâche</string>
+    <string name="addtask">Ajouter une tâche</string>
+    <string name="updatetask">Mettre à jour</string>
+    <string name="viewtask">Afficher la tâche</string>
+    <string name="cleartask">Effacer la tâche</string>
+    <string name="clear_database">Base de données vide</string>
+    <string name="done">Terminé</string>
+    <string name="priority">Prioriser</string>
+    <string name="select_priority">Choisir la priorité</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="add_list_or_tag">Ajouter des balises et des listes</string>
+    <string name="update_lists">Mettre à jour les listes</string>
+    <string name="update_tags">Mettre à jour les balises</string>
+    <string name="remove_list_or_tag">Supprimer les listes et les balises</string>
+    <string name="update">Mettre à jour</string>
+    <string name="delete">Supprimer</string>
+    <string name="defer_due">Définir l\'échéance</string>
+    <string name="defer_threshold">Définir la date seuil</string>
+    <string name="insert_due">Insérer date d’échéance</string>
+    <string name="insert_threshold">Insérer la date seuil</string>
+    <string name="share">Partager</string>
+    <string name="share_database">Partager la base de données</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="clear_filter">Effacer le filtre</string>
+    <string name="write_failed">Échec d’écriture du fichier ! Vos modifications n’ont PAS été enregistrées.</string>
+
+    <string name="tasktexthint">\@Discuter le problème +Paris avec +Hector @Troie
+Dire à +Hector d\'être moins casse-pieds @Troie
+Consulter les paramètres +Simpletask pour enlever ce texte @Téléphone</string>
+
+    <string name="filter_name_empty">Aucun nom spécifié, pas d\'ajout de filtre</string>
+    <string name="add_task_help">Ajouter ou mettre à jour une tâche dans la liste des tâches. Lors de l\'ajout de tâches, chaque ligne est une tâche séparée pour un ajout rapide.
+
+<b>Priorité</b>
+
+commencer la ligne avec (.), par exemple (A)
+
+<b>Balises</b>
+commencez avec un signe +, par exemple +Cuisine
+
+<b>Listes</b>
+commencez avec un signe @, par exemple @maison
+
+Une tâche peut comprendre un nombre quelconque de balises, ou être dans plusieurs listes.
+ </string>
+
+    <string name="preference_appearance">Apparence</string>
+    <string name="preference_interface">Interface</string>
+    <string name="preference_widget">Widget</string>
+    <string name="preference_other">Autre</string>
+
+    <string name="ARCHIVE_settings_header">Archiver</string>
+    <string name="widget_name_empty">Aucun nom de widget spécifié, widget non créé</string>
+    <string name="ARCHIVE_settings_summary">Paramètres d’archivage des tâches terminées en done.txt</string>
+    <string name="auto_archive_pref_title">Archivage automatique</string>
+    <string name="auto_archive_pref_summary">Archivage des tâches dès leur achèvement.</string>
+    <string name="archive_now_pref_title">Archiver maintenant</string>
+    <string name="archive_now_pref_summary">Déplacer les tâches terminées de todo.txt à done.txt.</string>
+    <string name="dropbox_logout_pref_title">Fermer session</string>
+    <string name="dropbox_logout_pref_summary">Fermer la session Dropbox.</string>
+    <string name="TODOTXTPATH_title">Emplacement de l\'archive</string>
+    <string name="TODOTXTPATH_summary">Dossier Dropbox où est stocké todo.txt .</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Paramètres de synchronisation Dropbox</string>
+
+    <string name="todotxt_features_settings_header">Fonctionnalités</string>
+    <string name="todotxt_features_settings_summary">Activer ou désactiver des fonctionnalités</string>
+
+    <string name="todotxt_configuration_settings_header">Configuration</string>
+    <string name="todotxt_configuration_settings_summary">Configurer le comportement de l’application</string>
+
+    <string name="todotxt_creation_settings_header">Création de tâche</string>
+
+    <string name="todotxt_ui_settings_header">Fonctionnalités</string>
+    <string name="todotxt_ui_settings_summary">Déterminer ce qui est affiché</string>
+    <string name="todotxt_behavior_settings_header">Comportement</string>
+    <string name="todotxt_settings_summary">Paramètres globaux de l\'application</string>
+    <string name="sort_complete_last_pref_title">Afficher tâches terminées en dernier</string>
+    <string name="sort_complete_last_pref_summary">Toujours afficher les tâches terminées en bas de la liste</string>
+    <string name="keep_prio_header">Conserver la priorité dans les tâches terminées</string>
+    <string name="keep_prio_summary">Todo.txt supprime la priorité lors de l\'achèvement de la tâche</string>
+    <string name="prepend_date_pref_title">Dater les nouvelles tâches</string>
+    <string name="prepend_date_pref_summary">Ajouter automatiquement la date de création</string>
+    <string name="line_breaks_pref_title">Sauts de ligne à la Windows</string>
+    <string name="line_breaks_pref_summary">Utilisez des sauts de ligne à la Windows</string>
+    <string name="recur_from_original_date_pref_title">Répéter les tâches avec les dates originales</string>
+    </resources>
