@@ -1,2 +1,310 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Неверное название списка</string>
+    <string name="invalid_project">Неверное название метки</string>
+    <string name="app_label">Simpletask</string>
+    <string name="added_task">Добавлена задача</string>
+    <string name="add_task_failed">Не могу добавить задачу</string>
+    <string name="save_task">Сохранить задачу</string>
+    <string name="update_task_failed">Невозможно обновить задачу</string>
+    <string name="sort">Сортировка</string>
+    <string name="script">Сценарий</string>
+    <string name="filter">Фильтр</string>
+    <string name="main_no_items">Нет задач для отображения.</string>
+    <string name="set_preferences">Настройка</string>
+    <string name="preferences">Настройка</string>
+    <string name="archive">Архив</string>
+    <string name="help">Помощь</string>
+    <string name="history">История</string>
+    <string name="debug_info">Информация для отладки</string>
+    <string name="log">Журнал</string>
+    <string name="next">Следующая</string>
+    <string name="prev">Предыдущая</string>
+    <string name="open_file">Открыть todo-файл</string>
+    <string name="sync">Обновить</string>
+    <string name="changelist">Выбрать список</string>
+    <string name="search">Поиск</string>
+    <string name="add">Добавить</string>
+    <string name="task">Задача</string>
+    <string name="addtask">Добавить задачу</string>
+    <string name="updatetask">Обновить задачу</string>
+    <string name="viewtask">Посмотреть</string>
+    <string name="cleartask">Очистить задачу</string>
+    <string name="clear_database">Очистить БД</string>
+    <string name="done">Выполнено</string>
+    <string name="priority">Приоритет</string>
+    <string name="select_priority">Выбрать приоритет</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="add_list_or_tag">Добавить списки и метки</string>
+    <string name="update_lists">Обновить списки</string>
+    <string name="update_tags">Обновить метки</string>
+    <string name="remove_list_or_tag">Убрать списки и метки</string>
+    <string name="update">Обновить</string>
+    <string name="delete">Удалить</string>
+    <string name="defer_due">Установить дату</string>
+    <string name="defer_threshold">Установить дату ожидания</string>
+    <string name="insert_due">Вставить дату</string>
+    <string name="insert_threshold">Вставить дату ожидания</string>
+    <string name="share">Поделиться</string>
+    <string name="share_database">Поделиться БД</string>
+    <string name="unComplete">Отменить завершения</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отменить</string>
+    <string name="clear_filter">Очистить фильтр</string>
+    <string name="write_failed">Ошибка записи файла! Ваши изменения не сохранены.</string>
+
+    <string name="filter_name_empty">Имя не указано, фильтр не добавлен</string>
+    <string name="widget_name_empty">Имя не указано, виджет не добавлен</string>
+    <string name="preference_appearance">Внешний вид</string>
+    <string name="preference_interface">Интерфейс</string>
+    <string name="preference_widget">Виджет</string>
+    <string name="preference_other">Другое</string>
+
+    <string name="ARCHIVE_settings_header">Архивирование</string>
+    <string name="ARCHIVE_settings_summary">Настройка архивирования выполненных задач в done.txt</string>
+    <string name="auto_archive_pref_title">Автоархивирование</string>
+    <string name="auto_archive_pref_summary">Архивировать задачи немедленно после завершения.</string>
+    <string name="archive_now_pref_title">Архивировать сейчас</string>
+    <string name="archive_now_pref_summary">Переместить завершены задачи по todo.txt к done.txt.</string>
+    <string name="dropbox_logout_pref_title">Выйти</string>
+    <string name="dropbox_logout_pref_summary">Выйти из Dropbox.</string>
+    <string name="TODOTXTPATH_title">Расположение файла</string>
+    <string name="TODOTXTPATH_summary">Папка Dropbox, где размещены todo.txt.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Настройка синхронизации через Dropbox</string>
+
+    <string name="todotxt_features_settings_header">Возможности</string>
+    <string name="todotxt_features_settings_summary">Включить или выключить возможности</string>
+
+    <string name="todotxt_configuration_settings_header">Настройка</string>
+    <string name="todotxt_configuration_settings_summary">Настроить поведение приложения</string>
+
+    <string name="todotxt_creation_settings_header">Создание задачи</string>
+
+    <string name="todotxt_ui_settings_header">Возможности</string>
+    <string name="todotxt_ui_settings_summary">Контроль отображаемых данных</string>
+    <string name="todotxt_behavior_settings_header">Поведение</string>
+    <string name="todotxt_settings_summary">Расширенные настройки</string>
+    <string name="sort_complete_last_pref_summary">Всегда показывать завершенные задачи вверху списка</string>
+    <string name="keep_prio_header">Сохранять приоритет в завершенных задачах</string>
+    <string name="keep_prio_summary">Todo.txt удаляет приоритет при завершении</string>
+    <string name="prepend_date_pref_title">Даты новых задач</string>
+    <string name="prepend_date_pref_summary">Автоматически добавлять дату создания</string>
+    <string name="line_breaks_pref_title">Разрывы строк в стиле Windows</string>
+    <string name="line_breaks_pref_summary">Использовать разрывы строк как в. Windows</string>
+    <string name="recur_from_original_date_pref_title">Повторять задачу используя исходную дату</string>
+    <string name="swipe_complete_pref_title">Смахнуть для выполнения</string>
+    <string name="swipe_complete_pref_summary">Смахните задачу чтобы выполнить её</string>
+    <string name="manual_sync_pref_title">Ручная синхронизация</string>
+    <string name="manual_sync_pref_summary">Не будет автоматически загружать изменения на Dropbox</string>
+    <string name="resume_sync_pref_title">Возобновить синхронизацию</string>
+    <string name="resume_sync_pref_summary">Синхронизировать с Dropbox при открытии</string>
+    <string name="font_size_delta_pref_title">Пользовательский размер шрифта</string>
+    <string name="font_size_delta_pref_summary">Изменить размер шрифта.</string>
+    <string name="theme_pref_title">Тема</string>
+    <string name="theme_pref_summary">Изменить тему используемую приложением.</string>
+
+    <string name="back_saves_pref_title">Кнопка назад</string>
+    <string name="show_txt_only_pref_title">Показывать только txt файлы</string>
+    <string name="calendar_sync_screen_title">Уведомления</string>
+    <string name="calendar_sync_screen_summary">Напоминания календаря (экспериментальное)</string>
+    <string name="calendar_sync_dues_title">Напоминание о сроках выполнения</string>
+    <string name="calendar_sync_thresholds_title">Напоминание о крайнем сроке</string>
+    <string name="calendar_reminder_time_title">Время напоминания</string>
+    <string name="calendar_reminder_time_summary">Время суток для напоминания</string>
+
+    <string name="widget_theme_pref_title">Тема</string>
+    <string name="widget_theme_pref_summary">Изменить тему используемую виджетами</string>
+
+    <string name="widget_header_transparency_title">Прозрачность заголовка</string>
+    <string name="widget_background_transparency_title">Прозрачность фона</string>
+
+    <string name="widget_extended_pref_title">Показывать панель даты</string>
+    <string name="widget_extended_pref_summary">Отображать даты на отдельной строке</string>
+
+    <string name="taskview_extended_pref_title">Показывать панель даты</string>
+    <string name="taskview_extended_pref_summary">Отображать даты на отдельной строке</string>
+
+    <string name="append_tasks_at_end_summary">Добавлять новые задачи в конец файла</string>
+
+    <string name="color_due_pref_title">Цвет</string>
+    <string name="show_edittext_hint_title">Показывать подсказки</string>
+    <string name="show_fast_scroll_title">Быстрый скроллинг</string>
+    <string name="show_calendarview_title">Использовать календарь для ввода даты</string>
+
+    <string name="show_empty_lists_summary">Показывать заголовок даже если задачи под ним скрыты</string>
+
+    <string name="show_empty_lists_title">Показывать заголовки пустых списков</string>
+    <string name="show_edittext_hint_summary">Показывать подсказки при добавлении задач. Отключите если это отвлекает.</string>
+
+    <string name="visit_website_title">Помощь</string>
+    <string name="visit_website_summary">Посетить сайт Simpletask</string>
+    <string name="visit_tracker_title">Предложить улучшения или сообщить об ошибке</string>
+    <string name="preference_title_debug_info">Посмотреть отладочную информацию</string>
+    <string name="preference_summary_debug_info">Посмотреть и поделиться версией приложения и журналом событий.</string>
+
+    <string name="sync_dialog_title">Ручная синхронизация</string>
+    <string name="sync_dialog_msg">Вы хотите загрузить или скачать ваш todo.txt файл?</string>
+    <string name="sync_dialog_upload">Загрузить на Dropbox</string>
+    <string name="sync_dialog_download">Скачать на устройство</string>
+    <string name="sync_upload_message">Загрузка Todo.txt…</string>
+    <string name="sync_download_message">Скачивание Todo.txt…</string>
+
+    <string name="login_screen_button">Авторизоваться в Dropbox</string>
+    <string name="login_folder_screen_button">Авторизоваться в дропбокс
+(доступ к папке приложения)</string>
+    <string name="search_hint">Поиск...</string>
+
+    <string name="by_project">По метке</string>
+    <string name="by_prio">По приоритету</string>
+    <string name="by_context">По списку</string>
+    <string name="alphabetical">По алфавиту</string>
+    <string name="by_project_todotxt">По проекту</string>
+    <string name="by_context_todotxt">По контексту</string>
+    <string name="by_creation_date">По дате создания</string>
+    <string name="export_filter">Экспорт</string>
+    <string name="import_filter">Импорт</string>
+    <string name="rename_filter">Переименовать</string>
+    <string name="update_filter">Обновить</string>
+    <string name="create_widget">Создать виджет</string>
+    <string name="config_widget">Настройка виджета</string>
+    <string name="add_task_help_btn">Помощь</string>
+    <string name="priority_prompt">Приоритет</string>
+    <string name="project_prompt">Метка</string>
+    <string name="context_prompt">Список</string>
+    <string name="priority_short_prompt">Приор-т</string>
+    <string name="project_prompt_todotxt">Проект</string>
+    <string name="context_prompt_todotxt">Контекст</string>
+    <string name="priority_format">(приор-т)</string>
+
+    <string name="separator">Разделитель</string>
+
+    <string name="all">все</string>
+
+    <string name="dates_days_ago"/>
+    <string name="dates_one_day_ago">1 день назад</string>
+    <string name="dates_years_ago"/>
+    <string name="dates_one_year_ago">год назад</string>
+    <string name="dates_tomorrow">завтра</string>
+
+    <string name="date_pick">выбрать дату</string>
+    <string name="title_activity_filter">Фильтр</string>
+    <string name="no_context">Входящие</string>
+    <string name="no_project">Без метки</string>
+    <string name="no_creation_date">Без даты создания</string>
+    <string name="add_to_calendar">Добавить напоминание</string>
+    <string name="version_copied">Номер версии скопирован в буфер обмена</string>
+
+    <string name="task_added">Задача добавлена в Simpletask</string>
+    <string name="pull_to_refresh_refreshing_label">Синхронизация с Dropbox…</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="click_to_copy">Нажмите чтобы скопировать в буфер обмена.</string>
+
+    <string name="action_settings">Настройки</string>
+
+    <string name="name">Имя</string>
+    <string name="date">Дата</string>
+    <string name="experimental_title">Экспериментальное</string>
+    <string name="experimental_summary">Включить экспериментальные функции</string>
+
+    <string name="lua_error">Ошибка Lua</string>
+    <string name="lua_config_screen">Конфигурация Lua</string>
+    <string name="lua_run">Запуск</string>
+    <string name="lua_config_import_export">Импорт/экспорт конфигурации Lua</string>
+    <string name="lua_config_export">Сохранить и экспортировать</string>
+    <string name="lua_config_import">Импорт</string>
+    <string name="lua_config_share">Поделиться</string>
+    <string name="lua_open_config">Конфигурации Lua</string>
+<string name="tasktexthint">\@Обсудить +Омск с +Геннадий @Тополев
+Сказать +Геннадий, чтобы не вёл себя как зануда @Тополев
+Проверьте настройки +Simpletask, чтобы удалить этот текст с @Телефона</string>
+
+    <string name="add_task_help">Добавьте или обновите задачу в списке. Если добавляете задачи, каждая строка это отдельная задача.
+
+ <b>Приоритет</b>
+
+ Начните новую строку с (.), например (A)
+
+ <b>метки</b>
+ начните со знака +, например +Кухня
+
+ <b>списки</b>
+ начните со знака @, например @дом
+
+ Задача может содержать любое количество меток или принадлежать когда множеству списков.
+ </string>
+
+    <string name="recur_from_original_date_pref_summary">Увеличение первоначальной даты задач при создании повторяющейся задачи.
+Снимите галочку, чтобы установить новые даты относительно текущей.</string>
+    <string name="datebar_relative_size_summary">Размер строки с датами</string>
+    <string name="share_task_append_text_title">Отметка фоновых задач</string>
+    <string name="share_task_append_text_summary">Добавьте \"%s\" для добавления фоновой задачи.</string>
+
+    <string name="local_file_root_title">Корневая папка</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="menu_capitalize_tasks">Прописные</string>
+    <string name="back_saves_summary">Сохранить введенные задачи или применить фильтр при нажатии назад.</string>
+
+    <string name="show_txt_only_summary">Показывать только .txt файлы при выборе файла.</string>
+
+    <string name="append_tasks_at_end_title">Добавить в файл</string>
+    <string name="color_due_pref_summary">Даты выполнения и дедлайна</string>
+
+    <string name="show_hidden_title">Показывать скрытые задачи</string>
+    <string name="show_hidden_summary">Показать скрытые (h:1) задачи, чтобы отредактировать их. После редактирования, отключите эту опцию.</string>
+
+    <string name="split_actionbar_pref_title">Использовать разделение панели действий</string>
+    <string name="show_complete_checkbox_title">Показать флажки завершения</string>
+    <string name="show_complete_checkbox_summary">Показывать флажки перед задачами для выполнения и отмены.</string>
+
+    <string name="show_confirmation_dialogs_title">Диалоговые окна подтверждения</string>
+    <string name="show_confirmation_dialogs_summary">Запрос перед архивированием или удалением задач</string>
+
+    <string name="show_todo_path_title">Показать путь к todo файлу</string>
+    <string name="show_todo_path_summary">Каталоги сокращаются до первой буквы</string>
+
+    <string name="show_fast_scroll_summary">Использовать быструю прокрутку, если список становится длиннее</string>
+
+    <string name="sort_case_sensitive_title">Сортировать с учётом регистра букв</string>
+    <string name="sort_case_sensitive_summary">Соблюдать регистр при сортировке списков, меток и сохранённых фильтров.</string>
+
+    <string name="use_create_backup_summary">При сортировке использовать дату создания в качестве даты дедлайна если дата дедлайна не указана</string>
+
+    <string name="todotxt_terms_summary">Контекст и проект вместо списка и метки</string>
+
+    <string name="about_settings_header">О программе</string>
+    <string name="about_settings_summary">Сведения о приложении</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+
+    <string name="visit_tracker_summary">Запросить новую функцию, улучшение или сообщить о проблеме.</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="sync_conflict_dialog_title">Конфликт файлов</string>
+    <string name="sync_conflict_dialog_msg">"Ой! Существует более новая версия файла todo.txt в Dropbox.
+Вы хотите загрузить ваши локальные изменения, или загрузить версию Dropbox?
+ "</string>
+
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_cloudless">"Если у вас нет учетной записи Dropbox или не хотите использовать его, для хранения списка задач
+Вы можете скачать Simpletask Cloudless из Play Store.
+
+http://goo.gl/X1C55P
+ "</string>
+
+    <string name="delete_task_title">Удалить %s задачи</string>
+    <string name="archive_task_title">Архивировать %s задачи</string>
+    <string name="delete_task_message">Это не может быть отменено. Вы уверены?</string>
+    <string name="logout_message">Пожалуйста, убедитесь, что вы синхронизировали все изменения с Dropbox или
+другим списком задач, если не подключали Dropbox.
+
+Любые изменения, которые не были синхронизированы будут утеряны после выхода.</string>
+     <string name="dropbox_open">Пожалуйста, убедитесь, что вы синхронизировали все изменения с Dropbox или
+другим списком задач, если не подключали Dropbox.
+
+Любые изменения, которые не были синхронизированы будут утеряны после открытия другого файла.</string>
+    <string name="delete_task_confirm">Удалить</string>
+
+    <string name="clone_tags">Предварительно заполнить</string>
+    <string name="word_wrap">Перенос слов</string>
+    </resources>
