@@ -112,4 +112,28 @@ Une tâche peut comprendre un nombre quelconque de balises, ou être dans plusie
     <string name="line_breaks_pref_title">Sauts de ligne à la Windows</string>
     <string name="line_breaks_pref_summary">Utilisez des sauts de ligne à la Windows</string>
     <string name="recur_from_original_date_pref_title">Répéter les tâches avec les dates originales</string>
+    <string name="unComplete">Annuler terminé</string>
+    <string name="recur_from_original_date_pref_summary">Augmenter les dates originales dans la tâche lors de la création de la tâche récurrente.
+Décochez cette option pour définir les nouvelles dates par rapport à aujourd\'hui.</string>
+    <string name="swipe_complete_pref_title">Glisser pour terminer</string>
+    <string name="swipe_complete_pref_summary">Glisser sur une tâche pour la terminer.</string>
+    <string name="manual_sync_pref_title">Synchronisation manuelle</string>
+    <string name="manual_sync_pref_summary">Ne chargez pas automatiquement toutes les modifications vers Dropbox.</string>
+    <string name="resume_sync_pref_title">Reprendre la synchronisation</string>
+    <string name="resume_sync_pref_summary">Synchroniser avec dropbox lors de l’ouverture des app.</string>
+    <string name="font_size_delta_pref_title">Taille de police personnalisée</string>
+    <string name="datebar_relative_size_summary">Taille relative de la barre de dates</string>
+    <string name="font_size_delta_pref_summary">Changer la taille de la police.</string>
+    <string name="theme_pref_title">Thème</string>
+    <string name="theme_pref_summary">Changer le thème utilisé pour l’application.</string>
+
+    <string name="share_task_show_edit_pref_title">Modifier les tâches partagées</string>
+    <string name="share_task_show_edit_summary">Modifier les tâches partagées vers Simpletask avant de les enregistrer</string>
+
+    <string name="share_task_append_text_title">Texte d\'arrière-plan</string>
+    <string name="share_task_append_text_summary">Ajouter « %s » aux tâches ajoutées en arrière-plan.</string>
+
+    <string name="local_file_root_title">Dossier racine :</string>
+    <string name="local_file_root_summary">%s</string>
+
     </resources>
