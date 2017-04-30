@@ -27,6 +27,7 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
@@ -41,6 +42,7 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
@@ -1422,7 +1424,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                             } else if (url.startsWith("root://")) {
                                 val rootFolder = Config.localFileRoot
                                 val file = File(rootFolder, url.substring(7))
-                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
+                                actionIntent = Intent(Intent.ACTION_VIEW)
+                                val contentUri = FileProvider.getUriForFile(application, application.applicationContext.packageName + ".fileprovider", file)
+                                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                                actionIntent.setDataAndType(contentUri, mime)
                                 startActivity(actionIntent)
                             } else {
                                 try {
