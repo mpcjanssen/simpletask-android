@@ -16,6 +16,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.Color
@@ -1425,9 +1426,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                                 val rootFolder = Config.localFileRoot
                                 val file = File(rootFolder, url.substring(7))
                                 actionIntent = Intent(Intent.ACTION_VIEW)
-                                val contentUri = FileProvider.getUriForFile(application, application.applicationContext.packageName + ".fileprovider", file)
+                                val contentUri = Uri.fromFile(file)
                                 val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
                                 actionIntent.setDataAndType(contentUri, mime)
+                                actionIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
                                 startActivity(actionIntent)
                             } else {
                                 try {
