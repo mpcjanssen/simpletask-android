@@ -37,6 +37,7 @@ android {
         versionCode 3056
 	minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
+        //noinspection OldTargetApi
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -77,6 +78,10 @@ android {
         preDexLibraries = true
         javaMaxHeapSize "3g"
         dexInProcess = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
