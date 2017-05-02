@@ -48,6 +48,7 @@ import kotlinx.android.synthetic.main.list_header.view.*
 import kotlinx.android.synthetic.main.list_item.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import kotlinx.android.synthetic.main.main.*
+import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -1568,21 +1569,17 @@ class Simpletask : ThemedNoActionBarActivity() {
         sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
         sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
 
-        val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
-        val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
-        rcv.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(this)
-        rcv.layoutManager = layoutManager
-
-
-        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
-        rcv.adapter = itemAdapter
-
-        val ed = view.findViewById(R.id.editText) as EditText
-
+        val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
         val builder = AlertDialog.Builder(this)
         builder.setView(view)
 
+        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
+        val rcv = view.current_items_list
+        rcv.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(this)
+        rcv.layoutManager = layoutManager
+        rcv.adapter = itemAdapter
+        val ed = view.new_item_text
         builder.setPositiveButton(R.string.ok) { _, _ ->
             val updatedValues = itemAdapter.currentState
             for (i in 0..updatedValues.lastIndex) {
@@ -1611,6 +1608,9 @@ class Simpletask : ThemedNoActionBarActivity() {
         builder.setNegativeButton(R.string.cancel) { _, _ -> }
         // Create the AlertDialog
         val dialog = builder.create()
+
+
+
         dialog.setTitle(title)
         dialog.show()
     }
