@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
@@ -20,6 +20,10 @@ apply plugin: 'kotlin-android-extensions'
 android {
     buildToolsVersion "25.0.2"
     compileSdkVersion 25
+
+		lintOptions {
+				disable 'InvalidPackage', 'MissingTranslation'
+		}
 
     //noinspection GroovyMissingReturnStatement
     packagingOptions {
