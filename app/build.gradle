@@ -36,6 +36,7 @@ android {
         versionName '9.0.2'
         versionCode 3056
 	minSdkVersion 14
+        // target API 23 because anything newer breaks root:// links
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -120,7 +121,7 @@ if (project.hasProperty('storeFile') &&
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+    gradleVersion = '3.5'
 }
 
 allprojects {
