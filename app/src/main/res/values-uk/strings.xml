@@ -52,7 +52,8 @@
     <string name="clear_filter">Очистити фільтр</string>
     <string name="write_failed">Помилка запису файлу! Ваші зміни НЕ ЗБЕРЕЖЕНО.</string>
 
-    <string name="tasktexthint"/>
+    <string name="tasktexthint">\@Написати листа +Султан
+\nПереглянути налаштування +Simpletask щоби це прибрати</string>
 
     <string name="filter_name_empty">Ім\'я не вказано, фільтр не додано</string>
     <string name="widget_name_empty">Ім\'я віджету не вказано, тому його не додано</string>
@@ -85,7 +86,7 @@
     <string name="TODOTXTPATH_title">Розташування файлу</string>
     <string name="TODOTXTPATH_summary">Тека Dropbox, де розміщено todo.txt.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
-    <string name="DROPBOX_settings_header"/>
+    <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Налаштування синхронізації через Dropbox</string>
 
     <string name="todotxt_features_settings_header">Можливості</string>
@@ -99,4 +100,82 @@
     <string name="todotxt_ui_settings_header">Можливості</string>
     <string name="todotxt_ui_settings_summary">Визначення того, що відображатиметься</string>
     <string name="todotxt_behavior_settings_header">Поведінка</string>
+    <string name="todotxt_settings_summary">Налаштування всього додатку</string>
+    <string name="sort_complete_last_pref_title">Показувати завершені в кінці</string>
+    <string name="sort_complete_last_pref_summary">Завжди показувати завершені завдання в кінці списку</string>
+    <string name="keep_prio_header">Зберігати пріоритет в завершених задачах</string>
+    <string name="keep_prio_summary">Todo.txt прибирає пріоритет при завершенні задачі</string>
+    <string name="prepend_date_pref_title">Датувати нові завдання</string>
+    <string name="prepend_date_pref_summary">Автоматично додавати дату створення</string>
+    <string name="line_breaks_pref_title">Дружні до Windows кінці рядків</string>
+    <string name="line_breaks_pref_summary">Використовувати кінці рядків, які прийняті в ОС Windows</string>
+    <string name="recur_from_original_date_pref_title">Повторювати з оригінальними датами</string>
+    <string name="recur_from_original_date_pref_summary">Оновлювати оригінальні дати в завданні при створенні повтору.
+\nЗніміть позначку щоби встановлювати дати відносно сьогоднішнього дня.</string>
+    <string name="swipe_complete_pref_title">Провести для завершення</string>
+    <string name="swipe_complete_pref_summary">Провести по завданню для позначення його виконаним.</string>
+    <string name="manual_sync_pref_title">Ручна синхронізація</string>
+    <string name="manual_sync_pref_summary">Непотрібно автоматично записувати кожну зміну в Dropbox.</string>
+    <string name="resume_sync_pref_title">Відновити синхронізацію</string>
+    <string name="resume_sync_pref_summary">Синхронізуватися з Dropbox при запуску додатку.</string>
+    <string name="font_size_delta_pref_title">Розмір шрифту</string>
+    <string name="datebar_relative_size_summary">Висота рядку дати</string>
+    <string name="font_size_delta_pref_summary">Змінити розмір шрифту.</string>
+    <string name="theme_pref_title">Оформлення</string>
+    <string name="theme_pref_summary">Змінити оформлення додатку.</string>
+
+    <string name="share_task_show_edit_pref_title">Правити надані завдання</string>
+    <string name="share_task_show_edit_summary">Правити надіслані до Simpletask завдання перед їх збереженням</string>
+
+    <string name="share_task_append_text_title">Текст до доданих у тлі завдань</string>
+    <string name="share_task_append_text_summary">Дописувати \"%s\" до завдань доданих на тлі.</string>
+
+    <string name="local_file_root_title">Коренева тека</string>
+    <string name="menu_capitalize_tasks">З великої літери</string>
+    <string name="back_saves_pref_title">Кнопка Назад</string>
+    <string name="back_saves_summary">Зберігати введене завдання або застосовувати фільтр при натисканні \"Назад\".</string>
+
+    <string name="show_txt_only_pref_title">Показувати лише текстові файли</string>
+    <string name="show_txt_only_summary">Показувати лише файли з розширенням .txt при виборі файлу.</string>
+
+    <string name="calendar_sync_screen_title">Повідомлення</string>
+    <string name="calendar_sync_screen_summary">Нагадування в календарі (експериментально)</string>
+    <string name="calendar_sync_dues_title">Нагадування про строки</string>
+    <string name="calendar_sync_thresholds_title">Нагадування про порогові дати</string>
+    <string name="calendar_reminder_days_title">Днів наперед</string>
+    <string name="calendar_reminder_days_summary">Як рано встановлювати нагадування</string>
+    <string name="calendar_reminder_time_title">Час нагадування</string>
+    <string name="calendar_reminder_time_summary">Час доби для встановлення нагадування</string>
+
+    <string name="drawer_fixed_landscape_title">Відкривати шухляди в альбомній орієнтації</string>
+    <string name="drawer_fixed_landscape_summary">Завжди показувати шухляди в альбомній орієнтації.</string>
+
+    <string name="widget_theme_pref_title">Оформлення</string>
+    <string name="widget_theme_pref_summary">Змінити оформлення віджетів.</string>
+
+    <string name="task_text_ellipsizing_pref_title">Скорочення тексту</string>
+    <string name="task_text_ellipsizing_pref_summary">Скорочувати текст завдання в основному вікні якщо він більший від 2-х рядків.</string>
+
+    <string name="widget_header_transparency_title">Прозорість заголовку</string>
+    <string name="widget_background_transparency_title">Прозорість тла</string>
+
+    <string name="widget_extended_pref_title">Показувати рядок дати</string>
+    <string name="widget_extended_pref_summary">Показувати дати на окремому рядку</string>
+
+    <string name="taskview_extended_pref_title">Показувати рядок дати</string>
+    <string name="taskview_extended_pref_summary">Показувати дати на окремому рядку</string>
+
+    <string name="append_tasks_at_end_title">Дописувати до файлу</string>
+    <string name="append_tasks_at_end_summary">Додавати нові завдання у кінець файлу</string>
+
+    <string name="color_due_pref_title">Колір</string>
+    <string name="color_due_pref_summary">Строки та порогові дати</string>
+
+    <string name="show_hidden_title">Показувати приховані задачі</string>
+    <string name="show_hidden_summary">"Показувати приховані (h:1)  завдання для їх правки. Після редагування знову приберіть цю відмітку."</string>
+
+    <string name="show_empty_lists_title">Показувати порожні заголовки</string>
+    <string name="show_empty_lists_summary">Показувати заголовок навіть якщо всі завдання під ним приховані.</string>
+
+    <string name="split_actionbar_pref_title">Використовувати розділений рядок дій</string>
     </resources>
