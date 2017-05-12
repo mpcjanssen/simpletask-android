@@ -208,5 +208,6 @@ You should have received a copy of the GNU General Public License along with Sim
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
             android:resource="@dimen/app_minimumsize_h"
             />
+
     </application>
 </manifest>
