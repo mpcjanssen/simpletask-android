@@ -16,6 +16,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.Color
@@ -25,13 +26,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -41,9 +40,15 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
+import kotlinx.android.synthetic.main.list_header.view.*
+import kotlinx.android.synthetic.main.list_item.*
+import kotlinx.android.synthetic.main.list_item.view.*
+import kotlinx.android.synthetic.main.main.*
+import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -77,10 +82,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     private val NAV_DRAWER = GravityCompat.END
     private val FILTER_DRAWER = GravityCompat.START
 
-    // Drawer vars
-    private var m_filterDrawerList: ListView? = null
-    private var m_navDrawerList: ListView? = null
-    private var m_drawerLayout: DrawerLayout? = null
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
     internal var m_scrollPosition = 0
@@ -146,13 +147,11 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
 
-        val actionToolBar = findViewById(R.id.main_actionbar) as Toolbar
-        setSupportActionBar(actionToolBar)
+        setSupportActionBar(main_actionbar)
 
         // Replace drawables if the theme is dark
         if (Config.isDarkTheme) {
-            val actionBarClear = findViewById(R.id.actionbar_clear) as ImageView?
-            actionBarClear?.setImageResource(R.drawable.ic_close_white_24dp)
+            actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE
         if (m_app.isAuthenticated && Config.latestChangelogShown < versionCode) {
@@ -240,17 +239,13 @@ class Simpletask : ThemedNoActionBarActivity() {
             return
         }
 
-        m_filterDrawerList = findViewById(R.id.filter_drawer) as ListView
-        m_navDrawerList = findViewById(R.id.nav_drawer) as ListView
-
-        m_drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout?
 
         // Set the list's click listener
-        m_filterDrawerList!!.onItemClickListener = DrawerItemClickListener()
+        filter_drawer?.onItemClickListener = DrawerItemClickListener()
 
-        if (m_drawerLayout != null) {
+        if (drawer_layout != null) {
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
-                    m_drawerLayout, /* DrawerLayout object */
+                    drawer_layout, /* DrawerLayout object */
                     R.string.changelist, /* "open drawer" description */
                     R.string.app_label /* "close drawer" description */) {
 
@@ -270,8 +265,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             // Set the drawer toggle as the DrawerListener
             val toggle = m_drawerToggle as ActionBarDrawerToggle
-            m_drawerLayout!!.removeDrawerListener(toggle)
-            m_drawerLayout!!.addDrawerListener(toggle)
+            drawer_layout?.removeDrawerListener(toggle)
+            drawer_layout?.addDrawerListener(toggle)
             val actionBar = supportActionBar
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true)
@@ -316,7 +311,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         listView?.adapter = this.m_adapter
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { startAddTaskActivity() }
         invalidateOptionsMenu()
         updateDrawers()
@@ -348,24 +342,20 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show connectivity status indicator
         // Red -> changes pending
         // Yellow -> offline
-        val pendingChangesIndicator = findViewById(R.id.pendingchanges)
-        val offlineIndicator = findViewById(R.id.offline)
         if (FileStore.changesPending()) {
-            pendingChangesIndicator?.visibility = View.VISIBLE
-            offlineIndicator?.visibility = View.GONE
+            pendingchanges.visibility = View.VISIBLE
+            offline.visibility = View.GONE
         } else if (!FileStore.isOnline){
-            pendingChangesIndicator?.visibility = View.GONE
-            offlineIndicator?.visibility = View.VISIBLE
+            pendingchanges.visibility = View.GONE
+            offline.visibility = View.VISIBLE
         } else {
-            pendingChangesIndicator?.visibility = View.GONE
-            offlineIndicator?.visibility = View.GONE
+            pendingchanges.visibility = View.GONE
+            offline.visibility = View.GONE
         }
     }
 
     private fun updateFilterBar() {
 
-        val actionbar = findViewById(R.id.actionbar) as LinearLayout
-        val filterText = findViewById(R.id.filter_text) as TextView
         if (MainFilter.hasFilter()) {
             actionbar.visibility = View.VISIBLE
         } else {
@@ -374,7 +364,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
         val total = TodoList.getTaskCount()
 
-        filterText.text = MainFilter.getTitle(
+        filter_text.text = MainFilter.getTitle(
                 count,
                 total,
                 getText(R.string.priority_prompt),
@@ -423,9 +413,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         this.options_menu = menu
 
         val inflater = menuInflater
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        val selection_fab = findViewById(R.id.selection_fab) as FloatingActionButton
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
         val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
 
@@ -480,7 +467,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     true -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
                 }
 
-                cbItem.setOnMenuItemClickListener { menu ->
+                cbItem.setOnMenuItemClickListener { _ ->
                     log.info(TAG, "Clicked on completion checkbox, state: $cbState")
                     when (cbState) {
                         false -> completeTasks(selectedTasks)
@@ -553,17 +540,15 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun isDrawerOpen(drawer: Int): Boolean {
-        val layout = m_drawerLayout
-        if (layout == null) {
+        if (drawer_layout == null) {
             log.warn(TAG, "Layout was null")
             return false
         }
-        return layout.isDrawerOpen(drawer)
+        return drawer_layout.isDrawerOpen(drawer)
     }
 
     private fun closeDrawer(drawer: Int) {
-        val layout = m_drawerLayout ?: return
-        layout.closeDrawer(drawer)
+        drawer_layout?.closeDrawer(drawer)
     }
 
     private fun populateSearch(menu: Menu) {
@@ -689,7 +674,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
-                    val dialog = DatePickerDialog(this@Simpletask, DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+                    val dialog = DatePickerDialog(this@Simpletask, DatePickerDialog.OnDateSetListener { _, year, month, day ->
                         var startMonth = month
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
@@ -720,7 +705,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val numTasks = tasks.size
         val title = getString(R.string.delete_task_title)
                     .replaceFirst(Regex("%s"), numTasks.toString())
-        val delete = DialogInterface.OnClickListener { dialogInterface, i ->
+        val delete = DialogInterface.OnClickListener { _, _ ->
             TodoList.removeAll(tasks)
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
             invalidateOptionsMenu()
@@ -743,7 +728,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val numTasks = (tasks ?: TodoList.completedTasks).size.toString()
             val title = getString(R.string.archive_task_title)
                          .replaceFirst(Regex("%s"), numTasks)
-            val archive = DialogInterface.OnClickListener { dialogInterface, i -> archiveAction() }
+            val archive = DialogInterface.OnClickListener { _, _ -> archiveAction() }
             showConfirmationDialog(this, R.string.delete_task_message, archive, title)
         } else {
             archiveAction()
@@ -925,7 +910,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.setView(input)
         input.setText(MainFilter.proposedName)
 
-        alert.setPositiveButton("Ok") { dialog, whichButton ->
+        alert.setPositiveButton("Ok") { _, _ ->
             val text = input.text
             val value: String
             if (text == null) {
@@ -941,7 +926,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
         }
 
-        alert.setNegativeButton("Cancel") { dialog, whichButton -> }
+        alert.setNegativeButton("Cancel") { _, _ -> }
         alert.show()
     }
 
@@ -1029,10 +1014,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         val filters = savedFilters
         Collections.sort(filters) { f1, f2 -> f1.name!!.compareTo(f2.name!!, ignoreCase = true) }
         val names = filters.map { it.name!! }
-        m_navDrawerList!!.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
-        m_navDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_NONE
-        m_navDrawerList!!.isLongClickable = true
-        m_navDrawerList!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
+        nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
+        nav_drawer.isLongClickable = true
+        nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             MainFilter = filters[position]
             val intent = intent
             MainFilter.saveInIntent(intent)
@@ -1042,7 +1027,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             closeSelectionMode()
             updateDrawers()
         }
-        m_navDrawerList!!.onItemLongClickListener = OnItemLongClickListener { parent, view, position, id ->
+        nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
             val filter = filters[position]
             val prefsName = filter.prefName!!
             val popupMenu = PopupMenu(this@Simpletask, view)
@@ -1126,7 +1111,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.setView(input)
         input.setText(filterName)
 
-        alert.setPositiveButton("Ok") { dialog, whichButton ->
+        alert.setPositiveButton("Ok") { _, _ ->
             val text = input.text
             val value: String
             if (text == null) {
@@ -1143,7 +1128,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
         }
 
-        alert.setNegativeButton("Cancel") { dialog, whichButton -> }
+        alert.setNegativeButton("Cancel") { _, _ -> }
 
         alert.show()
     }
@@ -1158,22 +1143,22 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Config.tagTerm,
                 decoratedProjects)
 
-        m_filterDrawerList!!.adapter = drawerAdapter
-        m_filterDrawerList!!.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-        m_filterDrawerList!!.onItemClickListener = DrawerItemClickListener()
+        filter_drawer.adapter = drawerAdapter
+        filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+        filter_drawer.onItemClickListener = DrawerItemClickListener()
 
         MainFilter.contexts
                 .map { drawerAdapter.getIndexOf("@" + it) }
                 .filter { it != -1 }
-                .forEach { m_filterDrawerList!!.setItemChecked(it, true) }
+                .forEach { filter_drawer.setItemChecked(it, true) }
 
         MainFilter.projects
                 .map { drawerAdapter.getIndexOf("+" + it) }
                 .filter { it != -1 }
-                .forEach { m_filterDrawerList!!.setItemChecked(it, true) }
-        m_filterDrawerList!!.setItemChecked(drawerAdapter.contextHeaderPosition, MainFilter.contextsNot)
-        m_filterDrawerList!!.setItemChecked(drawerAdapter.projectsHeaderPosition, MainFilter.projectsNot)
-        m_filterDrawerList!!.deferNotifyDataSetChanged()
+                .forEach { filter_drawer.setItemChecked(it, true) }
+        filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, MainFilter.contextsNot)
+        filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, MainFilter.projectsNot)
+        filter_drawer.deferNotifyDataSetChanged()
     }
 
 
@@ -1185,16 +1170,15 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     val listView: RecyclerView?
         get() {
-            val lv = findViewById(androidId.list)
-            return lv as RecyclerView?
+            val lv = list
+            return lv
         }
 
     fun showListViewProgress(show: Boolean) {
-        val progressBar = findViewById(R.id.empty_progressbar)
         if (show) {
-            progressBar?.visibility = View.VISIBLE
+            empty_progressbar?.visibility = View.VISIBLE
         } else {
-            progressBar?.visibility = View.GONE
+            empty_progressbar?.visibility = View.GONE
         }
     }
 
@@ -1234,7 +1218,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         fun bindHeader(holder : TaskViewHolder, position: Int) {
-            val t = holder.itemView.findViewById(R.id.list_header_title) as TextView
+            val t = holder.itemView.list_header_title
             val line = visibleLines[position]
             t.text = line.title
             t.textSize = textSize
@@ -1244,23 +1228,22 @@ class Simpletask : ThemedNoActionBarActivity() {
             val line = visibleLines[position]
             val item = line.task ?: return
             val view = holder.itemView
-            val taskText = view!!.findViewById(R.id.tasktext) as TextView
-            val taskAge = view.findViewById(R.id.taskage) as TextView
-            val taskDue = view.findViewById(R.id.taskdue) as TextView
-            val taskThreshold = view.findViewById(R.id.taskthreshold) as TextView
-            val cbCompleted = view.findViewById(R.id.checkBox) as CheckBox
+            val taskText = view.tasktext
+            val taskAge = view.taskage
+            val taskDue = view.taskdue
+            val taskThreshold = view.taskthreshold
+
 
             val task = item
 
             if (Config.showCompleteCheckbox) {
-                cbCompleted.visibility = View.VISIBLE
+                view.checkBox.visibility = View.VISIBLE
             } else {
-                cbCompleted.visibility = View.GONE
+                view.checkBox.visibility = View.GONE
             }
 
             if (!Config.hasExtendedTaskView) {
-                val taskBar = view.findViewById(R.id.datebar)
-                taskBar.visibility = View.GONE
+                datebar.visibility = View.GONE
             }
             var tokensToShow = TToken.ALL
             // Hide dates if we have a date bar
@@ -1307,7 +1290,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             taskDue.textSize = textSize * Config.dateBarRelativeSize
             taskThreshold.textSize = textSize * Config.dateBarRelativeSize
 
-            val cb = cbCompleted
+            val cb = view.checkBox
             taskText.text = ss
             taskText.textSize = textSize
             handleEllipsis(taskText)
@@ -1410,7 +1393,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val build = AlertDialog.Builder(this@Simpletask)
                     build.setTitle(R.string.task_action)
                     val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
-                    build.setItems(titleArray) { dialog, which ->
+                    build.setItems(titleArray) { _, which ->
                         val actionIntent: Intent
                         val url = links[which]
                         log.info(TAG, "" + actions[which] + ": " + url)
@@ -1422,7 +1405,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                             } else if (url.startsWith("root://")) {
                                 val rootFolder = Config.localFileRoot
                                 val file = File(rootFolder, url.substring(7))
-                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.fromFile(file))
+                                actionIntent = Intent(Intent.ACTION_VIEW)
+                                val contentUri = Uri.fromFile(file)
+                                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                                actionIntent.setDataAndType(contentUri, mime)
+                                actionIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
                                 startActivity(actionIntent)
                             } else {
                                 try {
@@ -1582,22 +1569,18 @@ class Simpletask : ThemedNoActionBarActivity() {
         sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
         sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
 
-        val view = layoutInflater.inflate(R.layout.list_dialog, null, false)
-        val rcv = view.findViewById(R.id.recyclerView) as RecyclerView
-        rcv.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(this)
-        rcv.layoutManager = layoutManager
-
-
-        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
-        rcv.adapter = itemAdapter
-
-        val ed = view.findViewById(R.id.editText) as EditText
-
+        val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
         val builder = AlertDialog.Builder(this)
         builder.setView(view)
 
-        builder.setPositiveButton(R.string.ok) { dialog, which ->
+        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
+        val rcv = view.current_items_list
+        rcv.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(this)
+        rcv.layoutManager = layoutManager
+        rcv.adapter = itemAdapter
+        val ed = view.new_item_text
+        builder.setPositiveButton(R.string.ok) { _, _ ->
             val updatedValues = itemAdapter.currentState
             for (i in 0..updatedValues.lastIndex) {
                 when (updatedValues[i] ) {
@@ -1622,9 +1605,12 @@ class Simpletask : ThemedNoActionBarActivity() {
             TodoList.updateCache()
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
         }
-        builder.setNegativeButton(R.string.cancel) { dialog, id -> }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
         // Create the AlertDialog
         val dialog = builder.create()
+
+
+
         dialog.setTitle(title)
         dialog.show()
     }

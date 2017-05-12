@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.0.6'
-    ext.android_support_version = '25.1.1'
+    ext.kotlin_version = '1.1.1'
+    ext.android_support_version = '25.3.1'
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
@@ -13,12 +13,17 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 // apply plugin: 'com.getkeepsafe.dexcount'
 
 
 android {
     buildToolsVersion "25.0.2"
     compileSdkVersion 25
+
+		lintOptions {
+				disable 'InvalidPackage', 'MissingTranslation'
+		}
 
     //noinspection GroovyMissingReturnStatement
     packagingOptions {
@@ -31,7 +36,9 @@ android {
         versionName '9.0.2'
         versionCode 3056
 	minSdkVersion 14
-        targetSdkVersion 25
+        // target API 23 because anything newer breaks root:// links
+        //noinspection OldTargetApi
+        targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -71,6 +78,10 @@ android {
         preDexLibraries = true
         javaMaxHeapSize "3g"
         dexInProcess = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
@@ -115,7 +126,7 @@ if (project.hasProperty('storeFile') &&
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+    gradleVersion = '3.5'
 }
 
 allprojects {
