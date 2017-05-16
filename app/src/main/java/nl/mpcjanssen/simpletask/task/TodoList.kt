@@ -45,6 +45,8 @@ import java.util.*
 
 /**
  * Implementation of the in memory representation of the Todo list
+ * uses an ActionQueue to ensure modifications and access of the underlying todo list are
+ * sequential. If this is not done properly the result is a likely ConcurrentModificationException.
 
  * @author Mark Janssen
  */
