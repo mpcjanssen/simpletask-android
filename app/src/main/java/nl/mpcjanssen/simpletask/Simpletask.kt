@@ -362,18 +362,20 @@ class Simpletask : ThemedNoActionBarActivity() {
             actionbar.visibility = View.GONE
         }
         val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
-        val total = TodoList.getTaskCount()
+        TodoList.queue("Update filter bar") {
+            val total = TodoList.getTaskCount()
 
-        filter_text.text = MainFilter.getTitle(
-                count,
-                total,
-                getText(R.string.priority_prompt),
-                Config.tagTerm,
-                Config.listTerm,
-                getText(R.string.search),
-                getText(R.string.script),
-                getText(R.string.title_filter_applied),
-                getText(R.string.no_filter))
+            filter_text.text = MainFilter.getTitle(
+                    count,
+                    total,
+                    getText(R.string.priority_prompt),
+                    Config.tagTerm,
+                    Config.listTerm,
+                    getText(R.string.search),
+                    getText(R.string.script),
+                    getText(R.string.title_filter_applied),
+                    getText(R.string.no_filter))
+        }
     }
 
     private fun startLogin() {
@@ -829,8 +831,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
-        val prefillLists = if (MainFilter.contexts.size == 1) "@${MainFilter.contexts[0]}" else ""
-        val prefillTags = if (MainFilter.projects.size == 1) "+${MainFilter.projects[0]}" else ""
+        val prefillLists = if (MainFilter.contexts.size == 1 && MainFilter.contexts[0] != "-") "@${MainFilter.contexts[0]}" else ""
+        val prefillTags = if (MainFilter.projects.size == 1 && MainFilter.projects[0] != "-") "+${MainFilter.projects[0]}" else ""
         val preFill = " $prefillLists $prefillTags"
         TodoList.editTasks(this,TodoList.selectedTasks, preFill.trimEnd())
     }

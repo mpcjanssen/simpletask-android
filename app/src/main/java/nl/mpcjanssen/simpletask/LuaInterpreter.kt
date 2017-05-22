@@ -59,6 +59,11 @@ object LuaInterpreter {
         return true
     }
 
+    fun hasFilterCallback(moduleName : String) : Boolean {
+        val module = globals.get(moduleName).checktable() ?: globals
+        return !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
+    }
+
     fun onGroupCallback (moduleName : String, t: Task): String? {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {

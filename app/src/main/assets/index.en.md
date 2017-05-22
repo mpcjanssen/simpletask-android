@@ -1,6 +1,6 @@
 Simpletask
 ==========
-(See in [Spanish](./index.es.md)). Ver en [Español](./index.es.md).
+Ver en [Español](./index.es.md), auf [Deutsch](./index.de.md) 
 
 [Simpletask](https://github.com/mpcjanssen/simpletask-android) is based on the brilliant [todo.txt](http://todotxt.com) by [Gina Trapani](http://ginatrapani.org/). The goal of the application is to provide a tool to do GTD without providing an overwhelming amount of options. Even though Simpletask can be customised by a fairly large amount of settings, the defaults should be sane and require no change.
 
@@ -24,7 +24,7 @@ Support
 
 Simpletask is translated using [weblate](https://hosted.weblate.org/engage/simpletask/). Follow the link to contribute.
 
-Join the chat at [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android), IRC at [#simpletask on Freenode](https://webchat.freenode.net/?channels=simpletask), or Matrix at [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org).
+Join the chat at [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android) or at [#simpletask at Freenode](https://webchat.freenode.net/?channels=simpletask)
 
 If you want to log an issue or feature request for [Simpletask](https://github.com/mpcjanssen/simpletask-android/) you can go to [the tracker](https://github.com/mpcjanssen/simpletask-android/issues). If you find Simpletask useful, you can buy the donate app (see Settings) or donate via [Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) me some beers.
 
