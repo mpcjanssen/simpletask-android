@@ -1,7 +1,7 @@
 <resources>
     <!-- Launch Screen -->
     <style name="LaunchScreen" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowBackground">@color/simple_primary</item>
+        <item name="android:windowBackground">@color/black</item>
         <item name="colorPrimaryDark">@color/simple_primary_dark</item>
     </style>
 
