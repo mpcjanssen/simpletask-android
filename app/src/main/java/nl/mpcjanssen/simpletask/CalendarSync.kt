@@ -48,7 +48,6 @@ import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
 
-
 private enum class EvtStatus {
     KEEP,
     DELETE,
@@ -156,6 +155,7 @@ private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long) {
  * Finally, the hashmap contents are applied - contained events are iterated and inserted/deleted as appropriate.
  * This is done using ContentResolver.applyBatch for better efficiency.
  */
+@SuppressLint("Recycle", "NewAPI")
 private class EvtMap private constructor(): HashMap<EvtKey, LinkedList<Evt>>() {
     constructor(cr: ContentResolver, calID: Long): this() {
         val evtPrj = arrayOf(Events._ID, Events.CALENDAR_ID, Events.DTSTART, Events.TITLE, Events.DESCRIPTION)
@@ -237,6 +237,8 @@ private class EvtMap private constructor(): HashMap<EvtKey, LinkedList<Evt>>() {
         }
     }
 
+
+    @SuppressLint("NewApi")
     fun apply(cr: ContentResolver, calID: Long): SyncStats {
         val ops = ArrayList<ContentProviderOperation>()
         var ins = 0L
@@ -349,7 +351,8 @@ object CalendarSync {
         }
         m_cr.insert(CAL_URI, cv)
     }
-
+    
+    @SuppressLint("NewApi")
     private fun removeCalendar() {
         log.debug(TAG, "Removing Simpletask calendar")
         val selection = Calendars.NAME + " = ?"
