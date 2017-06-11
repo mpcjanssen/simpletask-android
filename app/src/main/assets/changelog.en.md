@@ -1,6 +1,24 @@
 ﻿Changelog
 =========
 
+9.0.3
+-----
+
+- Merged: Added French translation (lmsteffan).
+- Merged: Added Russian translation (ksabee).
+- Merged: Added Ukranian translation (autumnus.v).
+- Fix `root://` links on N and provide proper mime-type.
+- Target API23 to prevent issues with `file://` links.
+- Use Kotlin Android extension to access views.
+- Merged: Use diffing algorithm when syncing calendar. Should improve stability and perfromance (#752 vojtechkral)
+- Split new list and tags on whitespace. Fixes #750.
+- Don't show filter bar if there is no `onFilter` callback.
+- Don't prefill tasks if the only filtering is for no tags or lists. Fixes #753.
+- Change launch screen background to black. Makes #749 less obvious.
+- Added German translation of the help files courtesy of doranism.
+- Merged: Added Chines translation (tangenters).
+- Merged: Updated Spanish translation (ddisanti).
+
 9.0.2
 -----
 
