@@ -1246,7 +1246,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
 
             if (!Config.hasExtendedTaskView) {
-                datebar.visibility = View.GONE
+                view.datebar.visibility = View.GONE
             }
             var tokensToShow = TToken.ALL
             // Hide dates if we have a date bar
