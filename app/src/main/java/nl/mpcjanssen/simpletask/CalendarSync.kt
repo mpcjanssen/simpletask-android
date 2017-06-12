@@ -351,7 +351,7 @@ object CalendarSync {
         }
         m_cr.insert(CAL_URI, cv)
     }
-    
+
     @SuppressLint("NewApi")
     private fun removeCalendar() {
         log.debug(TAG, "Removing Simpletask calendar")

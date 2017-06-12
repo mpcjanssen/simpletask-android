@@ -363,18 +363,19 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
         TodoList.queue("Update filter bar") {
-            val total = TodoList.getTaskCount()
-
-            filter_text.text = MainFilter.getTitle(
-                    count,
-                    total,
-                    getText(R.string.priority_prompt),
-                    Config.tagTerm,
-                    Config.listTerm,
-                    getText(R.string.search),
-                    getText(R.string.script),
-                    getText(R.string.title_filter_applied),
-                    getText(R.string.no_filter))
+            runOnUiThread {
+                val total = TodoList.getTaskCount()
+                filter_text.text = MainFilter.getTitle(
+                        count,
+                        total,
+                        getText(R.string.priority_prompt),
+                        Config.tagTerm,
+                        Config.listTerm,
+                        getText(R.string.search),
+                        getText(R.string.script),
+                        getText(R.string.title_filter_applied),
+                        getText(R.string.no_filter))
+            }
         }
     }
 
