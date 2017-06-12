@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.0.4
+-----
+
+- Fix crash with filter bar.
+
 9.0.3
 -----
 
