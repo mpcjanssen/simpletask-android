@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.0.5
+-----
+
+- Fix crash if no datebar is shown.
+
 9.0.4
 -----
 
