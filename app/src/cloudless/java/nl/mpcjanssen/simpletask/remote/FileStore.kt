@@ -75,7 +75,7 @@ object FileStore : FileStoreInterface {
         fileOperationsQueue!!.post(r)
     }
 
-    override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
+    override fun loadTasksFromFile(path: String, eol: String): List<String> {
         log.info(TAG, "Loading tasks")
         val result = CopyOnWriteArrayList<String>()
         isLoading = true
@@ -87,7 +87,6 @@ object FileStore : FileStoreInterface {
                 completeFile.add(line)
                 result.add(line)
             }
-            backup?.backup(path, join(completeFile, "\n"))
         } catch (e: IOException) {
             log.info(TAG, "Read read failed", e)
             e.printStackTrace()
@@ -152,11 +151,10 @@ object FileStore : FileStoreInterface {
         dialog.createFileDialog(act, this)
     }
 
-    @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean) {
+    @Synchronized override fun saveTasksToFile(path: String, lines: List<String>, eol: String, updateVersion: Boolean) {
         log.info(TAG, "Saving tasks to file: {}" + path)
 
         queueRunnable("Save ${lines.size} lines to file " + path, Runnable {
-            backup?.backup(path, join(lines, "\n"))
             val obs = observer
             obs?.ignoreEvents(true)
             try {

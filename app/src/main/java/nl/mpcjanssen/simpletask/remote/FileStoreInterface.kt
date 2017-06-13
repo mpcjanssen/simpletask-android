@@ -12,13 +12,13 @@ interface FileStoreInterface {
     val isAuthenticated: Boolean
 
     @Throws(IOException::class)
-    fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String>
+    fun loadTasksFromFile(path: String, eol: String): List<String>
     fun startLogin(caller: Activity)
     fun logout()
     fun browseForNewFile(act: Activity, path: String, listener: FileSelectedListener, txtOnly: Boolean)
 
     @Throws(IOException::class)
-    fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean = false)
+    fun saveTasksToFile(path: String, lines: List<String>,  eol: String, updateVersion : Boolean = false)
     @Throws(IOException::class)
     fun appendTaskToFile(path: String, lines: List<String>, eol: String)
     fun sync()

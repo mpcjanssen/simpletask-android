@@ -34,7 +34,6 @@ import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
 
-import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
@@ -216,11 +215,11 @@ object TodoList {
         }
 
 
-    fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
+    fun notifyChanged(todoName: String, eol: String, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
         queue("Notified changed") {
             if (save) {
-                save(FileStore, todoName, backup, eol)
+                save(FileStore, todoName, eol)
             }
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
@@ -252,7 +251,7 @@ object TodoList {
         return filteredTasks
     }
 
-    fun reload(backup: BackupInterface, lbm: LocalBroadcastManager, eol: String, reason: String = "") {
+    fun reload(lbm: LocalBroadcastManager, eol: String, reason: String = "") {
         val logText = "Reload: " + reason
         queue(logText) {
             if (!FileStore.isAuthenticated) return@queue
@@ -263,7 +262,7 @@ object TodoList {
                 try {
                     todoItems.clear()
                     val items = ArrayList<Task>(
-                            FileStore.loadTasksFromFile(filename, backup, eol).map { text ->
+                            FileStore.loadTasksFromFile(filename, eol).map { text ->
                                 Task(text)
                             })
                     todoItems.addAll(items)
@@ -284,19 +283,19 @@ object TodoList {
                 todoItems.clear()
                 todoItems.addAll(cached)
             }
-            notifyChanged(filename, eol, backup, false)
+            notifyChanged(filename, eol, false)
         }
     }
 
 
-    private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
+    private fun save(fileStore: FileStoreInterface, todoFileName: String, eol: String) {
         try {
             val lines = todoItems.map {
                 it.inFileFormat()
             }
 
             log.info(TAG, "Saving todo list, size ${lines.size}")
-            fileStore.saveTasksToFile(todoFileName, lines, backup, eol = eol, updateVersion = true)
+            fileStore.saveTasksToFile(todoFileName, lines, eol = eol, updateVersion = true)
             updateCache()
         } catch (e: IOException) {
             e.printStackTrace()
@@ -309,7 +308,7 @@ object TodoList {
                 val tasksToDelete = tasks ?: completedTasks
                 FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                 removeAll(tasksToDelete)
-                notifyChanged(todoFilename, eol, null, true)
+                notifyChanged(todoFilename, eol, true)
             } catch (e: IOException) {
                 e.printStackTrace()
                 showToastShort(TodoApplication.app, "Task archiving failed")

@@ -290,7 +290,7 @@ class AddTask : ThemedActionBarActivity() {
 
 
         // Save
-        todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
+        todoList.notifyChanged(Config.todoFileName, Config.eol, true)
         finishEdit()
     }
 

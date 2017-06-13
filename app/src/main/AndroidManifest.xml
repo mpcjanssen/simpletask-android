@@ -59,18 +59,6 @@ You should have received a copy of the GNU General Public License along with Sim
             android:label="@string/lua_config_screen"
             />
         <activity
-            android:name=".DebugInfoScreen"
-            android:parentActivityName=".Preferences"
-            android:label="@string/debug_info"
-            tools:ignore="UnusedAttribute"
-            />
-        <activity
-            android:name=".HistoryScreen"
-            android:parentActivityName=".Preferences"
-            android:label="@string/history"
-            tools:ignore="UnusedAttribute"
-            />
-        <activity
             android:name=".Preferences"
             android:parentActivityName=".Simpletask"
             android:label="@string/set_preferences"

@@ -295,7 +295,7 @@ object FileStore : FileStoreInterface {
 
 
     @Synchronized @Throws(IOException::class)
-    override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
+    override fun loadTasksFromFile(path: String, eol: String): List<String> {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -312,7 +312,7 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "Not loading, changes pending")
             isLoading = false
             val tasks = tasksFromCache()
-            saveTasksToFile(path, tasks, backup, eol)
+            saveTasksToFile(path, tasks, eol)
             startWatching(path)
             return tasks
         } else {
@@ -345,7 +345,6 @@ object FileStore : FileStoreInterface {
                 }
                 openFileStream.close()
                 val contents = join(readFile, "\n")
-                backup?.backup(path, contents)
                 saveToCache(fileInfo.metadata.fileName(), fileInfo.metadata.rev, contents)
                 startWatching(path)
             } catch (e: DropboxException) {
@@ -459,8 +458,7 @@ object FileStore : FileStoreInterface {
     }
 
     @Synchronized @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean) {
-        backup?.backup(path, join(lines, "\n"))
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String, updateVersion : Boolean) {
         val contents = join(lines, eol) + eol
         val r = Runnable {
             var newName = path

@@ -36,9 +36,6 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.support.v4.content.LocalBroadcastManager
-import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile
-import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
@@ -52,7 +49,7 @@ import java.util.*
 
 class TodoApplication : Application(),
 
-         FileStoreInterface.FileChangeListener, BackupInterface {
+         FileStoreInterface.FileChangeListener {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -148,7 +145,7 @@ class TodoApplication : Application(),
     }
 
     fun loadTodoList(reason: String) {
-        TodoList.reload(this, localBroadCastManager, Config.eol, reason = reason)
+        TodoList.reload(localBroadCastManager, Config.eol, reason = reason)
     }
 
 
@@ -202,13 +199,6 @@ class TodoApplication : Application(),
 
     val doneFileName: String
         get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
-
-    override fun backup(name: String, contents: String) {
-        val now = Date()
-        val fileToBackup = TodoFile(contents, name, now)
-        Daos.backup(fileToBackup)
-
-    }
 
     fun getSortString(key: String): String {
         if (Config.useTodoTxtTerms) {

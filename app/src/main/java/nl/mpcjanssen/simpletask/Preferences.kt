@@ -223,12 +223,6 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 preference.valueInSummary(any)
                 true
             }
-
-            val debugPref = findPreference("debug_info")
-            debugPref.setOnPreferenceClickListener {
-                startActivity(Intent(activity, DebugInfoScreen::class.java))
-                true
-            }
         }
     }
 

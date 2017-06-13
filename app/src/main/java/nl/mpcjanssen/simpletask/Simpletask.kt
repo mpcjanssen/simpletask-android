@@ -35,7 +35,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.TextUtils
 import android.view.*
@@ -634,7 +633,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
-            TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
         })
         builder.show()
 
@@ -651,7 +650,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (Config.isAutoArchive) {
             archiveTasks()
         }
-        TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+        TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
     }
 
     private fun uncompleteTasks(task: Task) {
@@ -662,7 +661,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun uncompleteTasks(tasks: List<Task>) {
         TodoList.uncomplete(tasks)
-        TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+        TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
     }
 
     private fun deferTasks(tasks: List<Task>, dateType: DateType) {
@@ -682,7 +681,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
                         TodoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
-                        TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                        TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
                     },
                             today.year!!,
                             today.month!! - 1,
@@ -695,7 +694,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else {
 
                     TodoList.defer(input, tasks, dateType)
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                    TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
 
                 }
 
@@ -710,7 +709,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     .replaceFirst(Regex("%s"), numTasks.toString())
         val delete = DialogInterface.OnClickListener { _, _ ->
             TodoList.removeAll(tasks)
-            TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
             invalidateOptionsMenu()
         }
 
@@ -783,7 +782,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.archive -> archiveTasks()
             R.id.open_file -> m_app.browseForNewFile(this)
-            R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()
             R.id.update -> startAddTaskActivity()
@@ -1307,7 +1305,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     uncompleteTasks(item)
                     // Update the tri state checkbox
                     if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                    TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
                 })
             } else {
                 taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -1317,7 +1315,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(item)
                     // Update the tri state checkbox
                     if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                    TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
                 }
 
             }
@@ -1606,7 +1604,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
             }
             TodoList.updateCache()
-            TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            TodoList.notifyChanged(Config.todoFileName, Config.eol, true)
         }
         builder.setNegativeButton(R.string.cancel) { _, _ -> }
         // Create the AlertDialog
