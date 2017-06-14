@@ -9,13 +9,11 @@ import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.*
 
 object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
-    val interpreter = LuaInterpreter
 
     val TAG = "LuaConfig"
 
@@ -136,7 +134,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     private val _activeTheme by StringPreference(R.string.theme_pref_key, "light_darkactionbar")
     private val activeThemeString: String
-        get() = interpreter.configTheme() ?: _activeTheme
+        get() = LuaInterpreter.configTheme() ?: _activeTheme
 
     // Only used in Dropbox build
     @Suppress("unused")
@@ -152,7 +150,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     val tasklistTextSize: Float?
         get() {
-            val luaValue = interpreter.tasklistTextSize()
+            val luaValue = LuaInterpreter.tasklistTextSize()
             if (luaValue != null) {
                 return luaValue
             }
