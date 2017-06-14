@@ -60,8 +60,13 @@ object LuaInterpreter {
     }
 
     fun hasFilterCallback(moduleName : String) : Boolean {
-        val module = globals.get(moduleName).checktable() ?: globals
-        return !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
+        try {
+            val module = globals.get(moduleName).checktable() ?: globals
+            return !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            return false
+        }
     }
 
     fun onGroupCallback (moduleName : String, t: Task): String? {
