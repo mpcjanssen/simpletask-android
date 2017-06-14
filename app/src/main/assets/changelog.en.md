@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.0.6
+-----
+
+- Fix some reported crashes on Google Play.
+
 9.0.5
 -----
 

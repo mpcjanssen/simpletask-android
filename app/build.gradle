@@ -33,8 +33,8 @@ android {
     }
 
     defaultConfig {
-        versionName '9.0.5'
-        versionCode 3059
+        versionName '9.0.6'
+        versionCode 3060
 	minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
