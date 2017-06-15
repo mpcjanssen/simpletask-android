@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.0.7
+-----
+
+- Fix custom font size setting.
+
 9.0.6
 -----
 
