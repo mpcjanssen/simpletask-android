@@ -155,7 +155,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
                 return luaValue
             }
             val customSize by BooleanPreference(R.string.custom_font_size, false)
-            if (customSize) {
+            if (!customSize) {
                 return 14.0f
             }
             val font_size by IntPreference(R.string.font_size, 14)
