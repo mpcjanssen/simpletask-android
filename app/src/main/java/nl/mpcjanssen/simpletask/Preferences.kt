@@ -72,8 +72,8 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
+            getString(R.string.calendar_sync_thresholds),
             getString(R.string.calendar_sync_dues) -> requestCalendarPermission()
-            getString(R.string.custom_font_size) -> requestCalendarPermission()
             getString(R.string.theme_pref_key) -> {
                 onContentChanged()
                 val broadcastIntent = Intent(Constants.BROADCAST_THEME_CHANGED)
@@ -84,6 +84,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 val broadcastIntent = Intent(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
             }
+            getString(R.string.custom_font_size), 
             getString(R.string.font_size) -> {
                 val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
