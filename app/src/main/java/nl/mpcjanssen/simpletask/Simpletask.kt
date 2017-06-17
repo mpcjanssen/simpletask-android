@@ -119,7 +119,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         log.info(TAG, "Logging out from Dropbox")
                         FileStore.logout()
                         finish()
-                        startActivity(intent)
+                        FileStore.startLogin(this@Simpletask)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         textSize = Config.tasklistTextSize ?: textSize
