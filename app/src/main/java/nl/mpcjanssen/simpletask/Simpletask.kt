@@ -119,7 +119,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         log.info(TAG, "Logging out from Dropbox")
                         FileStore.logout()
                         finish()
-                        startActivity(intent)
+                        FileStore.startLogin(this@Simpletask)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         textSize = Config.tasklistTextSize ?: textSize
@@ -362,18 +362,21 @@ class Simpletask : ThemedNoActionBarActivity() {
             actionbar.visibility = View.GONE
         }
         val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
-        val total = TodoList.getTaskCount()
-
-        filter_text.text = MainFilter.getTitle(
-                count,
-                total,
-                getText(R.string.priority_prompt),
-                Config.tagTerm,
-                Config.listTerm,
-                getText(R.string.search),
-                getText(R.string.script),
-                getText(R.string.title_filter_applied),
-                getText(R.string.no_filter))
+        TodoList.queue("Update filter bar") {
+            runOnUiThread {
+                val total = TodoList.getTaskCount()
+                filter_text.text = MainFilter.getTitle(
+                        count,
+                        total,
+                        getText(R.string.priority_prompt),
+                        Config.tagTerm,
+                        Config.listTerm,
+                        getText(R.string.search),
+                        getText(R.string.script),
+                        getText(R.string.title_filter_applied),
+                        getText(R.string.no_filter))
+            }
+        }
     }
 
     private fun startLogin() {
@@ -829,8 +832,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
-        val prefillLists = if (MainFilter.contexts.size == 1) "@${MainFilter.contexts[0]}" else ""
-        val prefillTags = if (MainFilter.projects.size == 1) "+${MainFilter.projects[0]}" else ""
+        val prefillLists = if (MainFilter.contexts.size == 1 && MainFilter.contexts[0] != "-") "@${MainFilter.contexts[0]}" else ""
+        val prefillTags = if (MainFilter.projects.size == 1 && MainFilter.projects[0] != "-") "+${MainFilter.projects[0]}" else ""
         val preFill = " $prefillLists $prefillTags"
         TodoList.editTasks(this,TodoList.selectedTasks, preFill.trimEnd())
     }
@@ -1243,7 +1246,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
 
             if (!Config.hasExtendedTaskView) {
-                datebar.visibility = View.GONE
+                view.datebar.visibility = View.GONE
             }
             var tokensToShow = TToken.ALL
             // Hide dates if we have a date bar

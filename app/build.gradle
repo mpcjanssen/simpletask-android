@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.1.1'
+    ext.kotlin_version = '1.1.2-2'
     ext.android_support_version = '25.3.1'
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
@@ -33,8 +33,8 @@ android {
     }
 
     defaultConfig {
-        versionName '9.0.2'
-        versionCode 3056
+        versionName '9.0.7'
+        versionCode 3061
 	minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
@@ -100,6 +100,7 @@ dependencies {
     compile 'com.atlassian.commonmark:commonmark:0.8.0'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'org.luaj:luaj-jse:3.0.1'
+    compile 'me.smichel.android:kpreferences:0.4.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile('com.android.support.test:runner:0.5') {

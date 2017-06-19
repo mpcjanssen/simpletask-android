@@ -32,8 +32,8 @@
     <string name="widget_extended_pref_title">Mostrar barra de fechas</string>
     <string name="widget_extended_pref_summary">Mostrar fechas en una línea separada</string>
 
-    <string name="color_due_pref_title">Color de fechas de vencimiento</string>
-    <string name="color_due_pref_summary">Color de las fechas de vencimiento e inicio</string>
+    <string name="color_due_pref_title">Color</string>
+    <string name="color_due_pref_summary">Fechas de vencimiento e inicio</string>
 
     <string name="show_hidden_title">Mostrar tareas ocultas</string>
     <string name="show_hidden_summary">Mostrar tareas ocultas (h:1) para poder editarlas. Después de editarlas deseleccione este ajuste otra vez.</string>
