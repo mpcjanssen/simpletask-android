@@ -5,7 +5,7 @@ Simpletask supports the following todo.txt extensions:
 
 -   Due date as `due:YYYY-MM-DD`
 -   Start/threshold date as `t:YYYY-MM-DD`
--   Recurrence with `rec:\+?[0-9]+[dwmyb]` as described [here](https://github.com/bram85/topydo/wiki/Recurrence) `??? Link is broken` but with a twist.
+-   Recurrence with `rec:\+?[0-9]+[dwmyb]` as described [here](https://github.com/bram85/topydo/wiki/Recurrence) but with a twist.
     - By default Simpletask will use the date of completion for recurring as described in the link. However if the rec includes a plus (e.g. `rec:+2w`), the date is determined from the original due or threshold date..
     - `rec:1b` will recur after 1 weekday (mnemonic *b*usiness-day). 
     - The format is described by a regular expression, so in words the syntax is `rec:` followed by an optional `+` then 1 or more numbers and then followed by one of `d`ay, `w`eek, `m`onth or `y`ear. For example `rec:12d` sets up a 12 day recurring task.
