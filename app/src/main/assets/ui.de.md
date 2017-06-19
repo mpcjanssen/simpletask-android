@@ -1,7 +1,7 @@
 Benutzeroberfläche
 ==================
 
-Diese Seite ist zur Zeit in Arbeit und wird noch ergänzt. `??? Ergänzung in Planung?`
+Diese Seite ist zur Zeit in Arbeit und wird noch ergänzt.
 
 ## Filtern von Aufgaben
 
