@@ -160,7 +160,7 @@ object FileStore : FileStoreInterface {
             val obs = observer
             obs?.ignoreEvents(true)
             try {
-                writeToFile(join(lines, eol) + eol, File(path), false)
+                writeToFile(lines, eol, File(path), false)
                 if (updateVersion) {
                     Config.currentVersionId = File(path).lastModified().toString()
                 }
@@ -179,7 +179,7 @@ object FileStore : FileStoreInterface {
         queueRunnable("Appending  ${lines.size} lines tasks to $path", Runnable {
             log.info(TAG, "Appending ${lines.size} tasks to $path")
             try {
-                writeToFile(join(lines, eol) + eol, File(path), true)
+                writeToFile(lines, eol, File(path), true)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

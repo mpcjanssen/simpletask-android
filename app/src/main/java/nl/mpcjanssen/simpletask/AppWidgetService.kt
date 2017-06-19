@@ -16,6 +16,7 @@ import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AppWidgetService : RemoteViewsService() {
 
@@ -69,11 +70,11 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         }
         
         val items = TodoList.todoItems
-        visibleTasks.clear()
+        val newVisibleTasks = ArrayList<Task>()
         val filter = getFilter()
 
         for (t in filter.apply(items)) {
-            visibleTasks.add(t)
+            newVisibleTasks.add(t)
         }
         val comp = MultiComparator(filter.getSort(
                 Config.defaultSorts),
@@ -82,12 +83,13 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
                 filter.createIsThreshold)
 
         if (!comp.fileOrder) {
-            visibleTasks.reverse()
+            newVisibleTasks.reverse()
         }
         comp.comparator?.let {
-            Collections.sort(visibleTasks,it)
+            Collections.sort(newVisibleTasks,it)
         }
-        log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${visibleTasks.size} tasks")
+        log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
+        visibleTasks = newVisibleTasks
     }
 
     override fun getCount(): Int {

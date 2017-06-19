@@ -329,9 +329,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     /* Adds the task to list Listname
 ** If the task is already on that list, it does nothing
  */
-    fun addList(listName : String) {
-        if (!lists.contains(listName)) {
-            tokens += ListToken("@"+listName)
+    fun addList(listName: String) {
+        listName.split(Regex("\\s+")).forEach {
+            if (!lists.contains(it)) {
+                tokens += ListToken("@" + it)
+            }
         }
     }
 
@@ -339,8 +341,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     ** If the task already has te tag, it does nothing
     */
     fun addTag(tagName : String) {
-        if (!tags.contains(tagName)) {
-            tokens += TagToken("+"+tagName)
+        tagName.split(Regex("\\s+")).forEach {
+            if (!tags.contains(it)) {
+                tokens += TagToken("+" + it)
+            }
         }
     }
 

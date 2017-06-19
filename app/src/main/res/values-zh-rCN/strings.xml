@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">列表名称无效</string>
+    <string name="invalid_project">标签名无效</string>
+    <string name="app_label">Simpletask</string>
+    <string name="add_task_failed">无法添加任务</string>
+    <string name="save_task">保存任务</string>
+    <string name="update_task_failed">无法更新任务</string>
+    <string name="sort">排序</string>
+    <string name="script">脚本</string>
+    <string name="filter">筛选</string>
+    <string name="main_no_items">没有需要显示的任务。</string>
+    <string name="set_preferences">设置</string>
+    <string name="preferences">设置</string>
+    <string name="added_task">已添加的任务</string>
+    <string name="archive">档案</string>
+    <string name="help">帮助</string>
+    <string name="history">历史</string>
+    <string name="debug_info">调试信息</string>
+    <string name="log">日志</string>
+    <string name="next">下一个</string>
+    <string name="prev">上一个</string>
+    <string name="open_file">打开todo文件</string>
+    <string name="sync">刷新</string>
+    <string name="changelist">选择列表</string>
+    <string name="search">搜索</string>
+    <string name="add">添加</string>
+    <string name="task">任务</string>
+    <string name="addtask">添加任务</string>
+    <string name="updatetask">更新</string>
+    <string name="viewtask">查看任务</string>
+    <string name="clear_database">空数据库</string>
+    <string name="done">完成</string>
+    <string name="select_priority">选择优先级</string>
+    <string name="select_all">选择所有</string>
+    <string name="add_list_or_tag">增加列表与标签</string>
+    <string name="update_lists">更新列表</string>
+    <string name="update_tags">更新标签</string>
+    <string name="remove_list_or_tag">删除列表与标签</string>
+    <string name="update">更新</string>
+    <string name="delete">删除</string>
+    <string name="defer_due">设置截止日期</string>
+    <string name="share">分享</string>
+    <string name="share_database">共享数据库</string>
+    <string name="unComplete">撤消完成</string>
+    <string name="ok">完成</string>
+    <string name="cancel">取消</string>
+    <string name="clear_filter">清空过滤条件</string>
+    <string name="write_failed">无法写入文件！你的改动将不会被保存。</string>
+
+    <string name="filter_name_empty">没有指定名称，将不添加筛选</string>
+    <string name="priority">优先级</string>
+    <string name="preference_appearance">外观</string>
+    <string name="preference_interface">接口</string>
+    <string name="preference_widget">部件</string>
+    <string name="preference_other">其他</string>
+
+    <string name="ARCHIVE_settings_header">档案</string>
+    <string name="auto_archive_pref_title">自动存档</string>
+    <string name="lua_open_config">Lua 配置</string>
+<string name="lua_config_share">分享</string>
+    <string name="lua_config_export">保存并导出</string>
+    <string name="lua_config_import">导入</string>
+    <string name="archive_now_pref_summary">将已完成的任务从 todo.txt 移动到 done.txt。</string>
+    <string name="dropbox_logout_pref_title">注销</string>
+    <string name="dropbox_logout_pref_summary">注销 Dropbox。</string>
+    <string name="TODOTXTPATH_title">文件路径</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Dropbox 同步设置</string>
+
+    <string name="todotxt_features_settings_header">功能</string>
+    <string name="todotxt_features_settings_summary">启用或禁用功能</string>
+
+    <string name="todotxt_configuration_settings_header">配置</string>
+    <string name="todotxt_configuration_settings_summary">配置应用程序行为</string>
+
+    <string name="todotxt_creation_settings_header">创建任务</string>
+
+    <string name="todotxt_ui_settings_header">功能</string>
+    <string name="todotxt_ui_settings_summary">控制已显示的内容</string>
+    <string name="todotxt_behavior_settings_header">行为</string>
+    <string name="sort_complete_last_pref_title">显示最后完成</string>
+    <string name="sort_complete_last_pref_summary">总是在列表的底部显示已完成的任务</string>
+    <string name="keep_prio_header">在已完成的任务中保持优先</string>
+    <string name="keep_prio_summary">Todo.txt 在完成时删除优先级</string>
+    <string name="prepend_date_pref_summary">自动添加创建日期</string>
+    <string name="line_breaks_pref_title">对 Windows 友好的换行符</string>
+    <string name="line_breaks_pref_summary">使用对 Windows 友好的换行符</string>
+    <string name="recur_from_original_date_pref_title">使用初始日期重回任务</string>
+    <string name="recur_from_original_date_pref_summary">在创建周期性任务时，增加任务中的初始日期。取消选中此项将重设为当前日期。</string>
+    <string name="lua_config_import_export">导入/导出 lua 配置</string>
+    <string name="lua_run">运行</string>
+    <string name="manual_sync_pref_title">手动同步</string>
+    <string name="manual_sync_pref_summary">不要自动将每一个更改上传到Dropbox。</string>
+    <string name="resume_sync_pref_title">恢复同步</string>
+    <string name="resume_sync_pref_summary">打开应用程序后与 Dropbox 同步。</string>
+    <string name="font_size_delta_pref_title">自定义字体大小</string>
+    <string name="datebar_relative_size_summary">相对日期栏大小</string>
+    <string name="font_size_delta_pref_summary">更改字体大小。</string>
+    <string name="theme_pref_title">主题</string>
+    <string name="theme_pref_summary">更改用于应用程序的主题。</string>
+
+    <string name="share_task_show_edit_pref_title">编辑已共享的任务</string>
+    <string name="share_task_append_text_title">背景文字</string>
+    <string name="local_file_root_title">root:// directory</string>
+    <string name="menu_capitalize_tasks">大写</string>
+    <string name="back_saves_pref_title">返回按钮</string>
+    <string name="show_txt_only_pref_title">仅显示 txt 文件</string>
+    <string name="show_txt_only_summary">仅在文件选择对话框中显示 .txt 文件。</string>
+
+    <string name="calendar_sync_screen_title">通知</string>
+    <string name="calendar_sync_screen_summary">日历提醒（实验性）</string>
+    <string name="calendar_sync_dues_title">到期提醒</string>
+    <string name="calendar_reminder_days_title">提前天数</string>
+    <string name="calendar_reminder_time_title">提醒时间</string>
+    <string name="calendar_reminder_time_summary">当天设置提醒的时间点</string>
+
+    <string name="widget_theme_pref_title">主题</string>
+    <string name="widget_theme_pref_summary">改变窗口小部件的主题。</string>
+
+    <string name="widget_header_transparency_title">页眉透明度</string>
+    <string name="widget_background_transparency_title">背景透明度</string>
+
+    <string name="widget_extended_pref_title">显示日期栏</string>
+    <string name="widget_extended_pref_summary">在单独行显示日期</string>
+
+    <string name="taskview_extended_pref_title">显示日期栏</string>
+    <string name="taskview_extended_pref_summary">在单独行显示日期</string>
+
+    <string name="append_tasks_at_end_title">追加到文件</string>
+    <string name="append_tasks_at_end_summary">在文件的末尾插入新任务</string>
+
+    <string name="color_due_pref_title">颜色</string>
+    <string name="show_hidden_title">显示隐藏的任务</string>
+    <string name="show_empty_lists_title">显示空标题</string>
+    <string name="show_empty_lists_summary">显示标题，即使该标题下的所有任务都被隐藏。</string>
+
+    <string name="split_actionbar_pref_title">使用拆分操作栏</string>
+    <string name="show_edittext_hint_title">显示提示</string>
+    <string name="show_complete_checkbox_title">显示完成复选框</string>
+    <string name="show_confirmation_dialogs_title">确认对话框</string>
+    <string name="show_confirmation_dialogs_summary">存档或删除任务之前提示</string>
+
+    <string name="show_todo_path_title">显示 todo 文件路径</string>
+    <string name="show_todo_path_summary">目录缩写为第一个字母</string>
+
+    <string name="show_fast_scroll_title">快速滚动</string>
+    <string name="lua_config_screen">Lua 配置</string>
+    <string name="lua_error">Lua 错误</string>
+    <string name="experimental_title">实验性</string>
+    <string name="experimental_summary">启用实验性功能</string>
+
+    <string name="keep_selection_title">保留选择</string>
+    <string name="keep_selection_summary">在更改后保持任务选择。</string>
+
+
+    <string name="share_history_title">Todo 历史</string>
+
+    <string name="hello_world">你好世界！</string>
+    <string name="action_settings">设置</string>
+
+    <string name="name">姓名</string>
+    <string name="date">日期</string>
+    <string name="help_locale">en</string>
+
+    <string name="calendar_write_error">错误︰ 无法写入日历</string>
+
+    <string name="click_to_copy">单击复制到剪贴板。</string>
+
+    <string name="donated_summary">"感谢您的捐助。 "</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">反向排序</string>
+
+    <string name="calendar_disp_name">Simpletask 提醒</string>
+    <string name="cleartask">清除任务</string>
+    <string name="defer_threshold">设置的阈值日期</string>
+    <string name="insert_due">插入截止日期</string>
+    <string name="insert_threshold">插入阈值日期</string>
+    <string name="widget_name_empty">没有指定窗口小部件名称，不添加窗口小部件</string>
+    <string name="ARCHIVE_settings_summary">为 done.txt 中已完成归档的任务的设置</string>
+    <string name="archive_now_pref_title">存档</string>
+    <string name="TODOTXTPATH_summary">存储 todo.txt 的 Dropbox 文件夹。</string>
+    <string name="todotxt_settings_summary">应用程序范围设置</string>
+    <string name="auto_archive_pref_summary">立即完成归档任务。</string>
+    <string name="share_task_show_edit_summary">在保存之前编辑任务共享到 Simpletask</string>
+
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="back_saves_summary">当按下返回时保存输入的 todos 及筛选。</string>
+
+    <string name="calendar_sync_thresholds_title">阈值日期提醒</string>
+    <string name="calendar_reminder_days_summary">多早设置提醒</string>
+    <string name="color_due_pref_summary">截至及阈值日期</string>
+
+    <string name="show_hidden_summary">显示隐藏的 (h:1) 任务以便编辑他们。完成编辑后可再次取消选中这条设置。</string>
+
+    <string name="split_actionbar_pref_summary">"分割操作栏，使菜单按钮位于屏幕底部。若要在屏幕显示更多的 todo 列表可关闭此项。 "</string>
+
+    <string name="show_edittext_hint_summary">在添加任务时显示提示。如果你觉得分神可禁用此项。</string>
+
+    <string name="show_complete_checkbox_summary">在任务前显示复选框以表示是否完成它们。</string>
+
+    <string name="show_fast_scroll_summary">如果 todo 列表过长，使用快速滚动功能</string>
+
+    <string name="show_calendarview_title">在输入日期时使用日历</string>
+
+    <string name="sort_case_sensitive_title">区分大小写排序</string>
+    <string name="use_create_backup_summary">排序时，如果没有设置阈值日期就使用任务创建日期作为阈值日期</string>
+
+    <string name="todotxt_terms_title">使用 todo.txt 术语</string>
+    </resources>
