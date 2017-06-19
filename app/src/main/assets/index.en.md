@@ -36,4 +36,3 @@ Check the menu for more help sections or click below.
 - [Defined intents](./intents.en.md) Intents that can be used for automating Simpletask
 - [Using Simpletask for 1MTD/MYN](./MYN.en.md)
 - [Using Lua](./script.en.md)
-
