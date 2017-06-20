@@ -27,11 +27,9 @@ Einrichten der Sortierung für MYN
 
 ![](./images/MYN_sort.png) 
 
-`??? Screenshot aktualisiseren`
-
 Um Aufgaben in Simpletask bis zur Wiedervorlage auszublenden ("Defer-To-Do" und "Defer-To-Review" in MYN), kann man ihnen mit `t:yyyy-mm-dd` Anfangsdaten zuweisen. 
 
-Stellen Sie sicher, dass in den Einstellungen das `Defer by threshold date` markiert ist `??? Does not exist anymore`.
+Stellen Sie sicher, dass in den Einstellungen das `Defer by threshold date` markiert ist.
 
 Sie können Aufgaben, deren Anfangsdaten in der Zukunft liegt, entweder verbergen (siehe Registerkarte "Other" in den Filtereinstellungen) oder Sie können sie ans Ende der Liste sortieren (so sind sie noch sichtbar, aber aus dem Weg). Um dies zu erreichen, verwenden Sie die Sortierung `Anfangsdatum in der Zukunft`. 
 
