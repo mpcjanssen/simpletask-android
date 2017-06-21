@@ -186,10 +186,10 @@ Show tasks without tags or lists (the GTD Inbox):
        return next(f.tags)==nil and next(f.lists)==nil
     end
 
-Show all tasks with the `@errands` tag:
+Show all tasks on the `@errands` list:
 
     function onFilter(t,f,e)
-       return f.tags["@errands"]
+       return f.lists["errands"]
     end
 
 Change the font size of the main task list to `16sp`:

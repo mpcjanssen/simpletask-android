@@ -190,10 +190,10 @@ Zeige alle Aufgaben ohne Listen oder Tags (der Posteingang bei GTD):
        return next(f.tags)==nil and next(f.lists)==nil
     end
 
-Zeige alle Aufgaben mit dem `@errands`-Tag:
+Zeige alle Aufgaben mit dem `@errands`-List:
 
     function onFilter(t,f,e)
-       return f.tags["@errands"]
+       return f.lists["errands"]
     end
 
 Ändere die Schriftgröße des Hauptbildschirms auf `16sp`:
