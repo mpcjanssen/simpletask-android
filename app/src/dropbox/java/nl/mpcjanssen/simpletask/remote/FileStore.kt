@@ -90,9 +90,9 @@ object FileStore : FileStoreInterface {
         val edit = mPrefs?.edit()
         edit?.let {
             if (accessToken == null) {
-                edit.remove(OAUTH2_TOKEN).commit()
+                edit.remove(OAUTH2_TOKEN).apply()
             } else {
-                edit.putString(OAUTH2_TOKEN, accessToken).commit()
+                edit.putString(OAUTH2_TOKEN, accessToken).apply()
             }
         }
     }
@@ -155,7 +155,7 @@ object FileStore : FileStoreInterface {
         val edit = mPrefs.edit()
         edit.putString(LOCAL_NAME, fileName)
         edit.putString(LOCAL_CONTENTS, contents)
-        edit.commit()
+        edit.apply()
     }
 
     private fun setChangesPending(pending: Boolean) {
@@ -167,7 +167,7 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "Changes are pending")
         }
         val edit = mPrefs.edit()
-        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit()
+        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).apply()
         mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
     }
 
@@ -329,17 +329,13 @@ object FileStore : FileStoreInterface {
             try {
 
                 val doneContents = ArrayList<String>()
-                var rev: String? = null
-                // First read file to append to
-
-                    val download = dbxClient.files().download(path)
-                    val inputAsString = download.inputStream.bufferedReader().forEachLine {
-                        doneContents.add(it)
-                    }
-                    rev = download.result.rev
-                    log.info(TAG, "The file's rev is: " + rev)
-                    download.close()
-
+                val download = dbxClient.files().download(path)
+                download.inputStream.bufferedReader().forEachLine {
+                    doneContents.add(it)
+                }
+                val rev = download.result.rev
+                log.info(TAG, "The file's rev is: " + rev)
+                download.close()
 
                 // Then append
                 doneContents += lines
@@ -462,7 +458,7 @@ object FileStore : FileStoreInterface {
         fun createFileDialog(act: Activity, fs: FileStoreInterface) {
             loadingOverlay = showLoadingOverlay(act, null, true)
 
-            val api = (fs as FileStore).dbxClient ?: return
+            val api = (fs as FileStore).dbxClient
 
             // Use an async task because we need to manage the UI
             Thread(Runnable {
