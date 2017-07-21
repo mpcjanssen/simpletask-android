@@ -32,6 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * FileStore implementation backed by Dropbox
+ * Dropbox V2 API docs suck, most of the V2 code was insoired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
 object FileStore : FileStoreInterface {
     override val isAuthenticated: Boolean
@@ -254,7 +255,6 @@ object FileStore : FileStoreInterface {
     }
 
     override fun logout() {
-        dbxClient.auth().tokenRevoke()
         mPrefs!!.edit().remove(OAUTH2_TOKEN).commit()
     }
 
