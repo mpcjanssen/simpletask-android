@@ -73,7 +73,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val newVisibleTasks = ArrayList<Task>()
         val filter = getFilter()
 
-        for (t in filter.apply(items)) {
+        for (t in filter.apply(items.asSequence())) {
             newVisibleTasks.add(t)
         }
         val comp = MultiComparator(filter.getSort(

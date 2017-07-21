@@ -240,14 +240,16 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<Task> {
-        val filteredTasks = filter.apply(todoItems.toMutableList())
+    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
-        if (!comp.fileOrder) {
-            filteredTasks.reverse()
+        val itemsToSort = if (comp.fileOrder) {
+            todoItems
+        } else {
+            todoItems.reversed()
         }
+        val filteredTasks = filter.apply(itemsToSort.asSequence())
         comp.comparator?.let {
-            Collections.sort(filteredTasks, it)
+            return filteredTasks.sortedWith(it)
         }
         return filteredTasks
     }

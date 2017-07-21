@@ -222,14 +222,13 @@ class ActiveFilter (val options : FilterOptions) {
         useScript = false
     }
 
-    fun apply(items: List<Task>?): ArrayList<Task> {
+    fun apply(items: Sequence<Task>?): Sequence<Task> {
         if (useScript) {
             log.info(TAG, "Filtering with Lua $script")
         }
         val filter = AndFilter()
-        val matched = ArrayList<Task>()
         if (items == null) {
-            return ArrayList()
+            return emptySequence()
         }
         val code = if (useScript) {script } else {null}
         val today = todayAsString
@@ -237,37 +236,34 @@ class ActiveFilter (val options : FilterOptions) {
             log.info(TAG, "Resetting onFilter callback in module ${options.luaModule}")
             LuaInterpreter.clearOnFilter(options.luaModule)
             LuaInterpreter.evalScript(options.luaModule, code)
-            for (item in items) {
-                if (options.showSelected && TodoList.isSelected(item) ) {
-                    matched.add(item)
-                    continue
+            return items.filter {
+                    if (options.showSelected && TodoList.isSelected(it)) {
+                        return@filter true
+                    }
+                    if (this.hideCompleted && it.isCompleted()) {
+                        return@filter false
+                    }
+                    if (this.hideFuture && it.inFuture(today)) {
+                        return@filter false
+                    }
+                    if (this.hideHidden && it.isHidden()) {
+                        return@filter false
+                    }
+                    if ("" == it.inFileFormat().trim { it <= ' ' }) {
+                        return@filter false
+                    }
+                    if (!filter.apply(it)) {
+                        return@filter false
+                    }
+                    if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, it)) {
+                        return@filter false
+                    }
+                return@filter true
                 }
-                val t = item
-                if (this.hideCompleted && t.isCompleted()) {
-                    continue
-                }
-                if (this.hideFuture && t.inFuture(today)) {
-                    continue
-                }
-                if (this.hideHidden && t.isHidden()) {
-                    continue
-                }
-                if ("" == t.inFileFormat().trim { it <= ' ' }) {
-                    continue
-                }
-                if (!filter.apply(t)) {
-                    continue
-                }
-                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, t)) {
-                        continue
-                }
-                matched.add(item)
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
             }
-        } catch (e: LuaError) {
-            log.debug(TAG, "Lua execution failed " + e.message)
-        }
-
-        return matched
+        return emptySequence()
     }
 
     fun setSort(sort: ArrayList<String>) {
