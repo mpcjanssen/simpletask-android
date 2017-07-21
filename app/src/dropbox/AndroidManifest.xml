@@ -26,25 +26,24 @@ You should have received a copy of the GNU General Public License along with Sim
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application>
+        <!-- Dropbox AuthActivity -->
         <activity
-                android:name="com.dropbox.client2.android.AuthActivity"
-                android:launchMode="singleTask"
-                android:configChanges="orientation|keyboard">
+                android:name="com.dropbox.core.android.AuthActivity"
+                android:configChanges="orientation|keyboard"
+                android:launchMode="singleTask">
             <intent-filter>
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="@string/dropbox_consumer_key" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <!-- Change this to be db- followed by your app key -->
+
+                <!-- Insert your app key after “db-  ...” -->
                 <data android:scheme="@string/dropbox_folder_consumer_key" />
+                <data android:scheme="@string/dropbox_consumer_key" />
+
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
             android:label="@string/app_label" >
