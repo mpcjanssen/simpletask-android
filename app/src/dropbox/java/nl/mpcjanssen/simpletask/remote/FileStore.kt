@@ -12,20 +12,15 @@ import android.os.Handler
 import android.os.Looper
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
-import com.dropbox.core.android.Auth
-import com.dropbox.core.http.OkHttp3Requestor
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
-
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
-import java.net.SocketTimeoutException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -35,57 +30,18 @@ import java.util.concurrent.CopyOnWriteArrayList
  * Dropbox V2 API docs suck, most of the V2 code was insoired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
 object FileStore : FileStoreInterface {
-    override val isAuthenticated: Boolean
-        get() = getAccessToken() != null
 
-    val dbxClient by lazy {
-        val accessToken = getAccessToken()
-        val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
-        val client = DbxClientV2(requestConfig, accessToken)
-        client
-    }
-
-    private fun getAccessToken(): String? {
-        val prefs = mApp.getSharedPreferences("nl.mpcjanssen.todotxtholo", Context.MODE_PRIVATE);
-        val accessToken = prefs.getString("access-token", null)
-        return accessToken
-    }
-
-    override fun needsRefresh(currentVersion: String?): Boolean {
-        try {
-            return getVersion(Config.todoFileName) != Config.currentVersionId
-        } catch (e : Exception) {
-            return false
-        }
-    }
-
-
-    override fun getVersion(filename: String): String {
-        val data = dbxClient.files().alphaGetMetadata(filename) as FileMetadata
-        return data.rev
-    }
 
     private val TAG = "FileStoreDB"
     private val LOCAL_CONTENTS = "localContents"
     private val LOCAL_NAME = "localName"
     private val LOCAL_CHANGES_PENDING = "localChangesPending"
     private val CACHE_PREFS = "dropboxMeta"
-    private val OAUTH2_TOKEN = "dropboxToken"
+    private val OAUTH2_TOKEN = "dropboxV2Token"
 
-    override fun pause(pause: Boolean) {
-        if (pause) {
-            log.info(TAG, "App went to background stop watching")
-            stopWatching()
-        } else {
-            log.info(TAG, "App came to foreground continue watching ${Config.todoFileName}")
-            continueWatching(Config.todoFileName)
-        }
-    }
 
     private val log: Logger = Logger
     private val mPrefs: SharedPreferences?
-
-
     private var pollingTask: Thread? = null
     internal var continuePolling = true
     internal var onOnline: Thread? = null
@@ -104,6 +60,62 @@ object FileStore : FileStoreInterface {
         })
         t.start()
         mOnline = isOnline
+    }
+
+
+    val dbxClient by lazy {
+        val accessToken = getAccessToken()
+        val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
+        val client = DbxClientV2(requestConfig, accessToken)
+        client
+    }
+
+
+    override fun pause(pause: Boolean) {
+        if (pause) {
+            log.info(TAG, "App went to background stop watching")
+            stopWatching()
+        } else {
+            log.info(TAG, "App came to foreground continue watching ${Config.todoFileName}")
+            continueWatching(Config.todoFileName)
+        }
+    }
+
+    fun getAccessToken(): String? {
+        val accessToken = mPrefs?.getString(OAUTH2_TOKEN, null)
+        return accessToken
+    }
+
+    fun setAccessToken(accessToken: String?) {
+        val edit = mPrefs?.edit()
+        edit?.let {
+            if (accessToken == null) {
+                edit.remove(OAUTH2_TOKEN).commit()
+            } else {
+                edit.putString(OAUTH2_TOKEN, accessToken).commit()
+            }
+        }
+    }
+
+    override val isAuthenticated: Boolean
+        get() = getAccessToken() != null
+
+    override fun logout() {
+        setAccessToken(null)
+    }
+
+    override fun needsRefresh(currentVersion: String?): Boolean {
+        try {
+            return getVersion(Config.todoFileName) != Config.currentVersionId
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+
+    override fun getVersion(filename: String): String {
+        val data = dbxClient.files().alphaGetMetadata(filename) as FileMetadata
+        return data.rev
     }
 
     private fun loadContentsFromCache(): String {
@@ -254,10 +266,6 @@ object FileStore : FileStoreInterface {
         })
     }
 
-    override fun logout() {
-        mPrefs!!.edit().remove(OAUTH2_TOKEN).commit()
-    }
-
     override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
         if (!isOnline) {
             showToastLong(mApp, "Device is offline")
@@ -280,9 +288,13 @@ object FileStore : FileStoreInterface {
                 val toStore = contents.toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
                 log.info(TAG, "Saving to file " + path)
-                val uploaded =  dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(WriteMode.update(rev)).uploadAndFinish(`in`)
+                val uploadBuilder = dbxClient.files().uploadBuilder(path)
+                if (rev != null) {
+                    uploadBuilder.withAutorename(true).withMode(WriteMode.update(rev))
+                }
+                val uploaded = uploadBuilder.uploadAndFinish(`in`)
                 rev = uploaded.rev
-                newName = uploaded.name
+                newName = uploaded.pathDisplay
                 if (updateVersion) {
                     Config.currentVersionId = rev
                 }
@@ -437,17 +449,12 @@ object FileStore : FileStoreInterface {
         private val log: Logger = Logger
         private var fileList: Array<String>? = null
         private val entryHash = HashMap<String, com.dropbox.core.v2.files.Metadata>()
-        private var currentPath: File? = null
+        private var currentPath = File(pathName)
 
         private val fileListenerList = ListenerList<FileStoreInterface.FileSelectedListener>()
         internal var dialog: Dialog? = null
         private var loadingOverlay: Dialog? = null
 
-
-        init {
-            currentPath = File(pathName)
-
-        }
 
         /**
 
@@ -459,33 +466,32 @@ object FileStore : FileStoreInterface {
 
             // Use an async task because we need to manage the UI
             Thread(Runnable {
-                loadFileList(act, api, currentPath ?: File("/"))
+                loadFileList(act, api, currentPath)
                 loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
                 runOnMainThread(Runnable {
                     val builder = AlertDialog.Builder(activity)
-                    builder.setTitle(currentPath!!.path)
+                    builder.setTitle(currentPath.canonicalPath)
 
                     builder.setItems(fileList, DialogInterface.OnClickListener { dialog, which ->
                         val fileChosen = fileList!![which]
                         if (fileChosen == PARENT_DIR) {
-                            currentPath = File(currentPath!!.parent)
+                            currentPath = currentPath.parentFile ?: File("/")
                             createFileDialog(act, fs)
                             return@OnClickListener
                         }
-                        val chosenFile = getChosenFile(fileChosen)
-                        log.warn(TAG, "Selected file " + chosenFile.name)
                         val entry = entryHash[fileChosen]
+                        log.warn(TAG, "Selected file " + entry?.pathDisplay)
                         if (entry == null) {
                             dialog.dismiss()
                             return@OnClickListener
                         }
-                        if (entry is FileMetadata) {
-                            currentPath = chosenFile
+                        if (entry is FolderMetadata) {
+                            currentPath = File(entry.pathDisplay)
                             createFileDialog(act, fs)
                         } else {
                             dialog.cancel()
                             dialog.dismiss()
-                            fireFileSelectedEvent(chosenFile)
+                            fireFileSelectedEvent(entry.pathDisplay)
                         }
                     })
                     if (dialog != null && dialog!!.isShowing) {
@@ -504,10 +510,10 @@ object FileStore : FileStoreInterface {
         }
 
 
-        private fun fireFileSelectedEvent(file: File) {
+        private fun fireFileSelectedEvent(file: String) {
             fileListenerList.fireEvent(object : ListenerList.FireHandler<FileStoreInterface.FileSelectedListener> {
                 override fun fireEvent(listener: FileStoreInterface.FileSelectedListener) {
-                    listener.fileSelected(file.toString())
+                    listener.fileSelected(file)
                 }
             })
         }
@@ -522,10 +528,12 @@ object FileStore : FileStoreInterface {
 
             entryHash.clear()
             try {
-                if (path.toString() != "/") {
-                    d.add("..")
+                val dbxPath = if (path.canonicalPath == "/") "" else path.canonicalPath
+                if (dbxPath != "") {
+                    d.add(PARENT_DIR)
                 }
-                val entries = dbxClient.files().listFolder(path.canonicalPath).entries
+
+                val entries = dbxClient.files().listFolder(dbxPath).entries
                 entries?.forEach {
                     entry ->
                     if (entry is FolderMetadata)
@@ -535,10 +543,8 @@ object FileStore : FileStoreInterface {
                             f.add(entry.name)
                         }
                     } else {
-
                         f.add(entry.name)
                     }
-
                     entryHash.put(entry.name, entry)
                 }
 
@@ -547,16 +553,10 @@ object FileStore : FileStoreInterface {
                 d.addAll(f)
                 fileList = d.toArray<String>(arrayOfNulls<String>(d.size))
             } catch (e: DbxException) {
+                Logger.error(TAG, "Dropbox error:", e)
                 loadFileList(act, api, File("/"))
                 return
             }
-        }
-
-        private fun getChosenFile(fileChosen: String): File {
-            if (fileChosen == PARENT_DIR)
-                return currentPath!!.parentFile
-            else
-                return File(currentPath, fileChosen)
         }
 
         companion object {

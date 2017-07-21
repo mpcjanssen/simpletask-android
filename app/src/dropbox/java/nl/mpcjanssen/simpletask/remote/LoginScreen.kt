@@ -31,9 +31,11 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Button
-
 import com.dropbox.core.android.Auth
-import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.Simpletask
+import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
+import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 
 
@@ -94,11 +96,10 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     private fun finishLogin() {
-            val accessToken = Auth.getOAuth2Token(); //generate Access Token
+        val accessToken = Auth.getOAuth2Token()
             if (accessToken != null) {
                 //Store accessToken in SharedPreferences
-                val prefs = getSharedPreferences("nl.mpcjanssen.todotxtholo", Context.MODE_PRIVATE);
-                prefs.edit().putString("access-token", accessToken).apply();
+                FileStore.setAccessToken(accessToken)
 
                 //Proceed to MainActivity
                 m_app.fileChanged(Config.todoFileName)
@@ -112,20 +113,13 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     internal fun startLogin() {
-        val app_secret =
-        if (Config.fullDropBoxAccess) {
-            m_app.getString(R.string.dropbox_consumer_secret)
-        } else {
-            m_app.getString(R.string.dropbox_folder_consumer_secret)
-
-        }
         val app_key =
                 if (Config.fullDropBoxAccess) {
                     m_app.getString(R.string.dropbox_consumer_key)
                 } else {
                     m_app.getString(R.string.dropbox_folder_consumer_key)
                 }
-        Auth.startOAuth2Authentication(this, app_key.substring(3));
+        Auth.startOAuth2Authentication(this, app_key.substring(3))
 
     }
 
@@ -134,6 +128,4 @@ class LoginScreen : ThemedNoActionBarActivity() {
 
         internal val TAG = LoginScreen::class.java.simpleName
     }
-
-
 }
