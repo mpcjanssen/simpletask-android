@@ -31,9 +31,8 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Button
-import com.dropbox.client2.DropboxAPI
-import com.dropbox.client2.android.AndroidAuthSession
-import com.dropbox.client2.session.AppKeyPair
+
+import com.dropbox.core.android.Auth
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.Config
 
@@ -81,26 +80,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
         }
 
     }
-    fun getMdbApi(mApp: TodoApplication) : DropboxAPI<AndroidAuthSession> {
-        val app_secret: String
-        var app_key: String
 
-            // Full access or folder access?
-            if (Config.fullDropBoxAccess) {
-                app_secret = mApp.getString(R.string.dropbox_consumer_secret)
-                app_key = mApp.getString(R.string.dropbox_consumer_key)
-            } else {
-                app_secret = mApp.getString(R.string.dropbox_folder_consumer_secret)
-                app_key = mApp.getString(R.string.dropbox_folder_consumer_key)
-            }
-            app_key = app_key.replaceFirst("^db-".toRegex(), "")
-            // And later in some initialization function:
-            val appKeys = AppKeyPair(app_key, app_secret)
-            val savedAuth : String? = null
-            val session = AndroidAuthSession(appKeys, savedAuth)
-            return DropboxAPI(session)
-
-    }
 
     private fun switchToTodolist() {
         val intent = Intent(this, Simpletask::class.java)
@@ -114,11 +94,17 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     private fun finishLogin() {
-        if (m_app.isAuthenticated) {
-            m_app.fileChanged(Config.todoFileName)
-            switchToTodolist()
+            val accessToken = Auth.getOAuth2Token(); //generate Access Token
+            if (accessToken != null) {
+                //Store accessToken in SharedPreferences
+                val prefs = getSharedPreferences("nl.mpcjanssen.todotxtholo", Context.MODE_PRIVATE);
+                prefs.edit().putString("access-token", accessToken).apply();
+
+                //Proceed to MainActivity
+                m_app.fileChanged(Config.todoFileName)
+                switchToTodolist()
+            }
         }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -126,7 +112,21 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     internal fun startLogin() {
-        getMdbApi(m_app).session.startOAuth2Authentication(this)
+        val app_secret =
+        if (Config.fullDropBoxAccess) {
+            m_app.getString(R.string.dropbox_consumer_secret)
+        } else {
+            m_app.getString(R.string.dropbox_folder_consumer_secret)
+
+        }
+        val app_key =
+                if (Config.fullDropBoxAccess) {
+                    m_app.getString(R.string.dropbox_consumer_key)
+                } else {
+                    m_app.getString(R.string.dropbox_folder_consumer_key)
+                }
+        Auth.startOAuth2Authentication(this, app_key.substring(3));
+
     }
 
 
