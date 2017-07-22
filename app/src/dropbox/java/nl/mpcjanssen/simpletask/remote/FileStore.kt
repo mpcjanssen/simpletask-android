@@ -10,14 +10,18 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
+
+`
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
+import com.dropbox.core.NetworkIOException
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
+import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
@@ -42,8 +46,7 @@ object FileStore : FileStoreInterface {
 
     private val log: Logger = Logger
     private val mPrefs: SharedPreferences?
-    private var pollingTask: Thread? = null
-    internal var continuePolling = true
+
     internal var onOnline: Thread? = null
     override var isLoading = false
     private var mOnline: Boolean = false
@@ -108,13 +111,14 @@ object FileStore : FileStoreInterface {
         try {
             return getVersion(Config.todoFileName) != Config.currentVersionId
         } catch (e: Exception) {
-            return false
+            Logger.error(TAG, "Can't determine if refresh is needed.", e)
+            return true
         }
     }
 
 
     override fun getVersion(filename: String): String {
-        val data = dbxClient.files().alphaGetMetadata(filename) as FileMetadata
+        val data = dbxClient.files().getMetadata(filename) as FileMetadata
         return data.rev
     }
 
@@ -179,9 +183,6 @@ object FileStore : FileStoreInterface {
         }
 
 
-    private var pollFailures: Int = 0
-
-
     @Synchronized @Throws(IOException::class)
     override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
 
@@ -219,6 +220,7 @@ object FileStore : FileStoreInterface {
                 val contents = join(readFile, "\n")
                 backup?.backup(path, contents)
                 saveToCache(fileInfo.name, fileInfo.rev, contents)
+            Config.currentVersionId = fileInfo.rev
                 startWatching(path)
             }
 
@@ -244,25 +246,17 @@ object FileStore : FileStoreInterface {
 
     private fun startWatching(path: String) {
         queueRunnable("startWatching", Runnable {
-            if (pollingTask == null) {
-                log.info("LongPoll", "Initializing long polling thread")
-                continueWatching(path)
-            }
         })
     }
 
     private fun continueWatching(path: String) {
         log.info(TAG, "Continue watching $path")
-        continuePolling = true
-        pollFailures = 0
-        //startLongPoll(0)
+
     }
 
 
     private fun stopWatching() {
         queueRunnable("stopWatching", Runnable {
-            continuePolling = false
-            pollingTask = null
         })
     }
 
@@ -390,6 +384,7 @@ object FileStore : FileStoreInterface {
 
     }
 
+
     override fun supportsSync(): Boolean {
         return true
     }
@@ -413,7 +408,6 @@ object FileStore : FileStoreInterface {
                     }
 
                     if (isOnline) {
-                        continuePolling = true
                         broadcastFileChanged(mApp.localBroadCastManager)
                     } else {
 
