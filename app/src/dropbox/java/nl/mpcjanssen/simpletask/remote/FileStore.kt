@@ -10,18 +10,14 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
-
-`
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
-import com.dropbox.core.NetworkIOException
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
@@ -42,7 +38,6 @@ object FileStore : FileStoreInterface {
     private val LOCAL_CHANGES_PENDING = "localChangesPending"
     private val CACHE_PREFS = "dropboxMeta"
     private val OAUTH2_TOKEN = "dropboxV2Token"
-
 
     private val log: Logger = Logger
     private val mPrefs: SharedPreferences?
@@ -80,7 +75,7 @@ object FileStore : FileStoreInterface {
             stopWatching()
         } else {
             log.info(TAG, "App came to foreground continue watching ${Config.todoFileName}")
-            continueWatching(Config.todoFileName)
+            startWatching(Config.todoFileName)
         }
     }
 
@@ -211,18 +206,18 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "The file's rev is: " + fileInfo.rev)
 
 
-                val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
+            val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
-                reader.forEachLine { line ->
-                    readFile.add(line)
-                }
-                openFileStream.close()
-                val contents = join(readFile, "\n")
-                backup?.backup(path, contents)
-                saveToCache(fileInfo.name, fileInfo.rev, contents)
-            Config.currentVersionId = fileInfo.rev
-                startWatching(path)
+            reader.forEachLine { line ->
+                readFile.add(line)
             }
+            openFileStream.close()
+            val contents = join(readFile, "\n")
+            backup?.backup(path, contents)
+            saveToCache(fileInfo.name, fileInfo.rev, contents)
+            Config.currentVersionId = fileInfo.rev
+            startWatching(path)
+        }
 
 
         return readFile
@@ -242,16 +237,12 @@ object FileStore : FileStoreInterface {
     }
 
 
-
-
     private fun startWatching(path: String) {
-        queueRunnable("startWatching", Runnable {
+        queueRunnable("Refresh", Runnable {
+            if (needsRefresh(Config.currentVersionId)) {
+                sync()
+            }
         })
-    }
-
-    private fun continueWatching(path: String) {
-        log.info(TAG, "Continue watching $path")
-
     }
 
 
@@ -272,7 +263,7 @@ object FileStore : FileStoreInterface {
     }
 
     @Synchronized @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean) {
+    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean) {
         backup?.backup(path, join(lines, "\n"))
         val contents = join(lines, eol) + eol
         val r = Runnable {
@@ -379,7 +370,6 @@ object FileStore : FileStoreInterface {
         val contents = join(readFile, "\n")
         fileRead?.fileRead(contents)
         return contents
-
 
 
     }
@@ -528,7 +518,7 @@ object FileStore : FileStoreInterface {
                     entry ->
                     if (entry is FolderMetadata)
                         d.add(entry.name)
-                     else if (txtOnly) {
+                    else if (txtOnly) {
                         if (File(entry.name).extension == "txt") {
                             f.add(entry.name)
                         }
@@ -553,8 +543,6 @@ object FileStore : FileStoreInterface {
             private val PARENT_DIR = ".."
         }
     }
-
-
 
 
     fun getDefaultPath(): String {
