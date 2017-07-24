@@ -27,7 +27,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-
 import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
@@ -40,7 +39,6 @@ import android.view.MenuItem
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.FontManager
 import java.util.*
-
 
 class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -84,7 +82,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 val broadcastIntent = Intent(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
             }
-            getString(R.string.custom_font_size), 
+            getString(R.string.custom_font_size),
             getString(R.string.font_size) -> {
                 val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
                 localBroadcastManager.sendBroadcast(broadcastIntent)

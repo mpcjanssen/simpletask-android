@@ -138,7 +138,6 @@ class HistoryScreen : ThemedActionBarActivity() {
         mScroll = sv.scrollY
     }
 
-
     private fun showPrev() {
         saveScroll()
         m_cursor!!.moveToPrevious()

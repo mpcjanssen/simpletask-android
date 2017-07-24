@@ -3,7 +3,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.markdownAssetAsHtml
 import java.util.*
 
@@ -37,7 +35,6 @@ class HelpScreen : ThemedActionBarActivity() {
             super.onBackPressed()
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,14 +90,12 @@ class HelpScreen : ThemedActionBarActivity() {
         startActivity(browserIntent)
     }
 
-
     fun showMarkdownAsset(wv: WebView, ctxt: Context, name: String) {
         log!!.debug(TAG, "Loading asset $name into $wv($ctxt)")
         val html = markdownAssetAsHtml(ctxt, name)
         history.push(name)
         wv.loadDataWithBaseURL(BASE_URL, html, "text/html", "UTF-8", "file:///android_asset/index." + getText(R.string.help_locale) + ".md")
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

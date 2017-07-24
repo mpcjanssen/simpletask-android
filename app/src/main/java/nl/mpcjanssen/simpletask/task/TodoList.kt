@@ -43,7 +43,6 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArraySet
 
-
 /**
  * Implementation of the in memory representation of the Todo list
  * uses an ActionQueue to ensure modifications and access of the underlying todo list are
@@ -60,7 +59,6 @@ object TodoList {
     val selectedItems = CopyOnWriteArraySet<Task>()
     val pendingEdits = LinkedHashSet<Task>()
     internal val TAG = TodoList::class.java.simpleName
-
 
     fun hasPendingAction(): Boolean {
         return ActionQueue.hasPending()
@@ -79,7 +77,6 @@ object TodoList {
         ActionQueue.add(description, r)
     }
 
-
     fun add(items: List<Task>, atEnd: Boolean) {
         queue("Add task ${items.size} atEnd: $atEnd") {
             if (atEnd) {
@@ -94,7 +91,6 @@ object TodoList {
         add(listOf(t), atEnd)
     }
 
-
     fun removeAll(tasks: List<Task>) {
         queue("Remove") {
             todoItems.removeAll(tasks)
@@ -103,11 +99,9 @@ object TodoList {
         }
     }
 
-
     fun size(): Int {
         return todoItems.size
     }
-
 
     val priorities: ArrayList<Priority>
         get() {
@@ -152,13 +146,11 @@ object TodoList {
             return newTags
         }
 
-
     val decoratedContexts: List<String>
         get() = contexts.map { "@" + it }
 
     val decoratedProjects: List<String>
         get() = projects.map { "+" + it }
-
 
     fun uncomplete(items: List<Task>) {
         queue("Uncomplete") {
@@ -185,7 +177,6 @@ object TodoList {
             }
         }
     }
-
 
     fun prioritize(tasks: List<Task>, prio: Priority) {
         queue("Complete") {
@@ -214,7 +205,6 @@ object TodoList {
         get() {
             return todoItems.filter { it.isCompleted() }
         }
-
 
     fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
@@ -290,7 +280,6 @@ object TodoList {
         }
     }
 
-
     private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         try {
             val lines = todoItems.map {
@@ -327,7 +316,6 @@ object TodoList {
         return selectedItems.size
     }
 
-
     fun selectTasks(items: List<Task>) {
         queue("Select") {
             selectedItems.addAll(items)
@@ -341,7 +329,6 @@ object TodoList {
         }
     }
 
-
     fun unSelectTask(item: Task) {
         unSelectTasks(listOf(item))
     }
@@ -352,7 +339,6 @@ object TodoList {
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
-
 
     fun clearSelection() {
         queue("Clear selection") {
@@ -373,7 +359,7 @@ object TodoList {
     }
 
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
-        queue("Edit tasks")  {
+        queue("Edit tasks") {
             pendingEdits.addAll(tasks)
             startAddTaskActivity(from, prefill)
         }

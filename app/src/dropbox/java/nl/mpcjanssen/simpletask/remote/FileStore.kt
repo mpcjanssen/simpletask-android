@@ -24,13 +24,11 @@ import java.io.*
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
-
 /**
  * FileStore implementation backed by Dropbox
  * Dropbox V2 API docs suck, most of the V2 code was insoired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
 object FileStore : FileStoreInterface {
-
 
     private val TAG = "FileStoreDB"
     private val LOCAL_CONTENTS = "localContents"
@@ -60,14 +58,12 @@ object FileStore : FileStoreInterface {
         mOnline = isOnline
     }
 
-
     val dbxClient by lazy {
         val accessToken = getAccessToken()
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
         val client = DbxClientV2(requestConfig, accessToken)
         client
     }
-
 
     override fun pause(pause: Boolean) {
         if (pause) {
@@ -110,7 +106,6 @@ object FileStore : FileStoreInterface {
             return true
         }
     }
-
 
     override fun getVersion(filename: String): String {
         val data = dbxClient.files().getMetadata(filename) as FileMetadata
@@ -177,7 +172,6 @@ object FileStore : FileStoreInterface {
             return netInfo != null && netInfo.isConnected
         }
 
-
     @Synchronized @Throws(IOException::class)
     override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
 
@@ -205,7 +199,6 @@ object FileStore : FileStoreInterface {
             val fileInfo = download.result
             log.info(TAG, "The file's rev is: " + fileInfo.rev)
 
-
             val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
             reader.forEachLine { line ->
@@ -218,7 +211,6 @@ object FileStore : FileStoreInterface {
             Config.currentVersionId = fileInfo.rev
             startWatching(path)
         }
-
 
         return readFile
     }
@@ -236,7 +228,6 @@ object FileStore : FileStoreInterface {
         caller.startActivity(intent)
     }
 
-
     private fun startWatching(path: String) {
         queueRunnable("Refresh", Runnable {
             if (needsRefresh(Config.currentVersionId)) {
@@ -244,7 +235,6 @@ object FileStore : FileStoreInterface {
             }
         })
     }
-
 
     private fun stopWatching() {
         queueRunnable("stopWatching", Runnable {
@@ -371,14 +361,11 @@ object FileStore : FileStoreInterface {
         fileRead?.fileRead(contents)
         return contents
 
-
     }
-
 
     override fun supportsSync(): Boolean {
         return true
     }
-
 
     fun changedConnectionState() {
         val prevOnline = mOnline
@@ -419,7 +406,6 @@ object FileStore : FileStoreInterface {
         return true
     }
 
-
     /**
      * @param activity activity to display the file dialog.
      * *
@@ -434,7 +420,6 @@ object FileStore : FileStoreInterface {
         private val fileListenerList = ListenerList<FileStoreInterface.FileSelectedListener>()
         internal var dialog: Dialog? = null
         private var loadingOverlay: Dialog? = null
-
 
         /**
 
@@ -484,11 +469,9 @@ object FileStore : FileStoreInterface {
             }).start()
         }
 
-
         fun addFileListener(listener: FileStoreInterface.FileSelectedListener) {
             fileListenerList.add(listener)
         }
-
 
         private fun fireFileSelectedEvent(file: String) {
             fileListenerList.fireEvent(object : ListenerList.FireHandler<FileStoreInterface.FileSelectedListener> {
@@ -498,13 +481,10 @@ object FileStore : FileStoreInterface {
             })
         }
 
-
         private fun loadFileList(act: Activity, api: DbxClientV2, path: File) {
             this.currentPath = path
             val f = ArrayList<String>()
             val d = ArrayList<String>()
-
-
 
             entryHash.clear()
             try {
@@ -543,7 +523,6 @@ object FileStore : FileStoreInterface {
             private val PARENT_DIR = ".."
         }
     }
-
 
     fun getDefaultPath(): String {
         if (Config.fullDropBoxAccess) {

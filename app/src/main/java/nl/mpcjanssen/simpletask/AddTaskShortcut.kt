@@ -31,7 +31,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 
-
 class AddTaskShortcut : ThemedNoActionBarActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {

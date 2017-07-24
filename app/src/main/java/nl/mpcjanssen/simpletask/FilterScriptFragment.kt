@@ -19,7 +19,6 @@ class FilterScriptFragment : Fragment() {
     private var spnCallback: Spinner? = null
     private val log: Logger = Logger
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log.debug(TAG, "onCreate() this:" + this)
@@ -52,7 +51,7 @@ class FilterScriptFragment : Fragment() {
         spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
         val callbacks = arrayOf<String>(LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME)
-        val spnAdapter = ArrayAdapter(activity,R.layout.spinner_item,callbacks)
+        val spnAdapter = ArrayAdapter(activity, R.layout.spinner_item, callbacks)
         spnCallback?.adapter = spnAdapter
 
         val btnTest = layout.findViewById(R.id.btnTest) as Button
@@ -64,7 +63,7 @@ class FilterScriptFragment : Fragment() {
                 val script = script
                 val snackBar = Snackbar.make(activity.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
                 val barView = snackBar.view
-                when(callbackToTest) {
+                when (callbackToTest) {
                     LuaInterpreter.ON_FILTER_NAME -> testOnFilterCallback(barView, script, snackBar, t)
                     LuaInterpreter.ON_GROUP_NAME -> testOnGroupCallback(barView, script, snackBar, t)
                 }
@@ -99,7 +98,7 @@ class FilterScriptFragment : Fragment() {
     private fun testOnGroupCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         if (!script.trim { it <= ' ' }.isEmpty()) {
             snackBar.setText("Group: " + LuaInterpreter.evalScript(environment, script).onGroupCallback(environment, t))
-            barView.setBackgroundColor(ContextCompat.getColor(activity,R.color.gray74))
+            barView.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray74))
         } else {
             snackBar.setText("Callback not defined")
             barView.setBackgroundColor(0xffe53935.toInt())
@@ -136,7 +135,6 @@ class FilterScriptFragment : Fragment() {
             txtScript?.setText(script)
         }
 
-
     val testTask: String
         get() {
             val arguments = arguments
@@ -149,12 +147,11 @@ class FilterScriptFragment : Fragment() {
 
     val selectedCallback: String
         get() {
-            if (spnCallback==null) {
+            if (spnCallback == null) {
                 return LuaInterpreter.ON_FILTER_NAME
             }
             return spnCallback?.selectedItem.toString()
         }
-
 
     companion object {
         internal val TAG = FilterScriptFragment::class.java.simpleName

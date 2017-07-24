@@ -6,7 +6,6 @@ package nl.mpcjanssen.simpletask
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.widget.Button
 import android.widget.EditText
 import android.view.Menu
 import android.view.MenuItem

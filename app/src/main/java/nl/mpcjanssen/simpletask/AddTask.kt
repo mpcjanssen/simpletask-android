@@ -5,7 +5,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.BroadcastReceiver
@@ -29,7 +28,6 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
-
 
 class AddTask : ThemedActionBarActivity() {
 
@@ -167,7 +165,6 @@ class AddTask : ThemedActionBarActivity() {
         findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
     }
 
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
@@ -205,7 +202,7 @@ class AddTask : ThemedActionBarActivity() {
                 finishEdit()
             }
             R.id.menu_prefill_next -> {
-                Config.isAddTagsCloneTags =  !Config.isAddTagsCloneTags
+                Config.isAddTagsCloneTags = !Config.isAddTagsCloneTags
                 item.isChecked = !item.isChecked
             }
             R.id.menu_word_wrap -> {
@@ -267,7 +264,7 @@ class AddTask : ThemedActionBarActivity() {
 
         // Update the TodoList with changes
         // Create new tasks
-        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty()}
+        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }
         log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks" )
         for (task in enteredTasks) {
             if (m_backup.size > 0) {
@@ -287,7 +284,6 @@ class AddTask : ThemedActionBarActivity() {
 
         // Remove remaining tasks that where selected for updateCache
         todoList.removeAll(m_backup)
-
 
         // Save
         todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
@@ -339,7 +335,7 @@ class AddTask : ThemedActionBarActivity() {
                     if (!input.isNullOrEmpty()) {
                         insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
                     } else {
-                        replaceDate(dateType,input)
+                        replaceDate(dateType, input)
                     }
                 }
             }
@@ -395,7 +391,7 @@ class AddTask : ThemedActionBarActivity() {
             val newText = ed.text.toString()
 
             for (i in 0..lvAdapter.count-1) {
-                val tag =  lvAdapter.getItem(i)
+                val tag = lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
                     task.addTag(tag)
                 } else {
@@ -407,13 +403,12 @@ class AddTask : ThemedActionBarActivity() {
                 task.addTag(newText)
             }
 
-
             if (idx != -1) {
                 tasks[idx] = task
             } else {
                 tasks.add(task)
             }
-            textInputField.setText(tasks.joinToString("\n") {it.text})
+            textInputField.setText(tasks.joinToString("\n") { it.text })
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
@@ -435,7 +430,6 @@ class AddTask : ThemedActionBarActivity() {
         dialog.setTitle(R.string.priority_prompt)
         dialog.show()
     }
-
 
     private fun getTasks() : MutableList<Task> {
         val input = textInputField.text.toString()
@@ -475,7 +469,7 @@ class AddTask : ThemedActionBarActivity() {
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             for (i in 0..lvAdapter.count-1) {
-                val list =  lvAdapter.getItem(i)
+                val list = lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
                     task.addList(list)
                 } else {
@@ -491,7 +485,7 @@ class AddTask : ThemedActionBarActivity() {
             } else {
                 tasks.add(task)
             }
-            textInputField.setText(tasks.joinToString("\n") {it.text})
+            textInputField.setText(tasks.joinToString("\n") { it.text })
         }
         builder.setNegativeButton(R.string.cancel) { dialog, id -> }
         // Create the AlertDialog
@@ -617,7 +611,6 @@ class AddTask : ThemedActionBarActivity() {
         textInputField.text.replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length)
     }
-
 
     public override fun onPause() {
 

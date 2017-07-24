@@ -12,7 +12,6 @@ import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
 
-
 data class FilterOptions(val luaModule: String, val showSelected : Boolean = false)
 
 /**
@@ -52,7 +51,6 @@ class ActiveFilter (val options : FilterOptions) {
         log = Logger
     }
 
-
     fun saveInJSON(json: JSONObject) {
         json.put(INTENT_TITLE, name)
         json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
@@ -81,7 +79,7 @@ class ActiveFilter (val options : FilterOptions) {
         val contexts: String?
         val sorts: String?
 
-        if (json==null) {
+        if (json == null) {
             return
         }
         name = json.optString(INTENT_TITLE, "No title")
@@ -90,7 +88,7 @@ class ActiveFilter (val options : FilterOptions) {
         contexts = json.optString(INTENT_CONTEXTS_FILTER)
         sorts = json.optString(INTENT_SORT_ORDER)
 
-        useScript = json.optBoolean(INTENT_USE_SCRIPT_FILTER,false)
+        useScript = json.optBoolean(INTENT_USE_SCRIPT_FILTER, false)
         script = json.optString(INTENT_SCRIPT_FILTER)
         scriptTestTask = json.optString(INTENT_SCRIPT_TEST_TASK_FILTER)
 
@@ -125,7 +123,6 @@ class ActiveFilter (val options : FilterOptions) {
             this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
     }
-
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
@@ -200,7 +197,6 @@ class ActiveFilter (val options : FilterOptions) {
         }
     }
 
-
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
             val editor = prefs.edit()
@@ -230,7 +226,7 @@ class ActiveFilter (val options : FilterOptions) {
         if (items == null) {
             return emptySequence()
         }
-        val code = if (useScript) {script } else {null}
+        val code = if (useScript) { script } else { null }
         val today = todayAsString
         try {
             log.info(TAG, "Resetting onFilter callback in module ${options.luaModule}")

@@ -10,7 +10,6 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
 import java.io.IOException
-import java.nio.charset.Charset
 import java.util.*
 
 object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -186,7 +185,6 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
             }
         }
     }
-
 
     val defaultSorts: Array<String>
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
