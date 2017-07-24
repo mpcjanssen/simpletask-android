@@ -14,7 +14,7 @@ import nl.mpcjanssen.simpletask.R
 
 class SeekBarPreference : Preference, OnSeekBarChangeListener {
 
-    private val TAG = javaClass.getName()
+    private val TAG = javaClass.name
     private val log: Logger
 
     private var mMaxValue = 100

@@ -192,7 +192,7 @@ object LuaInterpreter {
     }
 }
 
-class LuaToastShort() : OneArgFunction() {
+class LuaToastShort : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
         log.info(TAG, "Toast called $string")

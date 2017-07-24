@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * FileStore implementation backed by Dropbox
- * Dropbox V2 API docs suck, most of the V2 code was insoired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
+ * Dropbox V2 API docs suck, most of the V2 code was inspired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
 object FileStore : FileStoreInterface {
 
@@ -57,7 +57,7 @@ object FileStore : FileStoreInterface {
         t.start()
         mOnline = isOnline
     }
-
+    
     val dbxClient by lazy {
         val accessToken = getAccessToken()
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
