@@ -58,7 +58,7 @@ class ByContextFilter(contexts: List<String>?, private val not: Boolean) : TaskF
             if (contexts.contains(c)) {
                 return true
             }
-        }        /*
+        } /*
          * Match tasks without context if filter contains "-"
 		 */
         return input.lists.size == 0 && contexts.contains("-")

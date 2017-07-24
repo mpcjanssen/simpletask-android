@@ -5,7 +5,6 @@ package nl.mpcjanssen.simpletask
 
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.view.Menu
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
@@ -39,12 +38,9 @@ class DebugInfoScreen : ThemedActionBarActivity() {
 
     }
 
-
-
     private fun sendLog() {
-        shareText(this@DebugInfoScreen, "${appVersion(this)} log",  Daos.logAsText())
+        shareText(this@DebugInfoScreen, "${appVersion(this)} log", Daos.logAsText())
     }
-
 
     fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

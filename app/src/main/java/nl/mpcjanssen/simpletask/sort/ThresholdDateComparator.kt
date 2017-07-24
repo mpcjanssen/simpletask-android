@@ -18,7 +18,6 @@ class ThresholdDateComparator(val createAsBackup: Boolean) : Comparator<Task> {
         var dateA = a.thresholdDate
         var dateB = b.thresholdDate
 
-
         // Use create date as threshold date
         // if configured in the settings.
         if (createAsBackup) {

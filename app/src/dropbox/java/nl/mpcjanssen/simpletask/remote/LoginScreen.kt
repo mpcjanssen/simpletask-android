@@ -38,7 +38,6 @@ import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 
-
 class LoginScreen : ThemedNoActionBarActivity() {
 
     private lateinit var m_app: TodoApplication
@@ -76,13 +75,11 @@ class LoginScreen : ThemedNoActionBarActivity() {
             startLogin()
         }
 
-
         if (m_app.isAuthenticated) {
             switchToTodolist()
         }
 
     }
-
 
     private fun switchToTodolist() {
         val intent = Intent(this, Simpletask::class.java)
@@ -122,7 +119,6 @@ class LoginScreen : ThemedNoActionBarActivity() {
         Auth.startOAuth2Authentication(this, app_key.substring(3))
 
     }
-
 
     companion object {
 

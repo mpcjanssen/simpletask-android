@@ -11,7 +11,6 @@ class ProjectComparator(caseSensitive: Boolean) : Comparator<Task> {
         this.mStringComparator = AlphabeticalStringComparator(caseSensitive)
     }
 
-
     override fun compare(a: Task?, b: Task?): Int {
         if (a === b) {
             return 0

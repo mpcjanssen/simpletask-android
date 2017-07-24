@@ -26,7 +26,7 @@ object FileStore : FileStoreInterface {
     }
 
     override fun needsRefresh(currentVersion: String?): Boolean {
-        val lastModified =  Config.todoFile.lastModified()
+        val lastModified = Config.todoFile.lastModified()
         if (lastModified == 0L ) {
             return true
         }
@@ -245,7 +245,6 @@ object FileStore : FileStoreInterface {
             return dialog
         }
 
-
         fun addFileListener(listener: FileStoreInterface.FileSelectedListener) {
             fileListenerList.add(listener)
         }
@@ -365,6 +364,5 @@ class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolu
         Logger.info(TAG, "Observer: Adding delayed enabling to queue")
         handler.postDelayed(delayedEnable, ms.toLong())
     }
-
 
 }

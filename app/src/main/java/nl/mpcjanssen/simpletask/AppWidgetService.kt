@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask
 
-
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.graphics.Color
@@ -20,7 +19,6 @@ import kotlin.collections.ArrayList
 
 class AppWidgetService : RemoteViewsService() {
 
-
     override fun onGetViewFactory(intent: Intent): RemoteViewsService.RemoteViewsFactory {
         return AppWidgetRemoteViewsFactory(intent)
     }
@@ -39,7 +37,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     fun moduleName () : String {
         return "widget$widgetId"
     }
-   
+
     fun getFilter () : ActiveFilter {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
@@ -52,14 +50,12 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return filter
     }
 
-
     private fun createSelectedIntent(position: Int): Intent {
         val target = Intent()
         getFilter().saveInIntent(target)
         target.putExtra(Constants.INTENT_SELECTED_TASK_LINE, position)
         return target
     }
-
 
     fun setFilteredTasks() {
         log.debug(TAG, "Widget $widgetId: setFilteredTasks called")
@@ -68,7 +64,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             log.debug(TAG, "TodoApplication.app is not authenticated")
             return
         }
-        
+
         val items = TodoList.todoItems
         val newVisibleTasks = ArrayList<Task>()
         val filter = getFilter()
@@ -86,7 +82,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             newVisibleTasks.reverse()
         }
         comp.comparator?.let {
-            Collections.sort(newVisibleTasks,it)
+            Collections.sort(newVisibleTasks, it)
         }
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
@@ -217,9 +213,8 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         // find index in the to-do list of the clicked task
         val task = visibleTasks[position]
 
-        return getExtendedView(task,position)
+        return getExtendedView(task, position)
     }
-
 
     override fun getViewTypeCount(): Int {
         return 1

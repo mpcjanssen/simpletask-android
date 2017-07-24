@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask.sort
 import java.util.*
 import java.text.Collator
 
-
 class AlphabeticalStringComparator(caseSensitive: Boolean) : Comparator<String> {
     internal var bCaseSensitive = true
 

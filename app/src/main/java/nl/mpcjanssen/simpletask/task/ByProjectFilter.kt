@@ -41,7 +41,6 @@ class ByProjectFilter(projects: List<String>?, internal var not: Boolean) : Task
         }
     }
 
-
     override fun apply(task: Task): Boolean {
         if (not) {
             return !filter(task)
@@ -58,7 +57,7 @@ class ByProjectFilter(projects: List<String>?, internal var not: Boolean) : Task
             if (projects.contains(p)) {
                 return true
             }
-        }        /*
+        } /*
          * Match tasks without project if filter contains "-"
 		 */
         return input.tags.size == 0 && projects.contains("-")

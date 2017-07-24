@@ -40,7 +40,6 @@ object LuaInterpreter {
         return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
     }
 
-
     fun onFilterCallback(moduleName : String, t: Task): Boolean {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {
@@ -145,7 +144,7 @@ object LuaInterpreter {
 
         val extensionTable = LuaTable.tableOf()
         for ((key, value) in t.extensions) {
-            extensionTable.set(key,value)
+            extensionTable.set(key, value)
         }
         args.add(extensionTable)
 
@@ -169,9 +168,6 @@ object LuaInterpreter {
         return luaTable
     }
 
-
-
-
         // Call a Lua function `name`
         // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
         // Returns null if the function is not found or if a `LuaError` occurred
@@ -187,7 +183,6 @@ object LuaInterpreter {
             return null
 
         }
-
 
     fun clearOnFilter(moduleName: String) {
         val module = globals.get(moduleName)

@@ -50,7 +50,6 @@ object Constants {
     const val INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER"
     const val INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK"
 
-
     // Intent extras
     const val EXTRA_BACKGROUND_TASK = "task"
     const val EXTRA_HELP_PAGE = "page"

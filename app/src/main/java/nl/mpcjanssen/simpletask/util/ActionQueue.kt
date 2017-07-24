@@ -3,9 +3,6 @@ package nl.mpcjanssen.simpletask.util
 import android.os.Handler
 import android.os.Looper
 
-
-
-
 object ActionQueue : Thread() {
     private var mHandler: Handler? = null
     private val TAG = ActionQueue::class.java.simpleName
@@ -63,5 +60,4 @@ class LoggingRunnable (val description: String, val runnable: Runnable) : Runnab
         runnable.run()
     }
 }
-
 
