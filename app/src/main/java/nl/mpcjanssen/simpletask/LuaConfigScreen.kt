@@ -91,7 +91,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
     }
 
     private fun importLuaConfig (importFile: File) {
-        val r = Runnable() {
+        val r = Runnable {
             try {
                 val contents = FileStore.readFile(importFile.canonicalPath, null)
                 Config.luaConfig = contents

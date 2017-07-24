@@ -37,8 +37,7 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
 
     // Constructor is used from other_preferences.xml
     @Suppress("unused")
-    constructor(ctx: Context) : this(ctx, null) {
-    }
+    constructor(ctx: Context) : this(ctx, null)
 
     init {
         setPositiveButtonText(R.string.ok)

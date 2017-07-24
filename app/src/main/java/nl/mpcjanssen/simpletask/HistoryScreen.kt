@@ -176,16 +176,8 @@ class HistoryScreen : ThemedActionBarActivity() {
         }
         val prev = toolbar_menu!!.findItem(R.id.menu_prev)
         val next = toolbar_menu!!.findItem(R.id.menu_next)
-        if (m_cursor!!.isFirst || m_cursor!!.count < 2) {
-            prev.isEnabled = false
-        } else {
-            prev.isEnabled = true
-        }
-        if (m_cursor!!.isLast || m_cursor!!.count < 2) {
-            next.isEnabled = false
-        } else {
-            next.isEnabled = true
-        }
+        prev.isEnabled = !(m_cursor!!.isFirst || m_cursor!!.count < 2)
+        next.isEnabled = !(m_cursor!!.isLast || m_cursor!!.count < 2)
     }
 
     companion object {

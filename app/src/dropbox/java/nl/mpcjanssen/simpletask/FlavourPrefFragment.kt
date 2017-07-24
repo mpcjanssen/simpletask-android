@@ -21,7 +21,7 @@ class FlavourPrefFragment : PreferenceFragment() {
         dropboxPref.setOnPreferenceClickListener {
             log.info(TAG, "Logging out from Dropbox")
             showConfirmationDialog(activity, R.string.logout_message,
-                    DialogInterface.OnClickListener() { dialogInterface, i ->
+                    DialogInterface.OnClickListener { dialogInterface, i ->
                         FileStore.logout()
                         activity.finish()
                         LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_ACTION_LOGOUT))

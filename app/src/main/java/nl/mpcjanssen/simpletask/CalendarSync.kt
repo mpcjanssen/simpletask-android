@@ -65,7 +65,7 @@ private class Evt(
     var status: EvtStatus = EvtStatus.DELETE) {
 
     constructor(cursor: Cursor) // Create from a db record
-        : this(cursor.getLong(0), cursor.getLong(2), cursor.getString(3), cursor.getString(4)) {}
+        : this(cursor.getLong(0), cursor.getLong(2), cursor.getString(3), cursor.getString(4))
 
     constructor(date: DateTime, title: String, desc: String) // Create from a Task
         : this(-1, date.getMilliseconds(CalendarSync.UTC), title, desc, -1, -1, EvtStatus.INSERT) {
@@ -133,7 +133,7 @@ private class Evt(
     }
 }
 
-private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long) {}
+private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long)
 
 /**
  * A hashmap of Evts
