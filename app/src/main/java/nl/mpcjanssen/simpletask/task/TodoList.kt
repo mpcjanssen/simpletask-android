@@ -146,12 +146,6 @@ object TodoList {
             return newTags
         }
 
-    val decoratedContexts: List<String>
-        get() = contexts.map { "@" + it }
-
-    val decoratedProjects: List<String>
-        get() = projects.map { "+" + it }
-
     fun uncomplete(items: List<Task>) {
         queue("Uncomplete") {
             items.forEach {
