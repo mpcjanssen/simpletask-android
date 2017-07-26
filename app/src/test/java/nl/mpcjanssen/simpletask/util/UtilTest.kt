@@ -12,7 +12,7 @@ class UtilTest : TestCase() {
         tasks.add(Task("@Work h:1"))
         tasks.add(Task("@College h:1"))
 
-        assertEquals(6, addHeaderLines(tasks, ArrayList(listOf<String>("by_context")) , "none", false, null).size)
+        assertEquals(6, addHeaderLines(tasks.asSequence(), ArrayList(listOf<String>("by_context")) , "none", false, null).size)
 
     }
 

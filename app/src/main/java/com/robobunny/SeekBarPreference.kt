@@ -6,18 +6,15 @@ import android.preference.Preference
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
-import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 
-
 class SeekBarPreference : Preference, OnSeekBarChangeListener {
 
-    private val TAG = javaClass.getName()
+    private val TAG = javaClass.name
     private val log: Logger
 
     private var mMaxValue = 100
@@ -66,7 +63,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
     }
 
     private fun getAttributeStringValue(attrs: AttributeSet, namespace: String, name: String, defaultValue: String): String {
-        return attrs.getAttributeValue(namespace, name)?: defaultValue
+        return attrs.getAttributeValue(namespace, name) ?: defaultValue
     }
 
     public override fun onBindView(view: View) {
@@ -151,7 +148,6 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
     override fun onStopTrackingTouch(seekBar: SeekBar) {
         notifyChanged()
     }
-
 
     override fun onGetDefaultValue(ta: TypedArray, index: Int): Any {
 

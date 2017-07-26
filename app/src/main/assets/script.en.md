@@ -60,7 +60,7 @@ Called for every task as part of filtering the todo list.
     * `completiondate`: The completion date in seconds of the task or `nil` if not set.
     * `createdate`: The created date  in seconds of the task or `nil` if not set.
     * `due`: The due date in seconds or `nil` if not set.
-    * `lists`: A table with the lists of the task as keys. `fields.lits` itself will never be `nil`
+    * `lists`: A table with the lists of the task as keys. `fields.lists` itself will never be `nil`
     * `priority`: The priority of the task as string.
     * `recurrence`: The recurrence pattern of the task as string or `nil` if not set.
     * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
@@ -91,7 +91,7 @@ Called for every task as part of filtering the todo list.
     * `completiondate`: The completion date in seconds of the task or `nil` if not set.
     * `createdate`: The created date  in seconds of the task or `nil` if not set.
     * `due`: The due date in seconds or `nil` if not set.
-    * `lists`: A table with the lists of the task as keys. `fields.lits` itself will never be `nil`
+    * `lists`: A table with the lists of the task as keys. `fields.lists` itself will never be `nil`
     * `priority`: The priority of the task as string.
     * `recurrence`: The recurrence pattern of the task as string or `nil` if not set.
     * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
@@ -186,10 +186,10 @@ Show tasks without tags or lists (the GTD Inbox):
        return next(f.tags)==nil and next(f.lists)==nil
     end
 
-Show all tasks with the `@errands` tag:
+Show all tasks on the `@errands` list:
 
     function onFilter(t,f,e)
-       return f.tags["@errands"]
+       return f.lists["errands"]
     end
 
 Change the font size of the main task list to `16sp`:

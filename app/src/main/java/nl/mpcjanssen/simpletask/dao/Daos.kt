@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.dao
 
-
 import android.database.Cursor
 import de.greenrobot.dao.converter.PropertyConverter
 import nl.mpcjanssen.simpletask.Logger
@@ -9,7 +8,6 @@ import nl.mpcjanssen.simpletask.dao.gen.*
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.shortAppVersion
 import java.text.SimpleDateFormat
-
 
 import java.util.*
 
@@ -25,7 +23,6 @@ object Daos {
         logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
         Logger.setDao(logDao)
-
 
     }
 
@@ -68,7 +65,7 @@ object Daos {
     }
 }
 
-class TaskPropertyConverter  : PropertyConverter<Task, String> {
+class TaskPropertyConverter : PropertyConverter<Task, String> {
     override fun convertToEntityProperty(databaseValue: String) : Task {
         return Task(databaseValue)
     }

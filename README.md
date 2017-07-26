@@ -1,6 +1,13 @@
 Simpletask
 ==========
 
+## Translation
+
+Simpletask is translated using weblate: <a href="https://hosted.weblate.org/engage/simpletask/?utm_source=widget">
+                                        <img src="https://hosted.weblate.org/widgets/simpletask/-/svg-badge.svg" alt="Translation status" />
+                                        </a>
+
+
 See [here](./app/src/main/assets/index.en.md) for more information.
 
 ## Cloudless

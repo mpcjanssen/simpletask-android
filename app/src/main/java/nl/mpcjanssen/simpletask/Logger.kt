@@ -28,7 +28,6 @@ object Logger : Thread() {
         this.dao = dao
     }
 
-
     fun logInDB(severity: String, tag: String, s: String, throwable: Throwable? = null) {
         mHandler?.post {
             var throwableMessage: String = ""
@@ -41,41 +40,40 @@ object Logger : Thread() {
     }
 
     fun error(tag: String, s: String) {
-        Log.e(tag,s)
-        logInDB("e", tag,s)
+        Log.e(tag, s)
+        logInDB("e", tag, s)
     }
     fun warn(tag: String, s: String) {
-        Log.w(tag,s)
-        logInDB("w", tag,s)
+        Log.w(tag, s)
+        logInDB("w", tag, s)
     }
 
     fun info(tag: String, s: String) {
-        Log.i(tag,s)
-        logInDB("i", tag,s)
+        Log.i(tag, s)
+        logInDB("i", tag, s)
     }
 
     fun debug(tag: String, s: String) {
-        Log.d(tag,s)
-        logInDB("d", tag,s)
+        Log.d(tag, s)
+        logInDB("d", tag, s)
     }
 
-
     fun error(tag: String, s: String, throwable: Throwable) {
-        Log.e(tag,s,throwable)
-        logInDB("e", tag,s,throwable)
+        Log.e(tag, s, throwable)
+        logInDB("e", tag, s, throwable)
     }
 
     fun warn(tag: String, s: String, throwable: Throwable) {
-        Log.w(tag,s, throwable)
-        logInDB("w", tag,s, throwable)
+        Log.w(tag, s, throwable)
+        logInDB("w", tag, s, throwable)
     }
 
     fun info(tag: String, s: String, ex: Throwable) {
-        Log.i(tag,s,ex)
-        logInDB("i", tag,s,ex)
+        Log.i(tag, s, ex)
+        logInDB("i", tag, s, ex)
     }
 
     fun debug(tag: String, s: String, ex: Throwable) {
-        Log.d(tag,s,ex)
+        Log.d(tag, s, ex)
     }
 }

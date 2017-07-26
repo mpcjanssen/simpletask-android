@@ -26,7 +26,6 @@
 
 package nl.mpcjanssen.simpletask.util
 
-
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -75,27 +74,27 @@ fun getString (resId : Int) : String {
     return TodoApplication.app.getString(resId)
 }
 
-fun showConfirmationDialog(cxt:        Context,
-                           msgid:      Int,
+fun showConfirmationDialog(cxt: Context,
+                           msgid: Int,
                            okListener: DialogInterface.OnClickListener,
-                           titleid:    Int) {
+                           titleid: Int) {
     val builder = AlertDialog.Builder(cxt)
     builder.setTitle(titleid)
     showConfirmationDialog(msgid, okListener, builder)
 }
 
-fun showConfirmationDialog(cxt:        Context,
-                           msgid:      Int,
+fun showConfirmationDialog(cxt: Context,
+                           msgid: Int,
                            okListener: DialogInterface.OnClickListener,
-                           title:      CharSequence) {
+                           title: CharSequence) {
     val builder = AlertDialog.Builder(cxt)
     builder.setTitle(title)
     showConfirmationDialog(msgid, okListener, builder)
 }
 
-private fun showConfirmationDialog(msgid:      Int,
+private fun showConfirmationDialog(msgid: Int,
                            okListener: DialogInterface.OnClickListener,
-                           builder:    AlertDialog.Builder) {
+                           builder: AlertDialog.Builder) {
     val show = Config.showConfirmationDialogs
     builder.setMessage(msgid)
     builder.setPositiveButton(android.R.string.ok, okListener)
@@ -117,7 +116,6 @@ fun showToastShort(cxt: Context, resid: Int) {
 fun showToastLong(cxt: Context, resid: Int) {
     runOnMainThread(Runnable { Toast.makeText(cxt, resid, Toast.LENGTH_LONG).show() })
 }
-
 
 fun showToastShort(cxt: Context, msg: String) {
     runOnMainThread(Runnable { Toast.makeText(cxt, msg, Toast.LENGTH_SHORT).show() })
@@ -149,7 +147,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
         firstGroupSortIndex++
@@ -165,9 +163,9 @@ fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: Str
     var headerLine: HeaderLine? = null
     for (item in visibleTasks) {
         val t = item
-        val newHeader  = if (moduleName !=null ) {
+        val newHeader = if (moduleName != null ) {
             LuaInterpreter.onGroupCallback(moduleName, t)
-        }   else {
+        } else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
         if (header != newHeader) {
@@ -196,9 +194,9 @@ fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: Str
     return result
 }
 
-fun addHeaderLines(visibleTasks: List<Task>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: Sequence<Task>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
-    return addHeaderLines(visibleTasks,sorts,no_header, filter.createIsThreshold, filter.options.luaModule)
+    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.options.luaModule)
 }
 
 fun join(s: Collection<String>?, delimiter: String): String {
@@ -285,7 +283,7 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
         "b" -> newDate = addBusinessDays(newDate!!, amount)
         else -> {
         }
-    }// Dont add anything
+    } // Dont add anything
     return newDate
 }
 
@@ -459,8 +457,6 @@ fun showChangelogOverlay(act: Activity): Dialog? {
     return dialog
 }
 
-
-
 fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     var markdown: String
     try {
@@ -528,34 +524,34 @@ fun getRelativeDueDate(task: Task, app: TodoApplication): SpannableString? {
 private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: String): SpannableString? {
     val date = dateString.toDateTime() ?: return null
     val now = DateTime.today(TimeZone.getDefault())
-    val days= date.numDaysFrom(now)
-    val months = days/31
-    val weeks = days/7
-    val years = days/365
+    val days = date.numDaysFrom(now)
+    val months = days / 31
+    val weeks = days / 7
+    val years = days / 365
     val s = when {
-        years==1  -> app.getString(R.string.dates_one_year_ago)
-        years>1   -> app.getString(R.string.dates_years_ago, years)
-        months==1 -> app.getString(R.string.dates_one_month_ago)
-        months>1  -> app.getString(R.string.dates_months_ago, months)
-        weeks==1  -> app.getString(R.string.dates_one_week_ago)
-        weeks>1   -> app.getString(R.string.dates_weeks_ago, weeks)
-        days==1   -> app.getString(R.string.dates_one_day_ago)
-        days>1    -> app.getString(R.string.dates_days_ago, days)
-        days==0   -> app.getString(R.string.dates_today)
-        days==-1   -> app.getString(R.string.dates_tomorrow)
-        else      -> date.toString()
+        years == 1 -> app.getString(R.string.dates_one_year_ago)
+        years > 1 -> app.getString(R.string.dates_years_ago, years)
+        months == 1 -> app.getString(R.string.dates_one_month_ago)
+        months > 1 -> app.getString(R.string.dates_months_ago, months)
+        weeks == 1 -> app.getString(R.string.dates_one_week_ago)
+        weeks > 1 -> app.getString(R.string.dates_weeks_ago, weeks)
+        days == 1 -> app.getString(R.string.dates_one_day_ago)
+        days > 1 -> app.getString(R.string.dates_days_ago, days)
+        days == 0 -> app.getString(R.string.dates_today)
+        days == -1 -> app.getString(R.string.dates_tomorrow)
+        else -> date.toString()
     }
 
     val ss = SpannableString(prefix + s)
 
-    if (Config.hasColorDueDates && prefix=="Due: ") {
+    if (Config.hasColorDueDates && prefix == "Due: ") {
         val dueTodayColor = ContextCompat.getColor(app, R.color.simple_green_light)
         val overDueColor = ContextCompat.getColor(app, R.color.simple_red_light)
         val dueTomorrowColor = ContextCompat.getColor(app, R.color.simple_blue_light)
         when {
-            days==0        -> setColor(ss, dueTodayColor)
+            days == 0 -> setColor(ss, dueTodayColor)
             date.lteq(now) -> setColor(ss, overDueColor)
-            days==-1       -> setColor(ss, dueTomorrowColor)
+            days == -1 -> setColor(ss, dueTomorrowColor)
         }
     }
 

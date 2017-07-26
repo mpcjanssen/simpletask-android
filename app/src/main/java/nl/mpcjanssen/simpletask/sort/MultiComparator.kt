@@ -1,15 +1,13 @@
 package nl.mpcjanssen.simpletask.sort
 
-
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 import kotlin.comparisons.then
 
-class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean)  {
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) {
     var comparator : Comparator<Task>? = null
-
 
     var fileOrder = true
 
@@ -52,9 +50,9 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
             }
             if (reverse) {
-                comp =  CompReverser(comp)
+                comp = CompReverser(comp)
             }
-            comparator = comparator?.then(comp) ?:  comp
+            comparator = comparator?.then(comp) ?: comp
         }
     }
 

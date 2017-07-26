@@ -33,7 +33,6 @@ import android.annotation.TargetApi
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.ContentProviderOperation
-import android.content.ContentProviderResult
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Color
@@ -47,7 +46,6 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
-
 
 private enum class EvtStatus {
     KEEP,
@@ -66,14 +64,14 @@ private class Evt(
     var remMinutes: Long = -1,
     var status: EvtStatus = EvtStatus.DELETE) {
 
-    constructor(cursor: Cursor)  // Create from a db record
-        :this(cursor.getLong(0), cursor.getLong(2), cursor.getString(3), cursor.getString(4)) {}
+    constructor(cursor: Cursor) // Create from a db record
+        : this(cursor.getLong(0), cursor.getLong(2), cursor.getString(3), cursor.getString(4))
 
     constructor(date: DateTime, title: String, desc: String) // Create from a Task
-        :this(-1, date.getMilliseconds(CalendarSync.UTC), title, desc, -1, -1, EvtStatus.INSERT) {
+        : this(-1, date.getMilliseconds(CalendarSync.UTC), title, desc, -1, -1, EvtStatus.INSERT) {
 
         val localZone = Calendar.getInstance().timeZone
-        val remMargin = Config.reminderDays * 1440;
+        val remMargin = Config.reminderDays * 1440
         val remTime = Config.reminderTime
         val remDT = DateTime.forTimeOnly(remTime / 60, remTime % 60, 0, 0)
 
@@ -83,7 +81,7 @@ private class Evt(
         var remDate = date.minus(0, 0, 0, remMargin / 60, remMargin % 60, 0, 0, DateTime.DayOverflow.Spillover)
         remDate = remDate.plus(0, 0, 0, remDT.hour, remDT.minute, 0, 0, DateTime.DayOverflow.Spillover)
         if (remDate.isInTheFuture(localZone)) {
-            remID = 0L    // 0 = reminder entry to be created
+            remID = 0L // 0 = reminder entry to be created
             remMinutes = remDate.numSecondsFrom(date) / 60
         }
     }
@@ -114,12 +112,12 @@ private class Evt(
                 .withValue(Events.CALENDAR_ID, calID)
                 .withValue(Events.TITLE, title)
                 .withValue(Events.DTSTART, dtStart)
-                .withValue(Events.DTEND, dtStart + 24*60*60*1000)  // Needs to be set to DTSTART +24h, otherwise reminders don't work
+                .withValue(Events.DTEND, dtStart + 24*60*60*1000) // Needs to be set to DTSTART +24h, otherwise reminders don't work
                 .withValue(Events.ALL_DAY, 1)
                 .withValue(Events.DESCRIPTION, description)
                 .withValue(Events.EVENT_TIMEZONE, CalendarSync.UTC.id)
                 .withValue(Events.STATUS, Events.STATUS_CONFIRMED)
-                .withValue(Events.HAS_ATTENDEE_DATA, true)      // If this is not set, Calendar app is confused about Event.STATUS
+                .withValue(Events.HAS_ATTENDEE_DATA, true) // If this is not set, Calendar app is confused about Event.STATUS
                 .withValue(Events.CUSTOM_APP_PACKAGE, TodoApplication.app.packageName)
                 .withValue(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString())
                 .build())
@@ -135,7 +133,7 @@ private class Evt(
     }
 }
 
-private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long) {}
+private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long)
 
 /**
  * A hashmap of Evts
@@ -156,7 +154,8 @@ private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long) {
  * Finally, the hashmap contents are applied - contained events are iterated and inserted/deleted as appropriate.
  * This is done using ContentResolver.applyBatch for better efficiency.
  */
-private class EvtMap private constructor(): HashMap<EvtKey, LinkedList<Evt>>() {
+@SuppressLint("Recycle", "NewAPI")
+private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() {
     constructor(cr: ContentResolver, calID: Long): this() {
         val evtPrj = arrayOf(Events._ID, Events.CALENDAR_ID, Events.DTSTART, Events.TITLE, Events.DESCRIPTION)
         val evtSel = "${Events.CALENDAR_ID} = ?"
@@ -215,7 +214,7 @@ private class EvtMap private constructor(): HashMap<EvtKey, LinkedList<Evt>>() {
 
     fun mergeTasks(tasks: List<Task>) {
         for (task in tasks) {
-            if (task.isCompleted()) continue;
+            if (task.isCompleted()) continue
 
             var text: String? = null
 
@@ -237,6 +236,7 @@ private class EvtMap private constructor(): HashMap<EvtKey, LinkedList<Evt>>() {
         }
     }
 
+    @SuppressLint("NewApi")
     fun apply(cr: ContentResolver, calID: Long): SyncStats {
         val ops = ArrayList<ContentProviderOperation>()
         var ins = 0L
@@ -269,10 +269,10 @@ object CalendarSync {
         .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE)
         .build()
     private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
-    private val CAL_COLOR = Color.BLUE       // Chosen arbitrarily...
-    private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000  // ie. 24 hours
+    private val CAL_COLOR = Color.BLUE // Chosen arbitrarily...
+    private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000 // ie. 24 hours
 
-    private val SYNC_DELAY_MS = 20*1000
+    private val SYNC_DELAY_MS = 20 * 1000
     private val TAG = "CalendarSync"
 
     val UTC = TimeZone.getTimeZone("UTC")
@@ -289,7 +289,7 @@ object CalendarSync {
     val SYNC_TYPE_DUES = 1
     val SYNC_TYPE_THRESHOLDS = 2
 
-    private class SyncRunnable: Runnable {
+    private class SyncRunnable : Runnable {
         override fun run() {
             try {
                 sync()
@@ -350,6 +350,7 @@ object CalendarSync {
         m_cr.insert(CAL_URI, cv)
     }
 
+    @SuppressLint("NewApi")
     private fun removeCalendar() {
         log.debug(TAG, "Removing Simpletask calendar")
         val selection = Calendars.NAME + " = ?"
@@ -382,7 +383,7 @@ object CalendarSync {
 
             if (calID < 0) {
                 addCalendar()
-                calID = findCalendar()   // Re-find the calendar, this is needed to verify it has been added
+                calID = findCalendar() // Re-find the calendar, this is needed to verify it has been added
                 if (calID < 0) {
                     // This happens when CM privacy guard disallows to write calendar (1)
                     // OR it allows to write calendar but disallows reading it (2).

@@ -29,7 +29,7 @@ public class LogItemDao extends AbstractDao<LogItem, Long> {
         public final static Property Tag = new Property(3, String.class, "tag", false, "TAG");
         public final static Property Message = new Property(4, String.class, "message", false, "MESSAGE");
         public final static Property Exception = new Property(5, String.class, "exception", false, "EXCEPTION");
-    };
+    }
 
 
     public LogItemDao(DaoConfig config) {

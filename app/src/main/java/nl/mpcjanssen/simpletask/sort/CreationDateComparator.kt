@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.sort
 
-
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
@@ -15,13 +14,13 @@ class CreationDateComparator : Comparator<Task> {
             return 1
         }
         val aDate = a.createDate
-        val bDate =  b.createDate
+        val bDate = b.createDate
         if ( aDate == null && bDate == null) {
             return 0
         } else if (aDate == null) {
             return 1
         } else if (bDate == null) {
-            return  -1
+            return -1
         }
         return aDate.compareTo(bDate)
     }

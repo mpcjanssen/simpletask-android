@@ -82,16 +82,16 @@ class TaskTest : TestCase() {
 
         val text = t.tokens.filter {
             it.type == TToken.TEXT
-        }.map{it.text}.joinToString(" ")
+        }.map { it.text }.joinToString(" ")
         assertEquals("morgen", text)
     }
 
     fun testCompletion() {
         val str = "test"
-        val t1 =  Task(str)
+        val t1 = Task(str)
         t1.markComplete("2010-12-12")
         assertEquals("x 2010-12-12 $str", t1.text )
-        val tc =  Task("x 2000-12-12 $str")
+        val tc = Task("x 2000-12-12 $str")
         tc.markComplete("2010-12-12")
         assertEquals("x 2000-12-12 $str", tc.text )
     }
