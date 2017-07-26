@@ -54,8 +54,8 @@
     <string name="write_failed">Falha na gravação do arquivo. As mudanças NÃO foram salvas!</string>
 
     <string name="tasktexthint">\@discutir +macartismo com +Pepe @altruísmo
-Dizer ao +Pepe para discursar sobre @altruísmo
-Desmarque a opção \"Exibir dicas\" para remover este texto</string>
+\nDizer ao +Pepe para discursar sobre @altruísmo
+\nDesmarque a opção \"Exibir dicas\" para remover este texto</string>
 
     <string name="filter_name_empty">Sem especificação de nome, filtro não adicionado</string>
     <string name="widget_name_empty">Impossível adicionar um widget sem nome</string>
