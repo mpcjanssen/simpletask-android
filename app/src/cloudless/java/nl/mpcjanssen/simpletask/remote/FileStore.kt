@@ -26,7 +26,7 @@ object FileStore : FileStoreInterface {
     }
 
     override fun needsRefresh(currentVersion: String?): Boolean {
-        val lastModified =  Config.todoFile.lastModified()
+        val lastModified = Config.todoFile.lastModified()
         if (lastModified == 0L ) {
             return true
         }
@@ -160,7 +160,7 @@ object FileStore : FileStoreInterface {
             val obs = observer
             obs?.ignoreEvents(true)
             try {
-                writeToFile(join(lines, eol) + eol, File(path), false)
+                writeToFile(lines, eol, File(path), false)
                 if (updateVersion) {
                     Config.currentVersionId = File(path).lastModified().toString()
                 }
@@ -179,7 +179,7 @@ object FileStore : FileStoreInterface {
         queueRunnable("Appending  ${lines.size} lines tasks to $path", Runnable {
             log.info(TAG, "Appending ${lines.size} tasks to $path")
             try {
-                writeToFile(join(lines, eol) + eol, File(path), true)
+                writeToFile(lines, eol, File(path), true)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -244,7 +244,6 @@ object FileStore : FileStoreInterface {
             dialog = builder.show()
             return dialog
         }
-
 
         fun addFileListener(listener: FileStoreInterface.FileSelectedListener) {
             fileListenerList.add(listener)
@@ -365,6 +364,5 @@ class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolu
         Logger.info(TAG, "Observer: Adding delayed enabling to queue")
         handler.postDelayed(delayedEnable, ms.toLong())
     }
-
 
 }

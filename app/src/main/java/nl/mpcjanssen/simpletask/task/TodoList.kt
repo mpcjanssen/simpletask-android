@@ -41,7 +41,7 @@ import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 import java.io.IOException
 import java.util.*
-
+import java.util.concurrent.CopyOnWriteArraySet
 
 /**
  * Implementation of the in memory representation of the Todo list
@@ -56,10 +56,9 @@ object TodoList {
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
     val todoItems = ArrayList<Task>()
-    val selectedItems = HashSet<Task>()
+    val selectedItems = CopyOnWriteArraySet<Task>()
     val pendingEdits = LinkedHashSet<Task>()
     internal val TAG = TodoList::class.java.simpleName
-
 
     fun hasPendingAction(): Boolean {
         return ActionQueue.hasPending()
@@ -78,7 +77,6 @@ object TodoList {
         ActionQueue.add(description, r)
     }
 
-
     fun add(items: List<Task>, atEnd: Boolean) {
         queue("Add task ${items.size} atEnd: $atEnd") {
             if (atEnd) {
@@ -93,7 +91,6 @@ object TodoList {
         add(listOf(t), atEnd)
     }
 
-
     fun removeAll(tasks: List<Task>) {
         queue("Remove") {
             todoItems.removeAll(tasks)
@@ -102,11 +99,9 @@ object TodoList {
         }
     }
 
-
     fun size(): Int {
         return todoItems.size
     }
-
 
     val priorities: ArrayList<Priority>
         get() {
@@ -151,14 +146,6 @@ object TodoList {
             return newTags
         }
 
-
-    val decoratedContexts: List<String>
-        get() = contexts.map { "@" + it }
-
-    val decoratedProjects: List<String>
-        get() = projects.map { "+" + it }
-
-
     fun uncomplete(items: List<Task>) {
         queue("Uncomplete") {
             items.forEach {
@@ -184,7 +171,6 @@ object TodoList {
             }
         }
     }
-
 
     fun prioritize(tasks: List<Task>, prio: Priority) {
         queue("Complete") {
@@ -214,7 +200,6 @@ object TodoList {
             return todoItems.filter { it.isCompleted() }
         }
 
-
     fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         log.info(TAG, "Handler: Queue notifychanged")
         queue("Notified changed") {
@@ -239,14 +224,16 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): List<Task> {
-        val filteredTasks = filter.apply(todoItems.toMutableList())
+    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
-        if (!comp.fileOrder) {
-            filteredTasks.reverse()
+        val itemsToSort = if (comp.fileOrder) {
+            todoItems
+        } else {
+            todoItems.reversed()
         }
+        val filteredTasks = filter.apply(itemsToSort.asSequence())
         comp.comparator?.let {
-            Collections.sort(filteredTasks, it)
+            return filteredTasks.sortedWith(it)
         }
         return filteredTasks
     }
@@ -287,7 +274,6 @@ object TodoList {
         }
     }
 
-
     private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
         try {
             val lines = todoItems.map {
@@ -324,7 +310,6 @@ object TodoList {
         return selectedItems.size
     }
 
-
     fun selectTasks(items: List<Task>) {
         queue("Select") {
             selectedItems.addAll(items)
@@ -338,7 +323,6 @@ object TodoList {
         }
     }
 
-
     fun unSelectTask(item: Task) {
         unSelectTasks(listOf(item))
     }
@@ -349,7 +333,6 @@ object TodoList {
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
-
 
     fun clearSelection() {
         queue("Clear selection") {
@@ -370,7 +353,7 @@ object TodoList {
     }
 
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
-        queue("Edit tasks")  {
+        queue("Edit tasks") {
             pendingEdits.addAll(tasks)
             startAddTaskActivity(from, prefill)
         }

@@ -6,5 +6,5 @@ package nl.mpcjanssen.simpletask.remote
  * Uses events to communicate with the application. Currently supported are SYNC_START, SYNC_DONE and FILE_CHANGED.
  */
 interface BackupInterface {
-    fun backup(name: String, contents: String)
+    fun backup(name: String, lines: String)
 }

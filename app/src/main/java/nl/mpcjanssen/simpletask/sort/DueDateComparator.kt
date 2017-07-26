@@ -14,13 +14,13 @@ class DueDateComparator : Comparator<Task> {
             return 1
         }
         val aDate = a.dueDate
-        val bDate =  b.dueDate
+        val bDate = b.dueDate
         if ( aDate == null && bDate == null) {
             return 0
         } else if (aDate == null) {
             return 1
         } else if (bDate == null) {
-            return  -1
+            return -1
         }
         return aDate.compareTo(bDate)
 

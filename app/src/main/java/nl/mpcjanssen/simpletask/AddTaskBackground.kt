@@ -27,7 +27,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -40,11 +39,9 @@ import nl.mpcjanssen.simpletask.util.showToastShort
 import java.io.IOException
 import java.util.*
 
-
 class AddTaskBackground : Activity() {
     private var log = Logger
     val TAG = "AddTaskBackground"
-
 
     public override fun onCreate(instance: Bundle?) {
         log = Logger
@@ -97,7 +94,6 @@ class AddTaskBackground : Activity() {
             }
         }
     }
-
 
     private fun noteToSelf(intent: Intent, append_text: String) {
         val task = intent.getStringExtra(Intent.EXTRA_TEXT)

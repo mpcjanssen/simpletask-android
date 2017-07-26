@@ -12,7 +12,6 @@ import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
 
-
 data class FilterOptions(val luaModule: String, val showSelected : Boolean = false)
 
 /**
@@ -52,7 +51,6 @@ class ActiveFilter (val options : FilterOptions) {
         log = Logger
     }
 
-
     fun saveInJSON(json: JSONObject) {
         json.put(INTENT_TITLE, name)
         json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
@@ -81,7 +79,7 @@ class ActiveFilter (val options : FilterOptions) {
         val contexts: String?
         val sorts: String?
 
-        if (json==null) {
+        if (json == null) {
             return
         }
         name = json.optString(INTENT_TITLE, "No title")
@@ -90,7 +88,7 @@ class ActiveFilter (val options : FilterOptions) {
         contexts = json.optString(INTENT_CONTEXTS_FILTER)
         sorts = json.optString(INTENT_SORT_ORDER)
 
-        useScript = json.optBoolean(INTENT_USE_SCRIPT_FILTER,false)
+        useScript = json.optBoolean(INTENT_USE_SCRIPT_FILTER, false)
         script = json.optString(INTENT_SCRIPT_FILTER)
         scriptTestTask = json.optString(INTENT_SCRIPT_TEST_TASK_FILTER)
 
@@ -125,7 +123,6 @@ class ActiveFilter (val options : FilterOptions) {
             this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
     }
-
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
@@ -200,7 +197,6 @@ class ActiveFilter (val options : FilterOptions) {
         }
     }
 
-
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
             val editor = prefs.edit()
@@ -222,52 +218,48 @@ class ActiveFilter (val options : FilterOptions) {
         useScript = false
     }
 
-    fun apply(items: List<Task>?): ArrayList<Task> {
+    fun apply(items: Sequence<Task>?): Sequence<Task> {
         if (useScript) {
             log.info(TAG, "Filtering with Lua $script")
         }
         val filter = AndFilter()
-        val matched = ArrayList<Task>()
         if (items == null) {
-            return ArrayList()
+            return emptySequence()
         }
-        val code = if (useScript) {script } else {null}
+        val code = if (useScript) { script } else { null }
         val today = todayAsString
         try {
             log.info(TAG, "Resetting onFilter callback in module ${options.luaModule}")
             LuaInterpreter.clearOnFilter(options.luaModule)
             LuaInterpreter.evalScript(options.luaModule, code)
-            for (item in items) {
-                if (options.showSelected && TodoList.isSelected(item) ) {
-                    matched.add(item)
-                    continue
+            return items.filter {
+                    if (options.showSelected && TodoList.isSelected(it)) {
+                        return@filter true
+                    }
+                    if (this.hideCompleted && it.isCompleted()) {
+                        return@filter false
+                    }
+                    if (this.hideFuture && it.inFuture(today)) {
+                        return@filter false
+                    }
+                    if (this.hideHidden && it.isHidden()) {
+                        return@filter false
+                    }
+                    if ("" == it.inFileFormat().trim { it <= ' ' }) {
+                        return@filter false
+                    }
+                    if (!filter.apply(it)) {
+                        return@filter false
+                    }
+                    if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, it)) {
+                        return@filter false
+                    }
+                return@filter true
                 }
-                val t = item
-                if (this.hideCompleted && t.isCompleted()) {
-                    continue
-                }
-                if (this.hideFuture && t.inFuture(today)) {
-                    continue
-                }
-                if (this.hideHidden && t.isHidden()) {
-                    continue
-                }
-                if ("" == t.inFileFormat().trim { it <= ' ' }) {
-                    continue
-                }
-                if (!filter.apply(t)) {
-                    continue
-                }
-                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, t)) {
-                        continue
-                }
-                matched.add(item)
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
             }
-        } catch (e: LuaError) {
-            log.debug(TAG, "Lua execution failed " + e.message)
-        }
-
-        return matched
+        return emptySequence()
     }
 
     fun setSort(sort: ArrayList<String>) {

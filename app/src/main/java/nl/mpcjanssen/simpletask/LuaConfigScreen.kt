@@ -6,7 +6,6 @@ package nl.mpcjanssen.simpletask
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.widget.Button
 import android.widget.EditText
 import android.view.Menu
 import android.view.MenuItem
@@ -92,7 +91,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
     }
 
     private fun importLuaConfig (importFile: File) {
-        val r = Runnable() {
+        val r = Runnable {
             try {
                 val contents = FileStore.readFile(importFile.canonicalPath, null)
                 Config.luaConfig = contents

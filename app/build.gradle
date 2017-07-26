@@ -1,12 +1,18 @@
 buildscript {
-    ext.kotlin_version = '1.1.2-2'
+    ext.kotlin_version = '1.1.3-2'
+    ext.dokka_version = '0.9.15'
     ext.android_support_version = '25.3.1'
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
 }
@@ -14,6 +20,8 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: 'org.jetbrains.dokka'
 // apply plugin: 'com.getkeepsafe.dexcount'
 
 
@@ -33,8 +41,8 @@ android {
     }
 
     defaultConfig {
-        versionName '9.0.2'
-        versionCode 3056
+        versionName '9.0.7'
+        versionCode 3061
 	minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
@@ -90,7 +98,7 @@ repositories {
 }
 
 dependencies {
-    dropboxCompile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.dropbox.core:dropbox-core-sdk:3.0.3'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.android.support:support-v4:$android_support_version"
     compile "com.android.support:design:$android_support_version"
@@ -100,6 +108,7 @@ dependencies {
     compile 'com.atlassian.commonmark:commonmark:0.8.0'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'org.luaj:luaj-jse:3.0.1'
+    compile 'me.smichel.android:kpreferences:0.4.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile('com.android.support.test:runner:0.5') {
@@ -135,4 +144,11 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
+}
+
+dokka {
+    outputFormat = 'gfm'
+    outputDirectory = "$projectDir/../doc"
+    sourceDirs = files('src/main/java/nl/mpcjanssen ')
+
 }

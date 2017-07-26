@@ -49,7 +49,6 @@ import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.File
 import java.util.*
 
-
 class TodoApplication : Application(),
 
          FileStoreInterface.FileChangeListener, BackupInterface {
@@ -63,7 +62,6 @@ class TodoApplication : Application(),
         super.onCreate()
 
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
-
 
         setupUncaughtExceptionHandler()
 
@@ -101,8 +99,6 @@ class TodoApplication : Application(),
         loadTodoList("Initial load")
     }
 
-
-
     private fun setupUncaughtExceptionHandler() {
         // save original Uncaught exception handler
         androidUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
@@ -135,7 +131,6 @@ class TodoApplication : Application(),
                 AlarmManager.INTERVAL_DAY, pi)
     }
 
-
     override fun onTerminate() {
         Logger.info(TAG, "De-registered receiver")
         localBroadCastManager.unregisterReceiver(m_broadcastReceiver)
@@ -151,7 +146,6 @@ class TodoApplication : Application(),
         TodoList.reload(this, localBroadCastManager, Config.eol, reason = reason)
     }
 
-
     override fun fileChanged(newName: String?) {
         newName?.let {
             Config.setTodoFile(newName)
@@ -159,7 +153,6 @@ class TodoApplication : Application(),
         loadTodoList("from fileChanged")
 
     }
-
 
     fun updateWidgets() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
@@ -186,6 +179,7 @@ class TodoApplication : Application(),
     fun startLogin(caller: Activity) {
         FileStore.startLogin(caller)
     }
+
 
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
@@ -231,10 +225,9 @@ class TodoApplication : Application(),
     companion object {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
-        lateinit var  app : TodoApplication
+        lateinit var app : TodoApplication
     }
 
     var today: String = todayAsString
 }
-
 

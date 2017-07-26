@@ -31,15 +31,13 @@ import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.View
 
-
 class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet?, defStyle: Int = android.R.attr.dialogPreferenceStyle) : DialogPreference(ctx, attrs, defStyle) {
     private var m_minutes = 0
     private var m_picker: android.widget.TimePicker? = null
 
     // Constructor is used from other_preferences.xml
     @Suppress("unused")
-    constructor(ctx: Context) : this(ctx, null) {
-    }
+    constructor(ctx: Context) : this(ctx, null)
 
     init {
         setPositiveButtonText(R.string.ok)

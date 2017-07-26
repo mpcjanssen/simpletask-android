@@ -38,7 +38,7 @@ fun loadFromFile(file: File): List<String> {
 }
 
 @Throws(IOException::class)
-fun writeToFile(contents: String, file: File, append: Boolean) {
+fun writeToFile(lines: List<String>, eol: String, file: File, append: Boolean) {
     try {
         createParentDirectory(file)
     } catch (e: IOException) {
@@ -49,9 +49,12 @@ fun writeToFile(contents: String, file: File, append: Boolean) {
 
     val fw = BufferedWriter(OutputStreamWriter(
             str, "UTF-8"))
-    fw.write(contents)
+    lines.forEach { line ->
+        fw.write(line)
+        fw.write(eol)
+    }
+    fw.write(eol)
     fw.close()
     str.close()
 }
-
 

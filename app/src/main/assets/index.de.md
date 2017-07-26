@@ -12,7 +12,7 @@ Support
 
 Simpletask wird mit [weblate](https://hosted.weblate.org/engage/simpletask/) übersetzt. Folgen Sie dem Link, um zur Übersetzung beizutragen.
 
-Folgen Sie dem Chat auf [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android) oder auf [#simpletask at Freenode](https://webchat.freenode.net/?channels=simpletask).
+Folgen Sie dem Chat auf [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android), IRC auf [#simpletask at Freenode](https://webchat.freenode.net/?channels=simpletask) oder Matrix auf [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org).
 
 Probleme oder Verbesserungsvorschläge für [Simpletask](https://github.com/mpcjanssen/simpletask-android/) können Sie im [Tracker](https://github.com/mpcjanssen/simpletask-android/issues) melden.
 

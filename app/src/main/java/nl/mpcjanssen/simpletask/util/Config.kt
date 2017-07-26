@@ -1,9 +1,7 @@
 package nl.mpcjanssen.simpletask.util
 
-import android.annotation.SuppressLint
-import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
@@ -11,14 +9,10 @@ import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
-import java.nio.charset.Charset
 import java.util.*
 
-object Config : SharedPreferences.OnSharedPreferenceChangeListener {
-    val prefs = PreferenceManager.getDefaultSharedPreferences(TodoApplication.app)!!
-    val interpreter = LuaInterpreter
+object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
 
     val TAG = "LuaConfig"
 
@@ -26,23 +20,21 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         prefs.registerOnSharedPreferenceChangeListener(this)
     }
 
-    val useTodoTxtTerms: Boolean
-        get() = prefs.getBoolean(getString(R.string.ui_todotxt_terms), false)
+    val useTodoTxtTerms by BooleanPreference(R.string.ui_todotxt_terms, false)
 
-    val showTxtOnly: Boolean
-        get() = prefs.getBoolean(getString(R.string.show_txt_only), false)
+    val showTxtOnly by BooleanPreference(R.string.show_txt_only, false)
 
+    val _syncDues by BooleanPreference(R.string.calendar_sync_dues, false)
     val isSyncDues: Boolean
-        get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_dues), false)
+        get() = TodoApplication.atLeastAPI(16) && _syncDues
 
+    val _syncThresholds by BooleanPreference(R.string.calendar_sync_thresholds, false)
     val isSyncThresholds: Boolean
-        get() = TodoApplication.atLeastAPI(16) && prefs.getBoolean(getString(R.string.calendar_sync_thresholds), false)
+        get() = TodoApplication.atLeastAPI(16) && _syncThresholds
 
-    val reminderDays: Int
-        get() = prefs.getInt(getString(R.string.calendar_reminder_days), 1)
+    val reminderDays by IntPreference(R.string.calendar_reminder_days, 1)
 
-    val reminderTime: Int
-        get() = prefs.getInt(getString(R.string.calendar_reminder_time), 720)
+    val reminderTime by IntPreference(R.string.calendar_reminder_time, 720)
 
     val listTerm: String
         get() {
@@ -62,61 +54,29 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             }
         }
 
-    var currentVersionId: String?
-        get() = prefs.getString(getString(R.string.file_current_version_id), null)
-        set(version) {
-            prefs.edit().putString(getString(R.string.file_current_version_id), version).commit()
-        }
+    var currentVersionId by StringOrNullPreference(R.string.file_current_version_id)
 
-    var lastScrollPosition: Int
-        get() = prefs.getInt(getString(R.string.ui_last_scroll_position), -1)
-        set(position) {
-            prefs.edit().putInt(getString(R.string.ui_last_scroll_position), position).commit()
-        }
+    var lastScrollPosition by IntPreference(R.string.ui_last_scroll_position, -1)
 
-    var lastScrollOffset: Int
-        get() = prefs.getInt(getString(R.string.ui_last_scroll_offset), -1)
-        set(position) {
-            prefs.edit().putInt(getString(R.string.ui_last_scroll_offset), position).commit()
-        }
+    var lastScrollOffset by IntPreference(R.string.ui_last_scroll_offset, -1)
 
+    var luaConfig by StringPreference(R.string.lua_config, "")
 
-    var luaConfig: String
-        get() = prefs.getString(getString(R.string.lua_config), "")
-        set(config) {
-            prefs.edit().putString(getString(R.string.lua_config), config).commit()
-        }
+    var isWordWrap by BooleanPreference(R.string.word_wrap_key, true)
 
-    var isWordWrap: Boolean
-        get() = prefs.getBoolean(getString(R.string.word_wrap_key), true)
-        set(bool) = prefs.edit().putBoolean(getString(R.string.word_wrap_key), bool).apply()
+    var isShowEditTextHint by BooleanPreference(R.string.show_edittext_hint, true)
 
-    var isShowEditTextHint: Boolean
-        get() = prefs.getBoolean(getString(R.string.show_edittext_hint), true)
-        set(bool) = prefs.edit().putBoolean(getString(R.string.show_edittext_hint), bool).apply()
+    var isCapitalizeTasks by BooleanPreference(R.string.capitalize_tasks, true)
 
-    var isCapitalizeTasks: Boolean
-        get() = prefs.getBoolean(getString(R.string.capitalize_tasks), true)
-        set(bool) = prefs.edit().putBoolean(getString(R.string.capitalize_tasks), bool).apply()
+    val showTodoPath by BooleanPreference(R.string.show_todo_path, false)
 
-    val showTodoPath: Boolean
-        get() = prefs.getBoolean(getString(R.string.show_todo_path), false)
+    val backClearsFilter by BooleanPreference(R.string.back_clears_filter, false)
 
+    val sortCaseSensitive by BooleanPreference(R.string.ui_sort_case_sensitive, true)
 
-    val backClearsFilter: Boolean
-        get() = prefs.getBoolean(getString(R.string.back_clears_filter), false)
-
-    val sortCaseSensitive: Boolean
-        get() = prefs.getBoolean(getString(R.string.ui_sort_case_sensitive), true)
-
+    private val _windowsEOL by BooleanPreference(R.string.line_breaks_pref_key, true)
     val eol: String
-        get() {
-            if (prefs.getBoolean(getString(R.string.line_breaks_pref_key), true)) {
-                return "\r\n"
-            } else {
-                return "\n"
-            }
-        }
+        get() = if (_windowsEOL) "\r\n" else "\n"
 
     fun hasDonated(): Boolean {
         try {
@@ -127,12 +87,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    var isAddTagsCloneTags: Boolean
-        get() = prefs.getBoolean(getString(R.string.clone_tags_key), false)
-        set(bool) = prefs.edit().putBoolean(getString(R.string.clone_tags_key), bool).apply()
+    var isAddTagsCloneTags by BooleanPreference(R.string.clone_tags_key, false)
 
-    val hasAppendAtEnd: Boolean
-        get() = prefs.getBoolean(getString(R.string.append_tasks_at_end), true)
+    val hasAppendAtEnd by BooleanPreference(R.string.append_tasks_at_end, true)
 
     // Takes an argument f, an expression that maps theme strings to IDs
     val activeTheme: Int
@@ -170,77 +127,72 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
             }
         }
 
+    private val _widgetTheme by StringPreference(R.string.widget_theme_pref_key, "light_darkactionbar")
     val isDarkWidgetTheme: Boolean
-        get() = "dark" == prefs.getString(getString(R.string.widget_theme_pref_key), "light_darkactionbar")
+        get() = _widgetTheme == "dark"
 
+    private val _activeTheme by StringPreference(R.string.theme_pref_key, "light_darkactionbar")
     private val activeThemeString: String
-        get() = interpreter.configTheme() ?: prefs.getString(getString(R.string.theme_pref_key), "light_darkactionbar")
+        get() = LuaInterpreter.configTheme() ?: _activeTheme
 
     // Only used in Dropbox build
     @Suppress("unused")
-    var fullDropBoxAccess: Boolean
-        @SuppressWarnings("unused")
-        get() = prefs.getBoolean(getString(R.string.dropbox_full_access), true)
-        set(full) {
-            prefs.edit().putBoolean(getString(R.string.dropbox_full_access), full).commit()
-        }
+    var fullDropBoxAccess by BooleanPreference(R.string.dropbox_full_access, true)
 
     val dateBarRelativeSize: Float
         get() {
-            val def = 80
-            return prefs.getInt(getString(R.string.datebar_relative_size), def) / 100.0f
+            val dateBarSize by IntPreference(R.string.datebar_relative_size, 80)
+            return dateBarSize / 100.0f
         }
 
-    val showCalendar: Boolean
-        get() = prefs.getBoolean(getString(R.string.ui_show_calendarview), false)
+    val showCalendar by BooleanPreference(R.string.ui_show_calendarview, false)
 
     val tasklistTextSize: Float?
         get() {
-            val luaValue = interpreter.tasklistTextSize()
+            val luaValue = LuaInterpreter.tasklistTextSize()
             if (luaValue != null) {
                 return luaValue
             }
-
-            if (!prefs.getBoolean(getString(R.string.custom_font_size), false)) {
+            val customSize by BooleanPreference(R.string.custom_font_size, false)
+            if (!customSize) {
                 return 14.0f
             }
-            val font_size = prefs.getInt(getString(R.string.font_size), 14)
+            val font_size by IntPreference(R.string.font_size, 14)
             return font_size.toFloat()
         }
 
-    val hasShareTaskShowsEdit: Boolean
-        get() = prefs.getBoolean(getString(R.string.share_task_show_edit), false)
+    val hasShareTaskShowsEdit by BooleanPreference(R.string.share_task_show_edit, false)
 
-    val hasExtendedTaskView: Boolean
-        get() = prefs.getBoolean(getString(R.string.taskview_extended_pref_key), true)
+    val hasExtendedTaskView by BooleanPreference(R.string.taskview_extended_pref_key, true)
 
-    val showCompleteCheckbox: Boolean
-        get() = prefs.getBoolean(getString(R.string.ui_complete_checkbox), true)
+    val showCompleteCheckbox by BooleanPreference(R.string.ui_complete_checkbox, true)
 
-    val showConfirmationDialogs: Boolean
-        get() = prefs.getBoolean(getString(R.string.ui_show_confirmation_dialogs), true)
+    val showConfirmationDialogs by BooleanPreference(R.string.ui_show_confirmation_dialogs, true)
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
-        if (s == getString(R.string.widget_theme_pref_key) ||
-                s == getString(R.string.widget_extended_pref_key) ||
-                s == getString(R.string.widget_background_transparency) ||
-                s == getString(R.string.widget_header_transparency)) {
-            TodoApplication.app.redrawWidgets()
-        } else if (s == getString(R.string.calendar_sync_dues) ||
-                s == getString(R.string.calendar_sync_thresholds) ||
-                s == getString(R.string.calendar_reminder_days) ||
-                s == getString(R.string.calendar_reminder_time)) {
-            CalendarSync.updatedSyncTypes()
+        when (s) {
+            getString(R.string.widget_theme_pref_key),
+            getString(R.string.widget_extended_pref_key),
+            getString(R.string.widget_background_transparency),
+            getString(R.string.widget_header_transparency) -> {
+                TodoApplication.app.redrawWidgets()
+            }
+            getString(R.string.calendar_sync_dues),
+            getString(R.string.calendar_sync_thresholds),
+            getString(R.string.calendar_reminder_days),
+            getString(R.string.calendar_reminder_time) -> {
+                CalendarSync.updatedSyncTypes()
+            }
         }
     }
-
 
     val defaultSorts: Array<String>
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
 
+    private var _todoFileName by StringOrNullPreference(R.string.todo_file_key)
     val todoFileName: String
         get() {
-            var name = prefs.getString(getString(R.string.todo_file_key), null)
+            var name = _todoFileName
             if (name == null) {
                 name = FileStore.getDefaultPath()
                 setTodoFile(name)
@@ -257,13 +209,9 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
     val todoFile: File
         get() = File(todoFileName)
 
-    @SuppressLint("CommitPrefEdits")
     fun setTodoFile(todo: String) {
-        with(prefs.edit()) {
-            putString(getString(R.string.todo_file_key), todo)
-            remove(getString(R.string.file_current_version_id))
-            commit()
-        }
+        _todoFileName = todo
+        prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
     }
 
     fun clearCache() {
@@ -271,49 +219,35 @@ object Config : SharedPreferences.OnSharedPreferenceChangeListener {
         currentVersionId = null
     }
 
-    val isAutoArchive: Boolean
-        get() = prefs.getBoolean(getString(R.string.auto_archive_pref_key), false)
+    val isAutoArchive by BooleanPreference(R.string.auto_archive_pref_key, false)
 
-    val hasPrependDate: Boolean
-        get() = prefs.getBoolean(getString(R.string.prepend_date_pref_key), true)
+    val hasPrependDate by BooleanPreference(R.string.prepend_date_pref_key, true)
 
-    val hasKeepSelection: Boolean
-        get() = prefs.getBoolean(getString(R.string.keep_selection), false)
+    val hasKeepSelection by BooleanPreference(R.string.keep_selection, false)
 
-    val hasKeepPrio: Boolean
-        get() = prefs.getBoolean(getString(R.string.keep_prio), true)
+    val hasKeepPrio by BooleanPreference(R.string.keep_prio, true)
 
-    val shareAppendText: String
-        get() = prefs.getString(getString(R.string.share_task_append_text), " +background")
+    val shareAppendText by StringPreference(R.string.share_task_append_text, " +background")
 
-    var latestChangelogShown: Int
-        get() = prefs.getInt(getString(R.string.latest_changelog_shown), 0)
-        set(versionCode) {
-            prefs.edit().putInt(getString(R.string.latest_changelog_shown), versionCode).commit()
-        }
+    var latestChangelogShown by IntPreference(R.string.latest_changelog_shown, 0)
 
-    val localFileRoot: String
-        get() = prefs.getString(getString(R.string.local_file_root), "/sdcard/")
+    val localFileRoot by StringPreference(R.string.local_file_root, "/sdcard/")
 
-    val hasCapitalizeTasks: Boolean
-        get() = isCapitalizeTasks
+    val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    val hasColorDueDates: Boolean
-        get() = prefs.getBoolean(getString(R.string.color_due_date_key), true)
+    private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
     var todoList: ArrayList<Task>?
-        get() {
-            val cachedContents = prefs.getString(getString(R.string.cached_todo_file), null) ?: return null
-            return ArrayList<Task>().apply {
-                addAll(cachedContents.lines().map { line -> Task(line) })
+        get() = cachedContents?.let {
+            ArrayList<Task>().apply {
+                addAll(it.lines().map { line -> Task(line) })
             }
         }
         set(items) {
             if (items == null) {
-                prefs.edit().remove(getString(R.string.cached_todo_file))
+                prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {
-                val contents = items.map { it.inFileFormat() }.joinToString("\n")
-                prefs.edit().putString(getString(R.string.cached_todo_file), contents).commit()
+                cachedContents = items.map { it.inFileFormat() }.joinToString("\n")
             }
         }
 }

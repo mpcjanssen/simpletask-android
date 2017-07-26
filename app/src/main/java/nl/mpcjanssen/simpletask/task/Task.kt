@@ -26,11 +26,9 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-
 import nl.mpcjanssen.simpletask.util.addInterval
 
 import java.util.*
-
 
 class Task(text: String, defaultPrependedDate: String? = null) {
 
@@ -79,7 +77,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             return tokens.map { it.text }.joinToString(" ")
         }
 
-    val extensions: List<Pair<String,String>>
+    val extensions: List<Pair<String, String>>
         get() {
             return tokens.filter { it is KeyValueToken }.map {
                 val token = it as KeyValueToken
@@ -151,7 +149,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var recurrencePattern: String? = null
         get() = getFirstToken<RecurrenceToken>()?.valueStr
 
-
     var tags: SortedSet<String> = emptySet<String>().toSortedSet()
         get() {
             return tokens.filter { it is TagToken }.map { it -> (it as TagToken).value }.toSortedSet()
@@ -176,7 +173,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSortedSet()
         }
 
-
     fun removeTag(tag: String) {
         tokens = tokens.filter {
             !((it is TagToken) && it.value == tag)
@@ -197,7 +193,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             if (pattern != null) {
                 var deferFromDate : String = ""
                 if (!(recurrencePattern?.contains("+") ?: true)) {
-                    deferFromDate = completionDate?:""
+                    deferFromDate = completionDate ?: ""
                 }
                 val newTask = Task(textWithoutCompletedInfo)
                 if (newTask.dueDate != null) {
@@ -226,7 +222,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
     }
 
-    fun deferThresholdDate(deferString:String, deferFromDate:String) {
+    fun deferThresholdDate(deferString: String, deferFromDate: String) {
         if (deferString.matches(MATCH_SINGLE_DATE))
         {
             thresholdDate = deferString
@@ -250,7 +246,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         thresholdDate = newDate?.format(DATE_FORMAT)
     }
 
-    fun deferDueDate(deferString:String, deferFromDate:String) {
+    fun deferDueDate(deferString: String, deferFromDate: String) {
         if (deferString.matches(MATCH_SINGLE_DATE))
         {
             dueDate = deferString
@@ -274,7 +270,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         dueDate = newDate?.format(DATE_FORMAT)
     }
 
-
     fun inFileFormat() = text
 
     fun inFuture(today: String): Boolean {
@@ -295,7 +290,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun showParts(parts: Int): String {
         return tokens.filter { (it.type and parts) != 0 }
-                      .map {it.text}
+                      .map { it.text }
                        .joinToString(" ")
     }
 
@@ -314,14 +309,14 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             }
         } else if (sort.contains("by_threshold_date")) {
             if (createIsThreshold) {
-                return thresholdDate?:createDate?:empty
+                return thresholdDate ?: createDate ?: empty
             } else {
-                return thresholdDate?:empty
+                return thresholdDate ?: empty
             }
         } else if (sort.contains("by_prio")) {
             return priority.code
         } else if (sort.contains("by_due_date")) {
-            return dueDate?:empty
+            return dueDate ?: empty
         }
         return ""
     }
@@ -450,7 +445,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 }
 
-
 interface TToken {
     val text: String
     val value: Any?
@@ -476,15 +470,15 @@ interface TToken {
     }
 }
 
-data class CompletedToken(override val value: Boolean) :TToken {
+data class CompletedToken(override val value: Boolean) : TToken {
     override val text: String
     get() = if (value) "x" else ""
     override val type = TToken.COMPLETED
 }
 
-data class PriorityToken(override val text: String) :TToken {
+data class PriorityToken(override val text: String) : TToken {
     override val value: Priority
-    get() = Priority.toPriority(text.removeSurrounding("(",")"))
+    get() = Priority.toPriority(text.removeSurrounding("(", ")"))
     override val type = TToken.PRIO
 }
 
@@ -539,7 +533,6 @@ interface KeyValueToken : TToken {
         get() = "$key:$valueStr"
 }
 
-
 data class DueDateToken(override val valueStr : String) : KeyValueToken {
     override val key = "due"
     override val type = TToken.DUE_DATE
@@ -554,7 +547,7 @@ data class RecurrenceToken(override val valueStr : String) : KeyValueToken {
     override val type = TToken.RECURRENCE
 }
 
-data class HiddenToken(override val valueStr : String) :KeyValueToken {
+data class HiddenToken(override val valueStr : String) : KeyValueToken {
     override val key = "h"
     override val value: Boolean
         get() = valueStr == "1"

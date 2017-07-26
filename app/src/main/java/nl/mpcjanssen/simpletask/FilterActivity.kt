@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask
 
-
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -87,7 +86,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
             mFilter.initFromIntent(intent)
         }
 
-
         pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
 
         // Fill arguments for fragment
@@ -100,7 +98,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         val contextTab = FilterListFragment()
         contextTab.arguments = arguments
         pagerAdapter!!.add(contextTab)
-
 
         // Fill arguments for fragment
         arguments = Bundle()
@@ -137,7 +134,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         otherTab.arguments = arguments
         pagerAdapter!!.add(otherTab)
 
-
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS, mFilter.getSort(Config.defaultSorts))
@@ -158,7 +154,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         scriptTab.arguments = arguments
         pagerAdapter!!.add(scriptTab)
 
-
         pager = findViewById(R.id.pager) as ViewPager
         pager!!.adapter = pagerAdapter
         // Give the TabLayout the ViewPager
@@ -176,10 +171,10 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
             override fun onPageSelected(position: Int) {
                 log.info(TAG, "Page $position selected")
-                m_page  = position
+                m_page = position
             }
         })
-        val activePage = prefs.getInt(getString(R.string.last_open_filter_tab),0)
+        val activePage = prefs.getInt(getString(R.string.last_open_filter_tab), 0)
         if (activePage < pagerAdapter?.count ?: 0) {
             pager?.setCurrentItem(activePage, false)
         }
@@ -293,7 +288,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         }
     }
 
-
     private fun setScript(script: String?) {
         if (scriptFragment == null) {
             // fragment was never intialized
@@ -311,7 +305,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         mFilter.saveInPrefs(preferences)
         broadcastRefreshWidgets(m_app.localBroadCastManager)
     }
-
 
     private fun createWidget(name: String) {
         val mAppWidgetId: Int
@@ -379,10 +372,9 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        prefs.edit().putInt(getString(R.string.last_open_filter_tab),m_page).commit()
+        prefs.edit().putInt(getString(R.string.last_open_filter_tab), m_page).commit()
         pager?.clearOnPageChangeListeners()
     }
-
 
     /**
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
@@ -436,5 +428,4 @@ class FilterActivity : ThemedNoActionBarActivity() {
         val INITIAL_NOT = "initialNot"
     }
 }
-
 
