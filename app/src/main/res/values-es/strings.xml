@@ -202,7 +202,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="save_filter_message">Introduzca un nombre para el filtro:</string>
 
     <string name="donate_title">Donar</string>
-    <string name="donate_summary">"Si le gusta Simpletask, puede hacer una donación. NOTA: la donación es voluntaria, Simpletask siempre será gratis (es decir, sin cargo). "</string>
+    <string name="donate_summary">Si le gusta Simpletask, puede hacer una donación. NOTA: la donación es voluntaria, Simpletask siempre será gratis.</string>
     <string name="donated_summary">Gracias por su donación.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Invertir el orden</string>
@@ -395,7 +395,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="keep">mantener</string>
     <string name="all">todo</string>
 
-    <string name="input_new">"Nueva entrada "</string>
+    <string name="input_new">Nueva entrada</string>
     <string name="filter_import_export">Importar/exportar filtros</string>
 
     <string name="share_history">Ver y compartir la base de datos interna del historial de todo.txt para su recuperación.</string>
