@@ -178,8 +178,8 @@
     <string name="show_empty_lists_summary">ヘッダー以下のすべてのタスクが非表示の場合も、ヘッダーを表示します。</string>
 
     <string name="split_actionbar_pref_title">分割アクションバーを使用する</string>
-    <string name="split_actionbar_pref_summary">"分割アクションバーを使用すると、メニュー ボタンが、画面の下部に表示されます。
- 画面に Todo リストを多く表示したい場合は、これをオフにします。 "</string>
+    <string name="split_actionbar_pref_summary">分割アクションバーを使用すると、メニュー ボタンが、画面の下部に表示されます。
+\n 画面に Todo リストを多く表示したい場合は、これをオフにします。</string>
 
     <string name="show_edittext_hint_title">ヒントの表示</string>
     <string name="show_edittext_hint_summary">タスクを追加するとき、ヒントを表示します。紛らわしい場合は無効にします。</string>
@@ -349,7 +349,7 @@ http://goo.gl/X1C55P
     <string name="task_added">タスクを Simpletask に追加しました</string>
     <string name="default_sort">デフォルトの並べ替え</string>
     <string name="pull_to_refresh_refreshing_label">Dropbox と同期しています…</string>
-    <string name="input_new">"新しく入力 "</string>
+    <string name="input_new">新しく入力</string>
     <string name="no_filter">フィルターなし</string>
     <string name="dropbox">Dropbox</string>
 
@@ -359,8 +359,8 @@ http://goo.gl/X1C55P
     <string name="filter_import_export">フィルターのインポート/エクスポート</string>
 
     <string name="donate_title">寄付</string>
-    <string name="donate_summary">"シンプルタスクを気に入って頂けたら寄付をお願いします。注: 寄付は自発的なもので、シンプルタスクは常に無料です。 "</string>
-    <string name="donated_summary">"寄付をいただき、ありがとうございます。 "</string>
+    <string name="donate_summary">シンプルタスクを気に入って頂けたら寄付をお願いします。注: 寄付は自発的なもので、シンプルタスクは常に無料です。</string>
+    <string name="donated_summary">寄付をいただき、ありがとうございます。</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">逆順に並べ替え</string>
 
