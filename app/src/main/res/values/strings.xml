@@ -188,6 +188,11 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="task_text_ellipsizing_pref_title">Task text ellipsizing</string>
     <string name="task_text_ellipsizing_pref_summary">Ellipsize task text in main window if it takes more than 2 lines.</string>
+    <string name="task_text_ellipsizing_none">None: Very long task text</string>
+    <string name="task_text_ellipsizing_start">Start: ...task text</string>
+    <string name="task_text_ellipsizing_middle">Middle: Very... text</string>
+    <string name="task_text_ellipsizing_end">End: Very long...</string>
+    <string name="task_text_ellipsizing_marquee">Marquee: Very long ta</string>
 
     <string name="widget_header_transparency_title">Header transparency</string>
     <string name="widget_background_transparency_title">Background transparency</string>
