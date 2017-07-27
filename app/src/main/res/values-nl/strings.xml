@@ -183,8 +183,7 @@ Kijk de +Simpletask-instellingen na en verwijder deze tekst @Phone</string>
     <string name="show_empty_lists_summary">Kop weergeven, zelfs als alle taken eronder verborgen zijn.</string>
 
     <string name="split_actionbar_pref_title">Gesplitste actiebalk gebruiken</string>
-    <string name="split_actionbar_pref_summary">"Gesplitste actiebalk gebruiken zodat de menuknoppen onderaan het scherm worden weergegeven.
- Schakel dit uit als u meer ruimte voor de todo-lijst wilt. "</string>
+    <string name="split_actionbar_pref_summary">Gesplitste actiebalk gebruiken zodat de menuknoppen onderaan het scherm worden weergegeven. Schakel dit uit als u meer ruimte voor de nog-te-doen-lijst wilt.</string>
 
     <string name="show_edittext_hint_title">Tips weergeven</string>
     <string name="show_edittext_hint_summary">Tips weergeven tijdens het toevoegen van taen. Schakel dit uit als het u afleidt.</string>
@@ -241,11 +240,9 @@ Wilt u
     <string name="login_screen_button">Inloggen op Dropbox</string>
     <string name="login_folder_screen_button">Inloggen op Dropbox
 (maptoegang voor app)</string>
-    <string name="login_cloudless">"Als u geen Dropbox-account heeft of u wilt Dropbox niet gebruiken om uw todo-lijst naar op te slaan,
- dan kunt u Simpletask Cloudless downloaden uit de Play Store.
-
-http://goo.gl/X1C55P
- "</string>
+    <string name="login_cloudless">Als u geen Dropbox-account heeft of u wilt Dropbox niet gebruiken om uw nog-te-doen-lijst naar op te slaan, dan kunt u Simpletask Cloudless downloaden uit de Play Store.
+\n
+\nhttp://goo.gl/X1C55P</string>
 
     <string name="delete_task_title">%s ta(a)k(en) verwijderen</string>
     <string name="archive_task_title">%s ta(a)k(en) acrhiveren</string>
@@ -357,7 +354,7 @@ http://goo.gl/X1C55P
     <string name="task_added">Taak is toegevoegd aan Simpletask</string>
     <string name="default_sort">Standaard sortering</string>
     <string name="pull_to_refresh_refreshing_label">Bezig met synchroniseren met Dropbox…</string>
-    <string name="input_new">"Nieuwe invoer "</string>
+    <string name="input_new">Nieuwe invoer</string>
     <string name="no_filter">Geen filter</string>
     <string name="dropbox">Dropbox</string>
 
@@ -367,8 +364,8 @@ http://goo.gl/X1C55P
     <string name="filter_import_export">Filters importeren/exporteren</string>
 
     <string name="donate_title">Doneren</string>
-    <string name="donate_summary">"Doneer als u Simpletask waardeert. OPMERKING: doneren is geheel vrijblijvend; Simpletask zal altijd gratis blijven. "</string>
-    <string name="donated_summary">"Bedankt voor uw donatie. "</string>
+    <string name="donate_summary">Doneer als u Simpletask waardeert. LET OP: doneren is geheel vrijblijvend; Simpletask zal altijd gratis blijven.</string>
+    <string name="donated_summary">Bedankt voor uw donatie.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Andersom sorteren</string>
 
