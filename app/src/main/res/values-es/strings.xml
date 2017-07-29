@@ -42,8 +42,7 @@
     <string name="show_empty_lists_summary">Mostrar un encabezado incluso si todas las tareas bajo el mismo están ocultas.</string>
 
     <string name="split_actionbar_pref_title">Usar barra de acción dividida</string>
-    <string name="split_actionbar_pref_summary">"Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla.
-Deseleccinoe esta opción para disponer de más espacio de pantalla para la lista de tareas. "</string>
+    <string name="split_actionbar_pref_summary">Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla. Deseleccione esta opción para disponer de más espacio de pantalla para la lista de tareas.</string>
 
     <string name="show_edittext_hint_title">Mostrar sugerencias</string>
     <string name="show_edittext_hint_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
@@ -79,9 +78,8 @@ Deseleccinoe esta opción para disponer de más espacio de pantalla para la list
 
     <!-- sync conflict dialog -->
     <string name="sync_conflict_dialog_title">Conflicto de archivos</string>
-    <string name="sync_conflict_dialog_msg">"Vaya! Hay una versión más reciente de su archivo todo.txt en Dropbox.
-¿Quiere subir sus cambios locales, o descargar la versión de Dropbox?
- "</string>
+    <string name="sync_conflict_dialog_msg">¡Vaya! Hay una versión más reciente de su archivo todo.txt en Dropbox.
+\n¿Quiere subir sus cambios locales, o descargar la versión de Dropbox?</string>
 
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
@@ -175,11 +173,11 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="dates_two_weeks">2 semanas</string>
     <string name="dates_one_month">1 mes</string>
 
-    <string name="dates_today">hoy</string>
-    <string name="date_pick">elegir fecha</string>
-    <string name="dates_tomorrow">mañana</string>
+    <string name="dates_today">Hoy</string>
+    <string name="date_pick">Elegir una fecha</string>
+    <string name="dates_tomorrow">Mañana</string>
 
-    <string name="title_activity_filter">Filtrar</string>
+    <string name="title_activity_filter">Aplicar filtro</string>
     <string name="selected">seleccionada</string>
     <string name="no_context">Bandeja de entrada</string>
     <string name="no_project">Sin etiquetas</string>
@@ -230,7 +228,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="update_task_failed">No se pudo actualizar la tarea</string>
     <string name="sort">Ordenar</string>
     <string name="script">Script</string>
-    <string name="filter">Filtro</string>
+    <string name="filter">Aplicar filtro</string>
     <string name="main_no_items">No hay tareas para mostrar.</string>
     <string name="set_preferences">Configuración</string>
     <string name="preferences">Configuración</string>
@@ -248,7 +246,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="add">Agregar</string>
     <string name="task">Tarea</string>
     <string name="addtask">Agregar una Tarea</string>
-    <string name="updatetask">Actualizar tarea</string>
+    <string name="updatetask">Editar tarea</string>
     <string name="viewtask">Ver Tarea</string>
     <string name="clear_database">Vaciar base de datos</string>
     <string name="done">Completar</string>
@@ -256,8 +254,8 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="select_priority">Seleccionar prioridad</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="add_list_or_tag">Agregar listas y tareas</string>
-    <string name="update_lists">Actualizar listas</string>
-    <string name="update_tags">Actualizar etiquetas</string>
+    <string name="update_lists">Listas</string>
+    <string name="update_tags">Etiquetas</string>
     <string name="remove_list_or_tag">Quitar listas y etiquetas</string>
     <string name="update">Actualizar</string>
     <string name="delete">Borrar</string>
