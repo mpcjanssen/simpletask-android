@@ -77,7 +77,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="cancel">Abbrechen</string>
     <string name="clear_filter">Filter löschen</string>
 
-    <string name="tasktexthint">\@Besprechung +Paris Problem mit +Hector @Kneipe\n+Hector maßregeln, dass er nicht so ein Spielverderber sein soll @Kneipe</string>
+    <string name="tasktexthint">\@Besprechung +Paris Problem mit +Hector @Troja
+\n+Hector maßregeln, dass er nicht so ein Spielverderber sein soll @Troja
+\nDiesen Text im Menü ausblenden @Phone</string>
 
     <string name="filter_name_empty">Kein Name angegeben, es wird kein Filter hinzugefügt</string>
     <string name="widget_name_empty">Kein Widgetname angegeben, es wird kein Widget hinzugefügt</string>
@@ -177,8 +179,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_text_ellipsizing_pref_title">Aufgabentext kürzen</string>
     <string name="task_text_ellipsizing_pref_summary">Aufgabentext im Hauptfenster kürzen, wenn er mehr als zwei Zeilen einnimmt.</string>
     
-    <string name="color_due_pref_title">Farbe der Fälligkeitsdaten</string>
-    <string name="color_due_pref_summary">Farbe der Fälligkeits- und Anfangsdaten anpassen (heute, zukünftig oder überfällig).</string>
+    <string name="color_due_pref_title">Farbe</string>
+    <string name="color_due_pref_summary">Fälligkeits- und Anfangsdaten anpassen (heute, zukünftig oder überfällig).</string>
 
     <string name="show_hidden_title">Zeige versteckte Aufgaben</string>
     <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben um sie zu editieren. Nach dem Editieren deaktiviere diese Einstellung wieder.</string>
@@ -187,8 +189,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_empty_lists_summary">Zeige die Kopfzeile auch wenn alle Aufgaben unter dieser Kopfzeile versteckt sind.</string>
 
     <string name="split_actionbar_pref_title">Verwende geteilte Aktionsleiste</string>
-    <string name="split_actionbar_pref_summary">"Verwende eine geteile Aktionsleiste damit die Schaltflächen am unteren Ende des Bildschirms sind.
- Für mehr Bilschirmfläche deaktiviere diese Option. "</string>
+    <string name="split_actionbar_pref_summary">Verwende eine geteilte Aktionsleiste, damit die Schaltflächen am unteren Ende des Bildschirms sind.
+\nDeaktiviere diese Option für mehr Bildschirmfläche.</string>
 
     <string name="show_edittext_hint_title">Zeige Hinweise</string>
     <string name="show_edittext_hint_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
@@ -386,7 +388,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert.</string>
     <string name="by_completion_date">Nach Fertigstellungsdatum</string>
     <string name="clear_database">Datenbank leeren</string>
-    <string name="donated_summary">"Vielen Dank für Ihre Spende. "</string>
+    <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
     <string name="none">kein</string>
     <string name="taskview_extended_pref_summary">Aufgaben im Hauptfenster mit separater Zeile für Datum zeigen.</string>
     <string name="taskview_extended_pref_title">Datumszeile im Hauptfenster</string>
