@@ -87,10 +87,10 @@ class FilterScriptFragment : Fragment() {
 
     private fun testOnFilterCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         if (script.trim { it <= ' ' }.isEmpty() || LuaInterpreter.evalScript(environment, script).onFilterCallback(environment, t)) {
-            snackBar.setText("True, task will be shown")
+            snackBar.setText(getString(R.string.script_tab_true_task_shown))
             barView.setBackgroundColor(0xff43a047.toInt())
         } else {
-            snackBar.setText("False: task will not be shown")
+            snackBar.setText(getString(R.string.script_tab_false_task_not_shown))
             barView.setBackgroundColor(0xffe53935.toInt())
         }
         snackBar.show()
