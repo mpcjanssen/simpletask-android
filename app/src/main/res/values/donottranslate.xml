@@ -98,11 +98,11 @@ You should have received a copy of the GNU General Public License along with Tod
     </string-array>
 
     <string-array name="task_text_ellipsizing">
-        <item>None: Very long task text</item>
-        <item>Start: ...task text</item>
-        <item>Middle: Very... text</item>
-        <item>End: Very long...</item>
-        <item>Marquee: Very long ta</item>
+        <item>@string/task_text_ellipsizing_none</item>
+        <item>@string/task_text_ellipsizing_start</item>
+        <item>@string/task_text_ellipsizing_middle</item>
+        <item>@string/task_text_ellipsizing_end</item>
+        <item>@string/task_text_ellipsizing_marquee</item>
     </string-array>
 
     <string-array name="task_text_ellipsizing_values">

@@ -417,10 +417,10 @@ class FilterActivity : ThemedNoActionBarActivity() {
         val TAB_TYPE = "type"
         val CONTEXT_TAB = "context"
         val PROJECT_TAB = "project"
-        val PRIO_TAB = "prio"
-        val OTHER_TAB = "other"
-        val SORT_TAB = "sort"
-        val SCRIPT_TAB = "script"
+        val PRIO_TAB = getString(R.string.filter_tab_header_prio)
+        val OTHER_TAB = getString(R.string.filter_tab_header_other)
+        val SORT_TAB = getString(R.string.filter_tab_header_sort)
+        val SCRIPT_TAB = getString(R.string.filter_tab_header_script)
 
         // Constants for saving state
         val FILTER_ITEMS = "items"
