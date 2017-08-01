@@ -1376,8 +1376,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val titles = ArrayList<String>()
                     for (i in links.indices) {
                         when (actions[i]) {
-                            ACTION_SMS -> titles.add(i, R.string.action_pop_up_sms + links[i])
-                            ACTION_PHONE -> titles.add(i, R.string.action_pop_up_call + links[i])
+                            ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
+                            ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
                             else -> titles.add(i, links[i])
                         }
                     }
