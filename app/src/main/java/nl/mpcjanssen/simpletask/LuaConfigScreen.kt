@@ -95,7 +95,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
             try {
                 val contents = FileStore.readFile(importFile.canonicalPath, null)
                 Config.luaConfig = contents
-                showToastShort(this, "Lua config imported")
+                showToastShort(this, getString(R.string.toast_lua_config_imported))
             } catch (e: IOException) {
                 log.error(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
