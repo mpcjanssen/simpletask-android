@@ -15,7 +15,7 @@
         android:id="@+id/cb_use_script"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Use script"
+        android:text="@string/script_tab_use_script"
         />
 
     <LinearLayout
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnTest"
             style="?android:attr/buttonStyle"
-            android:text="Test"
+            android:text="@string/script_tab_test"
             />
 
         <Spinner
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true"
-            android:hint="Test task"
+            android:hint="@string/script_tab_test_task"
             android:gravity="top|left"
             />
 
