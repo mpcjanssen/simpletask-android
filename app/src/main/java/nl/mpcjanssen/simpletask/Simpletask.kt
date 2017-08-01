@@ -887,7 +887,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 	try {
             FileStore.writeFile(exportFile, jsonFilters.toString(2))
-	    showToastShort(this, "Filters exported")
+	    showToastShort(this, R.string.saved_filters_exported)
 	} catch (e: Exception) {
             log.error(TAG, "Export filters failed", e)
 	    showToastLong(this, "Error exporting filters")
@@ -1376,8 +1376,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val titles = ArrayList<String>()
                     for (i in links.indices) {
                         when (actions[i]) {
-                            ACTION_SMS -> titles.add(i, "SMS: " + links[i])
-                            ACTION_PHONE -> titles.add(i, "Call: " + links[i])
+                            ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
+                            ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
                             else -> titles.add(i, links[i])
                         }
                     }

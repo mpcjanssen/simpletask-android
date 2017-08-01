@@ -188,6 +188,31 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="task_text_ellipsizing_pref_title">Task text ellipsizing</string>
     <string name="task_text_ellipsizing_pref_summary">Ellipsize task text in main window if it takes more than 2 lines.</string>
+    <string name="task_text_ellipsizing_none">None: Very long task text</string>
+    <string name="task_text_ellipsizing_start">Start: ...task text</string>
+    <string name="task_text_ellipsizing_middle">Middle: Very... text</string>
+    <string name="task_text_ellipsizing_end">End: Very long...</string>
+    <string name="task_text_ellipsizing_marquee">Marquee: Very long ta</string>
+
+    <string name="filter_tab_header_prio">PRIO</string>
+    <string name="filter_tab_header_other">OTHER</string>
+    <string name="filter_tab_header_sort">SORT</string>
+    <string name="filter_tab_header_script">SCRIPT</string>
+
+    <string name="script_tab_script_from_file">Script from file</string>
+    <string name="script_tab_use_script">Use script</string>
+    <string name="script_tab_test">TEST</string>
+    <string name="script_tab_test_task">Test task</string>
+    <string name="script_tab_script">Script</string>
+    <string name="script_tab_true_task_shown">True, task will be shown</string>
+    <string name="script_tab_false_task_not_shown">False, task will not be shown</string>
+
+    <string name="action_pop_up_call">Call:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">INVERTED</string>
+    <string name="saved_filters_exported">Filters exported</string>
+    <string name="toast_lua_config_imported">Lua config imported</string>
 
     <string name="widget_header_transparency_title">Header transparency</string>
     <string name="widget_background_transparency_title">Background transparency</string>
