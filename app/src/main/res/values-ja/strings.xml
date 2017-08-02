@@ -399,11 +399,37 @@ http://goo.gl/X1C55P
     <string name="lua_open_config">Lua の設定</string>
 <string name="unComplete">取り消し完了</string>
     <string name="tasktexthint">+ヘクトール と +パリ の問題を @議論 @Troy
-+ヘクトール に、そんなドラッグはできないと伝える @Troy
-+Simpletask の設定をレビューして、このテキストを削除する @Phone</string>
+\n+ヘクトール に、そんなドラッグはできないと伝える @Troy
+\nメニューからこのテキストを削除する @Phone</string>
 
     <string name="keep_selection_title">選択を残す</string>
     <string name="keep_selection_summary">変更した後、タスクの選択を維持します。</string>
 
+
+    <string name="task_text_ellipsizing_none">なし: 非常に長いタスクのテキスト</string>
+    <string name="task_text_ellipsizing_start">開始: ...タスクのテキスト</string>
+    <string name="task_text_ellipsizing_middle">中: 非常に... テキスト</string>
+    <string name="task_text_ellipsizing_end">終了: 非常に長い...</string>
+    <string name="task_text_ellipsizing_marquee">マーキー: 非常に長いテキスト</string>
+
+    <string name="filter_tab_header_prio">優先</string>
+    <string name="filter_tab_header_other">その他</string>
+    <string name="filter_tab_header_sort">ソート</string>
+    <string name="filter_tab_header_script">スクリプト</string>
+
+    <string name="script_tab_script_from_file">ファイルからスクリプト</string>
+    <string name="script_tab_use_script">スクリプトを使用</string>
+    <string name="script_tab_test">テスト</string>
+    <string name="script_tab_test_task">タスクのテスト</string>
+    <string name="script_tab_script">スクリプト</string>
+    <string name="script_tab_true_task_shown">はい、タスクが表示されます</string>
+    <string name="script_tab_false_task_not_shown">いいえ、タスクは表示されません</string>
+
+    <string name="action_pop_up_call">呼び出し:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">反転</string>
+    <string name="saved_filters_exported">フィルターをエクスポートしました</string>
+    <string name="toast_lua_config_imported">Lua 設定をインポートしました</string>
 
     </resources>
