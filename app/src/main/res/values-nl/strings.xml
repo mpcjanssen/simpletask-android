@@ -161,8 +161,8 @@
     <string name="task_text_ellipsizing_pref_title">Taaktekst-inkorting</string>
     <string name="task_text_ellipsizing_pref_summary">Taaktekst elipseren in het hoofdvenster als er meer dan 2 regels zijn.</string>
 
-    <string name="widget_header_transparency_title">Koptransparantie</string>
-    <string name="widget_background_transparency_title">Achtergrondtransparantie</string>
+    <string name="widget_header_transparency_title">Kopdoorzichtigheid</string>
+    <string name="widget_background_transparency_title">Achtergronddoorzichtigheid</string>
 
     <string name="widget_extended_pref_title">Datumbalk weergeven</string>
     <string name="widget_extended_pref_summary">Datums weergeven op een aparte regel</string>
@@ -231,10 +231,8 @@
     <string name="sync_download_message">Bezig met downloaden van todo.txt…</string>
 
     <string name="sync_conflict_dialog_title">Bestandsconflict</string>
-    <string name="sync_conflict_dialog_msg">"Oeps! Er is al een nieuwere versie van uw todo.txt-bestand aanwezig op Dropbox.
-Wilt u
- uw lokaal aangebrachte wijzigingen uploaden of de Dropbox-versie downloaden?
- "</string>
+    <string name="sync_conflict_dialog_msg">Oeps! Er is al een nieuwere versie van uw todo.txt-bestand aanwezig op Dropbox. Wilt u
+\nuw lokaal aangebrachte wijzigingen uploaden of de Dropbox-versie downloaden?</string>
 
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Inloggen op Dropbox</string>
