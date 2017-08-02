@@ -432,4 +432,5 @@ http://goo.gl/X1C55P
     <string name="saved_filters_exported">フィルターをエクスポートしました</string>
     <string name="toast_lua_config_imported">Lua 設定をインポートしました</string>
 
+    <string name="saved_filters_imported">フィルターをインポートしました</string>
     </resources>
