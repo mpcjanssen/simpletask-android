@@ -228,7 +228,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="update_task_failed">No se pudo actualizar la tarea</string>
     <string name="sort">Ordenar</string>
     <string name="script">Script</string>
-    <string name="filter">Aplicar filtro</string>
+    <string name="filter">Filtrar</string>
     <string name="main_no_items">No hay tareas para mostrar.</string>
     <string name="set_preferences">Configuración</string>
     <string name="preferences">Configuración</string>
