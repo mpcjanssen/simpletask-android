@@ -249,8 +249,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_title">Aufgabe(n) löschen</string>
     <string name="archive_task_title">Aufgabe(n) archivieren</string>
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
-    <string name="logout_message">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
-        Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
+    <string name="logout_message">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.
+\n Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
     <string name="dropbox_open">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
         Alle nicht synchronisierten Änderungen sind nach dem Öffnen einer anderen Datei verloren.</string>
     <string name="delete_task_confirm">Löschen</string>
@@ -443,7 +443,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_text_ellipsizing_start">Anfang: ... Aufgabentext</string>
     <string name="task_text_ellipsizing_middle">Mitte: Sehr ...text</string>
     <string name="task_text_ellipsizing_end">Ende: Sehr langer...</string>
-    <string name="task_text_ellipsizing_marquee">Abgeschnitten: Sehr langer Aufg</string>
+    <string name="task_text_ellipsizing_marquee">Abschnitt: Sehr langer Aufg</string>
 
     <string name="filter_tab_header_prio">PRIO</string>
     <string name="filter_tab_header_other">ANDERE</string>
