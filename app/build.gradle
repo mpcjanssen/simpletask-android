@@ -69,10 +69,6 @@ android {
     signingConfigs {
         release {
             keyAlias = "mpcjanssen.nl"
-            keyAlias 'my-key-alias'
-            keyPassword ')i8zu9\'=E\'Vh9}\'a'
-            storeFile file('/home/dlan/local/misc/android-keystore/my-release-key.keystore')
-            storePassword ')i8zu9\'=E\'Vh9}\'a'
         }
     }
 
