@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flavour_settings_label" translatable="false">Nextcloud</string>
+    <string name="account_type">nl.mpcjanssen.simpletask.nextcloud</string>
+    <string name="login_unsuccesfull">Login unsuccessfull</string>
+    <string name="unexpected_result">Unexpected result</string>
+    <string name="nextcloud_login_screen_button">Log in to Nextcloud</string>
+    <string name="nextcloud_login_server_url">Server URL</string>
+    <string name="nextcloud_login_username">Username</string>
+    <string name="nextcloud_login_password">Password</string>
+    <string name="nextcloud_logout_message">Please make sure you have synced all changes with Nextcloud or
+        shared your complete task list if not connected to Nextcloud.\n
+        Any changes that have not been synced will be lost after logging out.</string>
+    <string name="nextcloud_logout_pref_summary">Log out of Nextcloud.</string>
+    <string name="nextcloud_logout_pref_title">Log out</string>
+</resources>
