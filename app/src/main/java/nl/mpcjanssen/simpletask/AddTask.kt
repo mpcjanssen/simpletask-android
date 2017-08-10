@@ -50,6 +50,8 @@ class AddTask : ThemedActionBarActivity() {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
 
+        TodoApplication.app.loadTodoList("before adding tasks")
+
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
