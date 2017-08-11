@@ -1436,7 +1436,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            ActionQueue.add("setFilteredTasks", Runnable {
+            TodoList.queue("setFilteredTasks") {
                 runOnUiThread {
                     showListViewProgress(true)
                 }
@@ -1463,7 +1463,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         Config.lastScrollPosition = -1
                     }
                 }
-            })
+            }
         }
 
         val countVisibleTasks: Int
