@@ -50,6 +50,8 @@ class AddTask : ThemedActionBarActivity() {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
 
+        TodoApplication.app.loadTodoList("before adding tasks")
+
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
@@ -91,8 +93,15 @@ class AddTask : ThemedActionBarActivity() {
         val preFillString = if (m_backup.isNotEmpty()) {
             setTitle(R.string.updatetask)
             join(m_backup.map(Task::inFileFormat), "\n")
+        } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
+            intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
+        } else if (intent.hasExtra(ActiveFilter.INTENT_JSON)) {
+            val opt = FilterOptions(luaModule = "from_intent")
+            val intentFilter  = ActiveFilter(opt)
+            intentFilter.initFromIntent(intent)
+            intentFilter.prefill
         } else {
-            intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT) ?: ""
+            ""
         }
         textInputField.setText(preFillString)
         // Listen to enter events, use IME_ACTION_NEXT for soft keyboards

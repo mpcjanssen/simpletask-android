@@ -79,9 +79,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="clear_filter">Clear filter</string>
     <string name="write_failed">Failed writing the file!. Your changes were NOT saved.</string>
 
-    <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy\nTell +Hector to not be such a drag
-        @Troy\nRemove this text from the menu @Phone
-    </string>
+    <string name="tasktexthint">\@Discuss +Paris issue with +Hector @Troy
+\nTell +Hector not to be such a drag @Troy
+\nRemove this text from the menu @Phone</string>
 
     <string name="filter_name_empty">No name specified, not adding filter</string>
     <string name="widget_name_empty">No widget name specified, not adding widget</string>
