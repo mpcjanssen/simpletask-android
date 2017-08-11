@@ -11,6 +11,7 @@ import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -237,9 +238,9 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
-    var todoList: ArrayList<Task>?
+    var todoList: CopyOnWriteArrayList<Task>?
         get() = cachedContents?.let {
-            ArrayList<Task>().apply {
+            CopyOnWriteArrayList<Task>().apply {
                 addAll(it.lines().map { line -> Task(line) })
             }
         }
