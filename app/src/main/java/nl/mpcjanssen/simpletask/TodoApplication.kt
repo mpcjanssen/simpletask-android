@@ -42,7 +42,6 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.ActionQueue
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
@@ -197,9 +196,9 @@ class TodoApplication : Application(),
     val doneFileName: String
         get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
 
-    override fun backup(name: String, contents: String) {
+    override fun backup(name: String, lines: String) {
         val now = Date()
-        val fileToBackup = TodoFile(contents, name, now)
+        val fileToBackup = TodoFile(lines, name, now)
         Daos.backup(fileToBackup)
 
     }
