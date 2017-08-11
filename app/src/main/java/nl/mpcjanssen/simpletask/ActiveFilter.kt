@@ -51,6 +51,13 @@ class ActiveFilter (val options : FilterOptions) {
         log = Logger
     }
 
+    val prefill
+        get() : String  {
+            val prefillLists = if (contexts.size == 1 && contexts[0] != "-") "@${contexts[0]}" else ""
+            val prefillTags = if (projects.size == 1 && projects[0] != "-") "+${projects[0]}" else ""
+            return " $prefillLists $prefillTags".trimEnd()
+        }
+
     fun saveInJSON(json: JSONObject) {
         json.put(INTENT_TITLE, name)
         json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))

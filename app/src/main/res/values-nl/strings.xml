@@ -52,9 +52,9 @@
     <string name="clear_filter">Filter wissen</string>
     <string name="write_failed">Het schrijven van het bestand is mislukt! Uw wijzigingen zijn NIET opgeslagen.</string>
 
-    <string name="tasktexthint">\@Bediscussieer het +Paris-probleem met +Hector @Troy
-Zegen tegen +Hector dat hij niet zo onvriendelijk moet zijn
-Kijk de +Simpletask-instellingen na en verwijder deze tekst @Phone</string>
+    <string name="tasktexthint">\@Bespreek het +Paris-probleem met +Hektor @Troja 
+\nZeg tegen +Hektor dat hij niet zo\'n spelbreker moet zijn @Troja 
+\nVerwijder deze tekst uit het menu @Phone</string>
 
     <string name="filter_name_empty">Geen naam opgegeven; filter wordt niet toegevoegd</string>
     <string name="widget_name_empty">Geen widgetnaam opgegeven; widget wordt niet toegevoegd</string>
@@ -161,8 +161,8 @@ Kijk de +Simpletask-instellingen na en verwijder deze tekst @Phone</string>
     <string name="task_text_ellipsizing_pref_title">Taaktekst-inkorting</string>
     <string name="task_text_ellipsizing_pref_summary">Taaktekst elipseren in het hoofdvenster als er meer dan 2 regels zijn.</string>
 
-    <string name="widget_header_transparency_title">Koptransparantie</string>
-    <string name="widget_background_transparency_title">Achtergrondtransparantie</string>
+    <string name="widget_header_transparency_title">Kopdoorzichtigheid</string>
+    <string name="widget_background_transparency_title">Achtergronddoorzichtigheid</string>
 
     <string name="widget_extended_pref_title">Datumbalk weergeven</string>
     <string name="widget_extended_pref_summary">Datums weergeven op een aparte regel</string>
@@ -231,10 +231,8 @@ Kijk de +Simpletask-instellingen na en verwijder deze tekst @Phone</string>
     <string name="sync_download_message">Bezig met downloaden van todo.txt…</string>
 
     <string name="sync_conflict_dialog_title">Bestandsconflict</string>
-    <string name="sync_conflict_dialog_msg">"Oeps! Er is al een nieuwere versie van uw todo.txt-bestand aanwezig op Dropbox.
-Wilt u
- uw lokaal aangebrachte wijzigingen uploaden of de Dropbox-versie downloaden?
- "</string>
+    <string name="sync_conflict_dialog_msg">Oeps! Er is al een nieuwere versie van uw todo.txt-bestand aanwezig op Dropbox. Wilt u
+\nuw lokaal aangebrachte wijzigingen uploaden of de Dropbox-versie downloaden?</string>
 
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Inloggen op Dropbox</string>
@@ -405,5 +403,31 @@ Wilt u
 <string name="keep_selection_title">Selectie behouden</string>
     <string name="keep_selection_summary">Taakselectie behouden na wijzigingen.</string>
 
+
+    <string name="task_text_ellipsizing_none">Geen: Hele lange taaktekst</string>
+    <string name="task_text_ellipsizing_start">Begin: ...taaktekst</string>
+    <string name="task_text_ellipsizing_middle">Midden: Erg... tekst</string>
+    <string name="task_text_ellipsizing_end">Einde: Hele lange...</string>
+    <string name="task_text_ellipsizing_marquee">Selectiekader: Hele lange ta</string>
+
+    <string name="filter_tab_header_prio">PRIO</string>
+    <string name="filter_tab_header_other">OVERIG</string>
+    <string name="filter_tab_header_sort">SORTEREN</string>
+    <string name="filter_tab_header_script">SCRIPT</string>
+
+    <string name="script_tab_script_from_file">Script uit bestand</string>
+    <string name="script_tab_use_script">Script gebruiken</string>
+    <string name="script_tab_test">TEST</string>
+    <string name="script_tab_test_task">Testtaak</string>
+    <string name="script_tab_script">Script</string>
+    <string name="script_tab_true_task_shown">True, tekst zal worden weergegeven</string>
+    <string name="script_tab_false_task_not_shown">False, tekst zal niet worden weergegeven</string>
+
+    <string name="action_pop_up_call">Bellen:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">OMGEKEERD</string>
+    <string name="saved_filters_exported">Filters zijn geëxporteerd</string>
+    <string name="toast_lua_config_imported">Lua-configuratie is geïmporteerd</string>
 
     </resources>

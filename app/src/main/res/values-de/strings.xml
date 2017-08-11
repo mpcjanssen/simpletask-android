@@ -180,7 +180,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="task_text_ellipsizing_pref_summary">Aufgabentext im Hauptfenster kürzen, wenn er mehr als zwei Zeilen einnimmt.</string>
     
     <string name="color_due_pref_title">Farbe</string>
-    <string name="color_due_pref_summary">Fälligkeits- und Anfangsdaten anpassen (heute, zukünftig oder überfällig).</string>
+    <string name="color_due_pref_summary">Fälligkeits- und Anfangsdaten anpassen (heute, zukünftig oder überfällig)</string>
 
     <string name="show_hidden_title">Zeige versteckte Aufgaben</string>
     <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben um sie zu editieren. Nach dem Editieren deaktiviere diese Einstellung wieder.</string>
@@ -249,8 +249,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="delete_task_title">Aufgabe(n) löschen</string>
     <string name="archive_task_title">Aufgabe(n) archivieren</string>
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
-    <string name="logout_message">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
-        Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
+    <string name="logout_message">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.
+\n Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
     <string name="dropbox_open">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
         Alle nicht synchronisierten Änderungen sind nach dem Öffnen einer anderen Datei verloren.</string>
     <string name="delete_task_confirm">Löschen</string>
@@ -366,7 +366,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_sync_desc_due">Erinnerung an das Fälligkeitsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_sync_desc_thre">Erinnerung an das Anfangsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_exists_warning">Warnung: ein Kalender identischen Namens existiert bereits. Überschreibe...</string>
-    <string name="calendar_write_error">Fehler: Kann Kalender nicht schrieben</string>
+    <string name="calendar_write_error">Fehler: Kann Kalender nicht schreiben</string>
 
  <string name="click_to_copy">Tippen, um in die Zwischenablage zu kopieren.</string>
     <string name="action_settings">Einstellungen</string>
@@ -438,5 +438,31 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="keep_selection_title">Auswahl behalten</string>
     <string name="keep_selection_summary">Auswahl bleibt nach Änderungen aktiv.</string>
 
+
+    <string name="task_text_ellipsizing_none">Aus: Sehr langer Aufgabentext</string>
+    <string name="task_text_ellipsizing_start">Anfang: ... Aufgabentext</string>
+    <string name="task_text_ellipsizing_middle">Mitte: Sehr ...text</string>
+    <string name="task_text_ellipsizing_end">Ende: Sehr langer...</string>
+    <string name="task_text_ellipsizing_marquee">Abschnitt: Sehr langer Aufg</string>
+
+    <string name="filter_tab_header_prio">PRIO</string>
+    <string name="filter_tab_header_other">ANDERE</string>
+    <string name="filter_tab_header_sort">SORT</string>
+    <string name="filter_tab_header_script">SKRIPT</string>
+
+    <string name="script_tab_script_from_file">Skript aus Datei</string>
+    <string name="script_tab_use_script">Skript verwenden</string>
+    <string name="script_tab_test">TEST</string>
+    <string name="script_tab_test_task">Testaufgabe</string>
+    <string name="script_tab_script">Skript</string>
+    <string name="script_tab_true_task_shown">Wahr, Aufgabe wird angezeigt</string>
+    <string name="script_tab_false_task_not_shown">Falsch, Aufgabe wird nicht angezeigt</string>
+
+    <string name="action_pop_up_call">Anruf:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">INVERTIERT</string>
+    <string name="saved_filters_exported">exportierte Filter</string>
+    <string name="toast_lua_config_imported">importierte Lua-Konfiguration</string>
 
     </resources>
