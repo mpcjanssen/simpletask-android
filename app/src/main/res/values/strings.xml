@@ -471,4 +471,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="lua_config_import">Import</string>
     <string name="lua_config_share">Share</string>
     <string name="lua_open_config">Lua config</string>
+
+    <string name="use_uuid_title">Assign a UUID to each task</string>
 </resources>

@@ -137,6 +137,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="clone_tags_key"                 translatable="false">clone_tags</string>
     <string name="word_wrap_key"                  translatable="false">word_wrap</string>
     <string name="color_due_date_key"             translatable="false">color_due_date</string>
+    <string name="use_uuids"                      translatable="false">use_uuids</string>
     <string name="todo_file_key"                  translatable="false">todo_file</string>
     <string name="back_key_saves_key"             translatable="false">back_saves</string>
     <string name="show_edittext_hint"            translatable="false">show_edittext_hint</string>
