@@ -1238,6 +1238,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 view.datebar.visibility = View.GONE
             }
             var tokensToShow = TToken.ALL
+            // Always hide the UUID
+            tokensToShow = tokensToShow and TToken.TUUID.inv()
+
             // Hide dates if we have a date bar
             if (Config.hasExtendedTaskView) {
                 tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()

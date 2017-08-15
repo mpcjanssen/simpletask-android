@@ -26,8 +26,8 @@
  */
 package nl.mpcjanssen.simpletask.task
 
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.addInterval
-
 import java.util.*
 
 class Task(text: String, defaultPrependedDate: String? = null) {
@@ -87,6 +87,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     var completionDate: String? = null
         get() = getFirstToken<CompletedDateToken>()?.value
+
+    var uuid: String? = getFirstToken<UUIDToken>()?.valueStr
 
     var createDate: String?
         get() = getFirstToken<CreateDateToken>()?.value
@@ -349,7 +351,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_LIST = Regex("@(\\S+)")
         private val MATCH_TAG = Regex("\\+(\\S+)")
         private val MATCH_HIDDEN = Regex("[Hh]:([01])")
-        private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
+        private val MATCH_UUID = Regex("[Uu][Uu][Ii][Dd]:([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})")
+        private val MATCH_DUE = Regex("[Dd][Uu][Ee](\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
         private val MATCH_EXT = Regex("(.+):(.+)")
@@ -413,6 +416,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     tokens.add(HiddenToken(it.groupValues[1]))
                     return@forEach
                 }
+                MATCH_UUID.matchEntire(lexeme)?.let {
+                    tokens.add(UUIDToken(it.groupValues[1]))
+                    return@forEach
+                }
                 MATCH_RECURRURENE.matchEntire(lexeme)?.let {
                     tokens.add(RecurrenceToken(it.groupValues[1]))
                     return@forEach
@@ -440,6 +447,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 }
 
             }
+            if (Config.useUUIDs && tokens.filterIsInstance<UUIDToken>().isEmpty()) {
+                tokens.add(UUIDToken(UUID.randomUUID().toString()))
+            }
             return tokens
         }
     }
@@ -466,6 +476,7 @@ interface TToken {
         const val LINK = 1 shl 13
         const val MAIL = 1 shl 14
         const val EXTENSION = 1 shl 15
+        const val TUUID = 1 shl 16
         const val ALL = 0b1111111111111111
     }
 }
@@ -523,6 +534,7 @@ data class PhoneToken(override val text: String) : StringValueToken {
     override val type = TToken.PHONE
 }
 
+
 // Key Value tokens
 interface KeyValueToken : TToken {
     val key : String
@@ -556,6 +568,11 @@ data class HiddenToken(override val valueStr : String) : KeyValueToken {
 
 data class ExtToken(override val key : String, override val valueStr: String) : KeyValueToken {
     override val type = TToken.EXTENSION
+}
+
+data class UUIDToken(override val valueStr: String) : KeyValueToken {
+    override val key = "uuid"
+    override val type = TToken.TUUID
 }
 
 // Extension functions

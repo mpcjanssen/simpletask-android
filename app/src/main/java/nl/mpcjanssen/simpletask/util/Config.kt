@@ -251,4 +251,5 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
                 cachedContents = items.map { it.inFileFormat() }.joinToString("\n")
             }
         }
+    val  useUUIDs by BooleanPreference(R.string.use_uuids, false)
 }
