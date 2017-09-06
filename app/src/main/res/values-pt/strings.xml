@@ -404,4 +404,30 @@ https://f-droid.org/app/nl.mpcjanssen.simpletask
     <string name="keep_selection_summary">Manter tarefas selecionadas após aplicar as mudanças.</string>
 
 
+    <string name="task_text_ellipsizing_none">Nenhum: Texto muito longo</string>
+    <string name="task_text_ellipsizing_start">Começo: ...texto da tarefa</string>
+    <string name="task_text_ellipsizing_middle">Meio: Muito... texto</string>
+    <string name="task_text_ellipsizing_end">Fim: Texto muito...</string>
+    <string name="task_text_ellipsizing_marquee">Toldo: Texto muito la</string>
+
+    <string name="filter_tab_header_prio">PRIO</string>
+    <string name="filter_tab_header_other">OUTRO</string>
+    <string name="filter_tab_header_sort">ORDEM</string>
+    <string name="filter_tab_header_script">SCRIPT</string>
+
+    <string name="script_tab_script_from_file">Script do arquivo</string>
+    <string name="script_tab_use_script">Usar script</string>
+    <string name="script_tab_test">TESTE</string>
+    <string name="script_tab_test_task">Testar tatefa</string>
+    <string name="script_tab_script">Script</string>
+    <string name="script_tab_true_task_shown">Verdadeiro, a tarefa será exibida</string>
+    <string name="script_tab_false_task_not_shown">Falso, a tarefa será ocultada</string>
+
+    <string name="action_pop_up_call">Ligar:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">INVERTIDO</string>
+    <string name="saved_filters_exported">Filtros exportados</string>
+    <string name="toast_lua_config_imported">Config lua importada</string>
+
     </resources>
