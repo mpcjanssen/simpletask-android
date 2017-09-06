@@ -41,6 +41,7 @@ import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
 
 /**
@@ -55,7 +56,7 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    val todoItems = ArrayList<Task>()
+    val todoItems = CopyOnWriteArrayList<Task>()
     val selectedItems = CopyOnWriteArraySet<Task>()
     val pendingEdits = LinkedHashSet<Task>()
     internal val TAG = TodoList::class.java.simpleName

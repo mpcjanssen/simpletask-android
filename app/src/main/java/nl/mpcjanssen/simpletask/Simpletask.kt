@@ -826,10 +826,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
-        val prefillLists = if (MainFilter.contexts.size == 1 && MainFilter.contexts[0] != "-") "@${MainFilter.contexts[0]}" else ""
-        val prefillTags = if (MainFilter.projects.size == 1 && MainFilter.projects[0] != "-") "+${MainFilter.projects[0]}" else ""
-        val preFill = " $prefillLists $prefillTags"
-        TodoList.editTasks(this, TodoList.selectedTasks, preFill.trimEnd())
+
+        TodoList.editTasks(this, TodoList.selectedTasks, " ${MainFilter.prefill}")
     }
 
     private fun startPreferencesActivity() {
@@ -1436,7 +1434,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            ActionQueue.add("setFilteredTasks", Runnable {
+            TodoList.queue("setFilteredTasks") {
                 runOnUiThread {
                     showListViewProgress(true)
                 }
@@ -1463,7 +1461,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         Config.lastScrollPosition = -1
                     }
                 }
-            })
+            }
         }
 
         val countVisibleTasks: Int
