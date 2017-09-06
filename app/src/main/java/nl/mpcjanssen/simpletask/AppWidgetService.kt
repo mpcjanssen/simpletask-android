@@ -65,25 +65,11 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             return
         }
 
-        val items = TodoList.todoItems
-        val newVisibleTasks = ArrayList<Task>()
         val filter = getFilter()
+        val sorts = filter.getSort(Config.defaultSorts)
 
-        for (t in filter.apply(items.asSequence())) {
-            newVisibleTasks.add(t)
-        }
-        val comp = MultiComparator(filter.getSort(
-                Config.defaultSorts),
-                TodoApplication.app.today,
-                Config.sortCaseSensitive,
-                filter.createIsThreshold)
-
-        if (!comp.fileOrder) {
-            newVisibleTasks.reverse()
-        }
-        comp.comparator?.let {
-            Collections.sort(newVisibleTasks, it)
-        }
+        val newVisibleTasks = ArrayList<Task>()
+        newVisibleTasks.addAll(TodoList.getSortedTasks(filter, sorts, Config.sortCaseSensitive))
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
     }
