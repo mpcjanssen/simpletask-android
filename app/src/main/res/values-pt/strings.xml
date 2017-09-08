@@ -59,7 +59,7 @@
 
     <string name="filter_name_empty">Sem especificação de nome, filtro não adicionado</string>
     <string name="widget_name_empty">Impossível adicionar um widget sem nome</string>
-    <string name="add_task_help">Adicionar ou atualizar tarefa para a lista. Quando adicionar tarefas, para adição rápida, cada linha é uma tarefa individual.   &lt;b &gt;Prioridade&lt;/b&gt;   comece a linha com (.), como (A)   &lt;b &gt;Projetos&lt;/b&gt;  comece com +, como +culinária   &lt;b &gt;Listas&lt;/b&gt;  comece com @, como @casa   Uma tarefa pode ter diversos projetos e inúmeras listas.</string>
+    <string name="add_task_help">Adicionar ou atualizar tarefa para a lista. Quando adicionar tarefas, para adição rápida, cada linha é uma tarefa individual. <b>Prioridade</b> comece a linha com (.), como (A) <b>Projetos</b> comece com +, como +culinária <b>Listas</b> comece com @, como @casa Uma tarefa pode ter diversos projetos e inúmeras listas. </string>
 
     <!-- other_preferences -->
     <string name="preference_appearance">Aparência</string>
