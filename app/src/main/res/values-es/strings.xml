@@ -418,10 +418,10 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
 
 
     <string name="keep_selection_title">Mantener selección</string>
-    <string name="task_text_ellipsizing_none">Ninguno: \"Texto de la tarea muy largo\"</string>
-    <string name="task_text_ellipsizing_start">Al comienzo: \"... de la tarea muy largo\"</string>
-    <string name="task_text_ellipsizing_middle">En el medio: \"Texto ... muy largo\"</string>
-    <string name="task_text_ellipsizing_end">Al final: \"Texto de la tarea ...\"</string>
+    <string name="task_text_ellipsizing_none">Ninguno: \"Texto de la tarea\"</string>
+    <string name="task_text_ellipsizing_start">Al comienzo: \"... de la tarea\"</string>
+    <string name="task_text_ellipsizing_middle">En el medio: \"Texto ... tarea\"</string>
+    <string name="task_text_ellipsizing_end">Al final: \"Texto de la ...\"</string>
     <string name="task_text_ellipsizing_marquee">"Marquesina:  \"Texto de la tar\""</string>
 
     <string name="filter_tab_header_prio">PRIO</string>
