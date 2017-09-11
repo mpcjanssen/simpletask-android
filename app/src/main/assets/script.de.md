@@ -67,6 +67,7 @@ Wird beim Filtern der Aufgabenliste für jede einzelne Aufgabe aufgerufen.
     * `tags`: Eine Tabelle mit den Tags der Aufgabe als Schlüssel. `fields.tags` selbst wird niemals `nil` sein.
     * `task`: Die gesamte Aufgabe als String.
     * `threshold`: Das Anfangsdatum der Aufgabe in Sekunden oder `nil`, wenn nicht gesetzt.
+    * `tasktext`:
 * `extensions`: Eine Tabelle mit den Todo.txt Erweiterungen (`key:val`) der Aufgabe als Schlüssel-Wert-Paare. Für jeden Schlüssel gibt es nur einen Eintrag, um die Anwendung einfach zu halten.
 Wenn Sie mehrere `key:val`-Paare mit dem gleichen Schlüssel benötigen, können Sie die Aufgabe in Lua parsen.
 
@@ -99,6 +100,7 @@ Wird beim Filtern der Aufgabenliste für jede einzelne Aufgabe aufgerufen.
     * `tags`: Eine Tabelle mit den Tags der Aufgabe als Schlüssel. `fields.tags` selbst wird niemals `nil` sein.
     * `task`: Die gesamte Aufgabe als String.
     * `threshold`: Das Anfangsdatum der Aufgabe in Sekunden oder `nil`, wenn nicht gesetzt.
+    * `tasktext`:
 * `extensions`: Eine Tabelle mit den Todo.txt Erweiterungen (`key:val`) der Aufgabe als Schlüssel-Wert-Paare. Für jeden Schlüssel gibt es nur einen Eintrag, um die Anwendung einfach zu halten.
 Wenn Sie mehrere `key:val`-Paare mit dem gleichen Schlüssel benötigen, können Sie die Aufgabe in Lua parsen.
 
@@ -111,6 +113,40 @@ Wenn Sie mehrere `key:val`-Paare mit dem gleichen Schlüssel benötigen, können
 * Wenn der Callback einen Lua-Fehler enthält, wird `true` zurückgegeben.
 * Da diese Funktion sehr oft aufgerufen wird (für jede Aufgabe in der Liste) sollte sie schnell sein. Wenn sie zu langsam ist, kann dies "Application not Responding"-Meldungen in Android verursachen.
 * Sie sollten die Funktion `onGroup` im Filter definieren, nicht in der Konfiguration. Sie in der Hauptkonfiguration zu definieren funktioniert nicht, wenn das Filter-Skript leer ist, bleibt die Funktion `onGroup` undefiniert.
+
+## `onDisplay (task, fields, extensions) -> String`
+
+* ???
+
+#### Parameter
+
+* `task`: Die Aufgabe als Zeichenkette (String).
+* `fields`: Teile der Aufgabe, die in verschiedene Typen umgewandelt wurden (z. B. ein Zeitstempel für `createdate`)
+    * `completed`: Boolean, die anzeigt, ob die Aufgabe erledigt ist.
+    * `completiondate`: Das Fertigstellungsdatum der Aufgabe in Sekunden oder `nil`, wenn nicht gesetzt.
+    * `createdate`: Das Erstellungsdatum der Aufgabe in Sekunden oder `nil`, wenn nicht gesetzt.
+    * `due`: Das Fertigstellungsdatum der Aufgabe in Sekunden oder `nil`, wenn nicht gesetzt.
+    * `lists`: Eine Tabelle mit den Listen der Aufgabe als Werte. `fields.lists` selbst wird niemals `nil` sein.
+    * `priority`: Die Priorität der Aufgabe als String.
+    * `recurrence`: Das Wiederholungsmuster der Aufgabe als String oder `nil`, wenn nicht gesetzt.
+    * `tags`: Eine Tabelle mit den Tags der Aufgabe als Schlüssel. `fields.tags` selbst wird niemals `nil` sein.
+    * `task`: Die gesamte Aufgabe als String.
+    * `threshold`: Das Anfangsdatum der Aufgabe in Sekunden oder `nil`, wenn nicht gesetzt.
+    * `tasktext`:
+* `extensions`: Eine Tabelle mit den Todo.txt Erweiterungen (`key:val`) der Aufgabe als Schlüssel-Wert-Paare. Für jeden Schlüssel gibt es nur einen Eintrag, um die Anwendung einfach zu halten.
+Wenn Sie mehrere `key:val`-Paare mit dem gleichen Schlüssel benötigen, können Sie die Aufgabe in Lua parsen.
+
+#### Rückgabewerte
+
+* ???
+    * ???
+    * ???
+
+#### Hinweise
+
+* Wenn der Callback einen Lua-Fehler enthält, wird `true` zurückgegeben.
+* Da diese Funktion sehr oft aufgerufen wird (für jede Aufgabe in der Liste) sollte sie schnell sein. Wenn sie zu langsam ist, kann dies "Application not Responding"-Meldungen in Android verursachen.
+* Sie sollten die Funktion `onDisplay` im Filter definieren, nicht in der Konfiguration. Sie in der Hauptkonfiguration zu definieren funktioniert nicht, wenn das Filter-Skript leer ist, bleibt die Funktion `onDisplay` undefiniert.
 
 ## `onTextSearch (taskText, caseSensitive) -> Boolean`
 
@@ -224,6 +260,16 @@ Gruppiere überhaupt nicht und blende die Titelzeilen aus (unabhängig von der S
 
     function onGroup()
         return ""
+    end
+
+???:
+
+    function onDisplay(t,f,e)
+       if f.due~=nil and os.time() > f.due then
+         --- Display overdue tasks in uppercase. (Prefixing with '=' replaces entire task.)
+         return "="..string.upper(f.tasktext)
+       end
+       return f.tasktext
     end
 
 Lua lernen

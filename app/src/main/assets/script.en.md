@@ -66,6 +66,7 @@ Called for every task as part of filtering the todo list.
     * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
     * `task`: The full task as string.
     * `threshold`: The threshold date in seconds or `nil` if not set.
+    * `tasktext`: The text entered when the task was created.
 * `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. There is only one entry for every key, this is to make use easier. If you need multiple `key:val` pairs with the same key, you can parse the task in Lua.
 
 ### Returns
@@ -97,6 +98,7 @@ Called for every task as part of filtering the todo list.
     * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
     * `task`: The full task as string.
     * `threshold`: The threshold date in seconds or `nil` if not set.
+    * `tasktext`: The text entered when the task was created.
 * `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. There is only one entry for every key, this is to make use easier. If you need multiple `key:val` pairs with the same key, you can parse the task in Lua.
 
 ### Returns
@@ -109,6 +111,39 @@ Called for every task as part of filtering the todo list.
 * Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
 * You should define the `onGroup` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onGroup` function will be undefined.
 
+
+### `onDisplay (task, fields, extensions) -> string`
+
+Called for every task before it is displayed.
+
+### Parameters
+
+* `task`: The task as a string.
+* `fields`: Parts of the task converted to different types (such as a timestamp for `createdate`)
+    * `completed`: Boolean indicating if the task is completed.
+    * `completiondate`: The completion date in seconds of the task or `nil` if not set.
+    * `createdate`: The created date  in seconds of the task or `nil` if not set.
+    * `due`: The due date in seconds or `nil` if not set.
+    * `lists`: A table with the lists of the task as keys. `fields.lists` itself will never be `nil`
+    * `priority`: The priority of the task as string.
+    * `recurrence`: The recurrence pattern of the task as string or `nil` if not set.
+    * `tags`: A table with the tags of the task as keys. `fields.tags` itself will never be `nil`
+    * `task`: The full task as string.
+    * `threshold`: The threshold date in seconds or `nil` if not set.
+    * `tasktext`: The text entered when the task was created.
+* `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. There is only one entry for every key, this is to make use easier. If you need multiple `key:val` pairs with the same key, you can parse the task in Lua.
+
+### Returns
+
+* A string which modifies the display of the task.
+    * If the string starts with '=', the entire task will be replaced after removing the '='.
+    * Otherwise, only the task text will be replaced.
+
+### Notes
+
+* If there is a Lua error in the callback, it behaves as if it had returned `""`
+* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
+* You should define the `onDisplay` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onDisplay` function will be undefined.
 
 ### `onTextSearch (taskText, caseSensitive) -> boolean`
 
@@ -221,6 +256,16 @@ Don't group at all and don't show any headers (regardless of sort order)
 
     function onGroup()
         return ""
+    end
+
+A callback to modify the display of a task:
+
+    function onDisplay(t,f,e)
+       if f.due~=nil and os.time() > f.due then
+         --- Display overdue tasks in uppercase. (Prefixing with '=' replaces entire task.)
+         return "="..string.upper(f.tasktext)
+       end
+       return f.tasktext
     end
 
 Learning Lua
