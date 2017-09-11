@@ -1253,7 +1253,13 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (MainFilter.hideTags) {
                 tokensToShow = tokensToShow and TToken.TTAG.inv()
             }
-            val txt = task.showParts(tokensToShow)
+
+            var txt = modDisplayText(task.taskText, MainFilter, task)
+            if (txt.startsWith("=")) {
+                txt = txt.substring(1)
+            } else {
+                txt += " " + task.showParts(tokensToShow and TToken.TEXT.inv())
+            }
 
             val ss = SpannableString(txt)
 
