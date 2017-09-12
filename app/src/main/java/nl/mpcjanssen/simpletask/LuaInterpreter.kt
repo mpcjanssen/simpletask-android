@@ -12,6 +12,7 @@ object LuaInterpreter {
     private val log = Logger
     private val TAG = "LuaInterpreter"
 
+    val ON_DISPLAY_NAME = "onDisplay"
     val ON_FILTER_NAME = "onFilter"
     val ON_GROUP_NAME = "onGroup"
     val ON_TEXTSEARCH_NAME = "onTextSearch"
@@ -86,6 +87,24 @@ object LuaInterpreter {
         return null
     }
 
+    fun onDisplayCallback (moduleName : String, t: Task): String? {
+        val module = globals.get(moduleName).checktable()
+        if (module == LuaValue.NIL) {
+            return null
+        }
+        val callback = module.get(LuaInterpreter.ON_DISPLAY_NAME)
+        if (!callback.isnil()) {
+            val args = fillOnFilterVarargs(t)
+            try {
+                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
+                return result.tojstring()
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
+            }
+        }
+        return null
+    }
+
     fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
         val module = globals.get(moduleName)
         if (module == LuaValue.NIL) {
@@ -129,6 +148,7 @@ object LuaInterpreter {
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
+        fieldTable.set("tasktext", t.taskText)
 
         val recPat = t.recurrencePattern
         if (recPat != null) {
