@@ -26,4 +26,20 @@
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         />
+    <ImageButton
+            android:id="@+id/down_button"
+            android:background="@drawable/ic_action_sort_down"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/item_height"
+            android:contentDescription="@string/sort_reverse"
+            android:layout_weight="0"
+    />
+    <ImageButton
+            android:id="@+id/up_button"
+            android:background="@drawable/ic_action_sort_up"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/item_height"
+            android:contentDescription="@string/sort_reverse"
+            android:layout_weight="0"
+    />
 </LinearLayout>

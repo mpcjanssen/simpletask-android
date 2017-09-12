@@ -318,7 +318,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="search_hint">Search...</string>
 
     <!-- sort -->
-    <string name="sort_help">Drag and drop to change the sort order. Click the items to change sort direction.</string>
+    <string name="sort_help">Click the arrows to reorder the items. Click the items to change sort direction.</string>
     <string name="file_order">File Order (unsorted)</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="by_prio">By Priority</string>

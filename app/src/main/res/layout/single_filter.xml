@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-    <com.mobeta.android.dslv.DragSortListView
+    <ListView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:dslv="http://schemas.android.com/apk/res-auto"
         android:id="@+id/dslistview"
@@ -16,13 +16,6 @@
         android:padding="3dp"
         android:layout_margin="3dp"
         android:dividerHeight="1px"
-        dslv:drag_enabled="true"
-        dslv:collapsed_height="1px"
-        dslv:drag_scroll_start="0.33"
-        dslv:float_alpha="0.6"
-        dslv:slide_shuffle_speed="0.3"
-        dslv:drag_start_mode="onLongPress"
-        dslv:remove_enabled="false"
         />
     <TextView 
         android:padding="10sp"

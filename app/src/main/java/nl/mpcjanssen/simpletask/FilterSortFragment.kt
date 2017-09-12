@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.mobeta.android.dslv.DragSortListView
+import kotlinx.android.synthetic.main.single_filter.*
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import java.util.*
@@ -15,7 +15,6 @@ import java.util.*
 class FilterSortFragment : Fragment() {
 
     private var originalItems: ArrayList<String>? = null
-    private var lv: DragSortListView? = null
     internal lateinit var adapter: SortItemAdapter
     internal var directions = ArrayList<String>()
     internal var adapterList = ArrayList<String>()
@@ -24,18 +23,6 @@ class FilterSortFragment : Fragment() {
 
     internal lateinit var m_app: TodoApplication
 
-    private val onDrop = DragSortListView.DropListener { from, to ->
-        if (from != to) {
-            val item = adapter.getItem(from)
-            adapter.remove(item)
-            adapter.insert(item, to)
-            val sortItem = directions[from]
-            directions.removeAt(from)
-            directions.add(to, sortItem)
-        }
-    }
-
-    private val onRemove = DragSortListView.RemoveListener { which -> adapter.remove(adapter.getItem(which)) }
     private var log: Logger? = null
 
     private // this DSLV xml declaration does not call for the use
@@ -106,13 +93,12 @@ class FilterSortFragment : Fragment() {
             }
         }
 
-        lv = layout.findViewById(R.id.dslistview) as DragSortListView
-        lv!!.setDropListener(onDrop)
-        lv!!.setRemoveListener(onRemove)
+        val lv = layout.findViewById(R.id.dslistview) as ListView
+
 
         adapter = SortItemAdapter(activity, R.layout.sort_list_item, R.id.text, adapterList)
-        lv!!.adapter = adapter
-        lv!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        lv.adapter = adapter
+        lv.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             var direction = directions[position]
             if (direction == ActiveFilter.REVERSED_SORT) {
                 direction = ActiveFilter.NORMAL_SORT
@@ -139,7 +125,8 @@ class FilterSortFragment : Fragment() {
     val selectedItem: ArrayList<String>
         get() {
             val multiSort = ArrayList<String>()
-            if (lv != null) {
+
+            if (dslistview != null) {
                 for (i in 0..adapter.count - 1) {
                     multiSort.add(directions[i] + ActiveFilter.SORT_SEPARATOR + adapter.getSortType(i))
                 }
@@ -159,16 +146,53 @@ class FilterSortFragment : Fragment() {
             names = resources.getStringArray(R.array.sort)
         }
 
+        fun moveItemUp(position: Int) {
+            val above = adapterList[position-1]
+            adapterList[position-1] = adapterList[position]
+            adapterList[position] = above
+
+        }
+        fun moveItemDown(position: Int) {
+            val below = adapterList[position+1]
+            adapterList[position+1] = adapterList[position]
+            adapterList[position] = below
+        }
+
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val row = super.getView(position, convertView, parent)
             val reverseButton = row.findViewById(R.id.reverse_button) as ImageButton
+            val upButton = row.findViewById(R.id.up_button) as ImageButton
+            val downButton = row.findViewById(R.id.down_button) as ImageButton
             val label = row.findViewById(R.id.text) as TextView
             label.text = m_app.getSortString(adapterList[position])
-
+            if (position == adapter.count -1) {
+                downButton.isEnabled = false
+                downButton.isClickable = false
+            } else {
+                downButton.isEnabled = true
+                downButton.isClickable = true
+            }
+            if (position == 0) {
+                upButton.isEnabled = false
+                upButton.isClickable = false
+            } else {
+                upButton.isEnabled = true
+                upButton.isClickable = true
+            }
+            upButton.setBackgroundResource(sortUpId)
+            downButton.setBackgroundResource(sortDownId)
             if (directions[position] == ActiveFilter.REVERSED_SORT) {
                 reverseButton.setBackgroundResource(sortUpId)
             } else {
                 reverseButton.setBackgroundResource(sortDownId)
+            }
+            upButton.setOnClickListener {
+                moveItemUp(position)
+                notifyDataSetChanged()
+            }
+            downButton.setOnClickListener {
+                moveItemDown(position)
+                notifyDataSetChanged()
             }
             return row
         }
