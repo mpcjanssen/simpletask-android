@@ -104,8 +104,9 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         if (filter.hideTags) {
             tokensToShow = tokensToShow and TToken.TTAG.inv()
         }
-        val ss = SpannableString(
-                task.showParts(tokensToShow).trim { it <= ' ' })
+
+        val txt = LuaInterpreter.onDisplayCallback(filter.options.luaModule, task) ?: task.showParts(tokensToShow).trim { it <= ' ' }
+        val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {
             itemForDarkTheme(rv)

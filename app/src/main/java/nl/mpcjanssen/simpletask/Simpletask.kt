@@ -1253,14 +1253,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (MainFilter.hideTags) {
                 tokensToShow = tokensToShow and TToken.TTAG.inv()
             }
-
-            var txt = modDisplayText(task.taskText, MainFilter, task)
-            if (txt.startsWith("=")) {
-                txt = txt.substring(1)
-            } else {
-                txt += " " + task.showParts(tokensToShow and TToken.TEXT.inv())
-            }
-
+            val txt = LuaInterpreter.onDisplayCallback(MainFilter.options.luaModule, task) ?: task.showParts(tokensToShow)
             val ss = SpannableString(txt)
 
             val contexts = task.lists
