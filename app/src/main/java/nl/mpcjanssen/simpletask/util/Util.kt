@@ -147,19 +147,6 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun modDisplayText(textIn: String?, filter: ActiveFilter, task: Task): String {
-    val moduleName = filter.options.luaModule
-    if (moduleName != null ) {
-        val dispText = LuaInterpreter.onDisplayCallback(moduleName, task)
-        if (dispText != null) {
-           return dispText
-        }
-    }
-    if (textIn == null) return ""
-    return textIn
-}
-
-
 fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {

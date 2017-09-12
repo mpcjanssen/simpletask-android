@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
@@ -148,7 +149,7 @@ object LuaInterpreter {
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-        fieldTable.set("tasktext", t.taskText)
+        fieldTable.set("text", t.showParts(TToken.TEXT))
 
         val recPat = t.recurrencePattern
         if (recPat != null) {

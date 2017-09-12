@@ -72,9 +72,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     }
 
-    var taskText: String? = null
-        get() = tokens.filter { it is TextToken }.map { it.text }.joinToString(" ")
-
     val text: String
         get() {
             return tokens.map { it.text }.joinToString(" ")
