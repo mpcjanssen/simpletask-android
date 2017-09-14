@@ -62,6 +62,13 @@
                         android:visibility="gone"
                         >
                         <!--suppress AndroidMissingOnClickHandler -->
+                        <TextView
+                            android:id="@+id/filter_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            />
                         <ImageButton
                             android:id="@+id/actionbar_clear"
                             style="?android:attr/borderlessButtonStyle"
@@ -75,12 +82,6 @@
                             android:paddingRight="2dp"
                             android:paddingTop="0dp"
                             android:src="@drawable/cancel_light"
-                            />
-                        <TextView
-                            android:id="@+id/filter_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
                             />
                     </LinearLayout>
 
