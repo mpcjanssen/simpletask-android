@@ -53,8 +53,8 @@ class ActiveFilter (val options : FilterOptions) {
 
     val prefill
         get() : String  {
-            val prefillLists = if (contexts.size == 1 && contexts[0] != "-") "@${contexts[0]}" else ""
-            val prefillTags = if (projects.size == 1 && projects[0] != "-") "+${projects[0]}" else ""
+            val prefillLists = if (!contextsNot && contexts.size == 1 && contexts[0] != "-") "@${contexts[0]}" else ""
+            val prefillTags = if (!projectsNot && projects.size == 1 && projects[0] != "-") "+${projects[0]}" else ""
             return " $prefillLists $prefillTags".trimEnd()
         }
 
