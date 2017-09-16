@@ -442,7 +442,7 @@ class AddTask : ThemedActionBarActivity() {
 
     private fun getTasks() : MutableList<Task> {
         val input = textInputField.text.toString()
-        return input.split("\r\n|\r|\n".toRegex()).map(::Task).filter { it.trimmedTextParts().isNotEmpty() } .toMutableList()
+        return input.split("\r\n|\r|\n".toRegex()).map(::Task).toMutableList()
     }
 
     @SuppressLint("InflateParams")

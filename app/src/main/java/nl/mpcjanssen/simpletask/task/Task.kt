@@ -297,10 +297,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                        .joinToString(" ")
     }
 
-    fun trimmedTextParts(): String {
-        return showParts(TToken.TEXT).trim()
-    }
-
     fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {
         if (sort.contains("by_context")) {
             if (lists.size > 0) {
