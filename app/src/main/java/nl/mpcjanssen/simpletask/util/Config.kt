@@ -113,7 +113,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     val activePopupTheme: Int
         get() {
-            return if (isDarkTheme) {
+            return if (isDarkTheme || isBlackTheme) {
                 R.style.AppTheme_ActionBar
             } else {
                 R.style.AppTheme_Black_ActionBar
@@ -123,7 +123,15 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
     val isDarkTheme: Boolean
         get() {
             return when (activeThemeString) {
-                "dark", "black" -> true
+                "dark" -> true
+                else -> false
+            }
+        }
+
+    val isBlackTheme: Boolean
+        get() {
+            return when (activeThemeString) {
+                "black" -> true
                 else -> false
             }
         }
