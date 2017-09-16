@@ -144,7 +144,7 @@ public class FilterOtherFragment extends Fragment {
     public boolean getCreateAsThreshold() {
         Bundle arguments = getArguments();
         if (cbCreateAsThreshold == null) {
-            return arguments.getBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, false);
+            return arguments.getBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, false);
         } else {
             return cbCreateAsThreshold.isChecked();
         }
