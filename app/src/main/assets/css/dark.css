@@ -74,7 +74,7 @@ code, tt        { background: #eee; color: #333; }
 /* tables */
 table           { border: 1px solid #ddd; border-collapse: collapse;
                   background: #fafafa; }
-td, th          { padding: 2px 12px; border: 1px solid #ddd; }
+td, th          { padding: 2px 12px; border: 1px solid #ddd; color: black; }
 
 /* footnotes */
 table.footnote          { margin: 15px 0; background: transparent; border: none; }
