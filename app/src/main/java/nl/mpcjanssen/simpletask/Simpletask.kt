@@ -148,7 +148,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         setSupportActionBar(main_actionbar)
 
         // Replace drawables if the theme is dark
-        if (Config.isDarkTheme) {
+        if (Config.isDarkTheme || Config.isBlackTheme) {
             actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE

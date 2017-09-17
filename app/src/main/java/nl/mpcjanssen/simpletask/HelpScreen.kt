@@ -7,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import nl.mpcjanssen.simpletask.util.markdownAssetAsHtml
+import nl.mpcjanssen.simpletask.util.Config
 import java.util.*
 
 class HelpScreen : ThemedActionBarActivity() {
@@ -50,6 +52,17 @@ class HelpScreen : ThemedActionBarActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
         wvHelp = findViewById(R.id.help_view) as WebView
+
+        // Prevent brief flash of white when loading WebView.
+        if (Config.isDarkTheme || Config.isBlackTheme) {
+            val tv = TypedValue()
+            getTheme().resolveAttribute(android.R.attr.windowBackground, tv, true);
+            if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                val windowBackgroundColor = tv.data
+                wvHelp!!.setBackgroundColor(windowBackgroundColor)
+            }
+        }
+
         wvHelp!!.setWebViewClient(object : WebViewClient() {
             // Replacement is API >= 21 only
             @Suppress("OverridingDeprecatedMember")

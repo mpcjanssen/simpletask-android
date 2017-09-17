@@ -60,7 +60,7 @@ class FilterSortFragment : Fragment() {
         m_app = activity.application as TodoApplication
 
         // Set the proper theme
-        if (Config.isDarkTheme) {
+        if (Config.isDarkTheme || Config.isBlackTheme) {
             sortDownId = R.drawable.ic_action_sort_down_dark
             sortUpId = R.drawable.ic_action_sort_up_dark
         } else {
