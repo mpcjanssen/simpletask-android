@@ -29,7 +29,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-import android.app.Activity
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
@@ -39,18 +38,15 @@ import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
-import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.todayAsString
-import java.io.File
 import java.util.*
 
 class TodoApplication : Application(),
 
-         FileStoreInterface.FileChangeListener, BackupInterface {
+      BackupInterface {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -67,7 +63,6 @@ class TodoApplication : Application(),
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
-        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -82,9 +77,6 @@ class TodoApplication : Application(),
                     Logger.info(TAG, "Refresh widgets from broadcast")
                     redrawWidgets()
                     updateWidgets()
-                } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
-                    Logger.info(TAG, "File changed, reloading")
-                    loadTodoList("from BROADCAST")
                 }
             }
         }
@@ -95,7 +87,6 @@ class TodoApplication : Application(),
         Logger.info(TAG, "onCreate()")
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
-        loadTodoList("Initial load")
     }
 
     private fun setupUncaughtExceptionHandler() {
@@ -136,23 +127,6 @@ class TodoApplication : Application(),
         super.onTerminate()
     }
 
-    fun switchTodoFile(newTodo: String) {
-        Config.setTodoFile(newTodo)
-        loadTodoList("from file switch")
-    }
-
-    fun loadTodoList(reason: String) {
-        TodoList.reload(this, localBroadCastManager, Config.eol, reason = reason)
-    }
-
-    override fun fileChanged(newName: String?) {
-        newName?.let {
-            Config.setTodoFile(newName)
-        }
-        loadTodoList("from fileChanged")
-
-    }
-
     fun updateWidgets() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
@@ -170,35 +144,10 @@ class TodoApplication : Application(),
         }
     }
 
-    val isAuthenticated: Boolean
-        get() {
-            return FileStore.isAuthenticated
-        }
 
-    fun startLogin(caller: Activity) {
-        FileStore.startLogin(caller)
-    }
-
-
-    fun browseForNewFile(act: Activity) {
-        val fileStore = FileStore
-        fileStore.browseForNewFile(
-                act,
-                Config.todoFile.parent,
-                object : FileStoreInterface.FileSelectedListener {
-                    override fun fileSelected(file: String) {
-                        switchTodoFile(file)
-                    }
-                },
-                Config.showTxtOnly)
-    }
-
-    val doneFileName: String
-        get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
-
-    override fun backup(name: String, lines: String) {
+    override fun backup(lines: String) {
         val now = Date()
-        val fileToBackup = TodoFile(lines, name, now)
+        val fileToBackup = TodoFile(lines, "standalone", now)
         Daos.backup(fileToBackup)
 
     }

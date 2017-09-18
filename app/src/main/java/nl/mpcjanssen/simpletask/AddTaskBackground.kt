@@ -127,7 +127,7 @@ class AddTaskBackground : Activity() {
             items.add(t)
         }
         todoList.add(items, Config.hasAppendAtEnd)
-        todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
+        todoList.saveInCache(backup =  TodoApplication.app)
         showToastShort(TodoApplication.app, R.string.task_added)
         if (Config.hasShareTaskShowsEdit) {
             todoList.editTasks(this, items, "")
