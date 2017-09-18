@@ -31,6 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 object FileStore : FileStoreInterface {
 
     private val TAG = "FileStoreDB"
+    private val LOCAL_CONTENTS = "localContents"
     private val LOCAL_NAME = "localName"
     private val LOCAL_CHANGES_PENDING = "localChangesPending"
     private val CACHE_PREFS = "dropboxMeta"
@@ -116,7 +117,7 @@ object FileStore : FileStoreInterface {
             log.warn(TAG, "Couldn't load cache from other_preferences, mPrefs == null")
             return ""
         }
-        return Config.cachedContents?:""
+        return mPrefs.getString(LOCAL_CONTENTS, "")
     }
 
     fun queueRunnable(description: String, r: Runnable) {
@@ -147,7 +148,7 @@ object FileStore : FileStoreInterface {
         }
         val edit = mPrefs.edit()
         edit.putString(LOCAL_NAME, fileName)
-        Config.cachedContents = contents
+        edit.putString(LOCAL_CONTENTS, contents)
         edit.apply()
     }
 
