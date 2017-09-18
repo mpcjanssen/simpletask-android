@@ -772,7 +772,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> {
-                Config.clearCache()
+                if (!FileStore.changesPending()) {
+                    Config.clearCache()
+                }
                 FileStore.sync()
             }
             R.id.archive -> archiveTasks()
