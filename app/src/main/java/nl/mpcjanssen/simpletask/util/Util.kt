@@ -617,20 +617,24 @@ fun ArrayList<HashSet<String>>.intersection(): Set<String> {
     return intersection
 }
 
-fun broadcastFileChanged(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file changed broadcast")
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_CHANGED))
+
+fun broadcastRefreshUI() {
+    TodoApplication.app.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
 }
 
-fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+fun broadcastRefreshSelection() {
+    TodoApplication.app.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
 }
 
-fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
-}
-
-fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
+fun broadcastRefreshWidgets() {
     log.info(TAG, "Sending widget refresh broadcast")
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
+    TodoApplication.app.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
+}
+
+fun broadcastSyncStart() {
+    TodoApplication.app.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
+}
+
+fun broadcastSyncDone() {
+    TodoApplication.app.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
 }

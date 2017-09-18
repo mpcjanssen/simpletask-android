@@ -9,10 +9,4 @@
         android:orderInCategory="100"
         app:showAsAction="always"
         />
-    <item
-        android:id="@+id/menu_filter_load_script"
-        android:title="@string/script_tab_script_from_file"
-        android:orderInCategory="200"
-        app:showAsAction="never"
-        />
 </menu>

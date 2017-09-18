@@ -50,8 +50,6 @@ class AddTask : ThemedActionBarActivity() {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
 
-        TodoApplication.app.loadTodoList("before adding tasks")
-
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
@@ -295,7 +293,7 @@ class AddTask : ThemedActionBarActivity() {
         todoList.removeAll(m_backup)
 
         // Save
-        todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
+        todoList.saveInCache(backup = TodoApplication.app)
         finishEdit()
     }
 

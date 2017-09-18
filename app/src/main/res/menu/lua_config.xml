@@ -23,16 +23,6 @@
         >
         <menu>
             <item
-                android:id="@+id/lua_config_import"
-                android:title="@string/import_filter"
-                app:showAsAction="never"
-                />
-            <item
-                android:id="@+id/lua_config_export"
-                android:title="@string/lua_config_export"
-                app:showAsAction="never"
-                />
-            <item
                 android:id="@+id/lua_config_share"
                 android:title="@string/lua_config_share"
                 app:showAsAction="never"

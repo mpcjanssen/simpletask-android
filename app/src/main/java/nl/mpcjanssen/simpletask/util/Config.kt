@@ -6,12 +6,7 @@ import nl.mpcjanssen.simpletask.CalendarSync
 import nl.mpcjanssen.simpletask.LuaInterpreter
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Task
-import java.io.File
-import java.io.IOException
-import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
+
 
 object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -68,8 +63,6 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
     var isShowEditTextHint by BooleanPreference(R.string.show_edittext_hint, true)
 
     var isCapitalizeTasks by BooleanPreference(R.string.capitalize_tasks, true)
-
-    val showTodoPath by BooleanPreference(R.string.show_todo_path, false)
 
     val backClearsFilter by BooleanPreference(R.string.back_clears_filter, false)
 
@@ -198,33 +191,8 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
     val defaultSorts: Array<String>
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
 
-    private var _todoFileName by StringOrNullPreference(R.string.todo_file_key)
-    val todoFileName: String
-        get() {
-            var name = _todoFileName
-            if (name == null) {
-                name = FileStore.getDefaultPath()
-                setTodoFile(name)
-            }
-            val todoFile = File(name)
-            try {
-                return todoFile.canonicalPath
-            } catch (e: IOException) {
-                return FileStore.getDefaultPath()
-            }
-
-        }
-
-    val todoFile: File
-        get() = File(todoFileName)
-
-    fun setTodoFile(todo: String) {
-        _todoFileName = todo
-        prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
-    }
-
     fun clearCache() {
-        todoList = null
+        cachedContents = ""
         currentVersionId = null
     }
 
@@ -240,23 +208,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     var latestChangelogShown by IntPreference(R.string.latest_changelog_shown, 0)
 
-    val localFileRoot by StringPreference(R.string.local_file_root, "/sdcard/")
-
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
-
-    var todoList: CopyOnWriteArrayList<Task>?
-        get() = cachedContents?.let {
-            CopyOnWriteArrayList<Task>().apply {
-                addAll(it.lines().map { line -> Task(line) })
-            }
-        }
-        set(items) {
-            if (items == null) {
-                prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
-            } else {
-                cachedContents = items.map { it.inFileFormat() }.joinToString("\n")
-            }
-        }
+    var cachedContents by StringPreference(R.string.cached_todo_file, "")
 }

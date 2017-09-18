@@ -10,11 +10,9 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
-import java.util.*
 import kotlin.collections.ArrayList
 
 class AppWidgetService : RemoteViewsService() {
@@ -59,11 +57,6 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
 
     fun setFilteredTasks() {
         log.debug(TAG, "Widget $widgetId: setFilteredTasks called")
-
-        if (!TodoApplication.app.isAuthenticated) {
-            log.debug(TAG, "TodoApplication.app is not authenticated")
-            return
-        }
 
         val filter = getFilter()
         val sorts = filter.getSort(Config.defaultSorts)
