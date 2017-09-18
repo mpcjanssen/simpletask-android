@@ -73,7 +73,7 @@ object TodoList {
         }
     }
 
-    fun queue(description: String, body : () -> Unit ) {
+    fun queue(description: String, body: () -> Unit) {
         val r = Runnable(body)
         ActionQueue.add(description, r)
     }
@@ -247,31 +247,36 @@ object TodoList {
             val filename = Config.todoFileName
             val cached = Config.todoList
             if (cached == null || FileStore.needsRefresh(Config.currentVersionId)) {
-                try {
-                    todoItems.clear()
-                    val items = ArrayList<Task>(
-                            FileStore.loadTasksFromFile(filename, backup, eol).map { text ->
-                                Task(text)
-                            })
-                    todoItems.addAll(items)
-                    updateCache()
-                    clearSelection()
-                    Config.currentVersionId = FileStore.getVersion(filename)
+                queue("Updating cache") {
+                    try {
+                        todoItems.clear()
+                        val items = ArrayList<Task>(
+                                FileStore.loadTasksFromFile(filename, backup, eol).map { text ->
+                                    Task(text)
+                                })
+                        todoItems.addAll(items)
+                        updateCache()
+                        clearSelection()
+                        Config.currentVersionId = FileStore.getVersion(filename)
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
-
-                } catch (e: IOException) {
-                    log.error(TAG, "TodoList load failed: {}" + filename, e)
-                    showToastShort(TodoApplication.app, "Loading of todo file failed")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
+                    } catch (e: IOException) {
+                        log.error(TAG, "TodoList load failed: {}" + filename, e)
+                        showToastShort(TodoApplication.app, "Loading of todo file failed")
+                        lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
+                    }
+                    log.info(TAG, "TodoList loaded from storage")
                 }
-                log.info(TAG, "TodoList loaded from storage")
-            } else {
-                log.info(TAG, "Todolist not changed, loaded from cache")
-                todoItems.clear()
-                todoItems.addAll(cached)
             }
-            notifyChanged(filename, eol, backup, false)
+            log.info(TAG, "Todolist loaded from cache")
+            val items = todoItems
+            items.clear()
+            if (cached != null) {
+                items.addAll(cached)
+            }
+
         }
     }
 

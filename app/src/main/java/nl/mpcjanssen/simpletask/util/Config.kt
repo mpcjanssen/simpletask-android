@@ -244,7 +244,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
+    var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
     var todoList: CopyOnWriteArrayList<Task>?
         get() = cachedContents?.let {
