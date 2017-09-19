@@ -89,7 +89,9 @@ class AddTask : ThemedActionBarActivity() {
 
         setTitle(R.string.addtask)
 
-        m_backup.addAll(TodoList.pendingEdits)
+        TodoList.pendingEdits.forEach {
+            m_backup.add(TodoList.todoItems.get(it.toInt()))
+        }
         val preFillString = if (m_backup.isNotEmpty()) {
             setTitle(R.string.updatetask)
             join(m_backup.map(Task::inFileFormat), "\n")
@@ -274,11 +276,18 @@ class AddTask : ThemedActionBarActivity() {
         // Update the TodoList with changes
         // Create new tasks
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }
+        if (enteredTasks.size < TodoList.pendingEdits.size) {
+            log.info(TAG, "Task size mismatch.")
+            showToastLong(this, "Task count differs. Aborting edits.")
+            finishEdit()
+            return
+        }
         log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks" )
-        for (task in enteredTasks) {
+        for ((i, task) in enteredTasks.withIndex()) {
             if (m_backup.size > 0) {
+                val taskIndex = TodoList.pendingEdits.get(i).toInt()
+                TodoList.todoItems.get(taskIndex).update(task.text)
                 // Don't modify create date for updated tasks
-                m_backup[0].update(task.text)
                 m_backup.removeAt(0)
             } else {
                 val t: Task
