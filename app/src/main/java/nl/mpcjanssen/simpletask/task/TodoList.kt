@@ -58,7 +58,7 @@ object TodoList {
     private var mTags: ArrayList<String>? = null
     val todoItems = CopyOnWriteArrayList<Task>()
     val selectedItems = CopyOnWriteArraySet<Task>()
-    val pendingEdits = LinkedHashSet<Task>()
+    val pendingEdits = ArrayList<Integer>()
     internal val TAG = TodoList::class.java.simpleName
 
     fun hasPendingAction(): Boolean {
@@ -96,7 +96,9 @@ object TodoList {
         queue("Remove") {
             todoItems.removeAll(tasks)
             selectedItems.removeAll(tasks)
-            pendingEdits.removeAll(tasks)
+            tasks.forEach {
+                pendingEdits.remove(Integer(todoItems.indexOf(it)))
+            }
         }
     }
 
@@ -365,7 +367,12 @@ object TodoList {
 
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         queue("Edit tasks") {
-            pendingEdits.addAll(tasks)
+            for (task in tasks) {
+                val i = TodoList.todoItems.indexOf(task)
+                if (i >= 0) {
+                    pendingEdits.add(Integer(i))
+                }
+            }
             startAddTaskActivity(from, prefill)
         }
     }
