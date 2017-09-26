@@ -6,12 +6,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <EditText
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/new_item_text"
-        android:layout_gravity="center_horizontal"
-        android:maxLines="1"/>
+        android:layout_height="match_parent"
+        >
+        <ImageButton
+            android:id="@+id/new_item_add_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:onClick="onClickAddItem"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="0dp"
+            android:background="?attr/colorPrimary"
+            android:src="@drawable/ic_add_white_24dp"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_item_text"
+            android:layout_gravity="center_horizontal"
+            android:maxLines="1"
+            />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

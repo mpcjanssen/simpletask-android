@@ -1526,47 +1526,36 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     @SuppressLint("InflateParams")
     private fun updateItemsDialog(title: String,
+                                  dialogTypeVal: Int,
                                   checkedTasks: List<Task>,
                                   allItems: ArrayList<String>,
                                   retrieveFromTask: (Task) -> SortedSet<String>,
                                   addToTask: (Task, String) -> Unit,
                                   removeFromTask: (Task, String) -> Unit
     ) {
-        val checkedTaskItems = ArrayList<HashSet<String>>()
-        checkedTasks.forEach {
-            val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(it))
-            checkedTaskItems.add(items)
-        }
-
-        // Determine items on all tasks (intersection of the sets)
-        val onAllTasks = checkedTaskItems.intersection()
-
-        // Determine items on some tasks (union of the sets)
-        var onSomeTasks = checkedTaskItems.union()
-        onSomeTasks -= onAllTasks
-
-        allItems.removeAll(onAllTasks)
-        allItems.removeAll(onSomeTasks)
-
-        val sortedAllItems = ArrayList<String>()
-        sortedAllItems += alfaSortList(onAllTasks, Config.sortCaseSensitive)
-        sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
-        sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
-
         val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
+        view.findViewById(R.id.new_item_text)
+        view.new_item_add_button.setTag(R.id.dialog_type_key, dialogTypeVal)
         val builder = AlertDialog.Builder(this)
         builder.setView(view)
 
-        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
+        val itemAdapter = constructItemDialogAdapter(checkedTasks, allItems, retrieveFromTask)
         val rcv = view.current_items_list
         rcv.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this)
         rcv.layoutManager = layoutManager
         rcv.adapter = itemAdapter
         val ed = view.new_item_text
+
         builder.setPositiveButton(R.string.ok) { _, _ ->
-            val updatedValues = itemAdapter.currentState
+            val sortedAllItems = ArrayList<String>()
+            val updatedValues = ArrayList<Boolean>()
+            for (i in 0..rcv.childCount-1) {
+                val cb = (rcv.getChildViewHolder(rcv.getChildAt(i)) as ItemDialogAdapter.ViewHolder).mCheckBox
+                sortedAllItems.add(cb.text.toString())
+                updatedValues.add(cb.state)
+            }
+
             for (i in 0..updatedValues.lastIndex) {
                 when (updatedValues[i] ) {
                     false -> {
@@ -1598,9 +1587,86 @@ class Simpletask : ThemedNoActionBarActivity() {
         dialog.show()
     }
 
+    private fun constructItemDialogAdapter(
+        checkedTasks: List<Task>,
+        allItems: ArrayList<String>,
+        retrieveFromTask: (Task) -> SortedSet<String>
+    ): ItemDialogAdapter {
+        val checkedTaskItems = ArrayList<HashSet<String>>()
+        checkedTasks.forEach {
+            val items = HashSet<String>()
+            items.addAll(retrieveFromTask.invoke(it))
+            checkedTaskItems.add(items)
+        }
+
+        // Determine items on all tasks (intersection of the sets)
+        val onAllTasks = checkedTaskItems.intersection()
+
+        // Determine items on some tasks (union of the sets)
+        var onSomeTasks = checkedTaskItems.union()
+        onSomeTasks -= onAllTasks
+
+        allItems.removeAll(onAllTasks)
+        allItems.removeAll(onSomeTasks)
+
+        val sortedAllItems = ArrayList<String>()
+        sortedAllItems += alfaSortList(onAllTasks, Config.sortCaseSensitive)
+        sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
+        sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
+
+        return ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
+    }
+
+    private fun itemsToTask(items: ArrayList<String>, prefix: String): Task {
+        return Task(join(items.map { prefix + it }, " "))
+    }
+
+    // Creates temporary Tasks which are used to re-construct the 'checked' state of every
+    // row in the dialog, including the added item.
+    @Suppress("unused")
+    fun onClickAddItem(v: View) {
+        val ed = (v.parent as LinearLayout).new_item_text as EditText
+        val rcv = (v.parent.parent as LinearLayout).current_items_list as RecyclerView
+
+        val edTxt = ed.text.toString().trim()
+        ed.text.clear()
+        if (edTxt.length == 0) return
+
+        val isListDialog = (v.getTag(R.id.dialog_type_key) == R.id.pick_lists_dialog)
+        // If not List, assume Tag
+        val prefix = if (isListDialog) "@" else "+"
+        val retrieveFromTask = if (isListDialog) Task::lists else Task:: tags
+
+        var allItems = ArrayList<String>()
+        var selAllItems = ArrayList<String>()
+        var selSomeItems = ArrayList<String>()
+
+        allItems.add(edTxt)
+        selAllItems.add(edTxt)
+        selSomeItems.add(edTxt)
+        for (i in 0..rcv.childCount-1) {
+            val cb = (rcv.getChildViewHolder(rcv.getChildAt(i)) as ItemDialogAdapter.ViewHolder).mCheckBox
+            val itemTxt = cb.text.toString()
+            allItems.add(itemTxt)
+            if (cb.state == true || cb.state == null) {
+                selSomeItems.add(itemTxt)
+            }
+            if (cb.state == true) {
+                selAllItems.add(itemTxt)
+            }
+        }
+
+        val checkedTasks = ArrayList<Task>()
+        checkedTasks.add(itemsToTask(selSomeItems, prefix))
+        checkedTasks.add(itemsToTask(selAllItems, prefix))
+
+        rcv.adapter = constructItemDialogAdapter(checkedTasks, allItems, retrieveFromTask)
+    }
+
     private fun updateLists(checkedTasks: List<Task>) {
         updateItemsDialog(
                 Config.listTerm,
+                R.id.pick_lists_dialog,
                 checkedTasks,
                 TodoList.contexts,
                 Task::lists,
@@ -1612,6 +1678,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun updateTags(checkedTasks: List<Task>) {
         updateItemsDialog(
                 Config.tagTerm,
+                R.id.pick_tags_dialog,
                 checkedTasks,
                 TodoList.projects,
                 Task::tags,

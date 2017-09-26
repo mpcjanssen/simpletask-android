@@ -20,7 +20,9 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.ArrayAdapter
+import android.widget.CheckedTextView
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ListView
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Priority
@@ -375,6 +377,49 @@ class AddTask : ThemedActionBarActivity() {
         }
     }
 
+    /**
+     * Handle add Tag/List item *
+     */
+    @Suppress("unused")
+    fun onClickAddItem(v: View) {
+        // Note: Assumes a specific layout
+        val ed = (v.parent as LinearLayout).findViewById(R.id.editText) as EditText
+        val lv = (v.parent.parent as LinearLayout).findViewById(R.id.listView) as ListView
+
+        // Get entered text
+        val txt = ed.text.toString().trim()
+        if (txt.length == 0) return
+
+        // Record existing state
+        val listedItems = emptySet<String>().toSortedSet()
+        val checkedItems = emptySet<String>().toSortedSet()
+        for(i in 0..lv.count-1) {
+            val vw = lv.getChildAt(i) as CheckedTextView
+            val vwTxt = vw.text.toString()
+            listedItems.add(vwTxt)
+            if (vw.isChecked) {
+                checkedItems.add(vwTxt)
+            }
+        }
+
+        // Include entered text
+        listedItems.add(txt)
+        checkedItems.add(txt)
+
+        assignArrayAdapter(lv, listedItems, checkedItems)
+
+        // Clear entered text
+        ed.text.clear()
+    }
+
+    fun assignArrayAdapter(lv: ListView, items: Set<String>, selectedItems: Set<String>) {
+        val sortedItems = alfaSortList(items, Config.sortCaseSensitive)
+        var lvAdapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice, sortedItems)
+        lv.adapter = lvAdapter
+        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+        initListViewSelection(lv, lvAdapter, selectedItems)
+    }
+
     @SuppressLint("InflateParams")
     private fun showTagMenu() {
         val items = TreeSet<String>()
@@ -391,25 +436,19 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = alfaSortList(items, Config.sortCaseSensitive)
-
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
         builder.setView(view)
         val lv = view.findViewById(R.id.listView) as ListView
         val ed = view.findViewById(R.id.editText) as EditText
-        val lvAdapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice,
-                projects.toArray<String>(arrayOfNulls<String>(projects.size)))
-        lv.adapter = lvAdapter
-        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
 
-        initListViewSelection(lv, lvAdapter, task.tags)
+        assignArrayAdapter(lv, items, task.tags)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
 
-            for (i in 0..lvAdapter.count-1) {
-                val tag = lvAdapter.getItem(i)
+            for (i in 0..lv.childCount-1) {
+                val tag = (lv.getChildAt(i) as CheckedTextView).text.toString()
                 if (lv.isItemChecked(i)) {
                     task.addTag(tag)
                 } else {
@@ -470,24 +509,17 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = alfaSortList(items, Config.sortCaseSensitive)
-
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
         builder.setView(view)
         val lv = view.findViewById(R.id.listView) as ListView
         val ed = view.findViewById(R.id.editText) as EditText
-        val choices = lists.toArray<String>(arrayOfNulls<String>(lists.size))
-        val lvAdapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice,
-                choices)
-        lv.adapter = lvAdapter
-        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
 
-        initListViewSelection(lv, lvAdapter, task.lists)
+        assignArrayAdapter(lv, items, task.lists)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            for (i in 0..lvAdapter.count-1) {
-                val list = lvAdapter.getItem(i)
+            for (i in 0..lv.childCount-1) {
+                val list = (lv.getChildAt(i) as CheckedTextView).text.toString()
                 if (lv.isItemChecked(i)) {
                     task.addList(list)
                 } else {
