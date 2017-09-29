@@ -10,6 +10,7 @@
         <item name="android:windowFullscreen">false</item>
         <item name="colorAccent">@color/simple_accent</item>
         <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
