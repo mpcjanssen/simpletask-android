@@ -264,6 +264,7 @@ object FileStore : FileStoreInterface {
             } catch (e: Exception) {
                 e.printStackTrace()
                 log.error(TAG, "Save failed:", e)
+                showToastLong(TodoApplication.app, "Saving to Dropbox failed! See log for details.")
                 // Changes are pending
                 setChangesPending(true)
             } finally {
