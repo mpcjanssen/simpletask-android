@@ -13,6 +13,7 @@
         android:id="@+id/main_actionbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:minHeight="?android:attr/actionBarSize"
         style="@style/SimpleToolbar"
         />
     <android.support.v4.widget.DrawerLayout
@@ -70,6 +71,7 @@
                             />
                         <ImageButton
                             android:id="@+id/actionbar_clear"
+                            style="?android:attr/borderlessButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/clear_filter"
@@ -123,6 +125,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="?android:attr/actionBarSize"
                 android:visibility="gone"
                 />
         </LinearLayout>
