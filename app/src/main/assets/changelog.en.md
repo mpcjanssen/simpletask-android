@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.1.1
+-----
+
+- Upload file even if local version is unknown. Fixes changes not saving to Dropbox (#789).
+
 9.1.0
 -----
 
