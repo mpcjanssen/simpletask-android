@@ -253,9 +253,7 @@ object FileStore : FileStoreInterface {
                 val `in` = ByteArrayInputStream(toStore)
                 log.info(TAG, "Saving to file " + path)
                 val uploadBuilder = dbxClient.files().uploadBuilder(path)
-                if (rev != null) {
-                    uploadBuilder.withAutorename(true).withMode(WriteMode.update(rev))
-                }
+                uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null )
                 val uploaded = uploadBuilder.uploadAndFinish(`in`)
                 rev = uploaded.rev
                 newName = uploaded.pathDisplay
