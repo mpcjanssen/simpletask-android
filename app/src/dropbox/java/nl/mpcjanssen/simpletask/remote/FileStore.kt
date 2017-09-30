@@ -265,6 +265,7 @@ object FileStore : FileStoreInterface {
                 setChangesPending(false)
             } catch (e: Exception) {
                 e.printStackTrace()
+                log.error(TAG, "Save failed:", e)
                 // Changes are pending
                 setChangesPending(true)
             } finally {
