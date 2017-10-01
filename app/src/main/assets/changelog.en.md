@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+9.1.1
+-----
+
+- Upload file even if local version is unknown. Fixes changes not saving to Dropbox (#789).
+
+9.1.0
+-----
+
+- Switched to Dropbox v2 API as v1 API was disabled.
+- Multiple other changes (see next changelog, this is an emergency release)
+
 9.0.7
 -----
 
