@@ -22,7 +22,6 @@ import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * FileStore implementation backed by Dropbox
@@ -253,9 +252,7 @@ object FileStore : FileStoreInterface {
                 val `in` = ByteArrayInputStream(toStore)
                 log.info(TAG, "Saving to file " + path)
                 val uploadBuilder = dbxClient.files().uploadBuilder(path)
-                if (rev != null) {
-                    uploadBuilder.withAutorename(true).withMode(WriteMode.update(rev))
-                }
+                uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null )
                 val uploaded = uploadBuilder.uploadAndFinish(`in`)
                 rev = uploaded.rev
                 newName = uploaded.pathDisplay
@@ -265,6 +262,7 @@ object FileStore : FileStoreInterface {
                 setChangesPending(false)
             } catch (e: Exception) {
                 log.error(TAG, "Saving failed:", e)
+                showToastLong(TodoApplication.app, "Saving to Dropbox failed! See log for details.")
                 // Changes are pending
                 setChangesPending(true)
             } finally {

@@ -39,7 +39,7 @@ object Daos {
 
     fun logAsText () : String {
         val logContents = StringBuilder()
-        for (item in logDao.loadAll()) {
+        for (item in logDao.loadAll().reversed()) {
             logContents.append(logItemToString(item)).append("\n")
         }
         return logContents.toString()
