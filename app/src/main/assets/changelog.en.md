@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.1.2
+-----
+
+- Fix archive if done.txt doesn't exist.
+
 9.1.1
 -----
 
