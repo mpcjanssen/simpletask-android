@@ -308,8 +308,7 @@ object TodoList {
                 FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                 removeAll(tasksToDelete)
                 notifyChanged(todoFilename, eol, null, true)
-            } catch (e: IOException) {
-                e.printStackTrace()
+            } catch (e: Exception) {
                 showToastShort(TodoApplication.app, "Task archiving failed")
             }
         }

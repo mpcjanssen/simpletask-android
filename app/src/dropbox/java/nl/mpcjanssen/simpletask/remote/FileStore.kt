@@ -13,9 +13,7 @@ import android.os.Looper
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
-import com.dropbox.core.v2.files.FileMetadata
-import com.dropbox.core.v2.files.FolderMetadata
-import com.dropbox.core.v2.files.WriteMode
+import com.dropbox.core.v2.files.*
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
@@ -289,23 +287,28 @@ object FileStore : FileStoreInterface {
         }
         val r = Runnable {
             try {
-
                 val doneContents = ArrayList<String>()
-                val download = dbxClient.files().download(path)
-                download.inputStream.bufferedReader().forEachLine {
-                    doneContents.add(it)
+                val rev = try {
+                    val download = dbxClient.files().download(path)
+                    download.inputStream.bufferedReader().forEachLine {
+                        doneContents.add(it)
+                    }
+                    download.close()
+                    download.result.rev
+                } catch (e: DownloadErrorException) {
+                    log.info(TAG, "${path} doesn't seem to exist", e)
+                    null
                 }
-                val rev = download.result.rev
                 log.info(TAG, "The file's rev is: " + rev)
-                download.close()
 
                 // Then append
                 doneContents += lines
                 val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
-                dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(WriteMode.update(rev)).uploadAndFinish(`in`)
+                dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null ).uploadAndFinish(`in`)
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.error(TAG, "Append failed: ", e)
+                throw(e)
             }
         }
         queueRunnable("Append to file " + path, r)
