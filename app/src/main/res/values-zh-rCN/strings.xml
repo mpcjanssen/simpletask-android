@@ -118,7 +118,7 @@
     <string name="widget_theme_pref_title">主题</string>
     <string name="widget_theme_pref_summary">改变窗口小部件的主题。</string>
 
-    <string name="widget_header_transparency_title">页眉透明度</string>
+    <string name="widget_header_transparency_title">标题透明度</string>
     <string name="widget_background_transparency_title">背景透明度</string>
 
     <string name="widget_extended_pref_title">显示日期栏</string>
@@ -177,7 +177,7 @@
     <string name="insert_due">插入截止日期</string>
     <string name="insert_threshold">插入阈值日期</string>
     <string name="widget_name_empty">没有指定窗口小部件名称，不添加窗口小部件</string>
-    <string name="ARCHIVE_settings_summary">为 done.txt 中已完成归档的任务的设置</string>
+    <string name="ARCHIVE_settings_summary">设置已完成的任务存档到 done.txt</string>
     <string name="archive_now_pref_title">存档</string>
     <string name="TODOTXTPATH_summary">存储 todo.txt 的 Dropbox 文件夹。</string>
     <string name="todotxt_settings_summary">应用程序范围设置</string>
@@ -208,4 +208,84 @@
     <string name="use_create_backup_summary">排序时，如果没有设置阈值日期就使用任务创建日期作为阈值日期</string>
 
     <string name="todotxt_terms_title">使用 todo.txt 术语</string>
+    <string name="add_task_help">"添加或更新任务到任务列表。当添加任务时，每行都为一个可快速添加的单独的任务。 "<b>Priority</b>
+
+ start the line with (.), like (A)
+
+ <b>Tags</b>
+ start with a + sign, like +Kitchen
+
+ <b>Lists</b>
+ start with an @ sign, like @home
+
+ A task can include any number of tags or be on multiple lists.
+ </string>
+
+    <string name="prepend_date_pref_title">新任务日期</string>
+    <string name="swipe_complete_pref_title">滑动完成</string>
+    <string name="swipe_complete_pref_summary">滑动任务以完成它。</string>
+    <string name="share_task_append_text_summary">将\"%s\"追加到在后台添加的任务。</string>
+
+    <string name="task_text_ellipsizing_pref_title">省略任务文本</string>
+    <string name="task_text_ellipsizing_pref_summary">如果任务文本超过2行，则在主窗口中省略。</string>
+    <string name="task_text_ellipsizing_none">无：很长的任务文本</string>
+    <string name="task_text_ellipsizing_start">开始：...任务文本</string>
+    <string name="task_text_ellipsizing_end">结尾：很长...</string>
+    <string name="filter_tab_header_prio">优先级</string>
+    <string name="filter_tab_header_other">其他</string>
+    <string name="filter_tab_header_sort">分类</string>
+    <string name="filter_tab_header_script">脚本</string>
+
+    <string name="script_tab_script_from_file">文件脚本</string>
+    <string name="script_tab_use_script">使用脚本</string>
+    <string name="script_tab_test">测试</string>
+    <string name="script_tab_test_task">测试任务</string>
+    <string name="script_tab_script">脚本</string>
+    <string name="script_tab_true_task_shown">正确，任务将会显示</string>
+    <string name="script_tab_false_task_not_shown">错误，任务不会显示</string>
+
+    <string name="action_pop_up_call">呼叫：</string>
+    <string name="action_pop_up_sms">短信：</string>
+
+    <string name="quick_filter_tag_header_inverted">倒</string>
+    <string name="saved_filters_exported">过滤器导出</string>
+    <string name="toast_lua_config_imported">Lua 配置导入</string>
+
+    <string name="sort_case_sensitive_summary">排序列表、标签及保存过滤器时区分大小写。</string>
+
+    <string name="todotxt_terms_summary">上下文和项目，而不是列表和标签</string>
+
+    <string name="about_settings_header">关于</string>
+    <string name="about_settings_summary">申请信息</string>
+    <string name="visit_website_title">帮助</string>
+    <string name="visit_website_summary">浏览 Simpletask 的网站</string>
+    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+
+    <string name="visit_tracker_title">请求新功能或报告 bug</string>
+    <string name="visit_tracker_summary">请求新功能或请求增强功能或报告问题。</string>
+    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="preference_title_debug_info">浏览调试日志</string>
+    <string name="preference_summary_debug_info">查看并共享应用程序版本和日志。</string>
+
+    <string name="sync_dialog_title">手动同步</string>
+    <string name="sync_dialog_msg">您需要上传或下载您的 todo.txt 文件吗？</string>
+    <string name="sync_dialog_upload">上传到 Dropbox</string>
+    <string name="sync_dialog_download">下载到设备</string>
+    <string name="sync_upload_message">正在上传 todo.txt…</string>
+    <string name="sync_download_message">正在下载 todo.txt…</string>
+
+    <string name="sync_conflict_dialog_title">文件冲突</string>
+    <string name="sync_conflict_dialog_msg">哎呀！Dropbox 中有个最新版本的 todo.txt 文件。
+\n你打算上传本地改动还是下载 Dropbox 中的版本？</string>
+
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_screen_button">登录到 Dropbox</string>
+    <string name="login_folder_screen_button">登录到Dropbox
+\n（应用程序文件夹访问）</string>
+    <string name="login_cloudless">如果您没有 Dropbox 帐户，或者不想使用它来存储您的待办事项列表，您可以到 Play Store 下载 Simpletask Cloudless。
+\nhttp://goo.gl/X1C55P</string>
+
+    <string name="delete_task_title">删除 ％s 任务</string>
+    <string name="archive_task_title">存档 ％ 任务</string>
+    <string name="delete_task_message">这不能撤销。你确定吗？</string>
     </resources>
