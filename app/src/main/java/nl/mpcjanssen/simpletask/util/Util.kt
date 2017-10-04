@@ -617,9 +617,9 @@ fun ArrayList<HashSet<String>>.intersection(): Set<String> {
     return intersection
 }
 
-fun broadcastFileChanged(broadcastManager: LocalBroadcastManager) {
+fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {
     log.info(TAG, "Sending file changed broadcast")
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_CHANGED))
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_SYNC))
 }
 
 fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {

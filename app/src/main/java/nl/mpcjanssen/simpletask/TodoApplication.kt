@@ -67,7 +67,7 @@ class TodoApplication : Application(),
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
-        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED)
+        intentFilter.addAction(Constants.BROADCAST_FILE_SYNC)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -82,17 +82,15 @@ class TodoApplication : Application(),
                     Logger.info(TAG, "Refresh widgets from broadcast")
                     redrawWidgets()
                     updateWidgets()
-                } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
-                    Logger.info(TAG, "File changed, reloading")
-                    loadTodoList("from BROADCAST")
+                } else if (intent.action == Constants.BROADCAST_FILE_SYNC) {
+                    loadTodoList("From BROADCAST_FILE_SYNC")
                 }
             }
         }
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-
-        Logger.info(TAG, "Created todolist " + TodoList)
         Logger.info(TAG, "onCreate()")
+        Logger.info(TAG, "Created todolist " + TodoList)
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         loadTodoList("Initial load")

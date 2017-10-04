@@ -10,12 +10,11 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
 import java.io.IOException
-import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    val TAG = "LuaConfig"
+    val TAG = "Config"
 
     init {
         prefs.registerOnSharedPreferenceChangeListener(this)
@@ -55,7 +54,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
             }
         }
 
-    var currentVersionId by StringOrNullPreference(R.string.file_current_version_id)
+    var lastSeenRemoteId by StringOrNullPreference(R.string.file_current_version_id)
 
     var lastScrollPosition by IntPreference(R.string.ui_last_scroll_position, -1)
 
@@ -225,7 +224,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     fun clearCache() {
         todoList = null
-        currentVersionId = null
+        lastSeenRemoteId = null
     }
 
     val isAutoArchive by BooleanPreference(R.string.auto_archive_pref_key, false)
@@ -244,15 +243,18 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
+    var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
     var todoList: CopyOnWriteArrayList<Task>?
         get() = cachedContents?.let {
+            val lines = it.lines()
+            log.info(TAG, "Getting ${lines.size} items todoList from cache")
             CopyOnWriteArrayList<Task>().apply {
-                addAll(it.lines().map { line -> Task(line) })
+                addAll(lines.map { line -> Task(line) })
             }
         }
         set(items) {
+            log.info(TAG, "Updating todoList cache with ${items?.size} items")
             if (items == null) {
                 prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {
