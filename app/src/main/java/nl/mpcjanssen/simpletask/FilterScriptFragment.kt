@@ -50,7 +50,7 @@ class FilterScriptFragment : Fragment() {
         txtTestTask = layout.findViewById(R.id.txt_testtask) as EditText
         spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
-        val callbacks = arrayOf<String>(LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME)
+        val callbacks = arrayOf<String>(LuaInterpreter.ON_DISPLAY_NAME, LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME)
         val spnAdapter = ArrayAdapter(activity, R.layout.spinner_item, callbacks)
         spnCallback?.adapter = spnAdapter
 
@@ -64,6 +64,7 @@ class FilterScriptFragment : Fragment() {
                 val snackBar = Snackbar.make(activity.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
                 val barView = snackBar.view
                 when (callbackToTest) {
+                    LuaInterpreter.ON_DISPLAY_NAME -> testOnDisplayCallback(barView, script, snackBar, t)
                     LuaInterpreter.ON_FILTER_NAME -> testOnFilterCallback(barView, script, snackBar, t)
                     LuaInterpreter.ON_GROUP_NAME -> testOnGroupCallback(barView, script, snackBar, t)
                 }
@@ -98,6 +99,17 @@ class FilterScriptFragment : Fragment() {
     private fun testOnGroupCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         if (!script.trim { it <= ' ' }.isEmpty()) {
             snackBar.setText("Group: " + LuaInterpreter.evalScript(environment, script).onGroupCallback(environment, t))
+            barView.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray74))
+        } else {
+            snackBar.setText("Callback not defined")
+            barView.setBackgroundColor(0xffe53935.toInt())
+        }
+        snackBar.show()
+    }
+
+    private fun testOnDisplayCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
+        if (!script.trim { it <= ' ' }.isEmpty()) {
+            snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onDisplayCallback(environment, t))
             barView.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray74))
         } else {
             snackBar.setText("Callback not defined")

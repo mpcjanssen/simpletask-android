@@ -58,7 +58,7 @@ object TodoList {
     private var mTags: ArrayList<String>? = null
     val todoItems = CopyOnWriteArrayList<Task>()
     val selectedItems = CopyOnWriteArraySet<Task>()
-    val pendingEdits = LinkedHashSet<Task>()
+    val pendingEdits = ArrayList<Integer>()
     internal val TAG = TodoList::class.java.simpleName
 
     fun hasPendingAction(): Boolean {
@@ -96,7 +96,9 @@ object TodoList {
         queue("Remove") {
             todoItems.removeAll(tasks)
             selectedItems.removeAll(tasks)
-            pendingEdits.removeAll(tasks)
+            tasks.forEach {
+                pendingEdits.remove(Integer(todoItems.indexOf(it)))
+            }
         }
     }
 
@@ -245,33 +247,43 @@ object TodoList {
             if (!FileStore.isAuthenticated) return@queue
             lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
             val filename = Config.todoFileName
-            val cached = Config.todoList
-            if (cached == null || FileStore.needsRefresh(Config.currentVersionId)) {
-                try {
-                    todoItems.clear()
-                    val items = ArrayList<Task>(
-                            FileStore.loadTasksFromFile(filename, backup, eol).map { text ->
-                                Task(text)
-                            })
-                    todoItems.addAll(items)
-                    updateCache()
-                    clearSelection()
-                    Config.currentVersionId = FileStore.getVersion(filename)
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-
-                } catch (e: IOException) {
-                    log.error(TAG, "TodoList load failed: {}" + filename, e)
-                    showToastShort(TodoApplication.app, "Loading of todo file failed")
+            if (FileStore.changesPending()) {
+                log.info(TAG, "Not loading, changes pending")
+                val cachedList = Config.todoList
+                if (cachedList!=null) {
+                    FileStore.saveTasksToFile(filename, cachedList.map { it.inFileFormat() }, backup, eol, true)
+                    lbm.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
                 }
-                log.info(TAG, "TodoList loaded from storage")
+
             } else {
-                log.info(TAG, "Todolist not changed, loaded from cache")
-                todoItems.clear()
-                todoItems.addAll(cached)
+                val cached = Config.todoList
+                if (cached == null || FileStore.needsRefresh(Config.currentVersionId)) {
+                    try {
+                        val items = ArrayList<Task>(
+                                FileStore.loadTasksFromFile(filename, backup, eol).map { text ->
+                                    Task(text)
+                                })
+                        todoItems.clear()
+                        todoItems.addAll(items)
+                        updateCache()
+                        clearSelection()
+                        Config.currentVersionId = FileStore.getVersion(filename)
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+
+                    } catch (e: IOException) {
+                        log.error(TAG, "TodoList load failed: {}" + filename, e)
+                        showToastShort(TodoApplication.app, "Loading of todo file failed")
+                    }
+                    log.info(TAG, "TodoList loaded from storage")
+                } else {
+                    log.info(TAG, "Todolist not changed, loaded from cache")
+                    todoItems.clear()
+                    todoItems.addAll(cached)
+                }
+                notifyChanged(filename, eol, backup, false)
             }
-            notifyChanged(filename, eol, backup, false)
         }
     }
 
@@ -296,8 +308,7 @@ object TodoList {
                 FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                 removeAll(tasksToDelete)
                 notifyChanged(todoFilename, eol, null, true)
-            } catch (e: IOException) {
-                e.printStackTrace()
+            } catch (e: Exception) {
                 showToastShort(TodoApplication.app, "Task archiving failed")
             }
         }
@@ -355,7 +366,12 @@ object TodoList {
 
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         queue("Edit tasks") {
-            pendingEdits.addAll(tasks)
+            for (task in tasks) {
+                val i = TodoList.todoItems.indexOf(task)
+                if (i >= 0) {
+                    pendingEdits.add(Integer(i))
+                }
+            }
             startAddTaskActivity(from, prefill)
         }
     }
