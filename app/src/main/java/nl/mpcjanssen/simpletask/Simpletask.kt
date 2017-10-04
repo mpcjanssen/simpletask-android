@@ -148,7 +148,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         setSupportActionBar(main_actionbar)
 
         // Replace drawables if the theme is dark
-        if (Config.isDarkTheme) {
+        if (Config.isDarkTheme || Config.isBlackTheme) {
             actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE
@@ -772,7 +772,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> {
-                Config.clearCache()
+                if (!FileStore.changesPending()) {
+                    Config.clearCache()
+                }
                 FileStore.sync()
             }
             R.id.archive -> archiveTasks()
@@ -1253,8 +1255,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (MainFilter.hideTags) {
                 tokensToShow = tokensToShow and TToken.TTAG.inv()
             }
-            val txt = task.showParts(tokensToShow)
-
+            val txt = LuaInterpreter.onDisplayCallback(MainFilter.options.luaModule, task) ?: task.showParts(tokensToShow)
             val ss = SpannableString(txt)
 
             val contexts = task.lists

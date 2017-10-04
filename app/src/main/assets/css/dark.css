@@ -1,0 +1,6 @@
+/* Colors for Dark theme */
+body                    { background-color: dark-gray; color: white; }
+a                       { color: #84aaf8; }
+h1, h2, h3, h4, h5, h6  { color: #ddd; }
+code, tt                { background: #eee; color: #333; }
+td, th                  { color: black; }

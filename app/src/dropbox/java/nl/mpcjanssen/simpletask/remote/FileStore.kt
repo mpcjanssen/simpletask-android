@@ -13,16 +13,13 @@ import android.os.Looper
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
-import com.dropbox.core.v2.files.FileMetadata
-import com.dropbox.core.v2.files.FolderMetadata
-import com.dropbox.core.v2.files.WriteMode
+import com.dropbox.core.v2.files.*
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * FileStore implementation backed by Dropbox
@@ -57,7 +54,7 @@ object FileStore : FileStoreInterface {
         t.start()
         mOnline = isOnline
     }
-    
+
     val dbxClient by lazy {
         val accessToken = getAccessToken()
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
@@ -99,11 +96,17 @@ object FileStore : FileStoreInterface {
     }
 
     override fun needsRefresh(currentVersion: String?): Boolean {
+        log.info(TAG, "Comparing remote version to check if refresh is needed.")
+        log.info(TAG, "Cached version ${Config.currentVersionId}.")
+
+
         try {
-            return getVersion(Config.todoFileName) != Config.currentVersionId
+            val remoteVersion = getVersion(Config.todoFileName)
+            log.info(TAG, "Remote version ${remoteVersion}.")
+            return  remoteVersion != Config.currentVersionId
         } catch (e: Exception) {
-            Logger.error(TAG, "Can't determine if refresh is needed.", e)
-            return true
+            log.error(TAG, "Can't determine if refresh is needed.", e)
+            return false
         }
     }
 
@@ -161,7 +164,7 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "Changes are pending")
         }
         val edit = mPrefs.edit()
-        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).apply()
+        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit()
         mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
     }
 
@@ -172,7 +175,8 @@ object FileStore : FileStoreInterface {
             return netInfo != null && netInfo.isConnected
         }
 
-    @Synchronized @Throws(IOException::class)
+    @Synchronized
+    @Throws(IOException::class)
     override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
 
         // If we load a file and changes are pending, we do not want to overwrite
@@ -186,41 +190,28 @@ object FileStore : FileStoreInterface {
             throw IOException("Not authenticated")
         }
         val readFile = ArrayList<String>()
-        if (changesPending()) {
-            log.info(TAG, "Not loading, changes pending")
-            isLoading = false
-            val tasks = tasksFromCache()
-            saveTasksToFile(path, tasks, backup, eol)
-            startWatching(path)
-            return tasks
-        } else {
-            val download = dbxClient.files().download(path)
-            val openFileStream = download.inputStream
-            val fileInfo = download.result
-            log.info(TAG, "The file's rev is: " + fileInfo.rev)
 
-            val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
+        val download = dbxClient.files().download(path)
+        val openFileStream = download.inputStream
+        val fileInfo = download.result
+        log.info(TAG, "The file's rev is: " + fileInfo.rev)
 
-            reader.forEachLine { line ->
-                readFile.add(line)
-            }
-            openFileStream.close()
-            val contents = join(readFile, "\n")
-            backup?.backup(path, contents)
-            saveToCache(fileInfo.name, fileInfo.rev, contents)
-            Config.currentVersionId = fileInfo.rev
-            startWatching(path)
+        val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
+
+        reader.forEachLine { line ->
+            readFile.add(line)
         }
+        openFileStream.close()
+        val contents = join(readFile, "\n")
+        backup?.backup(path, contents)
+        saveToCache(fileInfo.name, fileInfo.rev, contents)
+        Config.currentVersionId = fileInfo.rev
+        startWatching(path)
+
 
         return readFile
     }
 
-    private fun tasksFromCache(): List<String> {
-        val result = CopyOnWriteArrayList<String>()
-        val contents = loadContentsFromCache()
-        result += contents.split("(\r\n|\r|\n)".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()
-        return result
-    }
 
     override fun startLogin(caller: Activity) {
         // MyActivity below should be your activity class name
@@ -252,8 +243,9 @@ object FileStore : FileStoreInterface {
         dialog.createFileDialog(act, this)
     }
 
-    @Synchronized @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean) {
+    @Synchronized
+    @Throws(IOException::class)
+    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean ) {
         backup?.backup(path, join(lines, "\n"))
         val contents = join(lines, eol) + eol
         val r = Runnable {
@@ -264,9 +256,7 @@ object FileStore : FileStoreInterface {
                 val `in` = ByteArrayInputStream(toStore)
                 log.info(TAG, "Saving to file " + path)
                 val uploadBuilder = dbxClient.files().uploadBuilder(path)
-                if (rev != null) {
-                    uploadBuilder.withAutorename(true).withMode(WriteMode.update(rev))
-                }
+                uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null )
                 val uploaded = uploadBuilder.uploadAndFinish(`in`)
                 rev = uploaded.rev
                 newName = uploaded.pathDisplay
@@ -275,7 +265,8 @@ object FileStore : FileStoreInterface {
                 }
                 setChangesPending(false)
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.error(TAG, "Saving failed:", e)
+                showToastLong(TodoApplication.app, "Saving to Dropbox failed! See log for details.")
                 // Changes are pending
                 setChangesPending(true)
             } finally {
@@ -302,23 +293,28 @@ object FileStore : FileStoreInterface {
         }
         val r = Runnable {
             try {
-
                 val doneContents = ArrayList<String>()
-                val download = dbxClient.files().download(path)
-                download.inputStream.bufferedReader().forEachLine {
-                    doneContents.add(it)
+                val rev = try {
+                    val download = dbxClient.files().download(path)
+                    download.inputStream.bufferedReader().forEachLine {
+                        doneContents.add(it)
+                    }
+                    download.close()
+                    download.result.rev
+                } catch (e: DownloadErrorException) {
+                    log.info(TAG, "${path} doesn't seem to exist", e)
+                    null
                 }
-                val rev = download.result.rev
                 log.info(TAG, "The file's rev is: " + rev)
-                download.close()
 
                 // Then append
                 doneContents += lines
                 val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
-                dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(WriteMode.update(rev)).uploadAndFinish(`in`)
+                dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null ).uploadAndFinish(`in`)
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.error(TAG, "Append failed: ", e)
+                throw(e)
             }
         }
         queueRunnable("Append to file " + path, r)
@@ -494,8 +490,7 @@ object FileStore : FileStoreInterface {
                 }
 
                 val entries = dbxClient.files().listFolder(dbxPath).entries
-                entries?.forEach {
-                    entry ->
+                entries?.forEach { entry ->
                     if (entry is FolderMetadata)
                         d.add(entry.name)
                     else if (txtOnly) {
