@@ -96,10 +96,16 @@ object FileStore : FileStoreInterface {
     }
 
     override fun needsRefresh(currentVersion: String?): Boolean {
+        log.info(TAG, "Comparing remote version to check if refresh is needed.")
+        log.info(TAG, "Cached version ${Config.currentVersionId}.")
+
+
         try {
-            return getVersion(Config.todoFileName) != Config.currentVersionId
+            val remoteVersion = getVersion(Config.todoFileName)
+            log.info(TAG, "Remote version ${remoteVersion}.")
+            return  remoteVersion != Config.currentVersionId
         } catch (e: Exception) {
-            Logger.error(TAG, "Can't determine if refresh is needed.", e)
+            log.error(TAG, "Can't determine if refresh is needed.", e)
             return false
         }
     }
