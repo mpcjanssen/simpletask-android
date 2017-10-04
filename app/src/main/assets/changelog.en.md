@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+9.1.3
+-----
+
+-  Add some padding for "Invert filter". Fixes #792.
+
 9.1.2
 -----
 
@@ -15,7 +20,33 @@
 -----
 
 - Switched to Dropbox v2 API as v1 API was disabled.
-- Multiple other changes (see next changelog, this is an emergency release)
+- Merged #759 (smichel). Correctly respond when font size and sync threshold change
+- Fix error in Lua example, fixes #761.
+- Fix typo in Lua scripting doc, fixes #762.
+- Use lazy sequences while filtering and sorting.
+- Remove Dropbox polling for now until it's clear how to include it with SDK v2.
+- Refresh todo list when app comes to foreground.
+- Update hint text in AddTask.
+- Translated using Weblate (Dutch) (vistausss)
+- Translated using Weblate (Japanese) (naofum)
+- Translated using Weblate (Spanish) (ddisanti)
+- Translated using Weblate (German) (rdnz)
+- Translated using Weblate (English) (rdnz)
+- Translated using Weblate (Chinese (Simplified) (朱陈锬)
+- Translated using Weblate (Portuguese) (luisfsr)
+- Merge #768 (abowles). Add Missing strings for translation, fixes #723.
+- Merge #770 (daniel). Sync TodoList on adding tasks.
+- Merge nextcloud variant (daniel)
+- Set prefill from widget filter. Fixes #732.
+- Merge #774 (Geehu). Add onDisplay() feature.
+- Merge #775 (Geehu). Move filter clear button to right-side of screen.
+- Merge #777 (Geehu). If 'Invert filter' is active, do not include list or tag when creating a new task.
+- Merge #779 (Geehu). Ensure "Create is threshold" remains checked after switching away from page.
+- Merge #781 (Geehu). Observe theme on Help pages.
+- Lua, added tokens in the field parameters and a `print_table` diagnostic function for use in onDisplay.
+- Fix offline Dropbox use.
+- Log exceptions when saving to Dropbox in the application log.
+- Inform the user if a save to Dropbox failed.
 
 9.0.7
 -----
