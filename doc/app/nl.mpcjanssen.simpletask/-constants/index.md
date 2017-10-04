@@ -12,7 +12,7 @@
 | [BROADCAST_ACTION_ARCHIVE](-b-r-o-a-d-c-a-s-t_-a-c-t-i-o-n_-a-r-c-h-i-v-e.md) | `const val BROADCAST_ACTION_ARCHIVE: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [BROADCAST_ACTION_LOGOUT](-b-r-o-a-d-c-a-s-t_-a-c-t-i-o-n_-l-o-g-o-u-t.md) | `const val BROADCAST_ACTION_LOGOUT: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [BROADCAST_DATEBAR_SIZE_CHANGED](-b-r-o-a-d-c-a-s-t_-d-a-t-e-b-a-r_-s-i-z-e_-c-h-a-n-g-e-d.md) | `const val BROADCAST_DATEBAR_SIZE_CHANGED: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [BROADCAST_FILE_CHANGED](-b-r-o-a-d-c-a-s-t_-f-i-l-e_-c-h-a-n-g-e-d.md) | `const val BROADCAST_FILE_CHANGED: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [BROADCAST_FILE_SYNC](-b-r-o-a-d-c-a-s-t_-f-i-l-e_-c-h-a-n-g-e-d.md) | `const val BROADCAST_FILE_SYNC: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [BROADCAST_HIGHLIGHT_SELECTION](-b-r-o-a-d-c-a-s-t_-h-i-g-h-l-i-g-h-t_-s-e-l-e-c-t-i-o-n.md) | `const val BROADCAST_HIGHLIGHT_SELECTION: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [BROADCAST_SYNC_DONE](-b-r-o-a-d-c-a-s-t_-s-y-n-c_-d-o-n-e.md) | `const val BROADCAST_SYNC_DONE: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [BROADCAST_SYNC_START](-b-r-o-a-d-c-a-s-t_-s-y-n-c_-s-t-a-r-t.md) | `const val BROADCAST_SYNC_START: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

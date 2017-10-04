@@ -963,7 +963,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun closeSelectionMode() {
         TodoList.clearSelection()
         invalidateOptionsMenu()
-        m_adapter?.notifyDataSetChanged()
         m_adapter?.setFilteredTasks()
     }
 
@@ -1587,7 +1586,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                     addToTask(it, newText)
                 }
             }
-            TodoList.updateCache()
             TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
         }
         builder.setNegativeButton(R.string.cancel) { _, _ -> }

@@ -15,7 +15,7 @@
 | [activePopupTheme](active-popup-theme.md) | `val activePopupTheme: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [activeTheme](active-theme.md) | `val activeTheme: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [backClearsFilter](back-clears-filter.md) | `val backClearsFilter: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [currentVersionId](current-version-id.md) | `var currentVersionId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| [lastSeenRemoteId](current-version-id.md) | `var lastSeenRemoteId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 | [dateBarRelativeSize](date-bar-relative-size.md) | `val dateBarRelativeSize: `[`Float`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html) |
 | [defaultSorts](default-sorts.md) | `val defaultSorts: `[`Array`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
 | [eol](eol.md) | `val eol: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

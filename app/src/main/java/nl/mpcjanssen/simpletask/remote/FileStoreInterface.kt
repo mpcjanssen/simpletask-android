@@ -18,8 +18,6 @@ interface FileStoreInterface {
     fun browseForNewFile(act: Activity, path: String, listener: FileSelectedListener, txtOnly: Boolean)
 
     @Throws(IOException::class)
-    fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion : Boolean = false)
-    @Throws(IOException::class)
     fun appendTaskToFile(path: String, lines: List<String>, eol: String)
     fun sync()
 
@@ -53,7 +51,9 @@ interface FileStoreInterface {
         // Do nothing by default
     }
 
-    fun needsRefresh(currentVersion : String?): Boolean
+    fun needsRefresh(currentVersion : String?): String?
 
     fun getVersion(filename: String): String?
+
+    fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String)
 }

@@ -95,18 +95,14 @@ object FileStore : FileStoreInterface {
         setAccessToken(null)
     }
 
-    override fun needsRefresh(currentVersion: String?): Boolean {
-        log.info(TAG, "Comparing remote version to check if refresh is needed.")
-        log.info(TAG, "Cached version ${Config.currentVersionId}.")
-
-
+    override fun needsRefresh(currentVersion: String?): String? {
         try {
             val remoteVersion = getVersion(Config.todoFileName)
-            log.info(TAG, "Remote version ${remoteVersion}.")
-            return  remoteVersion != Config.currentVersionId
+            log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version ${remoteVersion}.")
+            return  if (remoteVersion == currentVersion)  null else remoteVersion
         } catch (e: Exception) {
             log.error(TAG, "Can't determine if refresh is needed.", e)
-            return false
+            return null
         }
     }
 
@@ -115,16 +111,9 @@ object FileStore : FileStoreInterface {
         return data.rev
     }
 
-    private fun loadContentsFromCache(): String {
-        if (mPrefs == null) {
-            log.warn(TAG, "Couldn't load cache from other_preferences, mPrefs == null")
-            return ""
-        }
-        return mPrefs.getString(LOCAL_CONTENTS, "")
-    }
+
 
     fun queueRunnable(description: String, r: Runnable) {
-        log.info(TAG, "Handler: Queue " + description)
         while (fileOperationsQueue == null) {
             try {
                 Thread.sleep(100)
@@ -144,18 +133,10 @@ object FileStore : FileStoreInterface {
         return mPrefs.getBoolean(LOCAL_CHANGES_PENDING, false)
     }
 
-    private fun saveToCache(fileName: String, rev: String?, contents: String) {
-        log.info(TAG, "Storing file in cache rev: $rev of file: $fileName")
-        if (mPrefs == null) {
-            return
-        }
-        val edit = mPrefs.edit()
-        edit.putString(LOCAL_NAME, fileName)
-        edit.putString(LOCAL_CONTENTS, contents)
-        edit.apply()
-    }
+
 
     private fun setChangesPending(pending: Boolean) {
+        log.info(TAG, "Set changes pending.")
         if (mPrefs == null) {
             log.error(TAG, "Couldn't save pending changes, mPrefs == null")
             return
@@ -183,7 +164,7 @@ object FileStore : FileStoreInterface {
         // our local changes, instead we upload local and handle any conflicts
         // on the dropbox side.
 
-        log.info(TAG, "Loading file fom dropnbox: " + path)
+        log.info(TAG, "Loading file fom Dropbox: " + path)
         isLoading = true
         if (!isAuthenticated) {
             isLoading = false
@@ -195,6 +176,7 @@ object FileStore : FileStoreInterface {
         val openFileStream = download.inputStream
         val fileInfo = download.result
         log.info(TAG, "The file's rev is: " + fileInfo.rev)
+        Config.lastSeenRemoteId = fileInfo.rev
 
         val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
@@ -203,9 +185,8 @@ object FileStore : FileStoreInterface {
         }
         openFileStream.close()
         val contents = join(readFile, "\n")
+        Config.cachedContents = contents
         backup?.backup(path, contents)
-        saveToCache(fileInfo.name, fileInfo.rev, contents)
-        Config.currentVersionId = fileInfo.rev
         startWatching(path)
 
 
@@ -221,7 +202,7 @@ object FileStore : FileStoreInterface {
 
     private fun startWatching(path: String) {
         queueRunnable("Refresh", Runnable {
-            if (needsRefresh(Config.currentVersionId)) {
+            if (needsRefresh(Config.lastSeenRemoteId)!=null) {
                 sync()
             }
         })
@@ -245,12 +226,14 @@ object FileStore : FileStoreInterface {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String, updateVersion: Boolean ) {
+    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String )  {
+        log.info(TAG, "Saving ${lines.size} tasks to Dropbox.")
         backup?.backup(path, join(lines, "\n"))
         val contents = join(lines, eol) + eol
+        Config.cachedContents = contents
         val r = Runnable {
             var newName = path
-            var rev = Config.currentVersionId
+            var rev = Config.lastSeenRemoteId
             try {
                 val toStore = contents.toByteArray(charset("UTF-8"))
                 val `in` = ByteArrayInputStream(toStore)
@@ -259,20 +242,14 @@ object FileStore : FileStoreInterface {
                 uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null )
                 val uploaded = uploadBuilder.uploadAndFinish(`in`)
                 rev = uploaded.rev
+                Config.lastSeenRemoteId = rev
                 newName = uploaded.pathDisplay
-                if (updateVersion) {
-                    Config.currentVersionId = rev
-                }
                 setChangesPending(false)
             } catch (e: Exception) {
                 log.error(TAG, "Saving failed:", e)
                 showToastLong(TodoApplication.app, "Saving to Dropbox failed! See log for details.")
                 // Changes are pending
                 setChangesPending(true)
-            } finally {
-                // Always save to cache  so you wont lose changes
-                // if actual save fails (e.g. when the device is offline)
-                saveToCache(path, rev, contents)
             }
 
             if (newName != path) {
@@ -321,7 +298,8 @@ object FileStore : FileStoreInterface {
     }
 
     override fun sync() {
-        broadcastFileChanged(mApp.localBroadCastManager)
+        log.info(TAG, "Sync.")
+        broadcastFileSync(mApp.localBroadCastManager)
     }
 
     override fun writeFile(file: File, contents: String) {
@@ -381,7 +359,7 @@ object FileStore : FileStoreInterface {
                     }
 
                     if (isOnline) {
-                        broadcastFileChanged(mApp.localBroadCastManager)
+                        broadcastFileSync(mApp.localBroadCastManager)
                     } else {
 
                         log.info(TAG, "Device no longer online skipping reloadLuaConfig")
