@@ -39,6 +39,7 @@ import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
+import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Task
@@ -182,8 +183,9 @@ class TodoApplication : Application(),
 
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
-        fileStore.browseForNewFile(
+        FileDialog.browseForNewFile(
                 act,
+                fileStore,
                 Config.todoFile.parent,
                 object : FileStoreInterface.FileSelectedListener {
                     override fun fileSelected(file: String) {

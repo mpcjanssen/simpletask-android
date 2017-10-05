@@ -1,24 +1,28 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
-import com.dropbox.core.v2.files.*
+import com.dropbox.core.v2.files.DownloadErrorException
+import com.dropbox.core.v2.files.FileMetadata
+import com.dropbox.core.v2.files.FolderMetadata
+import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.PARENT_DIR
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.ROOT_DIR
+import nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileEntry
 import nl.mpcjanssen.simpletask.task.TodoList.queue
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.broadcastFileSync
+import nl.mpcjanssen.simpletask.util.join
+import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.*
-import java.util.*
 
 /**
  * FileStore implementation backed by Dropbox
@@ -180,16 +184,6 @@ object FileStore : FileStoreInterface {
 
     }
 
-    override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
-        if (!isOnline) {
-            showToastLong(mApp, "Device is offline")
-            log.info(TAG, "Device is offline, browse closed")
-            return
-        }
-        val dialog = FileDialog(act, path, true)
-        dialog.addFileListener(listener)
-        dialog.createFileDialog(act, this)
-    }
 
     @Synchronized
     @Throws(IOException::class)
@@ -326,128 +320,31 @@ object FileStore : FileStoreInterface {
         return true
     }
 
-    /**
-     * @param activity activity to display the file dialog.
-     * *
-     * @param pathName initial path shown in the file dialog
-     */
-    class FileDialog(private val activity: Activity, pathName: String, private val txtOnly: Boolean) {
-        private val log: Logger = Logger
-        private var fileList: Array<String>? = null
-        private val entryHash = HashMap<String, com.dropbox.core.v2.files.Metadata>()
-        private var currentPath = File(pathName)
-
-        private val fileListenerList = ListenerList<FileStoreInterface.FileSelectedListener>()
-        internal var dialog: Dialog? = null
-        private var loadingOverlay: Dialog? = null
-
-        /**
-
-         */
-        fun createFileDialog(act: Activity, fs: FileStoreInterface) {
-            loadingOverlay = showLoadingOverlay(act, null, true)
-
-            val api = (fs as FileStore).dbxClient
-
-            // Use an async task because we need to manage the UI
-            Thread(Runnable {
-                loadFileList(act, api, currentPath)
-                loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
-                runOnMainThread(Runnable {
-                    val builder = AlertDialog.Builder(activity)
-                    builder.setTitle(currentPath.canonicalPath)
-
-                    builder.setItems(fileList, DialogInterface.OnClickListener { dialog, which ->
-                        val fileChosen = fileList!![which]
-                        if (fileChosen == PARENT_DIR) {
-                            currentPath = currentPath.parentFile ?: File("/")
-                            createFileDialog(act, fs)
-                            return@OnClickListener
-                        }
-                        val entry = entryHash[fileChosen]
-                        log.warn(TAG, "Selected file " + entry?.pathDisplay)
-                        if (entry == null) {
-                            dialog.dismiss()
-                            return@OnClickListener
-                        }
-                        if (entry is FolderMetadata) {
-                            currentPath = File(entry.pathDisplay)
-                            createFileDialog(act, fs)
-                        } else {
-                            dialog.cancel()
-                            dialog.dismiss()
-                            fireFileSelectedEvent(entry.pathDisplay)
-                        }
-                    })
-                    if (dialog != null && dialog!!.isShowing) {
-                        dialog!!.cancel()
-                        dialog!!.dismiss()
-                    }
-                    dialog = builder.create()
-                    dialog!!.show()
-                })
-            }).start()
-        }
-
-        fun addFileListener(listener: FileStoreInterface.FileSelectedListener) {
-            fileListenerList.add(listener)
-        }
-
-        private fun fireFileSelectedEvent(file: String) {
-            fileListenerList.fireEvent(object : ListenerList.FireHandler<FileStoreInterface.FileSelectedListener> {
-                override fun fireEvent(listener: FileStoreInterface.FileSelectedListener) {
-                    listener.fileSelected(file)
-                }
-            })
-        }
-
-        private fun loadFileList(act: Activity, api: DbxClientV2, path: File) {
-            this.currentPath = path
-            val f = ArrayList<String>()
-            val d = ArrayList<String>()
-
-            entryHash.clear()
-            try {
-                val dbxPath = if (path.canonicalPath == "/") "" else path.canonicalPath
-                if (dbxPath != "") {
-                    d.add(PARENT_DIR)
-                }
-
-                val entries = dbxClient.files().listFolder(dbxPath).entries
-                entries?.forEach { entry ->
-                    if (entry is FolderMetadata)
-                        d.add(entry.name)
-                    else if (txtOnly) {
-                        if (File(entry.name).extension == "txt") {
-                            f.add(entry.name)
-                        }
-                    } else {
-                        f.add(entry.name)
-                    }
-                    entryHash.put(entry.name, entry)
-                }
-
-                Collections.sort(d)
-                Collections.sort(f)
-                d.addAll(f)
-                fileList = d.toArray<String>(arrayOfNulls<String>(d.size))
-            } catch (e: DbxException) {
-                Logger.error(TAG, "Dropbox error:", e)
-                loadFileList(act, api, File("/"))
-                return
-            }
-        }
-
-        companion object {
-            private val PARENT_DIR = ".."
-        }
-    }
-
-    fun getDefaultPath(): String {
+    override fun getDefaultPath(): String {
         if (Config.fullDropBoxAccess) {
             return "/todo/todo.txt"
         } else {
             return "/todo.txt"
         }
+    }
+
+    override fun loadFileList(path: String, txtOnly: Boolean): List<FileStoreInterface.FileEntry> {
+
+        val fileList = ArrayList<FileEntry>()
+
+        val dbxPath = if (path == ROOT_DIR) "" else path
+        if (dbxPath != "") {
+            fileList.add(FileEntry(PARENT_DIR, isFolder = true))
+        }
+
+        val entries = FileStore.dbxClient.files().listFolder(dbxPath).entries
+        entries?.forEach { entry ->
+            if (entry is FolderMetadata)
+                fileList.add(FileEntry(entry.name, isFolder = true))
+            else if (!txtOnly || File(entry.name).extension == "txt") {
+                fileList.add(FileEntry(entry.name, isFolder = false))
+            }
+        }
+        return fileList
     }
 }
