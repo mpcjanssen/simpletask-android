@@ -43,7 +43,7 @@ class FileDialog {
                 })
             } ?: return@Runnable
             Logger.info(TAG, "Filelist from $startPath loaded")
-            val fileList = unsortedFileList.sortedWith(compareBy({ it.isFolder }, { it.name })).toMutableList()
+            val fileList = unsortedFileList.sortedWith(compareBy({ !it.isFolder }, { it.name })).toMutableList()
             if (startPath != ROOT_DIR) {
                 fileList.add(0, FileEntry(PARENT_DIR, isFolder = true))
             }
