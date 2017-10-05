@@ -19,7 +19,6 @@ interface FileStoreInterface {
 
     fun startLogin(caller: Activity)
     fun logout()
-    fun browseForNewFile(act: Activity, path: String, listener: FileSelectedListener, txtOnly: Boolean)
 
     @Throws(IOException::class)
     fun appendTaskToFile(path: String, lines: List<String>, eol: String)
@@ -59,5 +58,17 @@ interface FileStoreInterface {
 
     fun getVersion(filename: String): String?
 
+    fun getDefaultPath(): String
 
+
+    data class FileEntry(val name: String, val isFolder: Boolean)
+
+    fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry>
+
+    companion object {
+        val ROOT_DIR = "/"
+        val PARENT_DIR = ".."
+    }
 }
+
+
