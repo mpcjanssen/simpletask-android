@@ -337,7 +337,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show connectivity status indicator
         // Red -> changes pending
         // Yellow -> offline
-        if (FileStore.changesPending()) {
+        if (Config.changesPending) {
             pendingchanges.visibility = View.VISIBLE
             offline.visibility = View.GONE
         } else if (!FileStore.isOnline) {
@@ -771,7 +771,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> {
-                if (!FileStore.changesPending()) {
+                if (!Config.changesPending) {
                     Config.clearCache()
                 }
                 FileStore.sync()
