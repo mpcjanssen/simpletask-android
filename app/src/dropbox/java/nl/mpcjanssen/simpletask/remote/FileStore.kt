@@ -36,7 +36,7 @@ object FileStore : FileStoreInterface {
     private val log: Logger = Logger
     private val mPrefs: SharedPreferences?
 
-    internal var onOnline: Thread? = null
+    private var onOnline: Thread? = null
     override var isLoading = false
     private var mOnline: Boolean = false
     private val mApp = TodoApplication.app
@@ -46,7 +46,7 @@ object FileStore : FileStoreInterface {
         mOnline = isOnline
     }
 
-    val dbxClient by lazy {
+    private val dbxClient by lazy {
         val accessToken = getAccessToken()
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
         val client = DbxClientV2(requestConfig, accessToken)
@@ -65,9 +65,8 @@ object FileStore : FileStoreInterface {
         }
     }
 
-    fun getAccessToken(): String? {
-        val accessToken = mPrefs?.getString(OAUTH2_TOKEN, null)
-        return accessToken
+    private fun getAccessToken(): String? {
+        return mPrefs?.getString(OAUTH2_TOKEN, null)
     }
 
     fun setAccessToken(accessToken: String?) {
@@ -89,13 +88,13 @@ object FileStore : FileStoreInterface {
     }
 
     override fun needsRefresh(currentVersion: String?): String? {
-        try {
+        return try {
             val remoteVersion = getVersion(Config.todoFileName)
-            log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version ${remoteVersion}.")
-            return if (remoteVersion == currentVersion) null else remoteVersion
+            log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version $remoteVersion.")
+            if (remoteVersion == currentVersion) null else remoteVersion
         } catch (e: Exception) {
             log.error(TAG, "Can't determine if refresh is needed.", e)
-            return null
+            null
         }
     }
 
@@ -123,7 +122,7 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "Changes are pending")
         }
         val edit = mPrefs.edit()
-        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).commit()
+        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).apply()
         mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
     }
 
@@ -142,7 +141,7 @@ object FileStore : FileStoreInterface {
         // our local changes, instead we upload local and handle any conflicts
         // on the dropbox side.
 
-        log.info(TAG, "Loading file fom Dropbox: " + path)
+        log.info(TAG, "Loading file from Dropbox: " + path)
         isLoading = true
         if (!isAuthenticated) {
             isLoading = false
@@ -172,7 +171,7 @@ object FileStore : FileStoreInterface {
         caller.startActivity(intent)
     }
 
-    private fun startWatching(path: String) {
+    private fun startWatching(@Suppress("UNUSED_PARAMETER") path: String) {
         if (needsRefresh(Config.lastSeenRemoteId) != null) {
             sync()
         }
@@ -189,7 +188,6 @@ object FileStore : FileStoreInterface {
         log.info(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol)
 
-        var newName = path
         var rev = Config.lastSeenRemoteId
         val toStore = contents.toByteArray(charset("UTF-8"))
         val `in` = ByteArrayInputStream(toStore)
@@ -198,7 +196,7 @@ object FileStore : FileStoreInterface {
         uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null)
         val uploaded = uploadBuilder.uploadAndFinish(`in`)
         rev = uploaded.rev
-        newName = uploaded.pathDisplay
+        val newName = uploaded.pathDisplay
         setChangesPending(false)
 
         if (newName != path) {
@@ -225,7 +223,7 @@ object FileStore : FileStoreInterface {
             download.close()
             download.result.rev
         } catch (e: DownloadErrorException) {
-            log.info(TAG, "${path} doesn't seem to exist", e)
+            log.info(TAG, "$path doesn't seem to exist", e)
             null
         }
         log.info(TAG, "The file's rev is: " + rev)
@@ -319,10 +317,10 @@ object FileStore : FileStoreInterface {
     }
 
     override fun getDefaultPath(): String {
-        if (Config.fullDropBoxAccess) {
-            return "/todo/todo.txt"
+        return if (Config.fullDropBoxAccess) {
+            "/todo/todo.txt"
         } else {
-            return "/todo.txt"
+            "/todo.txt"
         }
     }
 

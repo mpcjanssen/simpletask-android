@@ -31,7 +31,6 @@ package nl.mpcjanssen.simpletask.task
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.*
 
 import nl.mpcjanssen.simpletask.remote.BackupInterface
@@ -39,7 +38,6 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
-import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
@@ -58,7 +56,7 @@ object TodoList {
     private var mTags: ArrayList<String>? = null
     val todoItems = CopyOnWriteArrayList<Task>()
     val selectedItems = CopyOnWriteArraySet<Task>()
-    val pendingEdits = ArrayList<Integer>()
+    val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
     fun hasPendingAction(): Boolean {
@@ -97,7 +95,7 @@ object TodoList {
             todoItems.removeAll(tasks)
             selectedItems.removeAll(tasks)
             tasks.forEach {
-                pendingEdits.remove(Integer(todoItems.indexOf(it)))
+                pendingEdits.remove(todoItems.indexOf(it))
             }
         }
     }
@@ -243,25 +241,25 @@ object TodoList {
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
         val logText = "Reload: " + reason
         queue(logText) {
+
             if (!FileStore.isAuthenticated) return@queue
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             val filename = Config.todoFileName
+            val cachedList = Config.todoList
             if (FileStore.changesPending()) {
                 log.info(TAG, "Not loading, changes pending")
-                val cachedList = Config.todoList
                 if (cachedList != null) {
                     log.info(TAG,"Saving instead of loading")
                     save(FileStore,filename,backup,eol)
                 }
             } else {
-                val cached = Config.todoList
                 val newerVersion = FileStore.needsRefresh(Config.lastSeenRemoteId)
                 if (newerVersion != null) {
                     log.info(TAG, "Remote version is different, sync")
                 } else {
                     log.info(TAG, "Remote version is same, load from cache")
                 }
-                if (cached == null || newerVersion != null) {
+                if (cachedList == null || newerVersion != null) {
                     try {
                         val remoteContents = FileStore.loadTasksFromFile(filename, eol)
                         val items = ArrayList<Task>(
@@ -287,9 +285,8 @@ object TodoList {
                     log.info(TAG, "TodoList loaded from dropbox")
                 } else {
                     log.info(TAG, "Todolist loaded from cache")
-
                     todoItems.clear()
-                    todoItems.addAll(cached)
+                    todoItems.addAll(cachedList)
                 }
                 broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                 notifyChanged(filename, eol, backup, false)
@@ -387,7 +384,7 @@ object TodoList {
             for (task in tasks) {
                 val i = TodoList.todoItems.indexOf(task)
                 if (i >= 0) {
-                    pendingEdits.add(Integer(i))
+                    pendingEdits.add(Integer.valueOf(i))
                 }
             }
             startAddTaskActivity(from, prefill)
