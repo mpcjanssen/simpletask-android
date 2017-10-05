@@ -1,10 +1,7 @@
 package nl.mpcjanssen.simpletask.remote
 
-/**
- * Interface definition of the storage backend used.
+import nl.mpcjanssen.simpletask.task.Task
 
- * Uses events to communicate with the application. Currently supported are SYNC_START, SYNC_DONE and FILE_CHANGED.
- */
 interface BackupInterface {
-    fun backup(name: String, lines: String)
+    fun backup(name: String, lines: List<Task>)
 }

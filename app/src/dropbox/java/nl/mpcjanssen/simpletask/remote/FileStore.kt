@@ -8,8 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.os.Handler
-import android.os.Looper
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
@@ -17,6 +15,7 @@ import com.dropbox.core.v2.files.*
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.task.TodoList.queue
 import nl.mpcjanssen.simpletask.util.*
 import java.io.*
 import java.util.*
@@ -28,8 +27,6 @@ import java.util.*
 object FileStore : FileStoreInterface {
 
     private val TAG = "FileStoreDB"
-    private val LOCAL_CONTENTS = "localContents"
-    private val LOCAL_NAME = "localName"
     private val LOCAL_CHANGES_PENDING = "localChangesPending"
     private val CACHE_PREFS = "dropboxMeta"
     private val OAUTH2_TOKEN = "dropboxV2Token"
@@ -40,18 +37,10 @@ object FileStore : FileStoreInterface {
     internal var onOnline: Thread? = null
     override var isLoading = false
     private var mOnline: Boolean = false
-    private var fileOperationsQueue: Handler? = null
     private val mApp = TodoApplication.app
 
     init {
         mPrefs = mApp.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-        // Set up the message queue
-        val t = Thread(Runnable {
-            Looper.prepare()
-            fileOperationsQueue = Handler()
-            Looper.loop()
-        })
-        t.start()
         mOnline = isOnline
     }
 
@@ -68,7 +57,9 @@ object FileStore : FileStoreInterface {
             stopWatching()
         } else {
             log.info(TAG, "App came to foreground continue watching ${Config.todoFileName}")
-            startWatching(Config.todoFileName)
+            queue("Start watching") {
+                startWatching(Config.todoFileName)
+            }
         }
     }
 
@@ -99,7 +90,7 @@ object FileStore : FileStoreInterface {
         try {
             val remoteVersion = getVersion(Config.todoFileName)
             log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version ${remoteVersion}.")
-            return  if (remoteVersion == currentVersion)  null else remoteVersion
+            return if (remoteVersion == currentVersion) null else remoteVersion
         } catch (e: Exception) {
             log.error(TAG, "Can't determine if refresh is needed.", e)
             return null
@@ -111,20 +102,6 @@ object FileStore : FileStoreInterface {
         return data.rev
     }
 
-
-
-    fun queueRunnable(description: String, r: Runnable) {
-        while (fileOperationsQueue == null) {
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-
-        }
-        fileOperationsQueue!!.post(r)
-    }
-
     override fun changesPending(): Boolean {
         if (mPrefs == null) {
             log.error(TAG, "Couldn't read pending changes state, mPrefs == null")
@@ -134,8 +111,7 @@ object FileStore : FileStoreInterface {
     }
 
 
-
-    private fun setChangesPending(pending: Boolean) {
+    fun setChangesPending(pending: Boolean) {
         log.info(TAG, "Set changes pending.")
         if (mPrefs == null) {
             log.error(TAG, "Couldn't save pending changes, mPrefs == null")
@@ -158,7 +134,7 @@ object FileStore : FileStoreInterface {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String> {
+    override fun loadTasksFromFile(path: String, eol: String): FileStoreInterface.RemoteContents {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -170,27 +146,21 @@ object FileStore : FileStoreInterface {
             isLoading = false
             throw IOException("Not authenticated")
         }
-        val readFile = ArrayList<String>()
+        val readLines = ArrayList<String>()
 
         val download = dbxClient.files().download(path)
         val openFileStream = download.inputStream
         val fileInfo = download.result
         log.info(TAG, "The file's rev is: " + fileInfo.rev)
-        Config.lastSeenRemoteId = fileInfo.rev
 
         val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
         reader.forEachLine { line ->
-            readFile.add(line)
+            readLines.add(line)
         }
         openFileStream.close()
-        val contents = join(readFile, "\n")
-        Config.cachedContents = contents
-        backup?.backup(path, contents)
         startWatching(path)
-
-
-        return readFile
+        return FileStoreInterface.RemoteContents(remoteId = fileInfo.rev, contents = readLines)
     }
 
 
@@ -201,16 +171,13 @@ object FileStore : FileStoreInterface {
     }
 
     private fun startWatching(path: String) {
-        queueRunnable("Refresh", Runnable {
-            if (needsRefresh(Config.lastSeenRemoteId)!=null) {
-                sync()
-            }
-        })
+        if (needsRefresh(Config.lastSeenRemoteId) != null) {
+            sync()
+        }
     }
 
     private fun stopWatching() {
-        queueRunnable("stopWatching", Runnable {
-        })
+
     }
 
     override fun browseForNewFile(act: Activity, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
@@ -226,76 +193,58 @@ object FileStore : FileStoreInterface {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String )  {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String): String {
         log.info(TAG, "Saving ${lines.size} tasks to Dropbox.")
-        backup?.backup(path, join(lines, "\n"))
         val contents = join(lines, eol)
-        Config.cachedContents = contents
-        val r = Runnable {
-            var newName = path
-            var rev = Config.lastSeenRemoteId
-            try {
-                val toStore = contents.toByteArray(charset("UTF-8"))
-                val `in` = ByteArrayInputStream(toStore)
-                log.info(TAG, "Saving to file " + path)
-                val uploadBuilder = dbxClient.files().uploadBuilder(path)
-                uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null )
-                val uploaded = uploadBuilder.uploadAndFinish(`in`)
-                rev = uploaded.rev
-                Config.lastSeenRemoteId = rev
-                newName = uploaded.pathDisplay
-                setChangesPending(false)
-            } catch (e: Exception) {
-                log.error(TAG, "Saving failed:", e)
-                showToastLong(TodoApplication.app, "Saving to Dropbox failed! See log for details.")
-                // Changes are pending
-                setChangesPending(true)
-            }
 
-            if (newName != path) {
-                // The file was written under another name
-                // Usually this means the was a conflict.
-                log.info(TAG, "Filename was changed remotely. New name is: " + newName)
-                showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
-                mApp.switchTodoFile(newName)
-            }
+        var newName = path
+        var rev = Config.lastSeenRemoteId
+        val toStore = contents.toByteArray(charset("UTF-8"))
+        val `in` = ByteArrayInputStream(toStore)
+        log.info(TAG, "Saving to file " + path)
+        val uploadBuilder = dbxClient.files().uploadBuilder(path)
+        uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null)
+        val uploaded = uploadBuilder.uploadAndFinish(`in`)
+        rev = uploaded.rev
+        newName = uploaded.pathDisplay
+        setChangesPending(false)
+
+        if (newName != path) {
+            // The file was written under another name
+            // Usually this means the was a conflict.
+            log.info(TAG, "Filename was changed remotely. New name is: " + newName)
+            showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
+            mApp.switchTodoFile(newName)
         }
-        queueRunnable("Save to file " + path, r)
+        return rev
     }
 
-    @Throws(IOException::class)
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
         if (!isOnline) {
             throw IOException("Device is offline")
         }
-        val r = Runnable {
-            try {
-                val doneContents = ArrayList<String>()
-                val rev = try {
-                    val download = dbxClient.files().download(path)
-                    download.inputStream.bufferedReader().forEachLine {
-                        doneContents.add(it)
-                    }
-                    download.close()
-                    download.result.rev
-                } catch (e: DownloadErrorException) {
-                    log.info(TAG, "${path} doesn't seem to exist", e)
-                    null
-                }
-                log.info(TAG, "The file's rev is: " + rev)
 
-                // Then append
-                doneContents += lines
-                val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
-                val `in` = ByteArrayInputStream(toStore)
-                dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null ).uploadAndFinish(`in`)
-            } catch (e: Exception) {
-                log.error(TAG, "Append failed: ", e)
-                throw(e)
+        val doneContents = ArrayList<String>()
+        val rev = try {
+            val download = dbxClient.files().download(path)
+            download.inputStream.bufferedReader().forEachLine {
+                doneContents.add(it)
             }
+            download.close()
+            download.result.rev
+        } catch (e: DownloadErrorException) {
+            log.info(TAG, "${path} doesn't seem to exist", e)
+            null
         }
-        queueRunnable("Append to file " + path, r)
+        log.info(TAG, "The file's rev is: " + rev)
+
+        // Then append
+        doneContents += lines
+        val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
+        val `in` = ByteArrayInputStream(toStore)
+        dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null).uploadAndFinish(`in`)
     }
+
 
     override fun sync() {
         log.info(TAG, "Sync.")
@@ -308,11 +257,10 @@ object FileStore : FileStoreInterface {
             return
         }
         val toStore = contents.toByteArray(charset("UTF-8"))
-        val r = Runnable {
+        queue("Write to file ${file.canonicalPath}") {
             val inStream = ByteArrayInputStream(toStore)
             dbxClient.files().uploadBuilder(file.path).withMode(WriteMode.OVERWRITE).uploadAndFinish(`inStream`)
         }
-        queueRunnable("Write to file ${file.canonicalPath}", r)
     }
 
     @Throws(IOException::class)
@@ -349,22 +297,20 @@ object FileStore : FileStoreInterface {
             // Give some time to settle so we ignore rapid connectivity changes
             // Only schedule if another thread is not running
             if (onOnline == null || !onOnline!!.isAlive) {
-                queueRunnable("onOnline", Runnable {
-                    // Check if we are still online
-                    log.info(TAG, "Device went online, reloading in 5 seconds")
-                    try {
-                        Thread.sleep(5000)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
+                // Check if we are still online
+                log.info(TAG, "Device went online, reloading in 5 seconds")
+                try {
+                    Thread.sleep(5000)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
 
-                    if (isOnline) {
-                        broadcastFileSync(mApp.localBroadCastManager)
-                    } else {
+                if (isOnline) {
+                    broadcastFileSync(mApp.localBroadCastManager)
+                } else {
 
-                        log.info(TAG, "Device no longer online skipping reloadLuaConfig")
-                    }
-                })
+                    log.info(TAG, "Device no longer online skipping reloadLuaConfig")
+                }
             }
 
         } else if (!mOnline) {

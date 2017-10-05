@@ -11,8 +11,12 @@ import java.io.IOException
 interface FileStoreInterface {
     val isAuthenticated: Boolean
 
+    data class RemoteContents(val remoteId : String, val contents: List<String> )
+
     @Throws(IOException::class)
-    fun loadTasksFromFile(path: String, backup: BackupInterface?, eol: String): List<String>
+    fun loadTasksFromFile(path: String, eol: String): RemoteContents
+    fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String
+
     fun startLogin(caller: Activity)
     fun logout()
     fun browseForNewFile(act: Activity, path: String, listener: FileSelectedListener, txtOnly: Boolean)
@@ -55,5 +59,5 @@ interface FileStoreInterface {
 
     fun getVersion(filename: String): String?
 
-    fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String)
+
 }
