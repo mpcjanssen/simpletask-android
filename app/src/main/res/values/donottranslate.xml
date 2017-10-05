@@ -174,4 +174,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_show_calendarview"           translatable="false">ui_show_calendarview</string>
     <string name="ui_last_scroll_position"        translatable="false">ui_last_scroll_position</string>
     <string name="ui_last_scroll_offset"          translatable="false">ui_last_scroll_offset</string>
+    <string name="changes_pending" translatable="false">changes_pending</string>
 </resources>

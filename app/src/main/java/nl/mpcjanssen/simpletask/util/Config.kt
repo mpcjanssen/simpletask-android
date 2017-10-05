@@ -261,4 +261,6 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
                 cachedContents = items.map { it.inFileFormat() }.joinToString("\n")
             }
         }
+
+    var changesPending by BooleanPreference(R.string.changes_pending, false)
 }

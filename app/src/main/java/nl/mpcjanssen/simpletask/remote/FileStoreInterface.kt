@@ -11,8 +11,6 @@ import java.io.IOException
 interface FileStoreInterface {
     val isAuthenticated: Boolean
 
-    data class RemoteContents(val remoteId : String, val contents: List<String> )
-
     @Throws(IOException::class)
     fun loadTasksFromFile(path: String, eol: String): RemoteContents
     fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String
@@ -29,11 +27,9 @@ interface FileStoreInterface {
     fun writeFile(file: File, contents: String)
 
     fun supportsSync(): Boolean
-    fun changesPending(): Boolean
 
     fun getWritePermission(act : Activity, activityResult: Int): Boolean
 
-    val isLoading: Boolean
 
     val isOnline: Boolean
 
@@ -68,6 +64,7 @@ interface FileStoreInterface {
     }
 }
 
+data class RemoteContents(val remoteId: String, val contents: List<String>)
 data class FileEntry(val name: String, val isFolder: Boolean)
 
 

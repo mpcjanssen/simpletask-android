@@ -37,7 +37,6 @@ object FileStore : FileStoreInterface {
     private val mPrefs: SharedPreferences?
 
     private var onOnline: Thread? = null
-    override var isLoading = false
     private var mOnline: Boolean = false
     private val mApp = TodoApplication.app
 
@@ -92,7 +91,7 @@ object FileStore : FileStoreInterface {
             val remoteVersion = getVersion(Config.todoFileName)
             log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version $remoteVersion.")
             if (remoteVersion == currentVersion) null else remoteVersion
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             log.error(TAG, "Can't determine if refresh is needed.", e)
             null
         }
@@ -101,29 +100,6 @@ object FileStore : FileStoreInterface {
     override fun getVersion(filename: String): String {
         val data = dbxClient.files().getMetadata(filename) as FileMetadata
         return data.rev
-    }
-
-    override fun changesPending(): Boolean {
-        if (mPrefs == null) {
-            log.error(TAG, "Couldn't read pending changes state, mPrefs == null")
-            return false
-        }
-        return mPrefs.getBoolean(LOCAL_CHANGES_PENDING, false)
-    }
-
-
-    fun setChangesPending(pending: Boolean) {
-        log.info(TAG, "Set changes pending.")
-        if (mPrefs == null) {
-            log.error(TAG, "Couldn't save pending changes, mPrefs == null")
-            return
-        }
-        if (pending) {
-            log.info(TAG, "Changes are pending")
-        }
-        val edit = mPrefs.edit()
-        edit.putBoolean(LOCAL_CHANGES_PENDING, pending).apply()
-        mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_PENDING_CHANGES))
     }
 
     override val isOnline: Boolean
@@ -135,16 +111,14 @@ object FileStore : FileStoreInterface {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun loadTasksFromFile(path: String, eol: String): FileStoreInterface.RemoteContents {
+    override fun loadTasksFromFile(path: String, eol: String): RemoteContents {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
         // on the dropbox side.
 
         log.info(TAG, "Loading file from Dropbox: " + path)
-        isLoading = true
         if (!isAuthenticated) {
-            isLoading = false
             throw IOException("Not authenticated")
         }
         val readLines = ArrayList<String>()
@@ -161,7 +135,7 @@ object FileStore : FileStoreInterface {
         }
         openFileStream.close()
         startWatching(path)
-        return FileStoreInterface.RemoteContents(remoteId = fileInfo.rev, contents = readLines)
+        return RemoteContents(remoteId = fileInfo.rev, contents = readLines)
     }
 
 
@@ -197,7 +171,6 @@ object FileStore : FileStoreInterface {
         val uploaded = uploadBuilder.uploadAndFinish(`in`)
         rev = uploaded.rev
         val newName = uploaded.pathDisplay
-        setChangesPending(false)
 
         if (newName != path) {
             // The file was written under another name
@@ -258,7 +231,6 @@ object FileStore : FileStoreInterface {
         if (!isAuthenticated) {
             return ""
         }
-        isLoading = true
 
         val download = dbxClient.files().download(file)
         log.info(TAG, "The file's rev is: " + download.result.rev)
@@ -282,33 +254,11 @@ object FileStore : FileStoreInterface {
     fun changedConnectionState() {
         val prevOnline = mOnline
         mOnline = isOnline
-        if (!prevOnline && mOnline) {
-            // Schedule a task to reloadLuaConfig the file
-            // Give some time to settle so we ignore rapid connectivity changes
-            // Only schedule if another thread is not running
-            if (onOnline == null || !onOnline!!.isAlive) {
-                // Check if we are still online
-                log.info(TAG, "Device went online, reloading in 5 seconds")
-                try {
-                    Thread.sleep(5000)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-
-                if (isOnline) {
-                    broadcastFileSync(mApp.localBroadCastManager)
-                } else {
-
-                    log.info(TAG, "Device no longer online skipping reloadLuaConfig")
-                }
-            }
-
-        } else if (!mOnline) {
-            stopWatching()
-        }
-        if (prevOnline && !mOnline) {
-            mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-            log.info(TAG, "Device went offline")
+        mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+        if (mOnline) {
+            log.info(TAG, "Device went online")
+        } else {
+            log.info(TAG, "Device no longer online skipping reloadLuaConfig")
         }
     }
 

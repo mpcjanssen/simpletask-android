@@ -246,7 +246,7 @@ object TodoList {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             val filename = Config.todoFileName
             val cachedList = Config.todoList
-            if (FileStore.changesPending()) {
+            if (Config.changesPending && FileStore.isOnline) {
                 log.info(TAG, "Not loading, changes pending")
                 if (cachedList != null) {
                     log.info(TAG,"Saving instead of loading")
@@ -306,9 +306,16 @@ object TodoList {
             log.info(TAG, "Saving todo list, size ${lines.size}")
             val rev = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
             Config.lastSeenRemoteId = rev
+            val changesWerePending = Config.changesPending
+            Config.changesPending = false
+            if (changesWerePending) {
+                // Remove the red bar
+                broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+            }
+
         }  catch (e: Exception) {
             log.error(TAG, "TodoList save to $todoFileName failed", e)
-            FileStore.setChangesPending(true)
+            Config.changesPending = true
             if (FileStore.isOnline) {
                 showToastShort(TodoApplication.app, "Saving of todo file failed")
             }
