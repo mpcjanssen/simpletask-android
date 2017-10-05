@@ -60,9 +60,6 @@ interface FileStoreInterface {
 
     fun getDefaultPath(): String
 
-
-    data class FileEntry(val name: String, val isFolder: Boolean)
-
     fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry>
 
     companion object {
@@ -70,5 +67,8 @@ interface FileStoreInterface {
         val PARENT_DIR = ".."
     }
 }
+
+data class FileEntry(val name: String, val isFolder: Boolean)
+
 
 

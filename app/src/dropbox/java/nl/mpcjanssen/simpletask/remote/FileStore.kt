@@ -14,9 +14,7 @@ import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.PARENT_DIR
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.ROOT_DIR
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface.FileEntry
 import nl.mpcjanssen.simpletask.task.TodoList.queue
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
@@ -328,15 +326,11 @@ object FileStore : FileStoreInterface {
         }
     }
 
-    override fun loadFileList(path: String, txtOnly: Boolean): List<FileStoreInterface.FileEntry> {
+    override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
 
         val fileList = ArrayList<FileEntry>()
 
         val dbxPath = if (path == ROOT_DIR) "" else path
-        if (dbxPath != "") {
-            fileList.add(FileEntry(PARENT_DIR, isFolder = true))
-        }
-
         val entries = FileStore.dbxClient.files().listFolder(dbxPath).entries
         entries?.forEach { entry ->
             if (entry is FolderMetadata)

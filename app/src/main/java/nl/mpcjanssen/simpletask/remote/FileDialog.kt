@@ -22,12 +22,12 @@ class FileDialog {
     fun createFileDialog(act: Activity, fileStore: FileStoreInterface, startPath: String, txtOnly: Boolean) {
         // Use an async task because we need to manage the UI
         Thread(Runnable {
-            val fileList: List<FileStoreInterface.FileEntry> = try {
+            val unsortedFileList: List<FileEntry> = try {
                 runOnMainThread(Runnable {
                     loadingOverlay = showLoadingOverlay(act, null, true)
                 })
                 fileStore.loadFileList(startPath, txtOnly)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Logger.warn(TAG, "Can't load fileList from $startPath")
                 if (startPath != ROOT_DIR) {
                     Logger.warn(TAG, "Trying root")
@@ -43,6 +43,10 @@ class FileDialog {
                 })
             } ?: return@Runnable
             Logger.info(TAG, "Filelist from $startPath loaded")
+            val fileList = unsortedFileList.sortedWith(compareBy({ it.isFolder }, { it.name })).toMutableList()
+            if (startPath != ROOT_DIR) {
+                fileList.add(0, FileEntry(PARENT_DIR, isFolder = true))
+            }
             runOnMainThread(Runnable {
                 val builder = AlertDialog.Builder(act)
                 builder.setTitle(startPath)
@@ -102,7 +106,11 @@ class FileDialog {
             }
             val dialog = FileDialog()
             dialog.addFileListener(listener)
-            dialog.createFileDialog(act, fileStore, path, txtOnly)
+            try {
+                dialog.createFileDialog(act, fileStore, path, txtOnly)
+            } catch (e: Exception) {
+                Logger.error(TAG, "Browsing for new file failed", e)
+            }
         }
     }
 }
