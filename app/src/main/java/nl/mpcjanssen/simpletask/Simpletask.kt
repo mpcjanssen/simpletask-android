@@ -387,12 +387,11 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onResume() {
         super.onResume()
         log.info(TAG, "onResume")
-        FileStore.pause(false)
         handleIntent()
+        FileStore.pause(false)
     }
 
     override fun onPause() {
-        FileStore.pause(true)
         val manager = listView?.layoutManager as LinearLayoutManager?
         if (manager != null) {
             val position = manager.findFirstVisibleItemPosition()
@@ -403,6 +402,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             Config.lastScrollOffset = offset
         }
         super.onPause()
+        FileStore.pause(true)
     }
 
     @SuppressLint("Recycle")
