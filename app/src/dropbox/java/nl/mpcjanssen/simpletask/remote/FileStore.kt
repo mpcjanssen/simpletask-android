@@ -229,7 +229,7 @@ object FileStore : FileStoreInterface {
     override fun saveTasksToFile(path: String, lines: List<String>, backup: BackupInterface?, eol: String )  {
         log.info(TAG, "Saving ${lines.size} tasks to Dropbox.")
         backup?.backup(path, join(lines, "\n"))
-        val contents = join(lines, eol) + eol
+        val contents = join(lines, eol)
         Config.cachedContents = contents
         val r = Runnable {
             var newName = path
