@@ -622,6 +622,16 @@ fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_SYNC))
 }
 
+fun broadcastFileSyncStart(broadcastManager: LocalBroadcastManager) {
+    log.info(TAG, "Sending file sync start broadcast")
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
+}
+
+fun broadcastFileSyncDone(broadcastManager: LocalBroadcastManager) {
+    log.info(TAG, "Sending file sync done changed broadcast")
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
+}
+
 fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
 }

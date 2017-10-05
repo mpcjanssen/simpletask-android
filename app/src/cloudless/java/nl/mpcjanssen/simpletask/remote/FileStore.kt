@@ -27,7 +27,7 @@ object FileStore : FileStoreInterface {
 
     override fun needsRefresh(currentVersion: String?): Boolean {
         val lastModified = Config.todoFile.lastModified()
-        if (lastModified == 0L ) {
+        if (lastModified == 0L) {
             return true
         }
         return currentVersion?.toLong() ?: 0 < lastModified
@@ -308,6 +308,7 @@ object FileStore : FileStoreInterface {
     override fun logout() {
 
     }
+
     fun getDefaultPath(): String {
         return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
     }

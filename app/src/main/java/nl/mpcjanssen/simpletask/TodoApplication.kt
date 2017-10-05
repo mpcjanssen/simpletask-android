@@ -41,6 +41,7 @@ import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.FileStoreInterface
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.appVersion
@@ -140,7 +141,8 @@ class TodoApplication : Application(),
     }
 
     fun loadTodoList(reason: String) {
-        TodoList.reload(this, localBroadCastManager, Config.eol, reason = reason)
+        Logger.info(TAG, "Loading todolist")
+        TodoList.reload(this, Config.eol, reason = reason)
     }
 
     override fun fileChanged(newName: String?) {
@@ -194,9 +196,9 @@ class TodoApplication : Application(),
     val doneFileName: String
         get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
 
-    override fun backup(name: String, lines: String) {
+    override fun backup(name: String, lines: List<Task>) {
         val now = Date()
-        val fileToBackup = TodoFile(lines, name, now)
+        val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
         Daos.backup(fileToBackup)
 
     }
