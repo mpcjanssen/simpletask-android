@@ -1,8 +1,0 @@
-[app](../../../index.md) / [android.support.design](../../index.md) / [R](../index.md) / [styleable](index.md) / [ActionBar_homeAsUpIndicator](.)
-
-# ActionBar_homeAsUpIndicator
-
-`static val ActionBar_homeAsUpIndicator: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
-`static val ActionBar_homeAsUpIndicator: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
-`static val ActionBar_homeAsUpIndicator: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
-`static val ActionBar_homeAsUpIndicator: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
