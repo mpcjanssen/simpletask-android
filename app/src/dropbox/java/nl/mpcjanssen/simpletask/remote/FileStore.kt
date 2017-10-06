@@ -28,21 +28,17 @@ import java.io.*
  */
 object FileStore : FileStoreInterface {
 
-    private val TAG = "FileStoreDB"
-    private val LOCAL_CHANGES_PENDING = "localChangesPending"
+    private val TAG = "FileStore"
     private val CACHE_PREFS = "dropboxMeta"
     private val OAUTH2_TOKEN = "dropboxV2Token"
 
     private val log: Logger = Logger
     private val mPrefs: SharedPreferences?
 
-    private var onOnline: Thread? = null
-    private var mOnline: Boolean = false
     private val mApp = TodoApplication.app
 
     init {
         mPrefs = mApp.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-        mOnline = isOnline
     }
 
     private val dbxClient by lazy {
@@ -50,18 +46,6 @@ object FileStore : FileStoreInterface {
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
         val client = DbxClientV2(requestConfig, accessToken)
         client
-    }
-
-    override fun pause(pause: Boolean) {
-        if (pause) {
-            log.info(TAG, "App went to background stop watching")
-            stopWatching()
-        } else {
-            log.info(TAG, "App came to foreground continue watching ${Config.todoFileName}")
-            queue("Start watching") {
-                startWatching(Config.todoFileName)
-            }
-        }
     }
 
     private fun getAccessToken(): String? {
@@ -109,8 +93,6 @@ object FileStore : FileStoreInterface {
             return netInfo != null && netInfo.isConnected
         }
 
-    @Synchronized
-    @Throws(IOException::class)
     override fun loadTasksFromFile(path: String, eol: String): RemoteContents {
 
         // If we load a file and changes are pending, we do not want to overwrite
@@ -134,7 +116,6 @@ object FileStore : FileStoreInterface {
             readLines.add(line)
         }
         openFileStream.close()
-        startWatching(path)
         return RemoteContents(remoteId = fileInfo.rev, contents = readLines)
     }
 
@@ -144,17 +125,6 @@ object FileStore : FileStoreInterface {
         val intent = Intent(caller, LoginScreen::class.java)
         caller.startActivity(intent)
     }
-
-    private fun startWatching(@Suppress("UNUSED_PARAMETER") path: String) {
-        if (needsRefresh(Config.lastSeenRemoteId) != null) {
-            sync()
-        }
-    }
-
-    private fun stopWatching() {
-
-    }
-
 
     @Synchronized
     @Throws(IOException::class)
@@ -252,10 +222,8 @@ object FileStore : FileStoreInterface {
     }
 
     fun changedConnectionState() {
-        val prevOnline = mOnline
-        mOnline = isOnline
         mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-        if (mOnline) {
+        if (isOnline) {
             log.info(TAG, "Device went online")
         } else {
             log.info(TAG, "Device no longer online skipping reloadLuaConfig")

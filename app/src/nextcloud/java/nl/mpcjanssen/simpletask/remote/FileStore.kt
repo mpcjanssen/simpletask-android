@@ -2,11 +2,17 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.accounts.AccountManager
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
@@ -17,9 +23,9 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.task.TodoList.queue
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
-import java.io.IOException
+import java.io.*
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 private val s1 = System.currentTimeMillis().toString()
 
@@ -37,7 +43,7 @@ object FileStore : FileStoreInterface {
         }
     }
 
-    private val TAG = "FileStoreDB"
+    private val TAG = "FileStore"
 
     private val log: Logger = Logger
 
@@ -59,14 +65,6 @@ object FileStore : FileStoreInterface {
                 password
         )
         client
-    }
-
-    override fun pause(pause: Boolean) {
-        queue("Pause $pause") {
-            if (!pause && needsRefresh(Config.lastSeenRemoteId) != null) {
-                sync()
-            }
-        }
     }
 
     override fun needsRefresh(currentVersion: String?): String? {

@@ -1,6 +1,8 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
+import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import java.io.File
 import java.io.IOException
 
@@ -45,10 +47,7 @@ interface FileStoreInterface {
         fun fileRead(contents: String?)
     }
 
-    // Called when the main screen goes to the background and when it comes back
-    fun pause(pause: Boolean) {
-        // Do nothing by default
-    }
+
 
     fun needsRefresh(currentVersion : String?): String?
 
@@ -58,9 +57,18 @@ interface FileStoreInterface {
 
     fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry>
 
+    // Allow the FileStore to signal that the remote
+    // todoFile changed. Call this in the filestore code
+    // to force file sync
+    fun remoteTodoFileChanged() {
+        broadcastFileSync(TodoApplication.app.localBroadCastManager)
+
+    }
+
     companion object {
         val ROOT_DIR = "/"
         val PARENT_DIR = ".."
+
     }
 }
 
