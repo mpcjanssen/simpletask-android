@@ -8,6 +8,10 @@ import java.io.IOException
 
 /**
  * Interface definition of the storage backend used.
+ * All functions are run in a background thread and are properly queued to prevent
+ * concurrent Todo list modification.
+ * The implementers of this interface should throw exceptions if anything goes wrong. The logic for handling the
+ * errors should be implemented in the users of the FileStore
 
  */
 interface FileStoreInterface {
@@ -22,7 +26,6 @@ interface FileStoreInterface {
 
     @Throws(IOException::class)
     fun appendTaskToFile(path: String, lines: List<String>, eol: String)
-    fun sync()
 
     @Throws(IOException::class)
     fun readFile(file: String, fileRead: FileReadListener?): String
@@ -47,11 +50,8 @@ interface FileStoreInterface {
         fun fileRead(contents: String?)
     }
 
-
-
-    fun needsRefresh(currentVersion : String?): String?
-
-    fun getVersion(filename: String): String?
+    // Retrieve the remote file version
+    fun getRemoteVersion(filename: String): String?
 
     fun getDefaultPath(): String
 

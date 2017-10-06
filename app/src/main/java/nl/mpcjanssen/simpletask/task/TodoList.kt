@@ -253,13 +253,20 @@ object TodoList {
                     save(FileStore,filename,backup,eol)
                 }
             } else {
-                val newerVersion = FileStore.needsRefresh(Config.lastSeenRemoteId)
-                if (newerVersion != null) {
+                val needSync = try {
+                    val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
+                    newerVersion != Config.lastSeenRemoteId
+                } catch (e: Throwable) {
+                    log.error(TAG, "Can't determine remote file version", e)
+                    false
+                }
+
+                if (needSync) {
                     log.info(TAG, "Remote version is different, sync")
                 } else {
                     log.info(TAG, "Remote version is same, load from cache")
                 }
-                if (cachedList == null || newerVersion != null) {
+                if (cachedList == null || needSync) {
                     try {
                         val remoteContents = FileStore.loadTasksFromFile(filename, eol)
                         val items = ArrayList<Task>(
