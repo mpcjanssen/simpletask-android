@@ -32,11 +32,9 @@ package nl.mpcjanssen.simpletask.task
 import android.app.Activity
 import android.content.Intent
 import nl.mpcjanssen.simpletask.*
-
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.IFileStore
-import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
