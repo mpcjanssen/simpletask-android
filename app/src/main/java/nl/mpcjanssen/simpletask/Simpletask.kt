@@ -263,7 +263,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
             MainFilter.initFromIntent(intent)
-            log.info(TAG, "handleIntent: launched with filter" + MainFilter)
+            log.info(TAG, "handleIntent")
             val extras = intent.extras
             if (extras != null) {
                 for (key in extras.keySet()) {
