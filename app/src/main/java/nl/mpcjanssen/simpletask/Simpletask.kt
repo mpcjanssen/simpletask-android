@@ -116,7 +116,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         log.info(TAG, "Logging out from Dropbox")
                         FileStore.logout()
                         finish()
-                        FileStore.startLogin(this@Simpletask)
+                        startLogin()
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         textSize = Config.tasklistTextSize ?: textSize
@@ -164,13 +164,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val flags = resultCode - Activity.RESULT_FIRST_USER
                 shareTodoList(flags)
             }
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_PERMISSION -> m_app.switchTodoFile(Config.todoFileName)
         }
     }
 
@@ -227,11 +220,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (!m_app.isAuthenticated) {
             log.info(TAG, "handleIntent: not authenticated")
             startLogin()
-            return
-        }
-
-        // Check if we have SDCard permission for cloudless
-        if (!FileStore.getWritePermission(this, REQUEST_PERMISSION)) {
             return
         }
 
@@ -505,10 +493,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                 inflater.inflate(R.menu.main, menu)
 
-                if (!FileStore.supportsSync()) {
-                    val mItem = menu.findItem(R.id.sync)
-                    mItem.isVisible = false
-                }
                 populateSearch(menu)
                 if (Config.showTodoPath) {
                     title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
@@ -860,14 +844,16 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun importFilters (importFile: File) {
         val r = Runnable {
             try {
-                val contents = FileStore.readFile(importFile.canonicalPath, null)
-                val jsonFilters = JSONObject(contents)
-                jsonFilters.keys().forEach {
-                    val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
-                    filter.initFromJSON(jsonFilters.getJSONObject(it))
-                    saveFilterInPrefs(it, filter)
+                FileStore.readFile(importFile.canonicalPath) { contents ->
+                    val jsonFilters = JSONObject(contents)
+                    jsonFilters.keys().forEach {
+                        val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+                        filter.initFromJSON(jsonFilters.getJSONObject(it))
+                        saveFilterInPrefs(it, filter)
+                    }
+                    localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+                    showToastShort(this, R.string.saved_filters_imported)
                 }
-                localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
             } catch (e: IOException) {
                 log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
@@ -883,13 +869,16 @@ class Simpletask : ThemedNoActionBarActivity() {
             it.saveInJSON(jsonItem)
             jsonFilters.put(it.name, jsonItem)
         }
-	try {
-            FileStore.writeFile(exportFile, jsonFilters.toString(2))
-	    showToastShort(this, R.string.saved_filters_exported)
-	} catch (e: Exception) {
-            log.error(TAG, "Export filters failed", e)
-	    showToastLong(this, "Error exporting filters")
+        val r = Runnable {
+            try {
+                FileStore.writeFile(exportFile, jsonFilters.toString(2))
+                showToastShort(this, R.string.saved_filters_exported)
+            } catch (e: Exception) {
+                log.error(TAG, "Export filters failed", e)
+                showToastLong(this, "Error exporting filters")
+            }
         }
+        Thread(r).start()
     }
     /**
      * Handle add filter click *
@@ -1302,7 +1291,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(item)
                     // Update the tri state checkbox
                     if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, false)
                 }
 
             }
@@ -1660,7 +1649,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         private val REQUEST_SHARE_PARTS = 1
         private val REQUEST_PREFERENCES = 2
-        private val REQUEST_PERMISSION = 3
 
         private val ACTION_LINK = "link"
         private val ACTION_SMS = "sms"

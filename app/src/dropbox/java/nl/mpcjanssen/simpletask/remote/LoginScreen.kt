@@ -99,7 +99,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
                 FileStore.setAccessToken(accessToken)
 
                 //Proceed to MainActivity
-                m_app.fileChanged(Config.todoFileName)
+                FileStore.remoteTodoFileChanged()
                 switchToTodolist()
             }
         }

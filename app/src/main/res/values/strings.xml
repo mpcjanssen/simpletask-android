@@ -211,6 +211,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="quick_filter_tag_header_inverted">INVERTED</string>
     <string name="saved_filters_exported">Filters exported</string>
+    <string name="saved_filters_imported">Filters imported</string>
     <string name="toast_lua_config_imported">Lua config imported</string>
 
     <string name="widget_header_transparency_title">Header transparency</string>

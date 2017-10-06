@@ -13,19 +13,19 @@ import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.ROOT_DIR
+import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
 import nl.mpcjanssen.simpletask.task.TodoList.queue
 import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.*
+import kotlin.reflect.KClass
 
 /**
  * FileStore implementation backed by Dropbox
  * Dropbox V2 API docs suck, most of the V2 code was inspired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
-object FileStore : FileStoreInterface {
+object FileStore : IFileStore {
 
     private val TAG = "FileStore"
     private val CACHE_PREFS = "dropboxMeta"
@@ -107,11 +107,8 @@ object FileStore : FileStoreInterface {
         return RemoteContents(remoteId = fileInfo.rev, contents = readLines)
     }
 
-
-    override fun startLogin(caller: Activity) {
-        // MyActivity below should be your activity class name
-        val intent = Intent(caller, LoginScreen::class.java)
-        caller.startActivity(intent)
+    override fun loginActivity(): KClass<*>? {
+        return LoginScreen::class
     }
 
     @Synchronized
@@ -175,9 +172,9 @@ object FileStore : FileStoreInterface {
     }
 
     @Throws(IOException::class)
-    override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
+    override fun readFile(file: String, fileRead: (String) -> Unit) {
         if (!isAuthenticated) {
-            return ""
+            return
         }
 
         val download = dbxClient.files().download(file)
@@ -190,13 +187,7 @@ object FileStore : FileStoreInterface {
         }
         download.inputStream.close()
         val contents = join(readFile, "\n")
-        fileRead?.fileRead(contents)
-        return contents
-
-    }
-
-    override fun supportsSync(): Boolean {
-        return true
+        fileRead(contents)
     }
 
     fun changedConnectionState() {
@@ -206,10 +197,6 @@ object FileStore : FileStoreInterface {
         } else {
             log.info(TAG, "Device no longer online skipping reloadLuaConfig")
         }
-    }
-
-    override fun getWritePermission(act: Activity, activityResult: Int): Boolean {
-        return true
     }
 
     override fun getDefaultPath(): String {
