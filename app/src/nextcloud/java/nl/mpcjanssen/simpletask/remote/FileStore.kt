@@ -2,17 +2,10 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.accounts.AccountManager
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
@@ -21,11 +14,12 @@ import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.task.TodoList.queue
-import nl.mpcjanssen.simpletask.util.*
-import java.io.*
+import nl.mpcjanssen.simpletask.util.getString
+import nl.mpcjanssen.simpletask.util.join
+import nl.mpcjanssen.simpletask.util.showToastLong
+import java.io.File
+import java.io.IOException
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 private val s1 = System.currentTimeMillis().toString()
 
@@ -162,15 +156,17 @@ object FileStore : FileStoreInterface {
 
 
         val cacheDir = mApp.applicationContext.cacheDir
+
         val op = DownloadRemoteFileOperation(path, cacheDir.canonicalPath)
-        op.execute(mNextcloud)
+        val result = op.execute(mNextcloud)
+        val doneContents = if (result.isSuccess) {
+            val cachePath = File(cacheDir, path).canonicalPath
+            File(cachePath).readLines().toMutableList()
+        } else {
+            ArrayList<String>()
+        }
 
-        val cachePath = File(cacheDir, path).canonicalPath
-        val originalLines = File(cachePath).readLines()
-
-        val doneContents = ArrayList<String>()
-        doneContents += originalLines
-        doneContents += lines
+        doneContents.addAll(lines)
         val contents = join(doneContents, eol) + eol
 
         val tmpFile = File(cacheDir, "tmp.txt")
@@ -181,6 +177,7 @@ object FileStore : FileStoreInterface {
 
 
     }
+
     override fun writeFile(file: File, contents: String) {
         if (!isAuthenticated) {
             log.error(TAG, "Not authenticated, file ${file.canonicalPath} not written.")

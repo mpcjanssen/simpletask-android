@@ -340,6 +340,7 @@ object TodoList {
                     removeAll(tasksToDelete)
                     notifyChanged(todoFilename, eol, null, true)
                 } catch (e: Exception) {
+                    log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")
                 }
 
