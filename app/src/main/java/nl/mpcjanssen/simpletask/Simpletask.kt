@@ -773,7 +773,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 if (!Config.changesPending) {
                     Config.clearCache()
                 }
-                FileStore.sync()
+                broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks()
             R.id.open_file -> m_app.browseForNewFile(this)

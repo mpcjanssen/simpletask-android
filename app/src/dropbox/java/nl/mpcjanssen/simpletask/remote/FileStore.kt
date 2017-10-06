@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
-import com.dropbox.core.v2.files.DownloadErrorException
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
@@ -70,18 +69,7 @@ object FileStore : FileStoreInterface {
         setAccessToken(null)
     }
 
-    override fun needsRefresh(currentVersion: String?): String? {
-        return try {
-            val remoteVersion = getVersion(Config.todoFileName)
-            log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version $remoteVersion.")
-            if (remoteVersion == currentVersion) null else remoteVersion
-        } catch (e: Throwable) {
-            log.error(TAG, "Can't determine if refresh is needed.", e)
-            null
-        }
-    }
-
-    override fun getVersion(filename: String): String {
+    override fun getRemoteVersion(filename: String): String {
         val data = dbxClient.files().getMetadata(filename) as FileMetadata
         return data.rev
     }
@@ -158,17 +146,13 @@ object FileStore : FileStoreInterface {
         }
 
         val doneContents = ArrayList<String>()
-        val rev = try {
-            val download = dbxClient.files().download(path)
-            download.inputStream.bufferedReader().forEachLine {
-                doneContents.add(it)
-            }
-            download.close()
-            download.result.rev
-        } catch (e: DownloadErrorException) {
-            log.info(TAG, "$path doesn't seem to exist", e)
-            null
+        val download = dbxClient.files().download(path)
+        download.inputStream.bufferedReader().forEachLine {
+            doneContents.add(it)
         }
+        download.close()
+        val rev = download.result.rev
+
         log.info(TAG, "The file's rev is: " + rev)
 
         // Then append
@@ -176,12 +160,6 @@ object FileStore : FileStoreInterface {
         val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
         val `in` = ByteArrayInputStream(toStore)
         dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null).uploadAndFinish(`in`)
-    }
-
-
-    override fun sync() {
-        log.info(TAG, "Sync.")
-        broadcastFileSync(mApp.localBroadCastManager)
     }
 
     override fun writeFile(file: File, contents: String) {

@@ -47,9 +47,8 @@ object FileStore : FileStoreInterface {
 
     private val log: Logger = Logger
 
-    internal var onOnline: Thread? = null
     private var mOnline: Boolean = false
-    private var fileOperationsQueue: Handler? = null
+
     private val mApp = TodoApplication.app
 
     private val mNextcloud by lazy {
@@ -67,18 +66,7 @@ object FileStore : FileStoreInterface {
         client
     }
 
-    override fun needsRefresh(currentVersion: String?): String? {
-        return try {
-            val remoteVersion = getVersion(Config.todoFileName)
-            log.info(TAG, "Cached version ${Config.lastSeenRemoteId}, remote version $remoteVersion.")
-            if (remoteVersion == currentVersion) null else remoteVersion
-        } catch (e: Exception) {
-            Logger.error(TAG, "Can't determine if refresh is needed.", e)
-            null
-        }
-    }
-
-    override fun getVersion(filename: String): String {
+    override fun getRemoteVersion(filename: String): String {
         val op = ReadRemoteFileOperation(filename)
         val res = op.execute(mNextcloud)
         val file = res.data[0] as RemoteFile
@@ -150,7 +138,7 @@ object FileStore : FileStoreInterface {
             val nameWithoutTxt = "\\.txt$".toRegex().replace(name, "")
             val newName = nameWithoutTxt + "_conflict_" + UUID.randomUUID() + ".txt"
             val newPath = parent + "/" + newName
-            val op = UploadRemoteFileOperation(tmpFile.absolutePath, newPath,
+            UploadRemoteFileOperation(tmpFile.absolutePath, newPath,
                     "text/plain", timestamp).execute(mNextcloud)
 
             showToastLong(TodoApplication.app, "CONFLICT! Uploaded as " + newName
@@ -189,15 +177,10 @@ object FileStore : FileStoreInterface {
         tmpFile.writeText(contents)
         val timestamp = timeStamp()
         val writeOp = UploadRemoteFileOperation(tmpFile.absolutePath, path, "text/plain", timestamp)
-        val res = writeOp.execute(mNextcloud)
+        writeOp.execute(mNextcloud)
 
 
     }
-
-    override fun sync() {
-        broadcastFileSync(mApp.localBroadCastManager)
-    }
-
     override fun writeFile(file: File, contents: String) {
         if (!isAuthenticated) {
             log.error(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
@@ -208,7 +191,7 @@ object FileStore : FileStoreInterface {
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
         val op = UploadRemoteFileOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
-        val res = op.execute(mNextcloud)
+        op.execute(mNextcloud)
 
     }
 

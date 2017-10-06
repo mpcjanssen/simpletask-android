@@ -10,9 +10,6 @@ import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import java.io.File
@@ -21,23 +18,8 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 object FileStore : FileStoreInterface {
-    override fun getVersion(filename: String): String {
+    override fun getRemoteVersion(filename: String): String {
         return File(filename).lastModified().toString()
-    }
-
-    override fun needsRefresh(currentVersion: String?): String? {
-        try {
-            val lastModified = Config.todoFile.lastModified().toString()
-            if (lastModified == currentVersion) {
-                return null
-            } else {
-                return lastModified
-            }
-        } catch (e: Throwable) {
-            log.error(TAG, "Can't determine if refresh is needed.", e)
-            return null
-        }
-
     }
 
     override val isOnline = true
@@ -70,11 +52,6 @@ object FileStore : FileStoreInterface {
         }
         setWatching(path)
         return RemoteContents(file.lastModified().toString(), lines)
-    }
-
-    override fun sync() {
-        log.info(TAG, "Sync.")
-        broadcastFileSync(TodoApplication.app.localBroadCastManager)
     }
 
     override fun writeFile(file: File, contents: String) {
