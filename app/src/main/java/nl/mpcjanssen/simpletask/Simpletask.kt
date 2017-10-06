@@ -387,8 +387,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onResume() {
         super.onResume()
         log.info(TAG, "onResume")
+        TodoList.reload(TodoApplication.app, "Main activity resume")
         handleIntent()
-        FileStore.pause(false)
     }
 
     override fun onPause() {
@@ -402,7 +402,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             Config.lastScrollOffset = offset
         }
         super.onPause()
-        FileStore.pause(true)
     }
 
     @SuppressLint("Recycle")

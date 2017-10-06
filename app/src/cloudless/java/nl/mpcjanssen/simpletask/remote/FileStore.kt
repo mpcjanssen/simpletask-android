@@ -41,7 +41,7 @@ object FileStore : FileStoreInterface {
     }
 
     override val isOnline = true
-    private val TAG = javaClass.simpleName
+    private val TAG = "FileStore"
     private val log: Logger
     private var observer: TodoObserver? = null
 
@@ -208,7 +208,7 @@ object FileStore : FileStoreInterface {
                         log.info(TAG, "Observer: ignored event on: " + path)
                     } else {
                         log.info(TAG, "File changed {}" + path)
-                        broadcastFileSync(TodoApplication.app.localBroadCastManager)
+                        FileStore.remoteTodoFileChanged()
                     }
                 }
             }
