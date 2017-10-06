@@ -5,8 +5,8 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.PARENT_DIR
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface.Companion.ROOT_DIR
+import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.PARENT_DIR
+import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
 import nl.mpcjanssen.simpletask.util.ListenerList
 import nl.mpcjanssen.simpletask.util.runOnMainThread
 import nl.mpcjanssen.simpletask.util.showLoadingOverlay
@@ -15,11 +15,11 @@ import java.io.File
 
 class FileDialog {
 
-    private val fileListenerList = ListenerList<FileStoreInterface.FileSelectedListener>()
+    private val fileListenerList = ListenerList<FileSelectedListener>()
     private var loadingOverlay: Dialog? = null
     private var showingDialog: AlertDialog? = null
 
-    fun createFileDialog(act: Activity, fileStore: FileStoreInterface, startPath: String, txtOnly: Boolean) {
+    fun createFileDialog(act: Activity, fileStore: IFileStore, startPath: String, txtOnly: Boolean) {
         // Use an async task because we need to manage the UI
         Thread(Runnable {
             val unsortedFileList: List<FileEntry> = try {
@@ -83,13 +83,13 @@ class FileDialog {
         }).start()
     }
 
-    fun addFileListener(listener: FileStoreInterface.FileSelectedListener) {
+    fun addFileListener(listener: FileSelectedListener) {
         fileListenerList.add(listener)
     }
 
     private fun fireFileSelectedEvent(file: String) {
-        fileListenerList.fireEvent(object : ListenerList.FireHandler<FileStoreInterface.FileSelectedListener> {
-            override fun fireEvent(listener: FileStoreInterface.FileSelectedListener) {
+        fileListenerList.fireEvent(object : ListenerList.FireHandler<FileSelectedListener> {
+            override fun fireEvent(listener: FileSelectedListener) {
                 listener.fileSelected(file)
             }
         })
@@ -98,7 +98,7 @@ class FileDialog {
 
     companion object {
         val TAG = "FileDialog"
-        fun browseForNewFile(act: Activity, fileStore: FileStore, path: String, listener: FileStoreInterface.FileSelectedListener, txtOnly: Boolean) {
+        fun browseForNewFile(act: Activity, fileStore: FileStore, path: String, listener: FileSelectedListener, txtOnly: Boolean) {
             if (!FileStore.isOnline) {
                 showToastLong(act, "Device is offline")
                 Logger.info(TAG, "Device is offline, browser closed")
@@ -113,6 +113,11 @@ class FileDialog {
             }
         }
     }
+
+    interface FileSelectedListener {
+        fun fileSelected(file: String)
+    }
 }
+
 
 

@@ -1,23 +1,23 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.FileObserver
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import nl.mpcjanssen.simpletask.Logger
+import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import java.io.File
 import java.io.FilenameFilter
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.reflect.KClass
 
-object FileStore : FileStoreInterface {
+object FileStore : IFileStore {
     override fun getRemoteVersion(filename: String): String {
         return File(filename).lastModified().toString()
     }
@@ -37,7 +37,11 @@ object FileStore : FileStoreInterface {
     }
 
     override val isAuthenticated: Boolean
-        get() = true
+        get() {
+            val permissionCheck = ContextCompat.checkSelfPermission(TodoApplication.app,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            return permissionCheck == PackageManager.PERMISSION_GRANTED
+        }
 
     override fun loadTasksFromFile(path: String, eol: String): RemoteContents {
         log.info(TAG, "Loading tasks")
@@ -59,22 +63,16 @@ object FileStore : FileStoreInterface {
         file.writeText(contents)
     }
 
-    override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
+    override fun readFile(file: String, fileRead: (String) -> Unit) {
         log.info(TAG, "Reading file: {}" + file)
         val contents: String
         val lines = File(file).readLines()
         contents = join(lines, "\n")
-        fileRead?.fileRead(contents)
-        return contents
+        fileRead(contents)
     }
 
-    override fun supportsSync(): Boolean {
-        return true
-    }
-
-    override fun startLogin(caller: Activity) {
-        // FIXME possible add permission retrieval on Lollipop here
-
+    override fun loginActivity(): KClass<*>? {
+        return LoginScreen::class
     }
 
     private fun setWatching(path: String) {
@@ -105,18 +103,6 @@ object FileStore : FileStoreInterface {
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
         log.info(TAG, "Appending ${lines.size} tasks to $path")
         writeToFile(lines, eol, File(path), true)
-    }
-
-    override fun getWritePermission(act: Activity, activityResult: Int): Boolean {
-
-        val permissionCheck = ContextCompat.checkSelfPermission(act,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(act,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), activityResult)
-        }
-        return permissionCheck == PackageManager.PERMISSION_GRANTED
     }
 
     override fun logout() {

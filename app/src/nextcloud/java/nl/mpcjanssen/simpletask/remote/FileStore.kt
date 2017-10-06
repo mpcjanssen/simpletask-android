@@ -20,13 +20,14 @@ import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.reflect.KClass
 
 private val s1 = System.currentTimeMillis().toString()
 
 /**
  * FileStore implementation backed by Nextcloud
  */
-object FileStore : FileStoreInterface {
+object FileStore : IFileStore {
     override val isAuthenticated: Boolean
         get() = !AccountManager.get(mApp.applicationContext).getAccountsByType(getString(R.string.account_type)).isEmpty()
 
@@ -101,10 +102,8 @@ object FileStore : FileStoreInterface {
     }
 
 
-    override fun startLogin(caller: Activity) {
-        // MyActivity below should be your activity class name
-        val intent = Intent(caller, LoginScreen::class.java)
-        caller.startActivity(intent)
+    override fun loginActivity(): KClass<*>? {
+        return LoginScreen::class
     }
 
     @Synchronized
@@ -188,28 +187,24 @@ object FileStore : FileStoreInterface {
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
         val op = UploadRemoteFileOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
-        op.execute(mNextcloud)
+        val result = op.execute(mNextcloud)
+        log.info(TAG, "Wrote file to ${file.path}, result ${result.isSuccess}")
 
     }
 
     private fun timeStamp() = (System.currentTimeMillis() / 1000).toString()
 
     @Throws(IOException::class)
-    override fun readFile(file: String, fileRead: FileStoreInterface.FileReadListener?): String {
+    override fun readFile(file: String, fileRead: (String) -> Unit) {
         if (!isAuthenticated) {
-            return ""
+            return
         }
         val cacheDir = mApp.applicationContext.cacheDir
         val op = DownloadRemoteFileOperation(file, cacheDir.canonicalPath)
         op.execute(mNextcloud)
         val cachePath = File(cacheDir, file).canonicalPath
         val contents = File(cachePath).readText()
-        fileRead?.fileRead(contents)
-        return contents
-    }
-
-    override fun supportsSync(): Boolean {
-        return true
+        fileRead(contents)
     }
 
     fun changedConnectionState() {
@@ -222,11 +217,6 @@ object FileStore : FileStoreInterface {
             log.info(TAG, "Device no longer online skipping reloadLuaConfig")
         }
     }
-
-    override fun getWritePermission(act: Activity, activityResult: Int): Boolean {
-        return true
-    }
-
 
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()

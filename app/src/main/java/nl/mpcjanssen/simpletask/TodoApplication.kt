@@ -41,7 +41,6 @@ import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
@@ -52,7 +51,7 @@ import java.util.*
 
 class TodoApplication : Application(),
 
-         FileStoreInterface.FileChangeListener, BackupInterface {
+        BackupInterface {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -146,14 +145,6 @@ class TodoApplication : Application(),
         TodoList.reload(this, Config.eol, reason = reason)
     }
 
-    override fun fileChanged(newName: String?) {
-        newName?.let {
-            Config.setTodoFile(newName)
-        }
-        loadTodoList("from fileChanged")
-
-    }
-
     fun updateWidgets() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
@@ -177,7 +168,11 @@ class TodoApplication : Application(),
         }
 
     fun startLogin(caller: Activity) {
-        FileStore.startLogin(caller)
+        val loginActivity = FileStore.loginActivity()?.java
+        loginActivity?.let {
+            val intent = Intent(caller, it)
+            caller.startActivity(intent)
+        }
     }
 
 
@@ -187,7 +182,7 @@ class TodoApplication : Application(),
                 act,
                 fileStore,
                 Config.todoFile.parent,
-                object : FileStoreInterface.FileSelectedListener {
+                object : FileDialog.FileSelectedListener {
                     override fun fileSelected(file: String) {
                         switchTodoFile(file)
                     }

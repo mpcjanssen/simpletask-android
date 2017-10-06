@@ -35,7 +35,7 @@ import nl.mpcjanssen.simpletask.*
 
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
+import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.sort.MultiComparator
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
@@ -301,7 +301,7 @@ object TodoList {
         }
     }
 
-    private fun save(fileStore: FileStoreInterface, todoFileName: String, backup: BackupInterface?, eol: String) {
+    private fun save(fileStore: IFileStore, todoFileName: String, backup: BackupInterface?, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
             it.inFileFormat()
