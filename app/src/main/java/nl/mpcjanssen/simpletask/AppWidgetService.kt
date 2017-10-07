@@ -168,7 +168,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             //rv.setViewPadding(R.id.tasktext,
             //        4, 4, 4, 0);
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(position))
+        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(TodoList.getTaskIndex(task)))
         return rv
     }
 

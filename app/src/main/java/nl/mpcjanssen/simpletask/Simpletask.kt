@@ -123,7 +123,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         if (m_adapter == null) {
                             return
                         }
-                        m_adapter!!.setFilteredTasks()
+                        m_adapter!!.notifyDataSetChanged()
                         invalidateOptionsMenu()
                         updateDrawers()
                     } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
@@ -306,7 +306,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
                 setIntent(intent)
                 if (position > -1) {
-                    val itemAtPosition = adapter.getNthTask(position)
+                    val itemAtPosition = TodoList.getTaskAt(position)
                     itemAtPosition?.let {
                         TodoList.clearSelection()
                         TodoList.selectTask(itemAtPosition)
@@ -1327,6 +1327,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 taskThreshold.visibility = View.GONE
             }
             // Set selected state
+            log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
             view.isActivated = TodoList.isSelected(item)
 
             // Set click listeners
@@ -1466,10 +1467,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         fun getPosition(task: Task): Int {
             val line = TaskLine(task = task)
             return visibleLines.indexOf(line)
-        }
-
-        fun getNthTask(n: Int) : Task? {
-            return visibleLines.filter { !it.header }.getOrNull(n)?.task
         }
 
         override fun getItemId(position: Int): Long {
