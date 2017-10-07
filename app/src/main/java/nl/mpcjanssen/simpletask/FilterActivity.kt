@@ -15,8 +15,8 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
@@ -203,24 +203,20 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 } else {
                     applyFilter()
                 }
-            R.id.menu_filter_load_script -> openScript(object : FileStoreInterface.FileReadListener {
-                override fun fileRead(contents: String?) {
-                    runOnMainThread(
-                            Runnable { setScript(contents) })
-                }
-            })
+            R.id.menu_filter_load_script -> openScript { contents ->
+                runOnMainThread(
+                        Runnable { setScript(contents) })
+            }
         }
         return true
     }
 
-    private fun openScript(file_read: FileStoreInterface.FileReadListener) {
-        runOnMainThread(Runnable {
-            val dialog = FileStore.FileDialog(this@FilterActivity, File(Config.todoFileName).parent, false)
-            dialog.addFileListener(object : FileStoreInterface.FileSelectedListener {
+    private fun openScript(file_read: (String) -> Unit) {
+            val dialog = FileDialog()
+        dialog.addFileListener(object : FileDialog.FileSelectedListener {
                 override fun fileSelected(file: String) {
                     Thread(Runnable {
                         try {
-
                             FileStore.readFile(file, file_read)
                         } catch (e: IOException) {
                             showToastShort(this@FilterActivity, "Failed to load script.")
@@ -229,8 +225,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                     }).start()
                 }
             })
-            dialog.createFileDialog(this@FilterActivity, FileStore)
-        })
+            dialog.createFileDialog(this@FilterActivity, FileStore, File(Config.todoFileName).parent, txtOnly = false)
     }
 
     private fun createFilterIntent(): Intent {
@@ -372,7 +367,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        prefs.edit().putInt(getString(R.string.last_open_filter_tab), m_page).commit()
+        prefs.edit().putInt(getString(R.string.last_open_filter_tab), m_page).apply()
         pager?.clearOnPageChangeListeners()
     }
 

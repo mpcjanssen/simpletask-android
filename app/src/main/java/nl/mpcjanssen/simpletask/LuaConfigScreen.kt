@@ -6,14 +6,14 @@ package nl.mpcjanssen.simpletask
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.widget.EditText
 import android.view.Menu
 import android.view.MenuItem
-import java.io.File
-import java.io.IOException
+import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.LuaError
+import java.io.File
+import java.io.IOException
 
 class LuaConfigScreen : ThemedActionBarActivity() {
 
@@ -93,16 +93,21 @@ class LuaConfigScreen : ThemedActionBarActivity() {
     private fun importLuaConfig (importFile: File) {
         val r = Runnable {
             try {
-                val contents = FileStore.readFile(importFile.canonicalPath, null)
-                Config.luaConfig = contents
-                showToastShort(this, getString(R.string.toast_lua_config_imported))
+                FileStore.readFile(importFile.canonicalPath) { contents ->
+                    Config.luaConfig = contents
+                    showToastShort(this, getString(R.string.toast_lua_config_imported))
+                    runOnUiThread {
+                        scriptEdit.setText(Config.luaConfig)
+                    }
+                }
+
             } catch (e: IOException) {
                 log.error(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
             }
         }
         Thread(r).start()
-        scriptEdit.setText(Config.luaConfig)
+
     }
 
     fun script () : String {

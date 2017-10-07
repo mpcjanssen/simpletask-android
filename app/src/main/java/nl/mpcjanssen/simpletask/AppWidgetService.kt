@@ -10,12 +10,11 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import nl.mpcjanssen.simpletask.sort.MultiComparator
-import nl.mpcjanssen.simpletask.task.*
+import nl.mpcjanssen.simpletask.task.Priority
+import nl.mpcjanssen.simpletask.task.TToken
+import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
-import org.json.JSONObject
-import java.util.*
-import kotlin.collections.ArrayList
 
 class AppWidgetService : RemoteViewsService() {
 
@@ -43,9 +42,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
         val filter = ActiveFilter(FilterOptions(luaModule = moduleName()))
         filter.initFromPrefs(preferences)
-        val obj = JSONObject()
-        filter.saveInJSON(obj)
-        log.debug (TAG, "Widget $widgetId filter $obj")
+        log.debug(TAG, "Retrieved widget $widgetId filter")
 
         return filter
     }

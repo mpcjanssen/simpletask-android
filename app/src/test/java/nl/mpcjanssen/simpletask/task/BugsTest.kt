@@ -1,11 +1,11 @@
 package nl.mpcjanssen.simpletask.task
 
-import org.junit.Assert
 import junit.framework.TestCase
 import nl.mpcjanssen.simpletask.ActiveFilter
 import nl.mpcjanssen.simpletask.FilterOptions
-import nl.mpcjanssen.simpletask.sort.MultiComparator
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.MultiComparator
+import nl.mpcjanssen.simpletask.util.todayAsString
+import org.junit.Assert
 
 /**
  * Tests to guard against bug regressions.

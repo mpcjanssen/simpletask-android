@@ -53,7 +53,6 @@ fun writeToFile(lines: List<String>, eol: String, file: File, append: Boolean) {
         fw.write(line)
         fw.write(eol)
     }
-    fw.write(eol)
     fw.close()
     str.close()
 }
