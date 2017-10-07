@@ -788,7 +788,11 @@ class Simpletask : ThemedNoActionBarActivity() {
             calendarDescription = selectedTasksAsString()
 
         }
-        intent = Intent(Intent.ACTION_EDIT).setType(Constants.ANDROID_EVENT).putExtra(Events.TITLE, calendarTitle).putExtra(Events.DESCRIPTION, calendarDescription)
+        intent = Intent(Intent.ACTION_EDIT).apply {
+            setType(Constants.ANDROID_EVENT)
+            putExtra(Events.TITLE, calendarTitle)
+            putExtra(Events.DESCRIPTION, calendarDescription)
+        }
         // Explicitly set start and end date/time.
         // Some calendar providers need this.
         val dueDate = checkedTasks[0].dueDate
