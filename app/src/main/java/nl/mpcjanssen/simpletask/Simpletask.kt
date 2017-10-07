@@ -94,6 +94,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE)
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
+        intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
         intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
@@ -117,6 +118,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                         FileStore.logout()
                         finish()
                         startLogin()
+                    } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
+                        log.info(TAG, "Tasklist changed, refiltering adapter")
+                        m_adapter!!.setFilteredTasks()
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         textSize = Config.tasklistTextSize ?: textSize
@@ -610,7 +614,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
-            TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
         })
         builder.show()
 
@@ -627,7 +631,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (Config.isAutoArchive) {
             archiveTasks()
         }
-        TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+        TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
     private fun uncompleteTasks(task: Task) {
@@ -638,7 +642,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun uncompleteTasks(tasks: List<Task>) {
         TodoList.uncomplete(tasks)
-        TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+        TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
     }
 
     private fun deferTasks(tasks: List<Task>, dateType: DateType) {
@@ -658,7 +662,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
                         TodoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
-                        TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                        TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
                     },
                             today.year!!,
                             today.month!! - 1,
@@ -671,7 +675,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else {
 
                     TodoList.defer(input, tasks, dateType)
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
 
                 }
 
@@ -686,7 +690,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     .replaceFirst(Regex("%s"), numTasks.toString())
         val delete = DialogInterface.OnClickListener { _, _ ->
             TodoList.removeAll(tasks)
-            TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
             invalidateOptionsMenu()
         }
 
@@ -1285,7 +1289,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     uncompleteTasks(item)
                     // Update the tri state checkbox
                     if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
                 })
             } else {
                 taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -1295,7 +1299,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(item)
                     // Update the tri state checkbox
                     if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, false)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, false)
                 }
 
             }
@@ -1574,7 +1578,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     addToTask(it, newText)
                 }
             }
-            TodoList.notifyChanged(Config.todoFileName, Config.eol, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
         }
         builder.setNegativeButton(R.string.cancel) { _, _ -> }
         // Create the AlertDialog
