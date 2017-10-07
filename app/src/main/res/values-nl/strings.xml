@@ -20,7 +20,7 @@
     <string name="next">Volgende</string>
     <string name="prev">Vorige</string>
     <string name="open_file">Todo-bestand openen</string>
-    <string name="sync">Herladen</string>
+    <string name="sync">Synchroniseren</string>
     <string name="changelist">Lijst selecteren</string>
     <string name="search">Zoeken</string>
     <string name="add">Toevoegen</string>
