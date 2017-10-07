@@ -360,7 +360,7 @@ object TodoList {
 
     fun selectTasks(items: List<Task>) {
         queue("Select") {
-            val idxs = items.map { todoItems.indexOf(it) }
+            val idxs = items.map { todoItems.indexOf(it) }.filterNot { it == -1 }
             selectedIndexes.addAll(idxs)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
