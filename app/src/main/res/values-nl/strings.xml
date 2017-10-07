@@ -52,8 +52,8 @@
     <string name="clear_filter">Filter wissen</string>
     <string name="write_failed">Het schrijven van het bestand is mislukt! Uw wijzigingen zijn NIET opgeslagen.</string>
 
-    <string name="tasktexthint">\@Bespreek het +Paris-probleem met +Hektor @Troja 
-\nZeg tegen +Hektor dat hij niet zo\'n spelbreker moet zijn @Troja 
+    <string name="tasktexthint">\@Bespreek het +Paris-probleem met +Hektor @Troy 
+\nZeg tegen +Hektor dat hij niet zo\'n spelbreker moet zijn @Troy 
 \nVerwijder deze tekst uit het menu @Phone</string>
 
     <string name="filter_name_empty">Geen naam opgegeven; filter wordt niet toegevoegd</string>
@@ -430,4 +430,5 @@
     <string name="saved_filters_exported">Filters zijn geëxporteerd</string>
     <string name="toast_lua_config_imported">Lua-configuratie is geïmporteerd</string>
 
+    <string name="saved_filters_imported">Filters zijn geïmporteerd</string>
     </resources>
