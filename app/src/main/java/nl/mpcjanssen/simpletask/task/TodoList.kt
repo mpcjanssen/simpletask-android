@@ -203,7 +203,7 @@ object TodoList {
             return todoItems.filter { it.isCompleted() }
         }
 
-    fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
+    fun notifyTasklistChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         queue("Notified changed") {
             if (save) {
                 save(FileStore, todoName, backup, eol)
@@ -213,6 +213,7 @@ object TodoList {
             }
             mLists = null
             mTags = null
+            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         }
     }
@@ -285,7 +286,7 @@ object TodoList {
                         log.error(TAG, "TodoList load failed: {}" + filename, e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
-                    notifyChanged(filename, eol, backup, false)
+                    notifyTasklistChanged(filename, eol, backup, false)
                     log.info(TAG, "TodoList loaded from dropbox")
                 } else {
                     log.info(TAG, "Todolist loaded from cache")
@@ -337,7 +338,7 @@ object TodoList {
                 try {
                     FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                     removeAll(tasksToDelete)
-                    notifyChanged(todoFilename, eol, null, true)
+                    notifyTasklistChanged(todoFilename, eol, null, true)
                 } catch (e: Exception) {
                     log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")
