@@ -229,11 +229,12 @@ object TodoList {
         } else {
             todoItems.reversed()
         }
-        val filteredTasks = filter.apply(itemsToSort.asSequence())
-        comp.comparator?.let {
-            return filteredTasks.sortedWith(it)
+        val sortedItems = if (comp.comparator != null) {
+            itemsToSort.sortedWith(comp.comparator)
+        } else {
+            itemsToSort
         }
-        return filteredTasks
+        return filter.apply(sortedItems.asSequence()
     }
 
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
