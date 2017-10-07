@@ -48,7 +48,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.sort.AlphabeticalStringComparator
+import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
@@ -375,8 +375,9 @@ fun createCachedDatabase(context: Context, dbFile: File) {
 
 fun alfaSortList(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
     val result = ArrayList<String>()
-    result.addAll(items)
-    Collections.sort(result, AlphabeticalStringComparator(caseSensitive))
+    result .addAll(items.sortedWith ( compareBy<String> {
+        if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
+    }))
     if (prefix != null) {
         result.add(0, prefix)
     }
@@ -617,9 +618,19 @@ fun ArrayList<HashSet<String>>.intersection(): Set<String> {
     return intersection
 }
 
-fun broadcastFileChanged(broadcastManager: LocalBroadcastManager) {
+fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {
     log.info(TAG, "Sending file changed broadcast")
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_CHANGED))
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_SYNC))
+}
+
+fun broadcastFileSyncStart(broadcastManager: LocalBroadcastManager) {
+    log.info(TAG, "Sending file sync start broadcast")
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
+}
+
+fun broadcastFileSyncDone(broadcastManager: LocalBroadcastManager) {
+    log.info(TAG, "Sending file sync done changed broadcast")
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
 }
 
 fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {

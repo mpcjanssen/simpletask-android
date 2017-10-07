@@ -39,8 +39,9 @@ import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
+import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.remote.FileStoreInterface
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.appVersion
@@ -50,7 +51,7 @@ import java.util.*
 
 class TodoApplication : Application(),
 
-         FileStoreInterface.FileChangeListener, BackupInterface {
+        BackupInterface {
 
     lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -67,7 +68,7 @@ class TodoApplication : Application(),
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
-        intentFilter.addAction(Constants.BROADCAST_FILE_CHANGED)
+        intentFilter.addAction(Constants.BROADCAST_FILE_SYNC)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -82,17 +83,15 @@ class TodoApplication : Application(),
                     Logger.info(TAG, "Refresh widgets from broadcast")
                     redrawWidgets()
                     updateWidgets()
-                } else if (intent.action == Constants.BROADCAST_FILE_CHANGED) {
-                    Logger.info(TAG, "File changed, reloading")
-                    loadTodoList("from BROADCAST")
+                } else if (intent.action == Constants.BROADCAST_FILE_SYNC) {
+                    loadTodoList("From BROADCAST_FILE_SYNC")
                 }
             }
         }
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-
-        Logger.info(TAG, "Created todolist " + TodoList)
         Logger.info(TAG, "onCreate()")
+        Logger.info(TAG, "Created todolist " + TodoList)
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         loadTodoList("Initial load")
@@ -142,15 +141,8 @@ class TodoApplication : Application(),
     }
 
     fun loadTodoList(reason: String) {
-        TodoList.reload(this, localBroadCastManager, Config.eol, reason = reason)
-    }
-
-    override fun fileChanged(newName: String?) {
-        newName?.let {
-            Config.setTodoFile(newName)
-        }
-        loadTodoList("from fileChanged")
-
+        Logger.info(TAG, "Loading todolist")
+        TodoList.reload(this, Config.eol, reason = reason)
     }
 
     fun updateWidgets() {
@@ -176,16 +168,21 @@ class TodoApplication : Application(),
         }
 
     fun startLogin(caller: Activity) {
-        FileStore.startLogin(caller)
+        val loginActivity = FileStore.loginActivity()?.java
+        loginActivity?.let {
+            val intent = Intent(caller, it)
+            caller.startActivity(intent)
+        }
     }
 
 
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
-        fileStore.browseForNewFile(
+        FileDialog.browseForNewFile(
                 act,
+                fileStore,
                 Config.todoFile.parent,
-                object : FileStoreInterface.FileSelectedListener {
+                object : FileDialog.FileSelectedListener {
                     override fun fileSelected(file: String) {
                         switchTodoFile(file)
                     }
@@ -196,9 +193,9 @@ class TodoApplication : Application(),
     val doneFileName: String
         get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
 
-    override fun backup(name: String, lines: String) {
+    override fun backup(name: String, lines: List<Task>) {
         val now = Date()
-        val fileToBackup = TodoFile(lines, name, now)
+        val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
         Daos.backup(fileToBackup)
 
     }

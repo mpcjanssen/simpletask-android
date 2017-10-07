@@ -24,61 +24,40 @@
  */
 package nl.mpcjanssen.simpletask.remote
 
+import android.Manifest
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Button
-import com.dropbox.core.android.Auth
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.showToastLong
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
-    private lateinit var m_app: TodoApplication
-    private lateinit var m_broadcastReceiver: BroadcastReceiver
-    private lateinit var localBroadcastManager: LocalBroadcastManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        m_app = application as TodoApplication
-        setTheme(Config.activeTheme)
-        setContentView(R.layout.login)
-        localBroadcastManager = LocalBroadcastManager.getInstance(this)
-
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("nl.mpcjanssen.simpletask.ACTION_LOGIN")
-        m_broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val i = Intent(context, Simpletask::class.java)
-                startActivity(i)
-                finish()
-            }
-        }
-        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-
-        var m_LoginButton = findViewById(R.id.login) as Button
-        m_LoginButton.setOnClickListener {
-            Config.fullDropBoxAccess = true
-            startLogin()
-        }
-
-        m_LoginButton = findViewById(R.id.login_folder) as Button
-        m_LoginButton.setOnClickListener {
-            Config.fullDropBoxAccess = false
-            startLogin()
-        }
-
-        if (m_app.isAuthenticated) {
+        if (FileStore.isAuthenticated) {
             switchToTodolist()
         }
+        setTheme(Config.activeTheme)
+        setContentView(R.layout.login)
 
+        val m_LoginButton = findViewById(R.id.login) as Button
+        m_LoginButton.setOnClickListener {
+            startLogin()
+        }
     }
 
     private fun switchToTodolist() {
@@ -87,41 +66,29 @@ class LoginScreen : ThemedNoActionBarActivity() {
         finish()
     }
 
-    override fun onResume() {
-        super.onResume()
-        finishLogin()
-    }
-
     private fun finishLogin() {
-        val accessToken = Auth.getOAuth2Token()
-            if (accessToken != null) {
-                //Store accessToken in SharedPreferences
-                FileStore.setAccessToken(accessToken)
 
-                //Proceed to MainActivity
-                FileStore.remoteTodoFileChanged()
-                switchToTodolist()
-            }
+        if (FileStore.isAuthenticated) {
+            switchToTodolist()
+        } else {
+            showToastLong(this, "Storage access denied")
         }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        localBroadcastManager.unregisterReceiver(m_broadcastReceiver)
     }
 
     internal fun startLogin() {
-        val app_key =
-                if (Config.fullDropBoxAccess) {
-                    m_app.getString(R.string.dropbox_consumer_key)
-                } else {
-                    m_app.getString(R.string.dropbox_folder_consumer_key)
-                }
-        Auth.startOAuth2Authentication(this, app_key.substring(3))
+        ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+    }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_PERMISSION -> finishLogin()
+        }
     }
 
     companion object {
-
+        private val REQUEST_PERMISSION = 1
         internal val TAG = LoginScreen::class.java.simpleName
     }
 }

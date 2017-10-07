@@ -31,7 +31,6 @@ object ActionQueue : Thread() {
             }
         }
         if (!silent) {
-            log.info(TAG, "Adding to queue: $description" )
             mHandler?.post(LoggingRunnable(description, r))
         } else {
             mHandler?.post (r)
