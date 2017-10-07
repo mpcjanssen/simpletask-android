@@ -278,20 +278,21 @@ object TodoList {
                         // Backup
                         backup.backup(filename, items)
 
-                        clearSelection()
-
                     } catch (e: Exception) {
                         log.error(TAG, "TodoList load failed: {}" + filename, e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
+                    notifyChanged(filename, eol, backup, false)
                     log.info(TAG, "TodoList loaded from dropbox")
                 } else {
                     log.info(TAG, "Todolist loaded from cache")
-                    todoItems.clear()
-                    todoItems.addAll(cachedList)
+                    if (todoItems.size == 0) {
+                        todoItems.addAll(cachedList)
+                    }
+                    broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
                 }
                 broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-                notifyChanged(filename, eol, backup, false)
+
             }
         }
     }
@@ -386,6 +387,14 @@ object TodoList {
     fun getTaskCount(): Long {
         val items = todoItems
         return items.filter { it.inFileFormat().isNotBlank() }.size.toLong()
+    }
+
+    fun getTaskIndex(t: Task): Int {
+        return todoItems.indexOf(t)
+    }
+
+    fun getTaskAt(idx: Int): Task? {
+        return todoItems.getOrNull(idx)
     }
 
 
