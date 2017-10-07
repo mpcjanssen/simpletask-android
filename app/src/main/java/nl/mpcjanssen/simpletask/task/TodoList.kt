@@ -53,7 +53,7 @@ object TodoList {
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
     val todoItems = CopyOnWriteArrayList<Task>()
-    val selectedItems = CopyOnWriteArraySet<Task>()
+    val selectedIndexes = CopyOnWriteArraySet<Int>()
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
@@ -90,11 +90,12 @@ object TodoList {
 
     fun removeAll(tasks: List<Task>) {
         queue("Remove") {
-            todoItems.removeAll(tasks)
-            selectedItems.removeAll(tasks)
             tasks.forEach {
-                pendingEdits.remove(todoItems.indexOf(it))
+                val idx = todoItems.indexOf(it)
+                selectedIndexes.remove(idx)
+                pendingEdits.remove(idx)
             }
+            todoItems.removeAll(tasks)
         }
     }
 
@@ -192,7 +193,9 @@ object TodoList {
 
     var selectedTasks: List<Task> = ArrayList()
         get() {
-            return selectedItems.toList()
+            return selectedIndexes.map { idx ->
+                todoItems[idx]
+            }
         }
 
     var completedTasks: List<Task> = ArrayList()
@@ -346,16 +349,18 @@ object TodoList {
     }
 
     fun isSelected(item: Task): Boolean {
-        return selectedItems.indexOf(item) > -1
+        val idx = todoItems.indexOf(item)
+        return idx in selectedIndexes
     }
 
     fun numSelected(): Int {
-        return selectedItems.size
+        return selectedIndexes.size
     }
 
     fun selectTasks(items: List<Task>) {
         queue("Select") {
-            selectedItems.addAll(items)
+            val idxs = items.map { todoItems.indexOf(it) }
+            selectedIndexes.addAll(idxs)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
@@ -372,14 +377,15 @@ object TodoList {
 
     fun unSelectTasks(items: List<Task>) {
         queue("Unselect") {
-            selectedItems.removeAll(items)
+            val idxs = items.map { todoItems.indexOf(it) }
+            selectedIndexes.removeAll(idxs)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
 
     fun clearSelection() {
         queue("Clear selection") {
-            selectedItems.clear()
+            selectedIndexes.clear()
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
