@@ -304,7 +304,7 @@ class AddTask : ThemedActionBarActivity() {
         todoList.removeAll(m_backup)
 
         // Save
-        todoList.notifyChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
+        todoList.notifyTasklistChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
         finishEdit()
     }
 

@@ -48,7 +48,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
@@ -635,6 +634,10 @@ fun broadcastFileSyncDone(broadcastManager: LocalBroadcastManager) {
 
 fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+}
+
+fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
 }
 
 fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {

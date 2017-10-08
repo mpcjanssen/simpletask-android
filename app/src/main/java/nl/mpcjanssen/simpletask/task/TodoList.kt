@@ -53,7 +53,7 @@ object TodoList {
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
     val todoItems = CopyOnWriteArrayList<Task>()
-    val selectedItems = CopyOnWriteArraySet<Task>()
+    val selectedIndexes = CopyOnWriteArraySet<Int>()
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
@@ -90,11 +90,12 @@ object TodoList {
 
     fun removeAll(tasks: List<Task>) {
         queue("Remove") {
-            todoItems.removeAll(tasks)
-            selectedItems.removeAll(tasks)
             tasks.forEach {
-                pendingEdits.remove(todoItems.indexOf(it))
+                val idx = todoItems.indexOf(it)
+                selectedIndexes.remove(idx)
+                pendingEdits.remove(idx)
             }
+            todoItems.removeAll(tasks)
         }
     }
 
@@ -192,7 +193,9 @@ object TodoList {
 
     var selectedTasks: List<Task> = ArrayList()
         get() {
-            return selectedItems.toList()
+            return selectedIndexes.map { idx ->
+                todoItems[idx]
+            }
         }
 
     var completedTasks: List<Task> = ArrayList()
@@ -200,7 +203,7 @@ object TodoList {
             return todoItems.filter { it.isCompleted() }
         }
 
-    fun notifyChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
+    fun notifyTasklistChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
         queue("Notified changed") {
             if (save) {
                 save(FileStore, todoName, backup, eol)
@@ -210,6 +213,7 @@ object TodoList {
             }
             mLists = null
             mTags = null
+            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         }
     }
@@ -229,11 +233,8 @@ object TodoList {
         } else {
             todoItems.reversed()
         }
-        val filteredTasks = filter.apply(itemsToSort.asSequence())
-        comp.comparator?.let {
-            return filteredTasks.sortedWith(it)
-        }
-        return filteredTasks
+        val sortedItems = comp.comparator?.let {itemsToSort.sortedWith(it)} ?: itemsToSort
+        return filter.apply(sortedItems.asSequence())
     }
 
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
@@ -281,20 +282,21 @@ object TodoList {
                         // Backup
                         backup.backup(filename, items)
 
-                        clearSelection()
-
                     } catch (e: Exception) {
                         log.error(TAG, "TodoList load failed: {}" + filename, e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
+                    notifyTasklistChanged(filename, eol, backup, false)
                     log.info(TAG, "TodoList loaded from dropbox")
                 } else {
                     log.info(TAG, "Todolist loaded from cache")
-                    todoItems.clear()
-                    todoItems.addAll(cachedList)
+                    if (todoItems.size == 0) {
+                        todoItems.addAll(cachedList)
+                    }
+                    broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
                 }
                 broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-                notifyChanged(filename, eol, backup, false)
+
             }
         }
     }
@@ -336,7 +338,7 @@ object TodoList {
                 try {
                     FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                     removeAll(tasksToDelete)
-                    notifyChanged(todoFilename, eol, null, true)
+                    notifyTasklistChanged(todoFilename, eol, null, true)
                 } catch (e: Exception) {
                     log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")
@@ -348,16 +350,18 @@ object TodoList {
     }
 
     fun isSelected(item: Task): Boolean {
-        return selectedItems.indexOf(item) > -1
+        val idx = todoItems.indexOf(item)
+        return idx in selectedIndexes
     }
 
     fun numSelected(): Int {
-        return selectedItems.size
+        return selectedIndexes.size
     }
 
     fun selectTasks(items: List<Task>) {
         queue("Select") {
-            selectedItems.addAll(items)
+            val idxs = items.map { todoItems.indexOf(it) }.filterNot { it == -1 }
+            selectedIndexes.addAll(idxs)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
@@ -374,14 +378,15 @@ object TodoList {
 
     fun unSelectTasks(items: List<Task>) {
         queue("Unselect") {
-            selectedItems.removeAll(items)
+            val idxs = items.map { todoItems.indexOf(it) }
+            selectedIndexes.removeAll(idxs)
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
 
     fun clearSelection() {
         queue("Clear selection") {
-            selectedItems.clear()
+            selectedIndexes.clear()
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
@@ -389,6 +394,14 @@ object TodoList {
     fun getTaskCount(): Long {
         val items = todoItems
         return items.filter { it.inFileFormat().isNotBlank() }.size.toLong()
+    }
+
+    fun getTaskIndex(t: Task): Int {
+        return todoItems.indexOf(t)
+    }
+
+    fun getTaskAt(idx: Int): Task? {
+        return todoItems.getOrNull(idx)
     }
 
 
