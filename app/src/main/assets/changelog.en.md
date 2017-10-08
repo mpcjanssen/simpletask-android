@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+10.0.1
+------
+
+- Fix race condition when updating drawers. Fixes #798.
+
+
 10.0.0
 ------
 
