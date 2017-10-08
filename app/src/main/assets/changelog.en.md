@@ -1,6 +1,19 @@
 ﻿Changelog
 =========
 
+10.0.0
+------
+
+- Added a Nexcloud version (daniel). See Simpletask Nextcloud in the Play Store.
+- Numerous code refactorings to make writing a new storage backend much easier.
+- Fix Nextcloud archiving.
+- Shorten the names of the versions with other backends.
+- Don't add extra EOLs at end of task list.
+- Merge #797 (smichel17), sort before filtering so scripts work as expected.
+- Select the task by index in the todolist, not by index in the view. Fixes #733.
+- Translation updates (ddsanti, vistausss,
+
+
 9.1.3
 -----
 
