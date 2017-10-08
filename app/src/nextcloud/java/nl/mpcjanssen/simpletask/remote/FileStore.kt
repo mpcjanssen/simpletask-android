@@ -214,7 +214,7 @@ object FileStore : IFileStore {
         if (mOnline) {
             log.info(TAG, "Device went online")
         } else {
-            log.info(TAG, "Device no longer online skipping reloadLuaConfig")
+            log.info(TAG, "Device no longer online")
         }
     }
 
