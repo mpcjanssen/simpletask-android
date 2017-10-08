@@ -1026,8 +1026,8 @@ class Simpletask : ThemedNoActionBarActivity() {
             setIntent(intent)
             mainFilter.saveInPrefs(Config.prefs)
             closeDrawer(NAV_DRAWER)
-            closeSelectionMode()
-            refreshUI()
+            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         }
         nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
             val filter = filters[position]
