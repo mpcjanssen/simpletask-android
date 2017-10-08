@@ -27,6 +27,18 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     private val log: Logger
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
     var visibleTasks = ArrayList<Task>()
+    var _filter: ActiveFilter? = null
+    var filter: ActiveFilter
+        get() {
+            val currentFilter = _filter ?: updateFilter()
+            if (_filter == null) {
+                _filter = currentFilter
+            }
+            return currentFilter
+        }
+        set (newFilter) {
+            _filter = newFilter
+        }
 
     init {
         log = Logger
@@ -37,7 +49,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return "widget$widgetId"
     }
 
-    fun getFilter () : ActiveFilter {
+    fun updateFilter(): ActiveFilter {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
         val filter = ActiveFilter(FilterOptions(luaModule = moduleName()))
@@ -49,7 +61,8 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
 
     private fun createSelectedIntent(position: Int): Intent {
         val target = Intent()
-        getFilter().saveInIntent(target)
+        val currentFilter = filter
+        currentFilter.saveInIntent(target)
         target.putExtra(Constants.INTENT_SELECTED_TASK_LINE, position)
         return target
     }
@@ -62,11 +75,12 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             return
         }
 
-        val filter = getFilter()
-        val sorts = filter.getSort(Config.defaultSorts)
+        val currentFilter = updateFilter()
+        filter = currentFilter
+        val sorts = currentFilter.getSort(Config.defaultSorts)
 
         val newVisibleTasks = ArrayList<Task>()
-        newVisibleTasks.addAll(TodoList.getSortedTasks(filter, sorts, Config.sortCaseSensitive))
+        newVisibleTasks.addAll(TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive))
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
     }
@@ -84,7 +98,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     }
 
     private fun getExtendedView(item: Task, position: Int): RemoteViews {
-        val filter = getFilter()
+        val currentFilter = filter
         val rv = RemoteViews(TodoApplication.app.packageName, R.layout.widget_list_item)
         val extended_widget = Config.prefs.getBoolean("widget_extended", true)
         val task = item
@@ -95,14 +109,14 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
         tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
         tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
-        if (filter.hideLists) {
+        if (currentFilter.hideLists) {
             tokensToShow = tokensToShow and TToken.LIST.inv()
         }
-        if (filter.hideTags) {
+        if (currentFilter.hideTags) {
             tokensToShow = tokensToShow and TToken.TTAG.inv()
         }
 
-        val txt = LuaInterpreter.onDisplayCallback(filter.options.luaModule, task) ?: task.showParts(tokensToShow).trim { it <= ' ' }
+        val txt = LuaInterpreter.onDisplayCallback(currentFilter.options.luaModule, task) ?: task.showParts(tokensToShow).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {
