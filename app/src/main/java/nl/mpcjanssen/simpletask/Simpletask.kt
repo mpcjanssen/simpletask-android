@@ -54,6 +54,7 @@ import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TodoList.queue
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.io.File
@@ -123,13 +124,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         m_adapter!!.setFilteredTasks()
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
-                        textSize = Config.tasklistTextSize ?: textSize
-                        if (m_adapter == null) {
-                            return
-                        }
-                        m_adapter!!.notifyDataSetChanged()
-                        invalidateOptionsMenu()
-                        updateDrawers()
+                        refreshUI()
                     } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                         m_adapter?.notifyDataSetChanged()
                         invalidateOptionsMenu()
@@ -158,6 +153,18 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (m_app.isAuthenticated && Config.latestChangelogShown < versionCode) {
             showChangelogOverlay(this)
             Config.latestChangelogShown = versionCode
+        }
+    }
+
+    private fun refreshUI() {
+        queue("Refresh UI") {
+            runOnUiThread {
+                textSize = Config.tasklistTextSize ?: textSize
+                m_adapter?.notifyDataSetChanged()
+                updateConnectivityIndicator()
+                invalidateOptionsMenu()
+                updateDrawers()
+            }
         }
     }
 
@@ -997,8 +1004,12 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateDrawers() {
-        updateFilterDrawer()
-        updateNavDrawer()
+        queue("Update drawers") {
+            runOnUiThread {
+                updateFilterDrawer()
+                updateNavDrawer()
+            }
+        }
     }
 
     private fun updateNavDrawer() {
@@ -1444,9 +1455,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 runOnUiThread {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
-                    notifyDataSetChanged()
-                    updateConnectivityIndicator()
-                    updateFilterBar()
                     showListViewProgress(false)
                     if (Config.lastScrollPosition != -1) {
                         val manager = listView?.layoutManager as LinearLayoutManager?
