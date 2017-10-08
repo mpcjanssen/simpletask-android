@@ -163,6 +163,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 m_adapter?.notifyDataSetChanged()
                 updateConnectivityIndicator()
                 invalidateOptionsMenu()
+                updateFilterBar()
                 updateDrawers()
             }
         }
@@ -306,8 +307,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.adapter = this.m_adapter
 
         fab.setOnClickListener { startAddTaskActivity() }
-        invalidateOptionsMenu()
-        updateDrawers()
+        refreshUI()
 
         // If we were started from the widget, select the pushed task
         // next scroll to the first selected item
@@ -999,8 +999,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         mainFilter.saveInIntent(intent)
         mainFilter.saveInPrefs(Config.prefs)
         setIntent(intent)
-        updateDrawers()
-        m_adapter!!.setFilteredTasks()
+        broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
 
     private fun updateDrawers() {
@@ -1027,7 +1027,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             mainFilter.saveInPrefs(Config.prefs)
             closeDrawer(NAV_DRAWER)
             closeSelectionMode()
-            updateDrawers()
+            refreshUI()
         }
         nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
             val filter = filters[position]
@@ -1627,11 +1627,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             val adapter = lv.adapter as DrawerAdapter
             if (adapter.projectsHeaderPosition == position) {
                 mainFilter.projectsNot = !mainFilter.projectsNot
-                updateDrawers()
             }
             if (adapter.contextHeaderPosition == position) {
                 mainFilter.contextsNot = !mainFilter.contextsNot
-                updateDrawers()
             } else {
                 tags = getCheckedItems(lv, true)
                 val filteredContexts = ArrayList<String>()
@@ -1654,7 +1652,8 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
-            m_adapter!!.setFilteredTasks()
+            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         }
     }
 
