@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
@@ -39,7 +40,14 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 } else {
                     { it -> it.showParts(TToken.TEXT).toLowerCase(Locale.getDefault()) }
                 }
-                "by_prio" -> comp = { it.priority }
+                "by_prio" -> comp = {
+                    val prio = it.priority
+                    if (prio == Priority.NONE) {
+                        "ZZZZ"
+                    } else {
+                        prio.code
+                    }
+                }
                 "completed" -> comp = { it.isCompleted() }
                 "by_creation_date" -> comp = { it.createDate ?: "" }
                 "in_future" -> comp = { it.inFuture(today) }
