@@ -74,7 +74,7 @@ class TodoApplication : Application(),
             override fun onReceive(context: Context, intent: Intent) {
                 Logger.info(TAG, "Received broadcast ${intent.action}")
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
-                    TodoList.queue("Refresh UI") {
+                    TodoList.queue("Refresh external UI") {
                         CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()

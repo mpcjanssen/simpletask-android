@@ -306,7 +306,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.adapter = this.m_adapter
 
         fab.setOnClickListener { startAddTaskActivity() }
-        refreshUI()
 
         // If we were started from the widget, select the pushed task
         // next scroll to the first selected item
@@ -387,6 +386,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.info(TAG, "onResume")
         TodoList.reload(TodoApplication.app, "Main activity resume")
         handleIntent()
+        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
 
     override fun onPause() {

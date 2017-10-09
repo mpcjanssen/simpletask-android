@@ -293,7 +293,6 @@ object TodoList {
                     if (todoItems.size == 0) {
                         todoItems.addAll(cachedList)
                     }
-                    broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
                 }
                 broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
 
