@@ -108,7 +108,8 @@ android {
     play {
         // ...
         track = 'production' // or 'rollout' or 'beta' or 'alpha'
-        userFraction = 1 // only necessary for 'rollout', in this case default is 0.1 (10% of the target)
+        userFraction = 1 // only necessary for 'rollout', in this case default is 1 (100% of the target)
+        // uploadImages = true // uncomment to upload images using publishListing<Flavour>Release
     }
 }
 
