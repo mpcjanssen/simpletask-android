@@ -32,11 +32,11 @@ class LuaConfigScreen : ThemedActionBarActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
         scriptEdit = findViewById(R.id.lua_config) as EditText
-        scriptEdit.setText(Config.luaConfig)
+        script = Config.luaConfig
 
         val fab = findViewById(R.id.lua_config_fab) as FloatingActionButton?
         fab?.setOnClickListener {
-            Config.luaConfig = script()
+            Config.luaConfig = script
             // Run the script and refilter
             runScript()
             broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
@@ -66,7 +66,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
                 startActivityForResult(intent, 0)
             }
             R.id.lua_config_share -> {
-                shareText(this, getString(R.string.lua_config_screen), script())
+                shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
                 importLuaConfig(File(Config.todoFile.parent, "config.lua"))
@@ -80,7 +80,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
 
     private fun runScript() {
         try {
-            LuaInterpreter.evalScript(null, script())
+            LuaInterpreter.evalScript(null, script)
         } catch (e: LuaError) {
             log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
             createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
@@ -89,7 +89,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
 
     private fun exportLuaConfig (exportFile: File) {
         queue("Export Lua config") {
-            Config.luaConfig = script()
+            Config.luaConfig = script
             try {
                 FileStore.writeFile(exportFile, Config.luaConfig)
                 showToastShort(this, "Lua config exported")
@@ -104,10 +104,9 @@ class LuaConfigScreen : ThemedActionBarActivity() {
         queue("Import Lua config") {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
-                    Config.luaConfig = contents
                     showToastShort(this, getString(R.string.toast_lua_config_imported))
                     runOnUiThread {
-                        scriptEdit.setText(Config.luaConfig)
+                        script = contents
                     }
                 }
 
@@ -118,9 +117,9 @@ class LuaConfigScreen : ThemedActionBarActivity() {
         }
     }
 
-    fun script () : String {
-        return scriptEdit.text.toString()
-    }
+    var script: String
+        get() = scriptEdit.text.toString()
+        set(value) = scriptEdit.setText(value)
 
     override fun onDestroy() {
         super.onDestroy()
