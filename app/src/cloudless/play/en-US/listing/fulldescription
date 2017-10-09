@@ -1,0 +1,21 @@
+The evolution of https://play.google.com/store/apps/details?id=nl.mpcjanssen.todotxtholo&hl=en
+
+A simple task list manager that strives to have just enough features to do GTD, but no more. Based on the todo.txt app so a todo.txt file (http://todotxt.com).
+
+Sync your list the way you want or only keep it on your device.
+
+Instead of including all kinds of cloud providers, the app will put your todo list on internal storage in ./data/nl.mpcjanssen.simpletask. You can the use external applications such as Foldersync or Bittorrent sync to sync to a large collection of cloud offerings or own machines.
+
+If you use any cloud service to sync, the task list will be reloaded if the todo.txt file is updated in the background.
+
+With the new sorting options it can also be used for MYN/1MTD. See the screenshots for an example of how to use it for MYN.
+
+Features
+- True to GTD without unecessary bells and whistles 
+- Todo list stored in the todo.txt format
+- Comprehensive filtering and multi sort
+- Quickly filter tasks using the left navigation drawer
+- Save common filters in right navigation drawer
+- Create calendar reminders for specific tasks directly from the app 
+- Share the complete tasklist or selected tasks using the Android share feature
+- Tasks can deferred into the future. Combined with the "Show future tasks" filter it allows you to get tasks out of your face (as in 1MTD/MYN)
