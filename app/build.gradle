@@ -13,6 +13,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
+
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
 }
@@ -20,6 +22,8 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.triplet.play'
+
 // apply plugin: 'com.getkeepsafe.dexcount'
 
 
@@ -31,6 +35,12 @@ android {
 				disable 'InvalidPackage', 'MissingTranslation'
 		}
 
+    playAccountConfigs {
+        defaultAccountConfig {
+            serviceAccountEmail = storeServiceAccount
+            pk12File = file(storeP12File)
+        }
+    }
     //noinspection GroovyMissingReturnStatement
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -41,12 +51,13 @@ android {
 
     defaultConfig {
         versionName '10.0.3'
-        versionCode 3069
-	minSdkVersion 14
+        versionCode 3071
+	     minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
 
     productFlavors {
@@ -92,6 +103,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    play {
+        // ...
+        track = 'production' // or 'rollout' or 'beta' or 'alpha'
+        userFraction = 1 // only necessary for 'rollout', in this case default is 0.1 (10% of the target)
     }
 }
 
@@ -140,6 +157,10 @@ if (project.hasProperty('storeFile') &&
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
+}
+
+task cleanPublish(type: GradleBuild) {
+    tasks = ['clean', 'publishNextcloudRelease', 'publishCloudlessRelease', 'publishDropboxRelease']
 }
 
 allprojects {
