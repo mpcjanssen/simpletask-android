@@ -109,6 +109,7 @@ android {
         // ...
         track = 'production' // or 'rollout' or 'beta' or 'alpha'
         userFraction = 1 // only necessary for 'rollout', in this case default is 1 (100% of the target)
+        untrackOld = true // supersede any releases on other tracks
         // uploadImages = true // uncomment to upload images using publishListing<Flavour>Release
     }
 }
