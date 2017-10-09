@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.0.4
+------
+
+- Sort empty dates last, fixes #800.
+
 10.0.3
 ------
 

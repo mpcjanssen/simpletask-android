@@ -1,1 +1,4 @@
-Testing automatic google play deploy.
+10.0.4
+------
+
+- Sort empty dates last, fixes #800.
