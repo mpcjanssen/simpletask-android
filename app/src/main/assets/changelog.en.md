@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.0.2
+------
+
+- Always update view after underlying adapter change. Should fix index out of bounds exceptions.
+
 10.0.1
 ------
 
