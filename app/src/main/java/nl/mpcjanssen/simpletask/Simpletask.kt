@@ -160,7 +160,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         queue("Refresh UI") {
             runOnUiThread {
                 textSize = Config.tasklistTextSize ?: textSize
-                m_adapter?.notifyDataSetChanged()
                 updateConnectivityIndicator()
                 invalidateOptionsMenu()
                 updateFilterBar()
@@ -1452,9 +1451,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val newVisibleLines = ArrayList<VisibleLine>()
 
                 newVisibleLines.addAll(addHeaderLines(visibleTasks, mainFilter, getString(R.string.no_header)))
+
                 runOnUiThread {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
+                    m_adapter?.notifyDataSetChanged()
                     showListViewProgress(false)
                     if (Config.lastScrollPosition != -1) {
                         val manager = listView?.layoutManager as LinearLayoutManager?
