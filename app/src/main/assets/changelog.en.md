@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.0.3
+------
+
+- Ensure Priority.NONE sorts after all other priorities. Fixes #799.
+
 10.0.2
 ------
 
