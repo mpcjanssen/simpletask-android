@@ -183,7 +183,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="no_project">Sin etiquetas</string>
     <string name="no_creation_date">Sin fecha de creación</string>
     <string name="no_threshold_date">Sin fecha de inicio</string>
-    <string name="no_header">Sin fecha</string>
+    <string name="no_header">Ninguno</string>
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Añadir recordatorio</string>
     <string name="calendar_title">Recordatorio de Simpletask</string>
