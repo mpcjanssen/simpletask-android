@@ -243,9 +243,8 @@ object TodoList {
         queue(logText) {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             if (!FileStore.isAuthenticated) return@queue
-            if (todoItems.size == 0) {
-                todoItems.addAll(Config.todoList ?: ArrayList<Task>())
-            }
+            todoItems.clear()
+            todoItems.addAll(Config.todoList ?: ArrayList<Task>())
             val filename = Config.todoFileName
 
             // First load from cache, then check remote version in separate thread
@@ -255,9 +254,9 @@ object TodoList {
                 log.info(TAG, "Not loading, changes pending")
                 log.info(TAG, "Saving instead of loading")
                 save(FileStore, filename, backup, eol)
-                broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             } else {
                 Thread(Runnable {
+                    broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                     val needSync = try {
                         val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
                         newerVersion != Config.lastSeenRemoteId
@@ -299,9 +298,6 @@ object TodoList {
 
                         log.info(TAG, "TodoList loaded from dropbox")
                     }
-
-
-
                     broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                 }).start()
 
