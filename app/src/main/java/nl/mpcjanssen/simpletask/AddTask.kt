@@ -26,6 +26,7 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TodoList.queue
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
@@ -89,96 +90,96 @@ class AddTask : ThemedActionBarActivity() {
 
         setTitle(R.string.addtask)
 
-        TodoList.pendingEdits.forEach {
-            m_backup.add(TodoList.todoItems.get(it.toInt()))
-        }
-        val preFillString = if (m_backup.isNotEmpty()) {
-            setTitle(R.string.updatetask)
-            join(m_backup.map(Task::inFileFormat), "\n")
-        } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
-            intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
-        } else if (intent.hasExtra(ActiveFilter.INTENT_JSON)) {
-            val opt = FilterOptions(luaModule = "from_intent")
-            val intentFilter  = ActiveFilter(opt)
-            intentFilter.initFromIntent(intent)
-            intentFilter.prefill
-        } else {
-            ""
-        }
-        textInputField.setText(preFillString)
-        // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
-        // like Swype where ENTER keyCode is not generated.
+        queue("Fill addtask") {
 
-        var inputFlags = InputType.TYPE_CLASS_TEXT
-
-        if (Config.isCapitalizeTasks) {
-            inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-        }
-        textInputField.setRawInputType(inputFlags)
-        textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
-        textInputField.setOnEditorActionListener { textView, actionId, keyEvent ->
-            val hardwareEnterUp = keyEvent != null &&
-                    keyEvent.action == KeyEvent.ACTION_UP &&
-                    keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-            val hardwareEnterDown = keyEvent != null &&
-                    keyEvent.action == KeyEvent.ACTION_DOWN &&
-                    keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-            val imeActionNext = actionId == EditorInfo.IME_ACTION_NEXT
-
-            if (imeActionNext || hardwareEnterUp) {
-                // Move cursor to end of line
-                val position = textInputField.selectionStart
-                val remainingText = textInputField.text.toString().substring(position)
-                val endOfLineDistance = remainingText.indexOf('\n')
-                var endOfLine: Int
-                if (endOfLineDistance == -1) {
-                    endOfLine = textInputField.length()
-                } else {
-                    endOfLine = position + endOfLineDistance
-                }
-                textInputField.setSelection(endOfLine)
-                replaceTextAtSelection("\n", false)
-
-                if (Config.isAddTagsCloneTags) {
-                    val precedingText = textInputField.text.toString().substring(0, endOfLine)
-                    val lineStart = precedingText.lastIndexOf('\n')
-                    val line: String
-                    if (lineStart != -1) {
-                        line = precedingText.substring(lineStart, endOfLine)
-                    } else {
-                        line = precedingText
-                    }
-                    val t = Task(line)
-                    val tags = t.lists
-                            .map { "@" + it }
-                            .toMutableSet()
-                    for (prj in t.tags) {
-                        tags.add("+" + prj)
-                    }
-                    replaceTextAtSelection(join(tags, " "), true)
-                }
-                endOfLine++
-                textInputField.setSelection(endOfLine)
+            TodoList.pendingEdits.forEach {
+                m_backup.add(TodoList.todoItems.get(it.toInt()))
             }
-            imeActionNext || hardwareEnterDown || hardwareEnterUp
+            runOnUiThread {
+                val preFillString = if (m_backup.isNotEmpty()) {
+                    setTitle(R.string.updatetask)
+                    join(m_backup.map(Task::inFileFormat), "\n")
+                } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
+                    intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
+                } else if (intent.hasExtra(ActiveFilter.INTENT_JSON)) {
+                    val opt = FilterOptions(luaModule = "from_intent")
+                    val currentFilter = ActiveFilter(opt)
+                    currentFilter.initFromIntent(intent)
+                    currentFilter.prefill
+                } else {
+                    ""
+                }
+                textInputField.setText(preFillString)
+                // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
+                // like Swype where ENTER keyCode is not generated.
+
+                var inputFlags = InputType.TYPE_CLASS_TEXT
+
+                if (Config.isCapitalizeTasks) {
+                    inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                }
+                textInputField.setRawInputType(inputFlags)
+                textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
+                textInputField.setOnEditorActionListener { textView, actionId, keyEvent ->
+                    val hardwareEnterUp = keyEvent != null &&
+                            keyEvent.action == KeyEvent.ACTION_UP &&
+                            keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
+                    val hardwareEnterDown = keyEvent != null &&
+                            keyEvent.action == KeyEvent.ACTION_DOWN &&
+                            keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
+                    val imeActionNext = actionId == EditorInfo.IME_ACTION_NEXT
+
+                    if (imeActionNext || hardwareEnterUp) {
+                        // Move cursor to end of line
+                        val position = textInputField.selectionStart
+                        val remainingText = textInputField.text.toString().substring(position)
+                        val endOfLineDistance = remainingText.indexOf('\n')
+                        var endOfLine: Int
+                        if (endOfLineDistance == -1) {
+                            endOfLine = textInputField.length()
+                        } else {
+                            endOfLine = position + endOfLineDistance
+                        }
+                        textInputField.setSelection(endOfLine)
+                        replaceTextAtSelection("\n", false)
+
+                        if (Config.isAddTagsCloneTags) {
+                            val precedingText = textInputField.text.toString().substring(0, endOfLine)
+                            val lineStart = precedingText.lastIndexOf('\n')
+                            val line: String
+                            if (lineStart != -1) {
+                                line = precedingText.substring(lineStart, endOfLine)
+                            } else {
+                                line = precedingText
+                            }
+                            val t = Task(line)
+                            val tags = t.lists
+                                    .map { "@" + it }
+                                    .toMutableSet()
+                            for (prj in t.tags) {
+                                tags.add("+" + prj)
+                            }
+                            replaceTextAtSelection(join(tags, " "), true)
+                        }
+                        endOfLine++
+                        textInputField.setSelection(endOfLine)
+                    }
+                    imeActionNext || hardwareEnterDown || hardwareEnterUp
+                }
+
+                setWordWrap(Config.isWordWrap)
+
+                val textIndex = 0
+                textInputField.setSelection(textIndex)
+
+                // Set button callbacks
+                findViewById(R.id.btnContext)?.setOnClickListener { showListMenu() }
+                findViewById(R.id.btnProject)?.setOnClickListener { showTagMenu() }
+                findViewById(R.id.btnPrio)?.setOnClickListener { showPriorityMenu() }
+                findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
+                findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
+            }
         }
-
-        setWordWrap(Config.isWordWrap)
-
-        val textIndex = 0
-        textInputField.setSelection(textIndex)
-
-        // Set button callbacks
-        findViewById(R.id.btnContext)?.setOnClickListener { showListMenu() }
-        findViewById(R.id.btnProject)?.setOnClickListener { showTagMenu() }
-        findViewById(R.id.btnPrio)?.setOnClickListener { showPriorityMenu() }
-        findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
-        findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-
     }
 
     fun setWordWrap(bool: Boolean) {
@@ -282,7 +283,7 @@ class AddTask : ThemedActionBarActivity() {
             finishEdit()
             return
         }
-        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks" )
+        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks")
         for ((i, task) in enteredTasks.withIndex()) {
             if (m_backup.size > 0) {
                 val taskIndex = TodoList.pendingEdits.get(i).toInt()
@@ -338,7 +339,7 @@ class AddTask : ThemedActionBarActivity() {
                      */
                     val today = DateTime.today(TimeZone.getDefault())
                     val dialog = DatePickerDialog(this@AddTask, DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                        val date = DateTime.forDateOnly(year, month+1, day)
+                        val date = DateTime.forDateOnly(year, month + 1, day)
                         insertDateAtSelection(dateType, date)
                     },
                             today.year!!,
@@ -408,7 +409,7 @@ class AddTask : ThemedActionBarActivity() {
         builder.setPositiveButton(R.string.ok) { dialog, which ->
             val newText = ed.text.toString()
 
-            for (i in 0..lvAdapter.count-1) {
+            for (i in 0..lvAdapter.count - 1) {
                 val tag = lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
                     task.addTag(tag)
@@ -449,7 +450,7 @@ class AddTask : ThemedActionBarActivity() {
         dialog.show()
     }
 
-    private fun getTasks() : MutableList<Task> {
+    private fun getTasks(): MutableList<Task> {
         val input = textInputField.text.toString()
         return input.split("\r\n|\r|\n".toRegex()).map(::Task).toMutableList()
     }
@@ -486,7 +487,7 @@ class AddTask : ThemedActionBarActivity() {
         initListViewSelection(lv, lvAdapter, task.lists)
 
         builder.setPositiveButton(R.string.ok) { dialog, which ->
-            for (i in 0..lvAdapter.count-1) {
+            for (i in 0..lvAdapter.count - 1) {
                 val list = lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
                     task.addList(list)
