@@ -182,7 +182,7 @@ object FileStore : IFileStore {
             // Cancel any running timers
             handler.removeCallbacks(delayedEnable)
             // Reschedule
-            Logger.info(TAG, "Observer: Adding delayed enabling to queue")
+            Logger.info(TAG, "Observer: Adding delayed enabling to todoQueue")
             handler.postDelayed(delayedEnable, ms.toLong())
         }
 

@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.remote
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -14,7 +13,7 @@ import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
-import nl.mpcjanssen.simpletask.task.TodoList.queue
+import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.showToastLong
@@ -165,7 +164,7 @@ object FileStore : IFileStore {
             return
         }
         val toStore = contents.toByteArray(charset("UTF-8"))
-        queue("Write to file ${file.canonicalPath}") {
+        todoQueue("Write to file ${file.canonicalPath}") {
             val inStream = ByteArrayInputStream(toStore)
             dbxClient.files().uploadBuilder(file.path).withMode(WriteMode.OVERWRITE).uploadAndFinish(`inStream`)
         }
