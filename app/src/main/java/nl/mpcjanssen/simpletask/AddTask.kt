@@ -26,7 +26,7 @@ import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.task.TodoList.queue
+import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
@@ -90,7 +90,7 @@ class AddTask : ThemedActionBarActivity() {
 
         setTitle(R.string.addtask)
 
-        queue("Fill addtask") {
+        todoQueue("Fill addtask") {
 
             TodoList.pendingEdits.forEach {
                 m_backup.add(TodoList.todoItems.get(it.toInt()))

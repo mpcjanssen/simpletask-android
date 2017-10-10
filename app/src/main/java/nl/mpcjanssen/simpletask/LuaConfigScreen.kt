@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.TodoList.queue
+import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.LuaError
 import java.io.File
@@ -88,7 +88,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
     }
 
     private fun exportLuaConfig (exportFile: File) {
-        queue("Export Lua config") {
+        todoQueue("Export Lua config") {
             Config.luaConfig = script
             try {
                 FileStore.writeFile(exportFile, Config.luaConfig)
@@ -101,7 +101,7 @@ class LuaConfigScreen : ThemedActionBarActivity() {
     }
 
     private fun importLuaConfig (importFile: File) {
-        queue("Import Lua config") {
+        todoQueue("Import Lua config") {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     showToastShort(this, getString(R.string.toast_lua_config_imported))
