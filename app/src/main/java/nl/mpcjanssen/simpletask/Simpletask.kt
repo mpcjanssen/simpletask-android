@@ -1174,10 +1174,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
     fun showListViewProgress(show: Boolean) {
-        if (show) {
-            empty_progressbar?.visibility = View.VISIBLE
-        } else {
-            empty_progressbar?.visibility = View.GONE
+        runOnUiThread {
+            if (show) {
+                sync_progress.visibility = View.VISIBLE
+            } else {
+                sync_progress.visibility = View.GONE
+            }
         }
     }
 

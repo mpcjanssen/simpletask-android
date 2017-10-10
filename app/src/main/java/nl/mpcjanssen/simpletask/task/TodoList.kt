@@ -241,6 +241,7 @@ object TodoList {
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
         val logText = "Reload: " + reason
         queue(logText) {
+            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             if (!FileStore.isAuthenticated) return@queue
             if (todoItems.size == 0) {
                 todoItems.addAll(Config.todoList ?: ArrayList<Task>())
@@ -254,7 +255,7 @@ object TodoList {
                 log.info(TAG, "Not loading, changes pending")
                 log.info(TAG, "Saving instead of loading")
                 save(FileStore, filename, backup, eol)
-                broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+                broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             } else {
                 Thread(Runnable {
                     val needSync = try {
@@ -316,32 +317,36 @@ object TodoList {
         // Update cache
         Config.cachedContents = lines.joinToString("\n")
         backup?.backup(todoFileName, todoItems)
-        try {
-            log.info(TAG, "Saving todo list, size ${lines.size}")
-            val rev = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
-            Config.lastSeenRemoteId = rev
-            val changesWerePending = Config.changesPending
-            Config.changesPending = false
-            if (changesWerePending) {
-                // Remove the red bar
-                broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
-            }
+        Thread(Runnable {
+            try {
+                log.info(TAG, "Saving todo list, size ${lines.size}")
+                val rev = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
+                Config.lastSeenRemoteId = rev
+                val changesWerePending = Config.changesPending
+                Config.changesPending = false
+                if (changesWerePending) {
+                    // Remove the red bar
+                    broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+                }
 
-        } catch (e: Exception) {
-            log.error(TAG, "TodoList save to $todoFileName failed", e)
-            Config.changesPending = true
-            if (FileStore.isOnline) {
-                showToastShort(TodoApplication.app, "Saving of todo file failed")
+            } catch (e: Exception) {
+                log.error(TAG, "TodoList save to $todoFileName failed", e)
+                Config.changesPending = true
+                if (FileStore.isOnline) {
+                    showToastShort(TodoApplication.app, "Saving of todo file failed")
+                }
             }
-        }
-        broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+        }).start()
     }
 
     fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>?, eol: String) {
         queue("Archive") {
 
             val tasksToDelete = tasks ?: completedTasks
+
             queue("Append to file") {
+                broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                 try {
                     FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                     removeAll(tasksToDelete)
@@ -350,6 +355,7 @@ object TodoList {
                     log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")
                 }
+                broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
 
 
             }

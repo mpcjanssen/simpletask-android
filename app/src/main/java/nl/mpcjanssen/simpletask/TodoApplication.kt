@@ -46,7 +46,6 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.appVersion
-import nl.mpcjanssen.simpletask.util.broadcastFileSyncStart
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.File
 import java.util.*
@@ -158,7 +157,6 @@ class TodoApplication : Application(),
     }
 
     fun loadTodoList(reason: String) {
-        broadcastFileSyncStart(app.localBroadCastManager)
         Logger.info(TAG, "Loading todolist")
         TodoList.reload(this, Config.eol, reason = reason)
     }
