@@ -39,6 +39,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
+import kotlin.collections.ArrayList
 
 /**
  * Implementation of the in memory representation of the Todo list
@@ -239,10 +240,15 @@ object TodoList {
 
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
         val logText = "Reload: " + reason
-
-        if (!FileStore.isAuthenticated) return
-
+        queue(logText) {
+            if (!FileStore.isAuthenticated) return@queue
+            if (todoItems.size == 0) {
+                todoItems.addAll(Config.todoList ?: ArrayList<Task>())
+            }
             val filename = Config.todoFileName
+
+            // First load from cache, then check remote version in separate thread
+
 
             if (Config.changesPending && FileStore.isOnline) {
                 log.info(TAG, "Not loading, changes pending")
@@ -291,18 +297,14 @@ object TodoList {
                         }
 
                         log.info(TAG, "TodoList loaded from dropbox")
-                    } else {
-                        log.info(TAG, "Todolist loaded from cache")
-                        queue("Fill todolist") {
-                            if (todoItems.size == 0) {
-                                todoItems.addAll(cachedList)
-                            }
-                            notifyTasklistChanged(filename, eol, backup, false)
-                        }
                     }
+
+
+
                     broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                 }).start()
 
+            }
         }
     }
 
