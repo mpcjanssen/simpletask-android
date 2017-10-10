@@ -233,70 +233,76 @@ object TodoList {
         } else {
             todoItems.reversed()
         }
-        val sortedItems = comp.comparator?.let {itemsToSort.sortedWith(it)} ?: itemsToSort
+        val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
         return filter.apply(sortedItems.asSequence())
     }
 
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
         val logText = "Reload: " + reason
-        queue(logText) {
 
-            if (!FileStore.isAuthenticated) return@queue
-            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+        if (!FileStore.isAuthenticated) return
+
             val filename = Config.todoFileName
-            val cachedList = Config.todoList
+
             if (Config.changesPending && FileStore.isOnline) {
                 log.info(TAG, "Not loading, changes pending")
-                if (cachedList != null) {
-                    log.info(TAG,"Saving instead of loading")
-                    save(FileStore,filename,backup,eol)
-                }
-            } else {
-                val needSync = try {
-                    val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
-                    newerVersion != Config.lastSeenRemoteId
-                } catch (e: Throwable) {
-                    log.error(TAG, "Can't determine remote file version", e)
-                    false
-                }
-
-                if (needSync) {
-                    log.info(TAG, "Remote version is different, sync")
-                } else {
-                    log.info(TAG, "Remote version is same, load from cache")
-                }
-                if (cachedList == null || needSync) {
-                    try {
-                        val remoteContents = FileStore.loadTasksFromFile(filename, eol)
-                        val items = ArrayList<Task>(
-                                remoteContents.contents.map { text ->
-                                    Task(text)
-                                })
-
-                        todoItems.clear()
-                        todoItems.addAll(items)
-                        // Update cache
-                        Config.cachedContents = remoteContents.contents.joinToString("\n")
-                        Config.lastSeenRemoteId = remoteContents.remoteId
-
-                        // Backup
-                        backup.backup(filename, items)
-
-                    } catch (e: Exception) {
-                        log.error(TAG, "TodoList load failed: {}" + filename, e)
-                        showToastShort(TodoApplication.app, "Loading of todo file failed")
-                    }
-                    notifyTasklistChanged(filename, eol, backup, false)
-                    log.info(TAG, "TodoList loaded from dropbox")
-                } else {
-                    log.info(TAG, "Todolist loaded from cache")
-                    if (todoItems.size == 0) {
-                        todoItems.addAll(cachedList)
-                    }
-                }
+                log.info(TAG, "Saving instead of loading")
+                save(FileStore, filename, backup, eol)
                 broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+            } else {
+                Thread(Runnable {
+                    val needSync = try {
+                        val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
+                        newerVersion != Config.lastSeenRemoteId
+                    } catch (e: Throwable) {
+                        log.error(TAG, "Can't determine remote file version", e)
+                        false
+                    }
 
-            }
+                    if (needSync) {
+                        log.info(TAG, "Remote version is different, sync")
+                    } else {
+                        log.info(TAG, "Remote version is same, load from cache")
+                    }
+                    val cachedList = Config.todoList
+                    if (cachedList == null || needSync) {
+                        try {
+                            val remoteContents = FileStore.loadTasksFromFile(filename, eol)
+                            val items = ArrayList<Task>(
+                                    remoteContents.contents.map { text ->
+                                        Task(text)
+                                    })
+
+                            queue("Fill todolist") {
+                                todoItems.clear()
+                                todoItems.addAll(items)
+                                // Update cache
+                                Config.cachedContents = remoteContents.contents.joinToString("\n")
+                                Config.lastSeenRemoteId = remoteContents.remoteId
+                                // Backup
+                                backup.backup(filename, items)
+                                notifyTasklistChanged(filename, eol, backup, false)
+                            }
+
+
+                        } catch (e: Exception) {
+                            log.error(TAG, "TodoList load failed: {}" + filename, e)
+                            showToastShort(TodoApplication.app, "Loading of todo file failed")
+                        }
+
+                        log.info(TAG, "TodoList loaded from dropbox")
+                    } else {
+                        log.info(TAG, "Todolist loaded from cache")
+                        queue("Fill todolist") {
+                            if (todoItems.size == 0) {
+                                todoItems.addAll(cachedList)
+                            }
+                            notifyTasklistChanged(filename, eol, backup, false)
+                        }
+                    }
+                    broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+                }).start()
+
         }
     }
 
@@ -319,7 +325,7 @@ object TodoList {
                 broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
             }
 
-        }  catch (e: Exception) {
+        } catch (e: Exception) {
             log.error(TAG, "TodoList save to $todoFileName failed", e)
             Config.changesPending = true
             if (FileStore.isOnline) {
