@@ -96,7 +96,6 @@ class TodoApplication : Application(),
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         scheduleRepeating()
-        loadTodoList("Initial load")
     }
 
     private fun setupUncaughtExceptionHandler() {

@@ -58,6 +58,10 @@ object TodoList {
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
+    init {
+        Config.todoList?.let { todoItems.addAll(it) }
+    }
+
     fun hasPendingAction(): Boolean {
         return ActionQueue.hasPending()
     }
@@ -246,17 +250,12 @@ object TodoList {
             todoItems.clear()
             todoItems.addAll(Config.todoList ?: ArrayList<Task>())
             val filename = Config.todoFileName
-
-            // First load from cache, then check remote version in separate thread
-
-
-            if (Config.changesPending && FileStore.isOnline) {
-                log.info(TAG, "Not loading, changes pending")
-                log.info(TAG, "Saving instead of loading")
-                save(FileStore, filename, backup, eol)
-            } else {
-                Thread(Runnable {
-                    broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+            Thread(Runnable {
+                if (Config.changesPending && FileStore.isOnline) {
+                    log.info(TAG, "Not loading, changes pending")
+                    log.info(TAG, "Saving instead of loading")
+                    save(FileStore, filename, backup, eol)
+                } else {
                     val needSync = try {
                         val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
                         newerVersion != Config.lastSeenRemoteId
@@ -298,10 +297,9 @@ object TodoList {
 
                         log.info(TAG, "TodoList loaded from dropbox")
                     }
-                    broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-                }).start()
-
-            }
+                }
+                broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+            }).start()
         }
     }
 
