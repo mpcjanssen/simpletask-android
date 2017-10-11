@@ -35,6 +35,7 @@ import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.os.SystemClock
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
@@ -74,7 +75,7 @@ class TodoApplication : Application(),
             override fun onReceive(context: Context, intent: Intent) {
                 Logger.info(TAG, "Received broadcast ${intent.action}")
                 if (intent.action == Constants.BROADCAST_UPDATE_UI) {
-                    TodoList.queue("Refresh UI") {
+                    TodoList.todoQueue("Refresh external UI") {
                         CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
@@ -94,7 +95,7 @@ class TodoApplication : Application(),
         Logger.info(TAG, "Created todolist " + TodoList)
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
-        loadTodoList("Initial load")
+        scheduleRepeating()
     }
 
     private fun setupUncaughtExceptionHandler() {
@@ -122,11 +123,25 @@ class TodoApplication : Application(),
         calendar.set(Calendar.SECOND, 0)
 
         Logger.info(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
-        val pi = PendingIntent.getBroadcast(this, 0,
-                Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_NEW_DAY)
+        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
                 AlarmManager.INTERVAL_DAY, pi)
+    }
+
+    private fun scheduleRepeating() {
+        // Schedules background reload
+
+        Logger.info(TAG, "Scheduling task list reload")
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_RELOAD)
+        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000,
+                5 * 60 * 1000, pi)
     }
 
     override fun onTerminate() {

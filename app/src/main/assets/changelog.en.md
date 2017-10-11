@@ -1,6 +1,21 @@
 ﻿Changelog
 =========
 
+10.0.4
+------
+
+- Sort empty dates last, fixes #800.
+
+10.0.3
+------
+
+- Ensure Priority.NONE sorts after all other priorities. Fixes #799.
+
+10.0.2
+------
+
+- Always update view after underlying adapter change. Should fix index out of bounds exceptions.
+
 10.0.1
 ------
 
@@ -239,7 +254,7 @@
 -----
 
 - Merged updated German translation. (#490 twickr).
-- Add all task list activities (modification and reading) in the queue to prevent race conditions.
+- Add all task list activities (modification and reading) in the todoQueue to prevent race conditions.
 - Add Todo History in the main menu.
 - Add link to scripting help from Lua Config screen for #488.
 - Add black theme for application.

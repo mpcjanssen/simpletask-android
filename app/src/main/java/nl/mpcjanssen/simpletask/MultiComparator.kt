@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
@@ -27,6 +28,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
             }
             var comp: (Task) -> Comparable<*>
+            val last_date = "9999-99-99"
             when (sortType) {
                 "file_order" -> {
                     fileOrder = !reverse
@@ -39,16 +41,23 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 } else {
                     { it -> it.showParts(TToken.TEXT).toLowerCase(Locale.getDefault()) }
                 }
-                "by_prio" -> comp = { it.priority }
+                "by_prio" -> comp = {
+                    val prio = it.priority
+                    if (prio == Priority.NONE) {
+                        "ZZZZ"
+                    } else {
+                        prio.code
+                    }
+                }
                 "completed" -> comp = { it.isCompleted() }
-                "by_creation_date" -> comp = { it.createDate ?: "" }
+                "by_creation_date" -> comp = { it.createDate ?: last_date }
                 "in_future" -> comp = { it.inFuture(today) }
-                "by_due_date" -> comp = { it.dueDate ?: "" }
+                "by_due_date" -> comp = { it.dueDate ?: last_date }
                 "by_threshold_date" -> comp = {
-                    val fallback = if (createAsBackup) it.createDate ?: "" else ""
+                    val fallback = if (createAsBackup) it.createDate ?: last_date else last_date
                     it.thresholdDate ?: fallback
                 }
-                "by_completion_date" -> comp = { it.completionDate ?: "" }
+                "by_completion_date" -> comp = { it.completionDate ?: last_date }
                 else -> {
                     log.warn("MultiComparator", "Unknown sort: " + sort)
                     continue@label
