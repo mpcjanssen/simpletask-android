@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import nl.mpcjanssen.simpletask.Logger
+import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.util.broadcastFileSync
+import nl.mpcjanssen.simpletask.util.broadcastRefreshUI
 
 class ConnectivityReceiver : BroadcastReceiver() {
 
