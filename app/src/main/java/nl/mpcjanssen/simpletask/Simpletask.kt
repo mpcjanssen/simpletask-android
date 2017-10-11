@@ -126,6 +126,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         log.info(TAG, "Updating UI because of broadcast")
                         refreshUI()
                     } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                        log.info(TAG, "Highligh selection")
                         m_adapter?.notifyDataSetChanged()
                         invalidateOptionsMenu()
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
