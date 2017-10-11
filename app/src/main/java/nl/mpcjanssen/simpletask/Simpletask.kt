@@ -765,9 +765,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> {
-                if (!Config.changesPending) {
-                    Config.clearCache()
-                }
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks()
@@ -1344,7 +1341,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 taskThreshold.visibility = View.GONE
             }
             // Set selected state
-            // log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
+            log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
             view.isActivated = TodoList.isSelected(item)
 
             // Set click listeners
