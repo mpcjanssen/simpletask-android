@@ -207,16 +207,6 @@ object FileStore : IFileStore {
         fileRead(contents)
     }
 
-    fun changedConnectionState() {
-        val prevOnline = mOnline
-        mOnline = isOnline
-        mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-        if (mOnline) {
-            log.info(TAG, "Device went online")
-        } else {
-            log.info(TAG, "Device no longer online")
-        }
-    }
 
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()

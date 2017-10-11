@@ -10,7 +10,15 @@ class ConnectivityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val log = Logger
         log.debug(TAG, "Connectivity changed {}" + intent)
-        FileStore.changedConnectionState()
+
+        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+        if (FileStore.isOnline) {
+            log.info(TAG, "Device went online")
+            broadcastFileSync(TodoApplication.app.localBroadCastManager)
+        } else {
+            log.info(TAG, "Device no longer online")
+        }
+
     }
 
     companion object {
