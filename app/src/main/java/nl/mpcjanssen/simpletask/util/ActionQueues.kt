@@ -7,7 +7,6 @@ import android.os.Looper
 open class ActionQueue(val qName: String) : Thread() {
     private var mHandler: Handler? = null
     private val TAG = "ActionQueue"
-    private val queueContents = ArrayList<String>()
 
     init {
         start()
@@ -34,11 +33,7 @@ open class ActionQueue(val qName: String) : Thread() {
                 e.printStackTrace()
             }
         }
-
-        mHandler?.post(LoggingRunnable("$qName: $description", r, queueContents))
-        queueContents.add(description)
-        log.debug(TAG, "$qName == ${queueContents}")
-
+        mHandler?.post(LoggingRunnable("$qName: $description", r))
     }
 }
 
@@ -46,7 +41,7 @@ object TodoActionQueue : ActionQueue("TLQ")
 
 object FileStoreActionQueue : ActionQueue("FSQ")
 
-class LoggingRunnable(val description: String, val runnable: Runnable, val queueContents: ArrayList<String>) : Runnable {
+class LoggingRunnable(val description: String, val runnable: Runnable) : Runnable {
     private val TAG = TodoActionQueue::class.java.simpleName
 
     override fun toString(): String {
@@ -54,7 +49,6 @@ class LoggingRunnable(val description: String, val runnable: Runnable, val queue
     }
 
     override fun run() {
-        if (queueContents.isNotEmpty()) queueContents.removeAt(0)
         log.info(TAG, description)
         runnable.run()
     }

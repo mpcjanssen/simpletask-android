@@ -8,8 +8,6 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.CopyOnWriteArraySet
 import kotlin.collections.ArrayList
 
 /**
@@ -24,8 +22,8 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    val todoItems = CopyOnWriteArrayList<Task>()
-    val selectedIndexes = CopyOnWriteArraySet<Int>()
+    val todoItems = ArrayList<Task>()
+    val selectedIndexes = ArrayList<Int>()
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
@@ -223,8 +221,7 @@ object TodoList {
         todoQueue(logText) {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             if (!FileStore.isAuthenticated) return@todoQueue
-            todoItems.clear()
-            todoItems.addAll(Config.todoList ?: ArrayList<Task>())
+
             val filename = Config.todoFileName
             fileStoreQueue("Reload") {
                 if (Config.changesPending && FileStore.isOnline) {
