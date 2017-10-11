@@ -54,6 +54,7 @@
                         android:elevation="3dp"
                         tools:ignore="UnusedAttribute"
                         />
+
                     <LinearLayout
                         android:id="@+id/actionbar"
                         android:layout_width="match_parent"
@@ -93,14 +94,7 @@
                         />
                 </LinearLayout>
 
-                <ProgressBar
-                    android:id="@+id/empty_progressbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminate="true"
-                    android:visibility="gone"
-                    />
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
@@ -119,7 +113,12 @@
                     />
 
             </FrameLayout>
-
+            <ProgressBar android:layout_width="match_parent"
+                         android:indeterminate="true"
+                         android:layout_height="wrap_content"
+                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                         android:id="@+id/sync_progress"
+                         android:visibility="gone"/>
             <android.support.v7.widget.Toolbar
                 style="@style/SimpleSelectionBar"
                 android:id="@+id/toolbar"
@@ -128,6 +127,8 @@
                 android:minHeight="?android:attr/actionBarSize"
                 android:visibility="gone"
                 />
+
+
         </LinearLayout>
 
         <!-- The quick filter drawer -->

@@ -54,7 +54,7 @@ import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.task.TodoList.queue
+import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.io.File
@@ -157,10 +157,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun refreshUI() {
-        queue("Refresh UI") {
+        todoQueue("Refresh UI") {
             runOnUiThread {
                 textSize = Config.tasklistTextSize ?: textSize
-                m_adapter?.notifyDataSetChanged()
                 updateConnectivityIndicator()
                 invalidateOptionsMenu()
                 updateFilterBar()
@@ -307,11 +306,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.adapter = this.m_adapter
 
         fab.setOnClickListener { startAddTaskActivity() }
-        refreshUI()
 
         // If we were started from the widget, select the pushed task
         // next scroll to the first selected item
-        ActionQueue.add("Scroll selection", Runnable {
+        TodoActionQueue.add("Scroll selection", Runnable {
             if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
                 val position = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
                 intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
@@ -356,7 +354,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             actionbar.visibility = View.GONE
         }
         val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
-        TodoList.queue("Update filter bar") {
+        TodoList.todoQueue("Update filter bar") {
             runOnUiThread {
                 val total = TodoList.getTaskCount()
                 filter_text.text = mainFilter.getTitle(
@@ -388,6 +386,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.info(TAG, "onResume")
         TodoList.reload(TodoApplication.app, "Main activity resume")
         handleIntent()
+        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
 
     override fun onPause() {
@@ -1004,7 +1003,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateDrawers() {
-        queue("Update drawers") {
+        todoQueue("Update drawers") {
             runOnUiThread {
                 updateFilterDrawer()
                 updateNavDrawer()
@@ -1175,10 +1174,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
     fun showListViewProgress(show: Boolean) {
-        if (show) {
-            empty_progressbar?.visibility = View.VISIBLE
-        } else {
-            empty_progressbar?.visibility = View.GONE
+        runOnUiThread {
+            if (show) {
+                sync_progress.visibility = View.VISIBLE
+            } else {
+                sync_progress.visibility = View.GONE
+            }
         }
     }
 
@@ -1441,7 +1442,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         internal var visibleLines = ArrayList<VisibleLine>()
 
         internal fun setFilteredTasks() {
-            TodoList.queue("setFilteredTasks") {
+            TodoList.todoQueue("setFilteredTasks") {
                 runOnUiThread {
                     showListViewProgress(true)
                 }
@@ -1452,9 +1453,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val newVisibleLines = ArrayList<VisibleLine>()
 
                 newVisibleLines.addAll(addHeaderLines(visibleTasks, mainFilter, getString(R.string.no_header)))
+
                 runOnUiThread {
                     // Replace the array in the main thread to prevent OutOfIndex exceptions
                     visibleLines = newVisibleLines
+                    m_adapter?.notifyDataSetChanged()
                     showListViewProgress(false)
                     if (Config.lastScrollPosition != -1) {
                         val manager = listView?.layoutManager as LinearLayoutManager?
