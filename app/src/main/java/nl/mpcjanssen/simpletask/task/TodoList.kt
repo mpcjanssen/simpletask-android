@@ -221,14 +221,13 @@ object TodoList {
         todoQueue(logText) {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             if (!FileStore.isAuthenticated) return@todoQueue
-
             val filename = Config.todoFileName
-            fileStoreQueue("Reload") {
-                if (Config.changesPending && FileStore.isOnline) {
-                    log.info(TAG, "Not loading, changes pending")
-                    log.info(TAG, "Saving instead of loading")
-                    save(FileStore, filename, backup, eol)
-                } else {
+            if (Config.changesPending && FileStore.isOnline) {
+                log.info(TAG, "Not loading, changes pending")
+                log.info(TAG, "Saving instead of loading")
+                save(FileStore, filename, backup, eol)
+            } else {
+                fileStoreQueue("Reload") {
                     val needSync = try {
                         val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
                         newerVersion != Config.lastSeenRemoteId
@@ -236,7 +235,6 @@ object TodoList {
                         log.error(TAG, "Can't determine remote file version", e)
                         false
                     }
-
                     if (needSync) {
                         log.info(TAG, "Remote version is different, sync")
                     } else {
