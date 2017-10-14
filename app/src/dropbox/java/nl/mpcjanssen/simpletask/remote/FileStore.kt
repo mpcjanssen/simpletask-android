@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.dropbox.core.DbxRequestConfig
@@ -9,7 +8,6 @@ import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
-import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
@@ -114,7 +112,7 @@ object FileStore : IFileStore {
     @Throws(IOException::class)
     override fun saveTasksToFile(path: String, lines: List<String>, eol: String): String {
         log.info(TAG, "Saving ${lines.size} tasks to Dropbox.")
-        val contents = join(lines, eol)
+        val contents = join(lines, eol) + eol
 
         var rev = Config.lastSeenRemoteId
         val toStore = contents.toByteArray(charset("UTF-8"))
@@ -187,15 +185,6 @@ object FileStore : IFileStore {
         download.inputStream.close()
         val contents = join(readFile, "\n")
         fileRead(contents)
-    }
-
-    fun changedConnectionState() {
-        mApp.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-        if (isOnline) {
-            log.info(TAG, "Device went online")
-        } else {
-            log.info(TAG, "Device no longer online skipping reloadLuaConfig")
-        }
     }
 
     override fun getDefaultPath(): String {

@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.0.5
+------
+
+- Greatly improve behaviour in bad connectivity scenarios. Fixes #803.
+
 10.0.4
 ------
 

@@ -1,4 +1,4 @@
-10.0.4
+10.0.5
 ------
 
-- Sort empty dates last, fixes #800.
+- Greatly improve behaviour in bad connectivity scenarios. Fixes #803.
