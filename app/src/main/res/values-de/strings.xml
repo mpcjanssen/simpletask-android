@@ -27,14 +27,14 @@ You should have received a copy of the GNU General Public License along with Tod
 <!--suppress ALL -->
 <resources>
     <string name="invalid_context">Ungültiger Listenname</string>
-    <string name="invalid_project">Ungültiger Kategoriename</string>
+    <string name="invalid_project">Ungültiger Kategorienname</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">Aufgabe hinzugefügt</string>
-    <string name="add_task_failed">Aufgabe kann nicht hinzugfügt werden</string>
+    <string name="add_task_failed">Aufgabe kann nicht hinzugefügt werden</string>
     <string name="save_task">Aufgabe speichern</string>
     <string name="update_task_failed">Aufgabe konnte nicht aktualisiert werden</string>
     <string name="sort">Sortieren</string>
-    <string name="script">Script</string>
+    <string name="script">Skript</string>
     <string name="filter">Filter</string>
     <string name="main_no_items">Keine Aufgaben vorhanden.</string>
     <string name="set_preferences">Einstellungen</string>
@@ -48,7 +48,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="prev">Vorheriges</string>
     <string name="open_file">Todo-Datei öffnen</string>
 
-    <string name="sync">Aktualisieren</string>
+    <string name="sync">Sync</string>
     <string name="changelist">Liste auswählen</string>
     <string name="search">Suchen</string>
     <string name="add">Hinzufügen</string>
@@ -58,7 +58,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="viewtask">Aufgabe zeigen</string>
     <string name="cleartask">Aufgabe löschen</string>
     <string name="done">Fertig</string>
-    <string name="select_all">Alle markieren</string>
+    <string name="select_all">Alles markieren</string>
     <string name="priority">Priorisieren</string>
     <string name="select_priority">Priorität auswählen</string>
     <string name="add_list_or_tag">Listen und Kategorien hinzufügen</string>
@@ -114,7 +114,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Einstellungen für Dropbox Synchronisation</string>
 
-    <string name="todotxt_ui_settings_header">Benutzer Schnittstelle</string>
+    <string name="todotxt_ui_settings_header">Benutzerschnittstelle</string>
     <string name="todotxt_behavior_settings_header">Verhalten</string>
     <string name="todotxt_settings_summary">Einstellungen für die gesamte Anwendung</string>
     <string name="sort_complete_last_pref_title">Zeige erledigte zuletzt</string>
@@ -150,13 +150,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
 
-    <string name="share_task_append_text_title">Hintergrund-tag</string>
+    <string name="share_task_append_text_title">Hintergrundtext</string>
     <string name="share_task_append_text_summary">Füge zu Auggaben, welche im Hintergrund hinzugefügt werden, einen konfigurierbares tag hinzu.</string>
     
 
     <string name="calendar_sync_screen_title">Erinnerungen in Kalender</string>
     <string name="calendar_sync_screen_summary">Kalendereintäge für Fälligkeits- und/oder Anfangsdaten automatisch generieren.</string>
-    <string name="calendar_sync_dues_title">Fälligkeitsdaten</string>
+    <string name="calendar_sync_dues_title">Fälligkeitsdatenerinnerungen</string>
     <string name="calendar_sync_thresholds_title">Anfangsdaten</string>
     <string name="calendar_reminder_days_title">Vorlaufzeit</string>
     <string name="calendar_reminder_days_summary">Wie viele Tage vor dem Fälligkeits- bzw. Anfangsdatum  soll die Erinnerung eingetragen werden?</string>
@@ -247,7 +247,7 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <!-- delete -->
     <string name="delete_task_title">Aufgabe(n) löschen</string>
-    <string name="archive_task_title">Aufgabe(n) archivieren</string>
+    <string name="archive_task_title">%s Aufgabe(n) archivieren</string>
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
     <string name="logout_message">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.
 \n Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
@@ -282,7 +282,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="update_filter">Aktualisieren</string>
     <string name="create_widget">Widget erstellen</string>
     <string name="filter_show_completed">Zeige erledigte Aufgaben</string>
-    <string name="filter_show_future">Zeige Aufgaben mit Anfangsdatum in der Zukunft</string>
+    <string name="filter_show_future">Zeige Aufgaben mit zukünftigem Anfangsdatum</string>
     <string name="filter_show_lists">Zeige Listen der Aufgaben</string>
     <string name="filter_show_tags">Zeige Kategorien der Aufgaben</string>
 
@@ -362,7 +362,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_reverse">Umgekehrte Sortierung</string>
 
     <!-- Calendar sync -->
-    <string name="calendar_disp_name">Simpletask Erinnerungen</string>
+    <string name="calendar_disp_name">Simpletaskerinnerungen</string>
     <string name="calendar_sync_desc_due">Erinnerung an das Fälligkeitsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_sync_desc_thre">Erinnerung an das Anfangsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_exists_warning">Warnung: ein Kalender identischen Namens existiert bereits. Überschreibe...</string>
@@ -382,7 +382,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="name">Name</string>
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="share_database">Datenbank durchsuchen</string>
-    <string name="share_history">Anzeigen und weitergeben der internen Datenbank zur Wiedererstellung.</string>
+    <string name="share_history">Anzeigen und Weitergeben der internen todo.txt-Verlaufs-Datenbank zur Wiederherstellung.</string>
     <string name="share_history_title">Todo-Verlauf</string>
     <string name="task_action">Aktion</string>
     <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert.</string>
@@ -419,8 +419,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="config_widget">Widget-Konfiguration</string>
     <string name="datebar_relative_size_summary">Relative Schriftgröße Datum</string>
     <string name="lua_config_screen">Lua-Konfiguration</string>
-    <string name="lua_error">Lua Fehler</string>
-    <string name="lua_open_config">Lua Konfiguration</string>
+    <string name="lua_error">Lua-Fehler</string>
+    <string name="lua_open_config">Lua-Konfiguration</string>
     <string name="lua_run">Ausführen</string>
 
     <!-- Default Help localisation -->
@@ -465,4 +465,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="saved_filters_exported">exportierte Filter</string>
     <string name="toast_lua_config_imported">importierte Lua-Konfiguration</string>
 
+    <string name="saved_filters_imported">Filter importiert</string>
     </resources>
