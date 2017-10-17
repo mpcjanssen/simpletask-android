@@ -223,6 +223,7 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
     }
 
     fun clearCache() {
+        cachedContents = null
         todoList = null
         lastSeenRemoteId = null
     }
@@ -245,11 +246,11 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
-    var todoList: CopyOnWriteArrayList<Task>?
+    var todoList: List<Task>?
         get() = cachedContents?.let {
             val lines = it.lines()
             log.info(TAG, "Getting ${lines.size} items todoList from cache")
-            CopyOnWriteArrayList<Task>().apply {
+            ArrayList<Task>().apply {
                 addAll(lines.map { line -> Task(line) })
             }
         }
