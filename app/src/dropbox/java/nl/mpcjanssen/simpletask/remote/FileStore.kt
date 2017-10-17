@@ -34,10 +34,21 @@ object FileStore : IFileStore {
 
     var accessToken by Config.StringOrNullPreference(OAUTH2_TOKEN)
 
-    private val dbxClient by lazy {
+    var _dbxClient : DbxClientV2? = null
+
+    val dbxClient : DbxClientV2
+            get()  {
+                val newclient = _dbxClient ?: initDbxClient()
+                _dbxClient = newclient
+                return newclient
+
+
+    }
+
+    private fun initDbxClient(): DbxClientV2 {
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
         val client = DbxClientV2(requestConfig, accessToken)
-        client
+        return client
     }
 
 
@@ -45,6 +56,8 @@ object FileStore : IFileStore {
         get() = accessToken != null
 
     override fun logout() {
+        _dbxClient?.auth()?.tokenRevoke()
+        _dbxClient = null
         accessToken = null
     }
 

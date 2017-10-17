@@ -36,6 +36,7 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 
 class LoginScreen : ThemedNoActionBarActivity() {
@@ -113,7 +114,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     internal fun startLogin() {
-
+        Config.clearCache()
         val app_key =
                 if (Config.fullDropBoxAccess) {
                     m_app.getString(R.string.dropbox_consumer_key)

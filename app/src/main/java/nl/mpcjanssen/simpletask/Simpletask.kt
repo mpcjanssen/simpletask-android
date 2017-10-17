@@ -54,6 +54,7 @@ import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.TodoList.fileStoreQueue
 import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
@@ -116,9 +117,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else {
                     if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                         log.info(TAG, "Logging out from Dropbox")
-                        FileStore.logout()
                         finish()
-                        startLogin()
+                        fileStoreQueue("Logout") {
+                            FileStore.logout()
+                            m_adapter?.notifyDataSetChanged()
+                            startLogin()
+                        }
                     } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                         log.info(TAG, "Tasklist changed, refiltering adapter")
                         m_adapter!!.setFilteredTasks()
