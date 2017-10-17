@@ -827,7 +827,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
 
-        TodoList.editTasks(this, TodoList.selectedTasks, " ${mainFilter.prefill}")
+        TodoList.editTasks(this, TodoList.selectedTasks, mainFilter.prefill)
     }
 
     private fun startPreferencesActivity() {
