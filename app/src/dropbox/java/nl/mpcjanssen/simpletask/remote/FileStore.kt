@@ -8,6 +8,7 @@ import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
+import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
@@ -25,45 +26,26 @@ import kotlin.reflect.KClass
 object FileStore : IFileStore {
 
     private val TAG = "FileStore"
-    private val CACHE_PREFS = "dropboxMeta"
     private val OAUTH2_TOKEN = "dropboxV2Token"
 
     private val log: Logger = Logger
-    private val mPrefs: SharedPreferences?
 
     private val mApp = TodoApplication.app
 
-    init {
-        mPrefs = mApp.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-    }
+    var accessToken by Config.StringOrNullPreference(OAUTH2_TOKEN)
 
     private val dbxClient by lazy {
-        val accessToken = getAccessToken()
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
         val client = DbxClientV2(requestConfig, accessToken)
         client
     }
 
-    private fun getAccessToken(): String? {
-        return mPrefs?.getString(OAUTH2_TOKEN, null)
-    }
-
-    fun setAccessToken(accessToken: String?) {
-        val edit = mPrefs?.edit()
-        edit?.let {
-            if (accessToken == null) {
-                edit.remove(OAUTH2_TOKEN).apply()
-            } else {
-                edit.putString(OAUTH2_TOKEN, accessToken).apply()
-            }
-        }
-    }
 
     override val isAuthenticated: Boolean
-        get() = getAccessToken() != null
+        get() = accessToken != null
 
     override fun logout() {
-        setAccessToken(null)
+        accessToken = null
     }
 
     override fun getRemoteVersion(filename: String): String {
