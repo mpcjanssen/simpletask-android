@@ -41,6 +41,7 @@ import nl.mpcjanssen.simpletask.util.Config
 class LoginScreen : ThemedNoActionBarActivity() {
 
     private lateinit var m_app: TodoApplication
+    var resumeAfterAuth = false
     private lateinit var m_broadcastReceiver: BroadcastReceiver
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
@@ -89,20 +90,22 @@ class LoginScreen : ThemedNoActionBarActivity() {
 
     override fun onResume() {
         super.onResume()
-        finishLogin()
+        if (resumeAfterAuth) {
+            finishLogin()
+        }
     }
 
     private fun finishLogin() {
         val accessToken = Auth.getOAuth2Token()
-            if (accessToken != null) {
-                //Store accessToken in SharedPreferences
-                FileStore.setAccessToken(accessToken)
-
-                //Proceed to MainActivity
-                FileStore.remoteTodoFileChanged()
-                switchToTodolist()
-            }
+        if (accessToken != null) {
+            //Store accessToken in SharedPreferences
+            FileStore.accessToken = accessToken
+            resumeAfterAuth = false
+            //Proceed to MainActivity
+            FileStore.remoteTodoFileChanged()
+            switchToTodolist()
         }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -110,12 +113,14 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     internal fun startLogin() {
+
         val app_key =
                 if (Config.fullDropBoxAccess) {
                     m_app.getString(R.string.dropbox_consumer_key)
                 } else {
                     m_app.getString(R.string.dropbox_folder_consumer_key)
                 }
+        resumeAfterAuth = true
         Auth.startOAuth2Authentication(this, app_key.substring(3))
 
     }
