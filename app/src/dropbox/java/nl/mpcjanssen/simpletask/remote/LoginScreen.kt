@@ -103,6 +103,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
             FileStore.accessToken = accessToken
             resumeAfterAuth = false
             //Proceed to MainActivity
+            Config.setTodoFile(FileStore.getDefaultPath())
             FileStore.remoteTodoFileChanged()
             switchToTodolist()
         }
