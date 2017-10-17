@@ -120,8 +120,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                         finish()
                         fileStoreQueue("Logout") {
                             FileStore.logout()
-                            m_adapter?.notifyDataSetChanged()
                             startLogin()
+                            runOnUiThread {
+                                m_adapter?.notifyDataSetChanged()
+                            }
                         }
                     } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                         log.info(TAG, "Tasklist changed, refiltering adapter")
