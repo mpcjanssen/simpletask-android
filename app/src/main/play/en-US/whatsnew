@@ -1,4 +1,4 @@
-10.0.5
+10.0.6
 ------
 
-- Greatly improve behaviour in bad connectivity scenarios. Fixes #803.
+- Updated Dropbox library and improved logout/login behavior.
