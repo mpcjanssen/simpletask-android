@@ -1,14 +1,12 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
-import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
@@ -47,8 +45,7 @@ object FileStore : IFileStore {
 
     private fun initDbxClient(): DbxClientV2 {
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
-        val client = DbxClientV2(requestConfig, accessToken)
-        return client
+        return DbxClientV2(requestConfig, accessToken)
     }
 
 
