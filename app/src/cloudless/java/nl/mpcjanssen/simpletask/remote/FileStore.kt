@@ -45,15 +45,9 @@ object FileStore : IFileStore {
 
     override fun loadTasksFromFile(path: String, eol: String): RemoteContents {
         log.info(TAG, "Loading tasks")
-        val result = CopyOnWriteArrayList<String>()
-        val completeFile = ArrayList<String>()
         val file = File(path)
         val lines = file.readLines()
         log.info(TAG, "Read ${lines.size} lines from $path")
-        for (line in lines) {
-            completeFile.add(line)
-            result.add(line)
-        }
         setWatching(path)
         return RemoteContents(file.lastModified().toString(), lines)
     }

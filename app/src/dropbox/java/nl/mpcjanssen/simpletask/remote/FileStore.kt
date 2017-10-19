@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
@@ -25,45 +24,38 @@ import kotlin.reflect.KClass
 object FileStore : IFileStore {
 
     private val TAG = "FileStore"
-    private val CACHE_PREFS = "dropboxMeta"
     private val OAUTH2_TOKEN = "dropboxV2Token"
 
     private val log: Logger = Logger
-    private val mPrefs: SharedPreferences?
 
     private val mApp = TodoApplication.app
 
-    init {
-        mPrefs = mApp.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+    var accessToken by Config.StringOrNullPreference(OAUTH2_TOKEN)
+
+    var _dbxClient : DbxClientV2? = null
+
+    val dbxClient : DbxClientV2
+            get()  {
+                val newclient = _dbxClient ?: initDbxClient()
+                _dbxClient = newclient
+                return newclient
+
+
     }
 
-    private val dbxClient by lazy {
-        val accessToken = getAccessToken()
+    private fun initDbxClient(): DbxClientV2 {
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
-        val client = DbxClientV2(requestConfig, accessToken)
-        client
+        return DbxClientV2(requestConfig, accessToken)
     }
 
-    private fun getAccessToken(): String? {
-        return mPrefs?.getString(OAUTH2_TOKEN, null)
-    }
-
-    fun setAccessToken(accessToken: String?) {
-        val edit = mPrefs?.edit()
-        edit?.let {
-            if (accessToken == null) {
-                edit.remove(OAUTH2_TOKEN).apply()
-            } else {
-                edit.putString(OAUTH2_TOKEN, accessToken).apply()
-            }
-        }
-    }
 
     override val isAuthenticated: Boolean
-        get() = getAccessToken() != null
+        get() = accessToken != null
 
     override fun logout() {
-        setAccessToken(null)
+        _dbxClient?.auth()?.tokenRevoke()
+        _dbxClient = null
+        accessToken = null
     }
 
     override fun getRemoteVersion(filename: String): String {
