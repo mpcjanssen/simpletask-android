@@ -239,7 +239,7 @@ end
             val tokenTable =  LuaTable.tableOf()
             tokenTable.set("type", LuaValue.valueOf(tok.type))
             tokenTable.set("text", LuaValue.valueOf(tok.text))
-            tokensTable.set(idx, tokenTable)
+            tokensTable.set(idx+1, tokenTable)
         }
         fieldTable.set("tokens", tokensTable)
         fieldTable.set("due", dateStringToLuaLong(t.dueDate))
