@@ -9,7 +9,7 @@ import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
 object LuaInterpreter {
-    val globals = JsePlatform.standardGlobals()!!
+    private val globals = JsePlatform.standardGlobals()!!
     private val log = Logger
     private val TAG = "LuaInterpreter"
 
@@ -151,12 +151,12 @@ end
     }
 
     fun hasFilterCallback(moduleName : String) : Boolean {
-        try {
+        return try {
             val module = globals.get(moduleName).checktable() ?: globals
-            return !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
+            !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
         } catch (e: LuaError) {
             Logger.error(TAG, "Lua error: ${e.message} )")
-            return false
+            false
         }
     }
 
@@ -229,17 +229,19 @@ end
     }
 
     // Fill the arguments for the onFilter callback
-    fun fillOnFilterVarargs(t: Task): Varargs {
+    private fun fillOnFilterVarargs(t: Task): Varargs {
         val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat()))
         val fieldTable = LuaTable.tableOf()
         val tokensTable =  LuaTable.tableOf()
         fieldTable.set("task", t.inFileFormat())
         t.tokens.forEachIndexed { idx,  tok ->
-            val tokenTable =  LuaTable.tableOf()
-            tokenTable.set("type", LuaValue.valueOf(tok.type))
-            tokenTable.set("text", LuaValue.valueOf(tok.text))
-            tokensTable.set(idx+1, tokenTable)
+            val luaIdx = idx +1
+            val tokenTable = LuaTable.tableOf().apply {
+                set("type", LuaValue.valueOf(tok.type))
+                set("text", LuaValue.valueOf(tok.text))
+            }
+            tokensTable.set(luaIdx, tokenTable)
         }
         fieldTable.set("tokens", tokensTable)
         fieldTable.set("due", dateStringToLuaLong(t.dueDate))
@@ -269,14 +271,14 @@ end
         return LuaValue.varargsOf(args.toTypedArray())
     }
 
-    fun dateStringToLuaLong(dateString: String?): LuaValue {
+    private fun dateStringToLuaLong(dateString: String?): LuaValue {
         dateString?.toDateTime()?.let {
             return LuaValue.valueOf((it.getMilliseconds(TimeZone.getDefault()) / 1000).toDouble())
         }
         return LuaValue.NIL
     }
 
-    fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
+    private fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
         val size = javaList.count()
         val luaTable = LuaValue.tableOf()
         if (size == 0) return luaTable
@@ -289,7 +291,7 @@ end
         // Call a Lua function `name`
         // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
         // Returns null if the function is not found or if a `LuaError` occurred
-        fun <T> callZeroArgLuaFunction(globals: LuaValue, name: String, unpackResult: (LuaValue) -> T?): T? {
+        private fun <T> callZeroArgLuaFunction(globals: LuaValue, name: String, unpackResult: (LuaValue) -> T?): T? {
             val function = globals.get(name)
             if (!function.isnil()) {
                 try {
