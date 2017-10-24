@@ -430,4 +430,5 @@ https://f-droid.org/app/nl.mpcjanssen.simpletask
     <string name="saved_filters_exported">Filtros exportados</string>
     <string name="toast_lua_config_imported">Config lua importada</string>
 
+    <string name="saved_filters_imported">Filtros importados</string>
     </resources>
