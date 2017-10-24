@@ -121,9 +121,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                         fileStoreQueue("Logout") {
                             FileStore.logout()
                             startLogin()
-                            runOnUiThread {
-                                m_adapter?.notifyDataSetChanged()
-                            }
                         }
                     } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                         log.info(TAG, "Tasklist changed, refiltering adapter")
@@ -829,7 +826,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
 
-        TodoList.editTasks(this, TodoList.selectedTasks, " ${mainFilter.prefill}")
+        TodoList.editTasks(this, TodoList.selectedTasks, mainFilter.prefill)
     }
 
     private fun startPreferencesActivity() {
