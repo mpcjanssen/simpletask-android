@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
+import com.dropbox.core.v2.files.DownloadErrorException
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
@@ -132,15 +133,19 @@ object FileStore : IFileStore {
         }
 
         val doneContents = ArrayList<String>()
-        val download = dbxClient.files().download(path)
-        download.inputStream.bufferedReader().forEachLine {
-            doneContents.add(it)
+        val rev = try {
+            val download = dbxClient.files().download(path)
+            download.inputStream.bufferedReader().forEachLine {
+                doneContents.add(it)
+            }
+            download.close()
+            val currentRev = download.result.rev
+            log.info(TAG, "The file's rev is: $currentRev")
+            currentRev
+        } catch (e: DownloadErrorException) {
+            log.info(TAG, "$path doesn't exist. Creating instead of appending")
+            null
         }
-        download.close()
-        val rev = download.result.rev
-
-        log.info(TAG, "The file's rev is: " + rev)
-
         // Then append
         doneContents += lines
         val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
