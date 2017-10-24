@@ -21,7 +21,7 @@
     <string name="next">Próximo</string>
     <string name="prev">Anterior</string>
     <string name="open_file">Abrir arquivo \"todo.txt\"</string>
-    <string name="sync">Atualizar</string>
+    <string name="sync">Sincronizar</string>
     <string name="changelist">Escolher lista</string>
     <string name="search">Procurar</string>
     <string name="add">Adicionar</string>
