@@ -161,7 +161,12 @@ end
     }
 
     fun onGroupCallback (moduleName : String, t: Task): String? {
-        val module = globals.get(moduleName).checktable()
+        val module = try {
+            globals.get(moduleName).checktable()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            LuaValue.NIL
+        }
         if (module == LuaValue.NIL) {
             return null
         }
@@ -179,7 +184,12 @@ end
     }
 
     fun onDisplayCallback (moduleName : String, t: Task): String? {
-        val module = globals.get(moduleName).checktable()
+        val module = try {
+            globals.get(moduleName).checktable()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            LuaValue.NIL
+        }
         if (module == LuaValue.NIL) {
             return null
         }
@@ -197,9 +207,14 @@ end
     }
 
     fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
-        val module = globals.get(moduleName)
+        val module = try {
+            globals.get(moduleName).checktable()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            LuaValue.NIL
+        }
         if (module == LuaValue.NIL) {
-            return true
+            return null
         }
         val onFilter = module.get(ON_TEXTSEARCH_NAME)
         if (!onFilter.isnil()) {
