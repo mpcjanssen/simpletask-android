@@ -106,9 +106,7 @@ Called for every task before it is displayed.
 
 ### Returns
 
-* A string which modifies the display of the task.
-    * If the string starts with '=', the entire task will be replaced after removing the '='.
-    * Otherwise, only the task text will be replaced.
+* A string which is displayed.
 
 ### Notes
 
