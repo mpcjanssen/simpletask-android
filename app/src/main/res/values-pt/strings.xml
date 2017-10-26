@@ -184,8 +184,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="show_empty_lists_summary">Exibir cabeçalho mesmo que todas as tarefas sob ele estejam ocultas.</string>
 
     <string name="split_actionbar_pref_title">Usar barra de separação</string>
-    <string name="split_actionbar_pref_summary">"Usar barra dividida para que os menus fiquem no inferior da tela.
-Para melhor disposição da tela desabilite. "</string>
+    <string name="split_actionbar_pref_summary">Usar barra dividida para que os menus fiquem no inferior da tela. Para melhor disposição da tela desabilite.</string>
 
     <string name="show_edittext_hint_title">Exibir dicas</string>
     <string name="show_edittext_hint_summary">Exibir dicas na adição de tarefas. Desabilite se quiser.</string>
@@ -230,14 +229,13 @@ Para melhor disposição da tela desabilite. "</string>
     <string name="sync_dialog_msg">NÃO ESTÁ SENDO USADO EM NENHUM LUGAR DO APP???</string>
     <string name="sync_dialog_upload">Carregar para o Dropbox</string>
     <string name="sync_dialog_download">Baixar para o celular</string>
-    <string name="sync_upload_message">Carregando todo.txt...</string>
-    <string name="sync_download_message">Baixando todo.txt...</string>
+    <string name="sync_upload_message">Carregando todo.txt…</string>
+    <string name="sync_download_message">Baixando todo.txt…</string>
 
     <!-- sync conflict dialog -->
     <string name="sync_conflict_dialog_title">Conflito de arquivos</string>
-    <string name="sync_conflict_dialog_msg">"Opa! Há uma nova versão do arquivo todo.txt no Dropbox.
-Pretende carregar o arquivo local ou o remoto?
- "</string>
+    <string name="sync_conflict_dialog_msg">Opa! Há uma nova versão do arquivo todo.txt no Dropbox.
+\nPretende carregar o arquivo local ou o remoto?</string>
 
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
@@ -252,7 +250,8 @@ Pretende carregar o arquivo local ou o remoto?
     <string name="delete_task_message">Impossível desfazer. Tem certeza?</string>
     <string name="logout_message">Certifique-se de que todas as mudanças foram sincronizadas no Dropbox ou que toda a lista de tarefas foi compartilhada.
 \n Mudanças não sincronizadas serão perdidas após deslogar.</string>
-     <string name="dropbox_open">Certifique-se de que todas as mudanças feitas estão sincronizadas no Dropbox ou         que sua lista de tarefas completadas foi compartilhada (se não houver conexão com o Dropbox).\n        Quaisquer mudanças não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
+     <string name="dropbox_open">Certifique-se de que as alterações foram sincronizadas no Dropbox ou inteiramente compartilhadas, se não houver conexão com o Dropbox.
+\n Alterações não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
     <string name="delete_task_confirm">Apagar</string>
 
     <!-- search -->
@@ -359,7 +358,7 @@ Pretende carregar o arquivo local ou o remoto?
 
     <string name="task_added">Tarefa adicionada ao Simpletask</string>
     <string name="default_sort">Disposição padrão</string>
-    <string name="pull_to_refresh_refreshing_label">Sincronizando com o Dropbox</string>
+    <string name="pull_to_refresh_refreshing_label">Sincronizando com o Dropbox…</string>
     <string name="input_new">Inserir nova</string>
     <string name="no_filter">Sem filtro</string>
     <string name="dropbox">Dropbox</string>
