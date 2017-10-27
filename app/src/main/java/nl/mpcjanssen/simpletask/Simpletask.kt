@@ -211,8 +211,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
-        TodoList.selectedTasks.forEach {
-            result.add(it.inFileFormat())
+        TodoList.selectedTasks.forEach { task ->
+            val luaTxt = LuaInterpreter.onDisplayCallback(mainFilter.options.luaModule, task)
+            result.add(luaTxt ?: task.inFileFormat())
         }
         return join(result, "\n")
     }
@@ -793,12 +794,14 @@ class Simpletask : ThemedNoActionBarActivity() {
         var calendarDescription = ""
         if (checkedTasks.size == 1) {
             // Set the task as title
-            calendarTitle = checkedTasks[0].text
+            val task = checkedTasks[0]
+            val luaTxt = LuaInterpreter.onDisplayCallback(mainFilter.options.luaModule, task)
+            calendarTitle = luaTxt ?: task.text
         } else {
             // Set the tasks as description
             calendarDescription = selectedTasksAsString()
-
         }
+
         intent = Intent(Intent.ACTION_EDIT).apply {
             setType(Constants.ANDROID_EVENT)
             putExtra(Events.TITLE, calendarTitle)
