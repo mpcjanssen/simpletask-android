@@ -14,6 +14,7 @@ object LuaInterpreter {
     private val TAG = "LuaInterpreter"
 
     val ON_DISPLAY_NAME = "onDisplay"
+    val ON_ADD_NAME = "onAdd"
     val ON_FILTER_NAME = "onFilter"
     val ON_GROUP_NAME = "onGroup"
     val ON_TEXTSEARCH_NAME = "onTextSearch"
@@ -111,6 +112,20 @@ object LuaInterpreter {
             try {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
                 return result.tojstring()
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
+            }
+        }
+        return null
+    }
+
+    fun onAddCallback (t: Task): Task? {
+        val callback = globals.get(LuaInterpreter.ON_ADD_NAME)
+        if (!callback.isnil()) {
+            val args = fillOnFilterVarargs(t)
+            try {
+                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
+                return Task(result.tojstring())
             } catch (e: LuaError) {
                 log.debug(TAG, "Lua execution failed " + e.message)
             }
