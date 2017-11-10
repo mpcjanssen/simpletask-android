@@ -55,10 +55,13 @@ object TodoList {
 
     fun add(items: List<Task>, atEnd: Boolean) {
         todoQueue("Add task ${items.size} atEnd: $atEnd") {
+            val updatedItems = items.map {item ->
+                LuaInterpreter.onAddCallback(item) ?: item
+            }
             if (atEnd) {
-                todoItems.addAll(items)
+                todoItems.addAll(updatedItems)
             } else {
-                todoItems.addAll(0, items)
+                todoItems.addAll(0, updatedItems)
             }
         }
     }
