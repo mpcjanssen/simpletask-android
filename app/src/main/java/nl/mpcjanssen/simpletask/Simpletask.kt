@@ -119,7 +119,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                         log.info(TAG, "Logging out from Dropbox")
                         finish()
                         fileStoreQueue("Logout") {
-                            FileStore.logout()
+                            try {
+                                FileStore.logout()
+                            } catch (e: Exception) {
+                                log.error(TAG, "Error logging out.", e)
+                            }
                             startLogin()
                         }
                     } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {

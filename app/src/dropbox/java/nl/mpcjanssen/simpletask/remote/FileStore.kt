@@ -196,14 +196,18 @@ object FileStore : IFileStore {
 
         val fileList = ArrayList<FileEntry>()
 
-        val dbxPath = if (path == ROOT_DIR) "" else path
-        val entries = FileStore.dbxClient.files().listFolder(dbxPath).entries
-        entries?.forEach { entry ->
-            if (entry is FolderMetadata)
-                fileList.add(FileEntry(entry.name, isFolder = true))
-            else if (!txtOnly || File(entry.name).extension == "txt") {
-                fileList.add(FileEntry(entry.name, isFolder = false))
+        try {
+            val dbxPath = if (path == ROOT_DIR) "" else path
+            val entries = FileStore.dbxClient.files().listFolder(dbxPath).entries
+            entries?.forEach { entry ->
+                if (entry is FolderMetadata)
+                    fileList.add(FileEntry(entry.name, isFolder = true))
+                else if (!txtOnly || File(entry.name).extension == "txt") {
+                    fileList.add(FileEntry(entry.name, isFolder = false))
+                }
             }
+        } catch (e: Throwable) {
+            log.error(TAG, "Couldn't load file list, ", e)
         }
         return fileList
     }
