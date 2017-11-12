@@ -1,2 +1,301 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Ugyldig listenavn</string>
+    <string name="invalid_project">Ugyldig etikettnavn</string>
+    <string name="added_task">Gjøremål lagt til</string>
+    <string name="add_task_failed">Kunne ikke legge til gjøremål</string>
+    <string name="save_task">Lagre gjøremål</string>
+    <string name="update_task_failed">Kunne ikke oppdatere gjøremål</string>
+    <string name="sort">Sorter</string>
+    <string name="script">Skript</string>
+    <string name="filter">Filter</string>
+    <string name="main_no_items">Ingen gjøremål å vise.</string>
+    <string name="set_preferences">Innstillinger</string>
+    <string name="preferences">Innstillinger</string>
+    <string name="archive">Arkiv</string>
+    <string name="help">Hjelp</string>
+    <string name="history">Historikk</string>
+    <string name="debug_info">Feilrettingsinfo</string>
+    <string name="log">Logg</string>
+    <string name="next">Neste</string>
+    <string name="prev">Forrige</string>
+    <string name="open_file">Åpne gjøremålsfil</string>
+    <string name="sync">Synkroniser</string>
+    <string name="changelist">Velg liste</string>
+    <string name="search">Søk</string>
+    <string name="add">Legg til</string>
+    <string name="task">Gjøremål</string>
+    <string name="addtask">Legg til gjøremål</string>
+    <string name="updatetask">Oppdater</string>
+    <string name="viewtask">Vis gjøremål</string>
+    <string name="cleartask">Tøm gjøremål</string>
+    <string name="clear_database">Tøm database</string>
+    <string name="done">Ferdig</string>
+    <string name="priority">Prioriter</string>
+    <string name="select_priority">Velg prioritet</string>
+    <string name="select_all">Velg alt</string>
+    <string name="add_list_or_tag">Legg til lister og etiketter</string>
+    <string name="update_lists">Oppdater lister</string>
+    <string name="update_tags">Oppdater etiketter</string>
+    <string name="remove_list_or_tag">Fjern lister og etiketter</string>
+    <string name="update">Oppdater</string>
+    <string name="delete">Slett</string>
+    <string name="defer_due">Velg frist</string>
+    <string name="insert_due">Sett inn fristdato</string>
+    <string name="share">Del</string>
+    <string name="share_database">Del database</string>
+    <string name="unComplete">Angre fullføring</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Avbryt</string>
+    <string name="clear_filter">Tøm filter</string>
+    <string name="write_failed">Klarte ikke å skrive fil. Endringene dine ble IKKE lagret.</string>
+
+    <string name="preference_appearance">Utseende</string>
+    <string name="preference_interface">Grensesnitt</string>
+    <string name="preference_widget">Miniprogram</string>
+    <string name="archive_now_pref_summary">Flytt fullførte gjøremål fra todo.txt til done.txt.</string>
+    <string name="dropbox_logout_pref_title">Logg ut</string>
+    <string name="dropbox_logout_pref_summary">Logg ut av Dropbox.</string>
+    <string name="TODOTXTPATH_title">Filplassering</string>
+    <string name="TODOTXTPATH_summary">Dropbox-mappa der todo.txt er lagret.</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Innstillinger for Dropbox-synkronisering</string>
+
+    <string name="todotxt_features_settings_header">Funksjoner</string>
+    <string name="todotxt_features_settings_summary">Skru på eller av funksjoner</string>
+
+    <string name="todotxt_configuration_settings_header">Oppsett</string>
+    <string name="todotxt_configuration_settings_summary">Sett opp programoppførsel</string>
+
+    <string name="todotxt_creation_settings_header">Gjøremålsopprettelse</string>
+
+    <string name="todotxt_ui_settings_header">Funksjoner</string>
+    <string name="todotxt_ui_settings_summary">Kontroller hva som vises</string>
+    <string name="todotxt_behavior_settings_header">Oppførsel</string>
+    <string name="todotxt_settings_summary">Innstillinger for hele programmet</string>
+    <string name="sort_complete_last_pref_title">Vis fullførte sist</string>
+    <string name="sort_complete_last_pref_summary">Alltid vis fullførte gjøremål i bunnen av listen</string>
+    <string name="prepend_date_pref_title">Datostemple nye oppgaver</string>
+    <string name="prepend_date_pref_summary">Legg til opprettelsesdato automatisk</string>
+    <string name="line_breaks_pref_title">Windows-vennlige linjeskift</string>
+    <string name="line_breaks_pref_summary">Bruk Windows-vennlige linjeskift</string>
+    <string name="swipe_complete_pref_title">Dra for å fullføre</string>
+    <string name="swipe_complete_pref_summary">Dra over et gjøremål for å fullføre det.</string>
+    <string name="manual_sync_pref_title">Manuell synkronisering</string>
+    <string name="resume_sync_pref_title">Fortsett synkronisering</string>
+    <string name="resume_sync_pref_summary">Synkroniser Dropbox når programmet åpnes.</string>
+    <string name="font_size_delta_pref_title">Egendefinert skriftstørrelse</string>
+    <string name="datebar_relative_size_summary">Relativ datofeltstørrelse</string>
+    <string name="font_size_delta_pref_summary">Endre skriftstørrelsen</string>
+    <string name="theme_pref_title">Drakt</string>
+    <string name="theme_pref_summary">Endre drakten brukt av programmet.</string>
+
+    <string name="share_task_show_edit_pref_title">Rediger delte gjøremål</string>
+    <string name="share_task_show_edit_summary">Rediger gjøremål delt med Simpletask før lagring</string>
+
+    <string name="share_task_append_text_title">Bakgrunnstekst</string>
+    <string name="share_task_append_text_summary">Legg til \"%s\" til gjøremål lagt til i bakgrunnen.</string>
+
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="back_saves_pref_title">Tilbake-knapp</string>
+    <string name="show_txt_only_pref_title">Kun vis TXT-filer</string>
+    <string name="show_txt_only_summary">Bare vis .txt-filer i filutvelgelsesdialogen.</string>
+
+    <string name="calendar_sync_screen_title">Merknader</string>
+    <string name="calendar_sync_screen_summary">Kalenderpåminnelser (eksperimentelt)</string>
+    <string name="calendar_reminder_days_title">Dager på forskudd</string>
+    <string name="calendar_reminder_time_title">Påminnelsestid</string>
+    <string name="widget_theme_pref_title">Drakt</string>
+    <string name="widget_theme_pref_summary">Endre drakten brukt av miniprogrammer.</string>
+
+    <string name="task_text_ellipsizing_none">Ingen: Veldig lang gjøremålstekst</string>
+    <string name="task_text_ellipsizing_start">Start: …gjøremålstekst</string>
+    <string name="task_text_ellipsizing_middle">Midten: Veldig… tekst</string>
+    <string name="task_text_ellipsizing_end">Slutt: Veldig lang…</string>
+    <string name="task_text_ellipsizing_marquee">Avsnitt: Veldig langt gj</string>
+
+    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_other">Annet</string>
+    <string name="filter_tab_header_sort">Sorter</string>
+    <string name="filter_tab_header_script">Skript</string>
+
+    <string name="script_tab_script_from_file">Skript fra fil</string>
+    <string name="script_tab_use_script">Bruk skript</string>
+    <string name="script_tab_test">Test</string>
+    <string name="script_tab_test_task">Test gjøremål</string>
+    <string name="script_tab_script">Skript</string>
+    <string name="script_tab_true_task_shown">Skru på for å vise gjøremål</string>
+    <string name="script_tab_false_task_not_shown">Skru av for å skjule gjøremål</string>
+
+    <string name="action_pop_up_call">Ring:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">Invertert</string>
+    <string name="saved_filters_exported">Filter eksportert</string>
+    <string name="saved_filters_imported">Filter importert</string>
+    <string name="toast_lua_config_imported">Lua-oppsett importert</string>
+
+    <string name="widget_header_transparency_title">Gjennomsiktighet for hode</string>
+    <string name="widget_background_transparency_title">Gjennomsiktighet for bakgrunn</string>
+
+    <string name="widget_extended_pref_title">Vis datofelt</string>
+    <string name="widget_extended_pref_summary">Vis datoer på egen linje</string>
+
+    <string name="taskview_extended_pref_title">Vis datofelt</string>
+    <string name="taskview_extended_pref_summary">Viser datoer på egen linje</string>
+
+    <string name="append_tasks_at_end_summary">Legg inn nye gjøremål i slutten av fila</string>
+
+    <string name="color_due_pref_title">Farge</string>
+    <string name="show_hidden_title">Vis skjulte gjøremål</string>
+    <string name="show_empty_lists_title">Vis tomme hoder</string>
+    <string name="show_empty_lists_summary">Vis hode selv om alle gjøremål under det er skjult.</string>
+
+    <string name="split_actionbar_pref_title">Vis delt handlingsfelt</string>
+    <string name="show_edittext_hint_title">Vis hint</string>
+    <string name="show_complete_checkbox_title">Vis avkryssningsbokser for fullføring</string>
+    <string name="show_confirmation_dialogs_title">Bekreftelsesdialoger</string>
+    <string name="show_fast_scroll_title">Rask rulling</string>
+    <string name="show_fast_scroll_summary">Bruk rask rulling hvis gjøremålslisten blir lenger</string>
+
+    <string name="show_calendarview_title">Bruk kalender for datooppføring</string>
+
+    <string name="about_settings_header">Om</string>
+    <string name="about_settings_summary">Programinformasjon</string>
+    <string name="visit_website_title">Hjelp</string>
+    <string name="visit_website_summary">Vis Simpletask-nettsiden</string>
+    <string name="visit_tracker_title">Forespør en funksjon eller loggfør en feil</string>
+    <string name="visit_tracker_summary">Send funksjonsforespørsel, forbedring, eller rapporter et problem.</string>
+    <string name="preference_title_debug_info">Vis feilrettingslogg</string>
+    <string name="sync_dialog_title">Manuell synkronisering</string>
+    <string name="sync_dialog_msg">Ønsker du å laste opp eller ned din todo-txt -fil?</string>
+    <string name="sync_dialog_upload">Last opp til Dropbox</string>
+    <string name="sync_dialog_download">Last ned til enhet</string>
+    <string name="sync_upload_message">Laster opp todo.txt…</string>
+    <string name="sync_download_message">Laster ned todo.txt…</string>
+
+    <string name="sync_conflict_dialog_title">Filkonflikt</string>
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_screen_button">Logg inn på Dropbox</string>
+    <string name="login_folder_screen_button">Logg inn på Dropbox
+\n(Programmappetilgang)</string>
+    <string name="delete_task_title">Slett %s gjøremål</string>
+    <string name="archive_task_title">Arkiver %s gjøremål</string>
+    <string name="delete_task_message">Dette kan ikke angres. Er du sikker?</string>
+    <string name="delete_task_confirm">Slett</string>
+
+    <string name="word_wrap">Tekstbryting</string>
+    <string name="search_hint">Søk…</string>
+
+    <string name="sort_help">Dra og slipp for å endre sorteringsrekkefølgen. Klikk på elementene for å endre sorteringsretning.</string>
+    <string name="file_order">Filrekkefølge (usortert)</string>
+    <string name="alphabetical">Alfabetisk</string>
+    <string name="by_prio">Etter prioritet</string>
+    <string name="by_project">Etter etikett</string>
+    <string name="by_context">Etter liste</string>
+    <string name="by_project_todotxt">Etter prosjekt</string>
+    <string name="by_context_todotxt">Etter bindeleddsinformasjon</string>
+    <string name="completed">Fullført</string>
+    <string name="by_creation_date">Etter opprettelsesdato</string>
+    <string name="by_completion_date">Etter fullføringsdato</string>
+	
+    <string name="filter_select_all">Valg alt</string>
+    <string name="filter_clear_all">Tøm filter</string>
+    <string name="filter_invert">Inverter filter</string>
+    <string name="add_filter_shortcut">Til hjemmeskjermen</string>
+    <string name="export_filter">Eksporter</string>
+    <string name="import_filter">Importer</string>
+    <string name="rename_filter">Gi nytt navn</string>
+    <string name="rename_filter_message">Skriv inn navn for lagret filter:</string>
+    <string name="title_filter_drawer">Hurtigfilter</string>
+    <string name="update_filter">Oppdater</string>
+    <string name="create_widget">Opprett miniprogram</string>
+    <string name="config_widget">Sett opp miniprogram</string>
+    <string name="filter_show_completed">Vis fullførte gjøremål</string>
+    <string name="filter_show_tags">Vis etiketter i gjøremålene</string>
+    <string name="filter_show_create_date">Vis gjøremålsalder</string>
+
+    <string name="filter_show_completed_short">Fullført</string>
+    <string name="filter_show_future_short">Fremtidig</string>
+    <string name="filter_show_prompt">Vis</string>
+    <string name="filter_saved_prompt">Lagrede filter</string>
+
+    <string name="task_select_parts">Velg gjøremålsdeler</string>
+    <string name="task_show_all">Alle</string>
+
+    <string name="add_task_help_btn">Hjelp</string>
+    <string name="priority_prompt">Prioritet</string>
+    <string name="priority_short_prompt">Prio</string>
+    <string name="project_prompt">Etikett</string>
+    <string name="context_prompt">Liste</string>
+    <string name="project_prompt_todotxt">Prosjekt</string>
+    <string name="context_prompt_todotxt">Bindeleddsinformasjon</string>
+    <string name="priority_format">(prio)</string>
+
+    <string name="separator">Inndeler</string>
+
+    <string name="shortcut_addtask_name">Legg til gjøremål</string>
+    <string name="share_addtask_name">Legg til i Simpletask</string>
+
+    <string name="none">ingen</string>
+    <string name="keep">behold</string>
+    <string name="all">alle</string>
+
+    <string name="dates_days_ago">%d dager siden</string>
+    <string name="dates_years_ago">%d år siden</string>
+    <string name="dates_weeks_ago">%d uker siden</string>
+    <string name="dates_today">i dag</string>
+    <string name="date_pick">velg dato</string>
+    <string name="dates_tomorrow">i morgen</string>
+
+    <string name="selected">valgt</string>
+    <string name="no_context">Innboks</string>
+    <string name="no_project">Ingen etikett</string>
+    <string name="no_creation_date">Ingen opprettelsesdato</string>
+    <string name="add_to_calendar">Legg til påminnelse</string>
+    <string name="calendar_title">Simpletask-påminnelse</string>
+    <string name="share_title">Simpletask-påminnelse</string>
+    <string name="version_copied">Versjonsinfo kopiert til utklippstavle</string>
+
+    <string name="task_added">Gjøremål lagt til i Simpletask</string>
+    <string name="default_sort">Forvalgt sortering</string>
+    <string name="pull_to_refresh_refreshing_label">Synkroniserer med Dropbox…</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="save_filter">Lagre gjeldende filter</string>
+    <string name="filter_import_export">Importer/eksporter filter</string>
+
+    <string name="donate_title">Doner</string>
+    <string name="donated_summary">Takk for din donasjon.</string>
+    <string name="sort_reverse">Omvendt sortering</string>
+
+    <string name="calendar_disp_name">Simpletask-påminnelser</string>
+    <string name="calendar_write_error">Feil: Kunne ikke skrive kalender</string>
+
+    <string name="click_to_copy">Klikk for å kopiere til utklippstavle.</string>
+
+    <string name="hello_world">Hei verden!</string>
+    <string name="action_settings">Innstillinger</string>
+
+    <string name="help_locale">nb</string>
+
+    <string name="task_action">Handling</string>
+
+    <string name="name">Navn</string>
+    <string name="date">Dato</string>
+    <string name="experimental_title">Eksperimentelt</string>
+    <string name="experimental_summary">Skru på eksperimentelle funksjoner</string>
+
+    <string name="keep_selection_title">Behold utvalg</string>
+    <string name="keep_selection_summary">Behold gjøremålsutvalg etter endringer.</string>
+
+
+    <string name="lua_error">Lua-feil</string>
+    <string name="lua_config_screen">Lua-oppsett</string>
+    <string name="lua_run">Kjør</string>
+    <string name="lua_config_import_export">Importer/eksporter Lua-oppsett</string>
+    <string name="lua_config_export">Lagre og eksporter</string>
+    <string name="lua_config_import">Importer</string>
+    <string name="lua_config_share">Del</string>
+    <string name="lua_open_config">Lua-oppsett</string>
+</resources>
