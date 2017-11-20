@@ -19,7 +19,7 @@
     <string name="log">ログ</string>
     <string name="next">次へ</string>
     <string name="prev">前へ</string>
-    <string name="open_file">todo ファイルを開く</string>
+    <string name="open_file">タスクリストファイルを開く</string>
     <string name="sync">同期</string>
     <string name="changelist">リストを選択</string>
     <string name="search">検索</string>
@@ -49,7 +49,7 @@
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>
     <string name="clear_filter">フィルターをクリア</string>
-    <string name="write_failed">ファイルの書き込みに失敗しました! 変更内容は保存されませんでした。</string>
+    <string name="write_failed">ファイルの書き込みに失敗しました。変更内容は保存されませんでした。</string>
 
     <string name="filter_name_empty">名前が指定されていません。フィルターを追加しません</string>
     <string name="widget_name_empty">ウィジェット名が指定されていません。ウィジェットを追加しません</string>
