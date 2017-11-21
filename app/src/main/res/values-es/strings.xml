@@ -5,9 +5,9 @@
 
     <string name="menu_capitalize_tasks">Tareas nuevas en mayúsculas</string>
     <string name="back_saves_pref_title">Botón ATRÁS</string>
-    <string name="back_saves_summary">Guardar las tareas introducidas o aplicar el filtro al pulsar ATRÁS.</string>
+    <string name="back_saves_summary">Guardar la lista de tareas o aplicar el filtro al pulsar ATRÁS.</string>
 
-    <string name="show_txt_only_pref_title">Sólo mostrar archivos txt</string>
+    <string name="show_txt_only_pref_title">Mostrar sólo archivos txt</string>
     <string name="show_txt_only_summary">Mostrar sólo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
 
     <string name="calendar_sync_screen_title">Notificaciones</string>
@@ -42,13 +42,13 @@
     <string name="show_empty_lists_summary">Mostrar un encabezado incluso si todas las tareas bajo el mismo están ocultas.</string>
 
     <string name="split_actionbar_pref_title">Usar barra de acción dividida</string>
-    <string name="split_actionbar_pref_summary">Usar una barra de acción dividida de modo que los botones de menú están en la base de la pantalla. Deseleccione esta opción para disponer de más espacio de pantalla para la lista de tareas.</string>
+    <string name="split_actionbar_pref_summary">Usar una barra de acción dividida, situando los botones de menú en el borde inferior de la pantalla. Desactivar esta opción para mostrar más líneas de la lista de tareas.</string>
 
     <string name="show_edittext_hint_title">Mostrar sugerencias</string>
-    <string name="show_edittext_hint_summary">Mostrar sugerencias al editar en cajas de texto. Si le distraen, desactive este ajuste.</string>
+    <string name="show_edittext_hint_summary">Mostrar sugerencias al agregar tareas.</string>
 
     <string name="show_complete_checkbox_title">Mostrar la casilla de completada</string>
-    <string name="show_complete_checkbox_summary">Mostrar la casilla delante de las tareas para marcarlas como completada o no.</string>
+    <string name="show_complete_checkbox_summary">Mostrar casilla de verificación delante de las tareas para marcarlas como completadas o no.</string>
 
     <string name="show_confirmation_dialogs_title">Mostrar diálogos de confirmación</string>
     <string name="show_confirmation_dialogs_summary">Preguntar antes de archivar o borrar tareas</string>
@@ -61,12 +61,12 @@
     <string name="about_settings_header">Acerca de</string>
     <string name="about_settings_summary">Información de la aplicación</string>
     <string name="visit_website_title">Ayuda</string>
-    <string name="visit_website_summary">Visite el sitio web de Simpletask</string>
-    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+    <string name="visit_website_summary">Ir al sitio web</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
 
     <string name="visit_tracker_title">Solicitae una característica o informe de un error</string>
     <string name="visit_tracker_summary">Solicitar una característica nueva o mejora o informar de un problema.</string>
-    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Sincronización Manual</string>
@@ -84,9 +84,7 @@
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Iniciar sesión en Dropbox</string>
-    <string name="login_cloudless">"Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google.
-http://goo.gl/X1C55P
- "</string>
+    <string name="login_cloudless">Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google. http://goo.gl/X1C55P</string>
 
     <!-- delete -->
     <string name="delete_task_title">Eliminar %s tarea(s)</string>
@@ -95,26 +93,26 @@ http://goo.gl/X1C55P
     <string name="logout_message">Por favor, si no está conectado con Dropbox, asegúrese de haber sincronizado todos los cambios o que ha compartido su lista de tareas completa.
 Cualquier cambio que no haya sido sincronizado se perderá después de desconectarse.</string>
     <string name="dropbox_open">Por favor,si no está conectado con Dropbox, asegúrese de que ha sincronizado todos los cambios o que ha compartido su lista de tareas completa.
-Los cambios que no hayan sido sincronizados se perderán al abrir un archivo diferente.</string>
+\nCualquier cambio que no haya sido sincronizados se perderá al abrir un archivo diferente.</string>
     <string name="delete_task_confirm">Eliminar</string>
 
     <!-- search -->
     <string name="clone_tags">Rellenar la próxima</string>
     <string name="word_wrap">Ajuste de línea automático</string>
-    <string name="search_hint">Buscar...</string>
+    <string name="search_hint">Buscar …</string>
 
     <!-- sort -->
     <string name="sort_help">Arrastrar y soltar para cambiar el orden. Toque un elemento para invertir el sentido de ordenamiento.</string>
     <string name="file_order">Orden de archivo (no ordenadas)</string>
     <string name="alphabetical">Alfabético</string>
-    <string name="by_prio">Por Prioridad</string>
-    <string name="by_project">Por Etiqueta</string>
-    <string name="by_context">Por Lista</string>
+    <string name="by_prio">Prioridad</string>
+    <string name="by_project">Etiqueta</string>
+    <string name="by_context">Lista</string>
     <string name="completed">Completadas</string>
-    <string name="by_creation_date">Por Fecha de Creación</string>
+    <string name="by_creation_date">Fecha de creación</string>
     <string name="in_future">Fecha de inicio en el futuro</string>
-    <string name="by_due_date">Por Fecha de Vencimiento</string>
-    <string name="by_threshold_date">Por Fecha de Inicio</string>
+    <string name="by_due_date">Fecha de vencimiento</string>
+    <string name="by_threshold_date">Fecha de inicio</string>
 
     <!-- filter -->
     <string name="filter_select_all">Seleccionar todo</string>
@@ -161,17 +159,17 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
 
     <!-- Relative Dates -->
     <string name="dates_days_ago">hace %d días</string>
-    <string name="dates_one_day_ago">hace 1 día</string>
+    <string name="dates_one_day_ago">ayer</string>
     <string name="dates_years_ago">hace %d años</string>
-    <string name="dates_one_year_ago">hace 1 año</string>
+    <string name="dates_one_year_ago">el año pasado</string>
     <string name="dates_months_ago">hace %d meses</string>
-    <string name="dates_one_month_ago">hace 1 mes</string>
+    <string name="dates_one_month_ago">el mes pasado</string>
     <string name="dates_weeks_ago">hace %d semanas</string>
-    <string name="dates_one_week_ago">hace 1 semana</string>
+    <string name="dates_one_week_ago">la semana pasada</string>
 
-    <string name="dates_one_week">1 semana</string>
-    <string name="dates_two_weeks">2 semanas</string>
-    <string name="dates_one_month">1 mes</string>
+    <string name="dates_one_week">una semana</string>
+    <string name="dates_two_weeks">dos semanas</string>
+    <string name="dates_one_month">un mes</string>
 
     <string name="dates_today">Hoy</string>
     <string name="date_pick">Elegir una fecha</string>
@@ -209,7 +207,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="calendar_disp_name">Recordatorios de Simpletask</string>
     <string name="calendar_sync_desc_due">Recordatorio de fecha de vencimiento generado automáticamente por Simpletask</string>
     <string name="calendar_sync_desc_thre">Recordatorio de fecha de inicio generado automáticamente por Simpletask</string>
-    <string name="calendar_exists_warning">Aviso: Ya existe un calendario con el mismo nombre, sobreescribiendo…</string>
+    <string name="calendar_exists_warning">Aviso: Ya existe un calendario con el mismo nombre, sobreescribiendo …</string>
     <string name="calendar_write_error">Error: no se pudo escribir el calendario</string>
 
     <string name="click_to_copy">Clic para copiar al portapapeles.</string>
@@ -240,7 +238,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
     <string name="next">Siguiente</string>
     <string name="prev">Anterior</string>
     <string name="open_file">Abrir archivo de tareas</string>
-    <string name="sync">Actualizar</string>
+    <string name="sync">Sincronizar</string>
     <string name="changelist">Seleccionar una lista</string>
     <string name="search">Búsqueda</string>
     <string name="add">Agregar</string>
@@ -275,9 +273,7 @@ Los cambios que no hayan sido sincronizados se perderán al abrir un archivo dif
 
     <string name="filter_name_empty">Nombre no especificado. No se creó el filtro</string>
     <string name="widget_name_empty">Nombre no especificado. No se creo el widget</string>
-    <string name="add_task_help">Agregar o actualizar una tarea en la lista de tareas. Al agregar tareas, para una adición rápida, cada línea corresponde a una tarea.
- 
-<b>Prioridad</b>
+    <string name="add_task_help">"&lt;b&gt; Actualizar o agregar una tarea a la lista. Una tarea por línea. &lt;b&gt;Prioridad&lt;/b&gt; Al comienzo de la línea con (.), como en (A) &lt;b&gt;Etiquetas&lt;/b&gt; Comienzan con un signo +, como en +Cocina &lt;b&gt;Listas&lt;/b&gt; Comienzan con un signo @, como en @Casa. Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas. "<b>Prioridad</b>
 Al comienzo de la línea con (.), como en (A)
 
 <b>Etiquetas</b>
@@ -324,7 +320,7 @@ Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas.
     <string name="sort_complete_last_pref_summary">Mostrar siempre las tareas completadas al final de la lista</string>
     <string name="keep_prio_header">Mantener prioridad en tareas completadas</string>
     <string name="keep_prio_summary">Todo.txt elimina la prioridad al completar la tarea</string>
-    <string name="prepend_date_pref_title">Fecha de tareas nuevas</string>
+    <string name="prepend_date_pref_title">Colocar fecha a tareas nuevas</string>
     <string name="prepend_date_pref_summary">Agregar automáticamente la fecha de creación</string>
     <string name="line_breaks_pref_title">Saltos de línea al estilo Windows</string>
     <string name="line_breaks_pref_summary">Usar saltos de línea al estilo de Windows</string>
@@ -341,7 +337,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="datebar_relative_size_summary">Tamaño relativo de la barra de fechas</string>
     <string name="font_size_delta_pref_summary">Cambiar el tamaño de la fuente.</string>
     <string name="theme_pref_title">Tema</string>
-    <string name="theme_pref_summary">Cambiar el tema utilizado por la aplicación.</string>
+    <string name="theme_pref_summary">Cambiar tema de la aplicación.</string>
 
     <string name="share_task_append_text_title">Texto agregado al compartir una tarea</string>
     <string name="share_task_append_text_summary">Agregar \"%s\" a las tareas agregadas en segundo plano.</string>
@@ -363,7 +359,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="show_todo_path_summary">Los nombres de directorios son abreviados a su primera letra</string>
 
     <string name="show_fast_scroll_title">Desplazamiento rápido</string>
-    <string name="show_fast_scroll_summary">Usar desplazamiento rápido si la lista de tareas es demasiado larga</string>
+    <string name="show_fast_scroll_summary">Usar desplazamiento rápido para lista de tareas demasiado larga</string>
 
     <string name="use_create_as_threshold_title">Fecha de creación es la fecha de inicio</string>
     <string name="use_create_backup_summary">Al ordenar, usar la fecha de creación de la tarea como fecha de inicio si ésta no está establecida</string>
@@ -376,9 +372,9 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
 
     <string name="login_folder_screen_button">Iniciar sesión en Dropbox
 (Acceso a la carpeta de la aplicación)</string>
-    <string name="by_project_todotxt">Por Proyecto</string>
-    <string name="by_context_todotxt">Por Contexto</string>
-    <string name="by_completion_date">Por Fecha de Finalización</string>
+    <string name="by_project_todotxt">Proyecto</string>
+    <string name="by_context_todotxt">Contexto</string>
+    <string name="by_completion_date">Fecha de finalización</string>
 	
     <string name="export_filter">Exportar</string>
     <string name="import_filter">Importar</string>
@@ -424,14 +420,14 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="task_text_ellipsizing_end">Al final: \"Texto de la ...\"</string>
     <string name="task_text_ellipsizing_marquee">"Marquesina:  \"Texto de la tar\""</string>
 
-    <string name="filter_tab_header_prio">PRIO</string>
-    <string name="filter_tab_header_other">OTROS</string>
-    <string name="filter_tab_header_sort">ORDEN</string>
-    <string name="filter_tab_header_script">SCRIPT</string>
+    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_other">Otros</string>
+    <string name="filter_tab_header_sort">Ordenar</string>
+    <string name="filter_tab_header_script">Script</string>
 
     <string name="script_tab_script_from_file">Cargar script desde archivo</string>
     <string name="script_tab_use_script">Usar script</string>
-    <string name="script_tab_test">PROBAR</string>
+    <string name="script_tab_test">Probar</string>
     <string name="script_tab_test_task">Tarea de prueba</string>
     <string name="script_tab_script">Script</string>
     <string name="script_tab_true_task_shown">Verdadero. La tarea será mostrada</string>
@@ -440,8 +436,9 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="action_pop_up_call">Llamar:</string>
     <string name="action_pop_up_sms">Enviar sms:</string>
 
-    <string name="quick_filter_tag_header_inverted">INVERTIDA</string>
+    <string name="quick_filter_tag_header_inverted">Invertida</string>
     <string name="saved_filters_exported">Filtros exportados</string>
     <string name="toast_lua_config_imported">Configuración Lua importada</string>
 
+    <string name="saved_filters_imported">Filtros importados</string>
     </resources>
