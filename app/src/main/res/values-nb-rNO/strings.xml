@@ -298,4 +298,77 @@
     <string name="lua_config_import">Importer</string>
     <string name="lua_config_share">Del</string>
     <string name="lua_open_config">Lua-oppsett</string>
-</resources>
+<string name="defer_threshold">Sett terskeldato</string>
+    <string name="insert_threshold">Sett inn terskeldato</string>
+    <string name="tasktexthint">\@Diskuter +Paris-problem med +Hector @Troy 
+\nFortell +Hector at han ikke skal være så nedlatende @Troy 
+\nFjern denne teksten fra menyen @Phone</string>
+
+    <string name="filter_name_empty">Inget navn angitt, legger ikke til filter</string>
+    <string name="widget_name_empty">Inget miniprogramsnavn angitt, legger ikke til miniprogram</string>
+    <string name="add_task_help">Oppdater og gjør endringer i oppgavelisten. Ett gjøremål per linje. <b>Priority</b> Start linjen med (.), likt (A) <b>Etiketter</b> Start med et \"+\"-tegn, likt +Kitchen <b>-lister</b> Start med et @-tegn, likt @home. En oppgave kan inneholde vilkårlig mengde etiketter eller være på flerfoldige lister. </string>
+
+    <string name="preference_other">Annet</string>
+
+    <string name="ARCHIVE_settings_header">Arkiver</string>
+    <string name="ARCHIVE_settings_summary">Innstillinger for arkivering av fullførte gjøremål i done.txt</string>
+    <string name="auto_archive_pref_title">Automatisk arkivering</string>
+    <string name="auto_archive_pref_summary">Arkiver gjøremål umiddelbart ved fullføring.</string>
+    <string name="archive_now_pref_title">Arkiver nå</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="keep_prio_header">Behold prioritet for fullførte gjøremål</string>
+    <string name="keep_prio_summary">Todo.txt fjerner prioritet ved fullføring</string>
+    <string name="recur_from_original_date_pref_title">Gjenta gjøremål ved bruk av opprinnelige datoer</string>
+    <string name="recur_from_original_date_pref_summary">Utsetter de opprinnelige datoene i gjøremålet når et gjentagende gjøremål opprettes. Velg bort dette for å sette nye datoer relativt til dagen.</string>
+    <string name="manual_sync_pref_summary">Ikke last opp hver eneste endring til Dropbox automatisk.</string>
+    <string name="local_file_root_title">Rotmappe</string>
+    <string name="menu_capitalize_tasks">Endre til stor forbokstav</string>
+    <string name="back_saves_summary">Lagre den åpne gjø</string>
+
+    <string name="calendar_reminder_days_summary">Hvordan sette tidlig påminnelse</string>
+    <string name="calendar_reminder_time_summary">Tidspunkt på dagen å sette påminnelse</string>
+
+    <string name="drawer_fixed_landscape_title">Åpne skuffer vannrett</string>
+    <string name="drawer_fixed_landscape_summary">Alltid åpne skuffer vannrett.</string>
+
+    <string name="show_edittext_hint_summary">Vis hint når du legger til gjøremål.</string>
+
+    <string name="sort_case_sensitive_title">Sorter etter størrelse på forbokstav</string>
+    <string name="sort_case_sensitive_summary">Ta hensyn til forbokstavsstørrelse ved sortering av lister, etiketter og lagrede filter.</string>
+
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
+
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
+    <string name="preference_summary_debug_info">Vis og del programversjonen og loggen.</string>
+
+    <string name="clone_tags">Forhåndsutfyll</string>
+    <string name="by_due_date">Frist</string>
+    <string name="by_threshold_date">Fristdato</string>
+    <string name="filter_show_future">Vis gjøremål med terskeldato i fremtiden</string>
+    <string name="filter_show_lists">Vis lister i gjøremålene</string>
+    <string name="title_filter_applied">Filtreringstidspunkt:</string>
+    <string name="dates_one_day_ago">I går</string>
+    <string name="dates_one_year_ago">Forrige år</string>
+    <string name="dates_months_ago">%d måneder siden</string>
+    <string name="dates_one_month_ago">Forrige måned</string>
+    <string name="dates_one_week_ago">Forrige uke</string>
+
+    <string name="dates_one_week">Ei uke</string>
+    <string name="dates_two_weeks">To uker</string>
+    <string name="dates_one_month">Én måned</string>
+
+    <string name="title_activity_filter">Filtrer</string>
+    <string name="no_threshold_date">Ingen terskeldato</string>
+    <string name="no_header">Ingen</string>
+    <string name="no_prio">-</string>
+    <string name="input_new">Skriv inn ny</string>
+    <string name="no_filter">Inget filter</string>
+    <string name="save_filter_message">Skriv inn navn på gjeldende filter, for visning i skuffen for lagrede filter.</string>
+
+    <string name="donate_summary">Tilbudt deg gratis, men også copyleft friprog. Mye hardt arbeid har blitt investert i det, og siden du har valget, blir donasjoner varmt mottatt.</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="calendar_sync_desc_due">Påminnelse om frist, automatisk generert av Simpletask</string>
+    <string name="calendar_sync_desc_thre">Påminnelse om terskel, automatisk generert av Simpletask</string>
+    <string name="share_history_title">Gjøremålshistorikk</string>
+
+    </resources>
