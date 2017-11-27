@@ -137,6 +137,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="keep_prio_summary">Todo.txt removes priority on completion</string>
     <string name="prepend_date_pref_title">Datestamp new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date</string>
+    <string name="show_null_dates_first_pref_title">Empty dates first</string>
+    <string name="show_null_dates_first_pref_summary">Display items with no dates first</string>
     <string name="line_breaks_pref_title">Windows-friendly line breaks</string>
     <string name="line_breaks_pref_summary">Use Windows-friendly line breaks</string>
     <string name="recur_from_original_date_pref_title">Recur task using original dates</string>

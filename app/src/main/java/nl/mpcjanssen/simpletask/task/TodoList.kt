@@ -208,8 +208,8 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
-        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
+    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean, showNullDatesFirst: Boolean): Sequence<Task> {
+        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, showNullDatesFirst)
         val itemsToSort = if (comp.fileOrder) {
             todoItems
         } else {

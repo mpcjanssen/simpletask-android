@@ -5,7 +5,7 @@ import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) {
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean, showNullDatesFirst: Boolean) {
     var comparator : Comparator<Task>? = null
 
     var fileOrder = true
@@ -28,7 +28,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
             }
             var comp: (Task) -> Comparable<*>
-            val last_date = "9999-99-99"
+            val nullDateVal = if (showNullDatesFirst) "0000-00-00" else "9999-99-99";
             when (sortType) {
                 "file_order" -> {
                     fileOrder = !reverse
@@ -50,14 +50,14 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     }
                 }
                 "completed" -> comp = { it.isCompleted() }
-                "by_creation_date" -> comp = { it.createDate ?: last_date }
+                "by_creation_date" -> comp = { it.createDate ?: nullDateVal }
                 "in_future" -> comp = { it.inFuture(today) }
-                "by_due_date" -> comp = { it.dueDate ?: last_date }
+                "by_due_date" -> comp = { it.dueDate ?: nullDateVal }
                 "by_threshold_date" -> comp = {
-                    val fallback = if (createAsBackup) it.createDate ?: last_date else last_date
+                    val fallback = if (createAsBackup) it.createDate ?: nullDateVal else nullDateVal
                     it.thresholdDate ?: fallback
                 }
-                "by_completion_date" -> comp = { it.completionDate ?: last_date }
+                "by_completion_date" -> comp = { it.completionDate ?: nullDateVal }
                 else -> {
                     log.warn("MultiComparator", "Unknown sort: " + sort)
                     continue@label

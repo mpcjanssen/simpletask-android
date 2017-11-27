@@ -46,6 +46,13 @@
         android:title="@string/prepend_date_pref_title"
         />
     <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/show_null_dates_first_pref_key"
+        android:summary="@string/show_null_dates_first_pref_summary"
+        android:title="@string/show_null_dates_first_pref_title"
+        />
+
+    <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/append_tasks_at_end"
         android:summary="@string/append_tasks_at_end_summary"

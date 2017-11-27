@@ -1457,7 +1457,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val visibleTasks: Sequence<Task>
                 log.info(TAG, "setFilteredTasks called: " + TodoList)
                 val sorts = mainFilter.getSort(Config.defaultSorts)
-                visibleTasks = TodoList.getSortedTasks(mainFilter, sorts, Config.sortCaseSensitive)
+                visibleTasks = TodoList.getSortedTasks(mainFilter, sorts, Config.sortCaseSensitive, Config.isNullDatesFirst)
                 val newVisibleLines = ArrayList<VisibleLine>()
 
                 newVisibleLines.addAll(addHeaderLines(visibleTasks, mainFilter, getString(R.string.no_header)))
