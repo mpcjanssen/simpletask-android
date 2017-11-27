@@ -232,6 +232,8 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
 
     val hasPrependDate by BooleanPreference(R.string.prepend_date_pref_key, true)
 
+    val isNullDatesFirst by BooleanPreference(R.string.show_null_dates_first_pref_key, false)
+
     val hasKeepSelection by BooleanPreference(R.string.keep_selection, false)
 
     val hasKeepPrio by BooleanPreference(R.string.keep_prio, true)
