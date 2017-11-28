@@ -84,6 +84,16 @@ object LuaInterpreter {
         }
     }
 
+    fun hasOnGroupCallback(moduleName : String) : Boolean {
+        return try {
+            val module = globals.get(moduleName).checktable() ?: globals
+            !module.get(LuaInterpreter.ON_GROUP_NAME).isnil()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            false
+        }
+    }
+
     fun onSortCallback (moduleName : String, t: Task): String {
         val module = try {
             globals.get(moduleName).checktable()

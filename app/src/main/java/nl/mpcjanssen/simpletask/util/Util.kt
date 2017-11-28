@@ -160,9 +160,10 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
     val result = ArrayList<VisibleLine>()
     var count = 0
     var headerLine: HeaderLine? = null
+    val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
         val t = item
-        val newHeader = if (moduleName != null ) {
+        val newHeader = if ( moduleName!=null && luaGrouping ) {
             LuaInterpreter.onGroupCallback(moduleName, t)
         } else {
             null
