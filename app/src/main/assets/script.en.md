@@ -100,6 +100,24 @@ Called for every task as part of filtering the todo list.
 * You should define the `onGroup` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onGroup` function will be undefined.
 
 
+### `onSort (task, fields, extensions) -> string`
+
+Called for every task as part of sorting the todo list. This function should return a string for every task. This string
+is then used to sort the tasks.
+
+
+### Returns
+
+* The string to use for task sorting.
+
+### Notes
+
+* If there is a Lua error in the callback, it behaves as if it had returned `""`
+* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
+* You should define the `onSort` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onGroup` function will be undefined.
+
+
+
 ### `onDisplay (task, fields, extensions) -> string`
 
 Called for every task before it is displayed.

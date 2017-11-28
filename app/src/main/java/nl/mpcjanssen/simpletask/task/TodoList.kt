@@ -209,12 +209,14 @@ object TodoList {
     }
 
     fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
-        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold)
+        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.options.luaModule)
         val itemsToSort = if (comp.fileOrder) {
             todoItems
         } else {
             todoItems.reversed()
         }
+        log.info(ActiveFilter.TAG, "Resetting callbacks in module ${filter.options.luaModule}")
+        filter.initInterpreter()
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
         return filter.apply(sortedItems.asSequence())
     }
