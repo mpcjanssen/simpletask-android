@@ -129,6 +129,7 @@ class ActiveFilter(val options: FilterOptions) {
         if (contexts != null && contexts != "") {
             this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
+        initInterpreter()
     }
 
     fun hasFilter(): Boolean {
