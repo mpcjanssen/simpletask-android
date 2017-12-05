@@ -39,6 +39,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>@string/by_due_date</item>
         <item>@string/by_threshold_date</item>
         <item>@string/by_completion_date</item>
+        <item>@string/by_lua</item>
     </string-array>
 
     <!-- will be prepended with "+!" or "-!" depending on direction -->
@@ -54,6 +55,7 @@ You should have received a copy of the GNU General Public License along with Tod
         <item>by_due_date</item>
         <item>by_threshold_date</item>
         <item>by_completion_date</item>
+        <item>by_lua</item>
     </string-array>
 
     <!-- available options for deferring -->
