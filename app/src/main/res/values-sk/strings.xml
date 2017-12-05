@@ -1,2 +1,71 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Neplatný názov zoznamu</string>
+    <string name="invalid_project">Neplatný názov značky</string>
+    <string name="added_task">Pridaná úloha</string>
+    <string name="add_task_failed">Nemožno pridať úlohu</string>
+    <string name="save_task">Uložiť úlohu</string>
+    <string name="update_task_failed">Nemožno aktualizovať úlohu</string>
+    <string name="sort">Zoradiť</string>
+    <string name="filter">Filter</string>
+    <string name="set_preferences">Nastavenia</string>
+    <string name="preferences">Nastavenia</string>
+    <string name="help">Pomocník</string>
+    <string name="history">História</string>
+    <string name="sync">Synchronizovať</string>
+    <string name="add">Pridať</string>
+    <string name="task">Úloha</string>
+    <string name="addtask">Pridať úlohu</string>
+    <string name="updatetask">Aktualizácia</string>
+    <string name="viewtask">Zobraziť úlohu</string>
+    <string name="delete">Odstrániť</string>
+    <string name="share">Zdieľať</string>
+    <string name="share_database">Zdieľať databázu</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="preference_appearance">Vzhľad</string>
+    <string name="preference_interface">Rozhranie</string>
+    <string name="preference_widget">Widget</string>
+    <string name="preference_other">Ostatné</string>
+
+    <string name="dropbox_logout_pref_title">Odhlásiť</string>
+    <string name="dropbox_logout_pref_summary">Odhlásiť sa z Dropboxu.</string>
+    <string name="TODOTXTPATH_title">"Umiestnenie  súboru"</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="todotxt_features_settings_header">Vlastnosti</string>
+    <string name="todotxt_configuration_settings_header">Konfigurácia</string>
+    <string name="todotxt_creation_settings_header">Vytváranie úloh</string>
+
+    <string name="todotxt_ui_settings_header">Vlastnosti</string>
+    <string name="theme_pref_title">Motív</string>
+    <string name="calendar_sync_screen_title">Notifikácie</string>
+    <string name="widget_theme_pref_title">Motív</string>
+    <string name="filter_tab_header_other">Ostatné</string>
+    <string name="color_due_pref_title">Farba</string>
+    <string name="show_empty_lists_title">Zobraziť prázdne hlavičky</string>
+    <string name="visit_website_summary">Navštíviť webovú stránku</string>
+    <string name="delete_task_confirm">Odstrániť</string>
+
+    <string name="word_wrap">Zalamovanie slov</string>
+    <string name="alphabetical">Abecedne</string>
+    <string name="by_prio">Priorita</string>
+    <string name="by_project">Značka</string>
+    <string name="by_context">Zoznam</string>
+    <string name="by_project_todotxt">Projekt</string>
+    <string name="rename_filter">Premenovať</string>
+    <string name="title_filter_drawer">Rýchly filter</string>
+    <string name="create_widget">Vytvoriť widget</string>
+    <string name="priority_prompt">Priorita</string>
+    <string name="project_prompt">Značka</string>
+    <string name="context_prompt">Zoznam</string>
+    <string name="project_prompt_todotxt">Projekt</string>
+    <string name="dates_one_day_ago">včera</string>
+    <string name="dates_one_year_ago">minulý rok</string>
+    <string name="dates_one_month_ago">minulý mesiac</string>
+    <string name="dates_today">dnes</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="action_settings">Nastavenia</string>
+
+    <string name="name">Názov</string>
+    <string name="date">Dátum</string>
+    </resources>
