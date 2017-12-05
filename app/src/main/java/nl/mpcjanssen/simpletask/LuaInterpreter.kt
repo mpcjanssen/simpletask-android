@@ -18,6 +18,7 @@ object LuaInterpreter {
     val ON_FILTER_NAME = "onFilter"
     val ON_GROUP_NAME = "onGroup"
     val ON_TEXTSEARCH_NAME = "onTextSearch"
+    val ON_SORT_NAME = "onSort"
     val CONFIG_THEME = "theme"
     val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
     val STDLIB = readAsset(TodoApplication.app.assets, "lua/stdlib.lua")
@@ -71,6 +72,49 @@ object LuaInterpreter {
             Logger.error(TAG, "Lua error: ${e.message} )")
             false
         }
+    }
+
+    fun hasOnSortCallback(moduleName : String) : Boolean {
+        return try {
+            val module = globals.get(moduleName).checktable() ?: globals
+            !module.get(LuaInterpreter.ON_SORT_NAME).isnil()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            false
+        }
+    }
+
+    fun hasOnGroupCallback(moduleName : String) : Boolean {
+        return try {
+            val module = globals.get(moduleName).checktable() ?: globals
+            !module.get(LuaInterpreter.ON_GROUP_NAME).isnil()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            false
+        }
+    }
+
+    fun onSortCallback (moduleName : String, t: Task): String {
+        val module = try {
+            globals.get(moduleName).checktable()
+        } catch (e: LuaError) {
+            Logger.error(TAG, "Lua error: ${e.message} )")
+            LuaValue.NIL
+        }
+        if (module == LuaValue.NIL) {
+            return ""
+        }
+        val callback = module.get(LuaInterpreter.ON_SORT_NAME)
+        if (!callback.isnil()) {
+            val args = fillOnFilterVarargs(t)
+            try {
+                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
+                return result.tojstring()
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
+            }
+        }
+        return ""
     }
 
     fun onGroupCallback (moduleName : String, t: Task): String? {

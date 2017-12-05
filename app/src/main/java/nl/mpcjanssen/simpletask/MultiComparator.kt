@@ -5,7 +5,7 @@ import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import java.util.*
 
-class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean) {
+class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean, moduleName: String? = null) {
     var comparator : Comparator<Task>? = null
 
     var fileOrder = true
@@ -58,6 +58,15 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     it.thresholdDate ?: fallback
                 }
                 "by_completion_date" -> comp = { it.completionDate ?: last_date }
+                "by_lua" -> {
+                    if (moduleName == null || !LuaInterpreter.hasOnSortCallback(moduleName)) {
+                       continue@label
+                    }
+                    comp = {
+                        val str = LuaInterpreter.onSortCallback(moduleName, it)
+                        str
+                    }
+                }
                 else -> {
                     log.warn("MultiComparator", "Unknown sort: " + sort)
                     continue@label

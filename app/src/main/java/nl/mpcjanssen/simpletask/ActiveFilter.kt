@@ -12,12 +12,12 @@ import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
 
-data class FilterOptions(val luaModule: String, val showSelected : Boolean = false)
+data class FilterOptions(val luaModule: String, val showSelected: Boolean = false)
 
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter (val options : FilterOptions) {
+class ActiveFilter(val options: FilterOptions) {
     private val log: Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
@@ -52,7 +52,7 @@ class ActiveFilter (val options : FilterOptions) {
     }
 
     val prefill
-        get() : String  {
+        get() : String {
             val prefillLists = if (!contextsNot && contexts.size == 1 && contexts[0] != "-") "@${contexts[0]}" else ""
             val prefillTags = if (!projectsNot && projects.size == 1 && projects[0] != "-") "+${projects[0]}" else ""
             return " $prefillLists $prefillTags".trimEnd()
@@ -129,6 +129,7 @@ class ActiveFilter (val options : FilterOptions) {
         if (contexts != null && contexts != "") {
             this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
+        initInterpreter()
     }
 
     fun hasFilter(): Boolean {
@@ -225,6 +226,20 @@ class ActiveFilter (val options : FilterOptions) {
         useScript = false
     }
 
+    fun initInterpreter() {
+        try {
+            val code = if (useScript) {
+                script
+            } else {
+                null
+            }
+            LuaInterpreter.clearOnFilter(options.luaModule)
+            LuaInterpreter.evalScript(options.luaModule, code)
+        } catch (e: LuaError) {
+            log.debug(TAG, "Lua execution failed " + e.message)
+        }
+    }
+
     fun apply(items: Sequence<Task>?): Sequence<Task> {
         if (useScript) {
             log.info(TAG, "Filtering with Lua $script")
@@ -233,39 +248,36 @@ class ActiveFilter (val options : FilterOptions) {
         if (items == null) {
             return emptySequence()
         }
-        val code = if (useScript) { script } else { null }
+
         val today = todayAsString
         try {
-            log.info(TAG, "Resetting onFilter callback in module ${options.luaModule}")
-            LuaInterpreter.clearOnFilter(options.luaModule)
-            LuaInterpreter.evalScript(options.luaModule, code)
             return items.filter {
-                    if (options.showSelected && TodoList.isSelected(it)) {
-                        return@filter true
-                    }
-                    if (this.hideCompleted && it.isCompleted()) {
-                        return@filter false
-                    }
-                    if (this.hideFuture && it.inFuture(today)) {
-                        return@filter false
-                    }
-                    if (this.hideHidden && it.isHidden()) {
-                        return@filter false
-                    }
-                    if ("" == it.inFileFormat().trim { it <= ' ' }) {
-                        return@filter false
-                    }
-                    if (!filter.apply(it)) {
-                        return@filter false
-                    }
-                    if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, it)) {
-                        return@filter false
-                    }
-                return@filter true
+                if (options.showSelected && TodoList.isSelected(it)) {
+                    return@filter true
                 }
-            } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                if (this.hideCompleted && it.isCompleted()) {
+                    return@filter false
+                }
+                if (this.hideFuture && it.inFuture(today)) {
+                    return@filter false
+                }
+                if (this.hideHidden && it.isHidden()) {
+                    return@filter false
+                }
+                if ("" == it.inFileFormat().trim { it <= ' ' }) {
+                    return@filter false
+                }
+                if (!filter.apply(it)) {
+                    return@filter false
+                }
+                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, it)) {
+                    return@filter false
+                }
+                return@filter true
             }
+        } catch (e: LuaError) {
+            log.debug(TAG, "Lua execution failed " + e.message)
+        }
         return emptySequence()
     }
 
