@@ -83,21 +83,9 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="filter_name_empty">Kein Name angegeben, es wird kein Filter hinzugefügt</string>
     <string name="widget_name_empty">Kein Widgetname angegeben, es wird kein Widget hinzugefügt</string>
-    <string name="add_task_help">Hinzufügen oder Aktualisieren einer Aufgabe in der Aufgabenliste. Um schnelles Hinzufügen zu ermöglichen, 
- entspricht jede Zeile einer separaten Aufgabe.
-
- <b>Priorität</b>
-
- Beginne die Zeile mit (.), wie (A)
-
- <b>Kategorien</b>
- Beginne mit einem + Zeichen, wie +Küche
-
- <b>Listen</b>
- Beginne mit einem @ Zeichen, wie @zuhause
-
- Eine Aufgabe kann eine beliebige Anzahl Kategorien beinhalten und zu beliebig vielen Listen gehören.
- </string>
+    <string name="add_task_help">Hinzufügen oder Aktualisieren einer Aufgabe in der Aufgabenliste. Eine Aufgabe je Zeile. 
+\n<b>Priorität</b> Beginne die Zeile mit (.), wie (A) <b>Kategorien</b> Beginne mit einem + Zeichen, wie +Küche <b>Listen</b> Beginne mit einem @ Zeichen, wie @zuhause 
+\nEine Aufgabe kann eine beliebige Anzahl Kategorien beinhalten und zu beliebig vielen Listen gehören. </string>
 
     <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">Archivierung</string>
@@ -145,7 +133,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="menu_capitalize_tasks">Beginne neue Aufgaben mit Großbuchstaben</string>
     <string name="back_saves_pref_title">Zurück-Schaltfläche</string>
-    <string name="back_saves_summary">Beim Betätigen von Zurück, werden eingegeben Aufgaben und Filter gespeichert.</string>
+    <string name="back_saves_summary">Betätigen von Zurück speichert die geöffnete Aufgabenlisten oder anwenden den Filter an.</string>
 
     <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
@@ -189,14 +177,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_empty_lists_summary">Zeige die Kopfzeile auch wenn alle Aufgaben unter dieser Kopfzeile versteckt sind.</string>
 
     <string name="split_actionbar_pref_title">Verwende geteilte Aktionsleiste</string>
-    <string name="split_actionbar_pref_summary">Verwende eine geteilte Aktionsleiste, damit die Schaltflächen am unteren Ende des Bildschirms sind.
+    <string name="split_actionbar_pref_summary">Verwende eine geteilte Aktionsleiste, um die Schaltflächen am unteren Bildschirmrand anzuzeigen. 
 \nDeaktiviere diese Option für mehr Bildschirmfläche.</string>
 
     <string name="show_edittext_hint_title">Zeige Hinweise</string>
-    <string name="show_edittext_hint_summary">Zeige Hinweise zum Editieren der Textboxen. Wenn dies irritiert deaktiviere die Einstellung wieder.</string>
+    <string name="show_edittext_hint_summary">Zeige Hinweise beim Editieren von Aufgaben.</string>
 
     <string name="show_complete_checkbox_title">Zeige \"Fertig\"-Auswahlfeld</string>
-    <string name="show_complete_checkbox_summary">Zeige ein Fertigstellungs-Auswahlfeld vor den Aufgaben.</string>
+    <string name="show_complete_checkbox_summary">Zeige Checkbox vor jeder Aufgabe, um sie als fertig oder nicht fertig zu markieren.</string>
 
     <string name="show_confirmation_dialogs_title">Zeige Bestätigungsdialoge</string>
     <string name="show_confirmation_dialogs_summary">Zeige einen Bestätigungsdialog vor dem Ausführen unzulässiger Operationen oder Operationen, die zu Datenverlust führen können.
@@ -211,7 +199,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_todo_path_summary">Zeigt den Pfadnamen zur todo.txt-Datei. Verzeichnisnamen werden abgekürzt. /todo/home/todo.txt wird beispielweise gekürzt zu /t/h/todo.txt.</string>
 
     <string name="show_fast_scroll_title">Schnelles Scrollen</string>
-    <string name="show_fast_scroll_summary">Bei längerer Aufgabenliste zügiger scrollen.</string>
+    <string name="show_fast_scroll_summary">In langen Aufgabenlisten schneller scrollen</string>
 
     <string name="todotxt_terms_title">todo.txt Begrifflichkeiten</string>
     <string name="todotxt_terms_summary">Verwende die Begriffe \"context\" und \"project\" an Stelle von \"tag\" und \"list\" um Konformität zu den todo.txt-Begrifflichkeiten herzustellen.</string>
@@ -219,12 +207,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="about_settings_header">Über</string>
     <string name="about_settings_summary">Anwendungsinformationen</string>
     <string name="visit_website_title">Hilfe (englisch)</string>
-    <string name="visit_website_summary">Besuche die Simpletask Website</string>
-    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+    <string name="visit_website_summary">Besuche die Website</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
 
     <string name="visit_tracker_title">Frage nach Funktionen oder berichte einen Bug</string>
     <string name="visit_tracker_summary">Frage nach neuen Funktionen oder Verbesserungen oder berichte von einem Problem.</string>
-    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
 
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manueller Sync</string>
@@ -241,36 +229,34 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">In Dropbox einloggen</string>
-    <string name="login_cloudless">Wenn du keinen Dropbox Account hast oder keinen benutzen möchtest um die todo-Liste zu speichern,
-        kannst Du  Simpletask Cloudless aus dem Play Store herunterladen.
-        \nhttp://goo.gl/X1C55P
-    </string>
+    <string name="login_cloudless">Wenn du keinen Dropbox-Account hast oder keinen benutzen möchtest um die Aufgabenliste zu speichern, kannst Du Simpletask Cloudless aus dem Play Store herunterladen. 
+\nhttps://goo.gl/X1C55P</string>
     <!-- delete -->
     <string name="delete_task_title">Aufgabe(n) löschen</string>
     <string name="archive_task_title">%s Aufgabe(n) archivieren</string>
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
-    <string name="logout_message">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.
-\n Alle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
-    <string name="dropbox_open">Bitte stelle sicher dass alle Änderungen mit Dropbox synchronisiert sind bzw. ob Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.\n
-        Alle nicht synchronisierten Änderungen sind nach dem Öffnen einer anderen Datei verloren.</string>
+    <string name="logout_message">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. dass Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist. 
+\nAlle nicht synchronisierten Änderungen sind nach dem Logout verloren.</string>
+    <string name="dropbox_open">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. dass Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist.
+\nAlle nicht synchronisierten Änderungen sind nach dem Öffnen einer anderen Datei verloren.</string>
     <string name="delete_task_confirm">Löschen</string>
     <!-- search -->
 
     <string name="clone_tags">Vorausfüllen</string>
     <string name="word_wrap">Zeilenumbruch</string>
-    <string name="search_hint">Suche...</string>
+    <string name="search_hint">Suche…</string>
     <!-- sort -->
     <string name="sort_help">Ziehen und Ablegen um die Reihenfolge zu ändern, Einträge antippen um die Sortierrichtung zu ändern.</string>
     <string name="alphabetical">Alphabetisch</string>
-    <string name="by_prio">Nach Priorität</string>
-    <string name="by_project">Nach Kategorie</string>
-    <string name="by_context">Nach Liste</string>
+    <string name="by_prio">Priorität</string>
+    <string name="by_project">Kategorie</string>
+    <string name="by_context">Liste</string>
     <string name="file_order">Wie in der Datei (unsortiert)</string>
     <string name="completed">Erledigt</string>
-    <string name="by_creation_date">Nach Erstellungsdatum</string>
+    <string name="by_creation_date">Erstellungsdatum</string>
     <string name="in_future">Anfangsdatum in der Zukunft</string>
-    <string name="by_due_date">Nach Fälligkeitsdatum</string>
-    <string name="by_threshold_date">Nach Anfangsdatum</string>
+    <string name="by_due_date">Fälligkeitsdatum</string>
+    <string name="by_threshold_date">Anfangsdatum</string>
 
     <!-- filter -->
     <string name="filter_select_all">Alles auswählen</string>
@@ -282,7 +268,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="update_filter">Aktualisieren</string>
     <string name="create_widget">Widget erstellen</string>
     <string name="filter_show_completed">Zeige erledigte Aufgaben</string>
-    <string name="filter_show_future">Zeige Aufgaben mit zukünftigem Anfangsdatum</string>
+    <string name="filter_show_future">Zeige Aufgaben mit Anfangsdatum in der Zukunft</string>
     <string name="filter_show_lists">Zeige Listen der Aufgaben</string>
     <string name="filter_show_tags">Zeige Kategorien der Aufgaben</string>
 
@@ -315,18 +301,18 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <!-- Relative Dates -->
     <string name="dates_days_ago">vor %d Tagen</string>
-    <string name="dates_one_day_ago">vor 1 Tag</string>
+    <string name="dates_one_day_ago">gestern</string>
     <string name="dates_years_ago">vor %d Jahren</string>
-    <string name="dates_one_year_ago">vor 1 Jahr</string>
+    <string name="dates_one_year_ago">letztes Jahr</string>
     <string name="dates_months_ago">vor %d Monaten</string>
-    <string name="dates_one_month_ago">vor 1 Monat</string>
+    <string name="dates_one_month_ago">letzten Monat</string>
     <string name="dates_weeks_ago">vor %d Wochen</string>
-    <string name="dates_one_week_ago">vor 1 Woche</string>
+    <string name="dates_one_week_ago">letzte Woche</string>
 
 
-    <string name="dates_one_week">1 Woche</string>
-    <string name="dates_two_weeks">2 Wochen</string>
-    <string name="dates_one_month">1 Monat</string>
+    <string name="dates_one_week">Woche</string>
+    <string name="dates_two_weeks">zwei Wochen</string>
+    <string name="dates_one_month">ein Monat</string>
 
     <string name="dates_today">Heute</string>
     <string name="date_pick">Datum auswählen</string>
@@ -365,15 +351,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_disp_name">Simpletaskerinnerungen</string>
     <string name="calendar_sync_desc_due">Erinnerung an das Fälligkeitsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_sync_desc_thre">Erinnerung an das Anfangsdatum, automatisch erstellt von Simpletask</string>
-    <string name="calendar_exists_warning">Warnung: ein Kalender identischen Namens existiert bereits. Überschreibe...</string>
+    <string name="calendar_exists_warning">Warnung: ein Kalender mit identischem Namen existiert bereits. Überschreibe…</string>
     <string name="calendar_write_error">Fehler: Kann Kalender nicht schreiben</string>
 
  <string name="click_to_copy">Tippen, um in die Zwischenablage zu kopieren.</string>
     <string name="action_settings">Einstellungen</string>
     <string name="append_tasks_at_end_summary">Neue Aufgaben am Ende der todo.txt einfügen. Wenn diese Option deaktiviert ist, werden neue Aufgaben am Anfang der Datei eingefügt.</string>
     <string name="append_tasks_at_end_title">Neue Aufgaben anhängen</string>
-    <string name="by_project_todotxt">Nach Projekten</string>
-    <string name="by_context_todotxt">Nach Kontext</string>
+    <string name="by_project_todotxt">Projekt</string>
+    <string name="by_context_todotxt">Kontext</string>
     <string name="context_prompt_todotxt">Kontext</string>
     <string name="date">Datum</string>
     <string name="filter_show_create_date">Zeige Alter einer Aufgabe</string>
@@ -383,10 +369,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="share_database">Datenbank durchsuchen</string>
     <string name="share_history">Anzeigen und Weitergeben der internen todo.txt-Verlaufs-Datenbank zur Wiederherstellung.</string>
-    <string name="share_history_title">Todo-Verlauf</string>
+    <string name="share_history_title">Aufgaben-Verlauf</string>
     <string name="task_action">Aktion</string>
-    <string name="write_failed">Fehler beim Schreiben der Datei! Ihre Änderungen wurden NICHT gespeichert.</string>
-    <string name="by_completion_date">Nach Fertigstellungsdatum</string>
+    <string name="write_failed">Fehler beim Schreiben der Datei. Ihre Änderungen wurden NICHT gespeichert.</string>
+    <string name="by_completion_date">Fertigstellungsdatum</string>
     <string name="clear_database">Datenbank leeren</string>
     <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
     <string name="none">kein</string>
@@ -416,7 +402,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="todotxt_features_settings_header">Eigenschaften</string>
     <string name="todotxt_features_settings_summary">Eigenschaften ein- und ausschalten</string>
     <string name="todotxt_ui_settings_summary">Festlegen, was angezeigt wird</string>
-    <string name="config_widget">Widget-Konfiguration</string>
+    <string name="config_widget">Widget konfigurieren</string>
     <string name="datebar_relative_size_summary">Relative Schriftgröße Datum</string>
     <string name="lua_config_screen">Lua-Konfiguration</string>
     <string name="lua_error">Lua-Fehler</string>
@@ -441,29 +427,31 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="task_text_ellipsizing_none">Aus: Sehr langer Aufgabentext</string>
     <string name="task_text_ellipsizing_start">Anfang: ... Aufgabentext</string>
-    <string name="task_text_ellipsizing_middle">Mitte: Sehr ...text</string>
-    <string name="task_text_ellipsizing_end">Ende: Sehr langer...</string>
+    <string name="task_text_ellipsizing_middle">Mitte: Sehr... text</string>
+    <string name="task_text_ellipsizing_end">Ende: Sehr langer…</string>
     <string name="task_text_ellipsizing_marquee">Abschnitt: Sehr langer Aufg</string>
 
-    <string name="filter_tab_header_prio">PRIO</string>
-    <string name="filter_tab_header_other">ANDERE</string>
-    <string name="filter_tab_header_sort">SORT</string>
-    <string name="filter_tab_header_script">SKRIPT</string>
+    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_other">Andere</string>
+    <string name="filter_tab_header_sort">Sort</string>
+    <string name="filter_tab_header_script">Skript</string>
 
     <string name="script_tab_script_from_file">Skript aus Datei</string>
     <string name="script_tab_use_script">Skript verwenden</string>
-    <string name="script_tab_test">TEST</string>
+    <string name="script_tab_test">Test</string>
     <string name="script_tab_test_task">Testaufgabe</string>
     <string name="script_tab_script">Skript</string>
-    <string name="script_tab_true_task_shown">Wahr, Aufgabe wird angezeigt</string>
-    <string name="script_tab_false_task_not_shown">Falsch, Aufgabe wird nicht angezeigt</string>
+    <string name="script_tab_true_task_shown">einschalten um Aufgabe anzuzeigen</string>
+    <string name="script_tab_false_task_not_shown">ausschalten um Aufgabe auszublenden</string>
 
     <string name="action_pop_up_call">Anruf:</string>
     <string name="action_pop_up_sms">SMS:</string>
 
-    <string name="quick_filter_tag_header_inverted">INVERTIERT</string>
+    <string name="quick_filter_tag_header_inverted">Invertiert</string>
     <string name="saved_filters_exported">exportierte Filter</string>
     <string name="toast_lua_config_imported">importierte Lua-Konfiguration</string>
 
     <string name="saved_filters_imported">Filter importiert</string>
+    <string name="by_lua">Lua Skript</string>
+
     </resources>
