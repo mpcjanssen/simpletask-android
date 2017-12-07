@@ -19,7 +19,7 @@
     <string name="log">Logboek</string>
     <string name="next">Volgende</string>
     <string name="prev">Vorige</string>
-    <string name="open_file">Todo-bestand openen</string>
+    <string name="open_file">Taaklijstbestand openen</string>
     <string name="sync">Synchroniseren</string>
     <string name="changelist">Lijst selecteren</string>
     <string name="search">Zoeken</string>
@@ -58,20 +58,7 @@
 
     <string name="filter_name_empty">Geen naam opgegeven; filter wordt niet toegevoegd</string>
     <string name="widget_name_empty">Geen widgetnaam opgegeven; widget wordt niet toegevoegd</string>
-    <string name="add_task_help">Voeg een taak toe aan de taaklijst of werk deze bij. Tijdens het toevoegen van taken staat elke regel voor een aparte taak.
-
- <b>Prioriteit</b>
-
- begin de regel met (.), bijv. (A)
-
- <b>Labels</b>
- begin met het +-teken, bijv. +Keuken
-
- <b>Lijsten</b>
- begin met het @-teken, bijv. @thuis
-
- Een taak mag een oneindig aantal labels bevatten of zich bevinden op meerdere lijsten.
- </string>
+    <string name="add_task_help">Voeg een taak toe aan de taaklijst of werk deze bij. Eén taak per regel. <b>Prioriteit</b> begin de regel met (.), bijv. (A) <b>Labels</b> begin met het +-teken, bijv. +Keuken <b>Lijsten</b> begin met het @-teken, bijv. @thuis Een taak mag een oneindig aantal labels bevatten of zich bevinden op meerdere lijsten. </string>
 
     <string name="preference_appearance">Uiterlijk</string>
     <string name="preference_interface">App-uiterlijk</string>
@@ -103,7 +90,7 @@
     <string name="todotxt_ui_settings_header">Mogelijkheden</string>
     <string name="todotxt_ui_settings_summary">Bepaal wat er moet worden weergegeven</string>
     <string name="todotxt_behavior_settings_header">Gedrag</string>
-    <string name="todotxt_settings_summary">Applicatie-brede instellingen</string>
+    <string name="todotxt_settings_summary">Instellingen voor de hele app</string>
     <string name="sort_complete_last_pref_title">Voltooide taken als laatste weergeven</string>
     <string name="sort_complete_last_pref_summary">Voltooide taken altijd onderaan de lijst weergeven</string>
     <string name="keep_prio_header">Prioriteit behouden in voltooide taken</string>
