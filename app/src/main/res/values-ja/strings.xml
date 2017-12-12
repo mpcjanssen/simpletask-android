@@ -41,9 +41,9 @@
     <string name="update">更新</string>
     <string name="delete">削除</string>
     <string name="defer_due">期限日を設定</string>
-    <string name="defer_threshold">期日を設定</string>
+    <string name="defer_threshold">着手日を設定</string>
     <string name="insert_due">期限日を挿入</string>
-    <string name="insert_threshold">期日を挿入</string>
+    <string name="insert_threshold">着手日を挿入</string>
     <string name="share">共有</string>
     <string name="share_database">データベースを共有</string>
     <string name="ok">OK</string>
@@ -51,8 +51,8 @@
     <string name="clear_filter">フィルターをクリア</string>
     <string name="write_failed">ファイルの書き込みに失敗しました。変更内容は保存されませんでした。</string>
 
-    <string name="filter_name_empty">名前が指定されていません。フィルターを追加しません</string>
-    <string name="widget_name_empty">ウィジェット名が指定されていません。ウィジェットを追加しません</string>
+    <string name="filter_name_empty">名前が指定されていないので、フィルターを追加できません</string>
+    <string name="widget_name_empty">ウィジェット名が指定されていませんので、ウィジェットを追加できません</string>
     <string name="add_task_help">タスクリストに、タスクを追加または更新します。タスクを追加するとき、それぞれの行がクイック追加する別のタスクです。
 
  <b>優先順位</b>
@@ -68,19 +68,19 @@
  タスクは、任意の数のタグを含めたり、複数のリストに入れることができます。
  </string>
 
-    <string name="preference_appearance">外観</string>
+    <string name="preference_appearance">表示</string>
     <string name="preference_interface">インターフェイス</string>
     <string name="preference_widget">ウィジェット</string>
     <string name="preference_other">その他</string>
 
     <string name="ARCHIVE_settings_header">アーカイブ</string>
-    <string name="ARCHIVE_settings_summary">done.txt 中の完了したタスクのアーカイブの設定</string>
+    <string name="ARCHIVE_settings_summary">done.txt に完了したタスクをアーカイブする設定</string>
     <string name="auto_archive_pref_title">自動アーカイブ</string>
     <string name="auto_archive_pref_summary">完了時にすぐにタスクをアーカイブします。</string>
     <string name="archive_now_pref_title">今すぐアーカイブ</string>
     <string name="archive_now_pref_summary">完了したタスクを todo.txt から done.txt に移動します。</string>
     <string name="dropbox_logout_pref_title">ログアウト</string>
-    <string name="dropbox_logout_pref_summary">Dropbox のログアウト。</string>
+    <string name="dropbox_logout_pref_summary">Dropbox からログアウト。</string>
     <string name="TODOTXTPATH_title">ファイルの場所</string>
     <string name="TODOTXTPATH_summary">todo.txt が格納されている Dropbox フォルダー。</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
@@ -90,24 +90,24 @@
     <string name="todotxt_features_settings_header">機能</string>
     <string name="todotxt_features_settings_summary">機能を有効または無効にします</string>
 
-    <string name="todotxt_configuration_settings_header">構成</string>
-    <string name="todotxt_configuration_settings_summary">アプリの動作を構成します</string>
+    <string name="todotxt_configuration_settings_header">設定</string>
+    <string name="todotxt_configuration_settings_summary">アプリの動作を設定します</string>
 
     <string name="todotxt_creation_settings_header">タスクの作成</string>
 
     <string name="todotxt_ui_settings_header">機能</string>
-    <string name="todotxt_ui_settings_summary">表示するものを制御します</string>
+    <string name="todotxt_ui_settings_summary">表示条件を設定します</string>
     <string name="todotxt_behavior_settings_header">動作</string>
     <string name="todotxt_settings_summary">アプリケーション全体の設定</string>
-    <string name="sort_complete_last_pref_title">最後に完了したものを表示</string>
+    <string name="sort_complete_last_pref_title">完了したものを最後に表示</string>
     <string name="sort_complete_last_pref_summary">常に完了したタスクをリストの下部に表示します</string>
-    <string name="keep_prio_header">完了したタスクの優先順位を維持</string>
-    <string name="keep_prio_summary">完了時に todo.txt の優先順位を削除します</string>
-    <string name="prepend_date_pref_title">日付の新しいタスク</string>
+    <string name="keep_prio_header">完了したタスクの優先順位を保持</string>
+    <string name="keep_prio_summary">完了時に todo.txt での優先順位を削除します</string>
+    <string name="prepend_date_pref_title">新しいタスクに日付をつける</string>
     <string name="prepend_date_pref_summary">自動的に作成日時を追加します</string>
     <string name="line_breaks_pref_title">Windows 向けの改行</string>
-    <string name="line_breaks_pref_summary">Windows 向けの改行を使用します</string>
-    <string name="recur_from_original_date_pref_title">元の日付を使用してタスクを繰り返し</string>
+    <string name="line_breaks_pref_summary">Windows でも読める改行コードを使用します</string>
+    <string name="recur_from_original_date_pref_title">タスクを繰り返す時に元の日付を使用する</string>
     <string name="recur_from_original_date_pref_summary">定期的なタスクを作成するとき、タスクの元の日付を増やします。
  チェックを外すと、今日を基準にして新しい日付を設定します。</string>
     <string name="swipe_complete_pref_title">スワイプすると完了</string>
@@ -133,7 +133,7 @@
 
     <string name="menu_capitalize_tasks">大文字にする</string>
     <string name="back_saves_pref_title">戻るボタン</string>
-    <string name="back_saves_summary">戻るを押したときに、入力した ToDo を保存またはフィルターを適用します。</string>
+    <string name="back_saves_summary">戻るを押したときに、入力したタスクを保存またはフィルターを適用します。</string>
 
     <string name="show_txt_only_pref_title">txt ファイルのみ表示</string>
     <string name="show_txt_only_summary">ファイル選択ダイアログで .txt ファイルのみを表示します。</string>
@@ -227,9 +227,7 @@
     <string name="sync_download_message">todo.txt をダウンロードしています…</string>
 
     <string name="sync_conflict_dialog_title">ファイルの競合</string>
-    <string name="sync_conflict_dialog_msg">"おっと! Dropbox に、新しいバージョンの todo.txt ファイルがあります。
-ローカルの変更をアップロードするか、または Dropbox バージョンをダウンロードしますか?
- "</string>
+    <string name="sync_conflict_dialog_msg">おっと！ Dropbox に、新しいバージョンの todo.txt ファイルがあります。 ローカルの変更をアップロードしますか、それとも Dropboxにあるものをダウンロードしますか?</string>
 
     <string name="first_title_word">シンプルタスク</string>
     <string name="login_screen_button">Dropbox にログイン</string>
@@ -373,7 +371,7 @@ http://goo.gl/X1C55P
     <string name="click_to_copy">クリックしてクリップボードにコピーします。</string>
 
     <string name="share_history">回復のため内部 todo.txt 履歴データベースを表示および共有します。</string>
-    <string name="share_history_title">Todo 履歴</string>
+    <string name="share_history_title">タスクの履歴</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">設定</string>
@@ -397,9 +395,9 @@ http://goo.gl/X1C55P
     <string name="lua_config_import">インポート</string>
     <string name="lua_config_share">共有</string>
     <string name="lua_open_config">Lua の設定</string>
-<string name="unComplete">取り消し完了</string>
-    <string name="tasktexthint">+ヘクトール と +パリ の問題を @議論 @Troy
-\n+ヘクトール に、そんなドラッグはできないと伝える @Troy
+<string name="unComplete">完了を取り消す</string>
+    <string name="tasktexthint">+ヘクトール と +パリ の問題を @議論 @Troy 
+\n+ヘクトール に、ぐずぐずしないよう伝える @Troy 
 \nメニューからこのテキストを削除する @Phone</string>
 
     <string name="keep_selection_title">選択を残す</string>
@@ -407,9 +405,9 @@ http://goo.gl/X1C55P
 
 
     <string name="task_text_ellipsizing_none">なし: 非常に長いタスクのテキスト</string>
-    <string name="task_text_ellipsizing_start">開始: ...タスクのテキスト</string>
-    <string name="task_text_ellipsizing_middle">中: 非常に... テキスト</string>
-    <string name="task_text_ellipsizing_end">終了: 非常に長い...</string>
+    <string name="task_text_ellipsizing_start">冒頭: ...タスクのテキスト</string>
+    <string name="task_text_ellipsizing_middle">中間: 非常に... テキスト</string>
+    <string name="task_text_ellipsizing_end">末尾: 非常に長い…</string>
     <string name="task_text_ellipsizing_marquee">マーキー: 非常に長いテキスト</string>
 
     <string name="filter_tab_header_prio">優先</string>
@@ -422,10 +420,10 @@ http://goo.gl/X1C55P
     <string name="script_tab_test">テスト</string>
     <string name="script_tab_test_task">タスクのテスト</string>
     <string name="script_tab_script">スクリプト</string>
-    <string name="script_tab_true_task_shown">はい、タスクが表示されます</string>
-    <string name="script_tab_false_task_not_shown">いいえ、タスクは表示されません</string>
+    <string name="script_tab_true_task_shown">タスクを表示するには選択します</string>
+    <string name="script_tab_false_task_not_shown">タスクを隠すには選択を外します</string>
 
-    <string name="action_pop_up_call">呼び出し:</string>
+    <string name="action_pop_up_call">電話:</string>
     <string name="action_pop_up_sms">SMS:</string>
 
     <string name="quick_filter_tag_header_inverted">反転</string>
