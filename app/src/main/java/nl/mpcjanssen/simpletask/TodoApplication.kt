@@ -44,9 +44,7 @@ import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.appVersion
-import nl.mpcjanssen.simpletask.util.todayAsString
+import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
 
@@ -89,6 +87,9 @@ class TodoApplication : Application(),
                 }
             }
         }
+
+        TodoActionQueue.start()
+        FileStoreActionQueue.start()
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         Logger.info(TAG, "onCreate()")
