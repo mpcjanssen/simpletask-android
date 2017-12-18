@@ -13,8 +13,6 @@ class AlarmReceiver : BroadcastReceiver() {
         if (Constants.ALARM_RELOAD == intent.getStringExtra(Constants.ALARM_REASON_EXTRA)) {
             TodoList.reload(TodoApplication.app, "Reload in background")
         } else {
-            Daos.cleanLogging()
-            // Update UI (widgets and main screen)
             TodoApplication.app.localBroadCastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
         }
 
