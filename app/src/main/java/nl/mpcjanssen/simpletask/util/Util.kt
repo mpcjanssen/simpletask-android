@@ -436,8 +436,8 @@ fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Di
         val newDialog = Dialog(act)
         newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         newDialog.setContentView(R.layout.loading)
-        val pr = newDialog.findViewById(R.id.progress) as ProgressBar
-        pr.indeterminateDrawable.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
+        val pr = newDialog.findViewById(R.id.progress) as ProgressBar?
+        pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
         newDialog.window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
         newDialog.setCancelable(false)
         newDialog.show()
