@@ -21,13 +21,13 @@ object LuaInterpreter {
     val ON_SORT_NAME = "onSort"
     val CONFIG_THEME = "theme"
     val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
-    val STDLIB = readAsset(TodoApplication.app.assets, "lua/stdlib.lua")
+    val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
 
     init {
 
         try {
             globals.set("toast", LuaToastShort())
-            evalScript(null,STDLIB)
+            evalScript(null, TODOLIB)
             evalScript(null, Config.luaConfig)
 
         } catch (e: LuaError) {
