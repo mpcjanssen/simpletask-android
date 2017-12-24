@@ -1,10 +1,8 @@
 10.0.7
 ------
 
-- Fix crash after Dropbox logout.
-- Fix archiving on Dropbox when `done.txt` doesn't exist.
+- Several Dropbox fixes.
 - Merge Lua fixes (smichel).
-- Don't crash on Dropbox related errors when loading files.
 - Add `onAdd` Lua callback. Fixes #827.
 - Merge pull request #830 (comradekingu), https, app, Lua, task list, ©, etc.
 - Add `onSort` Lua callback as a more flexible alternative for #834.
