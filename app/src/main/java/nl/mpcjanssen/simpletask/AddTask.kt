@@ -101,9 +101,9 @@ class AddTask : ThemedActionBarActivity() {
                     join(m_backup.map(Task::inFileFormat), "\n")
                 } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
                     intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
-                } else if (intent.hasExtra(ActiveFilter.INTENT_JSON)) {
+                } else if (intent.hasExtra(Query.INTENT_JSON)) {
                     val opt = FilterOptions(luaModule = "from_intent")
-                    val currentFilter = ActiveFilter(opt)
+                    val currentFilter = Query(opt)
                     currentFilter.initFromIntent(intent)
                     currentFilter.prefill
                 } else {

@@ -1,3 +1,3 @@
 package nl.mpcjanssen.simpletask
 
-var mainFilter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+var mainFilter = Query(FilterOptions(luaModule = "mainui", showSelected = true))

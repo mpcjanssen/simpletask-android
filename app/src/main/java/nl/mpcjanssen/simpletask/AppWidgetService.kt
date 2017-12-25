@@ -27,8 +27,8 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     private val log: Logger
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
     var visibleTasks = ArrayList<Task>()
-    var _filter: ActiveFilter? = null
-    var filter: ActiveFilter
+    var _filter: Query? = null
+    var filter: Query
         get() {
             val currentFilter = _filter ?: updateFilter()
             if (_filter == null) {
@@ -49,10 +49,10 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return "widget$widgetId"
     }
 
-    fun updateFilter(): ActiveFilter {
+    fun updateFilter(): Query {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
-        val filter = ActiveFilter(FilterOptions(luaModule = moduleName()))
+        val filter = Query(FilterOptions(luaModule = moduleName()))
         filter.initFromPrefs(preferences)
         log.debug(TAG, "Retrieved widget $widgetId filter")
 

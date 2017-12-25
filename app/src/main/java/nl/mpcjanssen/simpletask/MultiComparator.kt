@@ -14,7 +14,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
         val log = Logger
 
         label@ for (sort in sorts) {
-            val parts = sort.split(ActiveFilter.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+            val parts = sort.split(Query.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
             var reverse = false
             val sortType: String
             if (parts.size == 1) {
@@ -23,7 +23,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 sortType = parts[0]
             } else {
                 sortType = parts[1]
-                if (parts[0] == ActiveFilter.REVERSED_SORT) {
+                if (parts[0] == Query.REVERSED_SORT) {
                     reverse = true
                 }
             }
