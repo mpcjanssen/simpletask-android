@@ -1351,7 +1351,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 taskThreshold.visibility = View.GONE
             }
             // Set selected state
-            log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
+            // log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
             view.isActivated = TodoList.isSelected(item)
 
             // Set click listeners

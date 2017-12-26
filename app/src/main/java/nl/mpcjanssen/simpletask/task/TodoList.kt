@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task
 
 import android.app.Activity
 import android.content.Intent
+import android.os.SystemClock
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -209,6 +210,8 @@ object TodoList {
     }
 
     fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
+        log.debug(TAG, "Getting sorted and filtered tasks")
+        val start = SystemClock.elapsedRealtime()
         filter.initInterpreter()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.options.luaModule)
         val itemsToSort = if (comp.fileOrder) {
@@ -216,9 +219,12 @@ object TodoList {
         } else {
             todoItems.reversed()
         }
-        log.info(ActiveFilter.TAG, "Resetting callbacks in module ${filter.options.luaModule}")
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
-        return filter.apply(sortedItems.asSequence())
+        val result = filter.apply(sortedItems.asSequence())
+        val end = SystemClock.elapsedRealtime()
+        log.debug(TAG, "Sorting and filtering tasks took ${end-start} ms")
+        return result
+
     }
 
     fun reload(backup: BackupInterface, eol: String, reason: String = "") {
