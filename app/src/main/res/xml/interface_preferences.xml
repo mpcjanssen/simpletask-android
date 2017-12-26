@@ -41,4 +41,9 @@
         android:key="@string/ui_show_calendarview"
         android:title="@string/show_calendarview_title"
         />
+    <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/use_uuids"
+            android:title="@string/use_uuid_title"
+    />
 </PreferenceScreen>
