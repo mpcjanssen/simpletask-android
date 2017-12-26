@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import nl.mpcjanssen.simpletask.util.broadcastRefreshUI
 
