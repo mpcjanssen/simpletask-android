@@ -196,7 +196,7 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
 
 fun addHeaderLines(visibleTasks: Sequence<Task>, filter: Query, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
-    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.options.luaModule)
+    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.luaModule)
 }
 
 fun join(s: Collection<String>?, delimiter: String): String {

@@ -68,7 +68,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
 
-        mFilter = Query(FilterOptions(luaModule = environment))
+        mFilter = Query(luaModule = environment)
         val context = applicationContext
 
         if (asWidgetConfigure) {

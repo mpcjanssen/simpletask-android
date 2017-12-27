@@ -12,12 +12,13 @@ import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
 
-data class FilterOptions(val luaModule: String, val showSelected: Boolean = false)
-
 /**
  * Active filter, has methods for serialization in several formats
  */
-class Query(val options: FilterOptions) {
+class Query(
+        val luaModule: String,
+        val showSelected: Boolean = false
+) {
     private val log: Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
@@ -134,7 +135,7 @@ class Query(val options: FilterOptions) {
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
-                || !isEmptyOrNull(search) || LuaInterpreter.hasFilterCallback(options.luaModule)
+                || !isEmptyOrNull(search) || LuaInterpreter.hasFilterCallback(luaModule)
     }
 
     fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
@@ -233,8 +234,8 @@ class Query(val options: FilterOptions) {
             } else {
                 null
             }
-            LuaInterpreter.clearOnFilter(options.luaModule)
-            LuaInterpreter.evalScript(options.luaModule, code)
+            LuaInterpreter.clearOnFilter(luaModule)
+            LuaInterpreter.evalScript(luaModule, code)
         } catch (e: LuaError) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
@@ -252,7 +253,7 @@ class Query(val options: FilterOptions) {
         val today = todayAsString
         try {
             return items.filter {
-                if (options.showSelected && TodoList.isSelected(it)) {
+                if (showSelected && TodoList.isSelected(it)) {
                     return@filter true
                 }
                 if (this.hideCompleted && it.isCompleted()) {
@@ -270,7 +271,7 @@ class Query(val options: FilterOptions) {
                 if (!filter.apply(it)) {
                     return@filter false
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, it)) {
+                if (useScript && !LuaInterpreter.onFilterCallback(luaModule, it)) {
                     return@filter false
                 }
                 return@filter true
@@ -301,7 +302,7 @@ class Query(val options: FilterOptions) {
             }
 
             if (!isEmptyOrNull(search)) {
-                addFilter(ByTextFilter(options.luaModule, search, false))
+                addFilter(ByTextFilter(luaModule, search, false))
             }
         }
 
