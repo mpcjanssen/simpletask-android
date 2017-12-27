@@ -44,7 +44,7 @@ class Query(
     }
 
     // The name of the shared preference this filter came from
-    var prefName: String? = null
+    var id: String? = null
 
     var name: String? = null
 

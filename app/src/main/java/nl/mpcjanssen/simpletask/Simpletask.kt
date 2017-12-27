@@ -857,7 +857,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val filter_pref = getSharedPreferences(id, Context.MODE_PRIVATE)
                 val filter = Query(luaModule = "mainui", showSelected = true)
                 filter.initFromPrefs(filter_pref)
-                filter.prefName = id
+                filter.id = id
                 saved_filters.add(filter)
             }
             return saved_filters
@@ -1038,7 +1038,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
             val filter = filters[position]
-            val prefsName = filter.prefName!!
+            val prefsName = filter.id!!
             val popupMenu = PopupMenu(this@Simpletask, view)
             popupMenu.setOnMenuItemClickListener { item ->
                 val menuId = item.itemId
