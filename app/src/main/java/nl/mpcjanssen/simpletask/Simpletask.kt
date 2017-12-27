@@ -848,14 +848,14 @@ class Simpletask : ThemedNoActionBarActivity() {
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    val savedFilters: ArrayList<ActiveFilter>
+    val savedFilters: ArrayList<Query>
         get() {
-            val saved_filters = ArrayList<ActiveFilter>()
+            val saved_filters = ArrayList<Query>()
             val saved_filter_ids = getSharedPreferences("filters", Context.MODE_PRIVATE)
             val filterIds = saved_filter_ids.getStringSet("ids", HashSet<String>())
             for (id in filterIds) {
                 val filter_pref = getSharedPreferences(id, Context.MODE_PRIVATE)
-                val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+                val filter = Query(FilterOptions(luaModule = "mainui", showSelected = true))
                 filter.initFromPrefs(filter_pref)
                 filter.prefName = id
                 saved_filters.add(filter)
@@ -869,7 +869,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
                     jsonFilters.keys().forEach {
-                        val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+                        val filter = Query(FilterOptions(luaModule = "mainui", showSelected = true))
                         filter.initFromJSON(jsonFilters.getJSONObject(it))
                         saveFilterInPrefs(it, filter)
                     }
@@ -936,7 +936,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.show()
     }
 
-    private fun saveFilterInPrefs(name: String, filter: ActiveFilter) {
+    private fun saveFilterInPrefs(name: String, filter: Query) {
         val saved_filters = getSharedPreferences("filters", Context.MODE_PRIVATE)
         val newId = saved_filters.getInt("max_id", 1) + 1
         val filters = saved_filters.getStringSet("ids", HashSet<String>())
@@ -1059,7 +1059,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    fun createFilterShortcut(filter: ActiveFilter) {
+    fun createFilterShortcut(filter: Query) {
         val shortcut = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
         val target = Intent(Constants.INTENT_START_FILTER)
         filter.saveInIntent(target)
@@ -1083,7 +1083,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         ids.remove(prefsName)
         saved_filters.edit().putStringSet("ids", ids).apply()
         val filter_prefs = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val deleted_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+        val deleted_filter = Query(FilterOptions(luaModule = "mainui", showSelected = true))
         deleted_filter.initFromPrefs(filter_prefs)
         filter_prefs.edit().clear().apply()
         val prefs_path = File(this.filesDir, "../shared_prefs")
@@ -1097,7 +1097,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun updateSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+        val old_filter = Query(FilterOptions(luaModule = "mainui", showSelected = true))
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         mainFilter.name = filterName
@@ -1107,7 +1107,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun renameSavedFilter(prefsName: String) {
         val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
+        val old_filter = Query(FilterOptions(luaModule = "mainui", showSelected = true))
         old_filter.initFromPrefs(filter_pref)
         val filterName = old_filter.name
         val alert = AlertDialog.Builder(this)

@@ -32,8 +32,8 @@ class FilterScriptFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         log.debug(TAG, "onSaveInstanceState() this:" + this)
-        outState.putString(ActiveFilter.INTENT_SCRIPT_FILTER, script)
-        outState.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, testTask)
+        outState.putString(Query.INTENT_SCRIPT_FILTER, script)
+        outState.putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, testTask)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -76,13 +76,13 @@ class FilterScriptFragment : Fragment() {
             }
         }
         if (savedInstanceState != null) {
-            cbUseScript!!.isChecked = savedInstanceState.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, false)
-            txtScript!!.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_FILTER, ""))
-            txtTestTask!!.setText(savedInstanceState.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, ""))
+            cbUseScript!!.isChecked = savedInstanceState.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false)
+            txtScript!!.setText(savedInstanceState.getString(Query.INTENT_SCRIPT_FILTER, ""))
+            txtTestTask!!.setText(savedInstanceState.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, ""))
         } else {
-            cbUseScript!!.isChecked = arguments.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, false)
-            txtScript!!.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER, ""))
-            txtTestTask!!.setText(arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, ""))
+            cbUseScript!!.isChecked = arguments.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false)
+            txtScript!!.setText(arguments.getString(Query.INTENT_SCRIPT_FILTER, ""))
+            txtTestTask!!.setText(arguments.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, ""))
         }
         return layout
     }
@@ -134,7 +134,7 @@ class FilterScriptFragment : Fragment() {
         get() {
             val arguments = arguments
             if (cbUseScript == null) {
-                return arguments.getBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, false)
+                return arguments.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false)
             } else {
                 return cbUseScript?.isChecked ?: false
             }
@@ -143,14 +143,14 @@ class FilterScriptFragment : Fragment() {
     val environment: String
         get() {
             val arguments = arguments
-            return arguments.getString(ActiveFilter.INTENT_LUA_MODULE, "main")
+            return arguments.getString(Query.INTENT_LUA_MODULE, "main")
         }
 
     var script: String
         get() {
             val arguments = arguments
             if (txtScript == null) {
-                return arguments.getString(ActiveFilter.INTENT_SCRIPT_FILTER, "")
+                return arguments.getString(Query.INTENT_SCRIPT_FILTER, "")
             } else {
                 return txtScript!!.text.toString()
             }
@@ -163,7 +163,7 @@ class FilterScriptFragment : Fragment() {
         get() {
             val arguments = arguments
             if (txtTestTask == null) {
-                return arguments.getString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, "")
+                return arguments.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "")
             } else {
                 return txtTestTask!!.text.toString()
             }

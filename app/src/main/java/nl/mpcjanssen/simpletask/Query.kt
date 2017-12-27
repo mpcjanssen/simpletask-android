@@ -17,7 +17,7 @@ data class FilterOptions(val luaModule: String, val showSelected: Boolean = fals
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter(val options: FilterOptions) {
+class Query(val options: FilterOptions) {
     private val log: Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
@@ -322,7 +322,7 @@ class ActiveFilter(val options: FilterOptions) {
     }
 
     companion object {
-        internal val TAG = ActiveFilter::class.java.simpleName
+        internal val TAG = Query::class.java.simpleName
         const val NORMAL_SORT = "+"
         const val REVERSED_SORT = "-"
         const val SORT_SEPARATOR = "!"
