@@ -882,8 +882,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun exportFilters (exportFile: File) {
         val jsonFilters = JSONObject()
         savedQueries.forEach {
-            val jsonItem = JSONObject()
-            it.saveInJSON(jsonItem)
+            val jsonItem = it.saveInJSON()
             jsonFilters.put(it.name, jsonItem)
         }
         val r = Runnable {
