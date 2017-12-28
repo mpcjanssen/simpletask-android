@@ -59,26 +59,28 @@ class Query(
             return " $prefillLists $prefillTags".trimEnd()
         }
 
-    fun saveInJSON(json: JSONObject) {
-        json.put(INTENT_TITLE, name)
-        json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
-        json.put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
-        json.put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
-        json.put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
-        json.put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
-        json.put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
-        json.put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
-        json.put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
-        json.put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
-        json.put(INTENT_HIDE_LISTS_FILTER, hideLists)
-        json.put(INTENT_HIDE_TAGS_FILTER, hideTags)
-        json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
-        json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
-        json.put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
-        json.put(INTENT_SCRIPT_FILTER, script)
-        json.put(INTENT_USE_SCRIPT_FILTER, useScript)
-        json.put(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
-        json.put(SearchManager.QUERY, search)
+    fun saveInJSON(json: JSONObject = JSONObject()): JSONObject {
+        return json.apply {
+            put(INTENT_TITLE, name)
+            put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
+            put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
+            put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
+            put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
+            put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
+            put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
+            put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
+            put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
+            put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
+            put(INTENT_HIDE_LISTS_FILTER, hideLists)
+            put(INTENT_HIDE_TAGS_FILTER, hideTags)
+            put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
+            put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
+            put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
+            put(INTENT_SCRIPT_FILTER, script)
+            put(INTENT_USE_SCRIPT_FILTER, useScript)
+            put(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
+            put(SearchManager.QUERY, search)
+        }
     }
 
     fun initFromJSON(json: JSONObject?) {
@@ -200,19 +202,15 @@ class Query(
 
     fun saveInIntent(target: Intent?) {
         if (target != null) {
-            val json = JSONObject()
-            this.saveInJSON(json)
+            val json = this.saveInJSON()
             target.putExtra(INTENT_JSON, json.toString(2))
         }
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
-            val editor = prefs.edit()
-            val json = JSONObject()
-            this.saveInJSON(json)
-            editor.putString(INTENT_JSON, json.toString(2))
-            editor.commit()
+            val json = this.saveInJSON()
+            prefs.edit().putString(INTENT_JSON, json.toString(2)).commit()
         }
     }
 
