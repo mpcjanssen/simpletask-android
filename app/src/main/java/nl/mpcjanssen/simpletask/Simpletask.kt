@@ -387,7 +387,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        localBroadcastManager!!.unregisterReceiver(m_broadcastReceiver)
+        m_broadcastReceiver?.let {
+            localBroadcastManager!!.unregisterReceiver(it)
+        }
     }
 
     override fun onResume() {
