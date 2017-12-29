@@ -164,25 +164,27 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
     val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
         val t = item
-        val newHeader = if ( moduleName!=null && luaGrouping ) {
+        val newHeader = if (moduleName != null && luaGrouping) {
             LuaInterpreter.onGroupCallback(moduleName, t)
         } else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
         if (header != newHeader) {
             headerLine = HeaderLine(title = MyTitle(newHeader))
-            headerLine.title.myFolding=myFolding
-            if (!myFolding.containsKey(headerLine.title.ori) ) {
-                myFolding.put(headerLine.title.ori,false)
+            headerLine.title.myFolding = myFolding
+            if (!myFolding.containsKey(headerLine.title.ori)) {
+                myFolding.put(headerLine.title.ori, false)
             }
 
             result.add(headerLine)
             header = newHeader
         }
-        headerLine.title.count++
-        if (!myFolding.get(headerLine!!.title.ori)!!) {
-            val taskLine = TaskLine(item)
-            result.add(taskLine)
+        headerLine?.let {
+            headerLine.title.count++
+            if (!myFolding.get(headerLine.title.ori)!!) {
+                val taskLine = TaskLine(item)
+                result.add(taskLine)
+            }
         }
     }
 
