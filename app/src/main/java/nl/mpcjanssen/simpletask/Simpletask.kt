@@ -216,7 +216,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
         TodoList.selectedTasks.forEach { task ->
-            val luaTxt = LuaInterpreter.onDisplayCallback(mainFilter.options.luaModule, task)
+            val luaTxt = LuaInterpreter.onDisplayCallback(mainFilter.luaModule, task)
             result.add(luaTxt ?: task.inFileFormat())
         }
         return join(result, "\n")
@@ -799,7 +799,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (checkedTasks.size == 1) {
             // Set the task as title
             val task = checkedTasks[0]
-            val luaTxt = LuaInterpreter.onDisplayCallback(mainFilter.options.luaModule, task)
+            val luaTxt = LuaInterpreter.onDisplayCallback(mainFilter.luaModule, task)
             calendarTitle = luaTxt ?: task.text
         } else {
             // Set the tasks as description
@@ -848,34 +848,18 @@ class Simpletask : ThemedNoActionBarActivity() {
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    val savedFilters: ArrayList<ActiveFilter>
-        get() {
-            val saved_filters = ArrayList<ActiveFilter>()
-            val saved_filter_ids = getSharedPreferences("filters", Context.MODE_PRIVATE)
-            val filterIds = saved_filter_ids.getStringSet("ids", HashSet<String>())
-            for (id in filterIds) {
-                val filter_pref = getSharedPreferences(id, Context.MODE_PRIVATE)
-                val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
-                filter.initFromPrefs(filter_pref)
-                filter.prefName = id
-                saved_filters.add(filter)
-            }
-            return saved_filters
-        }
-
     fun importFilters (importFile: File) {
         val r = Runnable {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
                     jsonFilters.keys().forEach {
-                        val filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
-                        filter.initFromJSON(jsonFilters.getJSONObject(it))
-                        saveFilterInPrefs(it, filter)
+                        val newQuery = Query(luaModule = "mainui", showSelected = true)
+                        newQuery.initFromJSON(jsonFilters.getJSONObject(it))
+                        SavedQuery(query = newQuery).saveAs(it)
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-                    showToastShort(this, R.string.saved_filters_imported)
-                }
+                    showToastShort(this, R.string.saved_filters_imported) }
             } catch (e: IOException) {
                 log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
@@ -885,11 +869,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     fun exportFilters (exportFile: File) {
-        val jsonFilters = JSONObject()
-        savedFilters.forEach {
-            val jsonItem = JSONObject()
-            it.saveInJSON(jsonItem)
-            jsonFilters.put(it.name, jsonItem)
+        val queries = SavedQuery.ids.map { SavedQuery(it).query }
+        val jsonFilters = queries.fold(JSONObject()) { acc, query ->
+            acc.put(query.name, query.saveInJSON())
         }
         val r = Runnable {
             try {
@@ -927,24 +909,13 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (value == "") {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
-                saveFilterInPrefs(value, mainFilter)
+                SavedQuery(query = mainFilter).saveAs(value)
                 updateNavDrawer()
             }
         }
 
         alert.setNegativeButton("Cancel") { _, _ -> }
         alert.show()
-    }
-
-    private fun saveFilterInPrefs(name: String, filter: ActiveFilter) {
-        val saved_filters = getSharedPreferences("filters", Context.MODE_PRIVATE)
-        val newId = saved_filters.getInt("max_id", 1) + 1
-        val filters = saved_filters.getStringSet("ids", HashSet<String>())
-        filters.add("filter_" + newId)
-        saved_filters.edit().putStringSet("ids", filters).putInt("max_id", newId).apply()
-        val test_filter_prefs = getSharedPreferences("filter_" + newId, Context.MODE_PRIVATE)
-        filter.name = name
-        filter.saveInPrefs(test_filter_prefs)
     }
 
     override fun onBackPressed() {
@@ -1020,14 +991,14 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateNavDrawer() {
-        val filters = savedFilters
-        Collections.sort(filters) { f1, f2 -> f1.name!!.compareTo(f2.name!!, ignoreCase = true) }
-        val names = filters.map { it.name!! }
+        val queries = ArrayList<SavedQuery>(SavedQuery.ids.map { SavedQuery(it) })
+        Collections.sort(queries) { q1, q2 -> q1.name.compareTo(q2.name, ignoreCase = true) }
+        val names = queries.map { it.name }
         nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
         nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
         nav_drawer.isLongClickable = true
         nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            mainFilter = filters[position]
+            mainFilter = queries[position].query
             val intent = intent
             mainFilter.saveInIntent(intent)
             setIntent(intent)
@@ -1037,16 +1008,15 @@ class Simpletask : ThemedNoActionBarActivity() {
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         }
         nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
-            val filter = filters[position]
-            val prefsName = filter.prefName!!
+            val query = queries[position]
             val popupMenu = PopupMenu(this@Simpletask, view)
             popupMenu.setOnMenuItemClickListener { item ->
                 val menuId = item.itemId
                 when (menuId) {
-                    R.id.menu_saved_filter_delete -> deleteSavedFilter(prefsName)
-                    R.id.menu_saved_filter_shortcut -> createFilterShortcut(filter)
-                    R.id.menu_saved_filter_rename -> renameSavedFilter(prefsName)
-                    R.id.menu_saved_filter_update -> updateSavedFilter(prefsName)
+                    R.id.menu_saved_filter_delete -> deleteSavedQuery(query)
+                    R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.query)
+                    R.id.menu_saved_filter_rename -> renameSavedQuery(query)
+                    R.id.menu_saved_filter_update -> updateSavedQuery(query)
                     else -> {
                     }
                 }
@@ -1059,12 +1029,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    fun createFilterShortcut(filter: ActiveFilter) {
+    fun createFilterShortcut(query: Query) {
         val shortcut = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
         val target = Intent(Constants.INTENT_START_FILTER)
-        filter.saveInIntent(target)
+        query.saveInIntent(target)
 
-        target.putExtra("name", filter.name)
+        target.putExtra("name", query.name)
 
         // Setup target intent for shortcut
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target)
@@ -1072,44 +1042,21 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Set shortcut icon
         val iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_launcher)
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes)
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, filter.name)
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, query.name)
         sendBroadcast(shortcut)
     }
 
-    private fun deleteSavedFilter(prefsName: String) {
-        val saved_filters = getSharedPreferences("filters", Context.MODE_PRIVATE)
-        val ids = HashSet<String>()
-        ids.addAll(saved_filters.getStringSet("ids", HashSet<String>()))
-        ids.remove(prefsName)
-        saved_filters.edit().putStringSet("ids", ids).apply()
-        val filter_prefs = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val deleted_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
-        deleted_filter.initFromPrefs(filter_prefs)
-        filter_prefs.edit().clear().apply()
-        val prefs_path = File(this.filesDir, "../shared_prefs")
-        val prefs_xml = File(prefs_path, prefsName + ".xml")
-        val deleted = prefs_xml.delete()
-        if (!deleted) {
-            log.warn(TAG, "Failed to delete saved filter: " + deleted_filter.name!!)
-        }
+    private fun deleteSavedQuery(query: SavedQuery) {
+        query.delete()
         updateNavDrawer()
     }
 
-    private fun updateSavedFilter(prefsName: String) {
-        val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
-        old_filter.initFromPrefs(filter_pref)
-        val filterName = old_filter.name
-        mainFilter.name = filterName
-        mainFilter.saveInPrefs(filter_pref)
+    private fun updateSavedQuery(query: SavedQuery) {
+        SavedQuery(query.id, mainFilter).saveAs(query.name)
         updateNavDrawer()
     }
 
-    private fun renameSavedFilter(prefsName: String) {
-        val filter_pref = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        val old_filter = ActiveFilter(FilterOptions(luaModule = "mainui", showSelected = true))
-        old_filter.initFromPrefs(filter_pref)
-        val filterName = old_filter.name
+    private fun renameSavedQuery(query: SavedQuery) {
         val alert = AlertDialog.Builder(this)
 
         alert.setTitle(R.string.rename_filter)
@@ -1118,7 +1065,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Set an EditText view to get user input
         val input = EditText(this)
         alert.setView(input)
-        input.setText(filterName)
+        input.setText(query.name)
 
         alert.setPositiveButton("Ok") { _, _ ->
             val text = input.text
@@ -1131,8 +1078,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (value == "") {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
-                old_filter.name = value
-                old_filter.saveInPrefs(filter_pref)
+                query.saveAs(value)
                 updateNavDrawer()
             }
         }
@@ -1272,7 +1218,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (mainFilter.hideTags) {
                 tokensToShow = tokensToShow and TToken.TTAG.inv()
             }
-            val txt = LuaInterpreter.onDisplayCallback(mainFilter.options.luaModule, task) ?: task.showParts(tokensToShow)
+            val txt = LuaInterpreter.onDisplayCallback(mainFilter.luaModule, task) ?: task.showParts(tokensToShow)
             val ss = SpannableString(txt)
 
             val contexts = task.lists

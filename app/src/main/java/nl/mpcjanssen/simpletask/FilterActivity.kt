@@ -28,7 +28,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
     internal var asWidgetConfigure = false
     internal var asWidgetReConfigure = false
-    internal lateinit var mFilter: ActiveFilter
+    internal lateinit var mFilter: Query
 
     internal lateinit var m_app: TodoApplication
     val prefs = Config.prefs
@@ -68,7 +68,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
 
-        mFilter = ActiveFilter(FilterOptions(luaModule = environment))
+        mFilter = Query(luaModule = environment)
         val context = applicationContext
 
         if (asWidgetConfigure) {
@@ -122,13 +122,13 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
         // Fill arguments for fragment
         arguments = Bundle()
-        arguments.putBoolean(ActiveFilter.INTENT_HIDE_COMPLETED_FILTER, mFilter.hideCompleted)
-        arguments.putBoolean(ActiveFilter.INTENT_HIDE_FUTURE_FILTER, mFilter.hideFuture)
-        arguments.putBoolean(ActiveFilter.INTENT_HIDE_LISTS_FILTER, mFilter.hideLists)
-        arguments.putBoolean(ActiveFilter.INTENT_HIDE_TAGS_FILTER, mFilter.hideTags)
-        arguments.putBoolean(ActiveFilter.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.hideCreateDate)
-        arguments.putBoolean(ActiveFilter.INTENT_HIDE_HIDDEN_FILTER, mFilter.hideHidden)
-        arguments.putBoolean(ActiveFilter.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
+        arguments.putBoolean(Query.INTENT_HIDE_COMPLETED_FILTER, mFilter.hideCompleted)
+        arguments.putBoolean(Query.INTENT_HIDE_FUTURE_FILTER, mFilter.hideFuture)
+        arguments.putBoolean(Query.INTENT_HIDE_LISTS_FILTER, mFilter.hideLists)
+        arguments.putBoolean(Query.INTENT_HIDE_TAGS_FILTER, mFilter.hideTags)
+        arguments.putBoolean(Query.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.hideCreateDate)
+        arguments.putBoolean(Query.INTENT_HIDE_HIDDEN_FILTER, mFilter.hideHidden)
+        arguments.putBoolean(Query.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
         arguments.putString(TAB_TYPE, OTHER_TAB)
         val otherTab = FilterOtherFragment()
         otherTab.arguments = arguments
@@ -143,11 +143,11 @@ class FilterActivity : ThemedNoActionBarActivity() {
         pagerAdapter!!.add(sortTab)
 
         arguments = Bundle()
-        arguments.putString(ActiveFilter.INTENT_LUA_MODULE, environment)
+        arguments.putString(Query.INTENT_LUA_MODULE, environment)
 
-        arguments.putBoolean(ActiveFilter.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
-        arguments.putString(ActiveFilter.INTENT_SCRIPT_FILTER, mFilter.script)
-        arguments.putString(ActiveFilter.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
+        arguments.putBoolean(Query.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
+        arguments.putString(Query.INTENT_SCRIPT_FILTER, mFilter.script)
+        arguments.putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
         arguments.putString(TAB_TYPE, SCRIPT_TAB)
         val scriptTab = FilterScriptFragment()
         scriptFragment = scriptTab
