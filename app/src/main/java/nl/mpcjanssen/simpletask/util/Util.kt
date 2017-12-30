@@ -194,9 +194,9 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
     return result
 }
 
-fun addHeaderLines(visibleTasks: Sequence<Task>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: Sequence<Task>, filter: Query, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
-    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.options.luaModule)
+    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.luaModule)
 }
 
 fun join(s: Collection<String>?, delimiter: String): String {
@@ -578,7 +578,7 @@ fun getRelativeAge(task: Task, app: TodoApplication): String? {
     return getRelativeDate(app, "", date).toString()
 }
 
-fun initTaskWithFilter(task: Task, mFilter: ActiveFilter) {
+fun initTaskWithFilter(task: Task, mFilter: Query) {
     if (!mFilter.contextsNot && mFilter.contexts.size == 1) {
         task.addList(mFilter.contexts[0])
     }
