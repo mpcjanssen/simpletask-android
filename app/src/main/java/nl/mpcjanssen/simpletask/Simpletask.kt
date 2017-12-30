@@ -848,29 +848,18 @@ class Simpletask : ThemedNoActionBarActivity() {
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    val savedQueries: ArrayList<Query>
-        get() {
-            val saved_queries = ArrayList<Query>()
-            for (id in QueryStore.queryIds) {
-                val query = QueryStore.getQuery(id)
-                saved_queries.add(query)
-            }
-            return saved_queries
-        }
-
     fun importFilters (importFile: File) {
         val r = Runnable {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
                     jsonFilters.keys().forEach {
-                        val filter = Query(luaModule = "mainui", showSelected = true)
-                        filter.initFromJSON(jsonFilters.getJSONObject(it))
-                        QueryStore.save(filter, it)
+                        val newQuery = Query(luaModule = "mainui", showSelected = true)
+                        newQuery.initFromJSON(jsonFilters.getJSONObject(it))
+                        SavedQuery(query = newQuery).saveAs(it)
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-                    showToastShort(this, R.string.saved_filters_imported)
-                }
+                    showToastShort(this, R.string.saved_filters_imported) }
             } catch (e: IOException) {
                 log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
@@ -880,10 +869,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     fun exportFilters (exportFile: File) {
-        val jsonFilters = JSONObject()
-        savedQueries.forEach {
-            val jsonItem = it.saveInJSON()
-            jsonFilters.put(it.name, jsonItem)
+        val queries = SavedQuery.ids.map { SavedQuery(it).query }
+        val jsonFilters = queries.fold(JSONObject()) { acc, query ->
+            acc.put(query.name, query.saveInJSON())
         }
         val r = Runnable {
             try {
@@ -921,7 +909,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (value == "") {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
-                QueryStore.save(mainFilter, value)
+                SavedQuery(query = mainFilter).saveAs(value)
                 updateNavDrawer()
             }
         }
@@ -1003,14 +991,14 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateNavDrawer() {
-        val queries = savedQueries
-        Collections.sort(queries) { f1, f2 -> f1.name!!.compareTo(f2.name!!, ignoreCase = true) }
-        val names = queries.map { it.name!! }
+        val queries = ArrayList<SavedQuery>(SavedQuery.ids.map { SavedQuery(it) })
+        Collections.sort(queries) { q1, q2 -> q1.name.compareTo(q2.name, ignoreCase = true) }
+        val names = queries.map { it.name }
         nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
         nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
         nav_drawer.isLongClickable = true
         nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            mainFilter = queries[position]
+            mainFilter = queries[position].query
             val intent = intent
             mainFilter.saveInIntent(intent)
             setIntent(intent)
@@ -1026,7 +1014,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val menuId = item.itemId
                 when (menuId) {
                     R.id.menu_saved_filter_delete -> deleteSavedQuery(query)
-                    R.id.menu_saved_filter_shortcut -> createFilterShortcut(query)
+                    R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.query)
                     R.id.menu_saved_filter_rename -> renameSavedQuery(query)
                     R.id.menu_saved_filter_update -> updateSavedQuery(query)
                     else -> {
@@ -1058,19 +1046,17 @@ class Simpletask : ThemedNoActionBarActivity() {
         sendBroadcast(shortcut)
     }
 
-    private fun deleteSavedQuery(query: Query) {
-        query.id?.let {
-            QueryStore.delete(it)
-        } ?: log.warn(TAG, "Cannot delete query with no ID: ${query.name}")
+    private fun deleteSavedQuery(query: SavedQuery) {
+        query.delete()
         updateNavDrawer()
     }
 
-    private fun updateSavedQuery(query: Query) {
-        QueryStore.save(mainFilter, query.name, query.id)
+    private fun updateSavedQuery(query: SavedQuery) {
+        SavedQuery(query.id, mainFilter).saveAs(query.name)
         updateNavDrawer()
     }
 
-    private fun renameSavedQuery(query: Query) {
+    private fun renameSavedQuery(query: SavedQuery) {
         val alert = AlertDialog.Builder(this)
 
         alert.setTitle(R.string.rename_filter)
@@ -1092,7 +1078,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (value == "") {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
-                QueryStore.save(query, value)
+                query.saveAs(value)
                 updateNavDrawer()
             }
         }
