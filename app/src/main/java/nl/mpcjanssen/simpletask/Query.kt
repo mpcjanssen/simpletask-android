@@ -43,9 +43,6 @@ class Query(
         return join(m_sorts, ",")
     }
 
-    // The name of the shared preference this filter came from
-    var id: String? = null
-
     var name: String? = null
 
     init {
