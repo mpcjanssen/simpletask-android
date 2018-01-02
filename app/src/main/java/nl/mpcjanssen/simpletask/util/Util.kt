@@ -61,6 +61,8 @@ val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
 
+val myFolding: HashMap<String, Boolean> = hashMapOf()
+
 val mdParser: Parser = Parser.builder().build()
 val htmlRenderer : HtmlRenderer = HtmlRenderer.builder().build()
 
@@ -158,37 +160,37 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
 
     var header = ""
     val result = ArrayList<VisibleLine>()
-    var count = 0
     var headerLine: HeaderLine? = null
     val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
         val t = item
-        val newHeader = if ( moduleName!=null && luaGrouping ) {
+        val newHeader = if (moduleName != null && luaGrouping) {
             LuaInterpreter.onGroupCallback(moduleName, t)
         } else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
         if (header != newHeader) {
-            if (headerLine != null) {
-                headerLine.title += " ($count)"
+            headerLine = HeaderLine(title = MyTitle(newHeader))
+            headerLine.title.myFolding = myFolding
+            if (!myFolding.containsKey(headerLine.title.ori)) {
+                myFolding.put(headerLine.title.ori, false)
             }
-            headerLine = HeaderLine(newHeader)
-            count = 0
+
             result.add(headerLine)
             header = newHeader
         }
-        count++
-        val taskLine = TaskLine(item)
-        result.add(taskLine)
-    }
-    // Add count to last header
-    if (headerLine != null) {
-        headerLine.title += " ($count)"
+        headerLine?.let {
+            headerLine.title.count++
+            if (!myFolding.get(headerLine.title.ori)!!) {
+                val taskLine = TaskLine(item)
+                result.add(taskLine)
+            }
+        }
     }
 
     // Clean up possible last empty list header that should be hidden
     val i = result.size
-    if (i > 0 && result[i - 1].header) {
+    if (i > 0 && result[i - 1].header && headerLine!!.title.count==0) {
         result.removeAt(i - 1)
     }
     return result

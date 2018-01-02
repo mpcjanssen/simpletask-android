@@ -387,7 +387,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        localBroadcastManager!!.unregisterReceiver(m_broadcastReceiver)
+        m_broadcastReceiver?.let {
+            localBroadcastManager!!.unregisterReceiver(it)
+        }
     }
 
     override fun onResume() {
@@ -1173,10 +1175,16 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         fun bindHeader(holder : TaskViewHolder, position: Int) {
+            val view = holder.itemView
             val t = holder.itemView.list_header_title
             val line = visibleLines[position]
-            t.text = line.title
+            t.text = line.title?.text
             t.textSize = textSize
+            var originalTitle = line.title?.ori
+            view.setOnClickListener {
+                line.title?.myFolding!!.put(originalTitle!!,!line.title?.myFolding!!.get(originalTitle)!!)
+                TodoList.notifyTasklistChanged(Config.todoFileName, Config.eol, m_app, true)
+            }
         }
 
         fun bindTask (holder : TaskViewHolder, position: Int) {
@@ -1314,6 +1322,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
                 it.isActivated = newSelectedState
                 invalidateOptionsMenu()
+
             }
 
             view.setOnLongClickListener {
