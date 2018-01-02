@@ -350,7 +350,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         alert.setView(input)
         input.setText(name)
 
-        alert.setPositiveButton("Ok") { dialog, whichButton ->
+        alert.setPositiveButton("Ok") { _, _ ->
             val value = input.text.toString()
             if (value == "") {
                 showToastShort(applicationContext, R.string.widget_name_empty)
@@ -359,7 +359,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
             }
         }
 
-        alert.setNegativeButton("Cancel") { dialog, whichButton -> }
+        alert.setNegativeButton("Cancel") { _, _ -> }
 
         alert.show()
 
