@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.list_header.view.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import kotlinx.android.synthetic.main.main.*
 import kotlinx.android.synthetic.main.update_items_dialog.view.*
+import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -87,7 +88,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var log = Logger
 
-    private var activeQuery = Query(luaModule = "mainui", showSelected = true)
+    private var tempQuery = Query(luaModule = "mainui", showSelected = true)
+
+    val activeQuery: Query
+        get() = queryId?.let { SavedQuery(it).query } ?: tempQuery
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -282,6 +286,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         // Show search or filter results
+        queryId = null
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
             activeQuery.initFromIntent(intent)
@@ -977,6 +982,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Also clear the intent so we wont get the old filter after
         // switching back to app later fixes [1c5271ee2e]
         val intent = Intent()
+        queryId = null
         activeQuery.clear()
         activeQuery.saveInIntent(intent)
         activeQuery.saveInPrefs(Config.prefs)
@@ -1002,7 +1008,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
         nav_drawer.isLongClickable = true
         nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            activeQuery = queries[position].query
+            queryId = queries[position].id
             val intent = intent
             activeQuery.saveInIntent(intent)
             setIntent(intent)
@@ -1596,11 +1602,12 @@ class Simpletask : ThemedNoActionBarActivity() {
             val tags: ArrayList<String>
             val lv = parent as ListView
             val adapter = lv.adapter as DrawerAdapter
+            val query = activeQuery
             if (adapter.projectsHeaderPosition == position) {
-                activeQuery.projectsNot = !activeQuery.projectsNot
+                query.projectsNot = !query.projectsNot
             }
             if (adapter.contextHeaderPosition == position) {
-                activeQuery.contextsNot = !activeQuery.contextsNot
+                query.contextsNot = !query.contextsNot
             } else {
                 tags = getCheckedItems(lv, true)
                 val filteredContexts = ArrayList<String>()
@@ -1613,13 +1620,19 @@ class Simpletask : ThemedNoActionBarActivity() {
                         filteredContexts.add(tag.substring(1))
                     }
                 }
-                activeQuery.contexts = filteredContexts
-                activeQuery.projects = filteredProjects
+                query.contexts = filteredContexts
+                query.projects = filteredProjects
             }
             val intent = intent
-            activeQuery.saveInIntent(intent)
-            activeQuery.saveInPrefs(Config.prefs)
+            query.saveInIntent(intent)
+            query.saveInPrefs(Config.prefs)
             setIntent(intent)
+            val qId = queryId
+            if (qId != null) {
+                SavedQuery(qId, query).save()
+            } else {
+                tempQuery = query
+            }
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
@@ -1628,7 +1641,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    companion object {
+    companion object State : Preferences(TodoApplication.app, "state") {
+        var queryId: String? by StringOrNullPreference("queryid", null)
 
         private val REQUEST_SHARE_PARTS = 1
         private val REQUEST_PREFERENCES = 2
