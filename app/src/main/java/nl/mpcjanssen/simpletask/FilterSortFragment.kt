@@ -112,7 +112,7 @@ class FilterSortFragment : Fragment() {
 
         adapter = SortItemAdapter(activity, R.layout.sort_list_item, R.id.text, adapterList)
         lv!!.adapter = adapter
-        lv!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        lv!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             var direction = directions[position]
             if (direction == Query.REVERSED_SORT) {
                 direction = Query.NORMAL_SORT
