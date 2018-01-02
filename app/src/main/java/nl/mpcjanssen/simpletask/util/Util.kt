@@ -322,7 +322,7 @@ fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener
 
     val builder = AlertDialog.Builder(act)
     builder.setTitle(titleId)
-    builder.setItems(keys) { dialog, whichButton ->
+    builder.setItems(keys) { _, whichButton ->
         val which = whichButton
         val selected = values[which]
         listener.onClick(selected)
