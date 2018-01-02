@@ -373,7 +373,9 @@ class Simpletask : ThemedNoActionBarActivity() {
         TodoList.todoQueue("Update filter bar") {
             runOnUiThread {
                 val total = TodoList.getTaskCount()
-                filter_text.text = activeQuery.getTitle(
+                filter_text.text = queryId?.let {
+                    activeQuery.name // TODO: Improve this string
+                } ?: activeQuery.getTitle(
                         count,
                         total,
                         getText(R.string.priority_prompt),
