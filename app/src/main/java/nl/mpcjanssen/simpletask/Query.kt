@@ -197,21 +197,21 @@ class Query(
         return sorts
     }
 
-    fun saveInIntent(target: Intent?) {
-        if (target != null) {
-            val json = this.saveInJSON()
-            target.putExtra(INTENT_JSON, json.toString(2))
+    private inline val json: JSONObject get() = this.saveInJSON()
+
+    fun saveInIntent(target: Intent?): Intent? {
+        return target?.apply {
+            putExtra(INTENT_JSON, json.toString(2))
         }
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
-            val json = this.saveInJSON()
             prefs.edit().putString(INTENT_JSON, json.toString(2)).commit()
         }
     }
 
-    fun clear() {
+    fun clear(): Query {
         priorities = ArrayList<Priority>()
         contexts = ArrayList<String>()
         projects = ArrayList<String>()
@@ -220,6 +220,7 @@ class Query(
         prioritiesNot = false
         contextsNot = false
         useScript = false
+        return this
     }
 
     fun initInterpreter() {
