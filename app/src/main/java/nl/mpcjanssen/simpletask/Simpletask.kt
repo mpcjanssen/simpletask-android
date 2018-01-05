@@ -886,13 +886,11 @@ class Simpletask : ThemedNoActionBarActivity() {
         input.setText(mainFilter.proposedName)
 
         alert.setPositiveButton("Ok") { _, _ ->
-            val value = input.text?.toString()
-            if (value.isNullOrBlank()) {
-                showToastShort(applicationContext, R.string.filter_name_empty)
-            } else {
-                SavedQuery(query = mainFilter).saveAs(value)
+            val value = input.text?.toString()?.takeIf { it.isNotBlank() }
+            value?.let {
+                SavedQuery(query = mainFilter).saveAs(it)
                 updateNavDrawer()
-            }
+            } ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
 
         alert.setNegativeButton("Cancel") { _, _ -> }
@@ -1048,13 +1046,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         input.setText(query.name)
 
         alert.setPositiveButton("Ok") { _, _ ->
-            val value = input.text?.toString()
-            if (value.isNullOrBlank()) {
-                showToastShort(applicationContext, R.string.filter_name_empty)
-            } else {
-                query.saveAs(value)
+            val value = input.text?.toString()?.takeIf { it.isNotBlank() }
+
+            value?. let {
+                query.saveAs(it)
                 updateNavDrawer()
-            }
+            } ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
 
         alert.setNegativeButton("Cancel") { _, _ -> }
