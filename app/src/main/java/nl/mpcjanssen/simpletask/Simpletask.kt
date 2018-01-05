@@ -90,8 +90,19 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var tempQuery = Query(luaModule = "mainui", showSelected = true)
 
-    val activeQuery: Query
+    var activeQuery: Query
         get() = queryId?.let { SavedQuery(it).query } ?: tempQuery
+        set(value: Query) {
+            queryId?.let {
+                SavedQuery(it, value).save()
+            } ?: {
+                tempQuery = value
+            }()
+            // Update the intent so we wont get the old filter after
+            // switching back to app later. Fixes [1c5271ee2e]
+            intent = value.saveInIntent(intent)
+            value.saveInPrefs(Config.prefs)
+        }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -364,10 +375,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun updateFilterBar() {
 
-        if (activeQuery.hasFilter()) {
-            actionbar.visibility = View.VISIBLE
-        } else {
-            actionbar.visibility = View.GONE
+        actionbar.visibility = when {
+            queryId != null || activeQuery.hasFilter() -> View.VISIBLE
+            else -> View.GONE
         }
         val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
         TodoList.todoQueue("Update filter bar") {
@@ -981,14 +991,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     internal fun clearFilter() {
-        // Also clear the intent so we wont get the old filter after
-        // switching back to app later fixes [1c5271ee2e]
-        val intent = Intent()
         queryId = null
-        activeQuery.clear()
-        activeQuery.saveInIntent(intent)
-        activeQuery.saveInPrefs(Config.prefs)
-        setIntent(intent)
+        activeQuery = activeQuery.clear()
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
@@ -1010,11 +1014,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
         nav_drawer.isLongClickable = true
         nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            queryId = queries[position].id
-            val intent = intent
-            activeQuery.saveInIntent(intent)
-            setIntent(intent)
-            activeQuery.saveInPrefs(Config.prefs)
+            queries[position].let {
+                queryId = it.id
+                activeQuery = it.query
+            }
             closeDrawer(NAV_DRAWER)
             broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
@@ -1625,16 +1628,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 query.contexts = filteredContexts
                 query.projects = filteredProjects
             }
-            val intent = intent
-            query.saveInIntent(intent)
-            query.saveInPrefs(Config.prefs)
-            setIntent(intent)
-            val qId = queryId
-            if (qId != null) {
-                SavedQuery(qId, query).save()
-            } else {
-                tempQuery = query
-            }
+            activeQuery = query
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }

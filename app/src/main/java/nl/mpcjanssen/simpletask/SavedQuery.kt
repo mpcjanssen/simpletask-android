@@ -14,7 +14,7 @@ import java.io.File
 
 class SavedQuery(
         val id: String = nextId(),
-        val query: Query = savedQuery(id)
+        var query: Query = savedQuery(id)
 ) {
     val name: String get() = query.name ?: ""
 
