@@ -196,21 +196,18 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onSearchRequested(): Boolean {
-        if (options_menu == null) {
-            return false
+        options_menu?.let {
+            val searchMenuItem = it.findItem(R.id.search)
+            MenuItemCompat.expandActionView(searchMenuItem)
+            return true
         }
-        val searchMenuItem = options_menu!!.findItem(R.id.search)
-        MenuItemCompat.expandActionView(searchMenuItem)
-
-        return true
+        return false
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        if (m_drawerToggle != null) {
-            m_drawerToggle!!.syncState()
-        }
+        m_drawerToggle?.let { it.syncState() }
     }
 
     private fun selectedTasksAsString(): String {
@@ -231,9 +228,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (m_drawerToggle != null) {
-            m_drawerToggle!!.onConfigurationChanged(newConfig)
-        }
+        m_drawerToggle?.let { it.onConfigurationChanged(newConfig) }
     }
 
     private fun handleIntent() {
@@ -246,9 +241,9 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Set the list's click listener
         filter_drawer?.onItemClickListener = DrawerItemClickListener()
 
-        if (drawer_layout != null) {
+        drawer_layout?.let { drawerLayout ->
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
-                    drawer_layout, /* DrawerLayout object */
+                    drawerLayout, /* DrawerLayout object */
                     R.string.changelist, /* "open drawer" description */
                     R.string.app_label /* "close drawer" description */) {
 
@@ -268,12 +263,11 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             // Set the drawer toggle as the DrawerListener
             val toggle = m_drawerToggle as ActionBarDrawerToggle
-            drawer_layout?.removeDrawerListener(toggle)
-            drawer_layout?.addDrawerListener(toggle)
-            val actionBar = supportActionBar
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true)
-                actionBar.setHomeButtonEnabled(true)
+            drawerLayout.removeDrawerListener(toggle)
+            drawerLayout.addDrawerListener(toggle)
+            supportActionBar?.let {
+                it.setDisplayHomeAsUpEnabled(true)
+                it.setHomeButtonEnabled(true)
                 m_drawerToggle!!.isDrawerIndicatorEnabled = true
             }
             m_drawerToggle!!.syncState()
@@ -284,18 +278,13 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (Constants.INTENT_START_FILTER == intent.action) {
             mainFilter.initFromIntent(intent)
             log.info(TAG, "handleIntent")
-            val extras = intent.extras
-            if (extras != null) {
-                for (key in extras.keySet()) {
-                    val value = extras.get(key)
-                    if (value != null) {
-                        log.debug(TAG, "%s %s (%s)".format(key, value.toString(), value.javaClass.name))
-                    } else {
-                        log.debug(TAG, "%s %s)".format(key, "<null>"))
-                    }
-
+            intent.extras?.let { extras ->
+                extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
+                    val debugString = value?.let { v ->
+                        "$v (${v.javaClass.name})"
+                    } ?: "<null>"
+                    log.debug(TAG, "$key $debugString")
                 }
-
             }
             log.info(TAG, "handleIntent: saving filter in prefs")
             mainFilter.saveInPrefs(Config.prefs)
@@ -311,7 +300,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         m_adapter!!.setFilteredTasks()
 
         listView?.layoutManager = LinearLayoutManager(this)
-
         listView?.adapter = this.m_adapter
 
         fab.setOnClickListener { startAddTaskActivity() }
@@ -362,7 +350,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         } else {
             actionbar.visibility = View.GONE
         }
-        val count = if (m_adapter != null) m_adapter!!.countVisibleTasks else 0
+        val count = m_adapter?.let { it.countVisibleTasks } ?: 0
         TodoList.todoQueue("Update filter bar") {
             runOnUiThread {
                 val total = TodoList.getTaskCount()
@@ -401,8 +389,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onPause() {
-        val manager = listView?.layoutManager as LinearLayoutManager?
-        if (manager != null) {
+        (listView?.layoutManager as LinearLayoutManager?)?.let { manager ->
             val position = manager.findFirstVisibleItemPosition()
             val firstItemView = manager.findViewByPosition(position)
             val offset = firstItemView?.top ?: 0
@@ -454,17 +441,17 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val selectedTasks = TodoList.selectedTasks
                 val initialCompleteTasks = ArrayList<Task>()
                 val initialIncompleteTasks = ArrayList<Task>()
-                var cbState: Boolean?
-                cbState = selectedTasks.getOrNull(0)?.isCompleted()
 
-                selectedTasks.forEach {
-                    if (it.isCompleted()) {
-                        initialCompleteTasks.add(it)
-                        if (!(cbState ?: false)) { cbState = null }
+                val first : Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
+
+                val cbState: Boolean? = selectedTasks.fold(first) { stateSoFar, task ->
+                    val completed = task.isCompleted()
+                    if (completed) {
+                        initialCompleteTasks.add(task)
                     } else {
-                        initialIncompleteTasks.add(it)
-                        if (cbState ?: true) { cbState = null }
+                        initialIncompleteTasks.add(task)
                     }
+                    stateSoFar?.takeIf { it == completed }
                 }
                 when (cbState) {
                     null -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
@@ -593,9 +580,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 if (!m_ignoreSearchChangeCallback) {
                     mainFilter.search = newText
                     mainFilter.saveInPrefs(Config.prefs)
-                    if (m_adapter != null) {
-                        m_adapter!!.setFilteredTasks()
-                    }
+                    m_adapter?.let { it.setFilteredTasks() }
                 }
                 return true
             }
@@ -901,14 +886,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         input.setText(mainFilter.proposedName)
 
         alert.setPositiveButton("Ok") { _, _ ->
-            val text = input.text
-            val value: String
-            if (text == null) {
-                value = ""
-            } else {
-                value = text.toString()
-            }
-            if (value == "") {
+            val value = input.text?.toString()
+            if (value.isNullOrBlank()) {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
                 SavedQuery(query = mainFilter).saveAs(value)
@@ -954,10 +933,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             val currentIntent = getIntent()
             currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY))
             setIntent(currentIntent)
-            if (options_menu == null) {
-                return
+            options_menu?.let {
+                it.findItem(R.id.search).collapseActionView()
             }
-            options_menu!!.findItem(R.id.search).collapseActionView()
 
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action) {
             // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
@@ -1070,14 +1048,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         input.setText(query.name)
 
         alert.setPositiveButton("Ok") { _, _ ->
-            val text = input.text
-            val value: String
-            if (text == null) {
-                value = ""
-            } else {
-                value = text.toString()
-            }
-            if (value == "") {
+            val value = input.text?.toString()
+            if (value.isNullOrBlank()) {
                 showToastShort(applicationContext, R.string.filter_name_empty)
             } else {
                 query.saveAs(value)
@@ -1166,8 +1138,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         override fun onBindViewHolder(holder: TaskViewHolder?, position: Int) {
-            if (holder == null) return
-            when (holder.viewType) {
+            when (holder?.viewType) {
                 0 -> bindHeader(holder, position)
                 1 -> bindTask(holder, position)
                 else -> return
@@ -1472,23 +1443,21 @@ class Simpletask : ThemedNoActionBarActivity() {
         val ellipsizeKey = m_app.getString(R.string.task_text_ellipsizing_pref_key)
         val ellipsizePref = Config.prefs.getString(ellipsizeKey, noEllipsizeValue)
 
-        if (noEllipsizeValue != ellipsizePref) {
+        if (noEllipsizeValue != ellipsizePref) elipsis@ {
             val truncateAt: TextUtils.TruncateAt?
-            when (ellipsizePref) {
-                "start" -> truncateAt = TextUtils.TruncateAt.START
-                "end" -> truncateAt = TextUtils.TruncateAt.END
-                "middle" -> truncateAt = TextUtils.TruncateAt.MIDDLE
-                "marquee" -> truncateAt = TextUtils.TruncateAt.MARQUEE
-                else -> truncateAt = null
+            taskText.ellipsize = when (ellipsizePref) {
+                "start" -> TextUtils.TruncateAt.START
+                "end" -> TextUtils.TruncateAt.END
+                "middle" -> TextUtils.TruncateAt.MIDDLE
+                "marquee" -> TextUtils.TruncateAt.MARQUEE
+                else -> {
+                    log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
+                    return@elipsis
+                }
             }
 
-            if (truncateAt != null) {
-                taskText.maxLines = 1
-                taskText.setHorizontallyScrolling(true)
-                taskText.ellipsize = truncateAt
-            } else {
-                log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} !" + ellipsizePref)
-            }
+            taskText.maxLines = 1
+            taskText.setHorizontallyScrolling(true)
         }
     }
 
