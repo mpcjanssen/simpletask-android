@@ -14,7 +14,7 @@ import java.io.File
 
 class SavedQuery(
         val id: String = nextId(),
-        val query: Query = savedQuery(id)
+        var query: Query = savedQuery(id)
 ) {
     val name: String get() = query.name ?: ""
 
@@ -71,5 +71,6 @@ class SavedQuery(
         private inline val context get() = TodoApplication.app
 
         private const val ID_PREFIX: String = "filter_"
+        const val EXTRA_ID: String = "filterid"
     }
 }
