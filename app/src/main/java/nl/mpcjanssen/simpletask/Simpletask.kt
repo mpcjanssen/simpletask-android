@@ -912,25 +912,11 @@ class Simpletask : ThemedNoActionBarActivity() {
         input.setText(activeQuery.proposedName)
 
         alert.setPositiveButton("Ok") { _, _ ->
-<<<<<<< HEAD
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
-                SavedQuery(query = mainFilter).saveAs(it)
-=======
-            val text = input.text
-            val value: String
-            if (text == null) {
-                value = ""
-            } else {
-                value = text.toString()
-            }
-            if (value == "") {
-                showToastShort(applicationContext, R.string.filter_name_empty)
-            } else {
                 SavedQuery(query = activeQuery).saveAs(value)
->>>>>>> origin/queries
-                updateNavDrawer()
-            } ?: showToastShort(applicationContext, R.string.filter_name_empty)
+            }
+            value ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
 
         alert.setNegativeButton("Cancel") { _, _ -> }
