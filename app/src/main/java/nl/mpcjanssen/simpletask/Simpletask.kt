@@ -297,10 +297,9 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         // Show search or filter results
-        queryId = null
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
-            activeQuery.initFromIntent(intent)
+            clearFilter()
             log.info(TAG, "handleIntent")
             val extras = intent.extras
             if (extras != null) {
@@ -316,11 +315,11 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             }
             log.info(TAG, "handleIntent: saving filter in prefs")
-            activeQuery.saveInPrefs(Config.prefs)
+            activeQuery = activeQuery.initFromIntent(intent)
         } else {
             // Set previous filters and sort
             log.info(TAG, "handleIntent: from m_prefs state")
-            activeQuery.initFromPrefs(Config.prefs)
+            tempQuery.initFromPrefs(Config.prefs)
         }
 
         val adapter = m_adapter ?: TaskAdapter(layoutInflater)
@@ -1133,6 +1132,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun startFilterActivity() {
         val i = Intent(this, FilterActivity::class.java)
         activeQuery.saveInIntent(i)
+        i.putExtra(SavedQuery.EXTRA_ID, queryId)
         startActivity(i)
     }
 
