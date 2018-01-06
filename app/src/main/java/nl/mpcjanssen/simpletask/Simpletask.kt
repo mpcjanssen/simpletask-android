@@ -933,7 +933,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             setIntent(currentIntent)
             options_menu?.let {
                 it.findItem(R.id.search).collapseActionView()
-            }
+            } ?: return
 
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action) {
             // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
