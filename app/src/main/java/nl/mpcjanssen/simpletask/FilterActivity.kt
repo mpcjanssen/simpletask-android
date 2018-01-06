@@ -28,6 +28,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
     internal var asWidgetConfigure = false
     internal var asWidgetReConfigure = false
+    internal var queryId: String? = null
     internal lateinit var mFilter: Query
 
     internal lateinit var m_app: TodoApplication
@@ -67,6 +68,8 @@ class FilterActivity : ThemedNoActionBarActivity() {
             asWidgetConfigure = getIntent().action == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
+
+        queryId = intent.getStringExtra(SavedQuery.EXTRA_ID)
 
         mFilter = Query(luaModule = environment)
         val context = applicationContext
@@ -194,8 +197,13 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 finish()
                 return true
             }
-            R.id.menu_filter_action ->
-                if (asWidgetConfigure) {
+            R.id.menu_filter_action -> {
+                val qId = queryId
+                if (qId != null) {
+                    updateFilterFromFragments()
+                    SavedQuery(qId, mFilter).save()
+                    finish()
+                } else if (asWidgetConfigure) {
                     askWidgetName()
                 } else if (asWidgetReConfigure) {
                     updateWidget()
@@ -203,6 +211,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 } else {
                     applyFilter()
                 }
+            }
             R.id.menu_filter_load_script -> openScript { contents ->
                 runOnMainThread(
                         Runnable { setScript(contents) })
