@@ -539,6 +539,13 @@ class Simpletask : ThemedNoActionBarActivity() {
         drawer_layout?.closeDrawer(drawer)
     }
 
+    private fun openNavDrawer() {
+        closeDrawer(FILTER_DRAWER)
+        if (!isDrawerOpen(NAV_DRAWER)) {
+            drawer_layout.openDrawer(NAV_DRAWER)
+        }
+    }
+
     private fun populateSearch(menu: Menu) {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchMenu = menu.findItem(R.id.search)
@@ -745,7 +752,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.search -> { }
             R.id.preferences -> startPreferencesActivity()
-            R.id.filter -> startFilterActivity()
+            R.id.filter -> openNavDrawer()
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
@@ -766,6 +773,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
+            R.id.btn_filter_edit -> startFilterActivity()
             R.id.clear_filter -> clearFilter()
             R.id.update -> startAddTaskActivity()
             R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
