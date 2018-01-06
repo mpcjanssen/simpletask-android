@@ -19,7 +19,7 @@ class Query(
         val luaModule: String,
         val showSelected: Boolean = false
 ) {
-    private val log: Logger
+    private val log: Logger = Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
@@ -44,10 +44,6 @@ class Query(
     }
 
     var name: String? = null
-
-    init {
-        log = Logger
-    }
 
     val prefill
         get() : String {
@@ -80,14 +76,14 @@ class Query(
         }
     }
 
-    fun initFromJSON(json: JSONObject?) {
+    fun initFromJSON(json: JSONObject?): Query {
         val prios: String?
         val projects: String?
         val contexts: String?
         val sorts: String?
 
         if (json == null) {
-            return
+            return this
         }
         name = json.optString(INTENT_TITLE, "No title")
         prios = json.optString(INTENT_PRIORITIES_FILTER)
@@ -130,6 +126,7 @@ class Query(
             this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
         initInterpreter()
+        return this
     }
 
     fun hasFilter(): Boolean {
@@ -197,21 +194,21 @@ class Query(
         return sorts
     }
 
-    fun saveInIntent(target: Intent?) {
-        if (target != null) {
-            val json = this.saveInJSON()
-            target.putExtra(INTENT_JSON, json.toString(2))
+    private inline val json: JSONObject get() = this.saveInJSON()
+
+    fun saveInIntent(target: Intent?): Intent? {
+        return target?.apply {
+            putExtra(INTENT_JSON, json.toString(2))
         }
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
-            val json = this.saveInJSON()
             prefs.edit().putString(INTENT_JSON, json.toString(2)).commit()
         }
     }
 
-    fun clear() {
+    fun clear(): Query {
         priorities = ArrayList<Priority>()
         contexts = ArrayList<String>()
         projects = ArrayList<String>()
@@ -220,6 +217,7 @@ class Query(
         prioritiesNot = false
         contextsNot = false
         useScript = false
+        return this
     }
 
     fun initInterpreter() {
@@ -354,7 +352,7 @@ class Query(
         const val INTENT_EXTRA_DELIMITERS = "\n|,"
     }
 
-    fun initFromIntent(intent: Intent) {
+    fun initFromIntent(intent: Intent): Query {
         if (intent.hasExtra(INTENT_JSON)) {
             val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
             initFromJSON(JSONObject(jsonFromIntent))
@@ -406,9 +404,10 @@ class Query(
                 this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
             }
         }
+        return this
     }
 
-    fun initFromPrefs(prefs: SharedPreferences) {
+    fun initFromPrefs(prefs: SharedPreferences): Query {
         val jsonFromPref = prefs.getString(INTENT_JSON, null)
         if (jsonFromPref != null) {
             initFromJSON(JSONObject(jsonFromPref))
@@ -435,6 +434,7 @@ class Query(
             script = prefs.getString(INTENT_SCRIPT_FILTER, null)
             scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
         }
+        return this
     }
 
 }
