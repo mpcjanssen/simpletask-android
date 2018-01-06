@@ -168,8 +168,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="widget_extended_pref_title">Exibir barra de datas</string>
     <string name="widget_extended_pref_summary">Exibir datas numa linha diferente</string>
 
-    <string name="taskview_extended_pref_title">Exibir barra de datas</string>
-    <string name="taskview_extended_pref_summary">Exibir datas numa outra linha</string>
+    <string name="taskview_extended_pref_title">Exibir datas numa outra linha</string>
 
     <string name="append_tasks_at_end_title">Anexar ao arquivo</string>
     <string name="append_tasks_at_end_summary">Inserir novas tarefas no fim do arquivo</string>

@@ -162,8 +162,7 @@
     <string name="widget_extended_pref_title">Показувати рядок дати</string>
     <string name="widget_extended_pref_summary">Показувати дати на окремому рядку</string>
 
-    <string name="taskview_extended_pref_title">Показувати рядок дати</string>
-    <string name="taskview_extended_pref_summary">Показувати дати на окремому рядку</string>
+    <string name="taskview_extended_pref_title">Показувати дати на окремому рядку</string>
 
     <string name="append_tasks_at_end_title">Дописувати до файлу</string>
     <string name="append_tasks_at_end_summary">Додавати нові завдання у кінець файлу</string>

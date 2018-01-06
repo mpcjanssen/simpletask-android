@@ -141,8 +141,7 @@
     <string name="widget_extended_pref_title">Vis datofelt</string>
     <string name="widget_extended_pref_summary">Vis datoer på egen linje</string>
 
-    <string name="taskview_extended_pref_title">Vis datofelt</string>
-    <string name="taskview_extended_pref_summary">Viser datoer på egen linje</string>
+    <string name="taskview_extended_pref_title">Viser datoer på egen linje</string>
 
     <string name="append_tasks_at_end_summary">Legg inn nye gjøremål i slutten av fila</string>
 
