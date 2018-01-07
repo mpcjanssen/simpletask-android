@@ -851,7 +851,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startPreferencesActivity() {
         val settingsActivity = Intent(baseContext,
-                Preferences::class.java)
+                nl.mpcjanssen.simpletask.Preferences::class.java)
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES)
     }
 
