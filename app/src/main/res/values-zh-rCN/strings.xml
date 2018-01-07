@@ -124,8 +124,7 @@
     <string name="widget_extended_pref_title">显示日期栏</string>
     <string name="widget_extended_pref_summary">在单独行显示日期</string>
 
-    <string name="taskview_extended_pref_title">显示日期栏</string>
-    <string name="taskview_extended_pref_summary">在单独行显示日期</string>
+    <string name="taskview_extended_pref_title">在单独行显示日期</string>
 
     <string name="append_tasks_at_end_title">追加到文件</string>
     <string name="append_tasks_at_end_summary">在文件的末尾插入新任务</string>
