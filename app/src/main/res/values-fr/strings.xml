@@ -190,8 +190,7 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
     <string name="widget_extended_pref_title">Montrer la barre de date</string>
     <string name="widget_extended_pref_summary">Afficher les dates sur une ligne séparée</string>
 
-    <string name="taskview_extended_pref_title">Afficher la barre de date</string>
-    <string name="taskview_extended_pref_summary">Afficher les dates sur une ligne séparée</string>
+    <string name="taskview_extended_pref_title">Afficher les dates sur une ligne séparée</string>
 
     <string name="append_tasks_at_end_title">Ajouter au fichier</string>
     <string name="append_tasks_at_end_summary">Insérer les nouvelles tâches à la fin du fichier</string>
