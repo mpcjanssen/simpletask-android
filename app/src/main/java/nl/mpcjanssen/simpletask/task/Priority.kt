@@ -26,89 +26,38 @@ package nl.mpcjanssen.simpletask.task
 
 import java.util.*
 
-enum class Priority constructor(val code: String, private val listFormat: String, private val detailFormat: String,
-                                        private val fileFormat: String) {
-    NONE("-", "   ", "", ""), A("A", "A", "A", "(A)"), B("B", "B", "B", "(B)"), C("C", "C", "C", "(C)"), D("D", "D", "D", "(D)"), E("E", "E", "E", "(E)"), F("F", "F", "F", "(F)"), G("G", "G", "G", "(G)"), H("H", "H", "H", "(H)"), I("I", "I", "I", "(I)"), J("J", "J", "J", "(J)"), K("K", "K", "K", "(K)"), L("L", "L", "L", "(L)"), M("M", "M", "M", "(M)"), N("N", "N", "N", "(N)"), O("O", "O", "O", "(O)"), P("P", "P", "P", "(P)"), Q("Q", "Q", "Q", "(Q)"), R("R", "R", "R", "(R)"), S("S", "S", "S", "(S)"), T("T", "T", "T", "(T)"), U("U", "U", "U", "(U)"), V("V", "V", "V", "(V)"), W("W", "W", "W", "(W)"), X("X", "X", "X", "(X)"), Y("Y", "Y", "Y", "(Y)"), Z("Z", "Z", "Z", "(Z)");
+enum class Priority {
 
-    fun inListFormat(): String {
-        return listFormat
-    }
+    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+    NONE {
+        override val code: String = "-"
+        override val fileFormat: String = ""
+    };
 
-    fun inDetailFormat(): String {
-        return detailFormat
-    }
-
-    fun inFileFormat(): String {
-        return fileFormat
-    }
+    open val code: String = name
+    open val fileFormat: String = "($name)"
 
     companion object {
 
-        private fun reverseValues(): Array<Priority> {
-            val values = Priority.values()
-            return values.reversed().toTypedArray()
-        }
-
-        fun range(p1: Priority, p2: Priority): List<Priority> {
-            val priorities = ArrayList<Priority>()
-            var add = false
-
-            for (p in if (p1.ordinal < p2.ordinal)
-                Priority.values()
-            else
-                Priority.reverseValues()) {
-                if (p == p1) {
-                    add = true
-                }
-                if (add) {
-                    priorities.add(p)
-                }
-                if (p == p2) {
-                    break
-                }
-            }
-            return priorities
-        }
-
-        fun rangeInCode(p1: Priority, p2: Priority): List<String> {
-            val priorities = Priority.range(p1, p2)
-            val result = ArrayList<String>(priorities.size)
-            for (p in priorities) {
-                result.add(p.code)
-            }
-            return result
-        }
+        val codes: List<String>
+            get() = values().map { it.code }.sorted()
 
         fun inCode(priorities: List<Priority>): ArrayList<String> {
-            val strings = ArrayList<String>()
-            for (p in priorities) {
-                strings.add(p.code)
-            }
-            return strings
+            return ArrayList<String>(priorities.map { it.code })
         }
 
-        fun toPriority(codes: List<String>?): ArrayList<Priority> {
-            val priorities = ArrayList<Priority>()
-            if (codes == null) {
-                return ArrayList()
-            }
-            for (code in codes) {
-                priorities.add(Priority.toPriority(code))
-            }
-            return priorities
+        fun toPriority(codes: List<String>): ArrayList<Priority> {
+            return ArrayList<Priority>(codes.map { toPriority(it) })
         }
 
         fun toPriority(s: String?): Priority {
-            if (s == null) {
+            val upper = s?.toUpperCase(Locale.US) ?: return NONE
+            try {
+                return valueOf(upper)
+            }
+            catch (e: IllegalArgumentException) {
                 return NONE
             }
-
-            for (p in Priority.values()) {
-                if (p.code == s.toUpperCase(Locale.US)) {
-                    return p
-                }
-            }
-            return NONE
         }
     }
 
