@@ -142,9 +142,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             if (prio == Priority.NONE) {
                 tokens = tokens.filter { it !is PriorityToken }
             } else if (tokens.any { it is PriorityToken }) {
-                upsertToken(PriorityToken(prio.inFileFormat()))
+                upsertToken(PriorityToken(prio.fileFormat))
             } else {
-                tokens = listOf(PriorityToken(prio.inFileFormat())) + tokens
+                tokens = listOf(PriorityToken(prio.fileFormat)) + tokens
             }
         }
 

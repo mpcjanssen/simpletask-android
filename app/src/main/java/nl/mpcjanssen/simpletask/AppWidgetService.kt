@@ -144,7 +144,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             else -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.gray67)
         }
         if (prioColor != 0) {
-            setColor(ss, prioColor, task.priority.inFileFormat())
+            setColor(ss, prioColor, task.priority.fileFormat)
         }
         if (task.isCompleted()) {
             ss.setSpan(StrikethroughSpan(), 0, ss.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
