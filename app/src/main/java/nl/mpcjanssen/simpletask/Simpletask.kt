@@ -628,13 +628,14 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun prioritizeTasks(tasks: List<Task>) {
-        val strings = Priority.rangeInCode(Priority.NONE, Priority.Z)
-        val priorityArr = strings.toTypedArray()
+        val priorityArr = Priority.codes.toTypedArray()
 
-        var priorityIdx = 0
-        if (tasks.size == 1) {
-            priorityIdx = strings.indexOf(tasks[0].priority.code)
-        }
+        val first = tasks[0].priority.code
+
+        val priorityIdx = if (tasks.all { it.priority.code == first }) {
+            priorityArr.indexOf(first)
+        } else 0
+
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
         builder.setSingleChoiceItems(priorityArr, priorityIdx, { dialog, which ->
@@ -1235,7 +1236,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Priority.D -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_blue_dark)
                 else -> priorityColor = ContextCompat.getColor(m_app, R.color.gray67)
             }
-            setColor(ss, priorityColor, priority.inFileFormat())
+            setColor(ss, priorityColor, priority.fileFormat)
             val completed = task.isCompleted()
 
             taskAge.textSize = textSize * Config.dateBarRelativeSize
