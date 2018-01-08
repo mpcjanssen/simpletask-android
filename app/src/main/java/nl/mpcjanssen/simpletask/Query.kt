@@ -306,12 +306,7 @@ class Query(
         }
 
         fun apply(input: Task): Boolean {
-            for (f in filters) {
-                if (!f.apply(input)) {
-                    return false
-                }
-            }
-            return true
+            return filters.all { it.apply(input) }
         }
     }
 

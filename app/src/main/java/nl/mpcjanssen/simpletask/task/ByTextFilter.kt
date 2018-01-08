@@ -34,30 +34,25 @@ import java.util.*
  */
 class ByTextFilter(val moduleName : String, searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    private val parts: Array<String>
-    private var casedText: String
     val text = searchText ?: ""
-    init {
-        this.casedText = if (isCaseSensitive) text else text.toUpperCase(Locale.getDefault())
-        this.parts = this.casedText.split("\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    }
+
+    private val parts: List<String>
+        get() = cased(text).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
 
     override fun apply(task: Task): Boolean {
-        val luaResult = LuaInterpreter.onTextSearchCallback(moduleName, task.text, text, isCaseSensitive)
-        if (luaResult != null) {
-            return luaResult
+        return luaResult(task)?.let { luaval ->
+            luaval
+        } ?: cased(task.text).let { taskText ->
+            !parts.any { it.length > 0 && !taskText.contains(it) }
         }
+    }
 
-        val taskText = if (isCaseSensitive)
-            task.text
-        else
-            task.text.toUpperCase(Locale.getDefault())
+    private fun luaResult(task: Task): Boolean? {
+        return LuaInterpreter.onTextSearchCallback(moduleName, task.text, text, isCaseSensitive)
+    }
 
-        for (part in parts) {
-            if (part.length > 0 && !taskText.contains(part))
-                return false
-        }
 
-        return true
+    private fun cased(t: String): String {
+        return if (isCaseSensitive) t else t.toUpperCase(Locale.getDefault())
     }
 }

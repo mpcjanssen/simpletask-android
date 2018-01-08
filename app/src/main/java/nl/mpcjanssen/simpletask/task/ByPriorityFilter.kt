@@ -31,26 +31,17 @@ import java.util.ArrayList
 
  * @author Tim Barlotta
  */
-class ByPriorityFilter(priorities: List<Priority>?, private val not: Boolean) : TaskFilter {
+class ByPriorityFilter(
+        private val priorities: List<Priority>,
+        private val not: Boolean
+) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    internal var priorities = ArrayList<Priority>()
-
-    init {
-        if (priorities != null) {
-            this.priorities.addAll(priorities)
-        }
-    }
 
     override fun apply(task: Task): Boolean {
-        if (not) {
-            return !filter(task)
-        } else {
-            return filter(task)
-        }
+        return if (not) !filter(task) else filter(task)
     }
 
     fun filter(input: Task): Boolean {
         return priorities.size == 0 || priorities.contains(input.priority)
-
     }
 }
