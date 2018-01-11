@@ -130,7 +130,7 @@ repositories {
 dependencies {
     dropboxCompile 'com.dropbox.core:dropbox-core-sdk:3.0.5'
     nextcloudCompile 'com.github.nextcloud:android-library:-SNAPSHOT'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile "com.android.support:support-v4:$android_support_version"
     compile "com.android.support:design:$android_support_version"
     compile "com.android.support:appcompat-v7:$android_support_version"
