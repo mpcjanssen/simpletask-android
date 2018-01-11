@@ -12,12 +12,27 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 
-object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPreferenceChangeListener {
+object Config : Preferences(TodoApplication.app) {
 
     val TAG = "Config"
 
     init {
-        prefs.registerOnSharedPreferenceChangeListener(this)
+        registerCallbacks(listOf<String>(
+                getString(R.string.widget_theme_pref_key),
+                getString(R.string.widget_extended_pref_key),
+                getString(R.string.widget_background_transparency),
+                getString(R.string.widget_header_transparency)
+        )) {
+            TodoApplication.app.redrawWidgets()
+        }
+        registerCallbacks(listOf<String>(
+                getString(R.string.calendar_sync_dues),
+                getString(R.string.calendar_sync_thresholds),
+                getString(R.string.calendar_reminder_days),
+                getString(R.string.calendar_reminder_time)
+        )) {
+            CalendarSync.updatedSyncTypes()
+        }
     }
 
     val useTodoTxtTerms by BooleanPreference(R.string.ui_todotxt_terms, false)
@@ -147,11 +162,9 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
     @Suppress("unused")
     var fullDropBoxAccess by BooleanPreference(R.string.dropbox_full_access, true)
 
+    private val dateBarSize by IntPreference(R.string.datebar_relative_size, 80)
     val dateBarRelativeSize: Float
-        get() {
-            val dateBarSize by IntPreference(R.string.datebar_relative_size, 80)
-            return dateBarSize / 100.0f
-        }
+        get() = dateBarSize / 100.0f
 
     val showCalendar by BooleanPreference(R.string.ui_show_calendarview, false)
 
@@ -176,23 +189,6 @@ object Config : Preferences(TodoApplication.app), SharedPreferences.OnSharedPref
     val showCompleteCheckbox by BooleanPreference(R.string.ui_complete_checkbox, true)
 
     val showConfirmationDialogs by BooleanPreference(R.string.ui_show_confirmation_dialogs, true)
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
-        when (s) {
-            getString(R.string.widget_theme_pref_key),
-            getString(R.string.widget_extended_pref_key),
-            getString(R.string.widget_background_transparency),
-            getString(R.string.widget_header_transparency) -> {
-                TodoApplication.app.redrawWidgets()
-            }
-            getString(R.string.calendar_sync_dues),
-            getString(R.string.calendar_sync_thresholds),
-            getString(R.string.calendar_reminder_days),
-            getString(R.string.calendar_reminder_time) -> {
-                CalendarSync.updatedSyncTypes()
-            }
-        }
-    }
 
     val defaultSorts: Array<String>
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
