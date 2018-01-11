@@ -68,8 +68,6 @@ class SavedQuery(
             return context.getSharedPreferences(id, Context.MODE_PRIVATE)
         }
 
-        private inline val context get() = TodoApplication.app
-
         private const val ID_PREFIX: String = "filter_"
         const val EXTRA_ID: String = "filterid"
     }
