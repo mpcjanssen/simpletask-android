@@ -43,7 +43,7 @@ object FileStore : IFileStore {
             return permissionCheck == PackageManager.PERMISSION_GRANTED
         }
 
-    override fun loadTasksFromFile(path: String, eol: String): RemoteContents {
+    override fun loadTasksFromFile(path: String): RemoteContents {
         log.info(TAG, "Loading tasks")
         val file = File(path)
         val lines = file.readLines()

@@ -75,7 +75,7 @@ object FileStore : IFileStore {
             return netInfo != null && netInfo.isConnected
         }
 
-    override fun loadTasksFromFile(path: String, eol: String): RemoteContents {
+    override fun loadTasksFromFile(path: String): RemoteContents {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
