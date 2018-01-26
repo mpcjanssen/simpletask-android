@@ -401,7 +401,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onResume() {
         super.onResume()
         log.info(TAG, "onResume")
-        TodoList.reload(TodoApplication.app, "Main activity resume")
+        TodoList.reload(TodoApplication.app, Config.eol, reason = "Main activity resume")
         handleIntent()
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
