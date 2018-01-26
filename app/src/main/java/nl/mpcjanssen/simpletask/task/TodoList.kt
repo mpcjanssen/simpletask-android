@@ -186,10 +186,10 @@ object TodoList {
             return todoItems.filter { it.isCompleted() }
         }
 
-    fun notifyTasklistChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
+    fun notifyTasklistChanged(todoName: String,  backup: BackupInterface?, save: Boolean) {
         todoQueue("Notified changed") {
             if (save) {
-                save(FileStore, todoName, backup, eol)
+                save(FileStore, todoName, backup, Config.eol)
             }
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
@@ -227,7 +227,7 @@ object TodoList {
 
     }
 
-    fun reload(backup: BackupInterface, eol: String, reason: String = "") {
+    fun reload(backup: BackupInterface, reason: String = "") {
         val logText = "Reload: " + reason
         todoQueue(logText) {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
@@ -236,7 +236,7 @@ object TodoList {
             if (Config.changesPending && FileStore.isOnline) {
                 log.info(TAG, "Not loading, changes pending")
                 log.info(TAG, "Saving instead of loading")
-                save(FileStore, filename, backup, eol)
+                save(FileStore, filename, backup, Config.eol)
             } else {
                 fileStoreQueue("Reload") {
                     val needSync = try {
@@ -254,7 +254,7 @@ object TodoList {
                     val cachedList = Config.todoList
                     if (cachedList == null || needSync) {
                         try {
-                            val remoteContents = FileStore.loadTasksFromFile(filename, eol)
+                            val remoteContents = FileStore.loadTasksFromFile(filename)
                             val items = ArrayList<Task>(
                                     remoteContents.contents.map { text ->
                                         Task(text)
@@ -268,7 +268,7 @@ object TodoList {
                                 Config.lastSeenRemoteId = remoteContents.remoteId
                                 // Backup
                                 backup.backup(filename, items)
-                                notifyTasklistChanged(filename, eol, backup, false)
+                                notifyTasklistChanged(filename, backup, false)
                             }
 
 
@@ -326,7 +326,7 @@ object TodoList {
                 try {
                     FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                     removeAll(tasksToDelete)
-                    notifyTasklistChanged(todoFilename, eol, null, true)
+                    notifyTasklistChanged(todoFilename, null, true)
                 } catch (e: Exception) {
                     log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")

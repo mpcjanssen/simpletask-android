@@ -158,7 +158,7 @@ class TodoApplication : Application(),
 
     fun loadTodoList(reason: String) {
         Logger.info(TAG, "Loading todolist")
-        TodoList.reload(this, Config.eol, reason = reason)
+        TodoList.reload(this, reason = reason)
     }
 
     fun updateWidgets() {
