@@ -19,7 +19,7 @@
     <string name="log">Журнал</string>
     <string name="next">Следующая</string>
     <string name="prev">Предыдущая</string>
-    <string name="open_file">Открыть todo-файл</string>
+    <string name="open_file">Открыть файл</string>
     <string name="sync">Обновить</string>
     <string name="changelist">Выбрать список</string>
     <string name="search">Поиск</string>
@@ -94,9 +94,9 @@
     <string name="line_breaks_pref_summary">Использовать разрывы строк как в. Windows</string>
     <string name="recur_from_original_date_pref_title">Повторять задачу используя исходную дату</string>
     <string name="swipe_complete_pref_title">Смахнуть для выполнения</string>
-    <string name="swipe_complete_pref_summary">Смахните задачу чтобы выполнить её</string>
+    <string name="swipe_complete_pref_summary">Проведите пальцем по задаче, чтобы завершить ее.</string>
     <string name="manual_sync_pref_title">Ручная синхронизация</string>
-    <string name="manual_sync_pref_summary">Не будет автоматически загружать изменения на Dropbox</string>
+    <string name="manual_sync_pref_summary">Не загружать изменения в Dropbox автоматически.</string>
     <string name="resume_sync_pref_title">Возобновить синхронизацию</string>
     <string name="resume_sync_pref_summary">Синхронизировать с Dropbox при открытии</string>
     <string name="font_size_delta_pref_title">Пользовательский размер шрифта</string>
@@ -114,7 +114,7 @@
     <string name="calendar_reminder_time_summary">Время суток для напоминания</string>
 
     <string name="widget_theme_pref_title">Тема</string>
-    <string name="widget_theme_pref_summary">Изменить тему используемую виджетами</string>
+    <string name="widget_theme_pref_summary">Изменить тему для виджетов.</string>
 
     <string name="widget_header_transparency_title">Прозрачность заголовка</string>
     <string name="widget_background_transparency_title">Прозрачность фона</string>
@@ -132,7 +132,7 @@
     <string name="show_fast_scroll_title">Быстрый скроллинг</string>
     <string name="show_calendarview_title">Использовать календарь для ввода даты</string>
 
-    <string name="show_empty_lists_summary">Показывать заголовок даже если задачи под ним скрыты</string>
+    <string name="show_empty_lists_summary">Показывать заголовок даже если задачи под ним скрыты.</string>
 
     <string name="show_empty_lists_title">Показывать заголовки пустых списков</string>
     <string name="show_edittext_hint_summary">Показывать подсказки при добавлении задач. Отключите если это отвлекает.</string>
@@ -181,7 +181,7 @@
 
     <string name="all">все</string>
 
-    <string name="dates_days_ago"/>
+    <string name="dates_days_ago">%d дней назад</string>
     <string name="dates_one_day_ago">1 день назад</string>
     <string name="dates_years_ago"/>
     <string name="dates_one_year_ago">год назад</string>
@@ -216,9 +216,9 @@
     <string name="lua_config_import">Импорт</string>
     <string name="lua_config_share">Поделиться</string>
     <string name="lua_open_config">Конфигурации Lua</string>
-<string name="tasktexthint">\@Обсудить +Омск с +Геннадий @Тополев
-Сказать +Геннадий, чтобы не вёл себя как зануда @Тополев
-Проверьте настройки +Simpletask, чтобы удалить этот текст с @Телефона</string>
+<string name="tasktexthint">\@Обсудить +Омск с +Геннадий @Тополев 
+\nСказать +Геннадий, чтобы не вёл себя как зануда @Тополев 
+\nПроверьте настройки +Simpletask, чтобы удалить этот текст с @Телефона</string>
 
     <string name="add_task_help">Добавьте или обновите задачу в списке. Если добавляете задачи, каждая строка это отдельная задача.
 
@@ -281,9 +281,8 @@
     <string name="visit_tracker_summary">Запросить новую функцию, улучшение или сообщить о проблеме.</string>
     <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
     <string name="sync_conflict_dialog_title">Конфликт файлов</string>
-    <string name="sync_conflict_dialog_msg">"Ой! Существует более новая версия файла todo.txt в Dropbox.
-Вы хотите загрузить ваши локальные изменения, или загрузить версию Dropbox?
- "</string>
+    <string name="sync_conflict_dialog_msg">Ой! Существует более новая версия файла todo.txt в Dropbox. 
+\nВы хотите загрузить ваши локальные изменения, или загрузить версию из Dropbox?</string>
 
     <string name="first_title_word">Simpletask</string>
     <string name="login_cloudless">"Если у вас нет учетной записи Dropbox или не хотите использовать его, для хранения списка задач
@@ -307,4 +306,71 @@ http://goo.gl/X1C55P
 
     <string name="clone_tags">Предварительно заполнить</string>
     <string name="word_wrap">Перенос слов</string>
+    <string name="sort_complete_last_pref_title">Показать завершенные в конце</string>
+    <string name="share_task_show_edit_pref_title">Редактирование общих задач</string>
+    <string name="calendar_reminder_days_title">Дней до начала</string>
+    <string name="calendar_reminder_days_summary">Время оповещения</string>
+    <string name="drawer_fixed_landscape_title">Раскрывать категории в горизонтальной ориентации</string>
+    <string name="drawer_fixed_landscape_summary">Всегда раскрывать категории в горизонтальной ориентации</string>
+
+    <string name="task_text_ellipsizing_pref_title">Сокращение текста</string>
+    <string name="task_text_ellipsizing_pref_summary">Сокращать текст в главном окне если он занимает более 2 строк.</string>
+    <string name="task_text_ellipsizing_none">Не сокращать текст</string>
+    <string name="task_text_ellipsizing_start">С начала: ...текст задачи</string>
+    <string name="task_text_ellipsizing_middle">Середина: Очень... текст</string>
+    <string name="task_text_ellipsizing_end">Конец: Очень длинный…</string>
+    <string name="task_text_ellipsizing_marquee">Обрезать: Очень длинный те</string>
+
+    <string name="filter_tab_header_prio">Приоритет</string>
+    <string name="filter_tab_header_other">Другое</string>
+    <string name="filter_tab_header_sort">Сортировка</string>
+    <string name="filter_tab_header_script">Скрипт</string>
+
+    <string name="script_tab_script_from_file">Скрипт из файла</string>
+    <string name="script_tab_use_script">Использовать скрипт</string>
+    <string name="script_tab_test">Тест</string>
+    <string name="script_tab_test_task">Тестовая задача</string>
+    <string name="script_tab_script">Скрипт</string>
+    <string name="script_tab_true_task_shown">Включите чтобы показать задачу</string>
+    <string name="script_tab_false_task_not_shown">Выключите чтобы спрятать задачу</string>
+
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="quick_filter_tag_header_inverted">Инвертировать</string>
+    <string name="saved_filters_exported">Фильтры экспортированны</string>
+    <string name="saved_filters_imported">Фильтры импортированны</string>
+    <string name="toast_lua_config_imported">Конфигурация Lua импортированна</string>
+
+    <string name="todotxt_terms_title">Использовать термины todo.txt</string>
+    <string name="sort_help">Перетаскивайте для изменения сортировки. Нажатие изменяет направление сортировки.</string>
+    <string name="file_order">Как в файле (без сортировки)</string>
+    <string name="completed">Завершено</string>
+    <string name="in_future">Пороговая дата в будущем</string>
+    <string name="by_due_date">Срок выполнения</string>
+    <string name="by_threshold_date">Пороговая дата</string>
+    <string name="by_completion_date">Дата завершения</string>
+    <string name="by_lua">Lua скрипт</string>
+
+    <string name="filter_select_all">Выбрать все</string>
+    <string name="filter_clear_all">Офистить фильтр</string>
+    <string name="filter_invert">Инвертировать фильтр</string>
+    <string name="add_filter_shortcut">На главный экран</string>
+    <string name="rename_filter_message">Введите новое имя для сохраняемого фильтра:</string>
+    <string name="title_filter_drawer">Быстрый фильтр</string>
+    <string name="filter_show_completed">Показать завершенные</string>
+    <string name="filter_show_future">Показать задачи с пороговой датой в будущем</string>
+    <string name="filter_show_lists">Показывать списки в задачах</string>
+    <string name="filter_show_tags">Показывать метки в задачах</string>
+    <string name="filter_show_create_date">Показывать возраст задачи</string>
+
+    <string name="filter_show_completed_short">Завершенные</string>
+    <string name="filter_show_future_short">Будущее</string>
+    <string name="filter_show_prompt">Показать</string>
+    <string name="filter_saved_prompt">Сохраненные фильтры</string>
+
+    <string name="task_select_parts">Выберите части задачи</string>
+    <string name="task_show_all">Все</string>
+
+    <string name="title_filter_applied">Фильтровать по:</string>
+    <string name="shortcut_addtask_name">Добавить Задачу</string>
     </resources>
