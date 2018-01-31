@@ -12,13 +12,14 @@ import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
 
-data class FilterOptions(val luaModule: String, val showSelected: Boolean = false)
-
 /**
  * Active filter, has methods for serialization in several formats
  */
-class ActiveFilter(val options: FilterOptions) {
-    private val log: Logger
+class Query(
+        val luaModule: String,
+        val showSelected: Boolean = false
+) {
+    private val log: Logger = Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
@@ -42,14 +43,7 @@ class ActiveFilter(val options: FilterOptions) {
         return join(m_sorts, ",")
     }
 
-    // The name of the shared preference this filter came from
-    var prefName: String? = null
-
     var name: String? = null
-
-    init {
-        log = Logger
-    }
 
     val prefill
         get() : String {
@@ -58,36 +52,38 @@ class ActiveFilter(val options: FilterOptions) {
             return " $prefillLists $prefillTags".trimEnd()
         }
 
-    fun saveInJSON(json: JSONObject) {
-        json.put(INTENT_TITLE, name)
-        json.put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
-        json.put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
-        json.put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
-        json.put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
-        json.put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
-        json.put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
-        json.put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
-        json.put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
-        json.put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
-        json.put(INTENT_HIDE_LISTS_FILTER, hideLists)
-        json.put(INTENT_HIDE_TAGS_FILTER, hideTags)
-        json.put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
-        json.put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
-        json.put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
-        json.put(INTENT_SCRIPT_FILTER, script)
-        json.put(INTENT_USE_SCRIPT_FILTER, useScript)
-        json.put(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
-        json.put(SearchManager.QUERY, search)
+    fun saveInJSON(json: JSONObject = JSONObject()): JSONObject {
+        return json.apply {
+            put(INTENT_TITLE, name)
+            put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
+            put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
+            put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
+            put(INTENT_PROJECTS_FILTER_NOT, projectsNot)
+            put(INTENT_PRIORITIES_FILTER, join(Priority.inCode(priorities), "\n"))
+            put(INTENT_PRIORITIES_FILTER_NOT, prioritiesNot)
+            put(INTENT_SORT_ORDER, join(m_sorts, "\n"))
+            put(INTENT_HIDE_COMPLETED_FILTER, hideCompleted)
+            put(INTENT_HIDE_FUTURE_FILTER, hideFuture)
+            put(INTENT_HIDE_LISTS_FILTER, hideLists)
+            put(INTENT_HIDE_TAGS_FILTER, hideTags)
+            put(INTENT_HIDE_CREATE_DATE_FILTER, hideCreateDate)
+            put(INTENT_HIDE_HIDDEN_FILTER, hideHidden)
+            put(INTENT_CREATE_AS_THRESHOLD, createIsThreshold)
+            put(INTENT_SCRIPT_FILTER, script)
+            put(INTENT_USE_SCRIPT_FILTER, useScript)
+            put(INTENT_SCRIPT_TEST_TASK_FILTER, scriptTestTask)
+            put(SearchManager.QUERY, search)
+        }
     }
 
-    fun initFromJSON(json: JSONObject?) {
+    fun initFromJSON(json: JSONObject?): Query {
         val prios: String?
         val projects: String?
         val contexts: String?
         val sorts: String?
 
         if (json == null) {
-            return
+            return this
         }
         name = json.optString(INTENT_TITLE, "No title")
         prios = json.optString(INTENT_PRIORITIES_FILTER)
@@ -130,11 +126,12 @@ class ActiveFilter(val options: FilterOptions) {
             this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
         initInterpreter()
+        return this
     }
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
-                || !isEmptyOrNull(search) || LuaInterpreter.hasFilterCallback(options.luaModule)
+                || !isEmptyOrNull(search) || LuaInterpreter.hasFilterCallback(luaModule)
     }
 
     fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
@@ -197,25 +194,21 @@ class ActiveFilter(val options: FilterOptions) {
         return sorts
     }
 
-    fun saveInIntent(target: Intent?) {
-        if (target != null) {
-            val json = JSONObject()
-            this.saveInJSON(json)
-            target.putExtra(INTENT_JSON, json.toString(2))
+    private inline val json: JSONObject get() = this.saveInJSON()
+
+    fun saveInIntent(target: Intent?): Intent? {
+        return target?.apply {
+            putExtra(INTENT_JSON, json.toString(2))
         }
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
-            val editor = prefs.edit()
-            val json = JSONObject()
-            this.saveInJSON(json)
-            editor.putString(INTENT_JSON, json.toString(2))
-            editor.commit()
+            prefs.edit().putString(INTENT_JSON, json.toString(2)).commit()
         }
     }
 
-    fun clear() {
+    fun clear(): Query {
         priorities = ArrayList<Priority>()
         contexts = ArrayList<String>()
         projects = ArrayList<String>()
@@ -224,6 +217,7 @@ class ActiveFilter(val options: FilterOptions) {
         prioritiesNot = false
         contextsNot = false
         useScript = false
+        return this
     }
 
     fun initInterpreter() {
@@ -233,8 +227,8 @@ class ActiveFilter(val options: FilterOptions) {
             } else {
                 null
             }
-            LuaInterpreter.clearOnFilter(options.luaModule)
-            LuaInterpreter.evalScript(options.luaModule, code)
+            LuaInterpreter.clearOnFilter(luaModule)
+            LuaInterpreter.evalScript(luaModule, code)
         } catch (e: LuaError) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
@@ -252,7 +246,7 @@ class ActiveFilter(val options: FilterOptions) {
         val today = todayAsString
         try {
             return items.filter {
-                if (options.showSelected && TodoList.isSelected(it)) {
+                if (showSelected && TodoList.isSelected(it)) {
                     return@filter true
                 }
                 if (this.hideCompleted && it.isCompleted()) {
@@ -270,7 +264,7 @@ class ActiveFilter(val options: FilterOptions) {
                 if (!filter.apply(it)) {
                     return@filter false
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(options.luaModule, it)) {
+                if (useScript && !LuaInterpreter.onFilterCallback(luaModule, it)) {
                     return@filter false
                 }
                 return@filter true
@@ -301,7 +295,7 @@ class ActiveFilter(val options: FilterOptions) {
             }
 
             if (!isEmptyOrNull(search)) {
-                addFilter(ByTextFilter(options.luaModule, search, false))
+                addFilter(ByTextFilter(luaModule, search, false))
             }
         }
 
@@ -322,7 +316,7 @@ class ActiveFilter(val options: FilterOptions) {
     }
 
     companion object {
-        internal val TAG = ActiveFilter::class.java.simpleName
+        internal val TAG = Query::class.java.simpleName
         const val NORMAL_SORT = "+"
         const val REVERSED_SORT = "-"
         const val SORT_SEPARATOR = "!"
@@ -358,7 +352,7 @@ class ActiveFilter(val options: FilterOptions) {
         const val INTENT_EXTRA_DELIMITERS = "\n|,"
     }
 
-    fun initFromIntent(intent: Intent) {
+    fun initFromIntent(intent: Intent): Query {
         if (intent.hasExtra(INTENT_JSON)) {
             val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
             initFromJSON(JSONObject(jsonFromIntent))
@@ -410,9 +404,10 @@ class ActiveFilter(val options: FilterOptions) {
                 this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
             }
         }
+        return this
     }
 
-    fun initFromPrefs(prefs: SharedPreferences) {
+    fun initFromPrefs(prefs: SharedPreferences): Query {
         val jsonFromPref = prefs.getString(INTENT_JSON, null)
         if (jsonFromPref != null) {
             initFromJSON(JSONObject(jsonFromPref))
@@ -439,6 +434,7 @@ class ActiveFilter(val options: FilterOptions) {
             script = prefs.getString(INTENT_SCRIPT_FILTER, null)
             scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
         }
+        return this
     }
 
 }

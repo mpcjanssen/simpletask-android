@@ -61,6 +61,8 @@ val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
 
+val myFolding: HashMap<String, Boolean> = hashMapOf()
+
 val mdParser: Parser = Parser.builder().build()
 val htmlRenderer : HtmlRenderer = HtmlRenderer.builder().build()
 
@@ -158,45 +160,45 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
 
     var header = ""
     val result = ArrayList<VisibleLine>()
-    var count = 0
     var headerLine: HeaderLine? = null
     val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
         val t = item
-        val newHeader = if ( moduleName!=null && luaGrouping ) {
+        val newHeader = if (moduleName != null && luaGrouping) {
             LuaInterpreter.onGroupCallback(moduleName, t)
         } else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
         if (header != newHeader) {
-            if (headerLine != null) {
-                headerLine.title += " ($count)"
+            headerLine = HeaderLine(title = MyTitle(newHeader))
+            headerLine.title.myFolding = myFolding
+            if (!myFolding.containsKey(headerLine.title.ori)) {
+                myFolding.put(headerLine.title.ori, false)
             }
-            headerLine = HeaderLine(newHeader)
-            count = 0
+
             result.add(headerLine)
             header = newHeader
         }
-        count++
-        val taskLine = TaskLine(item)
-        result.add(taskLine)
-    }
-    // Add count to last header
-    if (headerLine != null) {
-        headerLine.title += " ($count)"
+        headerLine?.let {
+            headerLine.title.count++
+            if (!myFolding.get(headerLine.title.ori)!!) {
+                val taskLine = TaskLine(item)
+                result.add(taskLine)
+            }
+        }
     }
 
     // Clean up possible last empty list header that should be hidden
     val i = result.size
-    if (i > 0 && result[i - 1].header) {
+    if (i > 0 && result[i - 1].header && headerLine!!.title.count==0) {
         result.removeAt(i - 1)
     }
     return result
 }
 
-fun addHeaderLines(visibleTasks: Sequence<Task>, filter: ActiveFilter, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: Sequence<Task>, filter: Query, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
-    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.options.luaModule)
+    return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.luaModule)
 }
 
 fun join(s: Collection<String>?, delimiter: String): String {
@@ -320,7 +322,7 @@ fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener
 
     val builder = AlertDialog.Builder(act)
     builder.setTitle(titleId)
-    builder.setItems(keys) { dialog, whichButton ->
+    builder.setItems(keys) { _, whichButton ->
         val which = whichButton
         val selected = values[which]
         listener.onClick(selected)
@@ -436,8 +438,8 @@ fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Di
         val newDialog = Dialog(act)
         newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         newDialog.setContentView(R.layout.loading)
-        val pr = newDialog.findViewById(R.id.progress) as ProgressBar
-        pr.indeterminateDrawable.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
+        val pr = newDialog.findViewById(R.id.progress) as ProgressBar?
+        pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
         newDialog.window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
         newDialog.setCancelable(false)
         newDialog.show()
@@ -578,7 +580,7 @@ fun getRelativeAge(task: Task, app: TodoApplication): String? {
     return getRelativeDate(app, "", date).toString()
 }
 
-fun initTaskWithFilter(task: Task, mFilter: ActiveFilter) {
+fun initTaskWithFilter(task: Task, mFilter: Query) {
     if (!mFilter.contextsNot && mFilter.contexts.size == 1) {
         task.addList(mFilter.contexts[0])
     }

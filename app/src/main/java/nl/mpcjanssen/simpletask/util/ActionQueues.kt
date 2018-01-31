@@ -8,11 +8,7 @@ open class ActionQueue(val qName: String) : Thread() {
     private var mHandler: Handler? = null
     private val TAG = "ActionQueue"
 
-    init {
-        start()
-    }
-
-    override fun run(): Unit {
+    override fun run()  {
         Looper.prepare()
         mHandler = Handler() // the Handler hooks up to the current Thread
         Looper.loop()

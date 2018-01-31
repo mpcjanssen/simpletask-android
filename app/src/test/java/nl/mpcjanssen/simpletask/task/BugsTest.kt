@@ -1,8 +1,7 @@
 package nl.mpcjanssen.simpletask.task
 
 import junit.framework.TestCase
-import nl.mpcjanssen.simpletask.ActiveFilter
-import nl.mpcjanssen.simpletask.FilterOptions
+import nl.mpcjanssen.simpletask.Query
 import nl.mpcjanssen.simpletask.MultiComparator
 import nl.mpcjanssen.simpletask.util.todayAsString
 import org.junit.Assert
@@ -21,9 +20,8 @@ class BugsTest : TestCase() {
     }
 
     fun testActiveSortNullCrash() {
-        val opt = FilterOptions(luaModule = "test")
-        val f = ActiveFilter(opt)
-        val mc = MultiComparator(f.getSort(null), todayAsString, true, false)
+        val q = Query(luaModule = "test")
+        val mc = MultiComparator(q.getSort(null), todayAsString, true, false)
         Assert.assertNotNull(mc)
     }
 

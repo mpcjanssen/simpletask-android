@@ -149,7 +149,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="resume_sync_pref_title">Resume sync</string>
     <string name="resume_sync_pref_summary">Sync with Dropbox when opening app.</string>
     <string name="font_size_delta_pref_title">Custom font size</string>
-    <string name="datebar_relative_size_summary">Relative date bar size</string>
+    <string name="datebar_relative_size_summary">Relative date line size</string>
     <string name="font_size_delta_pref_summary">Change font size.</string>
     <string name="theme_pref_title">Theme</string>
     <string name="theme_pref_summary">Change app theme.</string>
@@ -220,8 +220,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="widget_extended_pref_title">Show datebar</string>
     <string name="widget_extended_pref_summary">Display dates on a separate line</string>
 
-    <string name="taskview_extended_pref_title">Show datebar</string>
-    <string name="taskview_extended_pref_summary">Display dates on a separate line</string>
+    <string name="taskview_extended_pref_title">Show dates on a separate line</string>
 
     <string name="append_tasks_at_end_title">Append to file</string>
     <string name="append_tasks_at_end_summary">Insert new tasks at the end of the file</string>
@@ -472,4 +471,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="lua_config_import">Import</string>
     <string name="lua_config_share">Share</string>
     <string name="lua_open_config">Lua config</string>
+
+    <string name="use_uuid_title">Assign a UUID to each task</string>
 </resources>

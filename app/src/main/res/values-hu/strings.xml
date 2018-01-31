@@ -157,8 +157,7 @@
     <string name="widget_extended_pref_title">Dátumsor mutatása</string>
     <string name="widget_extended_pref_summary">Dátumok mutatása külön soron</string>
 
-    <string name="taskview_extended_pref_title">Dátumsor mutatása</string>
-    <string name="taskview_extended_pref_summary">Dátumok mutatása külön soron</string>
+    <string name="taskview_extended_pref_title">Dátumok mutatása külön soron</string>
 
     <string name="append_tasks_at_end_title">Fájlhoz fűzés</string>
     <string name="append_tasks_at_end_summary">Az új feladatokat a fájl végére szúrja be</string>

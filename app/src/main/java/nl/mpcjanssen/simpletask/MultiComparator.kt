@@ -14,7 +14,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
         val log = Logger
 
         label@ for (sort in sorts) {
-            val parts = sort.split(ActiveFilter.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+            val parts = sort.split(Query.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
             var reverse = false
             val sortType: String
             if (parts.size == 1) {
@@ -23,7 +23,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 sortType = parts[0]
             } else {
                 sortType = parts[1]
-                if (parts[0] == ActiveFilter.REVERSED_SORT) {
+                if (parts[0] == Query.REVERSED_SORT) {
                     reverse = true
                 }
             }
@@ -41,14 +41,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 } else {
                     { it -> it.showParts(TToken.TEXT).toLowerCase(Locale.getDefault()) }
                 }
-                "by_prio" -> comp = {
-                    val prio = it.priority
-                    if (prio == Priority.NONE) {
-                        "ZZZZ"
-                    } else {
-                        prio.code
-                    }
-                }
+                "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }
                 "by_creation_date" -> comp = { it.createDate ?: last_date }
                 "in_future" -> comp = { it.inFuture(today) }
