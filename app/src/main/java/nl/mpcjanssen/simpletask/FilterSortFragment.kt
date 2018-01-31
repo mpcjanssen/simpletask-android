@@ -81,12 +81,12 @@ class FilterSortFragment : Fragment() {
             var sortDirection: String
             if (parts.size == 1) {
                 sortType = parts[0]
-                sortDirection = ActiveFilter.NORMAL_SORT
+                sortDirection = Query.NORMAL_SORT
             } else {
                 sortDirection = parts[0]
                 sortType = parts[1]
-                if (isEmptyOrNull(sortDirection) || sortDirection != ActiveFilter.REVERSED_SORT) {
-                    sortDirection = ActiveFilter.NORMAL_SORT
+                if (isEmptyOrNull(sortDirection) || sortDirection != Query.REVERSED_SORT) {
+                    sortDirection = Query.NORMAL_SORT
                 }
             }
 
@@ -102,7 +102,7 @@ class FilterSortFragment : Fragment() {
         for (item in keys) {
             if (item != null) {
                 adapterList.add(item)
-                directions.add(ActiveFilter.NORMAL_SORT)
+                directions.add(Query.NORMAL_SORT)
             }
         }
 
@@ -112,12 +112,12 @@ class FilterSortFragment : Fragment() {
 
         adapter = SortItemAdapter(activity, R.layout.sort_list_item, R.id.text, adapterList)
         lv!!.adapter = adapter
-        lv!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        lv!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             var direction = directions[position]
-            if (direction == ActiveFilter.REVERSED_SORT) {
-                direction = ActiveFilter.NORMAL_SORT
+            if (direction == Query.REVERSED_SORT) {
+                direction = Query.NORMAL_SORT
             } else {
-                direction = ActiveFilter.REVERSED_SORT
+                direction = Query.REVERSED_SORT
             }
             directions.removeAt(position)
             directions.add(position, direction)
@@ -141,7 +141,7 @@ class FilterSortFragment : Fragment() {
             val multiSort = ArrayList<String>()
             if (lv != null) {
                 for (i in 0..adapter.count - 1) {
-                    multiSort.add(directions[i] + ActiveFilter.SORT_SEPARATOR + adapter.getSortType(i))
+                    multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter.getSortType(i))
                 }
             } else if (originalItems != null) {
                 multiSort.addAll(originalItems as ArrayList<String>)
@@ -165,7 +165,7 @@ class FilterSortFragment : Fragment() {
             val label = row.findViewById(R.id.text) as TextView
             label.text = m_app.getSortString(adapterList[position])
 
-            if (directions[position] == ActiveFilter.REVERSED_SORT) {
+            if (directions[position] == Query.REVERSED_SORT) {
                 reverseButton.setBackgroundResource(sortUpId)
             } else {
                 reverseButton.setBackgroundResource(sortDownId)

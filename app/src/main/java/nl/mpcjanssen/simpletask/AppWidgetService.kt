@@ -27,8 +27,8 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     private val log: Logger
     val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
     var visibleTasks = ArrayList<Task>()
-    var _filter: ActiveFilter? = null
-    var filter: ActiveFilter
+    var _filter: Query? = null
+    var filter: Query
         get() {
             val currentFilter = _filter ?: updateFilter()
             if (_filter == null) {
@@ -49,10 +49,10 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return "widget$widgetId"
     }
 
-    fun updateFilter(): ActiveFilter {
+    fun updateFilter(): Query {
 	    log.debug (TAG, "Getting filter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
-        val filter = ActiveFilter(FilterOptions(luaModule = moduleName()))
+        val filter = Query(luaModule = moduleName())
         filter.initFromPrefs(preferences)
         log.debug(TAG, "Retrieved widget $widgetId filter")
 
@@ -116,7 +116,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             tokensToShow = tokensToShow and TToken.TTAG.inv()
         }
 
-        val txt = LuaInterpreter.onDisplayCallback(currentFilter.options.luaModule, task) ?: task.showParts(tokensToShow).trim { it <= ' ' }
+        val txt = LuaInterpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShow).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {
@@ -144,7 +144,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             else -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.gray67)
         }
         if (prioColor != 0) {
-            setColor(ss, prioColor, task.priority.inFileFormat())
+            setColor(ss, prioColor, task.priority.fileFormat)
         }
         if (task.isCompleted()) {
             ss.setSpan(StrikethroughSpan(), 0, ss.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

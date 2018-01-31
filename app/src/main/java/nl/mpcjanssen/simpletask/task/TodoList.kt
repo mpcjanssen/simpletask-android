@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task
 
 import android.app.Activity
 import android.content.Intent
+import android.os.SystemClock
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -185,10 +186,10 @@ object TodoList {
             return todoItems.filter { it.isCompleted() }
         }
 
-    fun notifyTasklistChanged(todoName: String, eol: String, backup: BackupInterface?, save: Boolean) {
+    fun notifyTasklistChanged(todoName: String,  backup: BackupInterface?, save: Boolean) {
         todoQueue("Notified changed") {
             if (save) {
-                save(FileStore, todoName, backup, eol)
+                save(FileStore, todoName, backup, Config.eol)
             }
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
@@ -208,20 +209,25 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: ActiveFilter, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
+    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
+        log.debug(TAG, "Getting sorted and filtered tasks")
+        val start = SystemClock.elapsedRealtime()
         filter.initInterpreter()
-        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.options.luaModule)
+        val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
         val itemsToSort = if (comp.fileOrder) {
             todoItems
         } else {
             todoItems.reversed()
         }
-        log.info(ActiveFilter.TAG, "Resetting callbacks in module ${filter.options.luaModule}")
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
-        return filter.apply(sortedItems.asSequence())
+        val result = filter.apply(sortedItems.asSequence())
+        val end = SystemClock.elapsedRealtime()
+        log.debug(TAG, "Sorting and filtering tasks took ${end-start} ms")
+        return result
+
     }
 
-    fun reload(backup: BackupInterface, eol: String, reason: String = "") {
+    fun reload(backup: BackupInterface, reason: String = "") {
         val logText = "Reload: " + reason
         todoQueue(logText) {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
@@ -230,7 +236,7 @@ object TodoList {
             if (Config.changesPending && FileStore.isOnline) {
                 log.info(TAG, "Not loading, changes pending")
                 log.info(TAG, "Saving instead of loading")
-                save(FileStore, filename, backup, eol)
+                save(FileStore, filename, backup, Config.eol)
             } else {
                 fileStoreQueue("Reload") {
                     val needSync = try {
@@ -248,7 +254,7 @@ object TodoList {
                     val cachedList = Config.todoList
                     if (cachedList == null || needSync) {
                         try {
-                            val remoteContents = FileStore.loadTasksFromFile(filename, eol)
+                            val remoteContents = FileStore.loadTasksFromFile(filename)
                             val items = ArrayList<Task>(
                                     remoteContents.contents.map { text ->
                                         Task(text)
@@ -262,7 +268,7 @@ object TodoList {
                                 Config.lastSeenRemoteId = remoteContents.remoteId
                                 // Backup
                                 backup.backup(filename, items)
-                                notifyTasklistChanged(filename, eol, backup, false)
+                                notifyTasklistChanged(filename, backup, false)
                             }
 
 
@@ -320,7 +326,7 @@ object TodoList {
                 try {
                     FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                     removeAll(tasksToDelete)
-                    notifyTasklistChanged(todoFilename, eol, null, true)
+                    notifyTasklistChanged(todoFilename, null, true)
                 } catch (e: Exception) {
                     log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")

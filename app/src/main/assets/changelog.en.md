@@ -1,6 +1,25 @@
 ﻿Changelog
 =========
 
+10.0.7
+------
+
+- Fix crash after Dropbox logout.
+- Fix archiving on Dropbox when `done.txt` doesn't exist.
+- Merge Lua fixes (smichel).
+- Don't crash on Dropbox related errors when loading files.
+- Add `onAdd` Lua callback. Fixes #827.
+- Merge pull request #830 (comradekingu), https, app, Lua, task list, ©, etc.
+- Add `onSort` Lua callback as a more flexible alternative for #834.
+- Switch to using logcat for logging to be able to see library logging.
+- Fix several reported NPE exceptions.
+- Rename `stdlib.lua` to `todolib.lua`. Fixes #841.
+
+10.0.6
+------
+
+-  Merge pull request #807 (aligitor). Hungarian translation of the help file "Versions".
+
 10.0.5
 ------
 

@@ -13,16 +13,13 @@ import java.util.*
 
 object Daos {
     internal val daoSession: DaoSession
-    val logDao: LogItemDao
     val backupDao: TodoFileDao
     init {
         val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
         val logDb = helper.writableDatabase
         val daoMaster = DaoMaster(logDb)
         daoSession = daoMaster.newSession()
-        logDao = daoSession.logItemDao
         backupDao = daoSession.todoFileDao
-        Logger.setDao(logDao)
 
     }
 
@@ -33,31 +30,12 @@ object Daos {
         backupDao.queryBuilder().where(TodoFileDao.Properties.Date.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
     }
 
-    fun logItemsDesc () : List<String> {
-        return logDao.queryBuilder().orderDesc(LogItemDao.Properties.Id).list().map { it -> logItemToString(it) }
-    }
-
-    fun logAsText () : String {
-        val logContents = StringBuilder()
-        for (item in logDao.loadAll().reversed()) {
-            logContents.append(logItemToString(item)).append("\n")
-        }
-        return logContents.toString()
-    }
 
     private fun logItemToString(entry: LogItem): String {
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US)
         return format.format(entry.timestamp) + "\t" + shortAppVersion() + "\t" + entry.severity + "\t" + entry.tag + "\t" + entry.message + "\t" + entry.exception
     }
 
-    fun cleanLogging() {
-        val now = Date()
-        val removeBefore = Date(now.time - 24 * 60 * 60 * 1000)
-        val oldLogCount = logDao.count()
-        logDao.queryBuilder().where(LogItemDao.Properties.Timestamp.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
-        val logCount = logDao.count()
-        Logger.info(Daos.javaClass.simpleName, "Cleared " + (oldLogCount - logCount) + " old log items")
-    }
 
     fun initHistoryCursor (): Cursor {
         val builder = daoSession.todoFileDao.queryBuilder()

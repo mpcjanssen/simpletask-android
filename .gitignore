@@ -20,3 +20,4 @@ apk/
 Thumbs.db
 *.swp
 captures/
+.DS_Store

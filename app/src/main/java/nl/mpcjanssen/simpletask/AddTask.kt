@@ -101,9 +101,8 @@ class AddTask : ThemedActionBarActivity() {
                     join(m_backup.map(Task::inFileFormat), "\n")
                 } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
                     intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
-                } else if (intent.hasExtra(ActiveFilter.INTENT_JSON)) {
-                    val opt = FilterOptions(luaModule = "from_intent")
-                    val currentFilter = ActiveFilter(opt)
+                } else if (intent.hasExtra(Query.INTENT_JSON)) {
+                    val currentFilter = Query(luaModule = "from_intent")
                     currentFilter.initFromIntent(intent)
                     currentFilter.prefill
                 } else {
@@ -120,7 +119,7 @@ class AddTask : ThemedActionBarActivity() {
                 }
                 textInputField.setRawInputType(inputFlags)
                 textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
-                textInputField.setOnEditorActionListener { textView, actionId, keyEvent ->
+                textInputField.setOnEditorActionListener { _, actionId, keyEvent ->
                     val hardwareEnterUp = keyEvent != null &&
                             keyEvent.action == KeyEvent.ACTION_UP &&
                             keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
@@ -305,7 +304,7 @@ class AddTask : ThemedActionBarActivity() {
         todoList.removeAll(m_backup)
 
         // Save
-        todoList.notifyTasklistChanged(Config.todoFileName, Config.eol, TodoApplication.app, true)
+        todoList.notifyTasklistChanged(Config.todoFileName, TodoApplication.app, true)
         finishEdit()
     }
 
@@ -338,7 +337,7 @@ class AddTask : ThemedActionBarActivity() {
                      * issue. The date is just replaced twice
                      */
                     val today = DateTime.today(TimeZone.getDefault())
-                    val dialog = DatePickerDialog(this@AddTask, DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+                    val dialog = DatePickerDialog(this@AddTask, DatePickerDialog.OnDateSetListener { _, year, month, day ->
                         val date = DateTime.forDateOnly(year, month + 1, day)
                         insertDateAtSelection(dateType, date)
                     },
@@ -406,7 +405,7 @@ class AddTask : ThemedActionBarActivity() {
 
         initListViewSelection(lv, lvAdapter, task.tags)
 
-        builder.setPositiveButton(R.string.ok) { dialog, which ->
+        builder.setPositiveButton(R.string.ok) { _, _ ->
             val newText = ed.text.toString()
 
             for (i in 0..lvAdapter.count - 1) {
@@ -429,7 +428,7 @@ class AddTask : ThemedActionBarActivity() {
             }
             textInputField.setText(tasks.joinToString("\n") { it.text })
         }
-        builder.setNegativeButton(R.string.cancel) { dialog, id -> }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
         // Create the AlertDialog
         val dialog = builder.create()
         dialog.setTitle(Config.tagTerm)
@@ -442,7 +441,7 @@ class AddTask : ThemedActionBarActivity() {
         val priorityCodes = priorities.mapTo(ArrayList<String>()) { it.code }
 
         builder.setItems(priorityCodes.toArray<String>(arrayOfNulls<String>(priorityCodes.size))
-        ) { arg0, which -> replacePriority(priorities[which].code) }
+        ) { _, which -> replacePriority(priorities[which].code) }
 
         // Create the AlertDialog
         val dialog = builder.create()
@@ -486,7 +485,7 @@ class AddTask : ThemedActionBarActivity() {
 
         initListViewSelection(lv, lvAdapter, task.lists)
 
-        builder.setPositiveButton(R.string.ok) { dialog, which ->
+        builder.setPositiveButton(R.string.ok) { _, _ ->
             for (i in 0..lvAdapter.count - 1) {
                 val list = lvAdapter.getItem(i)
                 if (lv.isItemChecked(i)) {
@@ -506,7 +505,7 @@ class AddTask : ThemedActionBarActivity() {
             }
             textInputField.setText(tasks.joinToString("\n") { it.text })
         }
-        builder.setNegativeButton(R.string.cancel) { dialog, id -> }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
         // Create the AlertDialog
         val dialog = builder.create()
         dialog.setTitle(Config.listTerm)
