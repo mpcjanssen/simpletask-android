@@ -12,7 +12,7 @@
     <string name="main_no_items">Нет задач для отображения.</string>
     <string name="set_preferences">Настройка</string>
     <string name="preferences">Настройка</string>
-    <string name="archive">Архив</string>
+    <string name="archive">Архивирование</string>
     <string name="help">Помощь</string>
     <string name="history">История</string>
     <string name="debug_info">Информация для отладки</string>
@@ -98,7 +98,7 @@
     <string name="manual_sync_pref_title">Ручная синхронизация</string>
     <string name="manual_sync_pref_summary">Не загружать изменения в Dropbox автоматически.</string>
     <string name="resume_sync_pref_title">Возобновить синхронизацию</string>
-    <string name="resume_sync_pref_summary">Синхронизировать с Dropbox при открытии</string>
+    <string name="resume_sync_pref_summary">Синхронизировать с Dropbox при открытии.</string>
     <string name="font_size_delta_pref_title">Пользовательский размер шрифта</string>
     <string name="font_size_delta_pref_summary">Изменить размер шрифта.</string>
     <string name="theme_pref_title">Тема</string>
