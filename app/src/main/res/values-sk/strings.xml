@@ -68,4 +68,32 @@
 
     <string name="name">Názov</string>
     <string name="date">Dátum</string>
+    <string name="script">Skript</string>
+    <string name="main_no_items">Žiadne úlohy na zobrazenie.</string>
+    <string name="search">Hľadať</string>
+    <string name="update_tags">Aktualizácia značky</string>
+    <string name="remove_list_or_tag">Odstrániť zoznamy a značky</string>
+    <string name="update">Aktualizovať</string>
+    <string name="defer_due">Nastavenie termínu</string>
+    <string name="defer_threshold">Nastaviť prah dátumu</string>
+    <string name="unComplete">Späť hotové</string>
+    <string name="ARCHIVE_settings_header">Archivovať</string>
+    <string name="auto_archive_pref_title">Automaticky archivovať</string>
+    <string name="auto_archive_pref_summary">Archivuje úlohy hneď po dokončení.</string>
+    <string name="archive_now_pref_title">Archivovať teraz</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_summary">Nastavenie pre synchronizáciu Dropboxu</string>
+
+    <string name="manual_sync_pref_title">Ručná synchronizácia</string>
+    <string name="resume_sync_pref_title">Obnoviť synchronizáciu</string>
+    <string name="font_size_delta_pref_title">Vlastná veľkosť písma</string>
+    <string name="share_task_show_edit_pref_title">Upraviť zdieľané úlohy</string>
+    <string name="local_file_root_title">root:// adresár</string>
+    <string name="calendar_reminder_time_title">Čas pripomienky</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="append_tasks_at_end_title">Pripojiť k súboru</string>
+    <string name="append_tasks_at_end_summary">Pridať nové úlohy na koniec súboru</string>
+
+    <string name="show_hidden_title">Zobraziť skryté úlohy</string>
     </resources>
