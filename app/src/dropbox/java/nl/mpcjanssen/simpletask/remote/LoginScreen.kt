@@ -112,7 +112,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
     override fun onDestroy() {
         super.onDestroy()
         localBroadcastManager.unregisterReceiver(m_broadcastReceiver)
-    }
+        }
 
     internal fun startLogin() {
         Config.clearCache()
