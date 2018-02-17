@@ -31,37 +31,22 @@ import java.util.ArrayList
 
  * @author Tim Barlotta
  */
-class ByContextFilter(contexts: List<String>?, private val not: Boolean) : TaskFilter {
+class ByContextFilter(
+        private val contexts: List<String>,
+        private val not: Boolean
+) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    internal val contexts = ArrayList<String>()
-
-    init {
-        if (contexts != null) {
-            this.contexts.addAll(contexts)
-        }
-    }
 
     override fun apply(task: Task): Boolean {
-        if (not) {
-            return !filter(task)
-        } else {
-            return filter(task)
-        }
+        return if (not) !filter(task) else filter(task)
     }
 
-    fun filter(input: Task): Boolean {
-        if (contexts.size == 0) {
-            return true
-        }
-
-        for (c in input.lists) {
-            if (contexts.contains(c)) {
-                return true
-            }
-        } /*
+    private fun filter(input: Task): Boolean {
+        val match = input.lists.any { contexts.contains(it) }
+        /*
          * Match tasks without context if filter contains "-"
 		 */
-        return input.lists.size == 0 && contexts.contains("-")
+        return match || input.lists.size == 0 && contexts.contains("-")
 
     }
 }
