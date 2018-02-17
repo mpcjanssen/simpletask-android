@@ -447,9 +447,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 }
 
             }
-            if (Config.useUUIDs && tokens.filterIsInstance<UUIDToken>().isEmpty()) {
-                tokens.add(UUIDToken(UUID.randomUUID().toString()))
-            }
             return tokens
         }
     }
