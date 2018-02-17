@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -25,7 +24,6 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2013 Mark Janssen
 @copyright 2015 Vojtech Kral
 -->
-
 <!--suppress ALL -->
 <resources>
     <string name="invalid_context">Nieprawidłowa nazwa listy</string>
@@ -403,4 +401,6 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="name">Nazwa</string>
     <string name="date">Data</string>
-</resources>
+<string name="preference_interface">Interfejs</string>
+    <string name="preference_widget">Widżet</string>
+    </resources>
