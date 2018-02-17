@@ -31,35 +31,21 @@ import java.util.ArrayList
 
  * @author Tim Barlotta
  */
-class ByProjectFilter(projects: List<String>?, internal var not: Boolean) : TaskFilter {
+class ByProjectFilter(
+        private val projects: List<String>,
+        private val not: Boolean
+) : TaskFilter {
     /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
-    internal val projects = ArrayList<String>()
-
-    init {
-        if (projects != null) {
-            this.projects.addAll(projects)
-        }
-    }
 
     override fun apply(task: Task): Boolean {
-        if (not) {
-            return !filter(task)
-        } else {
-            return filter(task)
-        }
+        return if (not) !filter(task) else filter(task)
     }
 
     fun filter(input: Task): Boolean {
-        if (projects.size == 0) {
-            return true
-        }
-        for (p in input.tags) {
-            if (projects.contains(p)) {
-                return true
-            }
-        } /*
+        val match = input.lists.any { projects.contains(it) }
+        /*
          * Match tasks without project if filter contains "-"
 		 */
-        return input.tags.size == 0 && projects.contains("-")
+        return match || input.tags.size == 0 && projects.contains("-")
     }
 }
