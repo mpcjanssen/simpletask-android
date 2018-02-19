@@ -1170,7 +1170,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val line = visibleLines[position]
             t.text = line.title?.text
             t.textSize = textSize
-            var originalTitle = line.title?.ori
+            var originalTitle = line.title?.originalTitle
             view.setOnClickListener {
                 line.title?.myFolding!!.put(originalTitle!!,!line.title?.myFolding!!.get(originalTitle)!!)
                 TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
