@@ -172,8 +172,8 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
         if (header != newHeader) {
             headerLine = HeaderLine(title = MyTitle(newHeader))
             headerLine.title.myFolding = myFolding
-            if (!myFolding.containsKey(headerLine.title.ori)) {
-                myFolding.put(headerLine.title.ori, false)
+            if (!myFolding.containsKey(headerLine.title.originalTitle)) {
+                myFolding.put(headerLine.title.originalTitle, false)
             }
 
             result.add(headerLine)
@@ -181,7 +181,7 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
         }
         headerLine?.let {
             headerLine.title.count++
-            if (!myFolding.get(headerLine.title.ori)!!) {
+            if (!myFolding.get(headerLine.title.originalTitle)!!) {
                 val taskLine = TaskLine(item)
                 result.add(taskLine)
             }
