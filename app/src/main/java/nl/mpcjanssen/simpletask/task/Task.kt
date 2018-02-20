@@ -364,6 +364,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
 
+//        fun parse(text: String): ArrayList<TToken> {
+//            val tokens = ArrayList<TToken>()
+//            tokens.add(TextToken(text))
+//            return tokens
+//        }
+
         fun parse(text: String): ArrayList<TToken> {
             var lexemes = text.lex()
             val tokens = ArrayList<TToken>()
