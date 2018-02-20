@@ -372,4 +372,6 @@ http://goo.gl/X1C55P
 
     <string name="title_filter_applied">Фильтровать по:</string>
     <string name="shortcut_addtask_name">Добавить Задачу</string>
+    <string name="filter_import_export">Импорт/экспорт фильтров</string>
+
     </resources>
