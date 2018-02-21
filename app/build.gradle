@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.21'
     ext.dokka_version = '0.9.15'
     ext.android_support_version = '25.3.1'
     repositories {
@@ -58,8 +58,8 @@ android {
     }
 
     defaultConfig {
-        versionName '10.0.7'
-        versionCode 3075
+        versionName '10.1.0'
+        versionCode 3076
 	     minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
