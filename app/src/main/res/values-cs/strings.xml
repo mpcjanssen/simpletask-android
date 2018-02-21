@@ -1,2 +1,301 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Neplatný název seznamu</string>
+    <string name="invalid_project">Neplatný název štítku</string>
+    <string name="added_task">Přidaný úkol</string>
+    <string name="add_task_failed">Úkol se nepodařilo přidat</string>
+    <string name="save_task">Uložit úkol</string>
+    <string name="update_task_failed">Úkol se nepodařilo aktualizovat</string>
+    <string name="sort">Seřadit</string>
+    <string name="script">Script</string>
+    <string name="filter">Filtr</string>
+    <string name="main_no_items">Žádné úkoly k zobrazení</string>
+    <string name="set_preferences">Nastavení</string>
+    <string name="preferences">Nastavení</string>
+    <string name="archive">Archiv</string>
+    <string name="help">Nápověda</string>
+    <string name="history">Historie</string>
+    <string name="debug_info">Ladící informace</string>
+    <string name="log">Záznam událostí (log)</string>
+    <string name="next">Další</string>
+    <string name="prev">Předchozí</string>
+    <string name="open_file">Otevřít soubor se seznamem úkolů</string>
+    <string name="sync">Synchronizovat</string>
+    <string name="changelist">Vybrat seznam</string>
+    <string name="search">Hledat</string>
+    <string name="add">Přidat</string>
+    <string name="task">Úkol</string>
+    <string name="addtask">Přidat úkol</string>
+    <string name="updatetask">Aktualizovat</string>
+    <string name="viewtask">Zobrazit úkol</string>
+    <string name="cleartask">Vyčistit úkol</string>
+    <string name="clear_database">Prázdná databáze</string>
+    <string name="done">Dokončeno</string>
+    <string name="priority">Upravit pořadí důležitosti</string>
+    <string name="select_priority">Vyberte prioritu</string>
+    <string name="select_all">Vybrat vše</string>
+    <string name="add_list_or_tag">Přidat seznamy a štítky</string>
+    <string name="update_lists">Aktualizovat seznamy</string>
+    <string name="update_tags">Aktualizovat štítky</string>
+    <string name="remove_list_or_tag">Odebrat seznamy a štítky</string>
+    <string name="update">Aktualizovat</string>
+    <string name="delete">Smazat</string>
+    <string name="defer_due">Nastavit termín</string>
+    <string name="defer_threshold">Nastavit hraniční datum</string>
+    <string name="insert_due">Vložit termín</string>
+    <string name="insert_threshold">Vložit hraniční datum</string>
+    <string name="share">Sdílet</string>
+    <string name="share_database">Sdílet databázi</string>
+    <string name="unComplete">Zrušit stav dokončeno</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Storno</string>
+    <string name="clear_filter">Vyčistit filtr</string>
+    <string name="write_failed">Nepodařilo se zapsat do souboru. Vaše změny NEBYLY uloženy.</string>
+
+    <string name="tasktexthint">\@prodiskutovat +Petr problém s +Honza @Troy 
+\nŘíct +Honza aby nebyl takový tahoun @Troy 
+\nOdebrat tento text z nabídky @telefon</string>
+
+    <string name="filter_name_empty">Není zadán název, filtr nebude přidán</string>
+    <string name="widget_name_empty">Není zadán název widgetu, nebude přidán</string>
+    <string name="preference_appearance">Vzhled</string>
+    <string name="preference_interface">Rozhraní</string>
+    <string name="preference_widget">Widget</string>
+    <string name="preference_other">Ostatní</string>
+
+    <string name="ARCHIVE_settings_header">Archivovat</string>
+    <string name="ARCHIVE_settings_summary">Nastavení pro archivaci dokončených úkolů v souboru done.txt</string>
+    <string name="auto_archive_pref_title">Automatická archivace</string>
+    <string name="auto_archive_pref_summary">Při dokončení úkoly automaticky archivovat.</string>
+    <string name="archive_now_pref_title">Archivovat nyní</string>
+    <string name="archive_now_pref_summary">Přesunout dokončené úkoly ze souboru todo.txt do done.txt.</string>
+    <string name="dropbox_logout_pref_title">Odhlásit</string>
+    <string name="dropbox_logout_pref_summary">Odhlásit ze služby Dropbox.</string>
+    <string name="TODOTXTPATH_title">Umístění souboru</string>
+    <string name="TODOTXTPATH_summary">Dropbox složka ve které je soubor todo.txt uložený.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Nastavení Dropbox synchronizace</string>
+
+    <string name="todotxt_features_settings_header">Funkce</string>
+    <string name="todotxt_features_settings_summary">Zapnout nebo vypnout funkce</string>
+
+    <string name="todotxt_configuration_settings_header">Nastavení</string>
+    <string name="todotxt_configuration_settings_summary">Nastavit chování aplikace</string>
+
+    <string name="todotxt_creation_settings_header">Vytvoření úkolu</string>
+
+    <string name="todotxt_ui_settings_header">Funkce</string>
+    <string name="todotxt_ui_settings_summary">Řídí co je zobrazováno</string>
+    <string name="todotxt_behavior_settings_header">Chování</string>
+    <string name="todotxt_settings_summary">Nastavení pro celou aplikaci</string>
+    <string name="sort_complete_last_pref_title">Zobrazit dokončené na konci</string>
+    <string name="sort_complete_last_pref_summary">Vždy zobrazovat dokončené úkoly na konci seznamu</string>
+    <string name="keep_prio_header">Zachovat prioritu v dokončených úkolech</string>
+    <string name="keep_prio_summary">Todo.txt při dokončení odebere prioritu</string>
+    <string name="prepend_date_pref_title">Časové razítko nového úkolu</string>
+    <string name="prepend_date_pref_summary">Automaticky přidat datum vytvoření</string>
+    <string name="line_breaks_pref_title">Konce řádků jako ve Windows</string>
+    <string name="line_breaks_pref_summary">Používat konce řádků jako ve Windows</string>
+    <string name="recur_from_original_date_pref_title">Opakovat úkol s použitím původních datumů</string>
+    <string name="recur_from_original_date_pref_summary">Zvýšit původní datumy v úkoly při vytváření opakujícího se úkolu. Toto odškrtněte pro nastavení nových datumů vztažených ke dnešku.</string>
+    <string name="manual_sync_pref_title">Ruční synchronizace</string>
+    <string name="manual_sync_pref_summary">Nenahrávat automaticky každou změnu na Dropbox.</string>
+    <string name="resume_sync_pref_title">Obnovit synchronizaci</string>
+    <string name="font_size_delta_pref_title">Vlastní velikost písma</string>
+    <string name="font_size_delta_pref_summary">Změnit velikost písma</string>
+    <string name="theme_pref_title">Téma vzhledu</string>
+    <string name="theme_pref_summary">Změnit téma vzhledu aplikace</string>
+
+    <string name="share_task_show_edit_pref_title">Upravit sdílené úkoly</string>
+    <string name="share_task_append_text_title">Text na pozadí</string>
+    <string name="local_file_root_title">složka root://</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="menu_capitalize_tasks">Převést na velká písmena</string>
+    <string name="back_saves_pref_title">Tlačítko zpět</string>
+    <string name="show_txt_only_pref_title">Zobrazovat pouze TXT soubory</string>
+    <string name="calendar_sync_screen_title">Upozornění</string>
+    <string name="calendar_sync_screen_summary">Připomínky v kalendáři (experimentální)</string>
+    <string name="calendar_sync_dues_title">Připomínání termínů</string>
+    <string name="calendar_sync_thresholds_title">Připomínání hraničních datumů</string>
+    <string name="calendar_reminder_days_title">Dnů předem</string>
+    <string name="calendar_reminder_days_summary">Na jak brzy nastavit připomínku</string>
+    <string name="calendar_reminder_time_title">Čas připomínky</string>
+    <string name="calendar_reminder_time_summary">Denní doba na kterou nastavit připomínku</string>
+
+    <string name="widget_theme_pref_title">Téma vzhledu</string>
+    <string name="task_text_ellipsizing_none">Žádné: velmi dlouhý text úkolu</string>
+    <string name="filter_tab_header_prio">Priorita</string>
+    <string name="filter_tab_header_other">Ostatní</string>
+    <string name="filter_tab_header_sort">Třídit</string>
+    <string name="action_pop_up_call">Volání:</string>
+    <string name="action_pop_up_sms">SMS:</string>
+
+    <string name="saved_filters_exported">Filtry exportovány</string>
+    <string name="saved_filters_imported">Filtry importovány</string>
+    <string name="toast_lua_config_imported">Nastavení Lua importováno</string>
+
+    <string name="widget_background_transparency_title">Průhlednost pozadí</string>
+
+    <string name="widget_extended_pref_title">Zobrazit pruh s datumem</string>
+    <string name="widget_extended_pref_summary">Zobrazit datumy na zvlášť řádku</string>
+
+    <string name="append_tasks_at_end_title">Připojit k souboru</string>
+    <string name="color_due_pref_title">Barva</string>
+    <string name="show_hidden_title">Zobrazit skryté úkoly</string>
+    <string name="show_empty_lists_title">Zobrazit prázdná záhlaví</string>
+    <string name="show_edittext_hint_title">Našeptávat</string>
+    <string name="show_edittext_hint_summary">Při přidávání úkolu našeptávat</string>
+
+    <string name="show_complete_checkbox_title">Zobrazovat zaškrtávací kolonky dokončení</string>
+    <string name="show_confirmation_dialogs_title">Potvrzovací dialogy</string>
+    <string name="show_todo_path_title">Zobrazovat kde je uložen soubor todo</string>
+    <string name="show_fast_scroll_title">Rychlé posouvání</string>
+    <string name="sort_case_sensitive_title">Při řazení rozlišovat velikost písmen</string>
+    <string name="todotxt_terms_title">Používat pojmy todo.txt</string>
+    <string name="about_settings_header">O aplikaci</string>
+    <string name="about_settings_summary">Informace o aplikaci</string>
+    <string name="visit_website_title">Nápověda</string>
+    <string name="visit_website_summary">Navštívit webové stránky projektu</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
+
+    <string name="visit_tracker_title">Požádat o funkci nebo nahlásit chybu</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
+    <string name="preference_title_debug_info">Zobrazit ladící informace</string>
+    <string name="preference_summary_debug_info">Zobrazit a sdílet verzi aplikace a záznam událostí (log)</string>
+
+    <string name="sync_dialog_title">Ruční synchronizace</string>
+    <string name="sync_dialog_msg">Chcete nahrát nebo si stáhnout svůj soubor todo.txt?</string>
+    <string name="sync_dialog_upload">Nahrát na Dropbox</string>
+    <string name="sync_dialog_download">Stáhnout si na zařízení</string>
+    <string name="sync_upload_message">Nahrávání todo.txt…</string>
+    <string name="sync_download_message">Stahování todo.txt…</string>
+
+    <string name="login_screen_button">Přihlásit k Dropbox</string>
+    <string name="delete_task_title">Smazat %s úkolů</string>
+    <string name="archive_task_title">Archivovat %s úkolů</string>
+    <string name="delete_task_message">Toto není možné vrátit zpět. Opravdu udělat?</string>
+    <string name="delete_task_confirm">Smazat</string>
+
+    <string name="clone_tags">Předvyplnit</string>
+    <string name="word_wrap">Dělení slov</string>
+    <string name="search_hint">Hledat…</string>
+
+    <string name="sort_help">"seřadit "</string>
+    <string name="file_order">Pořadí souborů (neseřazeno)</string>
+    <string name="alphabetical">Abecedně</string>
+    <string name="by_prio">Priorita</string>
+    <string name="by_project">Štítek</string>
+    <string name="by_context">Seznam</string>
+    <string name="by_project_todotxt">Projekt</string>
+    <string name="by_context_todotxt">Kontext</string>
+    <string name="completed">Dokončeno</string>
+    <string name="by_creation_date">Datum vytvoření</string>
+    <string name="in_future">Hraniční datum v budoucnosti</string>
+    <string name="by_due_date">Termín</string>
+    <string name="by_threshold_date">Hraniční datum</string>
+    <string name="by_completion_date">Datum dokončení</string>
+    <string name="by_lua">Lua skript</string>
+
+    <string name="filter_select_all">Vybrat vše</string>
+    <string name="filter_clear_all">Vyčistit filtr</string>
+    <string name="filter_invert">Převrátit filtr</string>
+    <string name="add_filter_shortcut">Na hlavní obrazovku</string>
+    <string name="export_filter">Export</string>
+    <string name="import_filter">Import</string>
+    <string name="rename_filter">Přejmenovat</string>
+    <string name="rename_filter_message">Zadejte název pro uložený filtr:</string>
+    <string name="title_filter_drawer">Rychlý filtr</string>
+    <string name="update_filter">Aktualizovat</string>
+    <string name="create_widget">Vytvořit widget</string>
+    <string name="config_widget">Nastavit widget</string>
+    <string name="filter_show_completed">Zobrazit dokončené úkoly</string>
+    <string name="filter_show_future">Zobrazit úkoly s hraničním datem v budoucnosti</string>
+    <string name="filter_show_lists">Zobrazovat seznam v úkolech</string>
+    <string name="filter_show_tags">Zobrazovat v úkolech štítky</string>
+    <string name="filter_show_create_date">Zobrazovat stáří úkolu</string>
+
+    <string name="filter_show_completed_short">Dokončeno</string>
+    <string name="filter_show_future_short">Budoucí</string>
+    <string name="filter_show_prompt">Zobrazit</string>
+    <string name="filter_saved_prompt">Uložené filtry</string>
+
+    <string name="task_show_all">Vše</string>
+
+    <string name="add_task_help_btn">Nápověda</string>
+    <string name="priority_prompt">Priorita</string>
+    <string name="project_prompt">Štítek</string>
+    <string name="context_prompt">Seznam</string>
+    <string name="project_prompt_todotxt">Projekt</string>
+    <string name="context_prompt_todotxt">Kontext</string>
+    <string name="separator">Oddělovač</string>
+
+    <string name="shortcut_addtask_name">Přidat úkol</string>
+    <string name="none">žádné</string>
+    <string name="keep">ponechat</string>
+    <string name="all">vše</string>
+
+    <string name="dates_days_ago">před %d dny</string>
+    <string name="dates_one_day_ago">včera</string>
+    <string name="dates_years_ago">před %d lety</string>
+    <string name="dates_one_year_ago">minulý rok</string>
+    <string name="dates_months_ago">před %d měsíci</string>
+    <string name="dates_one_month_ago">minulý měsíc</string>
+    <string name="dates_weeks_ago">před %d týdny</string>
+    <string name="dates_one_week_ago">minulý týden</string>
+
+    <string name="dates_one_week">jeden týden</string>
+    <string name="dates_two_weeks">dva týdny</string>
+    <string name="dates_one_month">jeden měsíc</string>
+
+    <string name="dates_today">dnes</string>
+    <string name="date_pick">vybrat datum</string>
+    <string name="dates_tomorrow">zítra</string>
+
+    <string name="selected">označeno</string>
+    <string name="no_project">Žádný štítek</string>
+    <string name="no_header">Žádné</string>
+    <string name="no_prio">–</string>
+    <string name="add_to_calendar">Přidat připomínku</string>
+    <string name="version_copied">Informace o verzi zkopírovány do schránky</string>
+
+    <string name="task_added">Úkol přidán do Simpletask</string>
+    <string name="default_sort">Výchozí řazení</string>
+    <string name="pull_to_refresh_refreshing_label">Synchronizuje se s DropBox…</string>
+    <string name="input_new">Zadat nový</string>
+    <string name="no_filter">Bez filtru</string>
+    <string name="dropbox">Dropbox</string>
+
+    <string name="save_filter">Uložit stávající filtr</string>
+    <string name="donate_title">Přispět na vývoj</string>
+    <string name="donated_summary">Děkujeme za váš dar</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="sort_reverse">Obrácené pořadí</string>
+
+    <string name="calendar_write_error">Chyba: Nepodařilo se zapsat kalendář</string>
+
+    <string name="click_to_copy">Kliknutím zkopírujte do schránky.</string>
+
+    <string name="share_history_title">Historie úkolu</string>
+
+    <string name="hello_world">Ahoj světe!</string>
+    <string name="action_settings">Nastavení</string>
+
+    <string name="task_action">Akce</string>
+
+    <string name="name">Název</string>
+    <string name="date">Datum</string>
+    <string name="experimental_title">Experimentální</string>
+    <string name="experimental_summary">Zapnout experimentální funkce</string>
+
+    <string name="keep_selection_title">Ponechat výběr</string>
+    <string name="lua_error">Chyba Lua</string>
+    <string name="lua_config_screen">Nastavení Lua</string>
+    <string name="lua_run">Spustit</string>
+    <string name="lua_config_import_export">Importovat/exportovat nastavení Lua</string>
+    <string name="lua_config_export">Uložit a exportovat</string>
+    <string name="lua_config_import">Import</string>
+    <string name="lua_config_share">Sdílet</string>
+    <string name="lua_open_config">Nastavení Lua</string>
+
+    </resources>
