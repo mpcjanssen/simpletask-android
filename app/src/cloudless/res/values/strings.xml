@@ -2,7 +2,7 @@
 <!--suppress ALL -->
 <resources>
 
-    <string name="app_label">ST Cloudless</string>
+    <string name="app_label">Simpletask C</string>
     <string name="flavour_settings_label">Cloudless</string>
     <string name="login_text">Simpletask Cloudless needs access to your storage to be able to save the todo file.
         Press OK to give access.

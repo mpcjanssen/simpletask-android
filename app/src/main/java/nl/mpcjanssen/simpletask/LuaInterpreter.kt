@@ -46,7 +46,7 @@ object LuaInterpreter {
         return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
     }
 
-    fun onFilterCallback(moduleName : String, t: Task): Boolean {
+    fun onFilterCallback(moduleName: String, t: Task): Boolean {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {
             return true
@@ -64,7 +64,7 @@ object LuaInterpreter {
         return true
     }
 
-    fun hasFilterCallback(moduleName : String) : Boolean {
+    fun hasFilterCallback(moduleName: String): Boolean {
         return try {
             val module = globals.get(moduleName).checktable() ?: globals
             !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
@@ -74,7 +74,7 @@ object LuaInterpreter {
         }
     }
 
-    fun hasOnSortCallback(moduleName : String) : Boolean {
+    fun hasOnSortCallback(moduleName: String): Boolean {
         return try {
             val module = globals.get(moduleName).checktable() ?: globals
             !module.get(LuaInterpreter.ON_SORT_NAME).isnil()
@@ -84,7 +84,7 @@ object LuaInterpreter {
         }
     }
 
-    fun hasOnGroupCallback(moduleName : String) : Boolean {
+    fun hasOnGroupCallback(moduleName: String): Boolean {
         return try {
             val module = globals.get(moduleName).checktable() ?: globals
             !module.get(LuaInterpreter.ON_GROUP_NAME).isnil()
@@ -94,7 +94,7 @@ object LuaInterpreter {
         }
     }
 
-    fun onSortCallback (moduleName : String, t: Task): String {
+    fun onSortCallback(moduleName: String, t: Task): String {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -117,7 +117,7 @@ object LuaInterpreter {
         return ""
     }
 
-    fun onGroupCallback (moduleName : String, t: Task): String? {
+    fun onGroupCallback(moduleName: String, t: Task): String? {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -140,7 +140,7 @@ object LuaInterpreter {
         return null
     }
 
-    fun onDisplayCallback (moduleName : String, t: Task): String? {
+    fun onDisplayCallback(moduleName: String, t: Task): String? {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -163,7 +163,7 @@ object LuaInterpreter {
         return null
     }
 
-    fun onAddCallback (t: Task): Task? {
+    fun onAddCallback(t: Task): Task? {
         val callback = globals.get(LuaInterpreter.ON_ADD_NAME)
         if (!callback.isnil()) {
             val args = fillOnFilterVarargs(t)
@@ -199,7 +199,7 @@ object LuaInterpreter {
         return null
     }
 
-    fun evalScript(moduleName : String?, script: String?) : LuaInterpreter {
+    fun evalScript(moduleName: String?, script: String?): LuaInterpreter {
         if (moduleName != null) {
             val module = LuaTable.tableOf()
             val metatable = LuaValue.tableOf()
@@ -219,10 +219,10 @@ object LuaInterpreter {
         val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat()))
         val fieldTable = LuaTable.tableOf()
-        val tokensTable =  LuaTable.tableOf()
+        val tokensTable = LuaTable.tableOf()
         fieldTable.set("task", t.inFileFormat())
-        t.tokens.forEachIndexed { idx,  tok ->
-            val luaIdx = idx +1
+        t.tokens.forEachIndexed { idx, tok ->
+            val luaIdx = idx + 1
             val tokenTable = LuaTable.tableOf().apply {
                 set("type", LuaValue.valueOf(tok.type))
                 set("text", LuaValue.valueOf(tok.text))
@@ -241,8 +241,11 @@ object LuaInterpreter {
             fieldTable.set("recurrence", t.recurrencePattern)
         }
         fieldTable.set("completed", LuaBoolean.valueOf(t.isCompleted()))
-        fieldTable.set("priority", t.priority.code)
 
+        val prioCode = t.priority.code
+        if (prioCode != "-") {
+            fieldTable.set("priority", prioCode)
+        }
         fieldTable.set("tags", javaListToLuaTable(t.tags))
         fieldTable.set("lists", javaListToLuaTable(t.lists))
 
@@ -274,21 +277,21 @@ object LuaInterpreter {
         return luaTable
     }
 
-        // Call a Lua function `name`
-        // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
-        // Returns null if the function is not found or if a `LuaError` occurred
-        private fun <T> callZeroArgLuaFunction(globals: LuaValue, name: String, unpackResult: (LuaValue) -> T?): T? {
-            val function = globals.get(name)
-            if (!function.isnil()) {
-                try {
-                    return unpackResult(function.call())
-                } catch (e: LuaError) {
-                    log.debug(TAG, "Lua execution failed " + e.message)
-                }
+    // Call a Lua function `name`
+    // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
+    // Returns null if the function is not found or if a `LuaError` occurred
+    private fun <T> callZeroArgLuaFunction(globals: LuaValue, name: String, unpackResult: (LuaValue) -> T?): T? {
+        val function = globals.get(name)
+        if (!function.isnil()) {
+            try {
+                return unpackResult(function.call())
+            } catch (e: LuaError) {
+                log.debug(TAG, "Lua execution failed " + e.message)
             }
-            return null
-
         }
+        return null
+
+    }
 
     fun clearOnFilter(moduleName: String) {
         val module = globals.get(moduleName)
