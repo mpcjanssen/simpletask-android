@@ -374,4 +374,5 @@ http://goo.gl/X1C55P
     <string name="shortcut_addtask_name">Добавить Задачу</string>
     <string name="filter_import_export">Импорт/экспорт фильтров</string>
 
+    <string name="donated_summary">Спасибо за ваш взнос.</string>
     </resources>
