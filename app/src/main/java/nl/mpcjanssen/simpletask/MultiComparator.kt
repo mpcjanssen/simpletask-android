@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TextToken
 import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean, moduleName: String? = null) {
@@ -37,9 +38,9 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 "by_context" -> comp = { it.lists.sorted().firstOrNull() ?: "" }
                 "by_project" -> comp = { it.tags.sorted().firstOrNull() ?: "" }
                 "alphabetical" -> comp = if (caseSensitve) {
-                    { it -> it.showParts(TToken.TEXT) }
+                    { it -> it.showParts ({ it is TextToken }) }
                 } else {
-                    { it -> it.showParts(TToken.TEXT).toLowerCase(Locale.getDefault()) }
+                    { it -> it.showParts({ it is TextToken }).toLowerCase(Locale.getDefault()) }
                 }
                 "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }

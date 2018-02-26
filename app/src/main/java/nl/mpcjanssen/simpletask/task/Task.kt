@@ -263,10 +263,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return getFirstToken<CompletedToken>() != null
     }
 
-    fun showParts(parts: Int): String {
-        return tokens.filter { (it.type and parts) != 0 }
-                      .map { it.text }
-                       .joinToString(" ")
+    fun showParts(filter: (TToken) -> Boolean): String {
+        return tokens.filter(filter)
+                .map { it.text }
+                .joinToString(" ")
     }
 
     fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {
@@ -434,51 +434,30 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 interface TToken {
     val text: String
     val value: Any?
-    val type: Int
-    companion object {
-        const val WHITE_SPACE = 1
-        const val LIST = 1 shl 1
-        const val TTAG = 1 shl 2
-        const val COMPLETED = 1 shl 3
-        const val COMPLETED_DATE = 1 shl 4
-        const val CREATION_DATE = 1 shl 5
-        const val TEXT = 1 shl 6
-        const val PRIO = 1 shl 7
-        const val THRESHOLD_DATE = 1 shl 8
-        const val DUE_DATE = 1 shl 9
-        const val HIDDEN = 1 shl 10
-        const val RECURRENCE = 1 shl 11
-        const val PHONE = 1 shl 12
-        const val LINK = 1 shl 13
-        const val MAIL = 1 shl 14
-        const val EXTENSION = 1 shl 15
-        const val TUUID = 1 shl 16
-        const val ALL = 0b1111111111111111
-    }
 }
 
 data class CompletedToken(override val value: Boolean) : TToken {
     override val text: String
     get() = if (value) "x" else ""
-    override val type = TToken.COMPLETED
+
 }
 
 data class PriorityToken(override val text: String) : TToken {
     override val value: Priority
     get() = Priority.toPriority(text.removeSurrounding("(", ")"))
-    override val type = TToken.PRIO
+
 }
 
 data class ListToken(override val text: String) : TToken {
     override val value: String
         get() = text.substring(1)
-    override val type = TToken.LIST
+
 }
 
 data class TagToken(override val text: String) : TToken {
     override val value: String
         get() = text.substring(1)
-    override val type = TToken.TTAG
+
 }
 
 // Tokens with the same value as text representation
@@ -487,28 +466,13 @@ interface StringValueToken : TToken {
         get () = text
 }
 
-data class CreateDateToken(override val text: String) : StringValueToken {
-    override val type = TToken.CREATION_DATE
-}
-data class CompletedDateToken(override val text: String) : StringValueToken {
-    override val type = TToken.COMPLETED_DATE
-}
-
-data class TextToken(override val text: String) : StringValueToken {
-    override val type = TToken.TEXT
-}
-data class WhiteSpaceToken(override val text: String) : StringValueToken {
-    override val type = TToken.WHITE_SPACE
-}
-data class MailToken(override val text: String) : StringValueToken {
-    override val type = TToken.MAIL
-}
-data class LinkToken(override val text: String) : StringValueToken {
-    override val type = TToken.LINK
-}
-data class PhoneToken(override val text: String) : StringValueToken {
-    override val type = TToken.PHONE
-}
+data class CreateDateToken(override val text: String) : StringValueToken
+data class CompletedDateToken(override val text: String) : StringValueToken
+data class TextToken(override val text: String) : StringValueToken
+data class WhiteSpaceToken(override val text: String) : StringValueToken
+data class MailToken(override val text: String) : StringValueToken
+data class LinkToken(override val text: String) : StringValueToken
+data class PhoneToken(override val text: String) : StringValueToken
 
 
 // Key Value tokens
@@ -523,32 +487,25 @@ interface KeyValueToken : TToken {
 
 data class DueDateToken(override val valueStr : String) : KeyValueToken {
     override val key = "due"
-    override val type = TToken.DUE_DATE
 }
 data class ThresholdDateToken(override val valueStr : String) : KeyValueToken {
     override val key = "t"
-    override val type = TToken.THRESHOLD_DATE
 }
 
 data class RecurrenceToken(override val valueStr : String) : KeyValueToken {
     override val key = "rec"
-    override val type = TToken.RECURRENCE
 }
 
 data class HiddenToken(override val valueStr : String) : KeyValueToken {
     override val key = "h"
     override val value: Boolean
         get() = valueStr == "1"
-    override val type = TToken.HIDDEN
 }
 
-data class ExtToken(override val key : String, override val valueStr: String) : KeyValueToken {
-    override val type = TToken.EXTENSION
-}
+data class ExtToken(override val key : String, override val valueStr: String) : KeyValueToken
 
 data class UUIDToken(override val valueStr: String) : KeyValueToken {
     override val key = "uuid"
-    override val type = TToken.TUUID
 }
 
 // Extension functions

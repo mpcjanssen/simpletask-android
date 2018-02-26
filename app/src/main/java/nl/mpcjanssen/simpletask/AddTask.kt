@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import hirondelle.date4j.DateTime
+import kotlinx.android.synthetic.main.add_task.*
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
@@ -60,7 +61,7 @@ class AddTask : ThemedActionBarActivity() {
 
         localBroadcastManager = TodoApplication.app.localBroadCastManager
 
-        m_broadcastReceiver = object : BroadcastReceiver() {
+        val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == Constants.BROADCAST_SYNC_START) {
                     setProgressBarIndeterminateVisibility(true)
@@ -69,7 +70,8 @@ class AddTask : ThemedActionBarActivity() {
                 }
             }
         }
-        localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
+        localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
+        m_broadcastReceiver = broadcastReceiver
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -172,11 +174,11 @@ class AddTask : ThemedActionBarActivity() {
                 textInputField.setSelection(textIndex)
 
                 // Set button callbacks
-                findViewById(R.id.btnContext)?.setOnClickListener { showListMenu() }
-                findViewById(R.id.btnProject)?.setOnClickListener { showTagMenu() }
-                findViewById(R.id.btnPrio)?.setOnClickListener { showPriorityMenu() }
-                findViewById(R.id.btnDue)?.setOnClickListener { insertDate(DateType.DUE) }
-                findViewById(R.id.btnThreshold)?.setOnClickListener { insertDate(DateType.THRESHOLD) }
+                btnContext.setOnClickListener { showListMenu() }
+                btnProject.setOnClickListener { showTagMenu() }
+                btnPrio.setOnClickListener { showPriorityMenu() }
+                btnDue.setOnClickListener { insertDate(DateType.DUE) }
+                btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
             }
         }
     }
@@ -637,8 +639,8 @@ class AddTask : ThemedActionBarActivity() {
 
     public override fun onDestroy() {
         super.onDestroy()
-        if (localBroadcastManager != null) {
-            localBroadcastManager!!.unregisterReceiver(m_broadcastReceiver)
+        m_broadcastReceiver?.let {
+            localBroadcastManager?.unregisterReceiver(it)
         }
     }
 

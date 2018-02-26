@@ -41,9 +41,7 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.*
 import android.support.v4.content.ContextCompat
 import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
 
@@ -56,19 +54,19 @@ private enum class EvtStatus {
 data class EvtKey(val dtStart: Long, val title: String)
 
 private class Evt(
-    var id: Long,
-    var dtStart: Long,
-    var title: String,
-    var description: String,
-    var remID: Long = - 1,
-    var remMinutes: Long = -1,
-    var status: EvtStatus = EvtStatus.DELETE) {
+        var id: Long,
+        var dtStart: Long,
+        var title: String,
+        var description: String,
+        var remID: Long = -1,
+        var remMinutes: Long = -1,
+        var status: EvtStatus = EvtStatus.DELETE) {
 
     constructor(cursor: Cursor) // Create from a db record
-        : this(cursor.getLong(0), cursor.getLong(2), cursor.getString(3), cursor.getString(4))
+            : this(cursor.getLong(0), cursor.getLong(2), cursor.getString(3), cursor.getString(4))
 
     constructor(date: DateTime, title: String, desc: String) // Create from a Task
-        : this(-1, date.getMilliseconds(CalendarSync.UTC), title, desc, -1, -1, EvtStatus.INSERT) {
+            : this(-1, date.getMilliseconds(CalendarSync.UTC), title, desc, -1, -1, EvtStatus.INSERT) {
 
         val localZone = Calendar.getInstance().timeZone
         val remMargin = Config.reminderDays * 1440
@@ -89,45 +87,45 @@ private class Evt(
     fun key() = EvtKey(dtStart, title)
 
     infix fun equals(other: Evt) =
-        dtStart == other.dtStart &&
-        title.equals(other.title) &&
-        description.equals(other.description) &&
-        remMinutes == other.remMinutes
+            dtStart == other.dtStart &&
+                    title.equals(other.title) &&
+                    description.equals(other.description) &&
+                    remMinutes == other.remMinutes
 
-    @TargetApi(16) fun addOp(list: ArrayList<ContentProviderOperation>, calID: Long) {
+    @TargetApi(16)
+    fun addOp(list: ArrayList<ContentProviderOperation>, calID: Long) {
         if (status == EvtStatus.DELETE) {
             val args = arrayOf(id.toString())
             list.add(ContentProviderOperation.newDelete(Events.CONTENT_URI)
-                .withSelection(Events._ID + "=?", args)
-                .build())
+                    .withSelection(Events._ID + "=?", args)
+                    .build())
             if (remID >= 0) {
                 val remArgs = arrayOf(remID.toString())
                 list.add(ContentProviderOperation.newDelete(Reminders.CONTENT_URI)
-                    .withSelection(Reminders._ID + "=?", remArgs)
-                    .build())
+                        .withSelection(Reminders._ID + "=?", remArgs)
+                        .build())
             }
-        }
-        else if (status == EvtStatus.INSERT) {
+        } else if (status == EvtStatus.INSERT) {
             list.add(ContentProviderOperation.newInsert(Events.CONTENT_URI)
-                .withValue(Events.CALENDAR_ID, calID)
-                .withValue(Events.TITLE, title)
-                .withValue(Events.DTSTART, dtStart)
-                .withValue(Events.DTEND, dtStart + 24*60*60*1000) // Needs to be set to DTSTART +24h, otherwise reminders don't work
-                .withValue(Events.ALL_DAY, 1)
-                .withValue(Events.DESCRIPTION, description)
-                .withValue(Events.EVENT_TIMEZONE, CalendarSync.UTC.id)
-                .withValue(Events.STATUS, Events.STATUS_CONFIRMED)
-                .withValue(Events.HAS_ATTENDEE_DATA, true) // If this is not set, Calendar app is confused about Event.STATUS
-                .withValue(Events.CUSTOM_APP_PACKAGE, TodoApplication.app.packageName)
-                .withValue(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString())
-                .build())
+                    .withValue(Events.CALENDAR_ID, calID)
+                    .withValue(Events.TITLE, title)
+                    .withValue(Events.DTSTART, dtStart)
+                    .withValue(Events.DTEND, dtStart + 24 * 60 * 60 * 1000) // Needs to be set to DTSTART +24h, otherwise reminders don't work
+                    .withValue(Events.ALL_DAY, 1)
+                    .withValue(Events.DESCRIPTION, description)
+                    .withValue(Events.EVENT_TIMEZONE, CalendarSync.UTC.id)
+                    .withValue(Events.STATUS, Events.STATUS_CONFIRMED)
+                    .withValue(Events.HAS_ATTENDEE_DATA, true) // If this is not set, Calendar app is confused about Event.STATUS
+                    .withValue(Events.CUSTOM_APP_PACKAGE, TodoApplication.app.packageName)
+                    .withValue(Events.CUSTOM_APP_URI, Uri.withAppendedPath(Simpletask.URI_SEARCH, title).toString())
+                    .build())
             if (remID >= 0) {
                 val evtIdx = list.size - 1
                 list.add(ContentProviderOperation.newInsert(Reminders.CONTENT_URI)
-                    .withValueBackReference(Reminders.EVENT_ID, evtIdx)
-                    .withValue(Reminders.MINUTES, remMinutes)
-                    .withValue(Reminders.METHOD, Reminders.METHOD_ALERT)
-                    .build())
+                        .withValueBackReference(Reminders.EVENT_ID, evtIdx)
+                        .withValue(Reminders.MINUTES, remMinutes)
+                        .withValue(Reminders.METHOD, Reminders.METHOD_ALERT)
+                        .build())
             }
         }
     }
@@ -156,7 +154,7 @@ private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long)
  */
 @SuppressLint("Recycle", "NewAPI")
 private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() {
-    constructor(cr: ContentResolver, calID: Long): this() {
+    constructor(cr: ContentResolver, calID: Long) : this() {
         val evtPrj = arrayOf(Events._ID, Events.CALENDAR_ID, Events.DTSTART, Events.TITLE, Events.DESCRIPTION)
         val evtSel = "${Events.CALENDAR_ID} = ?"
         val evtArgs = arrayOf(calID.toString())
@@ -165,14 +163,14 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
         val remSel = "${Reminders.EVENT_ID} = ?"
 
         val evts = cr.query(Events.CONTENT_URI, evtPrj, evtSel, evtArgs, null)
-            ?: throw IllegalArgumentException("null cursor")
+                ?: throw IllegalArgumentException("null cursor")
         while (evts.moveToNext()) {
             val evt = Evt(evts)
 
             // Try to find a matching reminder
             val remArgs = arrayOf(evt.id.toString())
             val rem = cr.query(Reminders.CONTENT_URI, remPrj, remSel, remArgs, null)
-                ?: throw IllegalArgumentException("null cursor")
+                    ?: throw IllegalArgumentException("null cursor")
             if (rem.count > 0) {
                 rem.moveToFirst()
                 evt.remID = rem.getLong(0)
@@ -264,10 +262,10 @@ object CalendarSync {
     private val ACCOUNT_NAME = "Simpletask Calendar"
     private val ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL
     private val CAL_URI = Calendars.CONTENT_URI.buildUpon()
-        .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-        .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
-        .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE)
-        .build()
+            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
+            .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE)
+            .build()
     private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
     private val CAL_COLOR = Color.BLUE // Chosen arbitrarily...
     private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000 // ie. 24 hours
@@ -276,18 +274,13 @@ object CalendarSync {
     private val TAG = "CalendarSync"
 
     val UTC = TimeZone.getTimeZone("UTC")
-    val TASK_TOKENS = TToken.ALL and
-        (TToken.COMPLETED or
-                TToken.COMPLETED_DATE or
-                TToken.CREATION_DATE or
-                TToken.PRIO or
-                TToken.THRESHOLD_DATE or
-                TToken.DUE_DATE or
-                TToken.HIDDEN or
-                TToken.RECURRENCE).inv()
-
-    val SYNC_TYPE_DUES = 1
-    val SYNC_TYPE_THRESHOLDS = 2
+    val TASK_TOKENS: (TToken) -> Boolean = {
+        when (it) {
+            is CompletedToken, is CreateDateToken, is CompletedDateToken, is PriorityToken, is ThresholdDateToken,
+            is DueDateToken, is HiddenToken, is RecurrenceToken -> false
+            else -> true
+        }
+    }
 
     private class SyncRunnable : Runnable {
         override fun run() {
@@ -323,7 +316,8 @@ object CalendarSync {
             }
         }
 
-        val cursor = m_cr.query(CAL_URI, projection, selection, args, null) ?: throw IllegalArgumentException("null cursor")
+        val cursor = m_cr.query(CAL_URI, projection, selection, args, null)
+                ?: throw IllegalArgumentException("null cursor")
         if (cursor.count == 0) {
             cursor.close()
             return -1
@@ -423,3 +417,4 @@ object CalendarSync {
         m_stpe.schedule(m_sync_runnable, SYNC_DELAY_MS.toLong(), TimeUnit.MILLISECONDS)
     }
 }
+
