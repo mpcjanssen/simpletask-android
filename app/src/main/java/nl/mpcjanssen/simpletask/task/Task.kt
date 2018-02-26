@@ -26,7 +26,6 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.addInterval
 import java.util.*
 
@@ -354,7 +353,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_UUID = Regex("[Uu][Uu][Ii][Dd]:([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})")
         private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
         private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_RECURRURENE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
+        private val MATCH_RECURRENCE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
         private val MATCH_EXT = Regex("(.+):(.+)")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
@@ -426,7 +425,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     tokens.add(UUIDToken(it.groupValues[1]))
                     return@forEach
                 }
-                MATCH_RECURRURENE.matchEntire(lexeme)?.let {
+                MATCH_RECURRENCE.matchEntire(lexeme)?.let {
                     tokens.add(RecurrenceToken(it.groupValues[1]))
                     return@forEach
                 }
