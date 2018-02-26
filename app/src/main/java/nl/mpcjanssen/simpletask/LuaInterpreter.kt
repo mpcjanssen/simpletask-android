@@ -1,7 +1,8 @@
 package nl.mpcjanssen.simpletask
 
-import nl.mpcjanssen.simpletask.task.TToken
+
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TextToken
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
@@ -13,15 +14,15 @@ object LuaInterpreter {
     private val log = Logger
     private val TAG = "LuaInterpreter"
 
-    val ON_DISPLAY_NAME = "onDisplay"
-    val ON_ADD_NAME = "onAdd"
-    val ON_FILTER_NAME = "onFilter"
-    val ON_GROUP_NAME = "onGroup"
-    val ON_TEXTSEARCH_NAME = "onTextSearch"
-    val ON_SORT_NAME = "onSort"
-    val CONFIG_THEME = "theme"
-    val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
-    val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
+    const val ON_DISPLAY_NAME = "onDisplay"
+    const val ON_ADD_NAME = "onAdd"
+    const val ON_FILTER_NAME = "onFilter"
+    const val ON_GROUP_NAME = "onGroup"
+    const val ON_TEXTSEARCH_NAME = "onTextSearch"
+    const val ON_SORT_NAME = "onSort"
+    const val CONFIG_THEME = "theme"
+    const val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
+    private val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
 
     init {
 
@@ -219,22 +220,12 @@ object LuaInterpreter {
         val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat()))
         val fieldTable = LuaTable.tableOf()
-        val tokensTable = LuaTable.tableOf()
         fieldTable.set("task", t.inFileFormat())
-        t.tokens.forEachIndexed { idx, tok ->
-            val luaIdx = idx + 1
-            val tokenTable = LuaTable.tableOf().apply {
-                set("type", LuaValue.valueOf(tok.type))
-                set("text", LuaValue.valueOf(tok.text))
-            }
-            tokensTable.set(luaIdx, tokenTable)
-        }
-        fieldTable.set("tokens", tokensTable)
         fieldTable.set("due", dateStringToLuaLong(t.dueDate))
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-        fieldTable.set("text", t.showParts(TToken.TEXT))
+        fieldTable.set("text", t.showParts({ it is TextToken }))
 
         val recPat = t.recurrencePattern
         if (recPat != null) {

@@ -50,29 +50,32 @@ class FilterScriptFragment : Fragment() {
         txtTestTask = layout.findViewById(R.id.txt_testtask) as EditText
         spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
-        val callbacks = arrayOf<String>(LuaInterpreter.ON_DISPLAY_NAME, LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME,  LuaInterpreter.ON_SORT_NAME)
+        val callbacks = arrayOf<String>(LuaInterpreter.ON_DISPLAY_NAME, LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME, LuaInterpreter.ON_SORT_NAME)
         val spnAdapter = ArrayAdapter(activity, R.layout.spinner_item, callbacks)
         spnCallback?.adapter = spnAdapter
+        activity?.let { act ->
+            val btnTest = layout.findViewById(R.id.btnTest) as Button
+            btnTest.setOnClickListener {
+                val callbackToTest = selectedCallback
+                val t = Task(testTask)
+                try {
+                    log.info(TAG, "Running $callbackToTest test Lua callback in module $environment")
+                    val script = script
 
-        val btnTest = layout.findViewById(R.id.btnTest) as Button
-        btnTest.setOnClickListener {
-            val callbackToTest = selectedCallback
-            val t = Task(testTask)
-            try {
-                log.info(TAG, "Running $callbackToTest test Lua callback in module $environment")
-                val script = script
-                val snackBar = Snackbar.make(activity.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
-                val barView = snackBar.view
-                when (callbackToTest) {
-                    LuaInterpreter.ON_DISPLAY_NAME -> testOnDisplayCallback(barView, script, snackBar, t)
-                    LuaInterpreter.ON_FILTER_NAME -> testOnFilterCallback(barView, script, snackBar, t)
-                    LuaInterpreter.ON_GROUP_NAME -> testOnGroupCallback(barView, script, snackBar, t)
-                    LuaInterpreter.ON_SORT_NAME -> testOnSortCallback(barView, script, snackBar, t)
+                    val snackBar = Snackbar.make(act.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
+                    val barView = snackBar.view
+                    when (callbackToTest) {
+                        LuaInterpreter.ON_DISPLAY_NAME -> testOnDisplayCallback(barView, script, snackBar, t)
+                        LuaInterpreter.ON_FILTER_NAME -> testOnFilterCallback(barView, script, snackBar, t)
+                        LuaInterpreter.ON_GROUP_NAME -> testOnGroupCallback(barView, script, snackBar, t)
+                        LuaInterpreter.ON_SORT_NAME -> testOnSortCallback(barView, script, snackBar, t)
+                    }
+
+
+                } catch (e: LuaError) {
+                    log.debug(TAG, "Lua execution failed " + e.message)
+                    createAlertDialog(act, R.string.lua_error, e.message ?: "").show()
                 }
-
-            } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
-                createAlertDialog(activity, R.string.lua_error, e.message ?: "").show()
             }
         }
         if (savedInstanceState != null) {
@@ -80,9 +83,9 @@ class FilterScriptFragment : Fragment() {
             txtScript!!.setText(savedInstanceState.getString(Query.INTENT_SCRIPT_FILTER, ""))
             txtTestTask!!.setText(savedInstanceState.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, ""))
         } else {
-            cbUseScript!!.isChecked = arguments.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false)
-            txtScript!!.setText(arguments.getString(Query.INTENT_SCRIPT_FILTER, ""))
-            txtTestTask!!.setText(arguments.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, ""))
+            cbUseScript!!.isChecked = arguments?.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false) ?: false
+            txtScript!!.setText(arguments?.getString(Query.INTENT_SCRIPT_FILTER, "") ?:"")
+            txtTestTask!!.setText(arguments?.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "")?:"")
         }
         return layout
     }
@@ -97,44 +100,51 @@ class FilterScriptFragment : Fragment() {
         }
         snackBar.show()
     }
+
     private fun testOnGroupCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
-        if (!script.trim { it <= ' ' }.isEmpty()) {
-            snackBar.setText("Group: " + LuaInterpreter.evalScript(environment, script).onGroupCallback(environment, t))
-            barView.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray74))
-        } else {
-            snackBar.setText("Callback not defined")
-            barView.setBackgroundColor(0xffe53935.toInt())
+        activity?.let {act ->
+            if (!script.trim { it <= ' ' }.isEmpty()) {
+                snackBar.setText("Group: " + LuaInterpreter.evalScript(environment, script).onGroupCallback(environment, t))
+                barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
+            } else {
+                snackBar.setText("Callback not defined")
+                barView.setBackgroundColor(0xffe53935.toInt())
+            }
+            snackBar.show()
         }
-        snackBar.show()
     }
 
     private fun testOnDisplayCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
-        if (!script.trim { it <= ' ' }.isEmpty()) {
-            snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onDisplayCallback(environment, t))
-            barView.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray74))
-        } else {
-            snackBar.setText("Callback not defined")
-            barView.setBackgroundColor(0xffe53935.toInt())
+        activity?.let { act ->
+            if (!script.trim { it <= ' ' }.isEmpty()) {
+                snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onDisplayCallback(environment, t))
+                barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
+            } else {
+                snackBar.setText("Callback not defined")
+                barView.setBackgroundColor(0xffe53935.toInt())
+            }
+            snackBar.show()
         }
-        snackBar.show()
     }
 
     private fun testOnSortCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
-        if (!script.trim { it <= ' ' }.isEmpty()) {
-            snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onSortCallback(environment, t))
-            barView.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray74))
-        } else {
-            snackBar.setText("Callback not defined")
-            barView.setBackgroundColor(0xffe53935.toInt())
+        activity?.let { act ->
+            if (!script.trim { it <= ' ' }.isEmpty()) {
+                snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onSortCallback(environment, t))
+                barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
+            } else {
+                snackBar.setText("Callback not defined")
+                barView.setBackgroundColor(0xffe53935.toInt())
+            }
+            snackBar.show()
         }
-        snackBar.show()
     }
 
     val useScript: Boolean
         get() {
             val arguments = arguments
             if (cbUseScript == null) {
-                return arguments.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false)
+                return arguments?.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false) ?: false
             } else {
                 return cbUseScript?.isChecked ?: false
             }
@@ -143,14 +153,14 @@ class FilterScriptFragment : Fragment() {
     val environment: String
         get() {
             val arguments = arguments
-            return arguments.getString(Query.INTENT_LUA_MODULE, "main")
+            return arguments?.getString(Query.INTENT_LUA_MODULE, "main") ?: "main"
         }
 
     var script: String
         get() {
             val arguments = arguments
             if (txtScript == null) {
-                return arguments.getString(Query.INTENT_SCRIPT_FILTER, "")
+                return arguments?.getString(Query.INTENT_SCRIPT_FILTER, "") ?: ""
             } else {
                 return txtScript!!.text.toString()
             }
@@ -163,7 +173,7 @@ class FilterScriptFragment : Fragment() {
         get() {
             val arguments = arguments
             if (txtTestTask == null) {
-                return arguments.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "")
+                return arguments?.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "") ?: ""
             } else {
                 return txtTestTask!!.text.toString()
             }

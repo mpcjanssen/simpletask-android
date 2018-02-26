@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FilterListFragment : Fragment() {
     private var lv: ListView? = null
@@ -43,15 +44,15 @@ class FilterListFragment : Fragment() {
         log!!.debug(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState)
 
         val arguments = arguments
-        val items = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS)
-        actionbar = activity.actionBar
+        val items = arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: emptyList<String>()
+        actionbar = activity?.actionBar
 
         if (savedInstanceState != null) {
             mSelectedItems = savedInstanceState.getStringArrayList("selectedItems")
             not = savedInstanceState.getBoolean("not")
         } else {
-            mSelectedItems = arguments.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS)
-            not = arguments.getBoolean(FilterActivity.INITIAL_NOT)
+            mSelectedItems = arguments?.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS)
+            not = arguments?.getBoolean(FilterActivity.INITIAL_NOT) ?: false
         }
 
         log!!.debug(TAG, "Fragment bundle:" + this + " arguments:" + arguments)
@@ -79,7 +80,7 @@ class FilterListFragment : Fragment() {
     fun getNot(): Boolean {
         if (mSelectedItems == null) {
             // Tab was not displayed so no selections were changed
-            return arguments.getBoolean(FilterActivity.INITIAL_NOT)
+            return arguments?.getBoolean(FilterActivity.INITIAL_NOT)?: false
         } else {
             return cb!!.isChecked
         }
@@ -90,7 +91,7 @@ class FilterListFragment : Fragment() {
         val arr = ArrayList<String>()
         if (mSelectedItems == null) {
             // Tab was not displayed so no selections were changed
-            return arguments.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS)
+            return arguments?.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS) ?: ArrayList<String>()
         }
         val size = lv!!.count
         for (i in 0..size - 1) {

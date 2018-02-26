@@ -11,6 +11,7 @@ import com.mobeta.android.dslv.DragSortListView
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FilterSortFragment : Fragment() {
 
@@ -53,11 +54,11 @@ class FilterSortFragment : Fragment() {
             if (savedInstanceState != null) {
                 originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED)
             } else {
-                originalItems = arguments.getStringArrayList(FilterActivity.FILTER_ITEMS)
+                originalItems = arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
             }
         }
         log!!.debug(TAG, "Created view with: " + originalItems!!)
-        m_app = activity.application as TodoApplication
+        m_app = TodoApplication.app
 
         // Set the proper theme
         if (Config.isDarkTheme || Config.isBlackTheme) {
@@ -146,12 +147,12 @@ class FilterSortFragment : Fragment() {
             } else if (originalItems != null) {
                 multiSort.addAll(originalItems as ArrayList<String>)
             } else {
-                multiSort.addAll(arguments.getStringArrayList(FilterActivity.FILTER_ITEMS))
+                multiSort.addAll(arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: java.util.ArrayList())
             }
             return multiSort
         }
 
-    inner class SortItemAdapter(context: Context, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
+    inner class SortItemAdapter(context: Context?, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
 
         private val names: Array<String>
 
