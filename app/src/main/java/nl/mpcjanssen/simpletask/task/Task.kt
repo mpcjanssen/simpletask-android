@@ -1,29 +1,3 @@
-/**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
-
- * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
-
- * LICENSE:
-
- * Simpletask is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
-
- * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
-
- * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
- * //www.gnu.org/licenses/>.
-
- * @author Mark Janssen, Todo.txt contributors @yahoogroups.com>
- * *
- * @license http://www.gnu.org/licenses/gpl.html
- * *
- * @copyright 2012- Mark Janssen
- * *
- * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
- */
 package nl.mpcjanssen.simpletask.task
 
 import nl.mpcjanssen.simpletask.util.addInterval
@@ -192,7 +166,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
             val pattern = recurrencePattern
             if (pattern != null) {
-                var deferFromDate : String = ""
+                var deferFromDate = ""
                 if (!(recurrencePattern?.contains("+") ?: true)) {
                     deferFromDate = completionDate ?: ""
                 }
@@ -235,7 +209,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             return
         }
         val olddate: String?
-        if (deferFromDate.isNullOrEmpty())
+        if (deferFromDate.isEmpty())
         {
             olddate = thresholdDate
         }
@@ -259,7 +233,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             return
         }
         val olddate: String?
-        if (deferFromDate.isNullOrEmpty())
+        if (deferFromDate.isEmpty())
         {
             olddate = dueDate
         }
