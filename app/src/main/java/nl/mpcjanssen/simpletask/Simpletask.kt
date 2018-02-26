@@ -283,7 +283,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show search or filter results
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
-            clearFilter()
             log.info(TAG, "handleIntent")
             intent.extras?.let { extras ->
                 extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
@@ -293,7 +292,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            log.info(TAG, "handleIntent: saving filter in prefs")
             activeQuery = activeQuery.initFromIntent(intent)
         } else {
             // Set previous filters and sort
