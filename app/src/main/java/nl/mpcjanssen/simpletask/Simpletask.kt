@@ -744,7 +744,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.search -> { }
             R.id.preferences -> startPreferencesActivity()
-            R.id.filter -> openNavDrawer()
+            R.id.filter -> startFilterActivity()
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
@@ -765,7 +765,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
-            R.id.btn_filter_edit -> startFilterActivity()
             R.id.clear_filter -> clearFilter()
             R.id.update -> startAddTaskActivity()
             R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
