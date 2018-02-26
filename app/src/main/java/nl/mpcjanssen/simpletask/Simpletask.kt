@@ -888,6 +888,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
                 SavedQuery(query = activeQuery).saveAs(value)
+                updateNavDrawer()
             }
             value ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
