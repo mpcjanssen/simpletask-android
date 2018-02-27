@@ -78,8 +78,8 @@ class Query(
 
     fun initFromJSON(json: JSONObject?): Query {
         val prios: String?
-        val projects: String?
-        val contexts: String?
+        val tags: String?
+        val lists: String?
         val sorts: String?
 
         if (json == null) {
@@ -87,8 +87,8 @@ class Query(
         }
         name = json.optString(INTENT_TITLE, "No title")
         prios = json.optString(INTENT_PRIORITIES_FILTER)
-        projects = json.optString(INTENT_PROJECTS_FILTER)
-        contexts = json.optString(INTENT_CONTEXTS_FILTER)
+        tags = json.optString(INTENT_PROJECTS_FILTER)
+        lists = json.optString(INTENT_CONTEXTS_FILTER)
         sorts = json.optString(INTENT_SORT_ORDER)
 
         useScript = json.optBoolean(INTENT_USE_SCRIPT_FILTER, false)
@@ -119,11 +119,11 @@ class Query(
         if (prios != null && prios != "") {
             priorities = Priority.toPriority(Arrays.asList(*prios.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
-        if (projects != null && projects != "") {
-            this.projects = ArrayList(Arrays.asList(*projects.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+        if (tags != null && tags != "") {
+            this.projects = ArrayList(Arrays.asList(*tags.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
-        if (contexts != null && contexts != "") {
-            this.contexts = ArrayList(Arrays.asList(*contexts.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+        if (lists != null && lists != "") {
+            this.contexts = ArrayList(Arrays.asList(*lists.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
         initInterpreter()
         return this
@@ -344,7 +344,7 @@ class Query(
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
 
-        const val INTENT_EXTRA_DELIMITERS = "\n|,"
+        const val INTENT_EXTRA_DELIMITERS = "[\n,]"
     }
 
     fun initFromIntent(intent: Intent): Query {
