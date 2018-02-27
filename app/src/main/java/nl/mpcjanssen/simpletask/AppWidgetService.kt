@@ -10,10 +10,7 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 
 class AppWidgetService : RemoteViewsService() {
@@ -103,20 +100,20 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val extended_widget = Config.prefs.getBoolean("widget_extended", true)
         val task = item
 
-        var tokensToShow = TToken.ALL
-        tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-        tokensToShow = tokensToShow and TToken.COMPLETED.inv()
-        tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-        tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-        tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
-        if (currentFilter.hideLists) {
-            tokensToShow = tokensToShow and TToken.LIST.inv()
+        val tokensToShowFilter: (it: TToken) -> Boolean = {
+            when (it) {
+                is UUIDToken -> false
+                is CreateDateToken -> false
+                is CompletedToken -> false
+                is CompletedDateToken -> false
+                is DueDateToken -> false
+                is ThresholdDateToken -> false
+                is ListToken -> !currentFilter.hideLists
+                is TagToken -> !currentFilter.hideTags
+                else -> true
+            }
         }
-        if (currentFilter.hideTags) {
-            tokensToShow = tokensToShow and TToken.TTAG.inv()
-        }
-
-        val txt = LuaInterpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShow).trim { it <= ' ' }
+        val txt = LuaInterpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {

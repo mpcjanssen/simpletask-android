@@ -1,7 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.2.21'
     ext.dokka_version = '0.9.15'
-    ext.android_support_version = '25.3.1'
+    ext.android_support_version = '27.0.2'
     repositories {
         jcenter()
         maven {
@@ -36,8 +36,8 @@ if (!project.hasProperty("storeServiceAccount")) {
 
 
 android {
-    buildToolsVersion "25.0.2"
-    compileSdkVersion 25
+    buildToolsVersion "27.0.3"
+    compileSdkVersion 27
 
 		lintOptions {
 				disable 'InvalidPackage', 'MissingTranslation'
@@ -58,8 +58,8 @@ android {
     }
 
     defaultConfig {
-        versionName '10.1.0'
-        versionCode 3076
+        versionName '10.1.1'
+        versionCode 3077
 	     minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
@@ -125,6 +125,9 @@ android {
 repositories {
     jcenter()
     maven { url "https://jitpack.io" }
+    maven {
+        url "https://maven.google.com"
+    }
 }
 
 dependencies {
@@ -132,6 +135,7 @@ dependencies {
     nextcloudCompile 'com.github.nextcloud:android-library:-SNAPSHOT'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.android.support:support-v4:$android_support_version"
+    compile "com.android.support:support-compat:$android_support_version"
     compile "com.android.support:design:$android_support_version"
     compile "com.android.support:appcompat-v7:$android_support_version"
     compile "com.android.support:recyclerview-v7:$android_support_version"

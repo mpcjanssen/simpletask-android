@@ -1,6 +1,19 @@
 ﻿Changelog
 =========
 
+10.1.1
+------
+
+- Fix filtering from FilterActivity.
+- Revert to old filter button behaviour.
+
+
+10.1.0
+------
+
+10.0.8
+------
+
 10.0.7
 ------
 
