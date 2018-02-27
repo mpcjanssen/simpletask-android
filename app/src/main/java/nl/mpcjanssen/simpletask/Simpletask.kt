@@ -1552,25 +1552,27 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             if (adapter.contextHeaderPosition == position) {
                 query.contextsNot = !query.contextsNot
-            } else {
-                tags = getCheckedItems(lv, true)
-                val filteredContexts = ArrayList<String>()
-                val filteredProjects = ArrayList<String>()
-
-                for (tag in tags) {
-                    if (tag.startsWith("+")) {
-                        filteredProjects.add(tag.substring(1))
-                    } else if (tag.startsWith("@")) {
-                        filteredContexts.add(tag.substring(1))
-                    }
-                }
-                query.contexts = filteredContexts
-                query.projects = filteredProjects
             }
+
+            tags = getCheckedItems(lv, true)
+            val filteredContexts = ArrayList<String>()
+            val filteredProjects = ArrayList<String>()
+
+            for (tag in tags) {
+                if (tag.startsWith("+")) {
+                    filteredProjects.add(tag.substring(1))
+                } else if (tag.startsWith("@")) {
+                    filteredContexts.add(tag.substring(1))
+                }
+            }
+            query.contexts = filteredContexts
+            query.projects = filteredProjects
+
             activeQuery = query
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
+
             broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
             broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
         }
