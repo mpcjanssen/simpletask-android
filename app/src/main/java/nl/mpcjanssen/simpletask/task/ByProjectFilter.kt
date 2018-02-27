@@ -42,10 +42,10 @@ class ByProjectFilter(
     }
 
     fun filter(input: Task): Boolean {
-        val match = input.lists.any { projects.contains(it) }
+        val match = input.tags.any { projects.contains(it) }
         /*
          * Match tasks without project if filter contains "-"
 		 */
-        return match || input.tags.size == 0 && projects.contains("-")
+        return match || (input.tags.size == 0 && projects.contains("-"))
     }
 }
