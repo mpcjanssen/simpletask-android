@@ -204,7 +204,7 @@ class Query(
 
     fun saveInPrefs(prefs: SharedPreferences?) {
         if (prefs != null) {
-            prefs.edit().putString(INTENT_JSON, json.toString(2)).commit()
+            prefs.edit().putString(INTENT_JSON, json.toString(2)).apply()
         }
     }
 

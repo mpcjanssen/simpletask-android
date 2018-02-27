@@ -167,7 +167,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             val pattern = recurrencePattern
             if (pattern != null) {
                 var deferFromDate = ""
-                if (!(recurrencePattern?.contains("+") ?: true)) {
+                if (recurrencePattern?.contains("+") == false) {
                     deferFromDate = completionDate ?: ""
                 }
                 val newTask = Task(textWithoutCompletedInfo)

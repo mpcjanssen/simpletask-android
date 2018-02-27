@@ -61,13 +61,13 @@ public class FilterOtherFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
                 container, false);
 
-        cbHideCompleted = (CheckBox) layout.findViewById(R.id.cb_show_completed);
-        cbHideFuture = (CheckBox) layout.findViewById(R.id.cb_show_future);
-        cbHideLists = (CheckBox) layout.findViewById(R.id.cb_show_lists);
-        cbHideTags = (CheckBox) layout.findViewById(R.id.cb_show_tags);
-        cbHideCreateDate = (CheckBox) layout.findViewById(R.id.cb_show_create_date);
-        cbHideHidden = (CheckBox) layout.findViewById(R.id.cb_show_hidden);
-        cbCreateAsThreshold = (CheckBox) layout.findViewById(R.id.cb_create_is_threshold);
+        cbHideCompleted = layout.findViewById(R.id.cb_show_completed);
+        cbHideFuture = layout.findViewById(R.id.cb_show_future);
+        cbHideLists = layout.findViewById(R.id.cb_show_lists);
+        cbHideTags = layout.findViewById(R.id.cb_show_tags);
+        cbHideCreateDate = layout.findViewById(R.id.cb_show_create_date);
+        cbHideHidden = layout.findViewById(R.id.cb_show_hidden);
+        cbCreateAsThreshold = layout.findViewById(R.id.cb_create_is_threshold);
         if (savedInstanceState != null) {
             cbHideCompleted.setChecked(!savedInstanceState.getBoolean(Query.INTENT_HIDE_COMPLETED_FILTER, false));
             cbHideFuture.setChecked(!savedInstanceState.getBoolean(Query.INTENT_HIDE_FUTURE_FILTER, false));

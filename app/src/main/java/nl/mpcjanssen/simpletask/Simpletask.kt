@@ -12,7 +12,6 @@
 package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
@@ -793,7 +792,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         intent = Intent(Intent.ACTION_EDIT).apply {
-            setType(Constants.ANDROID_EVENT)
+            type = Constants.ANDROID_EVENT
             putExtra(Events.TITLE, calendarTitle)
             putExtra(Events.DESCRIPTION, calendarDescription)
         }
@@ -931,9 +930,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val currentIntent = getIntent()
             currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY))
             setIntent(currentIntent)
-            options_menu?.let {
-                it.findItem(R.id.search).collapseActionView()
-            } ?: return
+            options_menu?.findItem(R.id.search)?.collapseActionView() ?: return
 
         } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action) {
             // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
@@ -1011,8 +1008,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         .setIcon(iconRes)
         .setShortLabel(query.name ?: "No name")
         .setIntent(target)
-        .build();
-        ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null);
+        .build()
+        ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null)
     }
 
     private fun deleteSavedQuery(query: SavedQuery) {

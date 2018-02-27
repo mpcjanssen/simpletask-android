@@ -24,18 +24,13 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import java.util.ArrayList
-
 /**
  * A filter that matches Tasks containing the specified contexts
-
- * @author Tim Barlotta
  */
 class ByContextFilter(
         private val contexts: List<String>,
         private val not: Boolean
 ) : TaskFilter {
-    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
 
     override fun apply(task: Task): Boolean {
         return if (not) !filter(task) else filter(task)

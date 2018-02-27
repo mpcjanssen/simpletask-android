@@ -77,13 +77,13 @@ class AddTask : ThemedActionBarActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton?
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab?.setOnClickListener {
             saveTasksAndClose()
         }
 
         // text
-        textInputField = findViewById(R.id.taskText) as EditText
+        textInputField = findViewById<EditText>(R.id.taskText)
         setHint()
 
         if (share_text != null) {
@@ -265,7 +265,7 @@ class AddTask : ThemedActionBarActivity() {
     private fun saveTasksAndClose() {
         val todoList = TodoList
         // strip line breaks
-        textInputField = findViewById(R.id.taskText) as EditText
+        textInputField = findViewById<EditText>(R.id.taskText)
         val input: String = textInputField.text.toString()
 
         // Don't add empty tasks
