@@ -28,6 +28,9 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.content.pm.ShortcutInfoCompat
+import android.support.v4.content.pm.ShortcutManagerCompat
+import android.support.v4.graphics.drawable.IconCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener
@@ -51,10 +54,7 @@ import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.task.TodoList.fileStoreQueue
 import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
@@ -127,7 +127,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         localBroadcastManager = m_app.localBroadCastManager
 
-        m_broadcastReceiver = object : BroadcastReceiver() {
+        val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
                     archiveTasks()
@@ -166,8 +166,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
             }
         }
-        localBroadcastManager!!.registerReceiver(m_broadcastReceiver, intentFilter)
-
+        localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
+        m_broadcastReceiver = broadcastReceiver
         setSupportActionBar(main_actionbar)
 
         // Replace drawables if the theme is dark
@@ -189,16 +189,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 invalidateOptionsMenu()
                 updateFilterBar()
                 updateDrawers()
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_SHARE_PARTS -> if (resultCode != Activity.RESULT_CANCELED) {
-                val flags = resultCode - Activity.RESULT_FIRST_USER
-                shareTodoList(flags)
             }
         }
     }
@@ -268,12 +258,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                  * Called when a drawer has settled in a completely closed
                  * state.
                  */
-                override fun onDrawerClosed(view: View?) {
+                override fun onDrawerClosed(view: View) {
                     invalidateOptionsMenu()
                 }
 
                 /** Called when a drawer has settled in a completely open state.  */
-                override fun onDrawerOpened(drawerView: View?) {
+                override fun onDrawerOpened(drawerView: View) {
                     invalidateOptionsMenu()
                 }
             }
@@ -293,7 +283,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show search or filter results
         val intent = intent
         if (Constants.INTENT_START_FILTER == intent.action) {
-            clearFilter()
             log.info(TAG, "handleIntent")
             intent.extras?.let { extras ->
                 extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
@@ -303,7 +292,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            log.info(TAG, "handleIntent: saving filter in prefs")
             activeQuery = activeQuery.initFromIntent(intent)
         } else {
             // Set previous filters and sort
@@ -612,21 +600,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         })
     }
 
-/*    private fun getTaskAt(pos: Int): TodoListItem? {
-        if (pos < m_adapter!!.count) {
-            return m_adapter!!.getItem(pos)
-        }
-        return null
-    }*/
-
-    private fun shareTodoList(format: Int) {
-        val text = StringBuilder()
-        m_adapter!!.visibleLines
-                .filterNot { it.header }
-                .forEach { text.append(it.task?.showParts(format)).append("\n") }
-        shareText(this, "Simpletask list", text.toString())
-    }
-
     private fun prioritizeTasks(tasks: List<Task>) {
         val priorityArr = Priority.codes.toTypedArray()
 
@@ -771,7 +744,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.search -> { }
             R.id.preferences -> startPreferencesActivity()
-            R.id.filter -> openNavDrawer()
+            R.id.filter -> startFilterActivity()
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
@@ -792,7 +765,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.open_file -> m_app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
-            R.id.btn_filter_edit -> startFilterActivity()
             R.id.clear_filter -> clearFilter()
             R.id.update -> startAddTaskActivity()
             R.id.defer_due -> deferTasks(checkedTasks, DateType.DUE)
@@ -916,6 +888,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
                 SavedQuery(query = activeQuery).saveAs(value)
+                updateNavDrawer()
             }
             value ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
@@ -1029,20 +1002,17 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     fun createFilterShortcut(query: Query) {
-        val shortcut = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
         val target = Intent(Constants.INTENT_START_FILTER)
         query.saveInIntent(target)
-
         target.putExtra("name", query.name)
 
-        // Setup target intent for shortcut
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target)
-
-        // Set shortcut icon
-        val iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_launcher)
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes)
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, query.name)
-        sendBroadcast(shortcut)
+        val iconRes = IconCompat.createWithResource(this,  R.drawable.ic_launcher)
+        val pinShortcutInfo = ShortcutInfoCompat.Builder(this, "simpletaskLauncher")
+        .setIcon(iconRes)
+        .setShortLabel(query.name ?: "No name")
+        .setIntent(target)
+        .build();
+        ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null);
     }
 
     private fun deleteSavedQuery(query: SavedQuery) {
@@ -1197,26 +1167,20 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (!Config.hasExtendedTaskView) {
                 view.datebar.visibility = View.GONE
             }
-            var tokensToShow = TToken.ALL
-            // Always hide the UUID
-            tokensToShow = tokensToShow and TToken.TUUID.inv()
-
-            // Hide dates if we have a date bar
-            if (Config.hasExtendedTaskView) {
-                tokensToShow = tokensToShow and TToken.COMPLETED_DATE.inv()
-                tokensToShow = tokensToShow and TToken.THRESHOLD_DATE.inv()
-                tokensToShow = tokensToShow and TToken.DUE_DATE.inv()
+            val tokensToShowFilter: (it: TToken) -> Boolean = {
+                when (it) {
+                    is UUIDToken -> false
+                    is CreateDateToken -> false
+                    is CompletedToken -> false
+                    is CompletedDateToken -> !Config.hasExtendedTaskView
+                    is DueDateToken -> !Config.hasExtendedTaskView
+                    is ThresholdDateToken -> !Config.hasExtendedTaskView
+                    is ListToken -> !activeQuery.hideLists
+                    is TagToken -> !activeQuery.hideTags
+                    else -> true
+                }
             }
-            tokensToShow = tokensToShow and TToken.CREATION_DATE.inv()
-            tokensToShow = tokensToShow and TToken.COMPLETED.inv()
-
-            if (activeQuery.hideLists) {
-                tokensToShow = tokensToShow and TToken.LIST.inv()
-            }
-            if (activeQuery.hideTags) {
-                tokensToShow = tokensToShow and TToken.TTAG.inv()
-            }
-            val txt = LuaInterpreter.onDisplayCallback(activeQuery.luaModule, task) ?: task.showParts(tokensToShow)
+            val txt = LuaInterpreter.onDisplayCallback(activeQuery.luaModule, task) ?: task.showParts(tokensToShowFilter)
             val ss = SpannableString(txt)
 
             val contexts = task.lists
@@ -1615,8 +1579,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     companion object State : Preferences(TodoApplication.app, "state") {
         var queryId: String? by StringOrNullPreference("queryid", null)
 
-        private val REQUEST_SHARE_PARTS = 1
-        private val REQUEST_PREFERENCES = 2
+        private val REQUEST_PREFERENCES = 1
 
         private val ACTION_LINK = "link"
         private val ACTION_SMS = "sms"
