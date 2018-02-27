@@ -220,7 +220,6 @@ object LuaInterpreter {
         val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat()))
         val fieldTable = LuaTable.tableOf()
-        fieldTable.set("task", t.inFileFormat())
         fieldTable.set("due", dateStringToLuaLong(t.dueDate))
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
