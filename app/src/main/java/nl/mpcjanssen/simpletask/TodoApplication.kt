@@ -52,7 +52,7 @@ class TodoApplication : Application(),
 
         BackupInterface {
 
-    lateinit private var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
+    private lateinit var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 

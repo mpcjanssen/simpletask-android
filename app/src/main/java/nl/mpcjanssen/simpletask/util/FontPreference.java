@@ -74,7 +74,7 @@ public class FontPreference extends DialogPreference implements DialogInterface.
             if ( view != null )
             {
                 // Find the text view from our interface
-                CheckedTextView tv = (CheckedTextView) view.findViewById( android.R.id.text1 );
+                CheckedTextView tv = view.findViewById( android.R.id.text1 );
 
                 // Replace the string with the current font name using our typeface
                 String path = m_fontPaths.get( position );

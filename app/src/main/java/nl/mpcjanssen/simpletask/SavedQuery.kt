@@ -1,15 +1,10 @@
-package nl.mpcjanssen.simpletask.util
+package nl.mpcjanssen.simpletask
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 
 import me.smichel.android.KPreferences.Preferences
-import nl.mpcjanssen.simpletask.Query
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.remote.FileStore
-import org.json.JSONObject
+import nl.mpcjanssen.simpletask.util.TAG
 import java.io.File
 
 class SavedQuery(
@@ -36,7 +31,7 @@ class SavedQuery(
         val prefs_xml = File(context.filesDir, "$prefs_path/$id.xml")
         val deleted = prefs_xml.delete()
         if (!deleted) {
-            log.warn(TAG, "Failed to delete saved query: " + name)
+            Logger.warn(TAG, "Failed to delete saved query: " + name)
         }
     }
 

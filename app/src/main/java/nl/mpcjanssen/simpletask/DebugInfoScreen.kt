@@ -20,8 +20,8 @@ class DebugInfoScreen : ThemedActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.log)
-        val mListView = findViewById(R.id.listView) as ListView
-        val mVersionInfo = findViewById(R.id.versionInfo) as TextView
+        val mListView = findViewById<ListView>(R.id.listView)
+        val mVersionInfo = findViewById<TextView>(R.id.versionInfo)
         mListView.isFastScrollEnabled = true
         mVersionInfo.text = "Version: ${appVersion(this)}"
 
@@ -45,7 +45,7 @@ class DebugInfoScreen : ThemedActionBarActivity() {
     fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val inflater = menuInflater
         val toolbar_menu = toolbar.menu
         toolbar_menu.clear()

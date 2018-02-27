@@ -64,14 +64,14 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
         }
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
 
-        var loginButton = findViewById(R.id.login) as Button
+        var loginButton = findViewById<Button>(R.id.login)
         loginButton.setOnClickListener {
             startLogin()
         }
 
-        m_server = findViewById(R.id.nextcloud_server_url) as EditText
-        m_username = findViewById(R.id.nextcloud_username) as EditText
-        m_password = findViewById(R.id.nextcloud_password) as EditText
+        m_server = findViewById<EditText>(R.id.nextcloud_server_url)
+        m_username = findViewById<EditText>(R.id.nextcloud_username)
+        m_password = findViewById<EditText>(R.id.nextcloud_password)
 
         if (m_app.isAuthenticated) {
             switchToTodolist()
@@ -83,10 +83,6 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
         val intent = Intent(this, Simpletask::class.java)
         startActivity(intent)
         finish()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun finishLogin() {

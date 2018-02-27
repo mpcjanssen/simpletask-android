@@ -81,7 +81,7 @@ class HistoryScreen : ThemedActionBarActivity() {
     fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val inflater = menuInflater
         toolbar_menu = toolbar.menu
         toolbar_menu!!.clear()
@@ -134,7 +134,7 @@ class HistoryScreen : ThemedActionBarActivity() {
     }
 
     private fun saveScroll() {
-        val sv = findViewById(R.id.scrollbar) as ScrollView
+        val sv = findViewById<ScrollView>(R.id.scrollbar)
         mScroll = sv.scrollY
     }
 
@@ -155,11 +155,11 @@ class HistoryScreen : ThemedActionBarActivity() {
 
         }
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        val fileView = findViewById(R.id.history_view) as TextView
+        val fileView = findViewById<TextView>(R.id.history_view)
 
-        val nameView = findViewById(R.id.name) as TextView
-        val dateView = findViewById(R.id.date) as TextView
-        val sv = findViewById(R.id.scrollbar) as ScrollView
+        val nameView = findViewById<TextView>(R.id.name)
+        val dateView = findViewById<TextView>(R.id.date)
+        val sv = findViewById<ScrollView>(R.id.scrollbar)
         fileView.text = todoContents
         nameView.text = name
         dateView.text = format.format(Date(date))

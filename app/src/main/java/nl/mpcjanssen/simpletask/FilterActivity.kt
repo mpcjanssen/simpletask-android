@@ -55,7 +55,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         m_app = application as TodoApplication
 
         setContentView(R.layout.filter)
-        val toolbar = findViewById(R.id.toolbar_edit_filter) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_edit_filter)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
@@ -157,10 +157,10 @@ class FilterActivity : ThemedNoActionBarActivity() {
         scriptTab.arguments = arguments
         pagerAdapter!!.add(scriptTab)
 
-        pager = findViewById(R.id.pager) as ViewPager
+        pager = findViewById<ViewPager>(R.id.pager)
         pager!!.adapter = pagerAdapter
         // Give the TabLayout the ViewPager
-        val tabLayout = findViewById(R.id.sliding_tabs) as TabLayout
+        val tabLayout = findViewById<TabLayout>(R.id.sliding_tabs)
         tabLayout.setupWithViewPager(pager as ViewPager)
         tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
         pager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {

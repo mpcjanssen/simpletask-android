@@ -31,10 +31,10 @@ class LuaConfigScreen : ThemedActionBarActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
-        scriptEdit = findViewById(R.id.lua_config) as EditText
+        scriptEdit = findViewById<EditText>(R.id.lua_config)
         script = Config.luaConfig
 
-        val fab = findViewById(R.id.lua_config_fab) as FloatingActionButton?
+        val fab = findViewById<FloatingActionButton>(R.id.lua_config_fab)
         fab?.setOnClickListener {
             Config.luaConfig = script
             // Run the script and refilter
@@ -121,10 +121,6 @@ class LuaConfigScreen : ThemedActionBarActivity() {
     var script: String
         get() = scriptEdit.text.toString()
         set(value) = scriptEdit.setText(value)
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     companion object {
         internal val TAG = LuaConfigScreen::class.java.simpleName
