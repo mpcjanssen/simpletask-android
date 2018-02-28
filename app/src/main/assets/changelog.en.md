@@ -1,6 +1,15 @@
 ﻿Changelog
 =========
 
+10.1.2
+------
+
+- Fix tags/projects filter. Fixes #864.
+- Remove redundant `fields['task']` field in Lua callbacks. Fixes #865. **incompatibility**
+- Demonstrate right drawer. Fixes #845.
+- Extend phone format and fix mis-interpretation as tag. Fixes #866 and #173.
+- Update Dropbox API library.
+
 10.1.1
 ------
 
@@ -11,8 +20,18 @@
 10.1.0
 ------
 
+- Update app labels for #851.
+- Fix creating saved filter shortcut on Oreo.
+- Don't add all task tokens to callbacks for better Lua performance. **incompatibility**
+
+
 10.0.8
 ------
+
+- Merged header folding support. Courtesy of Luke G.
+- Show saved filter name in filter bar.
+- Many code refactorings.
+- Don't set Lua priority filed if it is empty. Fixes #852.
 
 10.0.7
 ------
