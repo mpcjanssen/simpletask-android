@@ -379,8 +379,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     tokens.add(ListToken(lexeme))
                     return@forEach
                 }
-                // Match phone numbers before tags to support +
-                // This will make tags match phone numbers not possible
+                // Match phone numbers before tags to support +31.....
+                // This will make tags which can also be interpreted as phone numbers not possible
                 MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
                     tokens.add(PhoneToken(lexeme))
                     return@forEach
