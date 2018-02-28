@@ -79,7 +79,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     // Drawer side
     private val NAV_DRAWER = GravityCompat.END
-    private val FILTER_DRAWER = GravityCompat.START
+    private val QUICK_FILTER_DRAWER = GravityCompat.START
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
@@ -174,9 +174,14 @@ class Simpletask : ThemedNoActionBarActivity() {
             actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE
-        if (m_app.isAuthenticated && Config.latestChangelogShown < versionCode) {
-            showChangelogOverlay(this)
-            Config.latestChangelogShown = versionCode
+        if (m_app.isAuthenticated) {
+            if (Config.latestChangelogShown < versionCode) {
+                showChangelogOverlay(this)
+                Config.latestChangelogShown = versionCode
+            } else if (!Config.rightDrawerDemonstrated) {
+                Config.rightDrawerDemonstrated = true
+                openNavDrawer()
+            }
         }
     }
 
@@ -527,7 +532,7 @@ class Simpletask : ThemedNoActionBarActivity() {
      */
     private fun activeMode(): Mode {
         if (isDrawerOpen(NAV_DRAWER)) return Mode.NAV_DRAWER
-        if (isDrawerOpen(FILTER_DRAWER)) return Mode.FILTER_DRAWER
+        if (isDrawerOpen(QUICK_FILTER_DRAWER)) return Mode.FILTER_DRAWER
         if (TodoList.selectedTasks.isNotEmpty()) return Mode.SELECTION
         return Mode.MAIN
     }
@@ -545,7 +550,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun openNavDrawer() {
-        closeDrawer(FILTER_DRAWER)
+        closeDrawer(QUICK_FILTER_DRAWER)
         if (!isDrawerOpen(NAV_DRAWER)) {
             drawer_layout.openDrawer(NAV_DRAWER)
         }
@@ -730,7 +735,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         closeDrawer(NAV_DRAWER)
                     }
                     Mode.FILTER_DRAWER -> {
-                        closeDrawer(FILTER_DRAWER)
+                        closeDrawer(QUICK_FILTER_DRAWER)
                     }
                     Mode.SELECTION -> {
                         closeSelectionMode()
@@ -902,7 +907,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 closeDrawer(NAV_DRAWER)
             }
             Mode.FILTER_DRAWER -> {
-                closeDrawer(FILTER_DRAWER)
+                closeDrawer(QUICK_FILTER_DRAWER)
             }
             Mode.SELECTION -> {
                 closeSelectionMode()
@@ -962,39 +967,48 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun updateNavDrawer() {
         val queries = ArrayList<SavedQuery>(SavedQuery.ids.map { SavedQuery(it) })
+        val hasQueries = !queries.isEmpty()
         Collections.sort(queries) { q1, q2 -> q1.name.compareTo(q2.name, ignoreCase = true) }
-        val names = queries.map { it.name }
-        nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
-        nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
-        nav_drawer.isLongClickable = true
-        nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            queries[position].let {
-                queryId = it.id
-                activeQuery = it.query
-            }
-            closeDrawer(NAV_DRAWER)
-            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
-            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+        val names = if (hasQueries) {
+            queries.map { it.name }
+        } else {
+            val result = ArrayList<String>()
+            result.add(getString(R.string.nav_drawer_hint))
+            result
         }
-        nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
-            val query = queries[position]
-            val popupMenu = PopupMenu(this@Simpletask, view)
-            popupMenu.setOnMenuItemClickListener { item ->
-                val menuId = item.itemId
-                when (menuId) {
-                    R.id.menu_saved_filter_delete -> deleteSavedQuery(query)
-                    R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.query)
-                    R.id.menu_saved_filter_rename -> renameSavedQuery(query)
-                    R.id.menu_saved_filter_update -> updateSavedQuery(query)
-                    else -> {
-                    }
+        nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
+        if (hasQueries) {
+            nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
+            nav_drawer.isLongClickable = true
+            nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                queries[position].let {
+                    queryId = it.id
+                    activeQuery = it.query
                 }
+                closeDrawer(NAV_DRAWER)
+                broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+                broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+            }
+            nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
+                val query = queries[position]
+                val popupMenu = PopupMenu(this@Simpletask, view)
+                popupMenu.setOnMenuItemClickListener { item ->
+                    val menuId = item.itemId
+                    when (menuId) {
+                        R.id.menu_saved_filter_delete -> deleteSavedQuery(query)
+                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.query)
+                        R.id.menu_saved_filter_rename -> renameSavedQuery(query)
+                        R.id.menu_saved_filter_update -> updateSavedQuery(query)
+                        else -> {
+                        }
+                    }
+                    true
+                }
+                val inflater = popupMenu.menuInflater
+                inflater.inflate(R.menu.saved_filter, popupMenu.menu)
+                popupMenu.show()
                 true
             }
-            val inflater = popupMenu.menuInflater
-            inflater.inflate(R.menu.saved_filter, popupMenu.menu)
-            popupMenu.show()
-            true
         }
     }
 
