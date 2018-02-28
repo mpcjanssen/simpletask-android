@@ -1,11 +1,8 @@
-10.0.7
+10.1.2
 ------
 
-- Several Dropbox fixes.
-- Merge Lua fixes (smichel).
-- Add `onAdd` Lua callback. Fixes #827.
-- Merge pull request #830 (comradekingu), https, app, Lua, task list, ©, etc.
-- Add `onSort` Lua callback as a more flexible alternative for #834.
-- Switch to using logcat for logging to be able to see library logging.
-- Fix several reported NPE exceptions.
-- Rename `stdlib.lua` to `todolib.lua`. Fixes #841.
+- Fix tags/projects filter. Fixes #864.
+- Remove redundant `fields['task']` field in Lua callbacks. Fixes #865. **incompatibility**
+- Demonstrate right drawer. Fixes #845.
+- Extend phone format and fix mis-interpretation as tag. Fixes #866 and #173.
+- Update Dropbox API library.
