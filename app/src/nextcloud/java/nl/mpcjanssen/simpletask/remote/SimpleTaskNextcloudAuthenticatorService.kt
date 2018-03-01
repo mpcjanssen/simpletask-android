@@ -10,11 +10,11 @@ class SimpleTaskNextcloudAuthenticatorService : Service() {
 
     override fun onCreate() {
         // Create a new authenticator object
-        mAuthenticator = SimpleTaskNextcloudAuthenticator(this);
+        mAuthenticator = SimpleTaskNextcloudAuthenticator(this)
     }
 
     override fun onBind(intent: Intent): IBinder {
-        return mAuthenticator!!.iBinder;
+        return mAuthenticator!!.iBinder
     }
 
 }

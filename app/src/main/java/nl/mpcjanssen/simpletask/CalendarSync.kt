@@ -273,7 +273,7 @@ object CalendarSync {
     private val SYNC_DELAY_MS = 20 * 1000
     private val TAG = "CalendarSync"
 
-    val UTC = TimeZone.getTimeZone("UTC")
+    val UTC: TimeZone = TimeZone.getTimeZone("UTC")
     val TASK_TOKENS: (TToken) -> Boolean = {
         when (it) {
             is CompletedToken, is CreateDateToken, is CompletedDateToken, is PriorityToken, is ThresholdDateToken,

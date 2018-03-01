@@ -236,6 +236,8 @@ object Config : Preferences(TodoApplication.app) {
 
     var latestChangelogShown by IntPreference(R.string.latest_changelog_shown, 0)
 
+    var rightDrawerDemonstrated by BooleanPreference(R.string.right_drawer_demonstrated, false)
+
     val localFileRoot by StringPreference(R.string.local_file_root, "/sdcard/")
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
