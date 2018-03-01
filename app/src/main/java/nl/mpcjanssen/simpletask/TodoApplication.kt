@@ -36,6 +36,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.SystemClock
+import android.support.multidex.MultiDexApplication
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
@@ -48,7 +49,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
 
-class TodoApplication : Application(),
+class TodoApplication : MultiDexApplication(),
 
         BackupInterface {
 
