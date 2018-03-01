@@ -60,7 +60,8 @@ android {
     defaultConfig {
         versionName '10.1.2'
         versionCode 3078
-	     minSdkVersion 14
+        minSdkVersion 14
+        multiDexEnabled true
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
         targetSdkVersion 23
@@ -80,6 +81,10 @@ android {
         nextcloud {
             applicationId 'nl.mpcjanssen.simpletask.nextcloud'
             manifestPlaceholders = [providerFlavour: "nextcloud"]
+        }
+        taskwarrior {
+            applicationId 'nl.mpcjanssen.simpletask.taskwarrior'
+            manifestPlaceholders = [providerFlavour: "taskwarrior"]
         }
     }
 
@@ -133,6 +138,7 @@ repositories {
 dependencies {
     dropboxCompile 'com.dropbox.core:dropbox-core-sdk:3.0.6'
     nextcloudCompile 'com.github.nextcloud:android-library:-SNAPSHOT'
+    compile 'com.android.support:multidex:1.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.android.support:support-v4:$android_support_version"
     compile "com.android.support:support-compat:$android_support_version"
