@@ -167,7 +167,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             val pattern = recurrencePattern
             if (pattern != null) {
                 var deferFromDate = ""
-                if (!(recurrencePattern?.contains("+") ?: true)) {
+                if (recurrencePattern?.contains("+") == false) {
                     deferFromDate = completionDate ?: ""
                 }
                 val newTask = Task(textWithoutCompletedInfo)
@@ -331,7 +331,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_EXT = Regex("(.+):(.+)")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
-        private val MATCH_PHONE_NUMBER = Regex("[0+]?[0-9,#]{4,}")
+        private val MATCH_PHONE_NUMBER = Regex("[+]?[0-9,#()-]{4,}")
         private val MATCH_URI = Regex("[a-z]+://(\\S+)")
         private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
@@ -379,6 +379,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     tokens.add(ListToken(lexeme))
                     return@forEach
                 }
+                // Match phone numbers before tags to support +31.....
+                // This will make tags which can also be interpreted as phone numbers not possible
+                MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
+                    tokens.add(PhoneToken(lexeme))
+                    return@forEach
+                }
                 MATCH_TAG.matchEntire(lexeme)?.let {
                     tokens.add(TagToken(lexeme))
                     return@forEach
@@ -401,10 +407,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 }
                 MATCH_RECURRENCE.matchEntire(lexeme)?.let {
                     tokens.add(RecurrenceToken(it.groupValues[1]))
-                    return@forEach
-                }
-                MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
-                    tokens.add(PhoneToken(lexeme))
                     return@forEach
                 }
                 MATCH_URI.matchEntire(lexeme)?.let {

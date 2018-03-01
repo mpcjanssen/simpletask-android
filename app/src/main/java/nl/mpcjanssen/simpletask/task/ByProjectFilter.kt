@@ -28,24 +28,21 @@ import java.util.ArrayList
 
 /**
  * A filter that matches Tasks containing the specified projects
-
- * @author Tim Barlotta
  */
 class ByProjectFilter(
         private val projects: List<String>,
         private val not: Boolean
 ) : TaskFilter {
-    /* FOR TESTING ONLY, DO NOT USE IN APPLICATION */
 
     override fun apply(task: Task): Boolean {
         return if (not) !filter(task) else filter(task)
     }
 
     fun filter(input: Task): Boolean {
-        val match = input.lists.any { projects.contains(it) }
+        val match = input.tags.any { projects.contains(it) }
         /*
          * Match tasks without project if filter contains "-"
 		 */
-        return match || input.tags.size == 0 && projects.contains("-")
+        return match || (input.tags.size == 0 && projects.contains("-"))
     }
 }

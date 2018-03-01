@@ -51,19 +51,19 @@ class HelpScreen : ThemedActionBarActivity() {
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        wvHelp = findViewById(R.id.help_view) as WebView
+        wvHelp = findViewById<WebView>(R.id.help_view)
 
         // Prevent brief flash of white when loading WebView.
         if (Config.isDarkTheme || Config.isBlackTheme) {
             val tv = TypedValue()
-            getTheme().resolveAttribute(android.R.attr.windowBackground, tv, true);
+            theme.resolveAttribute(android.R.attr.windowBackground, tv, true)
             if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
                 val windowBackgroundColor = tv.data
                 wvHelp!!.setBackgroundColor(windowBackgroundColor)
             }
         }
 
-        wvHelp!!.setWebViewClient(object : WebViewClient() {
+        wvHelp!!.webViewClient = object : WebViewClient() {
             // Replacement is API >= 21 only
             @Suppress("OverridingDeprecatedMember")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
@@ -88,7 +88,7 @@ class HelpScreen : ThemedActionBarActivity() {
                     return false
                 }
             }
-        })
+        }
         showMarkdownAsset(wvHelp!!, this, page)
     }
 
