@@ -1,8 +1,4 @@
-10.1.2
+10.1.3
 ------
 
-- Fix tags/projects filter. Fixes #864.
-- Remove redundant `fields['task']` field in Lua callbacks. Fixes #865. **incompatibility**
-- Demonstrate right drawer. Fixes #845.
-- Extend phone format and fix mis-interpretation as tag. Fixes #866 and #173.
-- Update Dropbox API library.
+- Fix NoClassDefFound crash in Dropbox version.

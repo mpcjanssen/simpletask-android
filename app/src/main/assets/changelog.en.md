@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.3
+------
+
+- Fix NoClassDefFound crash in Dropbox version.
+
 10.1.2
 ------
 

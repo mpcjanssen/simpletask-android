@@ -58,8 +58,9 @@ android {
     }
 
     defaultConfig {
-        versionName '10.1.2'
-        versionCode 3078
+        versionName '10.1.3'
+        versionCode 3079
+        multiDexEnabled true
 	     minSdkVersion 14
         // target API 23 because anything newer breaks root:// links
         //noinspection OldTargetApi
@@ -145,6 +146,7 @@ dependencies {
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'org.luaj:luaj-jse:3.0.1'
     compile 'me.smichel.android:kpreferences:0.11.1'
+    compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile('com.android.support.test:runner:0.5') {
