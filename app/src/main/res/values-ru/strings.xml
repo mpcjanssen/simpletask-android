@@ -379,4 +379,6 @@ http://goo.gl/X1C55P
     <string name="calendar_sync_desc_due">Напоминание о сроке выполнения, сгенерированное в Simpletask</string>
     <string name="calendar_sync_desc_thre">Напоминание о крайнем сроке выполнения, сгенерированное в Simpletask</string>
     <string name="calendar_exists_warning">Внимание: календарь с таким названием уже есть, перезапись…</string>
+    <string name="calendar_write_error">Ошибка: невозможно записать календарь</string>
+
     </resources>
