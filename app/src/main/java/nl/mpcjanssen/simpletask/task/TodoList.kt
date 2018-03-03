@@ -210,7 +210,7 @@ object TodoList {
     }
 
     fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
-        log.debug(TAG, "Getting sorted and filtered tasks")
+        log.debug(TAG, "Getting sorted and filtered tasks with $filter")
         val start = SystemClock.elapsedRealtime()
         filter.initInterpreter()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
