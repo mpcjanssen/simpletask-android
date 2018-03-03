@@ -39,10 +39,6 @@ class Query(
     var script: String? = null
     var scriptTestTask: String? = null
 
-    override fun toString(): String {
-        return join(m_sorts, ",")
-    }
-
     var name: String? = null
 
     val prefill
