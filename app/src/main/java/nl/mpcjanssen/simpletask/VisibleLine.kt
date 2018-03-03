@@ -5,7 +5,7 @@ import nl.mpcjanssen.simpletask.task.Task
 interface VisibleLine {
     val header: Boolean
     val task : Task?
-    val title: MyTitle?
+    val title: String?
 }
 
 data class TaskLine(override val task: Task) : VisibleLine {
@@ -14,7 +14,7 @@ data class TaskLine(override val task: Task) : VisibleLine {
 
 }
 
-data class HeaderLine(override var title: MyTitle) : VisibleLine {
+data class HeaderLine(override var title: String) : VisibleLine {
     override val task = null
     override val header = true
 }
