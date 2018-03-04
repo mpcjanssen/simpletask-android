@@ -1004,7 +1004,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
                         R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
                         R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
-                        R.id.menu_saved_filter_update -> updateSavedQuery(query.first, activeQuery)
+                        R.id.menu_saved_filter_update -> updateSavedQuery(query.second, activeQuery)
                         else -> {
                         }
                     }
@@ -1036,8 +1036,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         updateNavDrawer()
     }
 
-    private fun updateSavedQuery(id: String, newQuery: Query) {
-        QueryStore.save(newQuery, id)
+    private fun updateSavedQuery(oldQuery: NamedQuery, newQuery: Query) {
+        QueryStore.save(newQuery, oldQuery.name)
         updateNavDrawer()
     }
 
