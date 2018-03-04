@@ -64,6 +64,5 @@ class SavedQuery(
         }
 
         private const val ID_PREFIX: String = "filter_"
-        const val EXTRA_ID: String = "filterid"
     }
 }
