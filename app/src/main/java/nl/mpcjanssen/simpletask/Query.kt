@@ -33,8 +33,10 @@ data class NamedQuery(val name: String, val query: Query) {
             val query =  Query(luaModule = module, showSelected = true).apply {
                 initFromPrefs(prefs)
             }
-            val name : String? = prefs.getString(INTENT_TITLE, null)
-            return NamedQuery(name?:fallbackTitle, query)
+            val name  = prefs.getString(INTENT_TITLE, null)
+                    ?: JSONObject(prefs.getString(Query.INTENT_JSON, "")).optString(INTENT_TITLE, fallbackTitle)
+
+            return NamedQuery(name, query)
         }
     }
 }

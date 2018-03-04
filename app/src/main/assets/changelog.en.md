@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.10
+-------
+
+- Fix saved filter names.
+
 10.1.9
 ------
 
