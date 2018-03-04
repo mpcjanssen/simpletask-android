@@ -87,16 +87,13 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var log = Logger
 
-    private var tempQuery = Query(luaModule = "mainui", showSelected = true)
-
     var activeQuery: Query
-        get() = queryId?.let { SavedQuery(it).query } ?: tempQuery
-        set(value: Query) {
-            queryId?.let {
-                SavedQuery(it, value).save()
-            } ?: {
-                tempQuery = value
-            }()
+        get()  {
+            val q = Query(luaModule = "mainui", showSelected = true)
+            q.initFromPrefs(Config.prefs)
+            return q
+        }
+        set(value) {
             // Update the intent so we wont get the old filter after
             // switching back to app later. Fixes [1c5271ee2e]
             intent = value.saveInIntent(intent)
@@ -300,7 +297,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         } else {
             // Set previous filters and sort
             log.info(TAG, "handleIntent: from m_prefs state")
-            tempQuery.initFromPrefs(Config.prefs)
         }
 
         val adapter = m_adapter ?: TaskAdapter(layoutInflater)
@@ -355,16 +351,14 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun updateFilterBar() {
 
         actionbar.visibility = when {
-            queryId != null || activeQuery.hasFilter() -> View.VISIBLE
+            activeQuery.hasFilter() -> View.VISIBLE
             else -> View.GONE
         }
-        val count = m_adapter?.let { it.countVisibleTasks } ?: 0
         TodoList.todoQueue("Update filter bar") {
             runOnUiThread {
+                val count = m_adapter?.countVisibleTasks ?: 0
                 val total = TodoList.getTaskCount()
-                filter_text.text = queryId?.let {
-                    activeQuery.name // TODO: Improve this string
-                } ?: activeQuery.getTitle(
+                filter_text.text = activeQuery.getTitle(
                         count,
                         total,
                         getText(R.string.priority_prompt),
@@ -556,12 +550,20 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    private fun populateSearch(menu: Menu) {
+    private fun populateSearch(menu: Menu?) {
+        if (menu==null) {
+            return
+        }
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchMenu = menu.findItem(R.id.search)
 
         val searchView = searchMenu.actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        val activeTextSearch = activeQuery.search
+        if (!isEmptyOrNull(activeTextSearch)) {
+            searchView.setQuery(activeTextSearch, false)
+            searchView.isActivated = true
+        }
 
         searchView.setIconifiedByDefault(false)
         MenuItemCompat.setOnActionExpandListener(searchMenu, object : OnActionExpandListener {
@@ -595,9 +597,11 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 if (!m_ignoreSearchChangeCallback) {
-                    activeQuery.search = newText
-                    activeQuery.saveInPrefs(Config.prefs)
-                    m_adapter?.let { it.setFilteredTasks() }
+                    val query = activeQuery
+                    query.search = newText
+                    activeQuery = query
+                    m_adapter?.setFilteredTasks()
+                    updateFilterBar()
                 }
                 return true
             }
@@ -950,7 +954,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     internal fun clearFilter() {
-        queryId = null
         activeQuery = activeQuery.clear()
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
@@ -982,7 +985,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             nav_drawer.isLongClickable = true
             nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 queries[position].let {
-                    queryId = it.id
                     activeQuery = it.query
                 }
                 closeDrawer(NAV_DRAWER)
@@ -1091,7 +1093,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun startFilterActivity() {
         val i = Intent(this, FilterActivity::class.java)
         activeQuery.saveInIntent(i)
-        i.putExtra(SavedQuery.EXTRA_ID, queryId)
         startActivity(i)
     }
 
@@ -1583,8 +1584,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     companion object State : Preferences(TodoApplication.app, "state") {
-        var queryId: String? by StringOrNullPreference("queryid", null)
-
         private val REQUEST_PREFERENCES = 1
 
         private val ACTION_LINK = "link"
