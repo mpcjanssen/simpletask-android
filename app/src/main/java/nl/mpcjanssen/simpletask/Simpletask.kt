@@ -973,9 +973,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateNavDrawer() {
-        val pairs = QueryStore.ids().map { Pair(it,  QueryStore.get(it)) }.toList()
-        val hasQueries = !pairs.isEmpty()
-        val queries = pairs.sortedBy { it.second.name  }
+        val idQueryPairs = QueryStore.ids().map { Pair(it,  QueryStore.get(it)) }.toList()
+        val hasQueries = !idQueryPairs.isEmpty()
+        val queries = idQueryPairs.sortedBy { it.second.name  }
         val names = if (hasQueries) {
             queries.map { it.second.name }
         } else {

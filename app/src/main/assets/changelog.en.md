@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.9
+------
+
+- Fix updating of saved queries.
+
 10.1.8
 ------
 
