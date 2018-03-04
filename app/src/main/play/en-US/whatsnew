@@ -1,3 +1,8 @@
+10.1.8
+------
+
+- Fix creating of desktop shortcuts.
+
 10.1.7
 ------
 
@@ -7,13 +12,3 @@
 ------
 
 - Fix saved filter handling.
-
-10.1.5
-------
-
-- Fix text search. Fixes #870.
-
-10.1.4
-------
-
-- Revert header folding for #868.
