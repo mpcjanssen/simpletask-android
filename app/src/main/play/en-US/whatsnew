@@ -1,3 +1,9 @@
+10.1.11
+-------
+
+- Fix JSON crash.
+
+
 10.1.10
 -------
 
@@ -8,12 +14,3 @@
 
 - Fix updating of saved queries.
 
-10.1.8
-------
-
-- Fix creating of desktop shortcuts.
-
-10.1.7
-------
-
-- Fix widget naming.
