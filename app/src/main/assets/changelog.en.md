@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.8
+------
+
+- Fix creating of desktop shortcuts.
+
 10.1.7
 ------
 
