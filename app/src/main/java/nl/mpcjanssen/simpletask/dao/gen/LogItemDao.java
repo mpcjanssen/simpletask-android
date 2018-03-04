@@ -23,7 +23,7 @@ public class LogItemDao extends AbstractDao<LogItem, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "prefName", true, "_id");
         public final static Property Timestamp = new Property(1, java.util.Date.class, "timestamp", false, "TIMESTAMP");
         public final static Property Severity = new Property(2, String.class, "severity", false, "SEVERITY");
         public final static Property Tag = new Property(3, String.class, "tag", false, "TAG");
@@ -44,7 +44,7 @@ public class LogItemDao extends AbstractDao<LogItem, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"LOG_ITEM\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: prefName
                 "\"TIMESTAMP\" INTEGER NOT NULL ," + // 1: timestamp
                 "\"SEVERITY\" TEXT NOT NULL ," + // 2: severity
                 "\"TAG\" TEXT NOT NULL ," + // 3: tag
@@ -84,7 +84,7 @@ public class LogItemDao extends AbstractDao<LogItem, Long> {
     @Override
     public LogItem readEntity(Cursor cursor, int offset) {
         LogItem entity = new LogItem( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // prefName
             new java.util.Date(cursor.getLong(offset + 1)), // timestamp
             cursor.getString(offset + 2), // severity
             cursor.getString(offset + 3), // tag

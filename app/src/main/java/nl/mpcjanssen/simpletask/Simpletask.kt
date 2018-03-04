@@ -850,7 +850,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     jsonFilters.keys().forEach {
                         val newQuery = Query(luaModule = "mainui", showSelected = true)
                         newQuery.initFromJSON(jsonFilters.getJSONObject(it))
-                        SavedQuery(query = newQuery).saveAs(it)
+                        QueryStore.save(newQuery, it)
+
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
                     showToastShort(this, R.string.saved_filters_imported) }
@@ -863,9 +864,12 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     fun exportFilters (exportFile: File) {
-        val queries = SavedQuery.ids.map { SavedQuery(it).query }
+        val queries = QueryStore.ids().map {
+            QueryStore.get(it)
+        }
         val jsonFilters = queries.fold(JSONObject()) { acc, query ->
-            acc.put(query.name, query.saveInJSON())
+
+            acc.put(query.name, query.query.saveInJSON())
         }
         val r = Runnable {
             try {
@@ -895,7 +899,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.setPositiveButton("Ok") { _, _ ->
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
-                SavedQuery(query = activeQuery).saveAs(value)
+                QueryStore.save(activeQuery, it)
                 updateNavDrawer()
             }
             value ?: showToastShort(applicationContext, R.string.filter_name_empty)
@@ -969,11 +973,11 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateNavDrawer() {
-        val queries = ArrayList<SavedQuery>(SavedQuery.ids.map { SavedQuery(it) })
-        val hasQueries = !queries.isEmpty()
-        Collections.sort(queries) { q1, q2 -> q1.name.compareTo(q2.name, ignoreCase = true) }
+        val pairs = QueryStore.ids().map { Pair(it,  QueryStore.get(it)) }.toList()
+        val hasQueries = !pairs.isEmpty()
+        val queries = pairs.sortedBy { it.second.name  }
         val names = if (hasQueries) {
-            queries.map { it.name }
+            queries.map { it.second.name }
         } else {
             val result = ArrayList<String>()
             result.add(getString(R.string.nav_drawer_hint))
@@ -985,7 +989,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             nav_drawer.isLongClickable = true
             nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 queries[position].let {
-                    activeQuery = it.query
+                    activeQuery = it.second.query
                 }
                 closeDrawer(NAV_DRAWER)
                 broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
@@ -997,10 +1001,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                 popupMenu.setOnMenuItemClickListener { item ->
                     val menuId = item.itemId
                     when (menuId) {
-                        R.id.menu_saved_filter_delete -> deleteSavedQuery(query)
-                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.query)
-                        R.id.menu_saved_filter_rename -> renameSavedQuery(query)
-                        R.id.menu_saved_filter_update -> updateSavedQuery(query)
+                        R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
+                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.first)
+                        R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
+                        R.id.menu_saved_filter_update -> updateSavedQuery(query.first, activeQuery)
                         else -> {
                         }
                     }
@@ -1014,9 +1018,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    fun createFilterShortcut(query: Query) {
+    fun createFilterShortcut(id: String) {
+        val query = QueryStore.get(id)
         val target = Intent(Constants.INTENT_START_FILTER)
-        query.saveInIntent(target)
+        query.query.saveInIntent(target)
         target.putExtra("name", query.name)
 
         val iconRes = IconCompat.createWithResource(this,  R.drawable.ic_launcher)
@@ -1028,17 +1033,18 @@ class Simpletask : ThemedNoActionBarActivity() {
         ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null)
     }
 
-    private fun deleteSavedQuery(query: SavedQuery) {
-        query.delete()
+    private fun deleteSavedQuery(id: String) {
+       QueryStore.delete(id)
         updateNavDrawer()
     }
 
-    private fun updateSavedQuery(query: SavedQuery) {
-        SavedQuery(query.id, activeQuery).saveAs(query.name)
+    private fun updateSavedQuery(id: String, newQuery: Query) {
+        QueryStore.save(newQuery, id)
         updateNavDrawer()
     }
 
-    private fun renameSavedQuery(query: SavedQuery) {
+    private fun renameSavedQuery(id: String) {
+        val squery = QueryStore.get(id)
         val alert = AlertDialog.Builder(this)
 
         alert.setTitle(R.string.rename_filter)
@@ -1047,13 +1053,13 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Set an EditText view to get user input
         val input = EditText(this)
         alert.setView(input)
-        input.setText(query.name)
+        input.setText(squery.name)
 
         alert.setPositiveButton("Ok") { _, _ ->
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
 
             value?. let {
-                query.saveAs(it)
+                QueryStore.rename(squery, it)
                 updateNavDrawer()
             } ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }

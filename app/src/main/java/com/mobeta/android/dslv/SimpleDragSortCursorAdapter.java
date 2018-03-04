@@ -325,7 +325,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
     }
 
     /**
-     * Create a map from an array of strings to an array of column-id integers in cursor c.
+     * Create a map from an array of strings to an array of column-prefName integers in cursor c.
      * If c is null, the array will be discarded.
      *
      * @param c the cursor to find the columns from
