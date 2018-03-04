@@ -234,7 +234,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         val target = Intent(this, Simpletask::class.java)
         target.action = Constants.INTENT_START_FILTER
         updateFilterFromFragments()
-        mFilter.name = mFilter.proposedName
         mFilter.saveInIntent(target)
 
         target.putExtra("name", mFilter.proposedName)
@@ -318,7 +317,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
             // Store widget filter
             val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)
-            mFilter.name = name
             mFilter.saveInPrefs(preferences)
 
             val appWidgetManager = AppWidgetManager.getInstance(context)

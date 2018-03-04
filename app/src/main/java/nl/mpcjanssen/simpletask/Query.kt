@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Base64
 
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.isEmptyOrNull
@@ -11,6 +12,33 @@ import nl.mpcjanssen.simpletask.util.todayAsString
 import org.json.JSONObject
 import org.luaj.vm2.LuaError
 import java.util.*
+
+
+data class NamedQuery(val name: String, val query: Query) {
+
+    fun id() : String {
+        return Base64.encodeToString(name.toByteArray(), Base64.DEFAULT).trim()
+    }
+
+
+    fun saveInPrefs(prefs: SharedPreferences) {
+        query.saveInPrefs(prefs)
+        prefs.edit().apply { putString(INTENT_TITLE,name) }.commit()
+
+    }
+
+    companion object {
+        val INTENT_TITLE = "TITLE"
+        fun initFromPrefs(prefs: SharedPreferences, module: String, fallbackTitle: String ) : NamedQuery {
+            val query =  Query(luaModule = module, showSelected = true).apply {
+                initFromPrefs(prefs)
+            }
+            val name : String? = prefs.getString(INTENT_TITLE, null)
+            return NamedQuery(name?:fallbackTitle, query)
+        }
+    }
+}
+
 
 /**
  * Active filter, has methods for serialization in several formats
@@ -43,8 +71,6 @@ class Query(
         return join(m_sorts, ",")
     }
 
-    var name: String? = null
-
     val prefill
         get() : String {
             val prefillLists = if (!contextsNot && contexts.size == 1 && contexts[0] != "-") "@${contexts[0]}" else ""
@@ -54,7 +80,6 @@ class Query(
 
     fun saveInJSON(json: JSONObject = JSONObject()): JSONObject {
         return json.apply {
-            put(INTENT_TITLE, name)
             put(INTENT_CONTEXTS_FILTER, join(contexts, "\n"))
             put(INTENT_CONTEXTS_FILTER_NOT, contextsNot)
             put(INTENT_PROJECTS_FILTER, join(projects, "\n"))
@@ -85,7 +110,6 @@ class Query(
         if (json == null) {
             return this
         }
-        name = json.optString(INTENT_TITLE, "No title")
         prios = json.optString(INTENT_PRIORITIES_FILTER)
         tags = json.optString(INTENT_PROJECTS_FILTER)
         lists = json.optString(INTENT_CONTEXTS_FILTER)
@@ -320,7 +344,6 @@ class Query(
      * Do NOT modify this without good reason.
      * Changing this will break existing shortcuts and widgets
      */
-        const val INTENT_TITLE = "TITLE"
         const val INTENT_JSON = "JSON"
         const val INTENT_SORT_ORDER = "SORTS"
         const val INTENT_CONTEXTS_FILTER = "CONTEXTS"
@@ -424,7 +447,6 @@ class Query(
             hideTags = prefs.getBoolean(INTENT_HIDE_TAGS_FILTER, false)
             hideCreateDate = prefs.getBoolean(INTENT_HIDE_CREATE_DATE_FILTER, false)
             hideHidden = prefs.getBoolean(INTENT_HIDE_HIDDEN_FILTER, true)
-            name = prefs.getString(INTENT_TITLE, "Simpletask")
             search = prefs.getString(SearchManager.QUERY, null)
             script = prefs.getString(INTENT_SCRIPT_FILTER, null)
             scriptTestTask = prefs.getString(INTENT_SCRIPT_TEST_TASK_FILTER, null)
