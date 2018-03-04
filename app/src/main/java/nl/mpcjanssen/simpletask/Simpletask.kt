@@ -1375,7 +1375,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 runOnUiThread {
                     showListViewProgress(true)
                 }
-                val visibleTasks: Sequence<Task>
+                val visibleTasks: List<Task>
                 log.info(TAG, "setFilteredTasks called: " + TodoList)
                 val sorts = activeQuery.getSort(Config.defaultSorts)
                 visibleTasks = TodoList.getSortedTasks(activeQuery, sorts, Config.sortCaseSensitive)

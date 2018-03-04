@@ -146,7 +146,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
         firstGroupSortIndex++
@@ -194,7 +194,7 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
     return result
 }
 
-fun addHeaderLines(visibleTasks: Sequence<Task>, filter: Query, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, filter: Query, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
     return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.luaModule)
 }
