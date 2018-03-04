@@ -209,10 +209,9 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
+    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): List<Task> {
         log.debug(TAG, "Getting sorted and filtered tasks")
         val start = SystemClock.elapsedRealtime()
-        filter.initInterpreter()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
         val itemsToSort = if (comp.fileOrder) {
             todoItems
@@ -220,7 +219,7 @@ object TodoList {
             todoItems.reversed()
         }
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
-        val result = filter.apply(sortedItems.asSequence())
+        val result = filter.apply(sortedItems)
         val end = SystemClock.elapsedRealtime()
         log.debug(TAG, "Sorting and filtering tasks took ${end-start} ms")
         return result

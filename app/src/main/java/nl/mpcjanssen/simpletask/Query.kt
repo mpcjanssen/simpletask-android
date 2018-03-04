@@ -151,7 +151,6 @@ class Query(
         if (lists != null && lists != "") {
             this.contexts = ArrayList(Arrays.asList(*lists.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
         }
-        initInterpreter()
         return this
     }
 
@@ -246,13 +245,8 @@ class Query(
         return this
     }
 
-    fun initInterpreter() {
+    fun initInterpreter(code: String?) {
         try {
-            val code = if (useScript) {
-                script
-            } else {
-                null
-            }
             LuaInterpreter.clearOnFilter(luaModule)
             LuaInterpreter.evalScript(luaModule, code)
         } catch (e: LuaError) {
@@ -260,18 +254,23 @@ class Query(
         }
     }
 
-    fun apply(items: Sequence<Task>?): Sequence<Task> {
-        if (useScript) {
-            log.info(TAG, "Filtering with Lua $script")
-        }
+    fun apply(items: List<Task>?): List<Task> {
+        val code = if (useScript)
+            script
+        else
+            null
+
+        initInterpreter(code)
+
+
         val filter = AndFilter()
         if (items == null) {
-            return emptySequence()
+            return ArrayList()
         }
 
         val today = todayAsString
         try {
-            return items.filter {
+            return  items.filter {
                 if (showSelected && TodoList.isSelected(it)) {
                     return@filter true
                 }
@@ -298,7 +297,7 @@ class Query(
         } catch (e: LuaError) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
-        return emptySequence()
+        return ArrayList()
     }
 
     fun setSort(sort: ArrayList<String>) {
