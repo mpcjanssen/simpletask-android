@@ -23,7 +23,7 @@ object QueryStore {
 
     fun get(id: String): NamedQuery {
         val prefs = prefs(id)
-        return NamedQuery.initFromPrefs(prefs, "main_ui", id)
+        return NamedQuery.initFromPrefs(prefs, "mainui", id)
     }
 
     fun save(query: Query, name: String) {

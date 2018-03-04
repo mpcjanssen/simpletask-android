@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.*
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.createAlertDialog
+import org.luaj.vm2.LuaBoolean
 import org.luaj.vm2.LuaError
 
 class FilterScriptFragment : Fragment() {
@@ -91,11 +92,12 @@ class FilterScriptFragment : Fragment() {
     }
 
     private fun testOnFilterCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
-        if (script.trim { it <= ' ' }.isEmpty() || LuaInterpreter.evalScript(environment, script).onFilterCallback(environment, t)) {
-            snackBar.setText(getString(R.string.script_tab_true_task_shown))
+        val result = LuaInterpreter.evalScript(environment, script).onFilterCallback(environment, t)
+        if (result.toboolean()) {
+            snackBar.setText(result.toString() +": " + getString(R.string.script_tab_true_task_shown))
             barView.setBackgroundColor(0xff43a047.toInt())
         } else {
-            snackBar.setText(getString(R.string.script_tab_false_task_not_shown))
+            snackBar.setText(result.toString() +": " + getString(R.string.script_tab_false_task_not_shown))
             barView.setBackgroundColor(0xffe53935.toInt())
         }
         snackBar.show()
