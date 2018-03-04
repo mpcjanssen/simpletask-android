@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.5
+------
+
+- Fix text search. Fixes #870.
+
 10.1.4
 ------
 
