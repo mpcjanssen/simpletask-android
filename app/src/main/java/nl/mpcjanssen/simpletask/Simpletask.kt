@@ -1002,7 +1002,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val menuId = item.itemId
                     when (menuId) {
                         R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
-                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.first)
+                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
                         R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
                         R.id.menu_saved_filter_update -> updateSavedQuery(query.first, activeQuery)
                         else -> {
@@ -1018,16 +1018,14 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    fun createFilterShortcut(id: String) {
-        val query = QueryStore.get(id)
+    fun createFilterShortcut(namedQuery: NamedQuery) {
         val target = Intent(Constants.INTENT_START_FILTER)
-        query.query.saveInIntent(target)
-        target.putExtra("name", query.name)
+        namedQuery.query.saveInIntent(target)
 
         val iconRes = IconCompat.createWithResource(this,  R.drawable.ic_launcher)
         val pinShortcutInfo = ShortcutInfoCompat.Builder(this, "simpletaskLauncher")
         .setIcon(iconRes)
-        .setShortLabel(query.name ?: "No name")
+        .setShortLabel(namedQuery.name)
         .setIntent(target)
         .build()
         ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null)
