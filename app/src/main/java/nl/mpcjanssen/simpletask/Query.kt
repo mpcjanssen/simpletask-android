@@ -290,7 +290,7 @@ class Query(
                 if (!filter.apply(it)) {
                     return@filter false
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(luaModule, it)) {
+                if (useScript && !LuaInterpreter.onFilterCallback(luaModule, it).toboolean()) {
                     return@filter false
                 }
                 return@filter true
