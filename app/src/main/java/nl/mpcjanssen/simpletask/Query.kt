@@ -178,7 +178,7 @@ class Query(
             if (!isEmptyOrNull(this.search)) {
                 activeParts.add(search.toString())
             }
-            if (!isEmptyOrNull(this.script)) {
+            if (useScript && !isEmptyOrNull(this.script)) {
                 activeParts.add(script.toString())
             }
             filterTitle = filterTitle + " " + join(activeParts, ",")

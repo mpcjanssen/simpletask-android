@@ -293,7 +293,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            activeQuery = activeQuery.initFromIntent(intent)
+            val newQuery = Query("mainui", true)
+            activeQuery = newQuery.initFromIntent(intent)
         } else {
             // Set previous filters and sort
             log.info(TAG, "handleIntent: from m_prefs state")
