@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.6
+------
+
+- Fix saved filter handling.
+
 10.1.5
 ------
 
