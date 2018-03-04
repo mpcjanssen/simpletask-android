@@ -34,7 +34,7 @@ data class NamedQuery(val name: String, val query: Query) {
                 initFromPrefs(prefs)
             }
             val name  = prefs.getString(INTENT_TITLE, null)
-                    ?: JSONObject(prefs.getString(Query.INTENT_JSON, "")).optString(INTENT_TITLE, fallbackTitle)
+                    ?: JSONObject(prefs.getString(Query.INTENT_JSON, "{}")).optString(INTENT_TITLE, fallbackTitle)
 
             return NamedQuery(name, query)
         }
