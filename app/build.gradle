@@ -58,8 +58,8 @@ android {
     }
 
     defaultConfig {
-        versionName '10.1.3'
-        versionCode 3079
+        versionName '10.1.4'
+        versionCode 3080
         multiDexEnabled true
 	     minSdkVersion 14
         // target API 23 because anything newer breaks root:// links

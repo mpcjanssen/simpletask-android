@@ -1,6 +1,11 @@
 ﻿Changelog
 =========
 
+10.1.4
+------
+
+- Revert header folding for #868.
+
 10.1.3
 ------
 
