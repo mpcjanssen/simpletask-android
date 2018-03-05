@@ -2,10 +2,7 @@ package nl.mpcjanssen.simpletask.util
 
 import android.content.SharedPreferences
 import me.smichel.android.KPreferences.Preferences
-import nl.mpcjanssen.simpletask.CalendarSync
-import nl.mpcjanssen.simpletask.LuaInterpreter
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
@@ -281,5 +278,17 @@ object Config : Preferences(TodoApplication.app) {
         }
         return values[index]
     }
+
+    var mainQuery: Query
+        get()  {
+            val q = Query(luaModule = "mainui", showSelected = true)
+            q.initFromPrefs(Config.prefs)
+            return q
+        }
+        set(value) {
+            // Update the intent so we wont get the old filter after
+            // switching back to app later. Fixes [1c5271ee2e]
+            value.saveInPrefs(Config.prefs)
+        }
 
 }

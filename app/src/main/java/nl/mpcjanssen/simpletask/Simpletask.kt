@@ -87,19 +87,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var log = Logger
 
-    var activeQuery: Query
-        get()  {
-            val q = Query(luaModule = "mainui", showSelected = true)
-            q.initFromPrefs(Config.prefs)
-            return q
-        }
-        set(value) {
-            // Update the intent so we wont get the old filter after
-            // switching back to app later. Fixes [1c5271ee2e]
-            intent = value.saveInIntent(intent)
-            value.saveInPrefs(Config.prefs)
-        }
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log.info(TAG, "onCreate")
@@ -141,7 +128,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         }
                     } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                         log.info(TAG, "Tasklist changed, refiltering adapter")
-                        m_adapter!!.setFilteredTasks()
+                        m_adapter!!.setFilteredTasks(this@Simpletask, Config.mainQuery)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         refreshUI()
@@ -221,7 +208,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
         TodoList.selectedTasks.forEach { task ->
-            val luaTxt = LuaInterpreter.onDisplayCallback(activeQuery.luaModule, task)
+            val luaTxt = LuaInterpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
             result.add(luaTxt ?: task.inFileFormat())
         }
         return join(result, "\n")
@@ -282,10 +269,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         // Show search or filter results
-        val intent = intent
-        if (Constants.INTENT_START_FILTER == intent.action) {
+        val currentIntent = intent
+        val query = if (Constants.INTENT_START_FILTER == currentIntent.action) {
             log.info(TAG, "handleIntent")
-            intent.extras?.let { extras ->
+            currentIntent.extras?.let { extras ->
                 extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
                     val debugString = value?.let { v ->
                         "$v (${v.javaClass.name})"
@@ -293,17 +280,20 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            val newQuery = Query("mainui", true)
-            activeQuery = newQuery.initFromIntent(intent)
+            val newQuery = Query("mainui", true).initFromIntent(currentIntent)
+            Config.mainQuery = newQuery
+            intent = newQuery.saveInIntent(intent)
+            newQuery
         } else {
             // Set previous filters and sort
             log.info(TAG, "handleIntent: from m_prefs state")
+            Config.mainQuery
         }
 
-        val adapter = m_adapter ?: TaskAdapter(layoutInflater)
+        val adapter = m_adapter ?: TaskAdapter(query, layoutInflater)
         m_adapter = adapter
-
-        m_adapter!!.setFilteredTasks()
+        showListViewProgress(true)
+        m_adapter!!.setFilteredTasks(this, query)
 
         listView?.layoutManager = LinearLayoutManager(this)
         listView?.adapter = this.m_adapter
@@ -313,10 +303,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         // If we were started from the widget, select the pushed task
         // next scroll to the first selected item
         TodoActionQueue.add("Scroll selection", Runnable {
-            if (intent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-                val position = intent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
-                intent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-                setIntent(intent)
+            if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
+                val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+                currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
+                setIntent(currentIntent)
                 if (position > -1) {
                     val itemAtPosition = TodoList.getTaskAt(position)
                     itemAtPosition?.let {
@@ -352,14 +342,14 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun updateFilterBar() {
 
         actionbar.visibility = when {
-            activeQuery.hasFilter() -> View.VISIBLE
+            Config.mainQuery.hasFilter() -> View.VISIBLE
             else -> View.GONE
         }
         TodoList.todoQueue("Update filter bar") {
             runOnUiThread {
                 val count = m_adapter?.countVisibleTasks ?: 0
                 val total = TodoList.getTaskCount()
-                filter_text.text = activeQuery.getTitle(
+                filter_text.text = Config.mainQuery.getTitle(
                         count,
                         total,
                         getText(R.string.priority_prompt),
@@ -560,7 +550,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         val searchView = searchMenu.actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        val activeTextSearch = activeQuery.search
+        val activeTextSearch = Config.mainQuery.search
         if (!isEmptyOrNull(activeTextSearch)) {
             searchView.setQuery(activeTextSearch, false)
             searchView.isActivated = true
@@ -598,10 +588,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 if (!m_ignoreSearchChangeCallback) {
-                    val query = activeQuery
+                    val query = Config.mainQuery
                     query.search = newText
-                    activeQuery = query
-                    m_adapter?.setFilteredTasks()
+                    Config.mainQuery = query
+                    m_adapter?.setFilteredTasks(this@Simpletask, query)
                     updateFilterBar()
                 }
                 return true
@@ -794,7 +784,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (checkedTasks.size == 1) {
             // Set the task as title
             val task = checkedTasks[0]
-            val luaTxt = LuaInterpreter.onDisplayCallback(activeQuery.luaModule, task)
+            val luaTxt = LuaInterpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
             calendarTitle = luaTxt ?: task.text
         } else {
             // Set the tasks as description
@@ -828,7 +818,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun startAddTaskActivity() {
         log.info(TAG, "Starting addTask activity")
 
-        TodoList.editTasks(this, TodoList.selectedTasks, activeQuery.prefill)
+        TodoList.editTasks(this, TodoList.selectedTasks, Config.mainQuery.prefill)
     }
 
     private fun startPreferencesActivity() {
@@ -895,12 +885,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Set an EditText view to get user input
         val input = EditText(this)
         alert.setView(input)
-        input.setText(activeQuery.proposedName)
+        input.setText(Config.mainQuery.proposedName)
 
         alert.setPositiveButton("Ok") { _, _ ->
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
-                QueryStore.save(activeQuery, it)
+                QueryStore.save(Config.mainQuery, it)
                 updateNavDrawer()
             }
             value ?: showToastShort(applicationContext, R.string.filter_name_empty)
@@ -922,7 +912,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 closeSelectionMode()
             }
             Mode.MAIN -> {
-                if (!Config.backClearsFilter || !activeQuery.hasFilter()) {
+                if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
                     return super.onBackPressed()
                 }
                 clearFilter()
@@ -935,7 +925,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun closeSelectionMode() {
         TodoList.clearSelection()
         invalidateOptionsMenu()
-        m_adapter?.setFilteredTasks()
+        m_adapter?.setFilteredTasks(this, Config.mainQuery)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -959,7 +949,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     internal fun clearFilter() {
-        activeQuery = activeQuery.clear()
+        Config.mainQuery = Config.mainQuery.clear()
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
@@ -990,7 +980,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             nav_drawer.isLongClickable = true
             nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 queries[position].let {
-                    activeQuery = it.second.query
+                    Config.mainQuery = it.second.query
                 }
                 closeDrawer(NAV_DRAWER)
                 broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
@@ -1005,7 +995,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
                         R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
                         R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
-                        R.id.menu_saved_filter_update -> updateSavedQuery(query.second, activeQuery)
+                        R.id.menu_saved_filter_update -> updateSavedQuery(query.second, Config.mainQuery)
                         else -> {
                         }
                     }
@@ -1081,23 +1071,23 @@ class Simpletask : ThemedNoActionBarActivity() {
         filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
         filter_drawer.onItemClickListener = DrawerItemClickListener()
 
-        activeQuery.contexts
+        Config.mainQuery.contexts
                 .map { drawerAdapter.getIndexOf("@" + it) }
                 .filter { it != -1 }
                 .forEach { filter_drawer.setItemChecked(it, true) }
 
-        activeQuery.projects
+        Config.mainQuery.projects
                 .map { drawerAdapter.getIndexOf("+" + it) }
                 .filter { it != -1 }
                 .forEach { filter_drawer.setItemChecked(it, true) }
-        filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, activeQuery.contextsNot)
-        filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, activeQuery.projectsNot)
+        filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, Config.mainQuery.contextsNot)
+        filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, Config.mainQuery.projectsNot)
         filter_drawer.deferNotifyDataSetChanged()
     }
 
     fun startFilterActivity() {
         val i = Intent(this, FilterActivity::class.java)
-        activeQuery.saveInIntent(i)
+        Config.mainQuery.saveInIntent(i)
         startActivity(i)
     }
 
@@ -1117,342 +1107,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHolder(itemView)
 
-    inner class TaskAdapter(private val m_inflater: LayoutInflater) : RecyclerView.Adapter <TaskViewHolder>() {
-        override fun getItemCount(): Int {
-            return visibleLines.size + 1
-        }
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TaskViewHolder {
-            val view = when (viewType) {
-                0 -> {
-                    // Header
-                    m_inflater.inflate(R.layout.list_header, parent, false)
-                }
-                1 -> {
-                    // Task
-                    m_inflater.inflate(R.layout.list_item, parent, false)
-                }
-                else -> {
-                    // Empty at end
-                    m_inflater.inflate(R.layout.empty_list_item, parent, false)
-                }
-
-            }
-            return TaskViewHolder(view, viewType)
-        }
-
-        override fun onBindViewHolder(holder: TaskViewHolder?, position: Int) {
-            when (holder?.viewType) {
-                0 -> bindHeader(holder, position)
-                1 -> bindTask(holder, position)
-                else -> return
-            }
-        }
-
-        fun bindHeader(holder : TaskViewHolder, position: Int) {
-            val t = holder.itemView.list_header_title
-            val line = visibleLines[position]
-            t.text = line.title
-            t.textSize = textSize
-        }
-
-        fun bindTask (holder : TaskViewHolder, position: Int) {
-            val line = visibleLines[position]
-            val item = line.task ?: return
-            val view = holder.itemView
-            val taskText = view.tasktext
-            val taskAge = view.taskage
-            val taskDue = view.taskdue
-            val taskThreshold = view.taskthreshold
-
-            val task = item
-
-            if (Config.showCompleteCheckbox) {
-                view.checkBox.visibility = View.VISIBLE
-            } else {
-                view.checkBox.visibility = View.GONE
-            }
-
-            if (!Config.hasExtendedTaskView) {
-                view.datebar.visibility = View.GONE
-            }
-            val tokensToShowFilter: (it: TToken) -> Boolean = {
-                when (it) {
-                    is UUIDToken -> false
-                    is CreateDateToken -> false
-                    is CompletedToken -> false
-                    is CompletedDateToken -> !Config.hasExtendedTaskView
-                    is DueDateToken -> !Config.hasExtendedTaskView
-                    is ThresholdDateToken -> !Config.hasExtendedTaskView
-                    is ListToken -> !activeQuery.hideLists
-                    is TagToken -> !activeQuery.hideTags
-                    else -> true
-                }
-            }
-            val txt = LuaInterpreter.onDisplayCallback(activeQuery.luaModule, task) ?: task.showParts(tokensToShowFilter)
-            val ss = SpannableString(txt)
-
-            val contexts = task.lists
-            val colorizeStrings = contexts.mapTo(ArrayList<String>()) { "@" + it }
-            setColor(ss, Color.GRAY, colorizeStrings)
-            colorizeStrings.clear()
-            val projects = task.tags
-            projects.mapTo(colorizeStrings) { "+" + it }
-            setColor(ss, Color.GRAY, colorizeStrings)
-
-            val priorityColor: Int
-            val priority = task.priority
-            when (priority) {
-                Priority.A -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_red_dark)
-                Priority.B -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_orange_dark)
-                Priority.C -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_green_dark)
-                Priority.D -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_blue_dark)
-                else -> priorityColor = ContextCompat.getColor(m_app, R.color.gray67)
-            }
-            setColor(ss, priorityColor, priority.fileFormat)
-            val completed = task.isCompleted()
-
-            taskAge.textSize = textSize * Config.dateBarRelativeSize
-            taskDue.textSize = textSize * Config.dateBarRelativeSize
-            taskThreshold.textSize = textSize * Config.dateBarRelativeSize
-
-            val cb = view.checkBox
-            taskText.text = ss
-            taskText.textSize = textSize
-            handleEllipsis(taskText)
-
-            if (completed) {
-                // log.info( "Striking through " + task.getText());
-                taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                cb.setOnClickListener({
-                    uncompleteTasks(item)
-                    // Update the tri state checkbox
-                    if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
-                })
-            } else {
-                taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-
-                cb.setOnClickListener {
-                    completeTasks(item)
-                    // Update the tri state checkbox
-                    if (activeMode() == Mode.SELECTION) invalidateOptionsMenu()
-                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
-                }
-
-            }
-            cb.isChecked = completed
-
-            val relAge = getRelativeAge(task, m_app)
-            val relDue = getRelativeDueDate(task, m_app)
-            val relativeThresholdDate = getRelativeThresholdDate(task, m_app)
-            if (!isEmptyOrNull(relAge) && !activeQuery.hideCreateDate) {
-                taskAge.text = relAge
-                taskAge.visibility = View.VISIBLE
-            } else {
-                taskAge.text = ""
-                taskAge.visibility = View.GONE
-            }
-
-            if (relDue != null) {
-                taskDue.text = relDue
-                taskDue.visibility = View.VISIBLE
-            } else {
-                taskDue.text = ""
-                taskDue.visibility = View.GONE
-            }
-            if (!isEmptyOrNull(relativeThresholdDate)) {
-                taskThreshold.text = relativeThresholdDate
-                taskThreshold.visibility = View.VISIBLE
-            } else {
-                taskThreshold.text = ""
-                taskThreshold.visibility = View.GONE
-            }
-            // Set selected state
-            // log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
-            view.isActivated = TodoList.isSelected(item)
-
-            // Set click listeners
-            view.setOnClickListener { it ->
-
-                val newSelectedState = !TodoList.isSelected(item)
-                if (newSelectedState) {
-                    TodoList.selectTask(item)
-                } else {
-                    TodoList.unSelectTask(item)
-                }
-                it.isActivated = newSelectedState
-                invalidateOptionsMenu()
-            }
-
-            view.setOnLongClickListener {
-                val links = ArrayList<String>()
-                val actions = ArrayList<String>()
-                val t = item
-                for (link in t.links) {
-                    actions.add(ACTION_LINK)
-                    links.add(link)
-                }
-                for (number in t.phoneNumbers) {
-                    actions.add(ACTION_PHONE)
-                    links.add(number)
-                    actions.add(ACTION_SMS)
-                    links.add(number)
-                }
-                for (mail in t.mailAddresses) {
-                    actions.add(ACTION_MAIL)
-                    links.add(mail)
-                }
-                if (actions.size != 0) {
-
-                    val titles = ArrayList<String>()
-                    for (i in links.indices) {
-                        when (actions[i]) {
-                            ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
-                            ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
-                            else -> titles.add(i, links[i])
-                        }
-                    }
-                    val build = AlertDialog.Builder(this@Simpletask)
-                    build.setTitle(R.string.task_action)
-                    val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
-                    build.setItems(titleArray) { _, which ->
-                        val actionIntent: Intent
-                        val url = links[which]
-                        log.info(TAG, "" + actions[which] + ": " + url)
-                        when (actions[which]) {
-                            ACTION_LINK -> if (url.startsWith("todo://")) {
-                                val todoFolder = Config.todoFile.parentFile
-                                val newName = File(todoFolder, url.substring(7))
-                                m_app.switchTodoFile(newName.absolutePath)
-                            } else if (url.startsWith("root://")) {
-                                val rootFolder = Config.localFileRoot
-                                val file = File(rootFolder, url.substring(7))
-                                actionIntent = Intent(Intent.ACTION_VIEW)
-                                val contentUri = Uri.fromFile(file)
-                                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
-                                actionIntent.setDataAndType(contentUri, mime)
-                                actionIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
-                                startActivity(actionIntent)
-                            } else {
-                                try {
-                                    actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                    startActivity(actionIntent)
-                                } catch (e: ActivityNotFoundException) {
-                                    log.info(TAG, "No handler for task action $url")
-                                    showToastLong(TodoApplication.app, "No handler for $url" )
-                                }
-                            }
-                            ACTION_PHONE -> {
-                                actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
-                                startActivity(actionIntent)
-                            }
-                            ACTION_SMS -> {
-                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
-                                startActivity(actionIntent)
-                            }
-                            ACTION_MAIL -> {
-                                actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                                actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                                        arrayOf(url))
-                                actionIntent.type = "text/plain"
-                                startActivity(actionIntent)
-                            }
-                        }
-                    }
-                    build.create().show()
-                }
-                true
-            }
-        }
-        internal var visibleLines = ArrayList<VisibleLine>()
-
-        internal fun setFilteredTasks() {
-            TodoList.todoQueue("setFilteredTasks") {
-                runOnUiThread {
-                    showListViewProgress(true)
-                }
-                val visibleTasks: List<Task>
-                log.info(TAG, "setFilteredTasks called: " + TodoList)
-                val sorts = activeQuery.getSort(Config.defaultSorts)
-                visibleTasks = TodoList.getSortedTasks(activeQuery, sorts, Config.sortCaseSensitive)
-                val newVisibleLines = ArrayList<VisibleLine>()
-
-                newVisibleLines.addAll(addHeaderLines(visibleTasks, activeQuery, getString(R.string.no_header)))
-
-                runOnUiThread {
-                    // Replace the array in the main thread to prevent OutOfIndex exceptions
-                    visibleLines = newVisibleLines
-                    m_adapter?.notifyDataSetChanged()
-                    showListViewProgress(false)
-                    if (Config.lastScrollPosition != -1) {
-                        val manager = listView?.layoutManager as LinearLayoutManager?
-                        val position = Config.lastScrollPosition
-                        val offset = Config.lastScrollOffset
-                        Logger.info(TAG, "Restoring scroll offset $position, $offset")
-                        manager?.scrollToPositionWithOffset(position, offset )
-                        Config.lastScrollPosition = -1
-                    }
-                }
-            }
-        }
-
-        val countVisibleTasks: Int
-            get() {
-               return visibleLines.count { !it.header }
-            }
-
-        /*
-        ** Get the adapter position for task
-        */
-        fun getPosition(task: Task): Int {
-            val line = TaskLine(task = task)
-            return visibleLines.indexOf(line)
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getItemViewType(position: Int): Int {
-            if (position == visibleLines.size) {
-                return 2
-            }
-            val line = visibleLines[position]
-            if (line.header) {
-                return 0
-            } else {
-                return 1
-            }
-        }
-    }
-
-    private fun handleEllipsis(taskText: TextView) {
-        val noEllipsizeValue = "no_ellipsize"
-        val ellipsizeKey = m_app.getString(R.string.task_text_ellipsizing_pref_key)
-        val ellipsizePref = Config.prefs.getString(ellipsizeKey, noEllipsizeValue)
-
-        if (noEllipsizeValue != ellipsizePref) elipsis@ {
-            val truncateAt: TextUtils.TruncateAt?
-            taskText.ellipsize = when (ellipsizePref) {
-                "start" -> TextUtils.TruncateAt.START
-                "end" -> TextUtils.TruncateAt.END
-                "middle" -> TextUtils.TruncateAt.MIDDLE
-                "marquee" -> TextUtils.TruncateAt.MARQUEE
-                else -> {
-                    log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
-                    return@elipsis
-                }
-            }
-
-            taskText.maxLines = 1
-            taskText.setHorizontallyScrolling(true)
-        }
-    }
 
     @SuppressLint("InflateParams")
     private fun updateItemsDialog(title: String,
@@ -1556,7 +1212,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val tags: ArrayList<String>
             val lv = parent as ListView
             val adapter = lv.adapter as DrawerAdapter
-            val query = activeQuery
+            val query = Config.mainQuery
             if (adapter.projectsHeaderPosition == position) {
                 query.projectsNot = !query.projectsNot
             }
@@ -1578,7 +1234,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             query.contexts = filteredContexts
             query.projects = filteredProjects
 
-            activeQuery = query
+            Config.mainQuery = query
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
