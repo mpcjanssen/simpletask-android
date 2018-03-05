@@ -25,7 +25,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "MyAppWidgetProvider" ;
 
     private static void putFilterExtras(Intent target, @NonNull SharedPreferences preferences, int widgetId) {
-        // log.debug(TAG, "putFilter extras  for appwidget " + widgetId);
+        // log.debug(tag, "putFilter extras  for appwidget " + widgetId);
         Query filter = new Query("widget" + widgetId, false);
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
