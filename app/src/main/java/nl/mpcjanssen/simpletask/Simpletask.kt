@@ -1108,14 +1108,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun createFilterShortcut(namedQuery: NamedQuery) {
         val target = Intent(Constants.INTENT_START_FILTER)
         namedQuery.query.saveInIntent(target)
-
-        val iconRes = IconCompat.createWithResource(this, R.drawable.ic_launcher)
-        val pinShortcutInfo = ShortcutInfoCompat.Builder(this, "simpletaskLauncher")
-                .setIcon(iconRes)
-                .setShortLabel(namedQuery.name)
-                .setIntent(target)
-                .build()
-        ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null)
+        createShortcut(this, "simpletaskLauncher", namedQuery.name,  R.drawable.ic_launcher, target)
     }
 
     private fun deleteSavedQuery(id: String) {

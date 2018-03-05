@@ -33,11 +33,15 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.content.pm.ShortcutInfoCompat
+import android.support.v4.content.pm.ShortcutManagerCompat
+import android.support.v4.graphics.drawable.IconCompat
 import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
@@ -648,4 +652,14 @@ fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
     log.info(TAG, "Sending widget refresh broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
+}
+
+fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
+    val iconRes = IconCompat.createWithResource(ctxt, icon)
+    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, id)
+            .setIcon(iconRes)
+            .setShortLabel(name)
+            .setIntent(target)
+            .build()
+    ShortcutManagerCompat.requestPinShortcut(ctxt, pinShortcutInfo, null)
 }
