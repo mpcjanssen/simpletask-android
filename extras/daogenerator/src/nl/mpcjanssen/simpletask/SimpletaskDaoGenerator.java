@@ -17,18 +17,13 @@ public class SimpletaskDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         Schema schema = new Schema(1012, "nl.mpcjanssen.simpletask.dao.gen");
-
-
         addEntities(schema);
-
         new DaoGenerator().generateAll(schema, "app/src/main/java");
-
     }
 
     private static void addEntities(Schema schema) {
         backupSchema(schema);
     }
-
 
     private static void backupSchema(Schema schema) {
         Entity entry = schema.addEntity("TodoFile");

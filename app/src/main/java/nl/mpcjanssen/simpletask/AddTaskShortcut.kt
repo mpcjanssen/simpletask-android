@@ -57,7 +57,6 @@ class AddTaskShortcut : ThemedNoActionBarActivity() {
     }
 
     companion object {
-
         private val TAG = AddTaskShortcut::class.java.simpleName
     }
 }
