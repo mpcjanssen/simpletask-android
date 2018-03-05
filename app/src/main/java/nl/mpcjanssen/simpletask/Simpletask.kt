@@ -856,7 +856,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
                     showToastShort(this, R.string.saved_filters_imported) }
-            } catch (e: IOException) {
+            } catch (e: Exception) {
+                // Need to catch generic exception because Dropbox errors don't inherit from IOException
                 log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
             }
