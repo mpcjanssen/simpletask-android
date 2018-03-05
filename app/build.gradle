@@ -14,8 +14,6 @@ buildscript {
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
-
-        // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.3.1'
     }
 }
 
@@ -23,8 +21,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
-
-// apply plugin: 'com.getkeepsafe.dexcount'
 
 if (!project.hasProperty("storeP12File")) {
     ext.storeP12File = file("/")
