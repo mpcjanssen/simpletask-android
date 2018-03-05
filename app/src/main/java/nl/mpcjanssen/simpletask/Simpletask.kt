@@ -15,11 +15,8 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
-import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.res.Configuration
 import android.content.res.TypedArray
-import android.graphics.Color
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -37,16 +34,12 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.SpannableString
-import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
-import kotlinx.android.synthetic.main.list_header.view.*
-import kotlinx.android.synthetic.main.list_item.view.*
 import kotlinx.android.synthetic.main.main.*
 import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import me.smichel.android.KPreferences.Preferences
@@ -67,8 +60,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     enum class Mode {
         NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
     }
-
-    var textSize: Float = 14.0F
 
     internal var options_menu: Menu? = null
     internal lateinit var m_app: TodoApplication
@@ -104,8 +95,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
-        textSize = Config.tasklistTextSize ?: textSize
-        log.info(TAG, "Text size = $textSize")
         setContentView(R.layout.main)
 
         localBroadcastManager = m_app.localBroadCastManager
@@ -172,7 +161,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun refreshUI() {
         todoQueue("Refresh UI") {
             runOnUiThread {
-                textSize = Config.tasklistTextSize ?: textSize
                 updateConnectivityIndicator()
                 invalidateOptionsMenu()
                 updateFilterBar()
@@ -290,7 +278,105 @@ class Simpletask : ThemedNoActionBarActivity() {
             Config.mainQuery
         }
 
-        val adapter = m_adapter ?: TaskAdapter(query, layoutInflater)
+        val adapter = m_adapter ?: TaskAdapter(query, layoutInflater, {
+            completeTasks(it)
+            // Update the tri state checkbox
+            if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
+        }, {
+            uncompleteTasks(it)
+            // Update the tri state checkbox
+            if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        }, { it ->
+
+            val newSelectedState = !TodoList.isSelected(it)
+            if (newSelectedState) {
+                TodoList.selectTask(it)
+            } else {
+                TodoList.unSelectTask(it)
+            }
+
+            invalidateOptionsMenu()
+        }) {
+            val links = ArrayList<String>()
+            val actions = ArrayList<String>()
+            val t = it
+            for (link in t.links) {
+                actions.add(Simpletask.ACTION_LINK)
+                links.add(link)
+            }
+            for (number in t.phoneNumbers) {
+                actions.add(Simpletask.ACTION_PHONE)
+                links.add(number)
+                actions.add(Simpletask.ACTION_SMS)
+                links.add(number)
+            }
+            for (mail in t.mailAddresses) {
+                actions.add(Simpletask.ACTION_MAIL)
+                links.add(mail)
+            }
+            if (actions.size != 0) {
+
+                val titles = ArrayList<String>()
+                for (i in links.indices) {
+                    when (actions[i]) {
+                        Simpletask.ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
+                        Simpletask.ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
+                        else -> titles.add(i, links[i])
+                    }
+                }
+                val build = AlertDialog.Builder(this@Simpletask)
+                build.setTitle(R.string.task_action)
+                val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
+                build.setItems(titleArray) { _, which ->
+                    val actionIntent: Intent
+                    val url = links[which]
+                    log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
+                    when (actions[which]) {
+                        Simpletask.ACTION_LINK -> if (url.startsWith("todo://")) {
+                            val todoFolder = Config.todoFile.parentFile
+                            val newName = File(todoFolder, url.substring(7))
+                            m_app.switchTodoFile(newName.absolutePath)
+                        } else if (url.startsWith("root://")) {
+                            val rootFolder = Config.localFileRoot
+                            val file = File(rootFolder, url.substring(7))
+                            actionIntent = Intent(Intent.ACTION_VIEW)
+                            val contentUri = Uri.fromFile(file)
+                            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                            actionIntent.setDataAndType(contentUri, mime)
+                            actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            startActivity(actionIntent)
+                        } else {
+                            try {
+                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                startActivity(actionIntent)
+                            } catch (e: ActivityNotFoundException) {
+                                log.info(Simpletask.TAG, "No handler for task action $url")
+                                showToastLong(TodoApplication.app, "No handler for $url" )
+                            }
+                        }
+                        Simpletask.ACTION_PHONE -> {
+                            actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
+                            startActivity(actionIntent)
+                        }
+                        Simpletask.ACTION_SMS -> {
+                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
+                            startActivity(actionIntent)
+                        }
+                        Simpletask.ACTION_MAIL -> {
+                            actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
+                            actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                                    arrayOf(url))
+                            actionIntent.type = "text/plain"
+                            startActivity(actionIntent)
+                        }
+                    }
+                }
+                build.create().show()
+            }
+            true
+        }
         m_adapter = adapter
         showListViewProgress(true)
         m_adapter!!.setFilteredTasks(this, query)
