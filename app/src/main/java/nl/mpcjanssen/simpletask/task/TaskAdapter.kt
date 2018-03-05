@@ -19,8 +19,13 @@ import java.util.ArrayList
 
 class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHolder(itemView)
 
-class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val completeAction: (Task) -> Unit, val uncompleteAction: (Task) -> Unit, val onClickAction: (Task) -> Unit, val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
-    val TAG = "TaskAdapter"
+class TaskAdapter(var query: Query,
+                  private val m_inflater: LayoutInflater,
+                  val completeAction: (Task) -> Unit,
+                  val unCompleteAction: (Task) -> Unit,
+                  val onClickAction: (Task) -> Unit,
+                  val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
+    val tag = "TaskAdapter"
     var textSize: Float = 14.0F
     override fun getItemCount(): Int {
         return visibleLines.size + 1
@@ -53,23 +58,21 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
         }
     }
 
-    fun bindHeader(holder : TaskViewHolder, position: Int) {
+    private fun bindHeader(holder : TaskViewHolder, position: Int) {
         val t = holder.itemView.list_header_title
         val line = visibleLines[position]
         t.text = line.title
         t.textSize = textSize
     }
 
-    fun bindTask (holder : TaskViewHolder, position: Int) {
+    private fun bindTask (holder : TaskViewHolder, position: Int) {
         val line = visibleLines[position]
-        val item = line.task ?: return
+        val task = line.task ?: return
         val view = holder.itemView
         val taskText = view.tasktext
         val taskAge = view.taskage
         val taskDue = view.taskdue
         val taskThreshold = view.taskthreshold
-
-        val task = item
 
         if (Config.showCompleteCheckbox) {
             view.checkBox.visibility = View.VISIBLE
@@ -97,21 +100,21 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
         val ss = SpannableString(txt)
 
         val contexts = task.lists
-        val colorizeStrings = contexts.mapTo(ArrayList<String>()) { "@" + it }
+        val colorizeStrings = contexts.mapTo(ArrayList()) { "@$it" }
         setColor(ss, Color.GRAY, colorizeStrings)
         colorizeStrings.clear()
         val projects = task.tags
-        projects.mapTo(colorizeStrings) { "+" + it }
+        projects.mapTo(colorizeStrings) { "+$it" }
         setColor(ss, Color.GRAY, colorizeStrings)
 
         val priorityColor: Int
         val priority = task.priority
-        when (priority) {
-            Priority.A -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_red_dark)
-            Priority.B -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_orange_dark)
-            Priority.C -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_green_dark)
-            Priority.D -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_blue_dark)
-            else -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.gray67)
+        priorityColor = when (priority) {
+            Priority.A -> ContextCompat.getColor(TodoApplication.app, R.color.simple_red_dark)
+            Priority.B -> ContextCompat.getColor(TodoApplication.app, R.color.simple_orange_dark)
+            Priority.C -> ContextCompat.getColor(TodoApplication.app, R.color.simple_green_dark)
+            Priority.D -> ContextCompat.getColor(TodoApplication.app, R.color.simple_blue_dark)
+            else -> ContextCompat.getColor(TodoApplication.app, R.color.gray67)
         }
         setColor(ss, priorityColor, priority.fileFormat)
         val completed = task.isCompleted()
@@ -129,12 +132,12 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
             // log.info( "Striking through " + task.getText());
             taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            cb.setOnClickListener { uncompleteAction(item) }
+            cb.setOnClickListener { unCompleteAction(task) }
         } else {
             taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 
-            cb.setOnClickListener { completeAction(item) }
+            cb.setOnClickListener { completeAction(task) }
 
         }
         cb.isChecked = completed
@@ -165,26 +168,26 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
             taskThreshold.visibility = View.GONE
         }
         // Set selected state
-        // log.debug(TAG, "Setting selected state ${TodoList.isSelected(item)}")
-        view.isActivated = TodoList.isSelected(item)
+        // log.debug(tag, "Setting selected state ${TodoList.isSelected(item)}")
+        view.isActivated = TodoList.isSelected(task)
 
         // Set click listeners
-        view.setOnClickListener { onClickAction (item) ; it.isActivated = !it.isActivated }
+        view.setOnClickListener { onClickAction (task) ; it.isActivated = !it.isActivated }
 
-        view.setOnLongClickListener { onLongClickAction (item) }
+        view.setOnLongClickListener { onLongClickAction (task) }
     }
     internal var visibleLines = ArrayList<VisibleLine>()
 
     internal fun setFilteredTasks(caller: Simpletask?, newQuery: Query) {
         textSize = Config.tasklistTextSize ?: textSize
-        log.info(TAG, "Text size = $textSize")
+        log.info(tag, "Text size = $textSize")
         query = newQuery
         TodoList.todoQueue("setFilteredTasks") {
             caller?.runOnUiThread {
                 caller.showListViewProgress(true)
             }
             val visibleTasks: List<Task>
-            log.info(TAG, "setFilteredTasks called: " + TodoList)
+            log.info(tag, "setFilteredTasks called: $TodoList")
             val sorts = newQuery.getSort(Config.defaultSorts)
             visibleTasks = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
             val newVisibleLines = ArrayList<VisibleLine>()
@@ -200,7 +203,7 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
                     val manager = caller.listView?.layoutManager as LinearLayoutManager?
                     val position = Config.lastScrollPosition
                     val offset = Config.lastScrollOffset
-                    Logger.info(TAG, "Restoring scroll offset $position, $offset")
+                    Logger.info(tag, "Restoring scroll offset $position, $offset")
                     manager?.scrollToPositionWithOffset(position, offset )
                     Config.lastScrollPosition = -1
                 }
@@ -230,10 +233,10 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
             return 2
         }
         val line = visibleLines[position]
-        if (line.header) {
-            return 0
+        return if (line.header) {
+            0
         } else {
-            return 1
+            1
         }
     }
 
@@ -242,16 +245,15 @@ class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val 
         val ellipsizeKey = TodoApplication.app.getString(R.string.task_text_ellipsizing_pref_key)
         val ellipsizePref = Config.prefs.getString(ellipsizeKey, noEllipsizeValue)
 
-        if (noEllipsizeValue != ellipsizePref) elipsis@ {
-            val truncateAt: TextUtils.TruncateAt?
+        if (noEllipsizeValue != ellipsizePref) ellipsis@ {
             taskText.ellipsize = when (ellipsizePref) {
                 "start" -> TextUtils.TruncateAt.START
                 "end" -> TextUtils.TruncateAt.END
                 "middle" -> TextUtils.TruncateAt.MIDDLE
                 "marquee" -> TextUtils.TruncateAt.MARQUEE
                 else -> {
-                    log.warn(TAG, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
-                    return@elipsis
+                    log.warn(tag, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
+                    return@ellipsis
                 }
             }
 

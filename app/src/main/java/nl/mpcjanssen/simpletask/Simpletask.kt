@@ -131,7 +131,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         showListViewProgress(false)
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
                         updateConnectivityIndicator()
-                    } else if ( receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
+                    } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                             receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                         recreate()
                     }
@@ -173,6 +173,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val i = Intent(this, LuaConfigScreen::class.java)
         startActivity(i)
     }
+
     private fun showHelp() {
         val i = Intent(this, HelpScreen::class.java)
         startActivity(i)
@@ -278,105 +279,107 @@ class Simpletask : ThemedNoActionBarActivity() {
             Config.mainQuery
         }
 
-        val adapter = m_adapter ?: TaskAdapter(query, layoutInflater, {
-            completeTasks(it)
-            // Update the tri state checkbox
-            if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
-        }, {
-            uncompleteTasks(it)
-            // Update the tri state checkbox
-            if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
-        }, { it ->
-
-            val newSelectedState = !TodoList.isSelected(it)
-            if (newSelectedState) {
-                TodoList.selectTask(it)
-            } else {
-                TodoList.unSelectTask(it)
-            }
-
-            invalidateOptionsMenu()
-        }) {
-            val links = ArrayList<String>()
-            val actions = ArrayList<String>()
-            val t = it
-            for (link in t.links) {
-                actions.add(Simpletask.ACTION_LINK)
-                links.add(link)
-            }
-            for (number in t.phoneNumbers) {
-                actions.add(Simpletask.ACTION_PHONE)
-                links.add(number)
-                actions.add(Simpletask.ACTION_SMS)
-                links.add(number)
-            }
-            for (mail in t.mailAddresses) {
-                actions.add(Simpletask.ACTION_MAIL)
-                links.add(mail)
-            }
-            if (actions.size != 0) {
-
-                val titles = ArrayList<String>()
-                for (i in links.indices) {
-                    when (actions[i]) {
-                        Simpletask.ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
-                        Simpletask.ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
-                        else -> titles.add(i, links[i])
+        val adapter = m_adapter ?: TaskAdapter(query, layoutInflater,
+                completeAction = {
+                    completeTasks(it)
+                    // Update the tri state checkbox
+                    if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
+                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
+                },
+                unCompleteAction = {
+                    uncompleteTasks(it)
+                    // Update the tri state checkbox
+                    if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
+                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+                },
+                onClickAction = {
+                    val newSelectedState = !TodoList.isSelected(it)
+                    if (newSelectedState) {
+                        TodoList.selectTask(it)
+                    } else {
+                        TodoList.unSelectTask(it)
                     }
-                }
-                val build = AlertDialog.Builder(this@Simpletask)
-                build.setTitle(R.string.task_action)
-                val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
-                build.setItems(titleArray) { _, which ->
-                    val actionIntent: Intent
-                    val url = links[which]
-                    log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
-                    when (actions[which]) {
-                        Simpletask.ACTION_LINK -> if (url.startsWith("todo://")) {
-                            val todoFolder = Config.todoFile.parentFile
-                            val newName = File(todoFolder, url.substring(7))
-                            m_app.switchTodoFile(newName.absolutePath)
-                        } else if (url.startsWith("root://")) {
-                            val rootFolder = Config.localFileRoot
-                            val file = File(rootFolder, url.substring(7))
-                            actionIntent = Intent(Intent.ACTION_VIEW)
-                            val contentUri = Uri.fromFile(file)
-                            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
-                            actionIntent.setDataAndType(contentUri, mime)
-                            actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            startActivity(actionIntent)
-                        } else {
-                            try {
-                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                startActivity(actionIntent)
-                            } catch (e: ActivityNotFoundException) {
-                                log.info(Simpletask.TAG, "No handler for task action $url")
-                                showToastLong(TodoApplication.app, "No handler for $url" )
+                    invalidateOptionsMenu()
+                },
+                onLongClickAction = {
+                    val links = ArrayList<String>()
+                    val actions = ArrayList<String>()
+                    val t = it
+                    for (link in t.links) {
+                        actions.add(Simpletask.ACTION_LINK)
+                        links.add(link)
+                    }
+                    for (number in t.phoneNumbers) {
+                        actions.add(Simpletask.ACTION_PHONE)
+                        links.add(number)
+                        actions.add(Simpletask.ACTION_SMS)
+                        links.add(number)
+                    }
+                    for (mail in t.mailAddresses) {
+                        actions.add(Simpletask.ACTION_MAIL)
+                        links.add(mail)
+                    }
+                    if (actions.size != 0) {
+
+                        val titles = ArrayList<String>()
+                        for (i in links.indices) {
+                            when (actions[i]) {
+                                Simpletask.ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
+                                Simpletask.ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
+                                else -> titles.add(i, links[i])
                             }
                         }
-                        Simpletask.ACTION_PHONE -> {
-                            actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
-                            startActivity(actionIntent)
+                        val build = AlertDialog.Builder(this@Simpletask)
+                        build.setTitle(R.string.task_action)
+                        val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
+                        build.setItems(titleArray) { _, which ->
+                            val actionIntent: Intent
+                            val url = links[which]
+                            log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
+                            when (actions[which]) {
+                                Simpletask.ACTION_LINK -> if (url.startsWith("todo://")) {
+                                    val todoFolder = Config.todoFile.parentFile
+                                    val newName = File(todoFolder, url.substring(7))
+                                    m_app.switchTodoFile(newName.absolutePath)
+                                } else if (url.startsWith("root://")) {
+                                    val rootFolder = Config.localFileRoot
+                                    val file = File(rootFolder, url.substring(7))
+                                    actionIntent = Intent(Intent.ACTION_VIEW)
+                                    val contentUri = Uri.fromFile(file)
+                                    val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                                    actionIntent.setDataAndType(contentUri, mime)
+                                    actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    startActivity(actionIntent)
+                                } else {
+                                    try {
+                                        actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                        startActivity(actionIntent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        log.info(Simpletask.TAG, "No handler for task action $url")
+                                        showToastLong(TodoApplication.app, "No handler for $url")
+                                    }
+                                }
+                                Simpletask.ACTION_PHONE -> {
+                                    actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
+                                    startActivity(actionIntent)
+                                }
+                                Simpletask.ACTION_SMS -> {
+                                    actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
+                                    startActivity(actionIntent)
+                                }
+                                Simpletask.ACTION_MAIL -> {
+                                    actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
+                                    actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                                            arrayOf(url))
+                                    actionIntent.type = "text/plain"
+                                    startActivity(actionIntent)
+                                }
+                            }
                         }
-                        Simpletask.ACTION_SMS -> {
-                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
-                            startActivity(actionIntent)
-                        }
-                        Simpletask.ACTION_MAIL -> {
-                            actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                            actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                                    arrayOf(url))
-                            actionIntent.type = "text/plain"
-                            startActivity(actionIntent)
-                        }
+                        build.create().show()
                     }
-                }
-                build.create().show()
-            }
-            true
-        }
+                    true
+                })
         m_adapter = adapter
         showListViewProgress(true)
         m_adapter!!.setFilteredTasks(this, query)
@@ -523,7 +526,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val initialCompleteTasks = ArrayList<Task>()
                 val initialIncompleteTasks = ArrayList<Task>()
 
-                val first : Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
+                val first: Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
 
                 val cbState: Boolean? = selectedTasks.fold(first) { stateSoFar, task ->
                     val completed = task.isCompleted()
@@ -545,31 +548,32 @@ class Simpletask : ThemedNoActionBarActivity() {
                     when (cbState) {
                         false -> completeTasks(selectedTasks)
                         true -> uncompleteTasks(selectedTasks)
-                      null -> {
-                          val popup = PopupMenu(this, toolbar)
-                          val menuInflater = popup.menuInflater
-                          menuInflater.inflate(R.menu.completion_popup, popup.menu)
-                          popup.show()
-                          popup.setOnMenuItemClickListener popup@ { item ->
-                              val menuId = item.itemId
-                              when (menuId) {
-                                  R.id.complete -> completeTasks(selectedTasks)
-                                  R.id.uncomplete -> uncompleteTasks(selectedTasks)
-                              }
-                              return@popup true
-                          }
-                      }
+                        null -> {
+                            val popup = PopupMenu(this, toolbar)
+                            val menuInflater = popup.menuInflater
+                            menuInflater.inflate(R.menu.completion_popup, popup.menu)
+                            popup.show()
+                            popup.setOnMenuItemClickListener popup@{ item ->
+                                val menuId = item.itemId
+                                when (menuId) {
+                                    R.id.complete -> completeTasks(selectedTasks)
+                                    R.id.uncomplete -> uncompleteTasks(selectedTasks)
+                                }
+                                return@popup true
+                            }
+                        }
                     }
                     return@setOnMenuItemClickListener true
                 }
 
                 selection_fab.visibility = View.VISIBLE
                 selection_fab.setOnClickListener {
-                    createCalendarAppointment(selectedTasks) }
+                    createCalendarAppointment(selectedTasks)
+                }
             }
 
             Mode.MAIN -> {
-                val a : TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
+                val a: TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
                 try {
                     val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
                     actionBar.setBackgroundDrawable(colorPrimary)
@@ -628,7 +632,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun populateSearch(menu: Menu?) {
-        if (menu==null) {
+        if (menu == null) {
             return
         }
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
@@ -700,7 +704,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
-            TodoList.notifyTasklistChanged(Config.todoFileName,  m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
         })
         builder.show()
 
@@ -717,7 +721,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (Config.isAutoArchive) {
             archiveTasks()
         }
-        TodoList.notifyTasklistChanged(Config.todoFileName,  m_app, true)
+        TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
     }
 
     private fun uncompleteTasks(task: Task) {
@@ -773,7 +777,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun deleteTasks(tasks: List<Task>) {
         val numTasks = tasks.size
         val title = getString(R.string.delete_task_title)
-                    .replaceFirst(Regex("%s"), numTasks.toString())
+                .replaceFirst(Regex("%s"), numTasks.toString())
         val delete = DialogInterface.OnClickListener { _, _ ->
             TodoList.removeAll(tasks)
             TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
@@ -783,7 +787,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
-    private fun archiveTasks() { archiveTasks(null, false) }
+    private fun archiveTasks() {
+        archiveTasks(null, false)
+    }
+
     private fun archiveTasks(tasks: List<Task>?, showDialog: Boolean = true) {
         val archiveAction = {
             if (Config.todoFileName == m_app.doneFileName) {
@@ -796,7 +803,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (showDialog) {
             val numTasks = (tasks ?: TodoList.completedTasks).size.toString()
             val title = getString(R.string.archive_task_title)
-                         .replaceFirst(Regex("%s"), numTasks)
+                    .replaceFirst(Regex("%s"), numTasks)
             val archive = DialogInterface.OnClickListener { _, _ -> archiveAction() }
             showConfirmationDialog(this, R.string.delete_task_message, archive, title)
         } else {
@@ -827,7 +834,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                     }
                 }
             }
-            R.id.search -> { }
+            R.id.search -> {
+            }
             R.id.preferences -> startPreferencesActivity()
             R.id.filter -> startFilterActivity()
             R.id.context_delete -> deleteTasks(checkedTasks)
@@ -885,7 +893,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Explicitly set start and end date/time.
         // Some calendar providers need this.
         val dueDate = checkedTasks[0].dueDate
-        val calDate = if (checkedTasks.size == 1 && dueDate != null ) {
+        val calDate = if (checkedTasks.size == 1 && dueDate != null) {
             val year = dueDate.substring(0, 4).toInt()
             val month = dueDate.substring(5, 7).toInt() - 1
             val day = dueDate.substring(8, 10).toInt()
@@ -919,7 +927,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    fun importFilters (importFile: File) {
+    fun importFilters(importFile: File) {
         val r = Runnable {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
@@ -931,7 +939,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-                    showToastShort(this, R.string.saved_filters_imported) }
+                    showToastShort(this, R.string.saved_filters_imported)
+                }
             } catch (e: IOException) {
                 log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
@@ -940,7 +949,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         Thread(r).start()
     }
 
-    fun exportFilters (exportFile: File) {
+    fun exportFilters(exportFile: File) {
         val queries = QueryStore.ids().map {
             QueryStore.get(it)
         }
@@ -959,6 +968,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         Thread(r).start()
     }
+
     /**
      * Handle add filter click *
      */
@@ -1050,9 +1060,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateNavDrawer() {
-        val idQueryPairs = QueryStore.ids().map { Pair(it,  QueryStore.get(it)) }.toList()
+        val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
         val hasQueries = !idQueryPairs.isEmpty()
-        val queries = idQueryPairs.sortedBy { it.second.name  }
+        val queries = idQueryPairs.sortedBy { it.second.name }
         val names = if (hasQueries) {
             queries.map { it.second.name }
         } else {
@@ -1099,17 +1109,17 @@ class Simpletask : ThemedNoActionBarActivity() {
         val target = Intent(Constants.INTENT_START_FILTER)
         namedQuery.query.saveInIntent(target)
 
-        val iconRes = IconCompat.createWithResource(this,  R.drawable.ic_launcher)
+        val iconRes = IconCompat.createWithResource(this, R.drawable.ic_launcher)
         val pinShortcutInfo = ShortcutInfoCompat.Builder(this, "simpletaskLauncher")
-        .setIcon(iconRes)
-        .setShortLabel(namedQuery.name)
-        .setIntent(target)
-        .build()
+                .setIcon(iconRes)
+                .setShortLabel(namedQuery.name)
+                .setIntent(target)
+                .build()
         ShortcutManagerCompat.requestPinShortcut(this, pinShortcutInfo, null)
     }
 
     private fun deleteSavedQuery(id: String) {
-       QueryStore.delete(id)
+        QueryStore.delete(id)
         updateNavDrawer()
     }
 
@@ -1133,7 +1143,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.setPositiveButton("Ok") { _, _ ->
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
 
-            value?. let {
+            value?.let {
                 QueryStore.rename(squery, it)
                 updateNavDrawer()
             } ?: showToastShort(applicationContext, R.string.filter_name_empty)
@@ -1145,8 +1155,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateFilterDrawer() {
-        val decoratedContexts = alfaSortList(TodoList.contexts, Config.sortCaseSensitive, prefix="-").map { "@" + it }
-        val decoratedProjects = alfaSortList(TodoList.projects, Config.sortCaseSensitive, prefix="-").map { "+" + it }
+        val decoratedContexts = alfaSortList(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@" + it }
+        val decoratedProjects = alfaSortList(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+" + it }
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
@@ -1194,8 +1204,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
 
-
-
     @SuppressLint("InflateParams")
     private fun updateItemsDialog(title: String,
                                   checkedTasks: List<Task>,
@@ -1240,7 +1248,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         builder.setPositiveButton(R.string.ok) { _, _ ->
             val updatedValues = itemAdapter.currentState
             for (i in 0..updatedValues.lastIndex) {
-                when (updatedValues[i] ) {
+                when (updatedValues[i]) {
                     false -> {
                         checkedTasks.forEach {
                             removeFromTask(it, sortedAllItems[i])

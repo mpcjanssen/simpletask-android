@@ -26,7 +26,7 @@ public class LogItemDao extends AbstractDao<LogItem, Long> {
         public final static Property Id = new Property(0, Long.class, "prefName", true, "_id");
         public final static Property Timestamp = new Property(1, java.util.Date.class, "timestamp", false, "TIMESTAMP");
         public final static Property Severity = new Property(2, String.class, "severity", false, "SEVERITY");
-        public final static Property Tag = new Property(3, String.class, "tag", false, "TAG");
+        public final static Property Tag = new Property(3, String.class, "tag", false, "tag");
         public final static Property Message = new Property(4, String.class, "message", false, "MESSAGE");
         public final static Property Exception = new Property(5, String.class, "exception", false, "EXCEPTION");
     }
@@ -47,7 +47,7 @@ public class LogItemDao extends AbstractDao<LogItem, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: prefName
                 "\"TIMESTAMP\" INTEGER NOT NULL ," + // 1: timestamp
                 "\"SEVERITY\" TEXT NOT NULL ," + // 2: severity
-                "\"TAG\" TEXT NOT NULL ," + // 3: tag
+                "\"tag\" TEXT NOT NULL ," + // 3: tag
                 "\"MESSAGE\" TEXT NOT NULL ," + // 4: message
                 "\"EXCEPTION\" TEXT NOT NULL );"); // 5: exception
     }
