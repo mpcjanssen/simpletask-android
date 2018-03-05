@@ -1,13 +1,8 @@
 package nl.mpcjanssen.simpletask.task
 
-import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
-import android.net.Uri
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableString
@@ -15,19 +10,18 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_header.view.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.util.ArrayList
 
 class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHolder(itemView)
 
-class TaskAdapter(var query: Query?, private val m_inflater: LayoutInflater) : RecyclerView.Adapter <TaskViewHolder>() {
+class TaskAdapter(var query: Query, private val m_inflater: LayoutInflater, val completeAction: (Task) -> Unit, val uncompleteAction: (Task) -> Unit, val onClickAction: (Task) -> Unit, val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
     val TAG = "TaskAdapter"
+    var textSize: Float = 14.0F
     override fun getItemCount(): Int {
         return visibleLines.size + 1
     }
@@ -94,12 +88,12 @@ class TaskAdapter(var query: Query?, private val m_inflater: LayoutInflater) : R
                 is CompletedDateToken -> !Config.hasExtendedTaskView
                 is DueDateToken -> !Config.hasExtendedTaskView
                 is ThresholdDateToken -> !Config.hasExtendedTaskView
-                is ListToken -> !(query?.hideLists?:false)
-                is TagToken -> !(query?.hideTags?:false)
+                is ListToken -> !query.hideLists
+                is TagToken -> !query.hideTags
                 else -> true
             }
         }
-        val txt = LuaInterpreter.onDisplayCallback(activeQuery.luaModule, task) ?: task.showParts(tokensToShowFilter)
+        val txt = LuaInterpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
         val ss = SpannableString(txt)
 
         val contexts = task.lists
@@ -113,11 +107,11 @@ class TaskAdapter(var query: Query?, private val m_inflater: LayoutInflater) : R
         val priorityColor: Int
         val priority = task.priority
         when (priority) {
-            Priority.A -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_red_dark)
-            Priority.B -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_orange_dark)
-            Priority.C -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_green_dark)
-            Priority.D -> priorityColor = ContextCompat.getColor(m_app, R.color.simple_blue_dark)
-            else -> priorityColor = ContextCompat.getColor(m_app, R.color.gray67)
+            Priority.A -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_red_dark)
+            Priority.B -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_orange_dark)
+            Priority.C -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_green_dark)
+            Priority.D -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_blue_dark)
+            else -> priorityColor = ContextCompat.getColor(TodoApplication.app, R.color.gray67)
         }
         setColor(ss, priorityColor, priority.fileFormat)
         val completed = task.isCompleted()
@@ -135,30 +129,20 @@ class TaskAdapter(var query: Query?, private val m_inflater: LayoutInflater) : R
             // log.info( "Striking through " + task.getText());
             taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            cb.setOnClickListener({
-                uncompleteTasks(item)
-                // Update the tri state checkbox
-                if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
-                TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
-            })
+            cb.setOnClickListener { uncompleteAction(item) }
         } else {
             taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 
-            cb.setOnClickListener {
-                completeTasks(item)
-                // Update the tri state checkbox
-                if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
-                TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
-            }
+            cb.setOnClickListener { completeAction(item) }
 
         }
         cb.isChecked = completed
 
-        val relAge = getRelativeAge(task, m_app)
-        val relDue = getRelativeDueDate(task, m_app)
-        val relativeThresholdDate = getRelativeThresholdDate(task, m_app)
-        if (!isEmptyOrNull(relAge) && !activeQuery.hideCreateDate) {
+        val relAge = getRelativeAge(task, TodoApplication.app)
+        val relDue = getRelativeDueDate(task, TodoApplication.app)
+        val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
+        if (!isEmptyOrNull(relAge) && !query.hideCreateDate) {
             taskAge.text = relAge
             taskAge.visibility = View.VISIBLE
         } else {
@@ -185,101 +169,15 @@ class TaskAdapter(var query: Query?, private val m_inflater: LayoutInflater) : R
         view.isActivated = TodoList.isSelected(item)
 
         // Set click listeners
-        view.setOnClickListener { it ->
+        view.setOnClickListener { onClickAction (item) ; it.isActivated = !it.isActivated }
 
-            val newSelectedState = !TodoList.isSelected(item)
-            if (newSelectedState) {
-                TodoList.selectTask(item)
-            } else {
-                TodoList.unSelectTask(item)
-            }
-            it.isActivated = newSelectedState
-            invalidateOptionsMenu()
-        }
-
-        view.setOnLongClickListener {
-            val links = ArrayList<String>()
-            val actions = ArrayList<String>()
-            val t = item
-            for (link in t.links) {
-                actions.add(Simpletask.ACTION_LINK)
-                links.add(link)
-            }
-            for (number in t.phoneNumbers) {
-                actions.add(Simpletask.ACTION_PHONE)
-                links.add(number)
-                actions.add(Simpletask.ACTION_SMS)
-                links.add(number)
-            }
-            for (mail in t.mailAddresses) {
-                actions.add(Simpletask.ACTION_MAIL)
-                links.add(mail)
-            }
-            if (actions.size != 0) {
-
-                val titles = ArrayList<String>()
-                for (i in links.indices) {
-                    when (actions[i]) {
-                        Simpletask.ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
-                        Simpletask.ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
-                        else -> titles.add(i, links[i])
-                    }
-                }
-                val build = AlertDialog.Builder(this@Simpletask)
-                build.setTitle(R.string.task_action)
-                val titleArray = titles.toArray<String>(arrayOfNulls<String>(titles.size))
-                build.setItems(titleArray) { _, which ->
-                    val actionIntent: Intent
-                    val url = links[which]
-                    log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
-                    when (actions[which]) {
-                        Simpletask.ACTION_LINK -> if (url.startsWith("todo://")) {
-                            val todoFolder = Config.todoFile.parentFile
-                            val newName = File(todoFolder, url.substring(7))
-                            m_app.switchTodoFile(newName.absolutePath)
-                        } else if (url.startsWith("root://")) {
-                            val rootFolder = Config.localFileRoot
-                            val file = File(rootFolder, url.substring(7))
-                            actionIntent = Intent(Intent.ACTION_VIEW)
-                            val contentUri = Uri.fromFile(file)
-                            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
-                            actionIntent.setDataAndType(contentUri, mime)
-                            actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            startActivity(actionIntent)
-                        } else {
-                            try {
-                                actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                startActivity(actionIntent)
-                            } catch (e: ActivityNotFoundException) {
-                                log.info(Simpletask.TAG, "No handler for task action $url")
-                                showToastLong(TodoApplication.app, "No handler for $url" )
-                            }
-                        }
-                        Simpletask.ACTION_PHONE -> {
-                            actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
-                            startActivity(actionIntent)
-                        }
-                        Simpletask.ACTION_SMS -> {
-                            actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
-                            startActivity(actionIntent)
-                        }
-                        Simpletask.ACTION_MAIL -> {
-                            actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                            actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                                    arrayOf(url))
-                            actionIntent.type = "text/plain"
-                            startActivity(actionIntent)
-                        }
-                    }
-                }
-                build.create().show()
-            }
-            true
-        }
+        view.setOnLongClickListener { onLongClickAction (item) }
     }
     internal var visibleLines = ArrayList<VisibleLine>()
 
     internal fun setFilteredTasks(caller: Simpletask?, newQuery: Query) {
+        textSize = Config.tasklistTextSize ?: textSize
+        log.info(TAG, "Text size = $textSize")
         query = newQuery
         TodoList.todoQueue("setFilteredTasks") {
             caller?.runOnUiThread {
@@ -297,12 +195,12 @@ class TaskAdapter(var query: Query?, private val m_inflater: LayoutInflater) : R
                 // Replace the array in the main thread to prevent OutOfIndex exceptions
                 visibleLines = newVisibleLines
                 notifyDataSetChanged()
-                caller?.showListViewProgress(false)
+                caller.showListViewProgress(false)
                 if (Config.lastScrollPosition != -1) {
-                    val manager = listView?.layoutManager as LinearLayoutManager?
+                    val manager = caller.listView?.layoutManager as LinearLayoutManager?
                     val position = Config.lastScrollPosition
                     val offset = Config.lastScrollOffset
-                    Logger.info(Simpletask.TAG, "Restoring scroll offset $position, $offset")
+                    Logger.info(TAG, "Restoring scroll offset $position, $offset")
                     manager?.scrollToPositionWithOffset(position, offset )
                     Config.lastScrollPosition = -1
                 }
