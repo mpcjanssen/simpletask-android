@@ -217,24 +217,6 @@ class TodoApplication : MultiDexApplication(),
 
     }
 
-    fun getSortString(key: String): String {
-        if (Config.useTodoTxtTerms) {
-            if ("by_context" == key) {
-                return getString(R.string.by_context_todotxt)
-            }
-            if ("by_project" == key) {
-                return getString(R.string.by_project_todotxt)
-            }
-        }
-        val keys = Arrays.asList(*resources.getStringArray(R.array.sortKeys))
-        val values = resources.getStringArray(R.array.sort)
-        val index = keys.indexOf(key)
-        if (index == -1) {
-            return getString(R.string.none)
-        }
-        return values[index]
-    }
-
     companion object {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
