@@ -10,6 +10,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
 import java.io.IOException
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 object Config : Preferences(TodoApplication.app) {
@@ -262,4 +263,23 @@ object Config : Preferences(TodoApplication.app) {
         }
     var changesPending by BooleanPreference(R.string.changes_pending, false)
     var useUUIDs by BooleanPreference(R.string.use_uuids, false)
+
+    fun getSortString(key: String): String {
+        if (useTodoTxtTerms) {
+            if ("by_context" == key) {
+                return getString(R.string.by_context_todotxt)
+            }
+            if ("by_project" == key) {
+                return getString(R.string.by_project_todotxt)
+            }
+        }
+        val keys = Arrays.asList(*TodoApplication.app.resources.getStringArray(R.array.sortKeys))
+        val values = TodoApplication.app.resources.getStringArray(R.array.sort)
+        val index = keys.indexOf(key)
+        if (index == -1) {
+            return getString(R.string.none)
+        }
+        return values[index]
+    }
+
 }
