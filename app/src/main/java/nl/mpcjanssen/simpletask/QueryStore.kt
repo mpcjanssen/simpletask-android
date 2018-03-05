@@ -13,11 +13,16 @@ object QueryStore {
     fun ids() : List<String> {
         val prefs_path = "../shared_prefs"
         val prefs_xml = File(TodoApplication.app.filesDir, "$prefs_path/")
-        val ids =  prefs_xml.listFiles { dir, name ->   name.startsWith(ID_PREFIX) }
-                .map { it.relativeTo(prefs_xml).name }
-                .map {it -> it.substringBeforeLast(".xml")}
-        Logger.debug(TAG, "Saved filter ids: $ids")
-        return ids
+        if (prefs_xml.exists() && prefs_xml.isDirectory) {
+            val ids = prefs_xml.listFiles { dir, name -> name.startsWith(ID_PREFIX) }
+                    .map { it.relativeTo(prefs_xml).name }
+                    .map { it -> it.substringBeforeLast(".xml") }
+            Logger.debug(TAG, "Saved filter ids: $ids")
+            return ids
+        } else {
+            Logger.warn(TAG, "No pref_xml folder ${prefs_xml.path}")
+            return emptyList()
+        }
     }
 
 
