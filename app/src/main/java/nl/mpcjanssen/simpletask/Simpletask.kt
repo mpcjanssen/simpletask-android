@@ -28,8 +28,6 @@ import android.support.v4.content.pm.ShortcutInfoCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
 import android.support.v4.view.GravityCompat
-import android.support.v4.view.MenuItemCompat
-import android.support.v4.view.MenuItemCompat.OnActionExpandListener
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -61,7 +59,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
     }
 
-    internal var options_menu: Menu? = null
+    private var options_menu: Menu? = null
     internal lateinit var m_app: TodoApplication
 
     internal var m_adapter: TaskAdapter? = null
@@ -74,7 +72,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
-    internal var m_scrollPosition = 0
+    private var m_scrollPosition = 0
 
     private var log = Logger
 
@@ -182,7 +180,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onSearchRequested(): Boolean {
         options_menu?.let {
             val searchMenuItem = it.findItem(R.id.search)
-            MenuItemCompat.expandActionView(searchMenuItem)
+            searchMenuItem.expandActionView()
             return true
         }
         return false
@@ -191,7 +189,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        m_drawerToggle?.let { it.syncState() }
+        m_drawerToggle?.syncState()
     }
 
     private fun selectedTasksAsString(): String {
@@ -212,7 +210,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        m_drawerToggle?.let { it.onConfigurationChanged(newConfig) }
+        m_drawerToggle?.onConfigurationChanged(newConfig)
     }
 
     private fun handleIntent() {
@@ -337,21 +335,23 @@ class Simpletask : ThemedNoActionBarActivity() {
                             val url = links[which]
                             log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
                             when (actions[which]) {
-                                Simpletask.ACTION_LINK -> if (url.startsWith("todo://")) {
-                                    val todoFolder = Config.todoFile.parentFile
-                                    val newName = File(todoFolder, url.substring(7))
-                                    m_app.switchTodoFile(newName.absolutePath)
-                                } else if (url.startsWith("root://")) {
-                                    val rootFolder = Config.localFileRoot
-                                    val file = File(rootFolder, url.substring(7))
-                                    actionIntent = Intent(Intent.ACTION_VIEW)
-                                    val contentUri = Uri.fromFile(file)
-                                    val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
-                                    actionIntent.setDataAndType(contentUri, mime)
-                                    actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                    startActivity(actionIntent)
-                                } else {
-                                    try {
+                                Simpletask.ACTION_LINK -> when {
+                                    url.startsWith("todo://") -> {
+                                        val todoFolder = Config.todoFile.parentFile
+                                        val newName = File(todoFolder, url.substring(7))
+                                        m_app.switchTodoFile(newName.absolutePath)
+                                    }
+                                    url.startsWith("root://") -> {
+                                        val rootFolder = Config.localFileRoot
+                                        val file = File(rootFolder, url.substring(7))
+                                        actionIntent = Intent(Intent.ACTION_VIEW)
+                                        val contentUri = Uri.fromFile(file)
+                                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                                        actionIntent.setDataAndType(contentUri, mime)
+                                        actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(actionIntent)
+                                    }
+                                    else -> try {
                                         actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                         startActivity(actionIntent)
                                     } catch (e: ActivityNotFoundException) {
@@ -647,7 +647,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         searchView.setIconifiedByDefault(false)
-        MenuItemCompat.setOnActionExpandListener(searchMenu, object : OnActionExpandListener {
+        searchMenu.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 // Do something when collapsed
                 return true // Return true to collapse action view
@@ -927,7 +927,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    fun importFilters(importFile: File) {
+    private fun importFilters(importFile: File) {
         val r = Runnable {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
@@ -949,7 +949,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         Thread(r).start()
     }
 
-    fun exportFilters(exportFile: File) {
+    private fun exportFilters(exportFile: File) {
         val queries = QueryStore.ids().map {
             QueryStore.get(it)
         }
@@ -1026,25 +1026,25 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (Intent.ACTION_SEARCH == intent.action) {
-            val currentIntent = getIntent()
-            currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY))
-            setIntent(currentIntent)
-            options_menu?.findItem(R.id.search)?.collapseActionView() ?: return
+        when {
+            Intent.ACTION_SEARCH == intent.action -> {
+                val currentIntent = getIntent()
+                currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY))
+                setIntent(currentIntent)
+                options_menu?.findItem(R.id.search)?.collapseActionView() ?: return
 
-        } else if (CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action) {
-            // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-            log.warn(TAG, "Not implemented search")
-        } else if (intent.extras != null) {
-            // Only change intent if it actually contains a filter
-            setIntent(intent)
+            }
+            CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action -> // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
+                log.warn(TAG, "Not implemented search")
+            intent.extras != null -> // Only change intent if it actually contains a filter
+                setIntent(intent)
         }
         Config.lastScrollPosition = -1
-        log.info(TAG, "onNewIntent: " + intent)
+        log.info(TAG, "onNewIntent: $intent")
 
     }
 
-    internal fun clearFilter() {
+    private fun clearFilter() {
         Config.mainQuery = Config.mainQuery.clear()
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
