@@ -50,7 +50,6 @@ import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.io.File
-import java.io.IOException
 import java.util.*
 import android.R.id as androidId
 
@@ -1046,6 +1045,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun clearFilter() {
         Config.mainQuery = Config.mainQuery.clear()
+        intent = Config.mainQuery.saveInIntent(intent)
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
     }
