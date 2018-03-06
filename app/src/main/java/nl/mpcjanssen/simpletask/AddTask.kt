@@ -7,10 +7,7 @@ package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
@@ -32,6 +29,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
 class AddTask : ThemedActionBarActivity() {
+    private var start_text: String = ""
 
     private val share_text: String? = null
 
@@ -110,6 +108,7 @@ class AddTask : ThemedActionBarActivity() {
                 } else {
                     ""
                 }
+                start_text = preFillString
                 textInputField.setText(preFillString)
                 // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
                 // like Swype where ENTER keyCode is not generated.
@@ -311,8 +310,16 @@ class AddTask : ThemedActionBarActivity() {
     }
 
     private fun finishEdit() {
-        TodoList.clearPendingEdits()
-        finish()
+        val close = DialogInterface.OnClickListener { _, _ ->
+            TodoList.clearPendingEdits()
+            finish()
+        }
+        if (textInputField.text.toString() != start_text) {
+            showConfirmationDialog(this, R.string.cancel_changes, close, null)
+        } else {
+            close.onClick(null,0)
+        }
+
     }
 
     override fun onBackPressed() {
