@@ -30,7 +30,7 @@ open class ActionQueue(val qName: String) : Thread() {
             }
         }
         log.info(qName, "-> $description")
-        mHandler?.post(LoggingRunnable(qName,"$description", r))
+        mHandler?.post(LoggingRunnable(qName,description, r))
     }
 }
 
