@@ -254,7 +254,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             m_drawerToggle!!.syncState()
         }
 
-        // Show search or filter results
+        // Show search or applyFilter results
         val currentIntent = intent
         val query = if (Constants.INTENT_START_FILTER == currentIntent.action) {
             log.info(TAG, "handleIntent")
@@ -266,7 +266,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            val newQuery = Query("mainui", true).initFromIntent(currentIntent)
+            val newQuery = Query("mainui").initFromIntent(currentIntent)
             Config.mainQuery = newQuery
             intent = newQuery.saveInIntent(intent)
             newQuery
@@ -292,9 +292,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 onClickAction = {
                     val newSelectedState = !TodoList.isSelected(it)
                     if (newSelectedState) {
-                        TodoList.selectTask(it)
+                        TodoList.selectTasks(listOf(it))
                     } else {
-                        TodoList.unSelectTask(it)
+                        TodoList.unSelectTasks(listOf(it))
                     }
                     invalidateOptionsMenu()
                 },
@@ -381,7 +381,23 @@ class Simpletask : ThemedNoActionBarActivity() {
                 })
         m_adapter = adapter
         showListViewProgress(true)
+        if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
+            TodoList.todoQueue("Selection from intent") {
+                val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+                currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
+                setIntent(currentIntent)
+                if (position > -1) {
+                    val itemAtPosition = TodoList.getTaskAt(position)
+                    itemAtPosition?.let {
+                        TodoList.clearSelection()
+                        TodoList.selectTasks(listOf(itemAtPosition))
+                    }
+
+                }
+            }
+        }
         m_adapter!!.setFilteredTasks(this, query)
+
 
         listView?.layoutManager = LinearLayoutManager(this)
         listView?.adapter = this.m_adapter
@@ -390,19 +406,9 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         // If we were started from the widget, select the pushed task
         // next scroll to the first selected item
+
+
         TodoActionQueue.add("Scroll selection", Runnable {
-            if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-                val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
-                currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-                setIntent(currentIntent)
-                if (position > -1) {
-                    val itemAtPosition = TodoList.getTaskAt(position)
-                    itemAtPosition?.let {
-                        TodoList.clearSelection()
-                        TodoList.selectTask(itemAtPosition)
-                    }
-                }
-            }
             val selection = TodoList.selectedTasks
             if (selection.isNotEmpty()) {
                 val selectedTask = selection[0]
@@ -433,7 +439,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             Config.mainQuery.hasFilter() -> View.VISIBLE
             else -> View.GONE
         }
-        TodoList.todoQueue("Update filter bar") {
+        TodoList.todoQueue("Update applyFilter bar") {
             runOnUiThread {
                 val count = m_adapter?.countVisibleTasks ?: 0
                 val total = TodoList.getTaskCount()
@@ -468,7 +474,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.info(TAG, "onResume")
         TodoList.reload(TodoApplication.app, reason = "Main activity resume")
         handleIntent()
-        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+        refreshUI()
     }
 
     override fun onPause() {
@@ -921,7 +927,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     /**
-     * Handle clear filter click *
+     * Handle clear applyFilter click *
      */
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
@@ -932,7 +938,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
                     jsonFilters.keys().forEach {
-                        val newQuery = Query(luaModule = "mainui", showSelected = true)
+                        val newQuery = Query(luaModule = "mainui")
                         newQuery.initFromJSON(jsonFilters.getJSONObject(it))
                         QueryStore.save(newQuery, it)
 
@@ -969,7 +975,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     /**
-     * Handle add filter click *
+     * Handle add applyFilter click *
      */
     fun onAddFilterClick() {
         val alert = AlertDialog.Builder(this)
@@ -1035,7 +1041,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action -> // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
                 log.warn(TAG, "Not implemented search")
-            intent.extras != null -> // Only change intent if it actually contains a filter
+            intent.extras != null -> // Only change intent if it actually contains a applyFilter
                 setIntent(intent)
         }
         Config.lastScrollPosition = -1

@@ -17,7 +17,7 @@ object QueryStore {
             val ids = prefs_xml.listFiles { dir, name -> name.startsWith(ID_PREFIX) }
                     .map { it.relativeTo(prefs_xml).name }
                     .map { it -> it.substringBeforeLast(".xml") }
-            Logger.debug(TAG, "Saved filter ids: $ids")
+            Logger.debug(TAG, "Saved applyFilter ids: $ids")
             return ids
         } else {
             Logger.warn(TAG, "No pref_xml folder ${prefs_xml.path}")

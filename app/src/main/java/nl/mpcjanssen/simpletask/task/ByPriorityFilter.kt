@@ -27,7 +27,7 @@ package nl.mpcjanssen.simpletask.task
 import java.util.ArrayList
 
 /**
- * A filter that matches Tasks containing the specified priorities
+ * A applyFilter that matches Tasks containing the specified priorities
 
  * @author Tim Barlotta
  */

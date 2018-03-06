@@ -315,7 +315,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
             val context = applicationContext
 
-            // Store widget filter
+            // Store widget applyFilter
             val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)
             val namedFilter = NamedQuery(name, mFilter)
             namedFilter.saveInPrefs(preferences)
