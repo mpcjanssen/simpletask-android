@@ -211,7 +211,7 @@ class AddTask : ThemedActionBarActivity() {
         when (item.itemId) {
         // Respond to the action bar's Up/Home button
             android.R.id.home -> {
-                finishEdit()
+                finishEdit(confirmation = true)
             }
             R.id.menu_prefill_next -> {
                 Config.isAddTagsCloneTags = !Config.isAddTagsCloneTags
@@ -280,7 +280,7 @@ class AddTask : ThemedActionBarActivity() {
         if (enteredTasks.size < TodoList.pendingEdits.size) {
             log.info(TAG, "Task size mismatch.")
             showToastLong(this, "Task count differs. Aborting edits.")
-            finishEdit()
+            finishEdit(confirmation = false)
             return
         }
         log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks")
@@ -306,15 +306,15 @@ class AddTask : ThemedActionBarActivity() {
 
         // Save
         todoList.notifyTasklistChanged(Config.todoFileName, TodoApplication.app, true)
-        finishEdit()
+        finishEdit(confirmation = false)
     }
 
-    private fun finishEdit() {
+    private fun finishEdit(confirmation: Boolean) {
         val close = DialogInterface.OnClickListener { _, _ ->
             TodoList.clearPendingEdits()
             finish()
         }
-        if (textInputField.text.toString() != start_text) {
+        if (confirmation && (textInputField.text.toString() != start_text)) {
             showConfirmationDialog(this, R.string.cancel_changes, close, null)
         } else {
             close.onClick(null,0)
@@ -359,7 +359,7 @@ class AddTask : ThemedActionBarActivity() {
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
-                    if (!input.isNullOrEmpty()) {
+                    if (!input.isEmpty()) {
                         insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
                     } else {
                         replaceDate(dateType, input)
