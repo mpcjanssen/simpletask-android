@@ -89,9 +89,9 @@ fun showConfirmationDialog(cxt: Context,
 fun showConfirmationDialog(cxt: Context,
                            msgid: Int,
                            okListener: DialogInterface.OnClickListener,
-                           title: CharSequence) {
+                           title: CharSequence?) {
     val builder = AlertDialog.Builder(cxt)
-    builder.setTitle(title)
+    title?.let{ builder.setTitle(it)}
     showConfirmationDialog(msgid, okListener, builder)
 }
 
