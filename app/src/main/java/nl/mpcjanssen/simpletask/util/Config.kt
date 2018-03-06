@@ -281,12 +281,12 @@ object Config : Preferences(TodoApplication.app) {
 
     var mainQuery: Query
         get()  {
-            val q = Query(luaModule = "mainui", showSelected = true)
+            val q = Query(luaModule = "mainui")
             q.initFromPrefs(Config.prefs)
             return q
         }
         set(value) {
-            // Update the intent so we wont get the old filter after
+            // Update the intent so we wont get the old applyFilter after
             // switching back to app later. Fixes [1c5271ee2e]
             value.saveInPrefs(Config.prefs)
         }

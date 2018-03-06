@@ -30,7 +30,7 @@ data class NamedQuery(val name: String, val query: Query) {
     companion object {
         val INTENT_TITLE = "TITLE"
         fun initFromPrefs(prefs: SharedPreferences, module: String, fallbackTitle: String ) : NamedQuery {
-            val query =  Query(luaModule = module, showSelected = true).apply {
+            val query =  Query(luaModule = module).apply {
                 initFromPrefs(prefs)
             }
             val name  = prefs.getString(INTENT_TITLE, null)
@@ -43,11 +43,10 @@ data class NamedQuery(val name: String, val query: Query) {
 
 
 /**
- * Active filter, has methods for serialization in several formats
+ * Active applyFilter, has methods for serialization in several formats
  */
 class Query(
-        val luaModule: String,
-        val showSelected: Boolean = false
+        val luaModule: String
 ) {
     private val log: Logger = Logger
     var priorities = ArrayList<Priority>()
@@ -254,7 +253,7 @@ class Query(
         }
     }
 
-    fun apply(items: List<Task>?): List<Task> {
+    fun applyFilter(items: List<Task>?, showSelected: Boolean): List<Task> {
         val code = if (useScript)
             script
         else
@@ -342,9 +341,9 @@ class Query(
         const val SORT_SEPARATOR = "!"
 
         /* Strings used in intent extras and other_preferences
-     * Do NOT modify this without good reason.
-     * Changing this will break existing shortcuts and widgets
-     */
+        * Do NOT modify this without good reason.
+        * Changing this will break existing shortcuts and widgets
+        */
         const val INTENT_JSON = "JSON"
         const val INTENT_SORT_ORDER = "SORTS"
         const val INTENT_CONTEXTS_FILTER = "CONTEXTS"
@@ -376,7 +375,7 @@ class Query(
             val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
             initFromJSON(JSONObject(jsonFromIntent))
         } else {
-            // Older non JSON version of filter. Use legacy loading
+            // Older non JSON version of applyFilter. Use legacy loading
             val prios: String?
             val projects: String?
             val contexts: String?
@@ -431,7 +430,7 @@ class Query(
         if (jsonFromPref != null) {
             initFromJSON(JSONObject(jsonFromPref))
         } else {
-            // Older non JSON version of filter. Use legacy loading
+            // Older non JSON version of applyFilter. Use legacy loading
             m_sorts = ArrayList<String>()
             m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
             contexts = ArrayList(prefs.getStringSet(

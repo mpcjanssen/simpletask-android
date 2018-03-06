@@ -28,7 +28,7 @@ import nl.mpcjanssen.simpletask.LuaInterpreter
 import java.util.*
 
 /**
- * A filter that matches Tasks containing the specified text
+ * A applyFilter that matches Tasks containing the specified text
  *
  * @author Tim Barlotta
  */

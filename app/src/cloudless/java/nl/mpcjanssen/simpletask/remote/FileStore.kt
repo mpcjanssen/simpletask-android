@@ -124,7 +124,7 @@ object FileStore : IFileStore {
                 }
             }
         }
-        // Run the file filter for side effects
+        // Run the file applyFilter for side effects
         file.list(filter)
         return result
     }
