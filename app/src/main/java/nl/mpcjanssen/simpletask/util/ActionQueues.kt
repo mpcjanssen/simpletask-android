@@ -29,7 +29,8 @@ open class ActionQueue(val qName: String) : Thread() {
                 e.printStackTrace()
             }
         }
-        mHandler?.post(LoggingRunnable("$qName: $description", r))
+        log.info(qName, "-> $description")
+        mHandler?.post(LoggingRunnable(qName,"$description", r))
     }
 }
 
@@ -37,15 +38,14 @@ object TodoActionQueue : ActionQueue("TLQ")
 
 object FileStoreActionQueue : ActionQueue("FSQ")
 
-class LoggingRunnable(val description: String, val runnable: Runnable) : Runnable {
-    private val TAG = TodoActionQueue::class.java.simpleName
+class LoggingRunnable(val queuName : String, val description: String, val runnable: Runnable) : Runnable {
 
     override fun toString(): String {
         return description
     }
 
     override fun run() {
-        log.info(TAG, description)
+        log.info(queuName, "<- $description")
         runnable.run()
     }
 }
