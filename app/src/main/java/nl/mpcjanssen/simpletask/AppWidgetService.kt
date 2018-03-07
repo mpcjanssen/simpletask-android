@@ -113,7 +113,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
                 else -> true
             }
         }
-        val txt = LuaInterpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
+        val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {

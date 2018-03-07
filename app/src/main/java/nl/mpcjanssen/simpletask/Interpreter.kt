@@ -9,19 +9,11 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-object LuaInterpreter {
+object Interpreter : AbstractInterpreter() {
     private val globals = JsePlatform.standardGlobals()!!
     private val log = Logger
-    private val TAG = "LuaInterpreter"
+    private val TAG = "LuaInterp"
 
-    const val ON_DISPLAY_NAME = "onDisplay"
-    const val ON_ADD_NAME = "onAdd"
-    const val ON_FILTER_NAME = "onFilter"
-    const val ON_GROUP_NAME = "onGroup"
-    const val ON_TEXTSEARCH_NAME = "onTextSearch"
-    const val ON_SORT_NAME = "onSort"
-    const val CONFIG_THEME = "theme"
-    const val CONFIG_TASKLIST_TEXT_SIZE_SP = "tasklistTextSize"
     private val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
 
     init {
@@ -38,64 +30,64 @@ object LuaInterpreter {
 
     }
 
-    fun tasklistTextSize(): Float? {
+    override fun tasklistTextSize(): Float? {
         return callZeroArgLuaFunction(globals, CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
     }
 
     // Callback to determine the theme. Return true for datk.
-    fun configTheme(): String? {
+    override fun configTheme(): String? {
         return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
     }
 
-    fun onFilterCallback(moduleName: String, t: Task): LuaValue {
+    override fun onFilterCallback(moduleName: String, t: Task): Pair<Boolean, String> {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {
-            return LuaBoolean.TRUE
+            return Pair(true, "true")
         }
-        val onFilter = module.get(LuaInterpreter.ON_FILTER_NAME)
+        val onFilter = module.get(ON_FILTER_NAME)
         if (!onFilter.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
                 val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
-                return result
+                return Pair(result.toboolean(), result.toString())
             } catch (e: LuaError) {
                 log.debug(TAG, "Lua execution failed " + e.message)
             }
         }
-        return LuaBoolean.TRUE
+        return Pair(true, "true")
     }
 
-    fun hasFilterCallback(moduleName: String): Boolean {
+    override fun hasFilterCallback(moduleName: String): Boolean {
         return try {
             val module = globals.get(moduleName).checktable() ?: globals
-            !module.get(LuaInterpreter.ON_FILTER_NAME).isnil()
+            !module.get(ON_FILTER_NAME).isnil()
         } catch (e: LuaError) {
             Logger.error(TAG, "Lua error: ${e.message} )")
             false
         }
     }
 
-    fun hasOnSortCallback(moduleName: String): Boolean {
+    override fun hasOnSortCallback(moduleName: String): Boolean {
         return try {
             val module = globals.get(moduleName).checktable() ?: globals
-            !module.get(LuaInterpreter.ON_SORT_NAME).isnil()
+            !module.get(ON_SORT_NAME).isnil()
         } catch (e: LuaError) {
             Logger.error(TAG, "Lua error: ${e.message} )")
             false
         }
     }
 
-    fun hasOnGroupCallback(moduleName: String): Boolean {
+    override fun hasOnGroupCallback(moduleName: String): Boolean {
         return try {
             val module = globals.get(moduleName).checktable() ?: globals
-            !module.get(LuaInterpreter.ON_GROUP_NAME).isnil()
+            !module.get(ON_GROUP_NAME).isnil()
         } catch (e: LuaError) {
             Logger.error(TAG, "Lua error: ${e.message} )")
             false
         }
     }
 
-    fun onSortCallback(moduleName: String, t: Task): String {
+    override fun onSortCallback(moduleName: String, t: Task): String {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -105,7 +97,7 @@ object LuaInterpreter {
         if (module == LuaValue.NIL) {
             return ""
         }
-        val callback = module.get(LuaInterpreter.ON_SORT_NAME)
+        val callback = module.get(ON_SORT_NAME)
         if (!callback.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
@@ -118,7 +110,7 @@ object LuaInterpreter {
         return ""
     }
 
-    fun onGroupCallback(moduleName: String, t: Task): String? {
+    override fun onGroupCallback(moduleName: String, t: Task): String? {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -128,7 +120,7 @@ object LuaInterpreter {
         if (module == LuaValue.NIL) {
             return null
         }
-        val callback = module.get(LuaInterpreter.ON_GROUP_NAME)
+        val callback = module.get(ON_GROUP_NAME)
         if (!callback.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
@@ -141,7 +133,7 @@ object LuaInterpreter {
         return null
     }
 
-    fun onDisplayCallback(moduleName: String, t: Task): String? {
+    override fun onDisplayCallback(moduleName: String, t: Task): String? {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -151,7 +143,7 @@ object LuaInterpreter {
         if (module == LuaValue.NIL) {
             return null
         }
-        val callback = module.get(LuaInterpreter.ON_DISPLAY_NAME)
+        val callback = module.get(ON_DISPLAY_NAME)
         if (!callback.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
@@ -164,8 +156,8 @@ object LuaInterpreter {
         return null
     }
 
-    fun onAddCallback(t: Task): Task? {
-        val callback = globals.get(LuaInterpreter.ON_ADD_NAME)
+    override fun onAddCallback(t: Task): Task? {
+        val callback = globals.get(ON_ADD_NAME)
         if (!callback.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
@@ -178,7 +170,7 @@ object LuaInterpreter {
         return null
     }
 
-    fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
+    override fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
@@ -200,7 +192,7 @@ object LuaInterpreter {
         return null
     }
 
-    fun evalScript(moduleName: String?, script: String?): LuaInterpreter {
+    override fun evalScript(moduleName: String?, script: String?): AbstractInterpreter {
         if (moduleName != null) {
             val module = LuaTable.tableOf()
             val metatable = LuaValue.tableOf()
@@ -283,7 +275,7 @@ object LuaInterpreter {
 
     }
 
-    fun clearOnFilter(moduleName: String) {
+    override fun clearOnFilter(moduleName: String) {
         val module = globals.get(moduleName)
         if (module != LuaValue.NIL) {
             module.set(ON_FILTER_NAME, LuaValue.NIL)

@@ -33,7 +33,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -164,11 +163,11 @@ fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: Str
     val result = ArrayList<VisibleLine>()
     var count = 0
     var headerLine: HeaderLine? = null
-    val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
+    val luaGrouping = moduleName != null && Interpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
         val t = item
         val newHeader = if (moduleName != null && luaGrouping) {
-            LuaInterpreter.onGroupCallback(moduleName, t)
+            Interpreter.onGroupCallback(moduleName, t)
         } else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)

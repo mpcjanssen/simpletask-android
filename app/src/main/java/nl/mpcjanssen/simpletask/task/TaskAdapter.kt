@@ -96,7 +96,7 @@ class TaskAdapter(var query: Query,
                 else -> true
             }
         }
-        val txt = LuaInterpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
+        val txt = Interpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
         val ss = SpannableString(txt)
 
         val contexts = task.lists
