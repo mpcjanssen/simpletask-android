@@ -1151,8 +1151,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateFilterDrawer() {
-        val decoratedContexts = alfaSortList(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@" + it }
-        val decoratedProjects = alfaSortList(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+" + it }
+        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@" + it }
+        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+" + it }
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
