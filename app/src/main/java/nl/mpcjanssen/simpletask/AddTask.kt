@@ -387,9 +387,9 @@ class AddTask : ThemedActionBarActivity() {
     @SuppressLint("InflateParams")
     private fun showTagMenu() {
         val items = TreeSet<String>()
-        val todoList = TodoList
-        items.addAll(todoList.projects)
-        // Also display contexts in tasks being added
+
+        items.addAll(TodoList.projects)
+        // Also display projects in tasks being added
         val tasks = getTasks()
         if (tasks.size == 0) {
             tasks.add(Task(""))
@@ -400,36 +400,14 @@ class AddTask : ThemedActionBarActivity() {
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val projects = alfaSortList(items, Config.sortCaseSensitive)
-
-        val builder = AlertDialog.Builder(this)
-        val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
-        builder.setView(view)
-        val lv = view.findViewById(R.id.listView) as ListView
-        val ed = view.findViewById(R.id.editText) as EditText
-        val lvAdapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice,
-                projects.toArray<String>(arrayOfNulls<String>(projects.size)))
-        lv.adapter = lvAdapter
-        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-
-        initListViewSelection(lv, lvAdapter, task.tags)
-
-        builder.setPositiveButton(R.string.ok) { _, _ ->
-            val newText = ed.text.toString()
-
-            for (i in 0..lvAdapter.count - 1) {
-                val tag = lvAdapter.getItem(i)
-                if (lv.isItemChecked(i)) {
-                    task.addTag(tag)
-                } else {
-                    task.removeTag(tag)
-                }
-            }
-
-            if (!newText.isEmpty()) {
-                task.addTag(newText)
-            }
-
+        updateItemsDialog(
+                Config.tagTerm,
+                listOf<Task>(task),
+                ArrayList(items),
+                Task::tags,
+                Task::addTag,
+                Task::removeTag
+        ) {
             if (idx != -1) {
                 tasks[idx] = task
             } else {
@@ -437,11 +415,6 @@ class AddTask : ThemedActionBarActivity() {
             }
             textInputField.setText(tasks.joinToString("\n") { it.text })
         }
-        builder.setNegativeButton(R.string.cancel) { _, _ -> }
-        // Create the AlertDialog
-        val dialog = builder.create()
-        dialog.setTitle(Config.tagTerm)
-        dialog.show()
     }
 
     private fun showPriorityMenu() {
@@ -476,37 +449,18 @@ class AddTask : ThemedActionBarActivity() {
         tasks.forEach {
             items.addAll(it.lists)
         }
+
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
 
-        val lists = alfaSortList(items, Config.sortCaseSensitive)
-
-        val builder = AlertDialog.Builder(this)
-        val view = layoutInflater.inflate(R.layout.single_task_tag_dialog, null, false)
-        builder.setView(view)
-        val lv = view.findViewById(R.id.listView) as ListView
-        val ed = view.findViewById(R.id.editText) as EditText
-        val choices = lists.toArray<String>(arrayOfNulls<String>(lists.size))
-        val lvAdapter = ArrayAdapter(this, R.layout.simple_list_item_multiple_choice,
-                choices)
-        lv.adapter = lvAdapter
-        lv.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-
-        initListViewSelection(lv, lvAdapter, task.lists)
-
-        builder.setPositiveButton(R.string.ok) { _, _ ->
-            for (i in 0..lvAdapter.count - 1) {
-                val list = lvAdapter.getItem(i)
-                if (lv.isItemChecked(i)) {
-                    task.addList(list)
-                } else {
-                    task.removeList(list)
-                }
-            }
-            val newText = ed.text.toString()
-            if (!newText.isEmpty()) {
-                task.addList(newText)
-            }
+        updateItemsDialog(
+                Config.listTerm,
+                listOf<Task>(task),
+                ArrayList(items),
+                Task::lists,
+                Task::addList,
+                Task::removeList
+        ) {
             if (idx != -1) {
                 tasks[idx] = task
             } else {
@@ -514,11 +468,6 @@ class AddTask : ThemedActionBarActivity() {
             }
             textInputField.setText(tasks.joinToString("\n") { it.text })
         }
-        builder.setNegativeButton(R.string.cancel) { _, _ -> }
-        // Create the AlertDialog
-        val dialog = builder.create()
-        dialog.setTitle(Config.listTerm)
-        dialog.show()
     }
 
     private fun initListViewSelection(lv: ListView, lvAdapter: ArrayAdapter<String>, selectedItems: Set<String>) {

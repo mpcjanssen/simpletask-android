@@ -92,7 +92,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                alfaSortList(TodoList.contexts, Config.sortCaseSensitive, "-"))
+                alfaSort(TodoList.contexts, Config.sortCaseSensitive, "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
         arguments.putBoolean(INITIAL_NOT, mFilter.contextsNot)
         arguments.putString(TAB_TYPE, CONTEXT_TAB)
@@ -103,7 +103,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         // Fill arguments for fragment
         arguments = Bundle()
         arguments.putStringArrayList(FILTER_ITEMS,
-                alfaSortList(TodoList.projects, Config.sortCaseSensitive, "-"))
+                alfaSort(TodoList.projects, Config.sortCaseSensitive, "-"))
         arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
         arguments.putBoolean(INITIAL_NOT, mFilter.projectsNot)
         arguments.putString(TAB_TYPE, PROJECT_TAB)
