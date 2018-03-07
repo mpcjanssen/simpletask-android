@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.*
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.createAlertDialog
-import org.luaj.vm2.LuaError
 
 class FilterScriptFragment : Fragment() {
     private var txtScript: EditText? = null
@@ -72,7 +71,7 @@ class FilterScriptFragment : Fragment() {
                     }
 
 
-                } catch (e: LuaError) {
+                } catch (e: Exception) {
                     log.debug(TAG, "Lua execution failed " + e.message)
                     createAlertDialog(act, R.string.lua_error, e.message ?: "").show()
                 }

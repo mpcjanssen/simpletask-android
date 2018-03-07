@@ -10,7 +10,6 @@ import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.todayAsString
 import org.json.JSONObject
-import org.luaj.vm2.LuaError
 import java.util.*
 
 
@@ -248,7 +247,7 @@ class Query(
         try {
             Interpreter.clearOnFilter(luaModule)
             Interpreter.evalScript(luaModule, code)
-        } catch (e: LuaError) {
+        } catch (e: Exception) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
     }
@@ -293,7 +292,7 @@ class Query(
                 }
                 return@filter true
             }
-        } catch (e: LuaError) {
+        } catch (e: Exception) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
         return ArrayList()
