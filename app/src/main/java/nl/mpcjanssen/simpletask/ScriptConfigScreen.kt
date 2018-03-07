@@ -81,7 +81,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
     private fun runScript() {
         try {
             Interpreter.evalScript(null, script)
-        } catch (e: ScriptError) {
+        } catch (e: Exception) {
             log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
             createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
         }
