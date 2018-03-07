@@ -13,14 +13,14 @@ class ByTextFilter(val moduleName : String, searchText: String?, internal val is
         get() = cased(text).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
 
     override fun apply(task: Task): Boolean {
-        return luaResult(task)?.let { luaval ->
+        return scriptResult(task)?.let { luaval ->
             luaval
         } ?: cased(task.text).let { taskText ->
             !parts.any { it.isNotEmpty() && !taskText.contains(it) }
         }
     }
 
-    private fun luaResult(task: Task): Boolean? {
+    private fun scriptResult(task: Task): Boolean? {
         return Interpreter.onTextSearchCallback(moduleName, task.text, text, isCaseSensitive)
     }
 
