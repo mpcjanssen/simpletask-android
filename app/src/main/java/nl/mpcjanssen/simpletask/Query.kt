@@ -155,7 +155,7 @@ class Query(
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
-                || !isEmptyOrNull(search) || LuaInterpreter.hasFilterCallback(luaModule)
+                || !isEmptyOrNull(search) || Interpreter.hasFilterCallback(luaModule)
     }
 
     fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
@@ -246,8 +246,8 @@ class Query(
 
     fun initInterpreter(code: String?) {
         try {
-            LuaInterpreter.clearOnFilter(luaModule)
-            LuaInterpreter.evalScript(luaModule, code)
+            Interpreter.clearOnFilter(luaModule)
+            Interpreter.evalScript(luaModule, code)
         } catch (e: LuaError) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
@@ -288,7 +288,7 @@ class Query(
                 if (!filter.apply(it)) {
                     return@filter false
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(luaModule, it).toboolean()) {
+                if (useScript && !Interpreter.onFilterCallback(luaModule, it).first) {
                     return@filter false
                 }
                 return@filter true

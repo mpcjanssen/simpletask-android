@@ -1,7 +1,5 @@
 package nl.mpcjanssen.simpletask
 
-import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TToken
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TextToken
 import java.util.*
@@ -53,11 +51,11 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
                 "by_completion_date" -> comp = { it.completionDate ?: last_date }
                 "by_lua" -> {
-                    if (moduleName == null || !LuaInterpreter.hasOnSortCallback(moduleName)) {
+                    if (moduleName == null || !Interpreter.hasOnSortCallback(moduleName)) {
                        continue@label
                     }
                     comp = {
-                        val str = LuaInterpreter.onSortCallback(moduleName, it)
+                        val str = Interpreter.onSortCallback(moduleName, it)
                         str
                     }
                 }

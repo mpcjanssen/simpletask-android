@@ -24,9 +24,6 @@ import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.content.pm.ShortcutInfoCompat
-import android.support.v4.content.pm.ShortcutManagerCompat
-import android.support.v4.graphics.drawable.IconCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
@@ -167,7 +164,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun openLuaConfig() {
-        val i = Intent(this, LuaConfigScreen::class.java)
+        val i = Intent(this, ScriptConfigScreen::class.java)
         startActivity(i)
     }
 
@@ -194,7 +191,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun selectedTasksAsString(): String {
         val result = ArrayList<String>()
         TodoList.selectedTasks.forEach { task ->
-            val luaTxt = LuaInterpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
+            val luaTxt = Interpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
             result.add(luaTxt ?: task.inFileFormat())
         }
         return join(result, "\n")
@@ -883,7 +880,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (checkedTasks.size == 1) {
             // Set the task as title
             val task = checkedTasks[0]
-            val luaTxt = LuaInterpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
+            val luaTxt = Interpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
             calendarTitle = luaTxt ?: task.text
         } else {
             // Set the tasks as description
