@@ -12,7 +12,6 @@ import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
-import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
 
@@ -82,7 +81,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
     private fun runScript() {
         try {
             Interpreter.evalScript(null, script)
-        } catch (e: LuaError) {
+        } catch (e: Exception) {
             log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
             createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
         }
