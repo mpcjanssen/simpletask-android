@@ -934,10 +934,10 @@ class Simpletask : ThemedNoActionBarActivity() {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
-                    jsonFilters.keys().forEach {
+                    jsonFilters.keys().forEach { name ->
                         val newQuery = Query(luaModule = "mainui")
-                        newQuery.initFromJSON(jsonFilters.getJSONObject(it))
-                        QueryStore.save(newQuery, it)
+                        newQuery.initFromJSON(jsonFilters.getJSONObject(name))
+                        QueryStore.save(newQuery, name)
 
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
