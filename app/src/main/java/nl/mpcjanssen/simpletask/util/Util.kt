@@ -320,7 +320,7 @@ fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
 fun Activity.updateItemsDialog(
         title: String,
         tasks: List<Task>,
-        allItems: ArrayList<String>,
+        allItems: MutableCollection<String>,
         retrieveFromTask: (Task) -> SortedSet<String>,
         addToTask: (Task, String) -> Unit,
         removeFromTask: (Task, String) -> Unit,
@@ -340,13 +340,14 @@ fun Activity.updateItemsDialog(
     var onSomeTasks = checkedTaskItems.union()
     onSomeTasks -= onAllTasks
 
+    // Remaining: items on no tasks
     allItems.removeAll(onAllTasks)
     allItems.removeAll(onSomeTasks)
 
     val sortedAllItems = ArrayList<String>()
-    sortedAllItems += alfaSortList(onAllTasks, Config.sortCaseSensitive)
-    sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
-    sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
+    sortedAllItems += alfaSort(onAllTasks, Config.sortCaseSensitive)
+    sortedAllItems += alfaSort(onSomeTasks, Config.sortCaseSensitive)
+    sortedAllItems += alfaSort(allItems.toSet(), Config.sortCaseSensitive)
 
     val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
     val builder = AlertDialog.Builder(this)
@@ -358,10 +359,11 @@ fun Activity.updateItemsDialog(
     val layoutManager = LinearLayoutManager(this)
     rcv.layoutManager = layoutManager
     rcv.adapter = itemAdapter
+
     val ed = view.new_item_text
     builder.setPositiveButton(R.string.ok) { _, _ ->
         val updatedValues = itemAdapter.currentState
-        for (i in 0..updatedValues.lastIndex) {
+        for (i in updatedValues.indices) {
             when (updatedValues[i]) {
                 false -> {
                     tasks.forEach {
@@ -373,10 +375,11 @@ fun Activity.updateItemsDialog(
                         addToTask(it, sortedAllItems[i])
                     }
                 }
+                // null ->  Nothing to do with indeterminite state
             }
         }
         val newText = ed.text.toString()
-        if (newText.isNotEmpty()) {
+        if (newText.isNotBlank()) {
             tasks.forEach {
                 addToTask(it, newText)
             }
@@ -456,21 +459,18 @@ fun createCachedDatabase(context: Context, dbFile: File) {
     copyFile(dbFile, cacheFile)
 }
 
-fun alfaSortList(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
-    val result = ArrayList<String>()
-    result .addAll(items.sortedWith ( compareBy<String> {
+fun alfaSort(items: Collection<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
+    val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
-    }))
+    })
     if (prefix != null) {
-        result.add(0, prefix)
+        val result = ArrayList<String>(sorted.size+1)
+        result.add(prefix)
+        result.addAll(sorted)
+        return result
+    } else {
+        return ArrayList(sorted)
     }
-    return result
-}
-
-fun alfaSortList(items: Set<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
-    val temp = ArrayList<String>()
-    temp.addAll(items)
-    return alfaSortList(temp, caseSensitive, prefix)
 }
 
 fun appVersion(ctx: Context): String {
