@@ -140,7 +140,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.atlassian.commonmark:commonmark:0.8.0'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-    compile 'org.luaj:luaj-jse:3.0.1'
     compile 'me.smichel.android:kpreferences:0.11.1'
     compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
