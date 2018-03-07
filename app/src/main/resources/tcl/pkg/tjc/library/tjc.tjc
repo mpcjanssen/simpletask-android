@@ -1,0 +1,5 @@
+PACKAGE tjc
+SOURCE ./src/main/resources/tcl/pkg/tjc/library/*.tcl
+INIT_SOURCE tjc.tcl
+OPTIONS +O
+
