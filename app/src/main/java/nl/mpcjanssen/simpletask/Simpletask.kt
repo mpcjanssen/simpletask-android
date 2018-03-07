@@ -1199,80 +1199,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-
-    @SuppressLint("InflateParams")
-    private fun updateItemsDialog(title: String,
-                                  checkedTasks: List<Task>,
-                                  allItems: ArrayList<String>,
-                                  retrieveFromTask: (Task) -> SortedSet<String>,
-                                  addToTask: (Task, String) -> Unit,
-                                  removeFromTask: (Task, String) -> Unit
-    ) {
-        val checkedTaskItems = ArrayList<HashSet<String>>()
-        checkedTasks.forEach {
-            val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(it))
-            checkedTaskItems.add(items)
-        }
-
-        // Determine items on all tasks (intersection of the sets)
-        val onAllTasks = checkedTaskItems.intersection()
-
-        // Determine items on some tasks (union of the sets)
-        var onSomeTasks = checkedTaskItems.union()
-        onSomeTasks -= onAllTasks
-
-        allItems.removeAll(onAllTasks)
-        allItems.removeAll(onSomeTasks)
-
-        val sortedAllItems = ArrayList<String>()
-        sortedAllItems += alfaSortList(onAllTasks, Config.sortCaseSensitive)
-        sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
-        sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
-
-        val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
-        val builder = AlertDialog.Builder(this)
-        builder.setView(view)
-
-        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
-        val rcv = view.current_items_list
-        rcv.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(this)
-        rcv.layoutManager = layoutManager
-        rcv.adapter = itemAdapter
-        val ed = view.new_item_text
-        builder.setPositiveButton(R.string.ok) { _, _ ->
-            val updatedValues = itemAdapter.currentState
-            for (i in 0..updatedValues.lastIndex) {
-                when (updatedValues[i]) {
-                    false -> {
-                        checkedTasks.forEach {
-                            removeFromTask(it, sortedAllItems[i])
-                        }
-                    }
-                    true -> {
-                        checkedTasks.forEach {
-                            addToTask(it, sortedAllItems[i])
-                        }
-                    }
-                }
-            }
-            val newText = ed.text.toString()
-            if (newText.isNotEmpty()) {
-                checkedTasks.forEach {
-                    addToTask(it, newText)
-                }
-            }
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
-        }
-        builder.setNegativeButton(R.string.cancel) { _, _ -> }
-        // Create the AlertDialog
-        val dialog = builder.create()
-
-        dialog.setTitle(title)
-        dialog.show()
-    }
-
     private fun updateLists(checkedTasks: List<Task>) {
         updateItemsDialog(
                 Config.listTerm,
@@ -1281,7 +1207,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::lists,
                 Task::addList,
                 Task::removeList
-        )
+        ) {
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        }
     }
 
     private fun updateTags(checkedTasks: List<Task>) {
@@ -1292,7 +1220,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::tags,
                 Task::addTag,
                 Task::removeTag
-        )
+        ) {
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        }
     }
 
     private inner class DrawerItemClickListener : AdapterView.OnItemClickListener {
