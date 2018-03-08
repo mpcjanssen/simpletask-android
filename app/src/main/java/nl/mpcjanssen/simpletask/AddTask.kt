@@ -5,7 +5,6 @@
  */
 package nl.mpcjanssen.simpletask
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
@@ -384,7 +383,6 @@ class AddTask : ThemedActionBarActivity() {
         }
     }
 
-    @SuppressLint("InflateParams")
     private fun showTagMenu() {
         val items = TreeSet<String>()
 
@@ -436,7 +434,6 @@ class AddTask : ThemedActionBarActivity() {
         return input.split("\r\n|\r|\n".toRegex()).map(::Task).toMutableList()
     }
 
-    @SuppressLint("InflateParams")
     private fun showListMenu() {
         val items = TreeSet<String>()
 
