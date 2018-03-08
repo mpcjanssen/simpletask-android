@@ -147,6 +147,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() {
             return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSortedSet()
         }
+    var selected: Boolean = false
 
     fun removeTag(tag: String) {
         tokens = tokens.filter {

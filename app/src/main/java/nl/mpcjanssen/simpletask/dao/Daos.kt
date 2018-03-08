@@ -16,8 +16,8 @@ object Daos {
     val backupDao: TodoFileDao
     init {
         val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
-        val logDb = helper.writableDatabase
-        val daoMaster = DaoMaster(logDb)
+        val db = helper.writableDatabase
+        val daoMaster = DaoMaster(db)
         daoSession = daoMaster.newSession()
         backupDao = daoSession.todoFileDao
 
@@ -31,23 +31,9 @@ object Daos {
     }
 
 
-    private fun logItemToString(entry: LogItem): String {
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US)
-        return format.format(entry.timestamp) + "\t" + shortAppVersion() + "\t" + entry.severity + "\t" + entry.tag + "\t" + entry.message + "\t" + entry.exception
-    }
-
 
     fun initHistoryCursor (): Cursor {
         val builder = daoSession.todoFileDao.queryBuilder()
         return builder.buildCursor().query()
-    }
-}
-
-class TaskPropertyConverter : PropertyConverter<Task, String> {
-    override fun convertToEntityProperty(databaseValue: String) : Task {
-        return Task(databaseValue)
-    }
-    override fun convertToDatabaseValue(entityProperty : Task) : String {
-        return entityProperty.inFileFormat()
     }
 }

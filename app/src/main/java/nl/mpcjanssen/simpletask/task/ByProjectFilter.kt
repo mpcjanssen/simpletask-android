@@ -27,7 +27,7 @@ package nl.mpcjanssen.simpletask.task
 import java.util.ArrayList
 
 /**
- * A filter that matches Tasks containing the specified projects
+ * A applyFilter that matches Tasks containing the specified projects
  */
 class ByProjectFilter(
         private val projects: List<String>,
@@ -41,7 +41,7 @@ class ByProjectFilter(
     fun filter(input: Task): Boolean {
         val match = input.tags.any { projects.contains(it) }
         /*
-         * Match tasks without project if filter contains "-"
+         * Match tasks without project if applyFilter contains "-"
 		 */
         return match || (input.tags.size == 0 && projects.contains("-"))
     }

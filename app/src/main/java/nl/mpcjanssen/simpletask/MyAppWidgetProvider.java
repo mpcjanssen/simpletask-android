@@ -25,8 +25,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "MyAppWidgetProvider" ;
 
     private static void putFilterExtras(Intent target, @NonNull SharedPreferences preferences, int widgetId) {
-        // log.debug(TAG, "putFilter extras  for appwidget " + widgetId);
-        Query filter = new Query("widget" + widgetId, false);
+        // log.debug(tag, "putFilter extras  for appwidget " + widgetId);
+        Query filter = new Query("widget" + widgetId);
         filter.initFromPrefs(preferences);
         filter.saveInIntent(target);
     }
@@ -68,8 +68,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         // Instantiate the RemoteViews object for the App Widget layout.
         view.setRemoteAdapter(R.id.widgetlv, intent);
 
-        Query filter = new Query("widget" + widgetId, false);
-        filter.initFromPrefs(preferences);
+        NamedQuery filter = NamedQuery.Companion.initFromPrefs(preferences, "widget" + widgetId, "no name");
+
+
         view.setTextViewText(R.id.title,filter.getName());
 
         // Make sure we use different intents for the different pendingIntents or
@@ -97,7 +98,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         appIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         appIntent.putExtra(Constants.EXTRA_WIDGET_RECONFIGURE, true);
         appIntent.putExtra(Constants.EXTRA_WIDGET_ID, widgetId);
-        filter.saveInIntent(appIntent);
+        filter.getQuery().saveInIntent(appIntent);
         pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.widgetconfig,pendingIntent);
         return view;
@@ -122,7 +123,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     public void onDeleted(@NonNull Context context, @NonNull int[] appWidgetIds) {
         Logger log = Logger.INSTANCE;
         for (int widgetId : appWidgetIds) {
-            log.debug(TAG, "cleaning up widget configuration id:" + widgetId);
+            log.debug(TAG, "cleaning up widget configuration prefName:" + widgetId);
             // At least clear contents of the other_preferences file
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
             preferences.edit().clear().apply();

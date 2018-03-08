@@ -85,7 +85,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
 
     /**
      * Calls {@link #DragSortController(DragSortListView, int)} with a
-     * 0 drag handle id, FLING_RIGHT_REMOVE remove mode,
+     * 0 drag handle prefName, FLING_RIGHT_REMOVE remove mode,
      * and ON_DOWN drag init. By default, sorting is enabled, and
      * removal is disabled.
      *
@@ -107,7 +107,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
      * By default, sorting is enabled, and removal is disabled.
      *
      * @param dslv The DSLV instance
-     * @param dragHandleId The resource id of the View that represents
+     * @param dragHandleId The resource prefName of the View that represents
      * the drag handle in a list item.
      */
     public DragSortController(@NonNull DragSortListView dslv, int dragHandleId, int dragInitMode,
@@ -121,7 +121,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
                         @Override
                         public final boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                                                      float velocityY) {
-                            // log.debug(TAG, "on fling remove called");
+                            // log.debug(tag, "on fling remove called");
                             if (mRemoveEnabled && mIsRemoving) {
                                 int w = mDslv.getWidth();
                                 int minPos = w / 5;
@@ -206,30 +206,30 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     }
 
     /**
-     * Set the resource id for the View that represents the drag
+     * Set the resource prefName for the View that represents the drag
      * handle in a list item.
      *
-     * @param id An android resource id.
+     * @param id An android resource prefName.
      */
     public void setDragHandleId(int id) {
         mDragHandleId = id;
     }
 
     /**
-     * Set the resource id for the View that represents the fling
+     * Set the resource prefName for the View that represents the fling
      * handle in a list item.
      *
-     * @param id An android resource id.
+     * @param id An android resource prefName.
      */
     public void setFlingHandleId(int id) {
         mFlingHandleId = id;
     }
 
     /**
-     * Set the resource id for the View that represents click
+     * Set the resource prefName for the View that represents click
      * removal button.
      *
-     * @param id An android resource id.
+     * @param id An android resource prefName.
      */
     public void setClickRemoveId(int id) {
         mClickRemoveId = id;
@@ -358,7 +358,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
         final int numFooters = mDslv.getFooterViewsCount();
         final int count = mDslv.getCount();
 
-        // log.debug(TAG, "touch down on position " + itemnum);
+        // log.debug(tag, "touch down on position " + itemnum);
         // We're only interested if the touch was on an
         // item that's not a header or footer.
         if (touchPos != AdapterView.INVALID_POSITION && touchPos >= numHeaders
@@ -442,7 +442,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
 
     @Override
     public void onLongPress(MotionEvent e) {
-        // log.debug(TAG, "lift listener long pressed");
+        // log.debug(tag, "lift listener long pressed");
         if (mHitPos != MISS && mDragInitMode == ON_LONG_PRESS) {
             mDslv.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             startDrag(mHitPos, mCurrX - mItemX, mCurrY - mItemY);

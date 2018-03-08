@@ -217,7 +217,7 @@
     <string name="by_due_date">일정 마감일 순서대로</string>
     <string name="by_threshold_date">일정 시작일 순서대로</string>
 
-    <!-- filter -->
+    <!-- applyFilter -->
     <string name="filter_select_all">모두 선택</string>
     <string name="filter_clear_all">필터 비우기</string>
     <string name="filter_invert">필터 뒤집기</string>

@@ -47,22 +47,22 @@ object LuaInterpreter {
         return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
     }
 
-    fun onFilterCallback(moduleName: String, t: Task): Boolean {
+    fun onFilterCallback(moduleName: String, t: Task): LuaValue {
         val module = globals.get(moduleName).checktable()
         if (module == LuaValue.NIL) {
-            return true
+            return LuaBoolean.TRUE
         }
         val onFilter = module.get(LuaInterpreter.ON_FILTER_NAME)
         if (!onFilter.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
                 val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
-                return result.toboolean()
+                return result
             } catch (e: LuaError) {
                 log.debug(TAG, "Lua execution failed " + e.message)
             }
         }
-        return true
+        return LuaBoolean.TRUE
     }
 
     fun hasFilterCallback(moduleName: String): Boolean {

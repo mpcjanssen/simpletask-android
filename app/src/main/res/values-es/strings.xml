@@ -114,7 +114,7 @@ Cualquier cambio que no haya sido sincronizado se perderá después de desconect
     <string name="by_due_date">Fecha de vencimiento</string>
     <string name="by_threshold_date">Fecha de inicio</string>
 
-    <!-- filter -->
+    <!-- applyFilter -->
     <string name="filter_select_all">Seleccionar todo</string>
     <string name="filter_clear_all">Quitar filtros</string>
     <string name="filter_invert">Invertir filtro</string>

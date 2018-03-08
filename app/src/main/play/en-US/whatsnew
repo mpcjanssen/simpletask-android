@@ -1,4 +1,27 @@
-10.1.3
+10.1.13
+-------
+
+- Possible IllegalStateException fix.
+
+10.1.12
+-------
+
+- Setup interpreter in query. Fixes Lua filtering.
+- Fix filtering from intent. Fixes queries from widgets and shortcuts.
+
+10.1.11
+-------
+
+- Fix JSON crash.
+
+
+10.1.10
+-------
+
+- Fix saved filter names.
+
+10.1.9
 ------
 
-- Fix NoClassDefFound crash in Dropbox version.
+- Fix updating of saved queries.
+

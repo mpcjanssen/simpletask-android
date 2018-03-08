@@ -1,6 +1,59 @@
 ﻿Changelog
 =========
 
+10.1.13
+-------
+
+- Possible IllegalStateException fix.
+
+10.1.12
+-------
+
+- Setup interpreter in query. Fixes Lua filtering.
+- Fix filtering from intent. Fixes queries from widgets and shortcuts.
+
+
+10.1.11
+-------
+
+- Fix JSON crash.
+
+
+10.1.10
+-------
+
+- Fix saved filter names.
+
+10.1.9
+------
+
+- Fix updating of saved queries.
+
+10.1.8
+------
+
+- Fix creating of desktop shortcuts.
+
+10.1.7
+------
+
+- Fix widget naming.
+
+10.1.6
+------
+
+- Fix saved filter handling.
+
+10.1.5
+------
+
+- Fix text search. Fixes #870.
+
+10.1.4
+------
+
+- Revert header folding for #868.
+
 10.1.3
 ------
 

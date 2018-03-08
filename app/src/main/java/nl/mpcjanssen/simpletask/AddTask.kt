@@ -7,10 +7,7 @@ package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
@@ -32,6 +29,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
 class AddTask : ThemedActionBarActivity() {
+    private var start_text: String = ""
 
     private val share_text: String? = null
 
@@ -110,6 +108,7 @@ class AddTask : ThemedActionBarActivity() {
                 } else {
                     ""
                 }
+                start_text = preFillString
                 textInputField.setText(preFillString)
                 // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
                 // like Swype where ENTER keyCode is not generated.
@@ -212,7 +211,7 @@ class AddTask : ThemedActionBarActivity() {
         when (item.itemId) {
         // Respond to the action bar's Up/Home button
             android.R.id.home -> {
-                finishEdit()
+                finishEdit(confirmation = true)
             }
             R.id.menu_prefill_next -> {
                 Config.isAddTagsCloneTags = !Config.isAddTagsCloneTags
@@ -281,7 +280,7 @@ class AddTask : ThemedActionBarActivity() {
         if (enteredTasks.size < TodoList.pendingEdits.size) {
             log.info(TAG, "Task size mismatch.")
             showToastLong(this, "Task count differs. Aborting edits.")
-            finishEdit()
+            finishEdit(confirmation = false)
             return
         }
         log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks")
@@ -307,12 +306,20 @@ class AddTask : ThemedActionBarActivity() {
 
         // Save
         todoList.notifyTasklistChanged(Config.todoFileName, TodoApplication.app, true)
-        finishEdit()
+        finishEdit(confirmation = false)
     }
 
-    private fun finishEdit() {
-        TodoList.clearPendingEdits()
-        finish()
+    private fun finishEdit(confirmation: Boolean) {
+        val close = DialogInterface.OnClickListener { _, _ ->
+            TodoList.clearPendingEdits()
+            finish()
+        }
+        if (confirmation && (textInputField.text.toString() != start_text)) {
+            showConfirmationDialog(this, R.string.cancel_changes, close, null)
+        } else {
+            close.onClick(null,0)
+        }
+
     }
 
     override fun onBackPressed() {
@@ -352,7 +359,7 @@ class AddTask : ThemedActionBarActivity() {
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
-                    if (!input.isNullOrEmpty()) {
+                    if (!input.isEmpty()) {
                         insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
                     } else {
                         replaceDate(dateType, input)
