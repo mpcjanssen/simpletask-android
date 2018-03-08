@@ -313,8 +313,8 @@
     <string name="script_tab_test">Test</string>
     <string name="script_tab_test_task">Testovací úkol</string>
     <string name="script_tab_script">Skript</string>
-    <string name="script_tab_true_task_shown">Zapněte pro zobrazení úkolu</string>
-    <string name="script_tab_false_task_not_shown">Vypněte pro skrytí úkolu</string>
+    <string name="script_tab_true_task_shown">Zobrazeno</string>
+    <string name="script_tab_false_task_not_shown">Nezobrazeno</string>
 
     <string name="quick_filter_tag_header_inverted">Prohozené</string>
     <string name="widget_header_transparency_title">Průhlednost hlavičky</string>
@@ -337,4 +337,20 @@
 
 
     <string name="use_uuid_title">Každému z úkolů přiřadit neopakující se identifikátor</string>
+<string name="cancel_changes">Změny budou ztraceny.</string>
+    <string name="show_todo_path_summary">Složky jsou zkráceny na první písmeno</string>
+
+    <string name="show_calendarview_title">Pro zadání datumu použít kalendář</string>
+
+    <string name="sync_conflict_dialog_title">Konflikt souboru</string>
+    <string name="first_title_word">přihlášení</string>
+    <string name="login_folder_screen_button">Přihlášení do Dropbox
+\n(přístup do složky aplikace)</string>
+    <string name="no_context">Příchozí</string>
+    <string name="no_creation_date">Žádné datum vytvoření</string>
+    <string name="calendar_title">Připomínka Simpletask</string>
+    <string name="filter_import_export">Filtry importu/exportu</string>
+
+    <string name="nav_drawer_hint">Stávající filtr uložíte
+\nstisknutím uložit</string>
 </resources>
