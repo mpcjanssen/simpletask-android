@@ -258,7 +258,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_due_date">Fälligkeitsdatum</string>
     <string name="by_threshold_date">Anfangsdatum</string>
 
-    <!-- filter -->
+    <!-- applyFilter -->
     <string name="filter_select_all">Alles auswählen</string>
     <string name="filter_clear_all">Filter löschen</string>
     <string name="filter_invert">Filter umkehren</string>

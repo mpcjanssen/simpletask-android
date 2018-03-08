@@ -33,11 +33,15 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.content.pm.ShortcutInfoCompat
+import android.support.v4.content.pm.ShortcutManagerCompat
+import android.support.v4.graphics.drawable.IconCompat
 import android.support.v7.app.AlertDialog
 import android.text.Spannable
 import android.text.SpannableString
@@ -60,8 +64,6 @@ val TAG = "Util"
 val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
-
-val myFolding: HashMap<String, Boolean> = hashMapOf()
 
 val mdParser: Parser = Parser.builder().build()
 val htmlRenderer : HtmlRenderer = HtmlRenderer.builder().build()
@@ -87,9 +89,9 @@ fun showConfirmationDialog(cxt: Context,
 fun showConfirmationDialog(cxt: Context,
                            msgid: Int,
                            okListener: DialogInterface.OnClickListener,
-                           title: CharSequence) {
+                           title: CharSequence?) {
     val builder = AlertDialog.Builder(cxt)
-    builder.setTitle(title)
+    title?.let{ builder.setTitle(it)}
     showConfirmationDialog(msgid, okListener, builder)
 }
 
@@ -148,7 +150,7 @@ fun createParentDirectory(dest: File?) {
     }
 }
 
-fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: String, createIsThreshold : Boolean, moduleName : String?): List<VisibleLine> {
     var firstGroupSortIndex = 0
     if (sorts.size > 1 && sorts[0].contains("completed") || sorts[0].contains("future")) {
         firstGroupSortIndex++
@@ -160,6 +162,7 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
 
     var header = ""
     val result = ArrayList<VisibleLine>()
+    var count = 0
     var headerLine: HeaderLine? = null
     val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
@@ -170,33 +173,32 @@ fun addHeaderLines(visibleTasks: Sequence<Task>, sorts: List<String>, no_header:
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
         if (header != newHeader) {
-            headerLine = HeaderLine(title = MyTitle(newHeader))
-            headerLine.title.myFolding = myFolding
-            if (!myFolding.containsKey(headerLine.title.originalTitle)) {
-                myFolding.put(headerLine.title.originalTitle, false)
+            if (headerLine != null) {
+                headerLine.title += " ($count)"
             }
-
+            headerLine = HeaderLine(newHeader)
+            count = 0
             result.add(headerLine)
             header = newHeader
         }
-        headerLine?.let {
-            headerLine.title.count++
-            if (!myFolding.get(headerLine.title.originalTitle)!!) {
-                val taskLine = TaskLine(item)
-                result.add(taskLine)
-            }
-        }
+        count++
+        val taskLine = TaskLine(item)
+        result.add(taskLine)
+    }
+    // Add count to last header
+    if (headerLine != null) {
+        headerLine.title += " ($count)"
     }
 
     // Clean up possible last empty list header that should be hidden
     val i = result.size
-    if (i > 0 && result[i - 1].header && headerLine!!.title.count==0) {
+    if (i > 0 && result[i - 1].header) {
         result.removeAt(i - 1)
     }
     return result
 }
 
-fun addHeaderLines(visibleTasks: Sequence<Task>, filter: Query, no_header: String): List<VisibleLine> {
+fun addHeaderLines(visibleTasks: List<Task>, filter: Query, no_header: String): List<VisibleLine> {
     val sorts = filter.getSort(Config.defaultSorts)
     return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.luaModule)
 }
@@ -650,4 +652,14 @@ fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
     log.info(TAG, "Sending widget refresh broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
+}
+
+fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
+    val iconRes = IconCompat.createWithResource(ctxt, icon)
+    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, id)
+            .setIcon(iconRes)
+            .setShortLabel(name)
+            .setIntent(target)
+            .build()
+    ShortcutManagerCompat.requestPinShortcut(ctxt, pinShortcutInfo, null)
 }

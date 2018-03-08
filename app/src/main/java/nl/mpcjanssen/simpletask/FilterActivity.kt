@@ -28,7 +28,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
     internal var asWidgetConfigure = false
     internal var asWidgetReConfigure = false
-    internal var queryId: String? = null
     internal lateinit var mFilter: Query
 
     internal lateinit var m_app: TodoApplication
@@ -69,7 +68,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
             environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
         }
 
-        queryId = intent.getStringExtra(SavedQuery.EXTRA_ID)
 
         mFilter = Query(luaModule = environment)
         val context = applicationContext
@@ -198,12 +196,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 return true
             }
             R.id.menu_filter_action -> {
-                val qId = queryId
-                if (qId != null) {
-                    updateFilterFromFragments()
-                    SavedQuery(qId, mFilter).save()
-                    finish()
-                } else if (asWidgetConfigure) {
+                if (asWidgetConfigure) {
                     askWidgetName()
                 } else if (asWidgetReConfigure) {
                     updateWidget()
@@ -241,7 +234,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         val target = Intent(this, Simpletask::class.java)
         target.action = Constants.INTENT_START_FILTER
         updateFilterFromFragments()
-        mFilter.name = mFilter.proposedName
         mFilter.saveInIntent(target)
 
         target.putExtra("name", mFilter.proposedName)
@@ -323,10 +315,10 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
             val context = applicationContext
 
-            // Store widget filter
+            // Store widget applyFilter
             val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)
-            mFilter.name = name
-            mFilter.saveInPrefs(preferences)
+            val namedFilter = NamedQuery(name, mFilter)
+            namedFilter.saveInPrefs(preferences)
 
             val appWidgetManager = AppWidgetManager.getInstance(context)
             MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,

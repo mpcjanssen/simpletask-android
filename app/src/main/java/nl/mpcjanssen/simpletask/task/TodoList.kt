@@ -24,7 +24,6 @@ object TodoList {
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
     val todoItems = ArrayList<Task>()
-    val selectedIndexes = ArrayList<Int>()
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
@@ -75,7 +74,6 @@ object TodoList {
         todoQueue("Remove") {
             tasks.forEach {
                 val idx = todoItems.indexOf(it)
-                selectedIndexes.remove(idx)
                 pendingEdits.remove(idx)
             }
             todoItems.removeAll(tasks)
@@ -176,10 +174,9 @@ object TodoList {
 
     var selectedTasks: List<Task> = ArrayList()
         get() {
-            return selectedIndexes.map { idx ->
-                todoItems[idx]
+            return todoItems.filter { it.selected }
             }
-        }
+
 
     var completedTasks: List<Task> = ArrayList()
         get() {
@@ -209,10 +206,9 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Sequence<Task> {
+    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): List<Task> {
         log.debug(TAG, "Getting sorted and filtered tasks")
         val start = SystemClock.elapsedRealtime()
-        filter.initInterpreter()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
         val itemsToSort = if (comp.fileOrder) {
             todoItems
@@ -220,7 +216,7 @@ object TodoList {
             todoItems.reversed()
         }
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
-        val result = filter.apply(sortedItems.asSequence())
+        val result = filter.applyFilter(sortedItems, showSelected = true)
         val end = SystemClock.elapsedRealtime()
         log.debug(TAG, "Sorting and filtering tasks took ${end-start} ms")
         return result
@@ -338,44 +334,37 @@ object TodoList {
         }
     }
 
-    fun isSelected(item: Task): Boolean {
-        val idx = todoItems.indexOf(item)
-        return idx in selectedIndexes
-    }
+    fun isSelected(item: Task): Boolean = item.selected
 
     fun numSelected(): Int {
-        return selectedIndexes.size
+        return todoItems.count { it.selected }
     }
 
     fun selectTasks(items: List<Task>) {
         todoQueue("Select") {
-            val idxs = items.map { todoItems.indexOf(it) }.filterNot { it == -1 }
-            selectedIndexes.addAll(idxs)
+            items.forEach {selectTask(it)}
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
 
-    fun selectTask(item: Task?) {
-        item?.let {
-            selectTasks(listOf(item))
-        }
+    private fun selectTask(item: Task?) {
+        item?.selected = true
     }
 
-    fun unSelectTask(item: Task) {
-        unSelectTasks(listOf(item))
+    private fun unSelectTask(item: Task) {
+        item.selected = false
     }
 
     fun unSelectTasks(items: List<Task>) {
         todoQueue("Unselect") {
-            val idxs = items.map { todoItems.indexOf(it) }
-            selectedIndexes.removeAll(idxs)
+            items.forEach { unSelectTask(it)}
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }
 
     fun clearSelection() {
         todoQueue("Clear selection") {
-            selectedIndexes.clear()
+            todoItems.forEach {it.selected = false}
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
     }

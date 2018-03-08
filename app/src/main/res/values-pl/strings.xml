@@ -287,7 +287,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_due_date">Po terminie</string>
     <string name="by_threshold_date">Po prógu przypomnienia</string>
 
-    <!-- filter -->
+    <!-- applyFilter -->
     <string name="filter_select_all">Zaznacz wszystkie</string>
     <string name="filter_clear_all">Wyczyść filtr</string>
     <string name="filter_invert">Odwróć filtr</string>

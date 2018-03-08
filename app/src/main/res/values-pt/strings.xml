@@ -274,7 +274,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="by_threshold_date">Por data limiar</string>
     <string name="by_completion_date">Por data de conclusão</string>
 	
-    <!-- filter -->
+    <!-- applyFilter -->
     <string name="filter_select_all">Selecionar tudo</string>
     <string name="filter_clear_all">Limpar filtro</string>
     <string name="filter_invert">Inverter filtro</string>

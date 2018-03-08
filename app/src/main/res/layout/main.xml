@@ -131,7 +131,7 @@
 
         </LinearLayout>
 
-        <!-- The quick filter drawer -->
+        <!-- The quick applyFilter drawer -->
         <ListView
             android:id="@+id/filter_drawer"
             android:layout_width="match_parent"

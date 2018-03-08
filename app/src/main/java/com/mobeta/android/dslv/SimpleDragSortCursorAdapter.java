@@ -208,7 +208,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * value cannot be used as an image resource, the value is used as an
      * image Uri.
      *
-     * Intended to be overridden by Adapters that need to filter strings
+     * Intended to be overridden by Adapters that need to applyFilter strings
      * retrieved from the database.
      *
      * @param v ImageView to receive an image
@@ -227,7 +227,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * there is no existing ViewBinder or if the existing ViewBinder cannot
      * handle binding to a TextView.
      *
-     * Intended to be overridden by Adapters that need to filter strings
+     * Intended to be overridden by Adapters that need to applyFilter strings
      * retrieved from the database.
      * 
      * @param v TextView to receive text
@@ -325,7 +325,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
     }
 
     /**
-     * Create a map from an array of strings to an array of column-id integers in cursor c.
+     * Create a map from an array of strings to an array of column-prefName integers in cursor c.
      * If c is null, the array will be discarded.
      *
      * @param c the cursor to find the columns from

@@ -251,7 +251,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_due_date">Secondo Data di scadenza</string>
     <string name="by_threshold_date">Secondo Data Limite</string>
 	
-    <!-- filter -->
+    <!-- applyFilter -->
     <string name="filter_select_all">Seleziona tutto</string>
     <string name="filter_clear_all">Cancella Filtro</string>
     <string name="filter_invert">Inverti Filtro</string>

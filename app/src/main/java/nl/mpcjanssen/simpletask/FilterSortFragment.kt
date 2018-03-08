@@ -164,7 +164,7 @@ class FilterSortFragment : Fragment() {
             val row = super.getView(position, convertView, parent)
             val reverseButton = row.findViewById(R.id.reverse_button) as ImageButton
             val label = row.findViewById(R.id.text) as TextView
-            label.text = m_app.getSortString(adapterList[position])
+            label.text = Config.getSortString(adapterList[position])
 
             if (directions[position] == Query.REVERSED_SORT) {
                 reverseButton.setBackgroundResource(sortUpId)

@@ -741,7 +741,7 @@ public class DragSortListView extends ListView {
 
         final Drawable divider = getDivider();
         final int dividerHeight = getDividerHeight();
-        // log.debug(TAG, "div="+divider+" divH="+dividerHeight);
+        // log.debug(tag, "div="+divider+" divH="+dividerHeight);
 
         if (divider != null && dividerHeight != 0) {
             final ViewGroup expItem = (ViewGroup) getChildAt(expPosition
@@ -761,7 +761,7 @@ public class DragSortListView extends ListView {
                     b = expItem.getBottom() - childHeight;
                     t = b - dividerHeight;
                 }
-                // log.debug(TAG, "l="+l+" t="+t+" r="+r+" b="+b);
+                // log.debug(tag, "l="+l+" t="+t+" r="+r+" b="+b);
 
                 // Have to clip to support ColorDrawable on <= Gingerbread
                 canvas.save();
@@ -808,11 +808,11 @@ public class DragSortListView extends ListView {
             final int alpha = (int) (255f * mCurrFloatAlpha * alphaMod);
 
             canvas.save();
-            // log.debug(TAG, "clip rect bounds: " + canvas.getClipBounds());
+            // log.debug(tag, "clip rect bounds: " + canvas.getClipBounds());
             canvas.translate(mFloatLoc.x, mFloatLoc.y);
             canvas.clipRect(0, 0, w, h);
 
-            // log.debug(TAG, "clip rect bounds: " + canvas.getClipBounds());
+            // log.debug(tag, "clip rect bounds: " + canvas.getClipBounds());
             canvas.saveLayerAlpha(0, 0, w, h, alpha, Canvas.ALL_SAVE_FLAG);
             mFloatView.draw(canvas);
             canvas.restore();
@@ -979,13 +979,13 @@ public class DragSortListView extends ListView {
 
         int divHeight = getDividerHeight();
 
-        // log.debug(TAG, "float mid="+mFloatViewMid);
+        // log.debug(tag, "float mid="+mFloatViewMid);
 
         int itemPos = startPos;
         int itemTop = startTop;
         if (mFloatViewMid < edge) {
             // scanning up for float position
-            // log.debug(TAG, "    edge="+edge);
+            // log.debug(tag, "    edge="+edge);
             while (itemPos >= 0) {
                 itemPos--;
                 itemHeight = getItemHeight(itemPos);
@@ -997,7 +997,7 @@ public class DragSortListView extends ListView {
 
                 itemTop -= itemHeight + divHeight;
                 edge = getShuffleEdge(itemPos, itemTop);
-                // log.debug(TAG, "    edge="+edge);
+                // log.debug(tag, "    edge="+edge);
 
                 if (mFloatViewMid >= edge) {
                     break;
@@ -1007,7 +1007,7 @@ public class DragSortListView extends ListView {
             }
         } else {
             // scanning down for float position
-            // log.debug(TAG, "    edge="+edge);
+            // log.debug(tag, "    edge="+edge);
             final int count = getCount();
             while (itemPos < count) {
                 if (itemPos == count - 1) {
@@ -1018,7 +1018,7 @@ public class DragSortListView extends ListView {
                 itemTop += divHeight + itemHeight;
                 itemHeight = getItemHeight(itemPos + 1);
                 edge = getShuffleEdge(itemPos + 1, itemTop);
-                // log.debug(TAG, "    edge="+edge);
+                // log.debug(tag, "    edge="+edge);
 
                 // test for hit
                 if (mFloatViewMid < edge) {
@@ -1050,7 +1050,7 @@ public class DragSortListView extends ListView {
                 edgeTop = edge;
                 edgeBottom = lastEdge;
             }
-            // log.debug(TAG, "edgeTop="+edgeTop+" edgeBot="+edgeBottom);
+            // log.debug(tag, "edgeTop="+edgeTop+" edgeBot="+edgeBottom);
 
             int slideRgnHeight = (int) (0.5f * mSlideRegionFrac * edgeToEdge);
             float slideRgnHeightF = (float) slideRgnHeight;
@@ -1538,7 +1538,7 @@ public class DragSortListView extends ListView {
 
     private void adjustOnReorder() {
         final int firstPos = getFirstVisiblePosition();
-        // log.debug(TAG, "first="+firstPos+" src="+mSrcPos);
+        // log.debug(tag, "first="+firstPos+" src="+mSrcPos);
         if (mSrcPos < firstPos) {
             // collapsed src item is off screen;
             // adjust the scroll after item heights have been fixed
@@ -1547,7 +1547,7 @@ public class DragSortListView extends ListView {
             if (v != null) {
                 top = v.getTop();
             }
-            // log.debug(TAG, "top="+top+" fvh="+mFloatViewHeight);
+            // log.debug(tag, "top="+top+" fvh="+mFloatViewHeight);
             setSelectionFromTop(firstPos - 1, top - getPaddingTop());
         }
     }
@@ -1938,7 +1938,7 @@ public class DragSortListView extends ListView {
             // first check cache for child height at this position
             int childHeight = mChildHeightCache.get(position);
             if (childHeight != -1) {
-                // log.debug(TAG, "found child height in cache!");
+                // log.debug(tag, "found child height in cache!");
                 return childHeight;
             }
 
@@ -2122,7 +2122,7 @@ public class DragSortListView extends ListView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        // log.debug(TAG, "onMeasure called");
+        // log.debug(tag, "onMeasure called");
         if (mFloatView != null) {
             if (mFloatView.isLayoutRequested()) {
                 measureFloatView();
@@ -2159,7 +2159,7 @@ public class DragSortListView extends ListView {
                 doActionUpOrCancel();
                 break;
             case MotionEvent.ACTION_UP:
-                // log.debug(TAG, "calling stopDrag from onDragTouchEvent");
+                // log.debug(tag, "calling stopDrag from onDragTouchEvent");
                 if (mDragState == DRAGGING) {
                     stopDrag(false);
                 }
@@ -2323,7 +2323,7 @@ public class DragSortListView extends ListView {
         if (updated) {
             adjustAllItems();
             int scroll = adjustScroll(movePos, moveItem, oldFirstExpPos, oldSecondExpPos);
-            // log.debug(TAG, "  adjust scroll="+scroll);
+            // log.debug(tag, "  adjust scroll="+scroll);
 
             setSelectionFromTop(movePos, moveItem.getTop() + scroll - getPaddingTop());
             layoutChildren();
@@ -2387,9 +2387,9 @@ public class DragSortListView extends ListView {
             }
         }
 
-        // log.debug(TAG, "dragView top=" + (y - mDragDeltaY));
-        // log.debug(TAG, "limit=" + limit);
-        // log.debug(TAG, "mDragDeltaY=" + mDragDeltaY);
+        // log.debug(tag, "dragView top=" + (y - mDragDeltaY));
+        // log.debug(tag, "limit=" + limit);
+        // log.debug(tag, "mDragDeltaY=" + mDragDeltaY);
 
         if (floatY < topLimit) {
             mFloatLoc.y = topLimit;
@@ -2861,7 +2861,7 @@ public class DragSortListView extends ListView {
                 return;
             }
 
-            // log.debug(TAG, "scroll");
+            // log.debug(tag, "scroll");
 
             final int first = getFirstVisiblePosition();
             final int last = getLastVisiblePosition();
@@ -2874,7 +2874,7 @@ public class DragSortListView extends ListView {
 
             if (scrollDir == UP) {
                 View v = getChildAt(0);
-                // log.debug(TAG, "vtop="+v.getTop()+" padtop="+padTop);
+                // log.debug(tag, "vtop="+v.getTop()+" padtop="+padTop);
                 if (v == null) {
                     mScrolling = false;
                     return;
@@ -2945,7 +2945,7 @@ public class DragSortListView extends ListView {
             doDragFloatView(movePos, moveItem, false);
 
             mPrevTime = mCurrTime;
-            // log.debug(TAG, "  updated prevTime="+mPrevTime);
+            // log.debug(tag, "  updated prevTime="+mPrevTime);
 
             post(this);
         }
