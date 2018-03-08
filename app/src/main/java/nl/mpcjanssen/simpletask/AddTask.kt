@@ -108,7 +108,10 @@ class AddTask : ThemedActionBarActivity() {
                     ""
                 }
                 start_text = preFillString
-                textInputField.setText(preFillString)
+                // Avoid discarding changes on rotate
+                if (textInputField.text.isEmpty()) {
+                    textInputField.setText(preFillString)
+                }
                 // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
                 // like Swype where ENTER keyCode is not generated.
 
