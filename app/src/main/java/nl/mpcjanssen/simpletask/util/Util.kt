@@ -26,6 +26,7 @@
 
 package nl.mpcjanssen.simpletask.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -316,7 +317,7 @@ fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
     return builder.create()
 }
 
-/* @SuppressLint("InflateParams") */
+@SuppressLint("InflateParams")
 fun Activity.updateItemsDialog(
         title: String,
         tasks: List<Task>,
