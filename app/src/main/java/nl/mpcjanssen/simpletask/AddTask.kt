@@ -115,7 +115,7 @@ class AddTask : ThemedActionBarActivity() {
                 // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
                 // like Swype where ENTER keyCode is not generated.
 
-                var inputFlags = InputType.TYPE_CLASS_TEXT
+                var inputFlags = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
 
                 if (Config.isCapitalizeTasks) {
                     inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
