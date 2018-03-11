@@ -286,21 +286,22 @@ class AddTask : ThemedActionBarActivity() {
             return
         }
         log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks")
-        for ((i, task) in enteredTasks.withIndex()) {
-            if (m_backup.size > 0) {
-                val taskIndex = TodoList.pendingEdits.get(i).toInt()
-                TodoList.todoItems.get(taskIndex).update(task.text)
+        if (m_backup.size > 0) {
+            enteredTasks.forEachIndexed { i, task ->
+                val taskIndex = TodoList.pendingEdits[i].toInt()
+                TodoList.todoItems[taskIndex].update(task.text)
                 // Don't modify create date for updated tasks
                 m_backup.removeAt(0)
-            } else {
-                val t: Task
-                if (Config.hasPrependDate) {
-                    t = Task(task.text, todayAsString)
-                } else {
-                    t = task
-                }
-                todoList.add(t, Config.hasAppendAtEnd)
             }
+        } else {
+            val processedTasks: List<Task> = enteredTasks.map { task ->
+                if (Config.hasPrependDate) {
+                    Task(task.text, todayAsString)
+                } else {
+                    task
+                }
+            }
+            todoList.add(processedTasks, Config.hasAppendAtEnd)
         }
 
         // Remove remaining tasks that where selected for updateCache
