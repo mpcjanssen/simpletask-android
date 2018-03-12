@@ -278,11 +278,7 @@ object Config : Preferences(TodoApplication.app) {
     }
 
     var mainQuery: Query
-        get()  {
-            val q = Query(luaModule = "mainui")
-            q.initFromPrefs(Config.prefs)
-            return q
-        }
+        get() = Query(this.prefs, luaModule = "mainui")
         set(value) {
             // Update the intent so we wont get the old applyFilter after
             // switching back to app later. Fixes [1c5271ee2e]
