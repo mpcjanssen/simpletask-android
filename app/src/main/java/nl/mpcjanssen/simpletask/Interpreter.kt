@@ -12,17 +12,16 @@ import java.util.*
 object Interpreter : AbstractInterpreter() {
     private val globals = JsePlatform.standardGlobals()!!
     private val log = Logger
-    private val TAG = "LuaInterp"
+    val tag = "LuaInterp"
 
     private val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
 
     init {
-
+        globals.set("toast", LuaToastShort())
+        globals.set("log", LuaLog())
+        evalScript(null, TODOLIB)
         try {
-            globals.set("toast", LuaToastShort())
-            evalScript(null, TODOLIB)
             evalScript(null, Config.luaConfig)
-
         } catch (e: LuaError) {
             nl.mpcjanssen.simpletask.util.log.warn(Config.TAG, "Lua execution failed " + e.message)
             showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
@@ -288,8 +287,16 @@ object Interpreter : AbstractInterpreter() {
 class LuaToastShort : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
-        log.info(TAG, "Toast called $string")
+        log.info(Interpreter.tag, "Toasted: \"$string\"")
         showToastShort(TodoApplication.app, string)
+        return LuaValue.NIL
+    }
+}
+
+class LuaLog : OneArgFunction() {
+    override fun call(text: LuaValue?): LuaValue? {
+        val string = text?.tojstring() ?: ""
+        log.info(Interpreter.tag, string)
         return LuaValue.NIL
     }
 }
