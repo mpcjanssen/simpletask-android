@@ -59,8 +59,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
-        var arguments: Bundle
-
         val intent = intent
         val environment: String = intent.action?.let {
             asWidgetConfigure = it == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
@@ -84,46 +82,39 @@ class FilterActivity : ThemedNoActionBarActivity() {
             setTitle(R.string.create_widget)
             mFilter = Query(prefs, luaModule = environment)
         }
-
         pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
 
-        // Fill arguments for fragment
-        arguments = Bundle().apply {
+        val contextTab = FilterListFragment()
+        contextTab.arguments = Bundle().apply {
             val contexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, "-")
             putStringArrayList(FILTER_ITEMS, contexts)
             putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
             putBoolean(INITIAL_NOT, mFilter.contextsNot)
             putString(TAB_TYPE, CONTEXT_TAB)
         }
-        val contextTab = FilterListFragment()
-        contextTab.arguments = arguments
         pagerAdapter!!.add(contextTab)
 
-        // Fill arguments for fragment
-        arguments = Bundle().apply {
+        val projectTab = FilterListFragment()
+        projectTab.arguments = Bundle().apply {
             val projects = alfaSort(TodoList.projects, Config.sortCaseSensitive, "-")
             putStringArrayList(FILTER_ITEMS, projects)
             putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
             putBoolean(INITIAL_NOT, mFilter.projectsNot)
             putString(TAB_TYPE, PROJECT_TAB)
         }
-        val projectTab = FilterListFragment()
-        projectTab.arguments = arguments
         pagerAdapter!!.add(projectTab)
 
-        // Fill arguments for fragment
-        arguments = Bundle().apply {
+        val prioTab = FilterListFragment()
+        prioTab.arguments = Bundle().apply {
             putStringArrayList(FILTER_ITEMS, Priority.inCode(TodoList.priorities))
             putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.priorities))
             putBoolean(INITIAL_NOT, mFilter.prioritiesNot)
             putString(TAB_TYPE, PRIO_TAB)
         }
-        val prioTab = FilterListFragment()
-        prioTab.arguments = arguments
         pagerAdapter!!.add(prioTab)
 
-        // Fill arguments for fragment
-        arguments = Bundle().apply {
+        val otherTab = FilterOtherFragment()
+        otherTab.arguments = Bundle().apply {
             putBoolean(Query.INTENT_HIDE_COMPLETED_FILTER, mFilter.hideCompleted)
             putBoolean(Query.INTENT_HIDE_FUTURE_FILTER, mFilter.hideFuture)
             putBoolean(Query.INTENT_HIDE_LISTS_FILTER, mFilter.hideLists)
@@ -133,29 +124,26 @@ class FilterActivity : ThemedNoActionBarActivity() {
             putBoolean(Query.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
             putString(TAB_TYPE, OTHER_TAB)
         }
-        val otherTab = FilterOtherFragment()
-        otherTab.arguments = arguments
         pagerAdapter!!.add(otherTab)
 
         // Fill arguments for fragment
-        arguments = Bundle().apply {
+        val sortTab = FilterSortFragment()
+        sortTab.arguments = Bundle().apply {
             putStringArrayList(FILTER_ITEMS, mFilter.getSort(Config.defaultSorts))
             putString(TAB_TYPE, SORT_TAB)
         }
-        val sortTab = FilterSortFragment()
-        sortTab.arguments = arguments
         pagerAdapter!!.add(sortTab)
 
-        arguments = Bundle().apply {
+
+        val scriptTab = FilterScriptFragment()
+        scriptFragment = scriptTab
+        scriptTab.arguments = Bundle().apply {
             putString(Query.INTENT_LUA_MODULE, environment)
             putBoolean(Query.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
             putString(Query.INTENT_SCRIPT_FILTER, mFilter.script)
             putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
             putString(TAB_TYPE, SCRIPT_TAB)
         }
-        val scriptTab = FilterScriptFragment()
-        scriptFragment = scriptTab
-        scriptTab.arguments = arguments
         pagerAdapter!!.add(scriptTab)
 
         pager = findViewById<ViewPager>(R.id.pager)
