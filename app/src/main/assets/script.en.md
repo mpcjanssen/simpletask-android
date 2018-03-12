@@ -40,6 +40,11 @@ Helper functions
 
 Shows `string` as an Android toast. Useful for debugging scripts.
 
+### `log (string) -> nil`
+
+Logs `string` to the Android logcat logging with info level and tag `LuaInterp`.
+
+
 ### Notes
 
 Don't use toasts inside functions. This is a good way to make Simpletask hang.
