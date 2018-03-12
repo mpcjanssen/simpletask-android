@@ -101,9 +101,7 @@ class AddTask : ThemedActionBarActivity() {
                 } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
                     intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
                 } else if (intent.hasExtra(Query.INTENT_JSON)) {
-                    val currentFilter = Query(luaModule = "from_intent")
-                    currentFilter.initFromIntent(intent)
-                    currentFilter.prefill
+                    Query(intent, luaModule = "from_intent").prefill
                 } else {
                     ""
                 }
