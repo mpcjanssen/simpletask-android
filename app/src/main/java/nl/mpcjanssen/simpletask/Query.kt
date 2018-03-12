@@ -19,20 +19,16 @@ data class NamedQuery(val name: String, val query: Query) {
         return Base64.encodeToString(name.toByteArray(), Base64.DEFAULT).trim()
     }
 
-
     fun saveInPrefs(prefs: SharedPreferences) {
         query.saveInPrefs(prefs)
         prefs.edit().apply { putString(INTENT_TITLE,name) }.commit()
-
     }
 
     companion object {
         val INTENT_TITLE = "TITLE"
         fun initFromPrefs(prefs: SharedPreferences, module: String, fallbackTitle: String ) : NamedQuery {
-            val query =  Query(luaModule = module).apply {
-                initFromPrefs(prefs)
-            }
-            val name  = prefs.getString(INTENT_TITLE, null)
+            val query = Query(prefs, luaModule = module)
+            val name = prefs.getString(INTENT_TITLE, null)
                     ?: JSONObject(prefs.getString(Query.INTENT_JSON, "{}")).optString(INTENT_TITLE, fallbackTitle)
 
             return NamedQuery(name, query)
@@ -66,6 +62,18 @@ class Query(
     var useScript: Boolean = false
     var script: String? = null
     var scriptTestTask: String? = null
+
+    constructor(json: JSONObject, luaModule: String) : this(luaModule) {
+        initFromJSON(json)
+    }
+
+    constructor(intent: Intent, luaModule: String) : this(luaModule) {
+        initFromIntent(intent)
+    }
+
+    constructor(prefs: SharedPreferences, luaModule: String) : this(luaModule) {
+        initFromPrefs(prefs)
+    }
 
     override fun toString(): String {
         return join(m_sorts, ",")
@@ -101,7 +109,7 @@ class Query(
         }
     }
 
-    fun initFromJSON(json: JSONObject?): Query {
+    private fun initFromJSON(json: JSONObject?): Query {
         val prios: String?
         val tags: String?
         val lists: String?
@@ -369,7 +377,7 @@ class Query(
         const val INTENT_EXTRA_DELIMITERS = "[\n,]"
     }
 
-    fun initFromIntent(intent: Intent): Query {
+    private fun initFromIntent(intent: Intent): Query {
         if (intent.hasExtra(INTENT_JSON)) {
             val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
             initFromJSON(JSONObject(jsonFromIntent))
@@ -424,7 +432,7 @@ class Query(
         return this
     }
 
-    fun initFromPrefs(prefs: SharedPreferences): Query {
+    private fun initFromPrefs(prefs: SharedPreferences): Query {
         val jsonFromPref = prefs.getString(INTENT_JSON, null)
         if (jsonFromPref != null) {
             initFromJSON(JSONObject(jsonFromPref))

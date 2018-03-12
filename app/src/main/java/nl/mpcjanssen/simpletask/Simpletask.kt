@@ -263,7 +263,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            val newQuery = Query("mainui").initFromIntent(currentIntent)
+            val newQuery = Query(currentIntent, "mainui")
             Config.mainQuery = newQuery
             intent = newQuery.saveInIntent(intent)
             newQuery
@@ -935,10 +935,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
                     jsonFilters.keys().forEach { name ->
-                        val newQuery = Query(luaModule = "mainui")
-                        newQuery.initFromJSON(jsonFilters.getJSONObject(name))
+                        val json = jsonFilters.getJSONObject(name)
+                        val newQuery = Query(json, luaModule = "mainui")
                         QueryStore.save(newQuery, name)
-
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
                     showToastShort(this, R.string.saved_filters_imported) }
@@ -956,7 +955,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             QueryStore.get(it)
         }
         val jsonFilters = queries.fold(JSONObject()) { acc, query ->
-
             acc.put(query.name, query.query.saveInJSON())
         }
         val r = Runnable {

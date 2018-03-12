@@ -69,22 +69,20 @@ class FilterActivity : ThemedNoActionBarActivity() {
         }
 
 
-        mFilter = Query(luaModule = environment)
         val context = applicationContext
 
-        if (asWidgetConfigure) {
-            if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
-                asWidgetReConfigure = true
-                asWidgetConfigure = false
-                setTitle(R.string.config_widget)
-                val preferences = context.getSharedPreferences("" + intent.getIntExtra(Constants.EXTRA_WIDGET_ID, -1), Context.MODE_PRIVATE)
-                mFilter.initFromPrefs(preferences)
-            } else {
-                setTitle(R.string.create_widget)
-                mFilter.initFromPrefs(prefs)
-            }
+        if (!asWidgetConfigure) {
+            mFilter = Query(intent, luaModule = environment)
+        } else if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
+            asWidgetReConfigure = true
+            asWidgetConfigure = false
+            setTitle(R.string.config_widget)
+            val prefsName = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, -1).toString()
+            val preferences = context.getSharedPreferences(prefsName , Context.MODE_PRIVATE)
+            mFilter = Query(preferences, luaModule = environment)
         } else {
-            mFilter.initFromIntent(intent)
+            setTitle(R.string.create_widget)
+            mFilter = Query(prefs, luaModule = environment)
         }
 
         pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
