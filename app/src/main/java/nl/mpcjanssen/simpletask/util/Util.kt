@@ -53,6 +53,7 @@ import android.view.KeyEvent
 import android.view.Window
 import android.widget.ListView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.update_items_dialog.view.*
@@ -344,23 +345,11 @@ fun Activity.updateItemsDialog(
     // like Swype where ENTER keyCode is not generated.
     editText.setRawInputType(InputType.TYPE_CLASS_TEXT)
     editText.imeOptions = EditorInfo.IME_ACTION_DONE
-    editText.setOnEditorActionListener { _, actionId, keyEvent ->
-        val hardwareEnterUp = keyEvent != null &&
-                keyEvent.action == KeyEvent.ACTION_UP &&
-                keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-        val hardwareEnterDown = keyEvent != null &&
-                keyEvent.action == KeyEvent.ACTION_DOWN &&
-                keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-        val imeActionDone = actionId == EditorInfo.IME_ACTION_DONE
-
-        if (imeActionDone || hardwareEnterUp) {
-            val whitespace = """\s""".toRegex()
-            val newItems = editText.text.split(whitespace).filterNot(String::isBlank)
-            itemAdapter.addItems(newItems)
-            editText.setText("")
-        }
-
-        imeActionDone || hardwareEnterDown || hardwareEnterUp
+    editText.setOnImeAction(EditorInfo.IME_ACTION_DONE) { v ->
+        val whitespace = """\s""".toRegex()
+        val newItems = v.text.toString().split(whitespace).filterNot(String::isBlank)
+        itemAdapter.addItems(newItems)
+        editText.setText("")
     }
 
     val builder = AlertDialog.Builder(this).apply {
@@ -392,6 +381,22 @@ fun Activity.updateItemsDialog(
     val dialog = builder.create()
     dialog.setTitle(title)
     dialog.show()
+}
+
+fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit): Unit {
+    this.setOnEditorActionListener { v, actionId, keyEvent ->
+        val enter = keyEvent != null && keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER
+
+        val hardwareEnterUp = enter && keyEvent?.action == KeyEvent.ACTION_UP
+        val hardwareEnterDown = enter && keyEvent?.action == KeyEvent.KEYCODE_ENTER
+        val imeAction = actionId == id
+
+        if (imeAction || hardwareEnterUp) {
+            callback(v)
+        }
+
+        imeAction || hardwareEnterDown || hardwareEnterUp
+    }
 }
 
 fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener): AlertDialog {
