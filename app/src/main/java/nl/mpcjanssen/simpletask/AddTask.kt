@@ -120,51 +120,40 @@ class AddTask : ThemedActionBarActivity() {
                 }
                 textInputField.setRawInputType(inputFlags)
                 textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
-                textInputField.setOnEditorActionListener { _, actionId, keyEvent ->
-                    val hardwareEnterUp = keyEvent != null &&
-                            keyEvent.action == KeyEvent.ACTION_UP &&
-                            keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-                    val hardwareEnterDown = keyEvent != null &&
-                            keyEvent.action == KeyEvent.ACTION_DOWN &&
-                            keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-                    val imeActionNext = actionId == EditorInfo.IME_ACTION_NEXT
-
-                    if (imeActionNext || hardwareEnterUp) {
-                        // Move cursor to end of line
-                        val position = textInputField.selectionStart
-                        val remainingText = textInputField.text.toString().substring(position)
-                        val endOfLineDistance = remainingText.indexOf('\n')
-                        var endOfLine: Int
-                        if (endOfLineDistance == -1) {
-                            endOfLine = textInputField.length()
-                        } else {
-                            endOfLine = position + endOfLineDistance
-                        }
-                        textInputField.setSelection(endOfLine)
-                        replaceTextAtSelection("\n", false)
-
-                        if (Config.isAddTagsCloneTags) {
-                            val precedingText = textInputField.text.toString().substring(0, endOfLine)
-                            val lineStart = precedingText.lastIndexOf('\n')
-                            val line: String
-                            if (lineStart != -1) {
-                                line = precedingText.substring(lineStart, endOfLine)
-                            } else {
-                                line = precedingText
-                            }
-                            val t = Task(line)
-                            val tags = t.lists
-                                    .map { "@" + it }
-                                    .toMutableSet()
-                            for (prj in t.tags) {
-                                tags.add("+" + prj)
-                            }
-                            replaceTextAtSelection(join(tags, " "), true)
-                        }
-                        endOfLine++
-                        textInputField.setSelection(endOfLine)
+                textInputField.setOnImeAction(EditorInfo.IME_ACTION_NEXT) { _ ->
+                    // Move cursor to end of line
+                    val position = textInputField.selectionStart
+                    val remainingText = textInputField.text.toString().substring(position)
+                    val endOfLineDistance = remainingText.indexOf('\n')
+                    var endOfLine: Int
+                    if (endOfLineDistance == -1) {
+                        endOfLine = textInputField.length()
+                    } else {
+                        endOfLine = position + endOfLineDistance
                     }
-                    imeActionNext || hardwareEnterDown || hardwareEnterUp
+                    textInputField.setSelection(endOfLine)
+                    replaceTextAtSelection("\n", false)
+
+                    if (Config.isAddTagsCloneTags) {
+                        val precedingText = textInputField.text.toString().substring(0, endOfLine)
+                        val lineStart = precedingText.lastIndexOf('\n')
+                        val line: String
+                        if (lineStart != -1) {
+                            line = precedingText.substring(lineStart, endOfLine)
+                        } else {
+                            line = precedingText
+                        }
+                        val t = Task(line)
+                        val tags = t.lists
+                                .map { "@" + it }
+                                .toMutableSet()
+                        for (prj in t.tags) {
+                            tags.add("+" + prj)
+                        }
+                        replaceTextAtSelection(join(tags, " "), true)
+                    }
+                    endOfLine++
+                    textInputField.setSelection(endOfLine)
                 }
 
                 setWordWrap(Config.isWordWrap)
