@@ -385,10 +385,10 @@ fun Activity.updateItemsDialog(
 
 fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit): Unit {
     this.setOnEditorActionListener { v, actionId, keyEvent ->
-        val enter = keyEvent != null && keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER
+        val enter = keyEvent != null && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
 
-        val hardwareEnterUp = enter && keyEvent?.action == KeyEvent.ACTION_UP
-        val hardwareEnterDown = enter && keyEvent?.action == KeyEvent.KEYCODE_ENTER
+        val hardwareEnterUp = enter && keyEvent.action == KeyEvent.ACTION_UP
+        val hardwareEnterDown = enter && keyEvent.action == KeyEvent.KEYCODE_ENTER
         val imeAction = actionId == id
 
         if (imeAction || hardwareEnterUp) {
