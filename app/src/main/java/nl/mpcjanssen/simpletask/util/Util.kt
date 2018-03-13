@@ -689,26 +689,6 @@ fun String.toDateTime(): DateTime? {
     return date
 }
 
-fun ArrayList<HashSet<String>>.union(): Set<String> {
-    val result = this.fold(HashSet<String>()) {
-        left, right ->
-        left.addAll(right)
-        left
-    }
-    return result
-}
-
-fun ArrayList<HashSet<String>>.intersection(): Set<String> {
-    val intersection = this.firstOrNull()?.toHashSet() ?: return emptySet()
-    for (i in 1..this.lastIndex) {
-        intersection.retainAll(this[i])
-        if (intersection.isEmpty()) {
-            break
-        }
-    }
-    return intersection
-}
-
 fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {
     log.info(TAG, "Sending file changed broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_SYNC))
