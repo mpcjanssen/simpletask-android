@@ -44,9 +44,12 @@ import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.inputmethod.EditorInfo
+import android.view.KeyEvent
 import android.view.Window
 import android.widget.ListView
 import android.widget.ProgressBar
@@ -321,77 +324,72 @@ fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
 fun Activity.updateItemsDialog(
         title: String,
         tasks: List<Task>,
-        allItems: MutableCollection<String>,
-        retrieveFromTask: (Task) -> SortedSet<String>,
+        allItems: Collection<String>,
+        retrieveFromTask: (Task) -> Set<String>,
         addToTask: (Task, String) -> Unit,
         removeFromTask: (Task, String) -> Unit,
         positiveButtonListener: () -> Unit
 ) {
-    val checkedTaskItems = ArrayList<HashSet<String>>()
-    tasks.forEach {
-        val items = HashSet<String>()
-        items.addAll(retrieveFromTask.invoke(it))
-        checkedTaskItems.add(items)
-    }
-
-    // Determine items on all tasks (intersection of the sets)
-    val onAllTasks = checkedTaskItems.intersection()
-
-    // Determine items on some tasks (union of the sets)
-    var onSomeTasks = checkedTaskItems.union()
-    onSomeTasks -= onAllTasks
-
-    // Remaining: items on no tasks
-    allItems.removeAll(onAllTasks)
-    allItems.removeAll(onSomeTasks)
-
-    val sortedAllItems = ArrayList<String>()
-    sortedAllItems += alfaSort(onAllTasks, Config.sortCaseSensitive)
-    sortedAllItems += alfaSort(onSomeTasks, Config.sortCaseSensitive)
-    sortedAllItems += alfaSort(allItems.toSet(), Config.sortCaseSensitive)
-
     val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
-    val builder = AlertDialog.Builder(this)
-    builder.setView(view)
+    val itemAdapter = ItemDialogAdapter(tasks, allItems, retrieveFromTask)
 
-    val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
-    val rcv = view.current_items_list
-    rcv.setHasFixedSize(true)
-    val layoutManager = LinearLayoutManager(this)
-    rcv.layoutManager = layoutManager
-    rcv.adapter = itemAdapter
-
-    val ed = view.new_item_text
-    builder.setPositiveButton(R.string.ok) { _, _ ->
-        val updatedValues = itemAdapter.currentState
-        for (i in updatedValues.indices) {
-            when (updatedValues[i]) {
-                false -> {
-                    tasks.forEach {
-                        removeFromTask(it, sortedAllItems[i])
-                    }
-                }
-                true -> {
-                    tasks.forEach {
-                        addToTask(it, sortedAllItems[i])
-                    }
-                }
-                // null ->  Nothing to do with indeterminite state
-            }
-        }
-        val newText = ed.text.toString()
-        if (newText.isNotBlank()) {
-            tasks.forEach {
-                addToTask(it, newText)
-            }
-        }
-
-        positiveButtonListener()
+    // Initialize RecyclerView
+    view.current_items_list.let {
+        it.layoutManager = LinearLayoutManager(this)
+        it.adapter = itemAdapter
     }
-    builder.setNegativeButton(R.string.cancel) { _, _ -> }
+
+    val editText = view.new_item_text
+    // Listen to enter events, use IME_ACTION_DONE for soft keyboards
+    // like Swype where ENTER keyCode is not generated.
+    editText.setRawInputType(InputType.TYPE_CLASS_TEXT)
+    editText.imeOptions = EditorInfo.IME_ACTION_DONE
+    editText.setOnEditorActionListener { _, actionId, keyEvent ->
+        val hardwareEnterUp = keyEvent != null &&
+                keyEvent.action == KeyEvent.ACTION_UP &&
+                keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
+        val hardwareEnterDown = keyEvent != null &&
+                keyEvent.action == KeyEvent.ACTION_DOWN &&
+                keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
+        val imeActionDone = actionId == EditorInfo.IME_ACTION_DONE
+
+        if (imeActionDone || hardwareEnterUp) {
+            val whitespace = """\s""".toRegex()
+            val newItems = editText.text.split(whitespace).filterNot(String::isBlank)
+            itemAdapter.addItems(newItems)
+            editText.setText("")
+        }
+
+        imeActionDone || hardwareEnterDown || hardwareEnterUp
+    }
+
+    val builder = AlertDialog.Builder(this).apply {
+        setView(view)
+        setPositiveButton(R.string.ok) { _, _ ->
+            val updatedValues = itemAdapter.changedItems()
+            updatedValues.forEach { (item, value) ->
+                when (value) {
+                    false -> tasks.forEach { 
+                        removeFromTask(it, item)
+                    }
+                    true -> tasks.forEach {
+                        addToTask(it, item)
+                    }
+                    // null ->  Nothing to do with indeterminite state
+                }
+            }
+            val newText = editText.text.toString()
+            if (newText.isNotBlank()) {
+                tasks.forEach { addToTask(it, newText) }
+            }
+
+            positiveButtonListener()
+        }
+        setNegativeButton(R.string.cancel) { _, _ -> }
+    }
+
     // Create the AlertDialog
     val dialog = builder.create()
-
     dialog.setTitle(title)
     dialog.show()
 }
@@ -460,7 +458,11 @@ fun createCachedDatabase(context: Context, dbFile: File) {
     copyFile(dbFile, cacheFile)
 }
 
-fun alfaSort(items: Collection<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
+fun alfaSort(
+        items: Collection<String>,
+        caseSensitive: Boolean = Config.sortCaseSensitive,
+        prefix: String? = null
+): ArrayList<String> {
     val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
     })
