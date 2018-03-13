@@ -382,4 +382,6 @@ http://goo.gl/X1C55P
     <string name="calendar_write_error">Ошибка: невозможно записать календарь</string>
 
     <string name="share_history">Просмотр и передача внутренней базы истории todo.txt для восстановления.</string>
+    <string name="share_history_title">История задач</string>
+
     </resources>
