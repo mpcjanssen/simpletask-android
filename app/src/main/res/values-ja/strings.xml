@@ -364,7 +364,7 @@
 
     <string name="name">名前</string>
     <string name="date">日付</string>
-    <string name="back_clears_filter_title">\"戻る でフィルターをクリア</string>
+    <string name="back_clears_filter_title">\"戻る\" でフィルターをクリア</string>
     <string name="back_clears_filter_summary">戻るボタンで、アプリを終了する前にフィルターをクリアします。</string>
     <string name="experimental_title">実験的</string>
     <string name="experimental_summary">実験的な機能を有効にします</string>
@@ -402,8 +402,8 @@
     <string name="script_tab_test">テスト</string>
     <string name="script_tab_test_task">タスクのテスト</string>
     <string name="script_tab_script">スクリプト</string>
-    <string name="script_tab_true_task_shown">タスクを表示するには選択します</string>
-    <string name="script_tab_false_task_not_shown">タスクを隠すには選択を外します</string>
+    <string name="script_tab_true_task_shown">表示</string>
+    <string name="script_tab_false_task_not_shown">非表示</string>
 
     <string name="action_pop_up_call">電話:</string>
     <string name="action_pop_up_sms">SMS:</string>
@@ -418,4 +418,5 @@
     <string name="use_uuid_title">各タスクに UUID を割り当てる</string>
 <string name="nav_drawer_hint">保存ボタンを使用して
 \n現在のフィルターを保存</string>
-</resources>
+<string name="cancel_changes">変更は失われます。</string>
+    </resources>
