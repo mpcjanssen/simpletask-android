@@ -393,4 +393,26 @@
     <string name="login_cloudless">Pokud nemáte Dropbox účet nebo ho nechcete používat pro ukládání vašich seznamů úkolů, můžete si stáhnout Simpletask Cloudless z obchodu Play.
 \nhttps://goo.gl/X1C55P</string>
 
+    <string name="logout_message">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
+\nJakékoli změny které nebyly synchronizovány budou po odhlášení ztraceny.</string>
+     <string name="dropbox_open">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
+\nJakékoli změny které nebyly synchronizovány budou po otevření jiného souboru ztraceny.</string>
+    <string name="title_filter_applied">Filtrováno na:</string>
+    <string name="priority_short_prompt">Prio</string>
+    <string name="priority_format">(prio)</string>
+
+    <string name="share_addtask_name">Použít na to Simpletask</string>
+
+    <string name="title_activity_filter">Filtrovat</string>
+    <string name="no_threshold_date">Žádné hraniční datum</string>
+    <string name="save_filter_message">Zadejte název pro stávající filtr, který bude zobrazován v přihrádce s uloženými filtry.</string>
+
+    <string name="donate_summary">Krom toho že je poskytovaný zdarma, jedná se o svobodný software. Bylo do něho vloženo mnoho usilovné práce a proto pokud máte možnost, jakýkoli dat je velmi oceněn.</string>
+    <string name="calendar_sync_desc_due">Připomínka termínu, automaticky vytvořené Simpletask</string>
+    <string name="calendar_sync_desc_thre">Připomínka hraničního data, automaticky vytvořená Simpletask</string>
+    <string name="share_history">Zobrazit a sdílet vnitřní databáze historie todo.txt pro účely obnovy.</string>
+    <string name="help_locale">cs</string>
+
+    <string name="back_clears_filter_title">„Zpět“ vyčistí filtr</string>
+    <string name="back_clears_filter_summary">Tlačítko zpět před ukončením aplikace vyčistí filtr.</string>
     </resources>
