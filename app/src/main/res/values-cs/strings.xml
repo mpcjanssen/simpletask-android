@@ -353,4 +353,44 @@
 
     <string name="nav_drawer_hint">Stávající filtr uložíte
 \nstisknutím uložit</string>
-</resources>
+<string name="add_task_help">Aktualizovat v nebo přidat na seznam úkolů. Každý úkol na zvlášť řádku.<b>Priority</b>Začněte řádek s (.), jako (A)<b>Štítky</b>Začněte znakem +, jako +kuchyně <b>Seznamy</b> Začněte znakem @, jako @doma Úloha může obsahovat libovolný počet štítků nebo být na vícero seznamech.</string>
+
+    <string name="swipe_complete_pref_title">Přejetím dokončete</string>
+    <string name="swipe_complete_pref_summary">Úlohu dokončete přejetím přes ní.</string>
+    <string name="share_task_show_edit_summary">Upravit úlohy Simpletask před uložením</string>
+
+    <string name="drawer_fixed_landscape_title">Otevřít vodorovné výsuvné panely</string>
+    <string name="drawer_fixed_landscape_summary">Vždy otevírat výsuvné panely ve vodorovném režimu.</string>
+
+    <string name="widget_theme_pref_summary">Změnit motiv vzhledu použitý pro widgety.</string>
+
+    <string name="task_text_ellipsizing_pref_title">Zkracování textu úkolu výpustky</string>
+    <string name="task_text_ellipsizing_pref_summary">V hlavním okně zkrátit text výpustky pokud je více než na dva řádky.</string>
+    <string name="task_text_ellipsizing_start">Začátek: …text úkolu</string>
+    <string name="task_text_ellipsizing_middle">Střed: Velmi… text</string>
+    <string name="task_text_ellipsizing_end">Konec: Velmi dlouhý…</string>
+    <string name="task_text_ellipsizing_marquee">Značka: Velmi dlouhý ta</string>
+
+    <string name="show_hidden_summary">Zobrazit skryté (h:1) úkoly takže je můžete upravovat. Po úpravě toto nastavení opět zrušte.</string>
+
+    <string name="show_empty_lists_summary">Zobrazit hlavičku i když jsou všechny úkoly pod ní skryté.</string>
+
+    <string name="split_actionbar_pref_title">Použít pruh rozdělení akce</string>
+    <string name="split_actionbar_pref_summary">Použít pruh rozdělení akce, kdy jsou tlačítka nabídky umístěna na spodní část obrazovky. Pro zobrazení více ze seznamu úkolů toto vypněte.</string>
+
+    <string name="show_complete_checkbox_summary">Zobrazit zaškrtávací kolonku před úkoly pro jejich dokončování či rušení dokončení.</string>
+
+    <string name="show_fast_scroll_summary">V delších seznamech úkolů posouvat rychleji</string>
+
+    <string name="sort_case_sensitive_summary">Všímat si velikosti písmen při řazení seznamů, štítků a uložených filtrů.</string>
+
+    <string name="use_create_as_threshold_title">Vytvoření je hranice</string>
+    <string name="use_create_backup_summary">Při řazení použít datum vytvoření úkolu jako hraniční datum pokud takové není nastavené</string>
+
+    <string name="sync_conflict_dialog_msg">Jejda! Na Dropbox je novější verze vašeho todo.txt souboru.
+\nChcete nahrát své místní změny, nebo stáhnout verzi z Dropbox?</string>
+
+    <string name="login_cloudless">Pokud nemáte Dropbox účet nebo ho nechcete používat pro ukládání vašich seznamů úkolů, můžete si stáhnout Simpletask Cloudless z obchodu Play.
+\nhttps://goo.gl/X1C55P</string>
+
+    </resources>
