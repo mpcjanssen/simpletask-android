@@ -145,7 +145,7 @@ class TaskAdapter(var query: Query,
         val relAge = getRelativeAge(task, TodoApplication.app)
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
-        if (!isEmptyOrNull(relAge) && !query.hideCreateDate) {
+        if (!relAge.isNullOrEmpty() && !query.hideCreateDate) {
             taskAge.text = relAge
             taskAge.visibility = View.VISIBLE
         } else {
@@ -160,7 +160,7 @@ class TaskAdapter(var query: Query,
             taskDue.text = ""
             taskDue.visibility = View.GONE
         }
-        if (!isEmptyOrNull(relativeThresholdDate)) {
+        if (!relativeThresholdDate.isNullOrEmpty()) {
             taskThreshold.text = relativeThresholdDate
             taskThreshold.visibility = View.VISIBLE
         } else {

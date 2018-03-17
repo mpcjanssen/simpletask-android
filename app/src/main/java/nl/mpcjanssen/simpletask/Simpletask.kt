@@ -643,7 +643,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val searchView = searchMenu.actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         val activeTextSearch = Config.mainQuery.search
-        if (!isEmptyOrNull(activeTextSearch)) {
+        if (!activeTextSearch.isNullOrEmpty()) {
             searchView.setQuery(activeTextSearch, false)
             searchView.isActivated = true
         }
