@@ -26,6 +26,7 @@
 
 package nl.mpcjanssen.simpletask.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -42,6 +43,7 @@ import android.support.v4.content.pm.ShortcutInfoCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -50,8 +52,11 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
 import hirondelle.date4j.DateTime
+import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoList
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 import java.io.*
@@ -312,6 +317,85 @@ fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
     return builder.create()
 }
 
+@SuppressLint("InflateParams")
+fun Activity.updateItemsDialog(
+        title: String,
+        tasks: List<Task>,
+        allItems: MutableCollection<String>,
+        retrieveFromTask: (Task) -> SortedSet<String>,
+        addToTask: (Task, String) -> Unit,
+        removeFromTask: (Task, String) -> Unit,
+        positiveButtonListener: () -> Unit
+) {
+    val checkedTaskItems = ArrayList<HashSet<String>>()
+    tasks.forEach {
+        val items = HashSet<String>()
+        items.addAll(retrieveFromTask.invoke(it))
+        checkedTaskItems.add(items)
+    }
+
+    // Determine items on all tasks (intersection of the sets)
+    val onAllTasks = checkedTaskItems.intersection()
+
+    // Determine items on some tasks (union of the sets)
+    var onSomeTasks = checkedTaskItems.union()
+    onSomeTasks -= onAllTasks
+
+    // Remaining: items on no tasks
+    allItems.removeAll(onAllTasks)
+    allItems.removeAll(onSomeTasks)
+
+    val sortedAllItems = ArrayList<String>()
+    sortedAllItems += alfaSort(onAllTasks, Config.sortCaseSensitive)
+    sortedAllItems += alfaSort(onSomeTasks, Config.sortCaseSensitive)
+    sortedAllItems += alfaSort(allItems.toSet(), Config.sortCaseSensitive)
+
+    val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
+    val builder = AlertDialog.Builder(this)
+    builder.setView(view)
+
+    val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
+    val rcv = view.current_items_list
+    rcv.setHasFixedSize(true)
+    val layoutManager = LinearLayoutManager(this)
+    rcv.layoutManager = layoutManager
+    rcv.adapter = itemAdapter
+
+    val ed = view.new_item_text
+    builder.setPositiveButton(R.string.ok) { _, _ ->
+        val updatedValues = itemAdapter.currentState
+        for (i in updatedValues.indices) {
+            when (updatedValues[i]) {
+                false -> {
+                    tasks.forEach {
+                        removeFromTask(it, sortedAllItems[i])
+                    }
+                }
+                true -> {
+                    tasks.forEach {
+                        addToTask(it, sortedAllItems[i])
+                    }
+                }
+                // null ->  Nothing to do with indeterminite state
+            }
+        }
+        val newText = ed.text.toString()
+        if (newText.isNotBlank()) {
+            tasks.forEach {
+                addToTask(it, newText)
+            }
+        }
+
+        positiveButtonListener()
+    }
+    builder.setNegativeButton(R.string.cancel) { _, _ -> }
+    // Create the AlertDialog
+    val dialog = builder.create()
+
+    dialog.setTitle(title)
+    dialog.show()
+}
+
 fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener): AlertDialog {
     val keys = act.resources.getStringArray(R.array.deferOptions)
     val today = "0d"
@@ -376,21 +460,18 @@ fun createCachedDatabase(context: Context, dbFile: File) {
     copyFile(dbFile, cacheFile)
 }
 
-fun alfaSortList(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
-    val result = ArrayList<String>()
-    result .addAll(items.sortedWith ( compareBy<String> {
+fun alfaSort(items: Collection<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
+    val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
-    }))
+    })
     if (prefix != null) {
-        result.add(0, prefix)
+        val result = ArrayList<String>(sorted.size+1)
+        result.add(prefix)
+        result.addAll(sorted)
+        return result
+    } else {
+        return ArrayList(sorted)
     }
-    return result
-}
-
-fun alfaSortList(items: Set<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
-    val temp = ArrayList<String>()
-    temp.addAll(items)
-    return alfaSortList(temp, caseSensitive, prefix)
 }
 
 fun appVersion(ctx: Context): String {

@@ -263,7 +263,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.debug(TAG, "$key $debugString")
                 }
             }
-            val newQuery = Query("mainui").initFromIntent(currentIntent)
+            val newQuery = Query(currentIntent, "mainui")
             Config.mainQuery = newQuery
             intent = newQuery.saveInIntent(intent)
             newQuery
@@ -935,10 +935,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     val jsonFilters = JSONObject(contents)
                     jsonFilters.keys().forEach { name ->
-                        val newQuery = Query(luaModule = "mainui")
-                        newQuery.initFromJSON(jsonFilters.getJSONObject(name))
+                        val json = jsonFilters.getJSONObject(name)
+                        val newQuery = Query(json, luaModule = "mainui")
                         QueryStore.save(newQuery, name)
-
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
                     showToastShort(this, R.string.saved_filters_imported) }
@@ -956,7 +955,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             QueryStore.get(it)
         }
         val jsonFilters = queries.fold(JSONObject()) { acc, query ->
-
             acc.put(query.name, query.query.saveInJSON())
         }
         val r = Runnable {
@@ -1151,8 +1149,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateFilterDrawer() {
-        val decoratedContexts = alfaSortList(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@" + it }
-        val decoratedProjects = alfaSortList(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+" + it }
+        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@" + it }
+        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+" + it }
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
@@ -1199,80 +1197,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-
-    @SuppressLint("InflateParams")
-    private fun updateItemsDialog(title: String,
-                                  checkedTasks: List<Task>,
-                                  allItems: ArrayList<String>,
-                                  retrieveFromTask: (Task) -> SortedSet<String>,
-                                  addToTask: (Task, String) -> Unit,
-                                  removeFromTask: (Task, String) -> Unit
-    ) {
-        val checkedTaskItems = ArrayList<HashSet<String>>()
-        checkedTasks.forEach {
-            val items = HashSet<String>()
-            items.addAll(retrieveFromTask.invoke(it))
-            checkedTaskItems.add(items)
-        }
-
-        // Determine items on all tasks (intersection of the sets)
-        val onAllTasks = checkedTaskItems.intersection()
-
-        // Determine items on some tasks (union of the sets)
-        var onSomeTasks = checkedTaskItems.union()
-        onSomeTasks -= onAllTasks
-
-        allItems.removeAll(onAllTasks)
-        allItems.removeAll(onSomeTasks)
-
-        val sortedAllItems = ArrayList<String>()
-        sortedAllItems += alfaSortList(onAllTasks, Config.sortCaseSensitive)
-        sortedAllItems += alfaSortList(onSomeTasks, Config.sortCaseSensitive)
-        sortedAllItems += alfaSortList(allItems.toSet(), Config.sortCaseSensitive)
-
-        val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
-        val builder = AlertDialog.Builder(this)
-        builder.setView(view)
-
-        val itemAdapter = ItemDialogAdapter(sortedAllItems, onAllTasks.toHashSet(), onSomeTasks.toHashSet())
-        val rcv = view.current_items_list
-        rcv.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(this)
-        rcv.layoutManager = layoutManager
-        rcv.adapter = itemAdapter
-        val ed = view.new_item_text
-        builder.setPositiveButton(R.string.ok) { _, _ ->
-            val updatedValues = itemAdapter.currentState
-            for (i in 0..updatedValues.lastIndex) {
-                when (updatedValues[i]) {
-                    false -> {
-                        checkedTasks.forEach {
-                            removeFromTask(it, sortedAllItems[i])
-                        }
-                    }
-                    true -> {
-                        checkedTasks.forEach {
-                            addToTask(it, sortedAllItems[i])
-                        }
-                    }
-                }
-            }
-            val newText = ed.text.toString()
-            if (newText.isNotEmpty()) {
-                checkedTasks.forEach {
-                    addToTask(it, newText)
-                }
-            }
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
-        }
-        builder.setNegativeButton(R.string.cancel) { _, _ -> }
-        // Create the AlertDialog
-        val dialog = builder.create()
-
-        dialog.setTitle(title)
-        dialog.show()
-    }
-
     private fun updateLists(checkedTasks: List<Task>) {
         updateItemsDialog(
                 Config.listTerm,
@@ -1281,7 +1205,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::lists,
                 Task::addList,
                 Task::removeList
-        )
+        ) {
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        }
     }
 
     private fun updateTags(checkedTasks: List<Task>) {
@@ -1292,7 +1218,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::tags,
                 Task::addTag,
                 Task::removeTag
-        )
+        ) {
+            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        }
     }
 
     private inner class DrawerItemClickListener : AdapterView.OnItemClickListener {

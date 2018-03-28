@@ -59,100 +59,91 @@ class FilterActivity : ThemedNoActionBarActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
-        var arguments: Bundle
-
         val intent = intent
-        var environment: String = "mainui"
-        if (intent.action != null) {
-            asWidgetConfigure = getIntent().action == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
-            environment = "widget" + getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0).toString()
-        }
+        val environment: String = intent.action?.let {
+            asWidgetConfigure = it == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
+            val id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0)
+            "widget" + id.toString()
+        } ?: "mainui"
 
 
-        mFilter = Query(luaModule = environment)
         val context = applicationContext
 
-        if (asWidgetConfigure) {
-            if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
-                asWidgetReConfigure = true
-                asWidgetConfigure = false
-                setTitle(R.string.config_widget)
-                val preferences = context.getSharedPreferences("" + intent.getIntExtra(Constants.EXTRA_WIDGET_ID, -1), Context.MODE_PRIVATE)
-                mFilter.initFromPrefs(preferences)
-            } else {
-                setTitle(R.string.create_widget)
-                mFilter.initFromPrefs(prefs)
-            }
+        if (!asWidgetConfigure) {
+            mFilter = Query(intent, luaModule = environment)
+        } else if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
+            asWidgetReConfigure = true
+            asWidgetConfigure = false
+            setTitle(R.string.config_widget)
+            val prefsName = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, -1).toString()
+            val preferences = context.getSharedPreferences(prefsName , Context.MODE_PRIVATE)
+            mFilter = Query(preferences, luaModule = environment)
         } else {
-            mFilter.initFromIntent(intent)
+            setTitle(R.string.create_widget)
+            mFilter = Query(prefs, luaModule = environment)
         }
-
         pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
 
-        // Fill arguments for fragment
-        arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS,
-                alfaSortList(TodoList.contexts, Config.sortCaseSensitive, "-"))
-        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
-        arguments.putBoolean(INITIAL_NOT, mFilter.contextsNot)
-        arguments.putString(TAB_TYPE, CONTEXT_TAB)
         val contextTab = FilterListFragment()
-        contextTab.arguments = arguments
+        contextTab.arguments = Bundle().apply {
+            val contexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, "-")
+            putStringArrayList(FILTER_ITEMS, contexts)
+            putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
+            putBoolean(INITIAL_NOT, mFilter.contextsNot)
+            putString(TAB_TYPE, CONTEXT_TAB)
+        }
         pagerAdapter!!.add(contextTab)
 
-        // Fill arguments for fragment
-        arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS,
-                alfaSortList(TodoList.projects, Config.sortCaseSensitive, "-"))
-        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
-        arguments.putBoolean(INITIAL_NOT, mFilter.projectsNot)
-        arguments.putString(TAB_TYPE, PROJECT_TAB)
         val projectTab = FilterListFragment()
-        projectTab.arguments = arguments
+        projectTab.arguments = Bundle().apply {
+            val projects = alfaSort(TodoList.projects, Config.sortCaseSensitive, "-")
+            putStringArrayList(FILTER_ITEMS, projects)
+            putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
+            putBoolean(INITIAL_NOT, mFilter.projectsNot)
+            putString(TAB_TYPE, PROJECT_TAB)
+        }
         pagerAdapter!!.add(projectTab)
 
-        // Fill arguments for fragment
-        arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS, Priority.inCode(TodoList.priorities))
-        arguments.putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.priorities))
-        arguments.putBoolean(INITIAL_NOT, mFilter.prioritiesNot)
-        arguments.putString(TAB_TYPE, PRIO_TAB)
         val prioTab = FilterListFragment()
-        prioTab.arguments = arguments
+        prioTab.arguments = Bundle().apply {
+            putStringArrayList(FILTER_ITEMS, Priority.inCode(TodoList.priorities))
+            putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.priorities))
+            putBoolean(INITIAL_NOT, mFilter.prioritiesNot)
+            putString(TAB_TYPE, PRIO_TAB)
+        }
         pagerAdapter!!.add(prioTab)
 
-        // Fill arguments for fragment
-        arguments = Bundle()
-        arguments.putBoolean(Query.INTENT_HIDE_COMPLETED_FILTER, mFilter.hideCompleted)
-        arguments.putBoolean(Query.INTENT_HIDE_FUTURE_FILTER, mFilter.hideFuture)
-        arguments.putBoolean(Query.INTENT_HIDE_LISTS_FILTER, mFilter.hideLists)
-        arguments.putBoolean(Query.INTENT_HIDE_TAGS_FILTER, mFilter.hideTags)
-        arguments.putBoolean(Query.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.hideCreateDate)
-        arguments.putBoolean(Query.INTENT_HIDE_HIDDEN_FILTER, mFilter.hideHidden)
-        arguments.putBoolean(Query.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
-        arguments.putString(TAB_TYPE, OTHER_TAB)
         val otherTab = FilterOtherFragment()
-        otherTab.arguments = arguments
+        otherTab.arguments = Bundle().apply {
+            putBoolean(Query.INTENT_HIDE_COMPLETED_FILTER, mFilter.hideCompleted)
+            putBoolean(Query.INTENT_HIDE_FUTURE_FILTER, mFilter.hideFuture)
+            putBoolean(Query.INTENT_HIDE_LISTS_FILTER, mFilter.hideLists)
+            putBoolean(Query.INTENT_HIDE_TAGS_FILTER, mFilter.hideTags)
+            putBoolean(Query.INTENT_HIDE_CREATE_DATE_FILTER, mFilter.hideCreateDate)
+            putBoolean(Query.INTENT_HIDE_HIDDEN_FILTER, mFilter.hideHidden)
+            putBoolean(Query.INTENT_CREATE_AS_THRESHOLD, mFilter.createIsThreshold)
+            putString(TAB_TYPE, OTHER_TAB)
+        }
         pagerAdapter!!.add(otherTab)
 
         // Fill arguments for fragment
-        arguments = Bundle()
-        arguments.putStringArrayList(FILTER_ITEMS, mFilter.getSort(Config.defaultSorts))
-        arguments.putString(TAB_TYPE, SORT_TAB)
         val sortTab = FilterSortFragment()
-        sortTab.arguments = arguments
+        sortTab.arguments = Bundle().apply {
+            putStringArrayList(FILTER_ITEMS, mFilter.getSort(Config.defaultSorts))
+            putString(TAB_TYPE, SORT_TAB)
+        }
         pagerAdapter!!.add(sortTab)
 
-        arguments = Bundle()
-        arguments.putString(Query.INTENT_LUA_MODULE, environment)
 
-        arguments.putBoolean(Query.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
-        arguments.putString(Query.INTENT_SCRIPT_FILTER, mFilter.script)
-        arguments.putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
-        arguments.putString(TAB_TYPE, SCRIPT_TAB)
         val scriptTab = FilterScriptFragment()
         scriptFragment = scriptTab
-        scriptTab.arguments = arguments
+        scriptTab.arguments = Bundle().apply {
+            putString(Query.INTENT_LUA_MODULE, environment)
+            putBoolean(Query.INTENT_USE_SCRIPT_FILTER, mFilter.useScript)
+            putString(Query.INTENT_SCRIPT_FILTER, mFilter.script)
+            putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, mFilter.scriptTestTask)
+            putString(TAB_TYPE, SCRIPT_TAB)
+        }
         pagerAdapter!!.add(scriptTab)
 
         pager = findViewById<ViewPager>(R.id.pager)

@@ -36,6 +36,7 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
+import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.IOException
 import java.util.*
 
@@ -107,30 +108,19 @@ class AddTaskBackground : Activity() {
         val todoList = TodoList
         log.debug(TAG, "Adding background tasks to todolist {} " + todoList)
 
-        val items = ArrayList<Task>()
-        for (taskText in sharedText.split("\r\n|\r|\n".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()) {
-            if (taskText.trim({ it <= ' ' }).isEmpty()) {
-                continue
-            }
-            var text: String
-            if (!appendText.isEmpty()) {
-                text = taskText + " " + appendText
-            } else {
-                text = taskText
-            }
-            val t: Task
-            if (Config.hasPrependDate) {
-                t = Task(text, DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT))
-            } else {
-                t = Task(text)
-            }
-            items.add(t)
+        val rawLines = sharedText.split("\r\n|\r|\n".toRegex()).filterNot(String::isBlank)
+        val lines = if (appendText.isBlank()) { rawLines } else {
+            rawLines.map { it + " " + appendText }
         }
-        todoList.add(items, Config.hasAppendAtEnd)
+        val tasks = lines.map { text ->
+            if (Config.hasPrependDate) { Task(text, todayAsString) } else { Task(text) }
+        }
+
+        todoList.add(tasks, Config.hasAppendAtEnd)
         todoList.notifyTasklistChanged(Config.todoFileName,  TodoApplication.app, true)
         showToastShort(TodoApplication.app, R.string.task_added)
         if (Config.hasShareTaskShowsEdit) {
-            todoList.editTasks(this, items, "")
+            todoList.editTasks(this, tasks, "")
         }
         finish()
     }
