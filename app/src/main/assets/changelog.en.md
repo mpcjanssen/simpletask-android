@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+10.1.14
+-------
+
+- Improve performance by reducing number of filter calls.
+- Ask confirmation before closing AddTask screen with changes. Fixes #94.
+- Some idiomatic Kotlin changes (smichel).
+
 10.1.13
 -------
 
