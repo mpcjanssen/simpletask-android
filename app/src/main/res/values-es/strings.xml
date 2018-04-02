@@ -4,8 +4,8 @@
     <string name="share_task_show_edit_summary">Editar tareas compartidas a Simpletask antes de guardarlas</string>
 
     <string name="menu_capitalize_tasks">Tareas nuevas en mayúsculas</string>
-    <string name="back_saves_pref_title">Botón ATRÁS</string>
-    <string name="back_saves_summary">Guardar la lista de tareas o aplicar el filtro al pulsar ATRÁS.</string>
+    <string name="back_saves_pref_title">Botón \"Volver\"</string>
+    <string name="back_saves_summary">Guardar la lista de tareas o aplicar el filtro al pulsar \"Volver\".</string>
 
     <string name="show_txt_only_pref_title">Mostrar sólo archivos txt</string>
     <string name="show_txt_only_summary">Mostrar sólo archivos .txt en el cuadro de diálogo de selección de archivos.</string>
@@ -198,7 +198,7 @@ Cualquier cambio que no haya sido sincronizado se perderá después de desconect
     <string name="save_filter_message">Introduzca un nombre para el filtro:</string>
 
     <string name="donate_title">Donar</string>
-    <string name="donate_summary">Si le gusta Simpletask, puede hacer una donación. NOTA: la donación es voluntaria, Simpletask siempre será gratis.</string>
+    <string name="donate_summary">Provisto gratis, Simpletask es además software libre bajo licencia copyleft. Mucho trabajo de ha puesto en él. Cualquier donación será muy apreciada.</string>
     <string name="donated_summary">Gracias por su donación.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Invertir el orden</string>
@@ -334,7 +334,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="resume_sync_pref_title">Reanudar la sincronización</string>
     <string name="resume_sync_pref_summary">Sincronizar con Dropbox al iniciar la aplicación.</string>
     <string name="font_size_delta_pref_title">Cambiar el tamaño de fuente</string>
-    <string name="datebar_relative_size_summary">Tamaño relativo de la barra de fechas</string>
+    <string name="datebar_relative_size_summary">Tamaño relativo de la línea de fecha</string>
     <string name="font_size_delta_pref_summary">Cambiar el tamaño de la fuente.</string>
     <string name="theme_pref_title">Tema</string>
     <string name="theme_pref_summary">Cambiar tema de la aplicación.</string>
@@ -367,7 +367,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="todotxt_terms_summary">Contexto y proyecto en lugar de lista y etiqueta</string>
 
     <string name="preference_title_debug_info">Ver registro de depuración</string>
-    <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación</string>
+    <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación.</string>
 
     <string name="login_folder_screen_button">Iniciar sesión en Dropbox
 (Acceso a la carpeta de la aplicación)</string>
@@ -396,8 +396,8 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
 
     <string name="name">Nombre</string>
     <string name="date">Fecha</string>
-    <string name="back_clears_filter_title">Botón \"ATRÁS\" quita el filtro</string>
-    <string name="back_clears_filter_summary">El botón \"ATRÁS\" elimina el filtro actual antes de salir de la aplicación.</string>
+    <string name="back_clears_filter_title">Botón \"_Atrás_\" quita el filtro</string>
+    <string name="back_clears_filter_summary">El botón \"Volver\" elimina el filtro actual antes de salir de la aplicación.</string>
     <string name="experimental_title">Características experimentales</string>
     <string name="experimental_summary">Habilitar características experimentales</string>
 
@@ -419,7 +419,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="task_text_ellipsizing_end">Al final: \"Texto de la ...\"</string>
     <string name="task_text_ellipsizing_marquee">"Marquesina:  \"Texto de la tar\""</string>
 
-    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_prio">Prioridad</string>
     <string name="filter_tab_header_other">Otros</string>
     <string name="filter_tab_header_sort">Ordenar</string>
     <string name="filter_tab_header_script">Script</string>
@@ -429,8 +429,8 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="script_tab_test">Probar</string>
     <string name="script_tab_test_task">Tarea de prueba</string>
     <string name="script_tab_script">Script</string>
-    <string name="script_tab_true_task_shown">Verdadero. La tarea será mostrada</string>
-    <string name="script_tab_false_task_not_shown">Falso. La tarea no será mostrada</string>
+    <string name="script_tab_true_task_shown">La tarea será mostrada</string>
+    <string name="script_tab_false_task_not_shown">La tarea no será mostrada</string>
 
     <string name="action_pop_up_call">Llamar:</string>
     <string name="action_pop_up_sms">Enviar sms:</string>
@@ -440,4 +440,10 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="toast_lua_config_imported">Configuración Lua importada</string>
 
     <string name="saved_filters_imported">Filtros importados</string>
-    </resources>
+    <string name="cancel_changes">Los cambios se perderán.</string>
+    <string name="by_lua">Script de Lua</string>
+
+    <string name="use_uuid_title">Asignar una UUID a cada tarea</string>
+    <string name="nav_drawer_hint">Guarde el filtro actual
+\npresionando el botón de guardar</string>
+</resources>
