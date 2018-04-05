@@ -386,4 +386,5 @@ http://goo.gl/X1C55P
 
     <string name="hello_world">Здравствуй, мир!</string>
     <string name="back_clears_filter_title">\"Назад\" сбрасывает фильтры</string>
+    <string name="back_clears_filter_summary">Кнопка \"Назад\" очистит фильтры перед выходом.</string>
     </resources>
