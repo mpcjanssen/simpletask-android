@@ -186,10 +186,11 @@ class TaskAdapter(var query: Query,
             caller?.runOnUiThread {
                 caller.showListViewProgress(true)
             }
-            val visibleTasks: List<Task>
             log.info(tag, "setFilteredTasks called: $TodoList")
             val sorts = newQuery.getSort(Config.defaultSorts)
-            visibleTasks = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+            val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+            countTotalTasks = total
+
             val newVisibleLines = ArrayList<VisibleLine>()
 
             newVisibleLines.addAll(addHeaderLines(visibleTasks, newQuery, getString(R.string.no_header)))
@@ -215,6 +216,8 @@ class TaskAdapter(var query: Query,
         get() {
             return visibleLines.count { !it.header }
         }
+
+    var countTotalTasks = 0
 
     /*
     ** Get the adapter position for task
