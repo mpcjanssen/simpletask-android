@@ -59,11 +59,11 @@ object Interpreter : AbstractInterpreter() {
     }
 
     override fun onAddCallback(t: Task): Task? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return interp.onAddCallback(t)
     }
 
     override fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return true
     }
 
     override fun evalScript(moduleName: String?, script: String?): AbstractInterpreter {
@@ -72,7 +72,7 @@ object Interpreter : AbstractInterpreter() {
     }
 
     override fun clearOnFilter(moduleName: String) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        interp.evalNSScript(moduleName, "rename $ON_FILTER_NAME {}")
     }
 
 
@@ -198,6 +198,10 @@ fun Interp.onDisplayCallback(ns: String, t: Task): String? {
         log.debug(TAG, "Tcl execution failed " + e.message)
         return null
     }
+}
+
+fun Interp.onAddCallback(t: Task): Task {
+    return t
 }
 
 
