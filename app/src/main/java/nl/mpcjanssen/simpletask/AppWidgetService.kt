@@ -76,7 +76,8 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val sorts = currentFilter.getSort(Config.defaultSorts)
 
         val newVisibleTasks = ArrayList<Task>()
-        newVisibleTasks.addAll(TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive))
+        val (tasks, count) = TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive)
+        newVisibleTasks.addAll(tasks)
         log.debug(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
     }
@@ -151,7 +152,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relThres = getRelativeThresholdDate(task, TodoApplication.app)
         var anyDateShown = false
-        if (!isEmptyOrNull(relAge) && !filter.hideCreateDate) {
+        if (!relAge.isNullOrEmpty() && !filter.hideCreateDate) {
             rv.setTextViewText(R.id.taskage, relAge)
             anyDateShown = true
         } else {
@@ -163,7 +164,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         } else {
             rv.setTextViewText(R.id.taskdue, "")
         }
-        if (!isEmptyOrNull(relThres)) {
+        if (!relThres.isNullOrEmpty()) {
             anyDateShown = true
             rv.setTextViewText(R.id.taskthreshold, relThres)
         } else {

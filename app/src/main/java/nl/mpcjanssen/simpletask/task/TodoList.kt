@@ -206,10 +206,11 @@ object TodoList {
         }
     }
 
-    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): List<Task> {
+    fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Pair<List<Task>, Int> {
         log.debug(TAG, "Getting sorted and filtered tasks")
         val start = SystemClock.elapsedRealtime()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
+        val taskCount = todoItems.size
         val itemsToSort = if (comp.fileOrder) {
             todoItems
         } else {
@@ -219,7 +220,7 @@ object TodoList {
         val result = filter.applyFilter(sortedItems, showSelected = true)
         val end = SystemClock.elapsedRealtime()
         log.debug(TAG, "Sorting and filtering tasks took ${end-start} ms")
-        return result
+        return Pair(result, taskCount)
 
     }
 
@@ -367,11 +368,6 @@ object TodoList {
             todoItems.forEach {it.selected = false}
             broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
         }
-    }
-
-    fun getTaskCount(): Long {
-        val items = todoItems
-        return items.filter { it.inFileFormat().isNotBlank() }.size.toLong()
     }
 
     fun getTaskIndex(t: Task): Int {

@@ -16,9 +16,4 @@ class UtilTest : TestCase() {
 
     }
 
-    fun testIntersectUnion() {
-        // Don't crash on an empty lists
-        assertEquals(HashSet<String>(), ArrayList<HashSet<String>>().intersection())
-        assertEquals(HashSet<String>(), ArrayList<HashSet<String>>().union())
-    }
 }

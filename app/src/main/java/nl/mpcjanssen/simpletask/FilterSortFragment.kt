@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.*
 import com.mobeta.android.dslv.DragSortListView
 import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -86,7 +85,7 @@ class FilterSortFragment : Fragment() {
             } else {
                 sortDirection = parts[0]
                 sortType = parts[1]
-                if (isEmptyOrNull(sortDirection) || sortDirection != Query.REVERSED_SORT) {
+                if (sortDirection.isNullOrEmpty() || sortDirection != Query.REVERSED_SORT) {
                     sortDirection = Query.NORMAL_SORT
                 }
             }
