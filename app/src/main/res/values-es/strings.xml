@@ -198,7 +198,7 @@ Cualquier cambio que no haya sido sincronizado se perderá después de desconect
     <string name="save_filter_message">Introduzca un nombre para el filtro:</string>
 
     <string name="donate_title">Donar</string>
-    <string name="donate_summary">Provisto gratis, Simpletask es además software libre bajo licencia copyleft. Mucho trabajo de ha puesto en él. Cualquier donación será muy apreciada.</string>
+    <string name="donate_summary">Provisto gratis, Simpletask es software libre bajo licencia copyleft. Mucho trabajo se ha puesto en él. Cualquier donación será muy apreciada.</string>
     <string name="donated_summary">Gracias por su donación.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Invertir el orden</string>
@@ -396,7 +396,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
 
     <string name="name">Nombre</string>
     <string name="date">Fecha</string>
-    <string name="back_clears_filter_title">Botón \"_Atrás_\" quita el filtro</string>
+    <string name="back_clears_filter_title">Botón \"Atrás\" quita el filtro</string>
     <string name="back_clears_filter_summary">El botón \"Volver\" elimina el filtro actual antes de salir de la aplicación.</string>
     <string name="experimental_title">Características experimentales</string>
     <string name="experimental_summary">Habilitar características experimentales</string>
