@@ -26,6 +26,7 @@
 
 package nl.mpcjanssen.simpletask.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -33,7 +34,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -43,16 +43,24 @@ import android.support.v4.content.pm.ShortcutInfoCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.inputmethod.EditorInfo
+import android.view.KeyEvent
 import android.view.Window
 import android.widget.ListView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import hirondelle.date4j.DateTime
+import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoList
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 import java.io.*
@@ -164,11 +172,11 @@ fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: Str
     val result = ArrayList<VisibleLine>()
     var count = 0
     var headerLine: HeaderLine? = null
-    val luaGrouping = moduleName != null && LuaInterpreter.hasOnGroupCallback(moduleName)
+    val luaGrouping = moduleName != null && Interpreter.hasOnGroupCallback(moduleName)
     for (item in visibleTasks) {
         val t = item
         val newHeader = if (moduleName != null && luaGrouping) {
-            LuaInterpreter.onGroupCallback(moduleName, t)
+            Interpreter.onGroupCallback(moduleName, t)
         } else {
             null
         } ?: t.getHeader(firstSort, no_header, createIsThreshold)
@@ -313,6 +321,84 @@ fun createAlertDialog(act: Activity, titleId: Int, alert: String): AlertDialog {
     return builder.create()
 }
 
+@SuppressLint("InflateParams")
+fun Activity.updateItemsDialog(
+        title: String,
+        tasks: List<Task>,
+        allItems: Collection<String>,
+        retrieveFromTask: (Task) -> Set<String>,
+        addToTask: (Task, String) -> Unit,
+        removeFromTask: (Task, String) -> Unit,
+        positiveButtonListener: () -> Unit
+) {
+    val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
+    val itemAdapter = ItemDialogAdapter(tasks, allItems, retrieveFromTask)
+
+    // Initialize RecyclerView
+    view.current_items_list.let {
+        it.layoutManager = LinearLayoutManager(this)
+        it.adapter = itemAdapter
+    }
+
+    val editText = view.new_item_text
+    // Listen to enter events, use IME_ACTION_DONE for soft keyboards
+    // like Swype where ENTER keyCode is not generated.
+    editText.setRawInputType(InputType.TYPE_CLASS_TEXT)
+    editText.imeOptions = EditorInfo.IME_ACTION_DONE
+    editText.setOnImeAction(EditorInfo.IME_ACTION_DONE) { v ->
+        val whitespace = """\s""".toRegex()
+        val newItems = v.text.toString().split(whitespace).filterNot(String::isBlank)
+        itemAdapter.addItems(newItems)
+        editText.setText("")
+    }
+
+    val builder = AlertDialog.Builder(this).apply {
+        setView(view)
+        setPositiveButton(R.string.ok) { _, _ ->
+            val updatedValues = itemAdapter.changedItems()
+            updatedValues.forEach { (item, value) ->
+                when (value) {
+                    false -> tasks.forEach { 
+                        removeFromTask(it, item)
+                    }
+                    true -> tasks.forEach {
+                        addToTask(it, item)
+                    }
+                    // null ->  Nothing to do with indeterminite state
+                }
+            }
+            val newText = editText.text.toString()
+            if (newText.isNotBlank()) {
+                tasks.forEach { addToTask(it, newText) }
+            }
+
+            positiveButtonListener()
+        }
+        setNegativeButton(R.string.cancel) { _, _ -> }
+    }
+
+    // Create the AlertDialog
+    val dialog = builder.create()
+    dialog.setTitle(title)
+    dialog.show()
+}
+
+fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit): Unit {
+    this.setOnEditorActionListener { v, actionId, keyEvent ->
+        val enter = keyEvent != null && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
+
+        val hardwareEnterUp = enter && keyEvent.action == KeyEvent.ACTION_UP
+        val hardwareEnterDown = enter && keyEvent.action == KeyEvent.KEYCODE_ENTER
+        val imeAction = actionId == id
+
+        if (imeAction || hardwareEnterUp) {
+            callback(v)
+        }
+
+        imeAction || hardwareEnterDown || hardwareEnterUp
+    }
+}
+
 fun createDeferDialog(act: Activity, titleId: Int, listener: InputDialogListener): AlertDialog {
     val keys = act.resources.getStringArray(R.array.deferOptions)
     val today = "0d"
@@ -377,21 +463,22 @@ fun createCachedDatabase(context: Context, dbFile: File) {
     copyFile(dbFile, cacheFile)
 }
 
-fun alfaSortList(items: List<String>, caseSensitive: Boolean, prefix: String?): ArrayList<String> {
-    val result = ArrayList<String>()
-    result .addAll(items.sortedWith ( compareBy<String> {
+fun alfaSort(
+        items: Collection<String>,
+        caseSensitive: Boolean = Config.sortCaseSensitive,
+        prefix: String? = null
+): ArrayList<String> {
+    val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
-    }))
+    })
     if (prefix != null) {
-        result.add(0, prefix)
+        val result = ArrayList<String>(sorted.size+1)
+        result.add(prefix)
+        result.addAll(sorted)
+        return result
+    } else {
+        return ArrayList(sorted)
     }
-    return result
-}
-
-fun alfaSortList(items: Set<String>, caseSensitive: Boolean, prefix: String? = null): ArrayList<String> {
-    val temp = ArrayList<String>()
-    temp.addAll(items)
-    return alfaSortList(temp, caseSensitive, prefix)
 }
 
 fun appVersion(ctx: Context): String {
@@ -600,26 +687,6 @@ fun String.toDateTime(): DateTime? {
         date = null
     }
     return date
-}
-
-fun ArrayList<HashSet<String>>.union(): Set<String> {
-    val result = this.fold(HashSet<String>()) {
-        left, right ->
-        left.addAll(right)
-        left
-    }
-    return result
-}
-
-fun ArrayList<HashSet<String>>.intersection(): Set<String> {
-    val intersection = this.firstOrNull()?.toHashSet() ?: return emptySet()
-    for (i in 1..this.lastIndex) {
-        intersection.retainAll(this[i])
-        if (intersection.isEmpty()) {
-            break
-        }
-    }
-    return intersection
 }
 
 fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {

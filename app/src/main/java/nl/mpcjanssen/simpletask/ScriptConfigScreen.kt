@@ -12,11 +12,10 @@ import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
-import org.luaj.vm2.LuaError
 import java.io.File
 import java.io.IOException
 
-class LuaConfigScreen : ThemedActionBarActivity() {
+class ScriptConfigScreen : ThemedActionBarActivity() {
 
     private val log = Logger
     private lateinit var m_app : TodoApplication
@@ -81,8 +80,8 @@ class LuaConfigScreen : ThemedActionBarActivity() {
 
     private fun runScript() {
         try {
-            LuaInterpreter.evalScript(null, script)
-        } catch (e: LuaError) {
+            Interpreter.evalScript(null, script)
+        } catch (e: Exception) {
             log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
             createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
         }
@@ -123,6 +122,6 @@ class LuaConfigScreen : ThemedActionBarActivity() {
         set(value) = scriptEdit.setText(value)
 
     companion object {
-        internal val TAG = LuaConfigScreen::class.java.simpleName
+        internal val TAG = ScriptConfigScreen::class.java.simpleName
     }
 }

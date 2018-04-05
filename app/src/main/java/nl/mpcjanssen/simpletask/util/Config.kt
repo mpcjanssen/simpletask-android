@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.util
 
-import android.content.SharedPreferences
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -8,7 +7,6 @@ import nl.mpcjanssen.simpletask.task.Task
 import java.io.File
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 object Config : Preferences(TodoApplication.app) {
 
@@ -154,7 +152,7 @@ object Config : Preferences(TodoApplication.app) {
 
     private val _activeTheme by StringPreference(R.string.theme_pref_key, "light_darkactionbar")
     private val activeThemeString: String
-        get() = LuaInterpreter.configTheme() ?: _activeTheme
+        get() = Interpreter.configTheme() ?: _activeTheme
 
     // Only used in Dropbox build
     @Suppress("unused")
@@ -168,7 +166,7 @@ object Config : Preferences(TodoApplication.app) {
 
     val tasklistTextSize: Float?
         get() {
-            val luaValue = LuaInterpreter.tasklistTextSize()
+            val luaValue = Interpreter.tasklistTextSize()
             if (luaValue != null) {
                 return luaValue
             }
@@ -280,11 +278,7 @@ object Config : Preferences(TodoApplication.app) {
     }
 
     var mainQuery: Query
-        get()  {
-            val q = Query(luaModule = "mainui")
-            q.initFromPrefs(Config.prefs)
-            return q
-        }
+        get() = Query(this.prefs, luaModule = "mainui")
         set(value) {
             // Update the intent so we wont get the old applyFilter after
             // switching back to app later. Fixes [1c5271ee2e]

@@ -53,7 +53,7 @@ You should have received a copy of the GNU General Public License along with Sim
             android:label="@string/help"
             />
         <activity
-            android:name=".LuaConfigScreen"
+            android:name=".ScriptConfigScreen"
             android:parentActivityName=".Simpletask"
             tools:ignore="UnusedAttribute"
             android:label="@string/lua_config_screen"
