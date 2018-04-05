@@ -10,8 +10,6 @@ import android.view.ViewGroup
 import android.widget.*
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.createAlertDialog
-import org.luaj.vm2.LuaBoolean
-import org.luaj.vm2.LuaError
 
 class FilterScriptFragment : Fragment() {
     private var txtScript: EditText? = null
@@ -51,7 +49,7 @@ class FilterScriptFragment : Fragment() {
         txtTestTask = layout.findViewById(R.id.txt_testtask) as EditText
         spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
-        val callbacks = arrayOf<String>(LuaInterpreter.ON_DISPLAY_NAME, LuaInterpreter.ON_FILTER_NAME, LuaInterpreter.ON_GROUP_NAME, LuaInterpreter.ON_SORT_NAME)
+        val callbacks = arrayOf<String>(Interpreter.ON_DISPLAY_NAME, Interpreter.ON_FILTER_NAME, Interpreter.ON_GROUP_NAME, Interpreter.ON_SORT_NAME)
         val spnAdapter = ArrayAdapter(activity, R.layout.spinner_item, callbacks)
         spnCallback?.adapter = spnAdapter
         activity?.let { act ->
@@ -66,14 +64,14 @@ class FilterScriptFragment : Fragment() {
                     val snackBar = Snackbar.make(act.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
                     val barView = snackBar.view
                     when (callbackToTest) {
-                        LuaInterpreter.ON_DISPLAY_NAME -> testOnDisplayCallback(barView, script, snackBar, t)
-                        LuaInterpreter.ON_FILTER_NAME -> testOnFilterCallback(barView, script, snackBar, t)
-                        LuaInterpreter.ON_GROUP_NAME -> testOnGroupCallback(barView, script, snackBar, t)
-                        LuaInterpreter.ON_SORT_NAME -> testOnSortCallback(barView, script, snackBar, t)
+                        Interpreter.ON_DISPLAY_NAME -> testOnDisplayCallback(barView, script, snackBar, t)
+                        Interpreter.ON_FILTER_NAME -> testOnFilterCallback(barView, script, snackBar, t)
+                        Interpreter.ON_GROUP_NAME -> testOnGroupCallback(barView, script, snackBar, t)
+                        Interpreter.ON_SORT_NAME -> testOnSortCallback(barView, script, snackBar, t)
                     }
 
 
-                } catch (e: LuaError) {
+                } catch (e: Exception) {
                     log.debug(TAG, "Lua execution failed " + e.message)
                     createAlertDialog(act, R.string.lua_error, e.message ?: "").show()
                 }
@@ -92,12 +90,12 @@ class FilterScriptFragment : Fragment() {
     }
 
     private fun testOnFilterCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
-        val result = LuaInterpreter.evalScript(environment, script).onFilterCallback(environment, t)
-        if (result.toboolean()) {
-            snackBar.setText(result.toString() +": " + getString(R.string.script_tab_true_task_shown))
+        val (toShow, result) = Interpreter.evalScript(environment, script).onFilterCallback(environment, t)
+        if (toShow) {
+            snackBar.setText(result +": " + getString(R.string.script_tab_true_task_shown))
             barView.setBackgroundColor(0xff43a047.toInt())
         } else {
-            snackBar.setText(result.toString() +": " + getString(R.string.script_tab_false_task_not_shown))
+            snackBar.setText(result +": " + getString(R.string.script_tab_false_task_not_shown))
             barView.setBackgroundColor(0xffe53935.toInt())
         }
         snackBar.show()
@@ -106,7 +104,7 @@ class FilterScriptFragment : Fragment() {
     private fun testOnGroupCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         activity?.let {act ->
             if (!script.trim { it <= ' ' }.isEmpty()) {
-                snackBar.setText("Group: " + LuaInterpreter.evalScript(environment, script).onGroupCallback(environment, t))
+                snackBar.setText("Group: " + Interpreter.evalScript(environment, script).onGroupCallback(environment, t))
                 barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
             } else {
                 snackBar.setText("Callback not defined")
@@ -119,7 +117,7 @@ class FilterScriptFragment : Fragment() {
     private fun testOnDisplayCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         activity?.let { act ->
             if (!script.trim { it <= ' ' }.isEmpty()) {
-                snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onDisplayCallback(environment, t))
+                snackBar.setText("Display: " + Interpreter.evalScript(environment, script).onDisplayCallback(environment, t))
                 barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
             } else {
                 snackBar.setText("Callback not defined")
@@ -132,7 +130,7 @@ class FilterScriptFragment : Fragment() {
     private fun testOnSortCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         activity?.let { act ->
             if (!script.trim { it <= ' ' }.isEmpty()) {
-                snackBar.setText("Display: " + LuaInterpreter.evalScript(environment, script).onSortCallback(environment, t))
+                snackBar.setText("Display: " + Interpreter.evalScript(environment, script).onSortCallback(environment, t))
                 barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
             } else {
                 snackBar.setText("Callback not defined")
@@ -184,7 +182,7 @@ class FilterScriptFragment : Fragment() {
     val selectedCallback: String
         get() {
             if (spnCallback == null) {
-                return LuaInterpreter.ON_FILTER_NAME
+                return Interpreter.ON_FILTER_NAME
             }
             return spnCallback?.selectedItem.toString()
         }

@@ -49,9 +49,8 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     fun updateFilter(): Query {
 	    log.debug (TAG, "Getting applyFilter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
-        val filter = Query(luaModule = moduleName())
-        filter.initFromPrefs(preferences)
-        log.debug(TAG, "Retrieved widget $widgetId applyFilter")
+        val filter = Query(preferences, luaModule = moduleName())
+        log.debug(TAG, "Retrieved widget $widgetId query")
 
         return filter
     }
@@ -113,7 +112,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
                 else -> true
             }
         }
-        val txt = LuaInterpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
+        val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {
@@ -152,7 +151,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relThres = getRelativeThresholdDate(task, TodoApplication.app)
         var anyDateShown = false
-        if (!isEmptyOrNull(relAge) && !filter.hideCreateDate) {
+        if (!relAge.isNullOrEmpty() && !filter.hideCreateDate) {
             rv.setTextViewText(R.id.taskage, relAge)
             anyDateShown = true
         } else {
@@ -164,7 +163,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         } else {
             rv.setTextViewText(R.id.taskdue, "")
         }
-        if (!isEmptyOrNull(relThres)) {
+        if (!relThres.isNullOrEmpty()) {
             anyDateShown = true
             rv.setTextViewText(R.id.taskthreshold, relThres)
         } else {

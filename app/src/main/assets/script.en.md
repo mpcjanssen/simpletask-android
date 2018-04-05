@@ -40,6 +40,11 @@ Helper functions
 
 Shows `string` as an Android toast. Useful for debugging scripts.
 
+### `log (string) -> nil`
+
+Logs `string` to the Android logcat logging with info level and tag `LuaInterp`.
+
+
 ### Notes
 
 Don't use toasts inside functions. This is a good way to make Simpletask hang.
@@ -64,7 +69,6 @@ Most functions get passed the same collection of parameters:
     * `task`: The full task as string.
     * `threshold`: The threshold date in seconds or `nil` if not set.
     * `text`: The text entered when the task was created.
-    * `tokens`: Array of all the tasks tokens (type and text).
 * `extensions`: A table with the Todo.txt extensions (`key:val`)of the task as key value pairs. There is only one entry for every key, this is to make use easier. If you need multiple `key:val` pairs with the same key, you can parse the task in Lua.
 
 

@@ -6,11 +6,9 @@ import android.content.SharedPreferences
 import android.util.Base64
 
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.todayAsString
 import org.json.JSONObject
-import org.luaj.vm2.LuaError
 import java.util.*
 
 
@@ -20,20 +18,16 @@ data class NamedQuery(val name: String, val query: Query) {
         return Base64.encodeToString(name.toByteArray(), Base64.DEFAULT).trim()
     }
 
-
     fun saveInPrefs(prefs: SharedPreferences) {
         query.saveInPrefs(prefs)
         prefs.edit().apply { putString(INTENT_TITLE,name) }.commit()
-
     }
 
     companion object {
         val INTENT_TITLE = "TITLE"
         fun initFromPrefs(prefs: SharedPreferences, module: String, fallbackTitle: String ) : NamedQuery {
-            val query =  Query(luaModule = module).apply {
-                initFromPrefs(prefs)
-            }
-            val name  = prefs.getString(INTENT_TITLE, null)
+            val query = Query(prefs, luaModule = module)
+            val name = prefs.getString(INTENT_TITLE, null)
                     ?: JSONObject(prefs.getString(Query.INTENT_JSON, "{}")).optString(INTENT_TITLE, fallbackTitle)
 
             return NamedQuery(name, query)
@@ -67,6 +61,18 @@ class Query(
     var useScript: Boolean = false
     var script: String? = null
     var scriptTestTask: String? = null
+
+    constructor(json: JSONObject, luaModule: String) : this(luaModule) {
+        initFromJSON(json)
+    }
+
+    constructor(intent: Intent, luaModule: String) : this(luaModule) {
+        initFromIntent(intent)
+    }
+
+    constructor(prefs: SharedPreferences, luaModule: String) : this(luaModule) {
+        initFromPrefs(prefs)
+    }
 
     override fun toString(): String {
         return join(m_sorts, ",")
@@ -102,7 +108,7 @@ class Query(
         }
     }
 
-    fun initFromJSON(json: JSONObject?): Query {
+    private fun initFromJSON(json: JSONObject?): Query {
         val prios: String?
         val tags: String?
         val lists: String?
@@ -155,7 +161,7 @@ class Query(
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
-                || !isEmptyOrNull(search) || LuaInterpreter.hasFilterCallback(luaModule)
+                || !search.isNullOrEmpty() || Interpreter.hasFilterCallback(luaModule)
     }
 
     fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
@@ -174,10 +180,10 @@ class Query(
             if (contexts.size > 0) {
                 activeParts.add(list.toString())
             }
-            if (!isEmptyOrNull(this.search)) {
+            if (!this.search.isNullOrEmpty()) {
                 activeParts.add(search.toString())
             }
-            if (useScript && !isEmptyOrNull(this.script)) {
+            if (useScript && !this.script.isNullOrEmpty()) {
                 activeParts.add(script.toString())
             }
             filterTitle = filterTitle + " " + join(activeParts, ",")
@@ -204,8 +210,7 @@ class Query(
 
     fun getSort(defaultSort: Array<String>?): ArrayList<String> {
         var sorts = m_sorts
-        if (sorts == null || sorts.size == 0
-                || isEmptyOrNull(sorts[0])) {
+        if (sorts == null || sorts.size == 0 || sorts[0].isNullOrEmpty()) {
             // Set a default sort
             sorts = ArrayList<String>()
             if (defaultSort == null) return sorts
@@ -246,9 +251,9 @@ class Query(
 
     fun initInterpreter(code: String?) {
         try {
-            LuaInterpreter.clearOnFilter(luaModule)
-            LuaInterpreter.evalScript(luaModule, code)
-        } catch (e: LuaError) {
+            Interpreter.clearOnFilter(luaModule)
+            Interpreter.evalScript(luaModule, code)
+        } catch (e: Exception) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
     }
@@ -288,12 +293,12 @@ class Query(
                 if (!filter.apply(it)) {
                     return@filter false
                 }
-                if (useScript && !LuaInterpreter.onFilterCallback(luaModule, it).toboolean()) {
+                if (useScript && !Interpreter.onFilterCallback(luaModule, it).first) {
                     return@filter false
                 }
                 return@filter true
             }
-        } catch (e: LuaError) {
+        } catch (e: Exception) {
             log.debug(TAG, "Lua execution failed " + e.message)
         }
         return ArrayList()
@@ -318,7 +323,7 @@ class Query(
                 addFilter(ByProjectFilter(projects, projectsNot))
             }
 
-            if (!isEmptyOrNull(search)) {
+            if (!search.isNullOrEmpty()) {
                 addFilter(ByTextFilter(luaModule, search, false))
             }
         }
@@ -370,7 +375,7 @@ class Query(
         const val INTENT_EXTRA_DELIMITERS = "[\n,]"
     }
 
-    fun initFromIntent(intent: Intent): Query {
+    private fun initFromIntent(intent: Intent): Query {
         if (intent.hasExtra(INTENT_JSON)) {
             val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
             initFromJSON(JSONObject(jsonFromIntent))
@@ -425,7 +430,7 @@ class Query(
         return this
     }
 
-    fun initFromPrefs(prefs: SharedPreferences): Query {
+    private fun initFromPrefs(prefs: SharedPreferences): Query {
         val jsonFromPref = prefs.getString(INTENT_JSON, null)
         if (jsonFromPref != null) {
             initFromJSON(JSONObject(jsonFromPref))

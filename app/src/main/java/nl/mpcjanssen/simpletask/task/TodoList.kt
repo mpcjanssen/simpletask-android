@@ -56,7 +56,7 @@ object TodoList {
     fun add(items: List<Task>, atEnd: Boolean) {
         todoQueue("Add task ${items.size} atEnd: $atEnd") {
             val updatedItems = items.map {item ->
-                LuaInterpreter.onAddCallback(item) ?: item
+                Interpreter.onAddCallback(item) ?: item
             }
             if (atEnd) {
                 todoItems.addAll(updatedItems)
