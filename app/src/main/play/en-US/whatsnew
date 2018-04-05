@@ -1,27 +1,15 @@
-10.1.13
+10.1.15
 -------
 
-- Possible IllegalStateException fix.
+- Store total tasks count in adapter to prevent CME.
+- Fix crash when adding tasks during task edit.
+- Allow deleting tasks when bulk editing again.
 
-10.1.12
+
+10.1.14
 -------
 
-- Setup interpreter in query. Fixes Lua filtering.
-- Fix filtering from intent. Fixes queries from widgets and shortcuts.
-
-10.1.11
--------
-
-- Fix JSON crash.
-
-
-10.1.10
--------
-
-- Fix saved filter names.
-
-10.1.9
-------
-
-- Fix updating of saved queries.
+- Improve performance by reducing number of filter calls.
+- Ask confirmation before closing AddTask screen with changes. Fixes #94.
+- Some idiomatic Kotlin changes (smichel).
 

@@ -145,7 +145,7 @@ class TaskAdapter(var query: Query,
         val relAge = getRelativeAge(task, TodoApplication.app)
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
-        if (!isEmptyOrNull(relAge) && !query.hideCreateDate) {
+        if (!relAge.isNullOrEmpty() && !query.hideCreateDate) {
             taskAge.text = relAge
             taskAge.visibility = View.VISIBLE
         } else {
@@ -160,7 +160,7 @@ class TaskAdapter(var query: Query,
             taskDue.text = ""
             taskDue.visibility = View.GONE
         }
-        if (!isEmptyOrNull(relativeThresholdDate)) {
+        if (!relativeThresholdDate.isNullOrEmpty()) {
             taskThreshold.text = relativeThresholdDate
             taskThreshold.visibility = View.VISIBLE
         } else {
@@ -186,10 +186,11 @@ class TaskAdapter(var query: Query,
             caller?.runOnUiThread {
                 caller.showListViewProgress(true)
             }
-            val visibleTasks: List<Task>
             log.info(tag, "setFilteredTasks called: $TodoList")
             val sorts = newQuery.getSort(Config.defaultSorts)
-            visibleTasks = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+            val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+            countTotalTasks = total
+
             val newVisibleLines = ArrayList<VisibleLine>()
 
             newVisibleLines.addAll(addHeaderLines(visibleTasks, newQuery, getString(R.string.no_header)))
@@ -215,6 +216,8 @@ class TaskAdapter(var query: Query,
         get() {
             return visibleLines.count { !it.header }
         }
+
+    var countTotalTasks = 0
 
     /*
     ** Get the adapter position for task

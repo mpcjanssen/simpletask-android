@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.util.Base64
 
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.util.isEmptyOrNull
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.todayAsString
 import org.json.JSONObject
@@ -162,10 +161,10 @@ class Query(
 
     fun hasFilter(): Boolean {
         return contexts.size + projects.size + priorities.size > 0
-                || !isEmptyOrNull(search) || Interpreter.hasFilterCallback(luaModule)
+                || !search.isNullOrEmpty() || Interpreter.hasFilterCallback(luaModule)
     }
 
-    fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
+    fun getTitle(visible: Int, total: Int, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
         var filterTitle = "" + filterApplied
         if (hasFilter()) {
             filterTitle = "($visible/$total) $filterTitle"
@@ -181,10 +180,10 @@ class Query(
             if (contexts.size > 0) {
                 activeParts.add(list.toString())
             }
-            if (!isEmptyOrNull(this.search)) {
+            if (!this.search.isNullOrEmpty()) {
                 activeParts.add(search.toString())
             }
-            if (useScript && !isEmptyOrNull(this.script)) {
+            if (useScript && !this.script.isNullOrEmpty()) {
                 activeParts.add(script.toString())
             }
             filterTitle = filterTitle + " " + join(activeParts, ",")
@@ -211,8 +210,7 @@ class Query(
 
     fun getSort(defaultSort: Array<String>?): ArrayList<String> {
         var sorts = m_sorts
-        if (sorts == null || sorts.size == 0
-                || isEmptyOrNull(sorts[0])) {
+        if (sorts == null || sorts.size == 0 || sorts[0].isNullOrEmpty()) {
             // Set a default sort
             sorts = ArrayList<String>()
             if (defaultSort == null) return sorts
@@ -325,7 +323,7 @@ class Query(
                 addFilter(ByProjectFilter(projects, projectsNot))
             }
 
-            if (!isEmptyOrNull(search)) {
+            if (!search.isNullOrEmpty()) {
                 addFilter(ByTextFilter(luaModule, search, false))
             }
         }

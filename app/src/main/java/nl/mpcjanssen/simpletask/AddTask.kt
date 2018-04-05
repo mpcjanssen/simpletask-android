@@ -32,7 +32,7 @@ class AddTask : ThemedActionBarActivity() {
 
     private val share_text: String? = null
 
-    private val m_backup = ArrayList<Task>()
+    // private val m_backup = ArrayList<Task>()
 
     private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
@@ -91,13 +91,13 @@ class AddTask : ThemedActionBarActivity() {
 
         todoQueue("Fill addtask") {
 
-            TodoList.pendingEdits.forEach {
-                m_backup.add(TodoList.todoItems.get(it.toInt()))
+            val pendingTasks = TodoList.pendingEdits.map {
+                TodoList.todoItems.get(it).inFileFormat()
             }
             runOnUiThread {
-                val preFillString = if (m_backup.isNotEmpty()) {
+                val preFillString = if (pendingTasks.isNotEmpty()) {
                     setTitle(R.string.updatetask)
-                    join(m_backup.map(Task::inFileFormat), "\n")
+                    join(pendingTasks, "\n")
                 } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
                     intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
                 } else if (intent.hasExtra(Query.INTENT_JSON)) {
@@ -120,51 +120,40 @@ class AddTask : ThemedActionBarActivity() {
                 }
                 textInputField.setRawInputType(inputFlags)
                 textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
-                textInputField.setOnEditorActionListener { _, actionId, keyEvent ->
-                    val hardwareEnterUp = keyEvent != null &&
-                            keyEvent.action == KeyEvent.ACTION_UP &&
-                            keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-                    val hardwareEnterDown = keyEvent != null &&
-                            keyEvent.action == KeyEvent.ACTION_DOWN &&
-                            keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
-                    val imeActionNext = actionId == EditorInfo.IME_ACTION_NEXT
-
-                    if (imeActionNext || hardwareEnterUp) {
-                        // Move cursor to end of line
-                        val position = textInputField.selectionStart
-                        val remainingText = textInputField.text.toString().substring(position)
-                        val endOfLineDistance = remainingText.indexOf('\n')
-                        var endOfLine: Int
-                        if (endOfLineDistance == -1) {
-                            endOfLine = textInputField.length()
-                        } else {
-                            endOfLine = position + endOfLineDistance
-                        }
-                        textInputField.setSelection(endOfLine)
-                        replaceTextAtSelection("\n", false)
-
-                        if (Config.isAddTagsCloneTags) {
-                            val precedingText = textInputField.text.toString().substring(0, endOfLine)
-                            val lineStart = precedingText.lastIndexOf('\n')
-                            val line: String
-                            if (lineStart != -1) {
-                                line = precedingText.substring(lineStart, endOfLine)
-                            } else {
-                                line = precedingText
-                            }
-                            val t = Task(line)
-                            val tags = t.lists
-                                    .map { "@" + it }
-                                    .toMutableSet()
-                            for (prj in t.tags) {
-                                tags.add("+" + prj)
-                            }
-                            replaceTextAtSelection(join(tags, " "), true)
-                        }
-                        endOfLine++
-                        textInputField.setSelection(endOfLine)
+                textInputField.setOnImeAction(EditorInfo.IME_ACTION_NEXT) { _ ->
+                    // Move cursor to end of line
+                    val position = textInputField.selectionStart
+                    val remainingText = textInputField.text.toString().substring(position)
+                    val endOfLineDistance = remainingText.indexOf('\n')
+                    var endOfLine: Int
+                    if (endOfLineDistance == -1) {
+                        endOfLine = textInputField.length()
+                    } else {
+                        endOfLine = position + endOfLineDistance
                     }
-                    imeActionNext || hardwareEnterDown || hardwareEnterUp
+                    textInputField.setSelection(endOfLine)
+                    replaceTextAtSelection("\n", false)
+
+                    if (Config.isAddTagsCloneTags) {
+                        val precedingText = textInputField.text.toString().substring(0, endOfLine)
+                        val lineStart = precedingText.lastIndexOf('\n')
+                        val line: String
+                        if (lineStart != -1) {
+                            line = precedingText.substring(lineStart, endOfLine)
+                        } else {
+                            line = precedingText
+                        }
+                        val t = Task(line)
+                        val tags = t.lists
+                                .map { "@" + it }
+                                .toMutableSet()
+                        for (prj in t.tags) {
+                            tags.add("+" + prj)
+                        }
+                        replaceTextAtSelection(join(tags, " "), true)
+                    }
+                    endOfLine++
+                    textInputField.setSelection(endOfLine)
                 }
 
                 setWordWrap(Config.isWordWrap)
@@ -276,34 +265,31 @@ class AddTask : ThemedActionBarActivity() {
 
         // Update the TodoList with changes
         // Create new tasks
-        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }
-        if (enteredTasks.size < TodoList.pendingEdits.size) {
-            log.info(TAG, "Task size mismatch.")
-            showToastLong(this, "Task count differs. Aborting edits.")
-            finishEdit(confirmation = false)
-            return
+        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }.toMutableList()
+
+        val updateSize = TodoList.pendingEdits.size
+        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${updateSize} tasks")
+        val replaceCount = Math.min(updateSize, enteredTasks.size)
+        for (i in 0 until replaceCount) {
+            val taskIndex = TodoList.pendingEdits[0]
+            TodoList.todoItems[taskIndex].update(enteredTasks[0].text)
+            enteredTasks.removeAt(0)
+            TodoList.pendingEdits.removeAt(0)
         }
-        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${m_backup.size} tasks")
-        if (m_backup.size > 0) {
-            enteredTasks.forEachIndexed { i, task ->
-                val taskIndex = TodoList.pendingEdits[i].toInt()
-                TodoList.todoItems[taskIndex].update(task.text)
-                // Don't modify create date for updated tasks
-                m_backup.removeAt(0)
-            }
-        } else {
-            val processedTasks: List<Task> = enteredTasks.map { task ->
-                if (Config.hasPrependDate) {
-                    Task(task.text, todayAsString)
-                } else {
-                    task
-                }
-            }
-            todoList.add(processedTasks, Config.hasAppendAtEnd)
+        // If tasks are left in pendingedits, they were removed
+        TodoList.pendingEdits.forEach { taskIndex ->
+            TodoList.todoItems.removeAt(taskIndex)
         }
 
-        // Remove remaining tasks that where selected for updateCache
-        todoList.removeAll(m_backup)
+        val processedTasks: List<Task> = enteredTasks.map { task ->
+            if (Config.hasPrependDate) {
+                Task(task.text, todayAsString)
+            } else {
+                task
+            }
+        }
+
+        todoList.add(processedTasks, Config.hasAppendAtEnd)
 
         // Save
         todoList.notifyTasklistChanged(Config.todoFileName, TodoApplication.app, true)
