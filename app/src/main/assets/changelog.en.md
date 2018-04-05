@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+10.1.15
+-------
+
+- Store total tasks count in adapter to prevent CME.
+- Fix crash when adding tasks during task edit.
+- Allow deleting tasks when bulk editing again.
+
 10.1.14
 -------
 
