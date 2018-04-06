@@ -164,7 +164,7 @@ class Query(
                 || !search.isNullOrEmpty() || Interpreter.hasFilterCallback(luaModule)
     }
 
-    fun getTitle(visible: Int, total: Long, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
+    fun getTitle(visible: Int, total: Int, prio: CharSequence, tag: CharSequence, list: CharSequence, search: CharSequence, script: CharSequence, filterApplied: CharSequence, noFilter: CharSequence): String {
         var filterTitle = "" + filterApplied
         if (hasFilter()) {
             filterTitle = "($visible/$total) $filterTitle"
