@@ -1,15 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.40'
     ext.dokka_version = '0.9.15'
-    ext.android_support_version = '27.0.2'
+    ext.android_support_version = '27.1.1'
     repositories {
         jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        google()
+        maven {  url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
@@ -34,6 +33,7 @@ if (!project.hasProperty("storeServiceAccount")) {
 android {
     buildToolsVersion "27.0.3"
     compileSdkVersion 27
+    flavorDimensions "main"
 
 		lintOptions {
 				disable 'InvalidPackage', 'MissingTranslation'
@@ -67,14 +67,17 @@ android {
 
     productFlavors {
         dropbox {
+            dimension "main"
             applicationId 'nl.mpcjanssen.todotxtholo'
             manifestPlaceholders = [providerFlavour: "dropbox"]
         }
         cloudless {
+            dimension "main"
             applicationId 'nl.mpcjanssen.simpletask'
             manifestPlaceholders = [providerFlavour: "cloudless"]
         }
         nextcloud {
+            dimension "main"
             applicationId 'nl.mpcjanssen.simpletask.nextcloud'
             manifestPlaceholders = [providerFlavour: "nextcloud"]
         }
@@ -88,7 +91,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix '.debug'
+            applicationIdSuffix ".debug"
             versionNameSuffix '-DEBUG'
             manifestPlaceholders = [providerBuildType: "debug"]
         }
@@ -128,29 +131,29 @@ repositories {
 }
 
 dependencies {
-    dropboxCompile 'com.dropbox.core:dropbox-core-sdk:3.0.6'
-    nextcloudCompile 'com.github.nextcloud:android-library:-SNAPSHOT'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "com.android.support:support-v4:$android_support_version"
-    compile "com.android.support:support-compat:$android_support_version"
-    compile "com.android.support:design:$android_support_version"
-    compile "com.android.support:appcompat-v7:$android_support_version"
-    compile "com.android.support:recyclerview-v7:$android_support_version"
-    compile 'de.greenrobot:greendao:2.1.0'
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.atlassian.commonmark:commonmark:0.8.0'
-    compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-    compile 'org.luaj:luaj-jse:3.0.1'
-    compile 'me.smichel.android:kpreferences:0.11.1'
-    compile 'com.android.support:multidex:1.0.1'
-    testCompile 'junit:junit:4.12'
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    androidTestCompile('com.android.support.test:runner:0.5') {
+    dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
+    nextcloudImplementation 'com.github.nextcloud:android-library:-SNAPSHOT'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "com.android.support:support-v4:$android_support_version"
+    implementation "com.android.support:support-compat:$android_support_version"
+    implementation "com.android.support:design:$android_support_version"
+    implementation "com.android.support:appcompat-v7:$android_support_version"
+    implementation "com.android.support:recyclerview-v7:$android_support_version"
+    implementation 'de.greenrobot:greendao:2.1.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.atlassian.commonmark:commonmark:0.8.0'
+    implementation 'com.darwinsys:hirondelle-date4j:1.5.1'
+    implementation 'org.luaj:luaj-jse:3.0.1'
+    implementation 'me.smichel.android:kpreferences:0.11.1'
+    implementation 'com.android.support:multidex:1.0.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation('com.android.support.test:runner:0.5') {
         // Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestCompile('com.android.support.test:rules:0.5') {
+    androidTestImplementation('com.android.support.test:rules:0.5') {
         // Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -171,7 +174,7 @@ if (project.hasProperty('storeFile') &&
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.4'
 }
 
 task cleanPublish(type: GradleBuild) {
