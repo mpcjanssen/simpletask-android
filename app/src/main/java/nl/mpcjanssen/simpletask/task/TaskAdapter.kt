@@ -31,7 +31,7 @@ class TaskAdapter(var query: Query,
         return visibleLines.size + 1
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TaskViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = when (viewType) {
             0 -> {
                 // Header
@@ -50,8 +50,8 @@ class TaskAdapter(var query: Query,
         return TaskViewHolder(view, viewType)
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder?, position: Int) {
-        when (holder?.viewType) {
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        when (holder.viewType) {
             0 -> bindHeader(holder, position)
             1 -> bindTask(holder, position)
             else -> return
