@@ -154,6 +154,7 @@ private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long)
  */
 @SuppressLint("Recycle", "NewAPI")
 private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() {
+    @SuppressLint("MissingPermission")
     constructor(cr: ContentResolver, calID: Long) : this() {
         val evtPrj = arrayOf(Events._ID, Events.CALENDAR_ID, Events.DTSTART, Events.TITLE, Events.DESCRIPTION)
         val evtSel = "${Events.CALENDAR_ID} = ?"
@@ -189,6 +190,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
             }
         }
         evts.close()
+
     }
 
     fun mergeEvt(evt: Evt) {
@@ -395,7 +397,9 @@ object CalendarSync {
             evtmap.mergeTasks(tasks)
             val stats = evtmap.apply(m_cr, calID)
             log.debug(TAG, "Sync finished: ${stats.inserts} inserted, ${stats.keeps} unchanged, ${stats.deletes} deleted")
-
+        } catch (e: SecurityException) {
+            
+            log.error(TAG, "No calendar access permissions granted", e )
         } catch (e: Exception) {
             log.error(TAG, "Calendar error", e)
         }

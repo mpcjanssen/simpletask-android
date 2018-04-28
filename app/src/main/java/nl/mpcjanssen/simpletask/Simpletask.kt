@@ -22,6 +22,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
+import android.support.annotation.StyleableRes
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
@@ -575,12 +576,18 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
 
             Mode.MAIN -> {
+                @StyleableRes
+                val primaryIdx = 0
+                @StyleableRes
+                val primaryDarkIdx = 1
+
                 val a: TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
                 try {
-                    val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(0, 0))
+                    val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(primaryIdx, 0))
+
                     actionBar.setBackgroundDrawable(colorPrimary)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        window.statusBarColor = ContextCompat.getColor(this, a.getResourceId(1, 0))
+                        window.statusBarColor = ContextCompat.getColor(this, a.getResourceId(primaryDarkIdx, 0))
                     }
                 } finally {
                     a.recycle()

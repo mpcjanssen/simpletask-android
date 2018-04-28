@@ -28,6 +28,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -2934,8 +2935,9 @@ public class DragSortListView extends ListView {
 
             // always do scroll
             mBlockLayoutRequests = true;
-
-            setSelectionFromTop(movePos, top - padTop);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                setSelectionFromTop(movePos, top - padTop);
+            }
             DragSortListView.this.layoutChildren();
             invalidate();
 
