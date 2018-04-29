@@ -398,7 +398,7 @@ object CalendarSync {
             val stats = evtmap.apply(m_cr, calID)
             log.debug(TAG, "Sync finished: ${stats.inserts} inserted, ${stats.keeps} unchanged, ${stats.deletes} deleted")
         } catch (e: SecurityException) {
-            
+
             log.error(TAG, "No calendar access permissions granted", e )
         } catch (e: Exception) {
             log.error(TAG, "Calendar error", e)
