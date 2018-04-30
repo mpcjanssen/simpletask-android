@@ -37,10 +37,7 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
-import kotlinx.android.synthetic.main.update_items_dialog.view.*
-import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.task.TodoList.fileStoreQueue
@@ -1269,7 +1266,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    companion object State : Preferences(TodoApplication.app, "state") {
+    companion object  {
         private val REQUEST_PREFERENCES = 1
 
         private val ACTION_LINK = "link"
