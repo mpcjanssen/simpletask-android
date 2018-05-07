@@ -124,9 +124,7 @@ android {
 repositories {
     jcenter()
     maven { url "https://jitpack.io" }
-    maven {
-        url "https://maven.google.com"
-    }
+    maven { url "https://maven.google.com" }
 }
 
 dependencies {
@@ -177,6 +175,9 @@ task wrapper(type: Wrapper) {
 }
 
 task cleanPublish(type: GradleBuild) {
+    group = 'deployment'
+    description = 'Build and deploy all versions to Google Play'
+
     setTasks(["clean", "publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
 }
 
