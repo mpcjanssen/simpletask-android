@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.40'
+    ext.kotlin_version = '1.2.41'
     ext.dokka_version = '0.9.15'
     ext.android_support_version = '27.1.1'
     repositories {
@@ -68,17 +68,17 @@ android {
     productFlavors {
         dropbox {
             dimension "main"
-            applicationId 'nl.mpcjanssen.todotxtholo'
+            setApplicationId("nl.mpcjanssen.todotxtholo")
             manifestPlaceholders = [providerFlavour: "dropbox"]
         }
         cloudless {
             dimension "main"
-            applicationId 'nl.mpcjanssen.simpletask'
+            setApplicationId("nl.mpcjanssen.simpletask")
             manifestPlaceholders = [providerFlavour: "cloudless"]
         }
         nextcloud {
             dimension "main"
-            applicationId 'nl.mpcjanssen.simpletask.nextcloud'
+            setApplicationId("nl.mpcjanssen.simpletask.nextcloud")
             manifestPlaceholders = [providerFlavour: "nextcloud"]
         }
     }
@@ -91,14 +91,14 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix '-DEBUG'
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = '-DEBUG'
             manifestPlaceholders = [providerBuildType: "debug"]
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
-            minifyEnabled true
+            setMinifyEnabled(true)
             proguardFile "proguard.txt"
             manifestPlaceholders = [providerBuildType: "release"]
         }
@@ -178,7 +178,7 @@ task wrapper(type: Wrapper) {
 }
 
 task cleanPublish(type: GradleBuild) {
-    tasks = ['clean', 'publishNextcloudRelease', 'publishCloudlessRelease', 'publishDropboxRelease']
+    setTasks(["clean", "publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
 }
 
 allprojects {
