@@ -31,7 +31,6 @@ if (!project.hasProperty("storeServiceAccount")) {
 
 
 android {
-    buildToolsVersion "27.0.3"
     compileSdkVersion 27
     flavorDimensions "main"
 
@@ -105,7 +104,7 @@ android {
     }
     dexOptions {
         preDexLibraries = true
-        javaMaxHeapSize "3g"
+        javaMaxHeapSize "6g"
         dexInProcess = true
     }
     compileOptions {
