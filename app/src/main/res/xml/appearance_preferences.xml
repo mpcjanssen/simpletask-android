@@ -23,7 +23,7 @@
     <com.robobunny.SeekBarPreference
         xmlns:robobunny="http://robobunny.com"
         android:dependency="@string/custom_font_size"
-        android:key="@string/font_size"
+        android:key="@string/fontSize"
         android:defaultValue="14"
         android:max="36"
         robobunny:min="12"

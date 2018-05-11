@@ -27,7 +27,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
             }
             var comp: (Task) -> Comparable<*>
-            val last_date = "9999-99-99"
+            val lastDate = "9999-99-99"
             when (sortType) {
                 "file_order" -> {
                     fileOrder = !reverse
@@ -42,14 +42,14 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
                 "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }
-                "by_creation_date" -> comp = { it.createDate ?: last_date }
+                "by_creation_date" -> comp = { it.createDate ?: lastDate }
                 "in_future" -> comp = { it.inFuture(today) }
-                "by_due_date" -> comp = { it.dueDate ?: last_date }
+                "by_due_date" -> comp = { it.dueDate ?: lastDate }
                 "by_threshold_date" -> comp = {
-                    val fallback = if (createAsBackup) it.createDate ?: last_date else last_date
+                    val fallback = if (createAsBackup) it.createDate ?: lastDate else lastDate
                     it.thresholdDate ?: fallback
                 }
-                "by_completion_date" -> comp = { it.completionDate ?: last_date }
+                "by_completion_date" -> comp = { it.completionDate ?: lastDate }
                 "by_lua" -> {
                     if (moduleName == null || !Interpreter.hasOnSortCallback(moduleName)) {
                        continue@label
@@ -60,7 +60,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     }
                 }
                 else -> {
-                    log.warn("MultiComparator", "Unknown sort: " + sort)
+                    log.warn("MultiComparator", "Unknown sort: $sort")
                     continue@label
                 }
             }
