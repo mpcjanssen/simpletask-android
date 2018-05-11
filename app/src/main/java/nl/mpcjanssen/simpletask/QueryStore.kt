@@ -11,16 +11,16 @@ object QueryStore {
 
 
     fun ids() : List<String> {
-        val prefs_path = "../shared_prefs"
-        val prefs_xml = File(TodoApplication.app.filesDir, "$prefs_path/")
-        if (prefs_xml.exists() && prefs_xml.isDirectory) {
-            val ids = prefs_xml.listFiles { dir, name -> name.startsWith(ID_PREFIX) }
-                    .map { it.relativeTo(prefs_xml).name }
+        val prefsPath = "../shared_prefs"
+        val prefsXml = File(TodoApplication.app.filesDir, "$prefsPath/")
+        if (prefsXml.exists() && prefsXml.isDirectory) {
+            val ids = prefsXml.listFiles { dir, name -> name.startsWith(ID_PREFIX) }
+                    .map { it.relativeTo(prefsXml).name }
                     .map { it -> it.substringBeforeLast(".xml") }
             Logger.debug(TAG, "Saved applyFilter ids: $ids")
             return ids
         } else {
-            Logger.warn(TAG, "No pref_xml folder ${prefs_xml.path}")
+            Logger.warn(TAG, "No pref_xml folder ${prefsXml.path}")
             return emptyList()
         }
     }
@@ -45,11 +45,11 @@ object QueryStore {
     }
 
     fun delete(id: String) {
-        val prefs_path = "../shared_prefs"
-        val prefs_xml = File(TodoApplication.app.filesDir, "$prefs_path/$id.xml")
-        val deleted = prefs_xml.delete()
+        val prefsPath = "../shared_prefs"
+        val prefsXml = File(TodoApplication.app.filesDir, "$prefsPath/$id.xml")
+        val deleted = prefsXml.delete()
         if (!deleted) {
-            Logger.warn(TAG, "Failed to delete saved query: " + id)
+            Logger.warn(TAG, "Failed to delete saved query: $id")
         }
     }
 

@@ -20,7 +20,7 @@ data class NamedQuery(val name: String, val query: Query) {
 
     fun saveInPrefs(prefs: SharedPreferences) {
         query.saveInPrefs(prefs)
-        prefs.edit().apply { putString(INTENT_TITLE,name) }.commit()
+        prefs.edit().apply { putString(INTENT_TITLE,name) }.apply()
     }
 
     companion object {
@@ -201,16 +201,16 @@ class Query(
             appliedFilters.addAll(Priority.inCode(priorities))
             appliedFilters.addAll(projects)
             appliedFilters.remove("-")
-            if (appliedFilters.size == 1) {
-                return appliedFilters[0]
+            return if (appliedFilters.size == 1) {
+                appliedFilters[0]
             } else {
-                return ""
+                ""
             }
         }
 
     fun getSort(defaultSort: Array<String>?): ArrayList<String> {
         var sorts = m_sorts
-        if (sorts == null || sorts.size == 0 || sorts[0].isNullOrEmpty()) {
+        if (sorts == null || sorts.size == 0 || sorts[0].isEmpty()) {
             // Set a default sort
             sorts = ArrayList<String>()
             if (defaultSort == null) return sorts
@@ -232,9 +232,7 @@ class Query(
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
-        if (prefs != null) {
-            prefs.edit().putString(INTENT_JSON, json.toString(2)).apply()
-        }
+        prefs?.edit()?.putString(INTENT_JSON, json.toString(2))?.apply()
     }
 
     fun clear(): Query {

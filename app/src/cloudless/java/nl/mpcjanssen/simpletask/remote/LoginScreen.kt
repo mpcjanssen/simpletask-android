@@ -25,21 +25,13 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.Manifest
-import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
-import android.widget.Button
+import kotlinx.android.synthetic.cloudless.login.*
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
-import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 
@@ -54,8 +46,8 @@ class LoginScreen : ThemedNoActionBarActivity() {
         setTheme(Config.activeTheme)
         setContentView(R.layout.login)
 
-        val m_LoginButton = findViewById(R.id.login) as Button
-        m_LoginButton.setOnClickListener {
+        val loginButton = login
+        loginButton.setOnClickListener {
             startLogin()
         }
     }

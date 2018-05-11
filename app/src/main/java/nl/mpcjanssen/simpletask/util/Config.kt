@@ -174,8 +174,8 @@ object Config : Preferences(TodoApplication.app) {
             if (!customSize) {
                 return 14.0f
             }
-            val font_size by IntPreference(R.string.font_size, 14)
-            return font_size.toFloat()
+            val fontSize by IntPreference(R.string.font_size, 14)
+            return fontSize.toFloat()
         }
 
     val hasShareTaskShowsEdit by BooleanPreference(R.string.share_task_show_edit, false)

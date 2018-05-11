@@ -31,7 +31,6 @@ package nl.mpcjanssen.simpletask
 
 import android.app.Activity
 import android.app.AlarmManager
-import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
@@ -73,18 +72,18 @@ class TodoApplication : MultiDexApplication(),
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 Logger.info(TAG, "Received broadcast ${intent.action}")
-                if (intent.action == Constants.BROADCAST_UPDATE_UI) {
-                    TodoList.todoQueue("Refresh external UI") {
+                when {
+                    intent.action == Constants.BROADCAST_UPDATE_UI -> TodoList.todoQueue("Refresh external UI") {
                         CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
                     }
-                } else if (intent.action == Constants.BROADCAST_UPDATE_WIDGETS) {
-                    Logger.info(TAG, "Refresh widgets from broadcast")
-                    redrawWidgets()
-                    updateWidgets()
-                } else if (intent.action == Constants.BROADCAST_FILE_SYNC) {
-                    loadTodoList("From BROADCAST_FILE_SYNC")
+                    intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
+                        Logger.info(TAG, "Refresh widgets from broadcast")
+                        redrawWidgets()
+                        updateWidgets()
+                    }
+                    intent.action == Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
                 }
             }
         }
@@ -94,7 +93,7 @@ class TodoApplication : MultiDexApplication(),
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         Logger.info(TAG, "onCreate()")
-        Logger.info(TAG, "Created todolist " + TodoList)
+        Logger.info(TAG, "Created todolist $TodoList")
         Logger.info(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         scheduleRepeating()
@@ -166,7 +165,7 @@ class TodoApplication : MultiDexApplication(),
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
-            Logger.info(TAG, "Updating widget: " + appWidgetId)
+            Logger.info(TAG, "Updating widget: $appWidgetId")
         }
     }
 
@@ -192,7 +191,6 @@ class TodoApplication : MultiDexApplication(),
         }
     }
 
-
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
         FileDialog.browseForNewFile(
@@ -214,7 +212,6 @@ class TodoApplication : MultiDexApplication(),
         val now = Date()
         val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
         Daos.backup(fileToBackup)
-
     }
 
     companion object {
