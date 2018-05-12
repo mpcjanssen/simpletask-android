@@ -37,10 +37,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
-import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.task.TodoList.fileStoreQueue
@@ -278,13 +276,13 @@ class Simpletask : ThemedNoActionBarActivity() {
                 completeAction = {
                     completeTasks(it)
                     // Update the tri state checkbox
-                    if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
+                    handleMode(mapOf(Simpletask.Mode.SELECTION to {invalidateOptionsMenu()}))
                     TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
                     // Update the tri state checkbox
-                    if (activeMode() == Simpletask.Mode.SELECTION) invalidateOptionsMenu()
+                    handleMode(mapOf( Simpletask.Mode.SELECTION to { invalidateOptionsMenu() } ))
                     TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
                 },
                 onClickAction = {
@@ -495,118 +493,116 @@ class Simpletask : ThemedNoActionBarActivity() {
         val inflater = menuInflater
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
         val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
+        handleMode(mapOf(
+                Mode.NAV_DRAWER to {
+                    inflater.inflate(R.menu.nav_drawer, menu)
+                    setTitle(R.string.filter_saved_prompt)
+                },
+                Mode.FILTER_DRAWER to {
+                    inflater.inflate(R.menu.filter_drawer, menu)
+                    setTitle(R.string.title_filter_drawer)
+                },
+                Mode.SELECTION to {
+                    val actionColor = ContextCompat.getDrawable(this, R.color.gray74)
+                    actionBar.setBackgroundDrawable(actionColor)
 
-        when (activeMode()) {
-            Mode.NAV_DRAWER -> {
-                inflater.inflate(R.menu.nav_drawer, menu)
-                setTitle(R.string.filter_saved_prompt)
-            }
-            Mode.FILTER_DRAWER -> {
-                inflater.inflate(R.menu.filter_drawer, menu)
-                setTitle(R.string.title_filter_drawer)
-            }
-            Mode.SELECTION -> {
-                val actionColor = ContextCompat.getDrawable(this, R.color.gray74)
-                actionBar.setBackgroundDrawable(actionColor)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.statusBarColor = ContextCompat.getColor(this, R.color.gray87)
-                }
-
-                inflater.inflate(R.menu.task_context_actionbar, menu)
-                title = "${TodoList.numSelected()}"
-                toggle.isDrawerIndicatorEnabled = false
-                fab.visibility = View.GONE
-                toolbar.setOnMenuItemClickListener { item ->
-                    onOptionsItemSelected(item)
-                }
-                toolbar.visibility = View.VISIBLE
-                toolbar.menu.clear()
-                inflater.inflate(R.menu.task_context, toolbar.menu)
-
-                val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
-                val selectedTasks = TodoList.selectedTasks
-                val initialCompleteTasks = ArrayList<Task>()
-                val initialIncompleteTasks = ArrayList<Task>()
-
-                val first: Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
-
-                val cbState: Boolean? = selectedTasks.fold(first) { stateSoFar, task ->
-                    val completed = task.isCompleted()
-                    if (completed) {
-                        initialCompleteTasks.add(task)
-                    } else {
-                        initialIncompleteTasks.add(task)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        window.statusBarColor = ContextCompat.getColor(this, R.color.gray87)
                     }
-                    stateSoFar?.takeIf { it == completed }
-                }
-                when (cbState) {
-                    null -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
-                    false -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
-                    true -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
-                }
 
-                cbItem.setOnMenuItemClickListener { _ ->
-                    log.info(TAG, "Clicked on completion checkbox, state: $cbState")
+                    inflater.inflate(R.menu.task_context_actionbar, menu)
+                    title = "${TodoList.numSelected()}"
+                    toggle.isDrawerIndicatorEnabled = false
+                    fab.visibility = View.GONE
+                    toolbar.setOnMenuItemClickListener { item ->
+                        onOptionsItemSelected(item)
+                    }
+                    toolbar.visibility = View.VISIBLE
+                    toolbar.menu.clear()
+                    inflater.inflate(R.menu.task_context, toolbar.menu)
+
+                    val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
+                    val selectedTasks = TodoList.selectedTasks
+                    val initialCompleteTasks = ArrayList<Task>()
+                    val initialIncompleteTasks = ArrayList<Task>()
+
+                    val first: Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
+
+                    val cbState: Boolean? = selectedTasks.fold(first) { stateSoFar, task ->
+                        val completed = task.isCompleted()
+                        if (completed) {
+                            initialCompleteTasks.add(task)
+                        } else {
+                            initialIncompleteTasks.add(task)
+                        }
+                        stateSoFar?.takeIf { it == completed }
+                    }
                     when (cbState) {
-                        false -> completeTasks(selectedTasks)
-                        true -> uncompleteTasks(selectedTasks)
-                        null -> {
-                            val popup = PopupMenu(this, toolbar)
-                            val menuInflater = popup.menuInflater
-                            menuInflater.inflate(R.menu.completion_popup, popup.menu)
-                            popup.show()
-                            popup.setOnMenuItemClickListener popup@{ item ->
-                                val menuId = item.itemId
-                                when (menuId) {
-                                    R.id.complete -> completeTasks(selectedTasks)
-                                    R.id.uncomplete -> uncompleteTasks(selectedTasks)
+                        null -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+                        false -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
+                        true -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
+                    }
+
+                    cbItem.setOnMenuItemClickListener { _ ->
+                        log.info(TAG, "Clicked on completion checkbox, state: $cbState")
+                        when (cbState) {
+                            false -> completeTasks(selectedTasks)
+                            true -> uncompleteTasks(selectedTasks)
+                            null -> {
+                                val popup = PopupMenu(this, toolbar)
+                                val menuInflater = popup.menuInflater
+                                menuInflater.inflate(R.menu.completion_popup, popup.menu)
+                                popup.show()
+                                popup.setOnMenuItemClickListener popup@{ item ->
+                                    val menuId = item.itemId
+                                    when (menuId) {
+                                        R.id.complete -> completeTasks(selectedTasks)
+                                        R.id.uncomplete -> uncompleteTasks(selectedTasks)
+                                    }
+                                    return@popup true
                                 }
-                                return@popup true
                             }
                         }
+                        return@setOnMenuItemClickListener true
                     }
-                    return@setOnMenuItemClickListener true
-                }
 
-                selection_fab.visibility = View.VISIBLE
-                selection_fab.setOnClickListener {
-                    createCalendarAppointment(selectedTasks)
-                }
-            }
-
-            Mode.MAIN -> {
-                @StyleableRes
-                val primaryIdx = 0
-                @StyleableRes
-                val primaryDarkIdx = 1
-
-                val a: TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
-                try {
-                    val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(primaryIdx, 0))
-
-                    actionBar.setBackgroundDrawable(colorPrimary)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        window.statusBarColor = ContextCompat.getColor(this, a.getResourceId(primaryDarkIdx, 0))
+                    selection_fab.visibility = View.VISIBLE
+                    selection_fab.setOnClickListener {
+                        createCalendarAppointment(selectedTasks)
                     }
-                } finally {
-                    a.recycle()
-                }
+                },
 
-                inflater.inflate(R.menu.main, menu)
+                Mode.MAIN to {
+                    @StyleableRes
+                    val primaryIdx = 0
+                    @StyleableRes
+                    val primaryDarkIdx = 1
 
-                populateSearch(menu)
-                if (Config.showTodoPath) {
-                    title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
-                } else {
-                    setTitle(R.string.app_label)
-                }
-                toggle.isDrawerIndicatorEnabled = true
-                fab.visibility = View.VISIBLE
-                selection_fab.visibility = View.GONE
-                toolbar.visibility = View.GONE
-            }
-        }
+                    val a: TypedArray = obtainStyledAttributes(intArrayOf(R.attr.colorPrimary, R.attr.colorPrimaryDark))
+                    try {
+                        val colorPrimary = ContextCompat.getDrawable(this, a.getResourceId(primaryIdx, 0))
+
+                        actionBar.setBackgroundDrawable(colorPrimary)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            window.statusBarColor = ContextCompat.getColor(this, a.getResourceId(primaryDarkIdx, 0))
+                        }
+                    } finally {
+                        a.recycle()
+                    }
+
+                    inflater.inflate(R.menu.main, menu)
+
+                    populateSearch(menu)
+                    if (Config.showTodoPath) {
+                        title = Config.todoFileName.replace("([^/])[^/]*/".toRegex(), "$1/")
+                    } else {
+                        setTitle(R.string.app_label)
+                    }
+                    toggle.isDrawerIndicatorEnabled = true
+                    fab.visibility = View.VISIBLE
+                    selection_fab.visibility = View.GONE
+                    toolbar.visibility = View.GONE
+                }))
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -614,11 +610,15 @@ class Simpletask : ThemedNoActionBarActivity() {
      * isDrawerOpen only returns true only if m_drawerLayout != null, so
      * if this returns either _DRAWER, m_drawerLayout!!. calls are safe to make
      */
-    private fun activeMode(): Mode {
-        if (isDrawerOpen(NAV_DRAWER)) return Mode.NAV_DRAWER
-        if (isDrawerOpen(QUICK_FILTER_DRAWER)) return Mode.FILTER_DRAWER
-        if (TodoList.selectedTasks.isNotEmpty()) return Mode.SELECTION
-        return Mode.MAIN
+    private fun handleMode(actions: Map<Mode, () -> Any?>) {
+        todoQueue("Handle mode") {
+            when {
+                isDrawerOpen(NAV_DRAWER) -> actions.get(Mode.NAV_DRAWER)?.invoke()
+                isDrawerOpen(QUICK_FILTER_DRAWER) -> actions . get (Mode.FILTER_DRAWER)?.invoke()
+                TodoList.selectedTasks.isNotEmpty() -> actions.get(Mode.SELECTION)?.invoke()
+                else -> actions.get(Mode.MAIN)?.invoke()
+            }
+        }
     }
 
     private fun isDrawerOpen(drawer: Int): Boolean {
@@ -822,26 +822,17 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         log.info(TAG, "onMenuItemSelected: " + item.itemId)
         val checkedTasks = TodoList.selectedTasks
         when (item.itemId) {
             androidId.home -> {
-                when (activeMode()) {
-                    Mode.NAV_DRAWER -> {
-                        closeDrawer(NAV_DRAWER)
-                    }
-                    Mode.FILTER_DRAWER -> {
-                        closeDrawer(QUICK_FILTER_DRAWER)
-                    }
-                    Mode.SELECTION -> {
-                        closeSelectionMode()
-                    }
-                    Mode.MAIN -> {
-                        val toggle = m_drawerToggle ?: return true
-                        toggle.onOptionsItemSelected(item)
-                    }
-                }
+                handleMode(mapOf(
+                        Mode.NAV_DRAWER to { closeDrawer(NAV_DRAWER) },
+                        Mode.FILTER_DRAWER to { closeDrawer(QUICK_FILTER_DRAWER) },
+                        Mode.SELECTION to { closeSelectionMode() },
+                        Mode.MAIN to  { m_drawerToggle?.onOptionsItemSelected(item) }
+                ))
+                return true
             }
             R.id.search -> {
             }
@@ -1004,25 +995,22 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onBackPressed() {
-        when (activeMode()) {
-            Mode.NAV_DRAWER -> {
-                closeDrawer(NAV_DRAWER)
+        handleMode(mapOf(
+                Mode.NAV_DRAWER to {
+            closeDrawer(NAV_DRAWER)
+        },
+                Mode.FILTER_DRAWER to {
+            closeDrawer(QUICK_FILTER_DRAWER)
+        },             Mode.SELECTION to {
+            closeSelectionMode()
+        },             Mode.MAIN to {
+            if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
+                super.onBackPressed()
             }
-            Mode.FILTER_DRAWER -> {
-                closeDrawer(QUICK_FILTER_DRAWER)
-            }
-            Mode.SELECTION -> {
-                closeSelectionMode()
-            }
-            Mode.MAIN -> {
-                if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
-                    return super.onBackPressed()
-                }
-                clearFilter()
-                onNewIntent(intent)
-            }
+            clearFilter()
+            onNewIntent(intent)
         }
-        return
+        ))
     }
 
     private fun closeSelectionMode() {
