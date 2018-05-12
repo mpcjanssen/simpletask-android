@@ -603,7 +603,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     selection_fab.visibility = View.GONE
                     toolbar.visibility = View.GONE
                 }))
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     /**
@@ -612,11 +612,13 @@ class Simpletask : ThemedNoActionBarActivity() {
      */
     private fun handleMode(actions: Map<Mode, () -> Any?>) {
         todoQueue("Handle mode") {
-            when {
-                isDrawerOpen(NAV_DRAWER) -> actions.get(Mode.NAV_DRAWER)?.invoke()
-                isDrawerOpen(QUICK_FILTER_DRAWER) -> actions . get (Mode.FILTER_DRAWER)?.invoke()
-                TodoList.selectedTasks.isNotEmpty() -> actions.get(Mode.SELECTION)?.invoke()
-                else -> actions.get(Mode.MAIN)?.invoke()
+            runOnUiThread {
+                when {
+                    isDrawerOpen(NAV_DRAWER) -> actions.get(Mode.NAV_DRAWER)?.invoke()
+                    isDrawerOpen(QUICK_FILTER_DRAWER) -> actions.get(Mode.FILTER_DRAWER)?.invoke()
+                    TodoList.selectedTasks.isNotEmpty() -> actions.get(Mode.SELECTION)?.invoke()
+                    else -> actions.get(Mode.MAIN)?.invoke()
+                }
             }
         }
     }
@@ -1257,7 +1259,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    companion object State : Preferences(TodoApplication.app, "state") {
+    companion object  {
         private val REQUEST_PREFERENCES = 1
 
         private val ACTION_LINK = "link"
