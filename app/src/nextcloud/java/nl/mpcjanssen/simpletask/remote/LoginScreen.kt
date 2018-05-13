@@ -7,33 +7,40 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.annotation.StringRes
 import android.support.v4.content.LocalBroadcastManager
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import com.owncloud.android.lib.common.OwnCloudClientFactory
+import com.owncloud.android.lib.common.OwnCloudClientManagerFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.Simpletask
-import nl.mpcjanssen.simpletask.TodoApplication
+import kotlinx.android.synthetic.nextcloud.login.*
+import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.Config
+
 
 class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
     override fun onRemoteOperationFinish(p0: RemoteOperation?, p1: RemoteOperationResult?) {
         if (p0 is GetRemoteUserInfoOperation) {
-            if (p1!!.httpCode == 200) {
+            if (p1?.httpCode == 200) {
                 finishLogin()
             } else {
+                Logger.error(TAG, "Exception: ${p1?.exception?.message}")
+                Logger.error(TAG, "Code: ${p1?.httpCode}")
+                Logger.error(TAG, "Message: ${p1?.logMessage}")
                 Toast.makeText(this, getString(R.string.login_unsuccesfull), Toast.LENGTH_SHORT).show()
             }
         } else {
+            Logger.error(TAG, "Exception: ${p1?.exception?.message}")
+            Logger.error(TAG, "Code: ${p1?.httpCode}")
+            Logger.error(TAG, "Message: ${p1?.logMessage}")
             Toast.makeText(this, getString(R.string.unexpected_result), Toast.LENGTH_SHORT).show()
         }
     }
@@ -41,9 +48,7 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
     private lateinit var m_app: TodoApplication
     private lateinit var m_broadcastReceiver: BroadcastReceiver
     private lateinit var localBroadcastManager: LocalBroadcastManager
-    private lateinit var m_server: EditText
-    private lateinit var m_username: EditText
-    private lateinit var m_password: EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,14 +69,13 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
         }
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
 
-        var loginButton = findViewById<Button>(R.id.login)
-        loginButton.setOnClickListener {
+        login.setOnClickListener {
             startLogin()
         }
 
-        m_server = findViewById<EditText>(R.id.nextcloud_server_url)
-        m_username = findViewById<EditText>(R.id.nextcloud_username)
-        m_password = findViewById<EditText>(R.id.nextcloud_password)
+        logging.setOnClickListener {
+            startActivity(Intent(this, DebugInfoScreen::class.java))
+        }
 
         if (m_app.isAuthenticated) {
             switchToTodolist()
@@ -88,10 +92,10 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
     private fun finishLogin() {
         val am = AccountManager.get(this)
         val bundle = Bundle()
-        bundle.putString("server_url", m_server.text.toString())
+        bundle.putString("server_url", nextcloud_server_url.text.toString())
         am.addAccountExplicitly(
-                Account(m_username.text.toString(), m_app.getString(R.string.account_type)),
-                m_password.text.toString(),
+                Account(nextcloud_username.text.toString(), m_app.getString(R.string.account_type)),
+                nextcloud_password.text.toString(),
                 bundle
         )
         switchToTodolist()
@@ -103,16 +107,55 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
     }
 
     internal fun startLogin() {
-        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(m_server.text.toString()), this, true)
+        val isSamlAuth = AUTH_ON.equals(getString(R.string.auth_method_saml_web_sso))
+
+        OwnCloudClientManagerFactory.setUserAgent(getUserAgent())
+        OwnCloudClientManagerFactory.setNextcloudUserAgent(getNextcloudUserAgent())
+        if (isSamlAuth) {
+            OwnCloudClientManagerFactory.setDefaultPolicy(OwnCloudClientManagerFactory.Policy.SINGLE_SESSION_PER_ACCOUNT)
+        } else {
+            OwnCloudClientManagerFactory
+                    .setDefaultPolicy(OwnCloudClientManagerFactory.Policy.SINGLE_SESSION_PER_ACCOUNT_IF_SERVER_SUPPORTS_SERVER_MONITORING)
+        }
+        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(nextcloud_server_url.text.toString()), this, true)
         client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
-                m_username.text.toString(),
-                m_password.text.toString()
+                nextcloud_username.text.toString(),
+                nextcloud_password.text.toString()
         )
         val versionOperation = GetRemoteUserInfoOperation()
         versionOperation.execute(client, this, Handler())
     }
 
+    fun getUserAgent(): String {
+        // Mozilla/5.0 (Android) ownCloud-android/1.7.0
+        return getUserAgent(R.string.user_agent)
+    }
+
+    fun getNextcloudUserAgent(): String {
+        // Mozilla/5.0 (Android) Nextcloud-android/2.1.0
+        return getUserAgent(R.string.nextcloud_user_agent)
+    }
+
+    private fun getUserAgent(@StringRes agent: Int): String {
+        val appString = applicationContext.getResources().getString(agent)
+        val packageName = applicationContext.getPackageName()
+        var version = ""
+
+        try {
+            val pInfo = applicationContext.getPackageManager().getPackageInfo(packageName, 0)
+            if (pInfo != null) {
+                version = pInfo.versionName
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            Logger.error(TAG, "Trying to get packageName")
+            e.cause?.let { Logger.error(TAG, "Cause:", it) }
+        }
+
+        return String.format(appString, version)
+    }
+
     companion object {
         internal val TAG = LoginScreen::class.java.simpleName
+        val AUTH_ON = "on"
     }
 }

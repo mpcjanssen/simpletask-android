@@ -72,6 +72,13 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/nextcloud_login_screen_button"
             android:textSize="8pt" />
+        <Button
+                android:id="@+id/logging"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/nextcloud_logging_screen_button"
+                android:textSize="8pt" />
     </LinearLayout>
 
 </LinearLayout>
