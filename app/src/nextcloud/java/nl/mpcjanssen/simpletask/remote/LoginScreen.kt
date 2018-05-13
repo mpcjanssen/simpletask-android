@@ -27,6 +27,11 @@ import nl.mpcjanssen.simpletask.util.Config
 
 
 class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
+    private val url: String
+        get () {
+            return "https://${nextcloud_server_url.text}"
+        }
+
     override fun onRemoteOperationFinish(p0: RemoteOperation?, p1: RemoteOperationResult?) {
         if (p0 is GetRemoteUserInfoOperation) {
             if (p1?.httpCode == 200) {
@@ -92,7 +97,7 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
     private fun finishLogin() {
         val am = AccountManager.get(this)
         val bundle = Bundle()
-        bundle.putString("server_url", nextcloud_server_url.text.toString())
+        bundle.putString("server_url", url)
         am.addAccountExplicitly(
                 Account(nextcloud_username.text.toString(), m_app.getString(R.string.account_type)),
                 nextcloud_password.text.toString(),
@@ -117,7 +122,7 @@ class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
             OwnCloudClientManagerFactory
                     .setDefaultPolicy(OwnCloudClientManagerFactory.Policy.SINGLE_SESSION_PER_ACCOUNT_IF_SERVER_SUPPORTS_SERVER_MONITORING)
         }
-        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(nextcloud_server_url.text.toString()), this, true)
+        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), this, true)
         client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
                 nextcloud_username.text.toString(),
                 nextcloud_password.text.toString()
