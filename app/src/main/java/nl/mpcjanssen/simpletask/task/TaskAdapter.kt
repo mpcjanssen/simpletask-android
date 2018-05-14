@@ -19,8 +19,7 @@ import java.util.ArrayList
 
 class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHolder(itemView)
 
-class TaskAdapter(private val m_inflater: LayoutInflater,
-                  val completeAction: (Task) -> Unit,
+class TaskAdapter(val completeAction: (Task) -> Unit,
                   val unCompleteAction: (Task) -> Unit,
                   val onClickAction: (Task) -> Unit,
                   val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
@@ -35,15 +34,15 @@ class TaskAdapter(private val m_inflater: LayoutInflater,
         val view = when (viewType) {
             0 -> {
                 // Header
-                m_inflater.inflate(R.layout.list_header, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.list_header, parent, false)
             }
             1 -> {
                 // Task
-                m_inflater.inflate(R.layout.list_item, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
             }
             else -> {
                 // Empty at end
-                m_inflater.inflate(R.layout.empty_list_item, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.empty_list_item, parent, false)
             }
 
         }

@@ -85,7 +85,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
-        taskAdapter =  TaskAdapter(layoutInflater,
+        taskAdapter =  TaskAdapter(
                 completeAction = {
                     completeTasks(it)
                     // Update the tri state checkbox
@@ -436,8 +436,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         TodoList.todoQueue("Update applyFilter bar") {
             runOnUiThread {
-                val count = taskAdapter.countVisibleTasks ?: 0
-                val total = taskAdapter.countTotalTasks ?: 0
+                val count = taskAdapter.countVisibleTasks
+                val total = taskAdapter.countTotalTasks
                 filter_text.text = Config.mainQuery.getTitle(
                         count,
                         total,
@@ -613,10 +613,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         todoQueue("Handle mode") {
             runOnUiThread {
                 when {
-                    isDrawerOpen(NAV_DRAWER) -> actions.get(Mode.NAV_DRAWER)?.invoke()
-                    isDrawerOpen(QUICK_FILTER_DRAWER) -> actions.get(Mode.FILTER_DRAWER)?.invoke()
-                    TodoList.selectedTasks.isNotEmpty() -> actions.get(Mode.SELECTION)?.invoke()
-                    else -> actions.get(Mode.MAIN)?.invoke()
+                    isDrawerOpen(NAV_DRAWER) -> actions[Mode.NAV_DRAWER]?.invoke()
+                    isDrawerOpen(QUICK_FILTER_DRAWER) -> actions[Mode.FILTER_DRAWER]?.invoke()
+                    TodoList.selectedTasks.isNotEmpty() -> actions[Mode.SELECTION]?.invoke()
+                    else -> actions[Mode.MAIN]?.invoke()
                 }
             }
         }
@@ -1145,8 +1145,8 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateFilterDrawer() {
-        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@" + it }
-        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+" + it }
+        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
+        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
         val drawerAdapter = DrawerAdapter(layoutInflater,
                 Config.listTerm,
                 decoratedContexts,
@@ -1158,12 +1158,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         filter_drawer.onItemClickListener = DrawerItemClickListener()
 
         Config.mainQuery.contexts
-                .map { drawerAdapter.getIndexOf("@" + it) }
+                .map { drawerAdapter.getIndexOf("@$it") }
                 .filter { it != -1 }
                 .forEach { filter_drawer.setItemChecked(it, true) }
 
         Config.mainQuery.projects
-                .map { drawerAdapter.getIndexOf("+" + it) }
+                .map { drawerAdapter.getIndexOf("+$it") }
                 .filter { it != -1 }
                 .forEach { filter_drawer.setItemChecked(it, true) }
         filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, Config.mainQuery.contextsNot)
