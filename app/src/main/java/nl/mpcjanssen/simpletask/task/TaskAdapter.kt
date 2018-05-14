@@ -19,12 +19,12 @@ import java.util.ArrayList
 
 class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHolder(itemView)
 
-class TaskAdapter(var query: Query,
-                  private val m_inflater: LayoutInflater,
+class TaskAdapter(private val m_inflater: LayoutInflater,
                   val completeAction: (Task) -> Unit,
                   val unCompleteAction: (Task) -> Unit,
                   val onClickAction: (Task) -> Unit,
                   val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
+    lateinit var query: Query
     val tag = "TaskAdapter"
     var textSize: Float = 14.0F
     override fun getItemCount(): Int {
