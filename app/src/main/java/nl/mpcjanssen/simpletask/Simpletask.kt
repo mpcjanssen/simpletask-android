@@ -55,7 +55,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private var options_menu: Menu? = null
-    internal lateinit var m_app: TodoApplication
 
     internal var m_adapter: TaskAdapter? = null
     private var m_broadcastReceiver: BroadcastReceiver? = null
@@ -74,7 +73,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log.info(TAG, "onCreate")
-        m_app = application as TodoApplication
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE)
@@ -90,7 +88,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         setContentView(R.layout.main)
 
-        localBroadcastManager = m_app.localBroadCastManager
+        localBroadcastManager = TodoApplication.app.localBroadCastManager
 
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
@@ -140,7 +138,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE
-        if (m_app.isAuthenticated) {
+        if (TodoApplication.app.isAuthenticated) {
             if (Config.latestChangelogShown < versionCode) {
                 showChangelogOverlay(this)
                 Config.latestChangelogShown = versionCode
@@ -209,7 +207,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun handleIntent() {
-        if (!m_app.isAuthenticated) {
+        if (!TodoApplication.app.isAuthenticated) {
             log.info(TAG, "handleIntent: not authenticated")
             startLogin()
             return
@@ -277,13 +275,13 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(it)
                     // Update the tri state checkbox
                     handleMode(mapOf(Simpletask.Mode.SELECTION to {invalidateOptionsMenu()}))
-                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, false)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, false)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
                     // Update the tri state checkbox
                     handleMode(mapOf( Simpletask.Mode.SELECTION to { invalidateOptionsMenu() } ))
-                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, true)
                 },
                 onClickAction = {
                     val newSelectedState = !TodoList.isSelected(it)
@@ -334,7 +332,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                     url.startsWith("todo://") -> {
                                         val todoFolder = Config.todoFile.parentFile
                                         val newName = File(todoFolder, url.substring(7))
-                                        m_app.switchTodoFile(newName.absolutePath)
+                                        TodoApplication.app.switchTodoFile(newName.absolutePath)
                                     }
                                     url.startsWith("root://") -> {
                                         val rootFolder = Config.localFileRoot
@@ -454,7 +452,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun startLogin() {
-        m_app.startLogin(this)
+        TodoApplication.app.startLogin(this)
         finish()
     }
 
@@ -468,7 +466,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onResume() {
         super.onResume()
         log.info(TAG, "onResume")
-        TodoList.reload(TodoApplication.app, reason = "Main activity resume")
+        TodoList.reload(reason = "Main activity resume")
         handleIntent()
         refreshUI()
     }
@@ -715,7 +713,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             TodoList.prioritize(tasks, priority)
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, true)
         })
         builder.show()
 
@@ -732,7 +730,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         if (Config.isAutoArchive) {
             archiveTasks()
         }
-        TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        TodoList.notifyTasklistChanged(Config.todoFileName, true)
     }
 
     private fun uncompleteTasks(task: Task) {
@@ -743,7 +741,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun uncompleteTasks(tasks: List<Task>) {
         TodoList.uncomplete(tasks)
-        TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+        TodoList.notifyTasklistChanged(Config.todoFileName, true)
     }
 
     private fun deferTasks(tasks: List<Task>, dateType: DateType) {
@@ -763,7 +761,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
                         TodoList.defer(date.format(Constants.DATE_FORMAT), tasks, dateType)
-                        TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+                        TodoList.notifyTasklistChanged(Config.todoFileName, true)
                     },
                             today.year!!,
                             today.month!! - 1,
@@ -776,7 +774,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else {
 
                     TodoList.defer(input, tasks, dateType)
-                    TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, true)
 
                 }
 
@@ -791,7 +789,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 .replaceFirst(Regex("%s"), numTasks.toString())
         val delete = DialogInterface.OnClickListener { _, _ ->
             TodoList.removeAll(tasks)
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, true)
             invalidateOptionsMenu()
         }
 
@@ -804,10 +802,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun archiveTasks(tasks: List<Task>?, showDialog: Boolean = true) {
         val archiveAction = {
-            if (Config.todoFileName == m_app.doneFileName) {
+            if (Config.todoFileName == Config.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
             }
-            TodoList.archive(Config.todoFileName, m_app.doneFileName, tasks, Config.eol)
+            TodoList.archive(Config.todoFileName, Config.doneFileName, tasks, Config.eol)
             invalidateOptionsMenu()
         }
 
@@ -857,7 +855,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks()
-            R.id.open_file -> m_app.browseForNewFile(this)
+            R.id.open_file -> TodoApplication.app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()
@@ -1203,7 +1201,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::addList,
                 Task::removeList
         ) {
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, true)
         }
     }
 
@@ -1216,7 +1214,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::addTag,
                 Task::removeTag
         ) {
-            TodoList.notifyTasklistChanged(Config.todoFileName, m_app, true)
+            TodoList.notifyTasklistChanged(Config.todoFileName, true)
         }
     }
 

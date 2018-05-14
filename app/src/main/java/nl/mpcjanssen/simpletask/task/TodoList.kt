@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.SystemClock
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.util.*
@@ -183,10 +182,10 @@ object TodoList {
             return todoItems.filter { it.isCompleted() }
         }
 
-    fun notifyTasklistChanged(todoName: String,  backup: BackupInterface?, save: Boolean) {
+    fun notifyTasklistChanged(todoName: String, save: Boolean) {
         todoQueue("Notified changed") {
             if (save) {
-                save(FileStore, todoName, backup, Config.eol)
+                save(FileStore, todoName, true, Config.eol)
             }
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
@@ -224,7 +223,7 @@ object TodoList {
 
     }
 
-    fun reload(backup: BackupInterface, reason: String = "") {
+    fun reload(reason: String = "") {
         val logText = "Reload: " + reason
         todoQueue(logText) {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
@@ -233,7 +232,7 @@ object TodoList {
             if (Config.changesPending && FileStore.isOnline) {
                 log.info(TAG, "Not loading, changes pending")
                 log.info(TAG, "Saving instead of loading")
-                save(FileStore, filename, backup, Config.eol)
+                save(FileStore, filename, true, Config.eol)
             } else {
                 fileStoreQueue("Reload") {
                     val needSync = try {
@@ -264,8 +263,8 @@ object TodoList {
                                 Config.cachedContents = remoteContents.contents.joinToString("\n")
                                 Config.lastSeenRemoteId = remoteContents.remoteId
                                 // Backup
-                                backup.backup(filename, items)
-                                notifyTasklistChanged(filename, backup, false)
+                                Backupper.backup(filename, items)
+                                notifyTasklistChanged(filename, false)
                             }
 
 
@@ -282,14 +281,15 @@ object TodoList {
         }
     }
 
-    private fun save(fileStore: IFileStore, todoFileName: String, backup: BackupInterface?, eol: String) {
+    private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
             it.inFileFormat()
         }
         // Update cache
         Config.cachedContents = lines.joinToString("\n")
-        backup?.backup(todoFileName, todoItems)
+        if (backup) {
+        }
         fileStoreQueue("Save") {
             try {
                 log.info(TAG, "Saving todo list, size ${lines.size}")
@@ -323,7 +323,7 @@ object TodoList {
                 try {
                     FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
                     removeAll(tasksToDelete)
-                    notifyTasklistChanged(todoFilename, null, true)
+                    notifyTasklistChanged(todoFilename, true)
                 } catch (e: Exception) {
                     log.error(TAG, "Task archiving failed", e)
                     showToastShort(TodoApplication.app, "Task archiving failed")

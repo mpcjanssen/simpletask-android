@@ -292,7 +292,7 @@ class AddTask : ThemedActionBarActivity() {
         todoList.add(processedTasks, Config.hasAppendAtEnd)
 
         // Save
-        todoList.notifyTasklistChanged(Config.todoFileName, TodoApplication.app, true)
+        todoList.notifyTasklistChanged(Config.todoFileName, true)
         finishEdit(confirmation = false)
     }
 
