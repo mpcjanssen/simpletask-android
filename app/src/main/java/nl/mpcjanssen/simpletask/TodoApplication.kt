@@ -48,9 +48,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
 
-class TodoApplication : MultiDexApplication(),
-
-        BackupInterface {
+class TodoApplication : MultiDexApplication() {
 
     private lateinit var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -158,7 +156,7 @@ class TodoApplication : MultiDexApplication(),
 
     fun loadTodoList(reason: String) {
         Logger.info(TAG, "Loading todolist")
-        TodoList.reload(this, reason = reason)
+        TodoList.reload(reason = reason)
     }
 
     fun updateWidgets() {
@@ -205,14 +203,7 @@ class TodoApplication : MultiDexApplication(),
                 Config.showTxtOnly)
     }
 
-    val doneFileName: String
-        get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
 
-    override fun backup(name: String, lines: List<Task>) {
-        val now = Date()
-        val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
-        Daos.backup(fileToBackup)
-    }
 
     companion object {
         private val TAG = TodoApplication::class.java.simpleName
@@ -223,3 +214,11 @@ class TodoApplication : MultiDexApplication(),
     var today: String = todayAsString
 }
 
+
+object Backupper : BackupInterface {
+    override fun backup(name: String, lines: List<Task>) {
+        val now = Date()
+        val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
+        Daos.backup(fileToBackup)
+    }
+}

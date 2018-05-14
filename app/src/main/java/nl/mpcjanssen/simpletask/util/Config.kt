@@ -214,6 +214,9 @@ object Config : Preferences(TodoApplication.app) {
         prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
     }
 
+    val doneFileName: String
+        get() = File(todoFile.parentFile, "done.txt").absolutePath
+
     fun clearCache() {
         cachedContents = null
         todoList = null
