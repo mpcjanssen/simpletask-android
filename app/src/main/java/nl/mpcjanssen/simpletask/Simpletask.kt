@@ -37,7 +37,6 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
-import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
@@ -56,7 +55,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var options_menu: Menu? = null
 
-    internal var m_adapter: TaskAdapter? = null
+    lateinit var taskAdapter: TaskAdapter
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
 
@@ -86,191 +85,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
-        setContentView(R.layout.main)
-
-        localBroadcastManager = TodoApplication.app.localBroadCastManager
-
-        val broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, receivedIntent: Intent) {
-                if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
-                    archiveTasks()
-                } else {
-                    if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
-                        log.info(TAG, "Logging out from Dropbox")
-                        finish()
-                        fileStoreQueue("Logout") {
-                            try {
-                                FileStore.logout()
-                            } catch (e: Exception) {
-                                log.error(TAG, "Error logging out.", e)
-                            }
-                            startLogin()
-                        }
-                    } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
-                        log.info(TAG, "Tasklist changed, refiltering adapter")
-                        m_adapter!!.setFilteredTasks(this@Simpletask, Config.mainQuery)
-                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
-                        log.info(TAG, "Updating UI because of broadcast")
-                        refreshUI()
-                    } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
-                        log.info(TAG, "Highligh selection")
-                        m_adapter?.notifyDataSetChanged()
-                        invalidateOptionsMenu()
-                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
-                        showListViewProgress(true)
-                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
-                        showListViewProgress(false)
-                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
-                        updateConnectivityIndicator()
-                    } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
-                            receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
-                        recreate()
-                    }
-                }
-            }
-        }
-        localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
-        m_broadcastReceiver = broadcastReceiver
-        setSupportActionBar(main_actionbar)
-
-        // Replace drawables if the theme is dark
-        if (Config.isDarkTheme || Config.isBlackTheme) {
-            actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
-        }
-        val versionCode = BuildConfig.VERSION_CODE
-        if (TodoApplication.app.isAuthenticated) {
-            if (Config.latestChangelogShown < versionCode) {
-                showChangelogOverlay(this)
-                Config.latestChangelogShown = versionCode
-            } else if (!Config.rightDrawerDemonstrated) {
-                Config.rightDrawerDemonstrated = true
-                openNavDrawer()
-            }
-        }
-    }
-
-    private fun refreshUI() {
-        todoQueue("Refresh UI") {
-            runOnUiThread {
-                updateConnectivityIndicator()
-                invalidateOptionsMenu()
-                updateFilterBar()
-                updateDrawers()
-            }
-        }
-    }
-
-    private fun openLuaConfig() {
-        val i = Intent(this, ScriptConfigScreen::class.java)
-        startActivity(i)
-    }
-
-    private fun showHelp() {
-        val i = Intent(this, HelpScreen::class.java)
-        startActivity(i)
-    }
-
-    override fun onSearchRequested(): Boolean {
-        options_menu?.let {
-            val searchMenuItem = it.findItem(R.id.search)
-            searchMenuItem.expandActionView()
-            return true
-        }
-        return false
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        m_drawerToggle?.syncState()
-    }
-
-    private fun selectedTasksAsString(): String {
-        val result = ArrayList<String>()
-        TodoList.selectedTasks.forEach { task ->
-            val luaTxt = Interpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
-            result.add(luaTxt ?: task.inFileFormat())
-        }
-        return join(result, "\n")
-    }
-
-    private fun selectAllTasks() {
-        val selectedTasks = m_adapter!!.visibleLines
-                .filterNot(VisibleLine::header)
-                .map { it.task!! }
-        TodoList.selectTasks(selectedTasks)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        m_drawerToggle?.onConfigurationChanged(newConfig)
-    }
-
-    private fun handleIntent() {
-        if (!TodoApplication.app.isAuthenticated) {
-            log.info(TAG, "handleIntent: not authenticated")
-            startLogin()
-            return
-        }
-
-        // Set the list's click listener
-        filter_drawer?.onItemClickListener = DrawerItemClickListener()
-
-        drawer_layout?.let { drawerLayout ->
-            m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
-                    drawerLayout, /* DrawerLayout object */
-                    R.string.changelist, /* "open drawer" description */
-                    R.string.app_label /* "close drawer" description */) {
-
-                /**
-                 * Called when a drawer has settled in a completely closed
-                 * state.
-                 */
-                override fun onDrawerClosed(view: View) {
-                    invalidateOptionsMenu()
-                }
-
-                /** Called when a drawer has settled in a completely open state.  */
-                override fun onDrawerOpened(drawerView: View) {
-                    invalidateOptionsMenu()
-                }
-            }
-
-            // Set the drawer toggle as the DrawerListener
-            val toggle = m_drawerToggle as ActionBarDrawerToggle
-            drawerLayout.removeDrawerListener(toggle)
-            drawerLayout.addDrawerListener(toggle)
-            supportActionBar?.let {
-                it.setDisplayHomeAsUpEnabled(true)
-                it.setHomeButtonEnabled(true)
-                m_drawerToggle!!.isDrawerIndicatorEnabled = true
-            }
-            m_drawerToggle!!.syncState()
-        }
-
-        // Show search or applyFilter results
-        val currentIntent = intent
-        val query = if (Constants.INTENT_START_FILTER == currentIntent.action) {
-            log.info(TAG, "handleIntent")
-            currentIntent.extras?.let { extras ->
-                extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
-                    val debugString = value?.let { v ->
-                        "$v (${v.javaClass.name})"
-                    } ?: "<null>"
-                    log.debug(TAG, "$key $debugString")
-                }
-            }
-            val newQuery = Query(currentIntent, "mainui")
-            Config.mainQuery = newQuery
-            intent = newQuery.saveInIntent(intent)
-            newQuery
-        } else {
-            // Set previous filters and sort
-            log.info(TAG, "handleIntent: from m_prefs state")
-            Config.mainQuery
-        }
-
-        val adapter = m_adapter ?: TaskAdapter(query, layoutInflater,
+        taskAdapter =  TaskAdapter(layoutInflater,
                 completeAction = {
                     completeTasks(it)
                     // Update the tri state checkbox
@@ -373,7 +188,193 @@ class Simpletask : ThemedNoActionBarActivity() {
                     }
                     true
                 })
-        m_adapter = adapter
+
+
+        setContentView(R.layout.main)
+
+        localBroadcastManager = TodoApplication.app.localBroadCastManager
+
+        val broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, receivedIntent: Intent) {
+                if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
+                    archiveTasks()
+                } else {
+                    if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
+                        log.info(TAG, "Logging out from Dropbox")
+                        finish()
+                        fileStoreQueue("Logout") {
+                            try {
+                                FileStore.logout()
+                            } catch (e: Exception) {
+                                log.error(TAG, "Error logging out.", e)
+                            }
+                            startLogin()
+                        }
+                    } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
+                        log.info(TAG, "Tasklist changed, refiltering adapter")
+                        taskAdapter.setFilteredTasks(this@Simpletask, Config.mainQuery)
+                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
+                        log.info(TAG, "Updating UI because of broadcast")
+                        refreshUI()
+                    } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                        log.info(TAG, "Highligh selection")
+                        taskAdapter.notifyDataSetChanged()
+                        invalidateOptionsMenu()
+                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
+                        showListViewProgress(true)
+                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
+                        showListViewProgress(false)
+                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
+                        updateConnectivityIndicator()
+                    } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
+                            receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
+                        recreate()
+                    }
+                }
+            }
+        }
+        localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
+        m_broadcastReceiver = broadcastReceiver
+        setSupportActionBar(main_actionbar)
+
+        // Replace drawables if the theme is dark
+        if (Config.isDarkTheme || Config.isBlackTheme) {
+            actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
+        }
+        val versionCode = BuildConfig.VERSION_CODE
+        if (TodoApplication.app.isAuthenticated) {
+            if (Config.latestChangelogShown < versionCode) {
+                showChangelogOverlay(this)
+                Config.latestChangelogShown = versionCode
+            } else if (!Config.rightDrawerDemonstrated) {
+                Config.rightDrawerDemonstrated = true
+                openNavDrawer()
+            }
+        }
+    }
+
+    private fun refreshUI() {
+        todoQueue("Refresh UI") {
+            runOnUiThread {
+                updateConnectivityIndicator()
+                invalidateOptionsMenu()
+                updateFilterBar()
+                updateDrawers()
+            }
+        }
+    }
+
+    private fun openLuaConfig() {
+        val i = Intent(this, ScriptConfigScreen::class.java)
+        startActivity(i)
+    }
+
+    private fun showHelp() {
+        val i = Intent(this, HelpScreen::class.java)
+        startActivity(i)
+    }
+
+    override fun onSearchRequested(): Boolean {
+        options_menu?.let {
+            val searchMenuItem = it.findItem(R.id.search)
+            searchMenuItem.expandActionView()
+            return true
+        }
+        return false
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        m_drawerToggle?.syncState()
+    }
+
+    private fun selectedTasksAsString(): String {
+        val result = ArrayList<String>()
+        TodoList.selectedTasks.forEach { task ->
+            val luaTxt = Interpreter.onDisplayCallback(Config.mainQuery.luaModule, task)
+            result.add(luaTxt ?: task.inFileFormat())
+        }
+        return join(result, "\n")
+    }
+
+    private fun selectAllTasks() {
+        val selectedTasks = taskAdapter.visibleLines
+                .filterNot(VisibleLine::header)
+                .map { it.task!! }
+        TodoList.selectTasks(selectedTasks)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        m_drawerToggle?.onConfigurationChanged(newConfig)
+    }
+
+    private fun handleIntent() {
+        if (!TodoApplication.app.isAuthenticated) {
+            log.info(TAG, "handleIntent: not authenticated")
+            startLogin()
+            return
+        }
+
+        // Set the list's click listener
+        filter_drawer?.onItemClickListener = DrawerItemClickListener()
+
+        drawer_layout?.let { drawerLayout ->
+            m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
+                    drawerLayout, /* DrawerLayout object */
+                    R.string.changelist, /* "open drawer" description */
+                    R.string.app_label /* "close drawer" description */) {
+
+                /**
+                 * Called when a drawer has settled in a completely closed
+                 * state.
+                 */
+                override fun onDrawerClosed(view: View) {
+                    invalidateOptionsMenu()
+                }
+
+                /** Called when a drawer has settled in a completely open state.  */
+                override fun onDrawerOpened(drawerView: View) {
+                    invalidateOptionsMenu()
+                }
+            }
+
+            // Set the drawer toggle as the DrawerListener
+            val toggle = m_drawerToggle as ActionBarDrawerToggle
+            drawerLayout.removeDrawerListener(toggle)
+            drawerLayout.addDrawerListener(toggle)
+            supportActionBar?.let {
+                it.setDisplayHomeAsUpEnabled(true)
+                it.setHomeButtonEnabled(true)
+                m_drawerToggle!!.isDrawerIndicatorEnabled = true
+            }
+            m_drawerToggle!!.syncState()
+        }
+
+        // Show search or applyFilter results
+        val currentIntent = intent
+        val query = if (Constants.INTENT_START_FILTER == currentIntent.action) {
+            log.info(TAG, "handleIntent")
+            currentIntent.extras?.let { extras ->
+                extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
+                    val debugString = value?.let { v ->
+                        "$v (${v.javaClass.name})"
+                    } ?: "<null>"
+                    log.debug(TAG, "$key $debugString")
+                }
+            }
+            val newQuery = Query(currentIntent, "mainui")
+            Config.mainQuery = newQuery
+            intent = newQuery.saveInIntent(intent)
+            newQuery
+        } else {
+            // Set previous filters and sort
+            log.info(TAG, "handleIntent: from m_prefs state")
+            Config.mainQuery
+        }
+
+
         showListViewProgress(true)
         if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
             TodoList.todoQueue("Selection from intent") {
@@ -390,11 +391,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                 }
             }
         }
-        m_adapter!!.setFilteredTasks(this, query)
+        taskAdapter.setFilteredTasks(this, query)
 
 
         listView?.layoutManager = LinearLayoutManager(this)
-        listView?.adapter = this.m_adapter
+        listView?.adapter = this.taskAdapter
 
         fab.setOnClickListener { startAddTaskActivity() }
 
@@ -406,7 +407,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val selection = TodoList.selectedTasks
             if (selection.isNotEmpty()) {
                 val selectedTask = selection[0]
-                m_scrollPosition = adapter.getPosition(selectedTask)
+                m_scrollPosition = taskAdapter.getPosition(selectedTask)
             }
         })
     }
@@ -435,8 +436,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         TodoList.todoQueue("Update applyFilter bar") {
             runOnUiThread {
-                val count = m_adapter?.countVisibleTasks ?: 0
-                val total = m_adapter?.countTotalTasks ?: 0
+                val count = taskAdapter.countVisibleTasks ?: 0
+                val total = taskAdapter.countTotalTasks ?: 0
                 filter_text.text = Config.mainQuery.getTitle(
                         count,
                         total,
@@ -690,7 +691,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val query = Config.mainQuery
                     query.search = newText
                     Config.mainQuery = query
-                    m_adapter?.setFilteredTasks(this@Simpletask, query)
+                    taskAdapter.setFilteredTasks(this@Simpletask, query)
                     updateFilterBar()
                 }
                 return true
@@ -1016,7 +1017,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun closeSelectionMode() {
         TodoList.clearSelection()
         invalidateOptionsMenu()
-        m_adapter?.setFilteredTasks(this, Config.mainQuery)
+        taskAdapter.setFilteredTasks(this, Config.mainQuery)
     }
 
     override fun onNewIntent(intent: Intent) {
