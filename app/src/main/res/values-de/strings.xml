@@ -129,78 +129,77 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="share_task_show_edit_pref_title">Geteilte Aufgabe editieren</string>
     <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben</string>
 
-    <string name="menu_capitalize_tasks">Beginne neue Aufgaben mit Großbuchstaben</string>
+    <string name="menu_capitalize_tasks">Großschreiben</string>
     <string name="back_saves_pref_title">Zurück-Schaltfläche</string>
-    <string name="back_saves_summary">Betätigen von Zurück speichert die geöffnete Aufgabenlisten oder anwenden den Filter an.</string>
+    <string name="back_saves_summary">Betätigen von Zurück speichert die geöffnete Aufgabenliste oder wendet den Filter an.</string>
 
-    <string name="show_txt_only_pref_title">Zeige nur .txt-Dateien</string>
+    <string name="show_txt_only_pref_title">Zeige nur txt-Dateien</string>
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
 
     <string name="share_task_append_text_title">Hintergrundtext</string>
-    <string name="share_task_append_text_summary">Füge zu Aufgaben, welche im Hintergrund hinzugefügt werden, einen konfigurierbares tag hinzu.</string>
+    <string name="share_task_append_text_summary">Füge \"%s\" zu Aufgaben, welche im Hintergrund hinzugefügt werden, hinzu.</string>
     
 
-    <string name="calendar_sync_screen_title">Erinnerungen in Kalender</string>
-    <string name="calendar_sync_screen_summary">Kalendereintäge für Fälligkeits- und/oder Anfangsdaten automatisch generieren.</string>
+    <string name="calendar_sync_screen_title">Erinnerungen</string>
+    <string name="calendar_sync_screen_summary">Kalendererinnerungen (experimentell)</string>
     <string name="calendar_sync_dues_title">Fälligkeitsdatenerinnerungen</string>
-    <string name="calendar_sync_thresholds_title">Anfangsdaten</string>
-    <string name="calendar_reminder_days_title">Vorlaufzeit</string>
-    <string name="calendar_reminder_days_summary">Wie viele Tage vor dem Fälligkeits- bzw. Anfangsdatum  soll die Erinnerung eingetragen werden?</string>
+    <string name="calendar_sync_thresholds_title">Anfangsdatenerinnerungen</string>
+    <string name="calendar_reminder_days_title">Tage im Voraus</string>
+    <string name="calendar_reminder_days_summary">Wie früh soll die Erinnerung gesetzt werden</string>
     <string name="calendar_reminder_time_title">Zeitpunkt der Erinnerungen</string>
-    <string name="calendar_reminder_time_summary">Zu welcher Tageszeit sollen die Kalendererinnerungen jeweils eingetragen werden?</string>
+    <string name="calendar_reminder_time_summary">Zu welcher Tageszeit sollen die Kalendererinnerungen eingetragen werden</string>
 
     <string name="drawer_fixed_landscape_title">Öffne im Querformat</string>
     <string name="drawer_fixed_landscape_summary">Immer im Querformat öffnen.</string>
 
 
     <string name="widget_theme_pref_title">Widget Theme</string>
-    <string name="widget_theme_pref_summary">Ändere das Widget Theme</string>
+    <string name="widget_theme_pref_summary">Ändere das Aussehen für Widgets.</string>
 
-    <string name="widget_header_transparency_title">Widget: Transparenz der Kopfleiste</string>
-    <string name="widget_background_transparency_title">Widget: Hintergrundtransparenz</string>
+    <string name="widget_header_transparency_title">Transparenz der Kopfleiste</string>
+    <string name="widget_background_transparency_title">Hintergrundtransparenz</string>
 
-    <string name="widget_extended_pref_title">Erweitertes Widget</string>
-    <string name="widget_extended_pref_summary">Zeige Aufgaben im Widget mit Trennlinien.</string>
+    <string name="widget_extended_pref_title">Zeige Datumszeile</string>
+    <string name="widget_extended_pref_summary">Zeige Daten auf einer separaten Zeile</string>
 
     <string name="task_text_ellipsizing_pref_title">Aufgabentext kürzen</string>
     <string name="task_text_ellipsizing_pref_summary">Aufgabentext im Hauptfenster kürzen, wenn er mehr als zwei Zeilen einnimmt.</string>
     
     <string name="color_due_pref_title">Farbe</string>
-    <string name="color_due_pref_summary">Fälligkeits- und Anfangsdaten anpassen (heute, zukünftig oder überfällig)</string>
+    <string name="color_due_pref_summary">Fälligkeits- und Anfangsdaten</string>
 
     <string name="show_hidden_title">Zeige versteckte Aufgaben</string>
-    <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben um sie zu editieren. Nach dem Editieren deaktiviere diese Einstellung wieder.</string>
+    <string name="show_hidden_summary">Zeige versteckte (h:1) Aufgaben, um sie zu editieren. Deaktiviere diese Einstellung nach dem Editieren wieder.</string>
 
-    <string name="show_empty_lists_title">Zeige leere Kopfzeile</string>
+    <string name="show_empty_lists_title">Zeige leere Kopfzeilen</string>
     <string name="show_empty_lists_summary">Zeige die Kopfzeile auch wenn alle Aufgaben unter dieser Kopfzeile versteckt sind.</string>
 
     <string name="split_actionbar_pref_title">Verwende geteilte Aktionsleiste</string>
     <string name="split_actionbar_pref_summary">Verwende eine geteilte Aktionsleiste, um die Schaltflächen am unteren Bildschirmrand anzuzeigen. 
-\nDeaktiviere diese Option für mehr Bildschirmfläche.</string>
+\nDeaktiviere diese Option, um mehr von der Aufgabenliste anzuzeigen.</string>
 
     <string name="show_edittext_hint_title">Zeige Hinweise</string>
-    <string name="show_edittext_hint_summary">Zeige Hinweise beim Editieren von Aufgaben.</string>
+    <string name="show_edittext_hint_summary">Zeige Hinweise beim Hinzufügen von Aufgaben.</string>
 
-    <string name="show_complete_checkbox_title">Zeige \"Fertig\"-Auswahlfeld</string>
-    <string name="show_complete_checkbox_summary">Zeige Checkbox vor jeder Aufgabe, um sie als fertig oder nicht fertig zu markieren.</string>
+    <string name="show_complete_checkbox_title">Zeige \"Fertig\"-Kontrollkästchen</string>
+    <string name="show_complete_checkbox_summary">Zeige Kontrollkästchen vor jeder Aufgabe, um sie als fertig oder nicht fertig zu markieren.</string>
 
     <string name="show_confirmation_dialogs_title">Zeige Bestätigungsdialoge</string>
-    <string name="show_confirmation_dialogs_summary">Zeige einen Bestätigungsdialog vor dem Ausführen unzulässiger Operationen oder Operationen, die zu Datenverlust führen können.
-        Deaktiviere diese Einstellung, wenn sie stört - Du wurdest gewarnt!</string>
+    <string name="show_confirmation_dialogs_summary">Zeige einen Bestätigungsdialog vor dem Archivieren oder Löschen von Aufgaben</string>
 
-    <string name="show_calendarview_title">Kalender für Eingabe</string>
+    <string name="show_calendarview_title">Nutze Kalender für Datumseingabe</string>
 
-    <string name="sort_case_sensitive_title">Sortiereinstellungen</string>
-    <string name="sort_case_sensitive_summary">Groß- und Kleinschreibung beachten beim Sortieren von Listen, Kategorien und Filtern.</string>
+    <string name="sort_case_sensitive_title">Sortiere schreibungsabhängig</string>
+    <string name="sort_case_sensitive_summary">Groß- und Kleinschreibung beachten beim Sortieren von Listen, Tags und gespeicherten Filtern.</string>
 
-    <string name="show_todo_path_title">Zeige Pfadnamen</string>
-    <string name="show_todo_path_summary">Zeigt den Pfadnamen zur todo.txt-Datei. Verzeichnisnamen werden abgekürzt. /todo/home/todo.txt wird beispielweise gekürzt zu /t/h/todo.txt.</string>
+    <string name="show_todo_path_title">Zeige Pfadnamen von todo.txt Datei</string>
+    <string name="show_todo_path_summary">Verzeichnisse werden auf den Anfangsbuchstaben gekürzt</string>
 
     <string name="show_fast_scroll_title">Schnelles Scrollen</string>
-    <string name="show_fast_scroll_summary">In langen Aufgabenlisten schneller scrollen</string>
+    <string name="show_fast_scroll_summary">Nutze in langen Aufgabenlisten schnelleres Scrollen</string>
 
-    <string name="todotxt_terms_title">todo.txt Begrifflichkeiten</string>
-    <string name="todotxt_terms_summary">Verwende die Begriffe \"context\" und \"project\" an Stelle von \"tag\" und \"list\" um Konformität zu den todo.txt-Begrifflichkeiten herzustellen.</string>
+    <string name="todotxt_terms_title">Nutze todo.txt Begrifflichkeiten</string>
+    <string name="todotxt_terms_summary">Kontext und Projekt an Stelle von Liste und Tag</string>
 
     <string name="about_settings_header">Über</string>
     <string name="about_settings_summary">Anwendungsinformationen</string>
@@ -208,29 +207,28 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="visit_website_summary">Besuche die Website</string>
     <string name="visit_website_data">https://mpcjanssen.nl/</string>
 
-    <string name="visit_tracker_title">Frage nach Funktionen oder berichte einen Bug</string>
+    <string name="visit_tracker_title">Frage nach Funktionen oder melde einen Fehler</string>
     <string name="visit_tracker_summary">Frage nach neuen Funktionen oder Verbesserungen oder berichte von einem Problem.</string>
     <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
 
     <!-- sync dialog -->
-    <string name="sync_dialog_title">Manueller Sync</string>
+    <string name="sync_dialog_title">Manuelle Synchronisation</string>
     <string name="sync_dialog_msg">Willst Du die todo.txt Datei hoch- oder runterladen?</string>
-    <string name="sync_dialog_upload">Hochladen zu Dropbox</string>
-    <string name="sync_dialog_download">Runterladen zum Gerät</string>
+    <string name="sync_dialog_upload">Zu Dropbox hochladen</string>
+    <string name="sync_dialog_download">Auf das Gerät herunterladen</string>
     <string name="sync_upload_message">Lade todo.txt hoch…</string>
     <string name="sync_download_message">Lade todo.txt herunter…</string>
     <!-- sync conflict dialog -->
-    <string name="sync_conflict_dialog_title">Datei Konflikt</string>
-    <string name="sync_conflict_dialog_msg">Ups! Es gibt eine neuere Version der todo.txt Datei in Dropbox.\nSollen die 
-            lokalen Änderungen hoch, oder die Dropbox-Version heruntergeladen werden?
-    </string>
+    <string name="sync_conflict_dialog_title">Dateikonflikt</string>
+    <string name="sync_conflict_dialog_msg">Ups! Es gibt eine neuere Version der todo.txt Datei in Dropbox.
+\nSollen die lokalen Änderungen hoch- oder die Dropbox-Version heruntergeladen werden?</string>
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">In Dropbox einloggen</string>
-    <string name="login_cloudless">Wenn du keinen Dropbox-Account hast oder keinen benutzen möchtest um die Aufgabenliste zu speichern, kannst Du Simpletask Cloudless aus dem Play Store herunterladen. 
+    <string name="login_cloudless">Wenn du keinen Dropbox-Account hast oder keinen benutzen möchtest, um die Aufgabenliste zu speichern, kannst Du Simpletask Cloudless aus dem Play Store herunterladen. 
 \nhttps://goo.gl/X1C55P</string>
     <!-- delete -->
-    <string name="delete_task_title">Aufgabe(n) löschen</string>
+    <string name="delete_task_title">%s Aufgabe(n) löschen</string>
     <string name="archive_task_title">%s Aufgabe(n) archivieren</string>
     <string name="delete_task_message">Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
     <string name="logout_message">Bitte stelle sicher, dass alle Änderungen mit Dropbox synchronisiert sind bzw. dass Du die komplette Aufgabenliste geteilt hast, falls Du nicht mit Dropbox verbunden bist. 
@@ -244,10 +242,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="word_wrap">Zeilenumbruch</string>
     <string name="search_hint">Suche…</string>
     <!-- sort -->
-    <string name="sort_help">Ziehen und Ablegen um die Reihenfolge zu ändern, Einträge antippen um die Sortierrichtung zu ändern.</string>
+    <string name="sort_help">Ziehen und Ablegen, um die Reihenfolge zu ändern. Einträge antippen, um die Sortierrichtung zu ändern.</string>
     <string name="alphabetical">Alphabetisch</string>
     <string name="by_prio">Priorität</string>
-    <string name="by_project">Kategorie</string>
+    <string name="by_project">Tag</string>
     <string name="by_context">Liste</string>
     <string name="file_order">Wie in der Datei (unsortiert)</string>
     <string name="completed">Erledigt</string>
@@ -260,7 +258,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_select_all">Alles auswählen</string>
     <string name="filter_clear_all">Filter löschen</string>
     <string name="filter_invert">Filter umkehren</string>
-    <string name="add_filter_shortcut">Homescreen-Verknüpfung</string>
+    <string name="add_filter_shortcut">Startbildschirmverknüpfung</string>
     <string name="rename_filter">Umbenennen</string>
     <string name="rename_filter_message">Neuen Namen für den Filter eingeben:</string>
     <string name="update_filter">Aktualisieren</string>
@@ -268,7 +266,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_show_completed">Zeige erledigte Aufgaben</string>
     <string name="filter_show_future">Zeige Aufgaben mit Anfangsdatum in der Zukunft</string>
     <string name="filter_show_lists">Zeige Listen der Aufgaben</string>
-    <string name="filter_show_tags">Zeige Kategorien der Aufgaben</string>
+    <string name="filter_show_tags">Zeige Tags der Aufgaben</string>
 
     <string name="filter_show_completed_short">Erledigt</string>
     <string name="filter_show_future_short">Zukünftig</string>
@@ -285,10 +283,10 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="add_task_help_btn">Hilfe</string>
     <string name="priority_prompt">Priorität</string>
     <string name="priority_short_prompt">Prio</string>
-    <string name="project_prompt">Kategorie</string>
+    <string name="project_prompt">Tag</string>
     <string name="context_prompt">Liste</string>
 
-    <string name="priority_format">(prio)</string>
+    <string name="priority_format">(Prio)</string>
 
     <string name="separator">Trennzeichen</string>
 
@@ -308,19 +306,19 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_one_week_ago">letzte Woche</string>
 
 
-    <string name="dates_one_week">Woche</string>
+    <string name="dates_one_week">eine Woche</string>
     <string name="dates_two_weeks">zwei Wochen</string>
     <string name="dates_one_month">ein Monat</string>
 
     <string name="dates_today">Heute</string>
     <string name="date_pick">Datum auswählen</string>
-    <string name="dates_tomorrow">Morgen</string>
+    <string name="dates_tomorrow">morgen</string>
 
 
     <string name="title_activity_filter">Filter</string>
     <string name="selected">ausgewählt</string>
     <string name="no_context">Eingang</string>
-    <string name="no_project">Keine Kategorie</string>
+    <string name="no_project">Kein Tag</string>
     <string name="no_creation_date">Kein Erstellungstatum</string>
     <string name="no_threshold_date">Kein Anfangsdatum</string>
     <string name="no_header">Kein</string>
@@ -338,7 +336,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="save_filter">Aktuellen Filter speichern</string>
-    <string name="save_filter_message">Gib den Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird.</string>
+    <string name="save_filter_message">Gib einen Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird.</string>
 
     <string name="donate_title">Spenden</string>
     <string name="donate_summary">Für Sie kostenlos bereitgestellt, dies ist freie Software. Eine Menge harter Arbeit wurde hereingesteckt und weil du die Option hast, ist jede Spende gerne willkommen.</string>
@@ -346,15 +344,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_reverse">Umgekehrte Sortierung</string>
 
     <!-- Calendar sync -->
-    <string name="calendar_disp_name">Simpletaskerinnerungen</string>
+    <string name="calendar_disp_name">Simpletask Erinnerungen</string>
     <string name="calendar_sync_desc_due">Erinnerung an das Fälligkeitsdatum, automatisch erstellt von Simpletask</string>
     <string name="calendar_sync_desc_thre">Erinnerung an das Anfangsdatum, automatisch erstellt von Simpletask</string>
-    <string name="calendar_exists_warning">Warnung: ein Kalender mit identischem Namen existiert bereits. Überschreibe…</string>
+    <string name="calendar_exists_warning">Warnung: Ein Kalender mit identischem Namen existiert bereits. Überschreibe…</string>
     <string name="calendar_write_error">Fehler: Kann Kalender nicht schreiben</string>
 
  <string name="click_to_copy">Tippen, um in die Zwischenablage zu kopieren.</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="append_tasks_at_end_summary">Neue Aufgaben am Ende der todo.txt einfügen. Wenn diese Option deaktiviert ist, werden neue Aufgaben am Anfang der Datei eingefügt.</string>
+    <string name="append_tasks_at_end_summary">Füge neue Aufgaben am Ende der Datei ein</string>
     <string name="append_tasks_at_end_title">Neue Aufgaben anhängen</string>
     <string name="by_project_todotxt">Projekt</string>
     <string name="by_context_todotxt">Kontext</string>
@@ -366,19 +364,19 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="name">Name</string>
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="share_database">Datenbank durchsuchen</string>
-    <string name="share_history">Anzeigen und Weitergeben der internen todo.txt-Verlaufs-Datenbank zur Wiederherstellung.</string>
-    <string name="share_history_title">Aufgaben-Verlauf</string>
+    <string name="share_history">Anzeigen und Weitergeben der internen todo.txt-Verlaufsdatenbank zur Wiederherstellung.</string>
+    <string name="share_history_title">Aufgabenverlauf</string>
     <string name="task_action">Aktion</string>
     <string name="write_failed">Fehler beim Schreiben der Datei. Ihre Änderungen wurden NICHT gespeichert.</string>
     <string name="by_completion_date">Fertigstellungsdatum</string>
     <string name="clear_database">Datenbank leeren</string>
     <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
     <string name="none">kein</string>
-    <string name="taskview_extended_pref_title">Zeige Datum in einer separaten Zeile</string>
-    <string name="use_create_backup_summary">Beim Sortieren Erstellungsdatum der Aufgabe verwenden, wenn kein Anfangsdatum angegeben.</string>
+    <string name="taskview_extended_pref_title">Zeige Daten in einer separaten Zeile</string>
+    <string name="use_create_backup_summary">Beim Sortieren das Erstellungsdatum der Aufgabe verwenden, wenn kein Anfangsdatum gegeben ist.</string>
     <string name="use_create_as_threshold_title">Erstellungsdatum als Anfangsdatum</string>
-    <string name="local_file_root_summary">Stammverzeichnis, von dem aus root:// Links aufgelöst werden</string>
-    <string name="local_file_root_title">Datei-Link Stammverzeichnis</string>
+    <string name="local_file_root_summary">%s</string>
+    <string name="local_file_root_title">root:// Verzeichnis</string>
     <string name="all">alle</string>
     <string name="back_clears_filter_summary">Erste Betätigung der Zurück-Schaltfläche löscht den Filter; die zweite Betätigung schließt die App.</string>
     <string name="back_clears_filter_title">Zurück-Schaltfläche löscht den Filter</string>
@@ -409,13 +407,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- Default Help localisation -->
     <string name="help_locale">de</string>
 <string name="title_filter_drawer">Schnellfilter</string>
-    <string name="filter_import_export">Import-/Export-Filter</string>
+    <string name="filter_import_export">Import-/Exportfilter</string>
 
     <string name="lua_config_import_export">Im-/Export Lua-Konfiguration</string>
     <string name="lua_config_export">Speichern und Export</string>
     <string name="lua_config_import">Import</string>
     <string name="lua_config_share">Teilen</string>
-    <string name="preference_title_debug_info">Debug-Log ansehen</string>
+    <string name="preference_title_debug_info">Fehlerprotokoll ansehen</string>
     <string name="preference_summary_debug_info">App-Version und Log ansehen und versenden.</string>
 
     <string name="keep_selection_title">Auswahl behalten</string>
@@ -423,8 +421,8 @@ You should have received a copy of the GNU General Public License along with Tod
 
 
     <string name="task_text_ellipsizing_none">Aus: Sehr langer Aufgabentext</string>
-    <string name="task_text_ellipsizing_start">Anfang: ... Aufgabentext</string>
-    <string name="task_text_ellipsizing_middle">Mitte: Sehr... text</string>
+    <string name="task_text_ellipsizing_start">Anfang: …Aufgabentext</string>
+    <string name="task_text_ellipsizing_middle">Mitte: Sehr… Text</string>
     <string name="task_text_ellipsizing_end">Ende: Sehr langer…</string>
     <string name="task_text_ellipsizing_marquee">Abschnitt: Sehr langer Aufg</string>
 
@@ -444,8 +442,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="action_pop_up_call">Anruf:</string>
     <string name="action_pop_up_sms">SMS:</string>
 
-    <string name="quick_filter_tag_header_inverted">Invertiert</string>
-    <string name="saved_filters_exported">exportierte Filter</string>
+    <string name="quick_filter_tag_header_inverted">Umgekehrt</string>
+    <string name="saved_filters_exported">Exportierte Filter</string>
     <string name="toast_lua_config_imported">importierte Lua-Konfiguration</string>
 
     <string name="saved_filters_imported">Filter importiert</string>
