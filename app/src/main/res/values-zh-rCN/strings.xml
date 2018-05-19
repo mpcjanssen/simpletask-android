@@ -88,7 +88,7 @@
     <string name="line_breaks_pref_summary">使用对 Windows 友好的换行符</string>
     <string name="recur_from_original_date_pref_title">使用初始日期重回任务</string>
     <string name="recur_from_original_date_pref_summary">在创建周期性任务时，增加任务中的初始日期。取消选中此项将重设为当前日期。</string>
-    <string name="lua_config_import_export">导入/导出 lua 配置</string>
+    <string name="lua_config_import_export">导入/导出 Lua 配置</string>
     <string name="lua_run">运行</string>
     <string name="manual_sync_pref_title">手动同步</string>
     <string name="manual_sync_pref_summary">不要自动将每一个更改上传到Dropbox。</string>
