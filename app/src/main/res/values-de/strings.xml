@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="invalid_project">Ungültiger Kategorienname</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">Aufgabe hinzugefügt</string>
-    <string name="add_task_failed">Aufgabe kann nicht hinzugefügt werden</string>
+    <string name="add_task_failed">Aufgabe konnte nicht hinzugefügt werden</string>
     <string name="save_task">Aufgabe speichern</string>
     <string name="update_task_failed">Aufgabe konnte nicht aktualisiert werden</string>
     <string name="sort">Sortieren</string>
@@ -48,23 +48,23 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="prev">Vorheriges</string>
     <string name="open_file">Todo-Datei öffnen</string>
 
-    <string name="sync">Sync</string>
+    <string name="sync">Synchronisieren</string>
     <string name="changelist">Liste auswählen</string>
     <string name="search">Suchen</string>
     <string name="add">Hinzufügen</string>
     <string name="task">Aufgabe</string>
     <string name="addtask">Aufgabe(n) hinzufügen</string>
-    <string name="updatetask">Aufgabe(n) ändern</string>
+    <string name="updatetask">Ändern</string>
     <string name="viewtask">Aufgabe zeigen</string>
     <string name="cleartask">Aufgabe löschen</string>
     <string name="done">Fertig</string>
     <string name="select_all">Alles markieren</string>
     <string name="priority">Priorisieren</string>
     <string name="select_priority">Priorität auswählen</string>
-    <string name="add_list_or_tag">Listen und Kategorien hinzufügen</string>
+    <string name="add_list_or_tag">Listen und Tags hinzufügen</string>
     <string name="update_lists">Listen modifizieren</string>
-    <string name="update_tags">Tags modifizieren</string>
-    <string name="remove_list_or_tag">Listen und Kategorien entfernen</string>
+    <string name="update_tags">Tags ändern</string>
+    <string name="remove_list_or_tag">Listen und Tags entfernen</string>
     <string name="update">Aktualisieren</string>
     <string name="delete">Löschen</string>
     <string name="defer_due">Fälligkeitsdatum setzen</string>
@@ -77,15 +77,15 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="cancel">Abbrechen</string>
     <string name="clear_filter">Filter löschen</string>
 
-    <string name="tasktexthint">\@Besprechung +Paris Problem mit +Hector @Troja
-\n+Hector maßregeln, dass er nicht so ein Spielverderber sein soll @Troja
-\nDiesen Text im Menü ausblenden @Phone</string>
+    <string name="tasktexthint">\@Besprechung +Paris Problem mit +Hector @Troja 
+\n+Hector maßregeln, dass er nicht so ein Spielverderber sein soll @Troja 
+\nDiesen Text im Menü ausblenden @Telefon</string>
 
     <string name="filter_name_empty">Kein Name angegeben, es wird kein Filter hinzugefügt</string>
     <string name="widget_name_empty">Kein Widgetname angegeben, es wird kein Widget hinzugefügt</string>
-    <string name="add_task_help">Hinzufügen oder Aktualisieren einer Aufgabe in der Aufgabenliste. Eine Aufgabe je Zeile. 
-\n<b>Priorität</b> Beginne die Zeile mit (.), wie (A) <b>Kategorien</b> Beginne mit einem + Zeichen, wie +Küche <b>Listen</b> Beginne mit einem @ Zeichen, wie @zuhause 
-\nEine Aufgabe kann eine beliebige Anzahl Kategorien beinhalten und zu beliebig vielen Listen gehören. </string>
+    <string name="add_task_help">Aktualisieren oder Hinzufügen einer Aufgabe in der Aufgabenliste. Eine Aufgabe je Zeile. 
+\n<b>Priorität</b> Beginne die Zeile mit (.), wie (A) <b>Tags</b> Beginnen mit einem + Zeichen, wie +Küche <b>Listen</b> Beginnen mit einem @ Zeichen, wie @zuhause 
+\nEine Aufgabe kann eine beliebige Anzahl Tags beinhalten und zu beliebig vielen Listen gehören. </string>
 
     <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">Archivierung</string>
@@ -96,40 +96,38 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="archive_now_pref_summary">Verschiebe erledigte Aufgaben von todo.txt nach done.txt.</string>
     <string name="dropbox_logout_pref_title">Ausloggen</string>
     <string name="dropbox_logout_pref_summary">Aus Dropbox ausloggen.</string>
-    <string name="TODOTXTPATH_title">Datei Speicherort</string>
-    <string name="TODOTXTPATH_summary">Der Dropbox Ordner in dem todo.txt gespeichert ist.</string>
+    <string name="TODOTXTPATH_title">Dateispeicherort</string>
+    <string name="TODOTXTPATH_summary">Der Dropbox Ordner, in dem todo.txt gespeichert ist.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Einstellungen für Dropbox Synchronisation</string>
 
-    <string name="todotxt_ui_settings_header">Benutzerschnittstelle</string>
+    <string name="todotxt_ui_settings_header">Funktionalitäten</string>
     <string name="todotxt_behavior_settings_header">Verhalten</string>
-    <string name="todotxt_settings_summary">Einstellungen für die gesamte Anwendung</string>
+    <string name="todotxt_settings_summary">Einstellungen für die gesamte App</string>
     <string name="sort_complete_last_pref_title">Zeige erledigte zuletzt</string>
     <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste</string>
-    <string name="keep_prio_header">Priorität in abgeschlossenen Aufgaben</string>
-    <string name="keep_prio_summary">Behalte Prioritäten in abgeschlossenen Aufgaben. Deaktiviere dies um das todo.txt App Verhalten wiederherzustellen.</string>
+    <string name="keep_prio_header">Priorität in abgeschlossenen Aufgaben behalten</string>
+    <string name="keep_prio_summary">Todo.txt entfernt die Prioritäten in abgeschlossenen Aufgaben</string>
     <string name="prepend_date_pref_title">Zeitstempel für neue Aufgaben</string>
     <string name="prepend_date_pref_summary">Erstellungsdatum automatisch hinzufügen</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>
-    <string name="line_breaks_pref_summary">Windows-Zeilenumbrüche in Textdateien verwenden.</string>
-    <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Daten</string>
-    <string name="recur_from_original_date_pref_summary">Setze das Datum von wiederholten Aufgabe relativ zum Ursprungsdatum.
-        Deaktivieren um das neue Datum relativ zu heute zu setzen.</string>
+    <string name="line_breaks_pref_summary">Nutze Windows Zeilenumbrüche</string>
+    <string name="recur_from_original_date_pref_title">Wiederholung der Aufgabe unter Beibehaltung der Originaldaten</string>
+    <string name="recur_from_original_date_pref_summary">Erhöhe die Originaldaten in der Aufgabe wenn wiederholende Aufgaben erstellt werden. Deaktivieren, um das neue Datum relativ zu heute zu setzen.</string>
     <string name="swipe_complete_pref_title">Wischen zum Fertigstellen</string>
     <string name="swipe_complete_pref_summary">Wische über eine Aufgabe zum Fertigstellen.</string>
     <string name="manual_sync_pref_title">Manuelle Synchronisation</string>
     <string name="manual_sync_pref_summary">Nicht jede Änderung automatisch zu Dropbox hochladen.</string>
-    <string name="resume_sync_pref_title">Sync wiederaufnehmen</string>
-    <string name="resume_sync_pref_summary">Sync mit Dropbox wenn die App geöffnet wird.</string>
+    <string name="resume_sync_pref_title">Synchronisation wiederaufnehmen</string>
+    <string name="resume_sync_pref_summary">Synchronisiere mit Dropbox, wenn die App geöffnet wird.</string>
     <string name="font_size_delta_pref_title">Schriftgröße ändern</string>
-    <string name="font_size_delta_pref_summary">Schriftgröße ändern. Verwende negative Einheiten um die Fontgröße zu verringern.</string>
-    <string name="theme_pref_title">Anwendungs-Theme</string>
-    <string name="theme_pref_summary">Anwendungs-Theme ändern</string>
+    <string name="font_size_delta_pref_summary">Schriftgröße ändern.</string>
+    <string name="theme_pref_title">Anwendungsaussehen</string>
+    <string name="theme_pref_summary">Anwendungsaussehen ändern.</string>
 
     <string name="share_task_show_edit_pref_title">Geteilte Aufgabe editieren</string>
-    <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben.
- Deaktiviere dies für die Speicherung einer geteilten Aufgabe ohne Veränderung.</string>
+    <string name="share_task_show_edit_summary">Das Editieren einer geteilten Aufgabe vor dem Speichern erlauben</string>
 
     <string name="menu_capitalize_tasks">Beginne neue Aufgaben mit Großbuchstaben</string>
     <string name="back_saves_pref_title">Zurück-Schaltfläche</string>
@@ -343,7 +341,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="save_filter_message">Gib den Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird.</string>
 
     <string name="donate_title">Spenden</string>
-    <string name="donate_summary">Spenden Sie, wenn Ihnen Simpletask gefällt.\nHinweis: Spenden sind freiwillig, Simpletask wird immer kostenlos verfügbar bleiben. </string>
+    <string name="donate_summary">Für Sie kostenlos bereitgestellt, dies ist freie Software. Eine Menge harter Arbeit wurde hereingesteckt und weil du die Option hast, ist jede Spende gerne willkommen.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Umgekehrte Sortierung</string>
 
@@ -376,7 +374,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="clear_database">Datenbank leeren</string>
     <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
     <string name="none">kein</string>
-    <string name="taskview_extended_pref_title">Aufgaben im Hauptfenster mit separater Zeile für Datum zeigen.</string>
+    <string name="taskview_extended_pref_title">Zeige Datum in einer separaten Zeile</string>
     <string name="use_create_backup_summary">Beim Sortieren Erstellungsdatum der Aufgabe verwenden, wenn kein Anfangsdatum angegeben.</string>
     <string name="use_create_as_threshold_title">Erstellungsdatum als Anfangsdatum</string>
     <string name="local_file_root_summary">Stammverzeichnis, von dem aus root:// Links aufgelöst werden</string>
@@ -432,7 +430,7 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="filter_tab_header_prio">Prio</string>
     <string name="filter_tab_header_other">Andere</string>
-    <string name="filter_tab_header_sort">Sort</string>
+    <string name="filter_tab_header_sort">Sortieren</string>
     <string name="filter_tab_header_script">Skript</string>
 
     <string name="script_tab_script_from_file">Skript aus Datei</string>
@@ -454,4 +452,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="by_lua">Lua Skript</string>
 
     <string name="cancel_changes">Alle Änderungen werden verworfen.</string>
-    </resources>
+    <string name="use_uuid_title">Weise jeder Aufgabe eine UUID zu</string>
+    <string name="nav_drawer_hint">Speichere den aktuellen Filter
+\n mit dem Speicher-Button</string>
+</resources>
