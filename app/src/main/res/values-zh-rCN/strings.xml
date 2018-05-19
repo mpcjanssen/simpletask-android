@@ -313,7 +313,7 @@
     <string name="by_due_date">截止日期</string>
     <string name="by_threshold_date">启动日期</string>
     <string name="by_completion_date">完成日期</string>
-    <string name="by_lua">Lua脚本</string>
+    <string name="by_lua">Lua 脚本</string>
 
     <string name="filter_select_all">选择全部</string>
     <string name="filter_clear_all">清除筛选器</string>
