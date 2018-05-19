@@ -110,7 +110,7 @@
 
     <string name="calendar_sync_screen_title">通知</string>
     <string name="calendar_sync_screen_summary">日历提醒（实验性）</string>
-    <string name="calendar_sync_dues_title">截至日期提醒</string>
+    <string name="calendar_sync_dues_title">截止日期提醒</string>
     <string name="calendar_reminder_days_title">提前天数</string>
     <string name="calendar_reminder_time_title">提醒时间</string>
     <string name="calendar_reminder_time_summary">设置日历提醒的具体时间点</string>
@@ -150,7 +150,7 @@
     <string name="experimental_summary">启用实验性功能</string>
 
     <string name="keep_selection_title">保留选择</string>
-    <string name="keep_selection_summary">在更改后保持任务选择。</string>
+    <string name="keep_selection_summary">在更改后保留任务选择。</string>
 
 
     <string name="share_history_title">任务历史</string>
@@ -158,7 +158,7 @@
     <string name="hello_world">你好世界！</string>
     <string name="action_settings">设置</string>
 
-    <string name="name">姓名</string>
+    <string name="name">名称</string>
     <string name="date">日期</string>
     <string name="help_locale">英语</string>
 
@@ -185,7 +185,7 @@
 
     <string name="local_file_root_summary">%s</string>
 
-    <string name="back_saves_summary">当按下返回键时，保存打开的任务清单或使用过滤器。</string>
+    <string name="back_saves_summary">当按下返回键时，保存打开的任务清单或使用筛选器。</string>
 
     <string name="calendar_sync_thresholds_title">启动日期提醒</string>
     <string name="calendar_reminder_days_summary">设置提醒的提前时间</string>
@@ -241,7 +241,7 @@
 
     <string name="sort_case_sensitive_summary">排序清单、标签和已保存筛选器时区分大小写。</string>
 
-    <string name="todotxt_terms_summary">使用场景和项目的说法，而不是清单和标签</string>
+    <string name="todotxt_terms_summary">使用“场景”和“项目”的说法，而不是“清单”和“标签”</string>
 
     <string name="about_settings_header">关于</string>
     <string name="about_settings_summary">应用信息</string>
@@ -410,8 +410,8 @@
     <string name="share_history">查看和分享内部 todo.txt 历史数据库以用于恢复。</string>
     <string name="task_action">动作</string>
 
-    <string name="back_clears_filter_title">按返回键将清除筛选器</string>
+    <string name="back_clears_filter_title">返回键清除筛选</string>
     <string name="back_clears_filter_summary">在退出应用程序之前按返回键将清除筛选器。</string>
     <string name="use_uuid_title">为每个任务分配一个 UUID</string>
-    <string name="nav_drawer_hint">使用 \"保存\" 按钮保存当前筛选器</string>
+    <string name="nav_drawer_hint">使用“保存”按钮保存当前筛选器</string>
 </resources>
