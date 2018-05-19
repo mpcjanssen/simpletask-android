@@ -137,7 +137,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_summary">Zeige nur .txt-Dateien im Dateiauswahldialog.</string>
 
     <string name="share_task_append_text_title">Hintergrundtext</string>
-    <string name="share_task_append_text_summary">Füge zu Auggaben, welche im Hintergrund hinzugefügt werden, einen konfigurierbares tag hinzu.</string>
+    <string name="share_task_append_text_summary">Füge zu Aufgaben, welche im Hintergrund hinzugefügt werden, einen konfigurierbares tag hinzu.</string>
     
 
     <string name="calendar_sync_screen_title">Erinnerungen in Kalender</string>
