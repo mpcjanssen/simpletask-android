@@ -101,7 +101,7 @@
     <string name="theme_pref_summary">更改应用的显示主题。</string>
 
     <string name="share_task_show_edit_pref_title">编辑已分享的任务</string>
-    <string name="share_task_append_text_title">背景文字</string>
+    <string name="share_task_append_text_title">后台文字</string>
     <string name="local_file_root_title">root:// 文件夹</string>
     <string name="menu_capitalize_tasks">大写</string>
     <string name="back_saves_pref_title">返回键</string>
