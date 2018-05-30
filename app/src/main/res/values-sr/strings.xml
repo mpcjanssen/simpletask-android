@@ -1,2 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Неисправно име листе</string>
+    <string name="invalid_project">Неисправно име ознаке</string>
+    <string name="added_task">Задатак додат</string>
+    <string name="add_task_failed">Није могуће додати задатак</string>
+    <string name="save_task">Сачувај задатак</string>
+    <string name="sort">Сортирај</string>
+    </resources>
