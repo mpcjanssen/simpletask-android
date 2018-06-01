@@ -5,4 +5,52 @@
     <string name="add_task_failed">Није могуће додати задатак</string>
     <string name="save_task">Сачувај задатак</string>
     <string name="sort">Сортирај</string>
+    <string name="update_task_failed">Не могу да ажурирам задатак</string>
+    <string name="script">Скрипта</string>
+    <string name="filter">Филтер</string>
+    <string name="main_no_items">Нема задатака за приказ.</string>
+    <string name="set_preferences">Поставке</string>
+    <string name="preferences">Поставке</string>
+    <string name="archive">Архива</string>
+    <string name="help">Помоћ</string>
+    <string name="history">Историјат</string>
+    <string name="debug_info">Информације за исправку грешака</string>
+    <string name="log">Записник</string>
+    <string name="next">Следеће</string>
+    <string name="prev">Претходно</string>
+    <string name="open_file">Отвори фајл са списком задатака</string>
+    <string name="sync">Синхронизација</string>
+    <string name="changelist">Одабери списак</string>
+    <string name="search">Претрага</string>
+    <string name="add">Додај</string>
+    <string name="task">Задатак</string>
+    <string name="addtask">Додај задатак</string>
+    <string name="updatetask">Ажурирај</string>
+    <string name="viewtask">Погледај задатак</string>
+    <string name="cleartask">Очисти задатак</string>
+    <string name="clear_database">Испразни базу</string>
+    <string name="done">Готово</string>
+    <string name="priority">Приоритизуј</string>
+    <string name="select_priority">Одабери приоритет</string>
+    <string name="select_all">Одабери све</string>
+    <string name="add_list_or_tag">Додај спискове и ознаке</string>
+    <string name="update_lists">Ажурирај спискове</string>
+    <string name="update_tags">Ажурирај ознаке</string>
+    <string name="remove_list_or_tag">Уклони спискове и ознаке</string>
+    <string name="update">Ажурирај</string>
+    <string name="delete">Обриши</string>
+    <string name="defer_due">Постави крајњи рок</string>
+    <string name="defer_threshold">Постави датум окидања</string>
+    <string name="insert_due">Убаци крајњи рок</string>
+    <string name="insert_threshold">Убаци датум окидања</string>
+    <string name="share">Подели</string>
+    <string name="share_database">Подели базу</string>
+    <string name="ok">У реду</string>
+    <string name="cancel">Поништи</string>
+    <string name="cancel_changes">Измене ће бити изгубљене.</string>
+    <string name="clear_filter">Очисти филтер</string>
+    <string name="tasktexthint">\@попричати проблем који има +Парис са +Хектор @Троја
+\nРеци +Хектор да не буде гњавеж @Троја
+\nИзбриши овај текст @телефон</string>
+
     </resources>
