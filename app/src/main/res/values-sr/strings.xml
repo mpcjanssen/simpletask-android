@@ -53,4 +53,92 @@
 \nРеци +Хектор да не буде гњавеж @Троја
 \nИзбриши овај текст @телефон</string>
 
+    <string name="write_failed">Грешка приликом уписа у фајл. Измене НЕЋЕ бити сачуване.</string>
+
+    <string name="filter_name_empty">Име није наведено, не додајем филтер</string>
+    <string name="widget_name_empty">Име справице није наведено, не додајем је</string>
+    <string name="preference_appearance">Изглед</string>
+    <string name="preference_interface">Интерфејс</string>
+    <string name="preference_widget">Справица</string>
+    <string name="preference_other">Остало</string>
+
+    <string name="ARCHIVE_settings_header">Архива</string>
+    <string name="ARCHIVE_settings_summary">Поставке за архивирање завршених задатака у done.txt</string>
+    <string name="auto_archive_pref_title">Аутоматско архивирање</string>
+    <string name="auto_archive_pref_summary">Архивирај задатке одмах по завршетку.</string>
+    <string name="archive_now_pref_title">Архивирај сада</string>
+    <string name="archive_now_pref_summary">Премести завршене задатаке из todo.txt у done.txt.</string>
+    <string name="dropbox_logout_pref_title">Одјава</string>
+    <string name="dropbox_logout_pref_summary">Одјава са Dropbox-а.</string>
+    <string name="TODOTXTPATH_title">Локација фајла</string>
+    <string name="TODOTXTPATH_summary">Dropbox фасцикла где је смештен todo.txt.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Поставке за Dropbox синхронизацију</string>
+
+    <string name="todotxt_features_settings_header">Могућности</string>
+    <string name="todotxt_features_settings_summary">Укључи или искључи могућности</string>
+
+    <string name="todotxt_configuration_settings_header">Конфигурација</string>
+    <string name="todotxt_configuration_settings_summary">Поставке понашања апликације</string>
+
+    <string name="todotxt_creation_settings_header">Креирање задатака</string>
+
+    <string name="todotxt_ui_settings_header">Могућности</string>
+    <string name="todotxt_ui_settings_summary">Контролиши шта је приказано</string>
+    <string name="todotxt_behavior_settings_header">Понашање</string>
+    <string name="todotxt_settings_summary">Поставке целокупне апликације</string>
+    <string name="sort_complete_last_pref_title">Последње прикажи завршене</string>
+    <string name="filter_select_all">Одабери све</string>
+    <string name="filter_clear_all">Очисти филтер</string>
+    <string name="filter_invert">Обрни филтер</string>
+    <string name="export_filter">Извоз</string>
+    <string name="import_filter">Увоз</string>
+    <string name="rename_filter">Преименуј</string>
+    <string name="title_filter_drawer">Брзи филтер</string>
+    <string name="update_filter">Ажурирај</string>
+    <string name="task_show_all">Све</string>
+
+    <string name="add_task_help_btn">Помоћ</string>
+    <string name="priority_prompt">Приоритет</string>
+    <string name="priority_short_prompt">Прио</string>
+    <string name="project_prompt">Ознака</string>
+    <string name="context_prompt">Списак</string>
+    <string name="project_prompt_todotxt">Пројекат</string>
+    <string name="context_prompt_todotxt">Контекст</string>
+    <string name="priority_format">(прио)</string>
+
+    <string name="separator">Разделник</string>
+
+    <string name="shortcut_addtask_name">Додај задатак</string>
+    <string name="dates_one_day_ago">јуче</string>
+    <string name="dates_one_year_ago">прошле године</string>
+    <string name="dates_one_month_ago">прошлог месеца</string>
+    <string name="dates_one_week">једна недеља</string>
+    <string name="dates_two_weeks">две недеље</string>
+    <string name="dates_one_month">један месец</string>
+
+    <string name="dates_today">данас</string>
+    <string name="date_pick">одабери датум</string>
+    <string name="dates_tomorrow">сутра</string>
+
+    <string name="title_activity_filter">Филтер</string>
+    <string name="selected">означено</string>
+    <string name="no_context">Пријемно сандуче</string>
+    <string name="no_project">Без ознаке</string>
+    <string name="no_creation_date">Без датума креирања</string>
+    <string name="no_threshold_date">Без датума окидања</string>
+    <string name="no_header">Ништа</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">Додај подсетник</string>
+    <string name="donate_title">Донирај</string>
+    <string name="donated_summary">Хвала Вам на донацији.</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="hello_world">Здраво свете!</string>
+    <string name="action_settings">Поставке</string>
+
+    <string name="help_locale">en</string>
+
+    <string name="name">Име</string>
+    <string name="date">Датум</string>
     </resources>
