@@ -141,4 +141,5 @@
 
     <string name="name">Име</string>
     <string name="date">Датум</string>
+    <string name="manual_sync_pref_title">Ручна синхронизација</string>
     </resources>
