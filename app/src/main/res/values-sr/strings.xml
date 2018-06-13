@@ -142,4 +142,91 @@
     <string name="name">Име</string>
     <string name="date">Датум</string>
     <string name="manual_sync_pref_title">Ручна синхронизација</string>
+    <string name="prepend_date_pref_summary">Аутоматски додај датум креирања</string>
+    <string name="line_breaks_pref_title">Прелом линија добар и за Windows</string>
+    <string name="line_breaks_pref_summary">Користити прелом линија који је добар и за Windows</string>
+    <string name="recur_from_original_date_pref_title">Понављај задатке користећи оригиналне датуме</string>
+    <string name="swipe_complete_pref_title">Превуци за завршетак</string>
+    <string name="swipe_complete_pref_summary">Превуците преко задатка да га завршите.</string>
+    <string name="manual_sync_pref_summary">Немој аутоматски да шаљеш сваку измену на Dropbox.</string>
+    <string name="resume_sync_pref_title">Настави синхронизацију</string>
+    <string name="resume_sync_pref_summary">Синхронизуј са Dropbox-ом при отварању апликације.</string>
+    <string name="font_size_delta_pref_title">Произвољна величина фонта</string>
+    <string name="datebar_relative_size_summary">Релативна величина линије са датумом</string>
+    <string name="font_size_delta_pref_summary">Промени величину фонта.</string>
+    <string name="theme_pref_title">Тема</string>
+    <string name="theme_pref_summary">Промени тему апликације.</string>
+
+    <string name="share_task_show_edit_pref_title">Измени дељене задатке</string>
+    <string name="share_task_append_text_title">Текст у позадини</string>
+    <string name="share_task_append_text_summary">Додај \"%s\" на задатке додате у позадини.</string>
+
+    <string name="local_file_root_title">root:// directory</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="back_saves_pref_title">Дугме за повратак</string>
+    <string name="back_saves_summary">Сачувај отворени списак задатака, или примени филтер када се притисне дугме за назад.</string>
+
+    <string name="show_txt_only_pref_title">Приказуј само TXT фајлове</string>
+    <string name="show_txt_only_summary">Приказуј само .txt фајлове у дијалогу за одабир фајлова.</string>
+
+    <string name="calendar_sync_screen_title">Обавештења</string>
+    <string name="calendar_sync_screen_summary">Подсетници у календару (експериментално)</string>
+    <string name="calendar_reminder_days_title">Дана унапред</string>
+    <string name="calendar_reminder_days_summary">Колико рано да се постави подсетник</string>
+    <string name="calendar_reminder_time_title">Време подсетника</string>
+    <string name="calendar_reminder_time_summary">Време током дана да се постави подсетник</string>
+
+    <string name="widget_theme_pref_title">Тема</string>
+    <string name="widget_theme_pref_summary">Измени тему коју користе виџети.</string>
+
+    <string name="task_text_ellipsizing_pref_title">Скраћивање текста задатка</string>
+    <string name="task_text_ellipsizing_pref_summary">Скраћуј текст задатка у главном прозору ако заузима више од 2 линије.</string>
+    <string name="task_text_ellipsizing_none">Не: веома дугачак текст задатка</string>
+    <string name="task_text_ellipsizing_start">На почетку: …текст задатка</string>
+    <string name="task_text_ellipsizing_middle">У средини: веома… задатка</string>
+    <string name="task_text_ellipsizing_end">На крају: веома дугачак…</string>
+    <string name="task_text_ellipsizing_marquee">Сасечено: веома дугачак тек</string>
+
+    <string name="filter_tab_header_other">Остало</string>
+    <string name="filter_tab_header_sort">Сортирање</string>
+    <string name="filter_tab_header_script">Скрипте</string>
+
+    <string name="script_tab_script_from_file">Скрипте из фајла</string>
+    <string name="script_tab_use_script">Користи скрипте</string>
+    <string name="script_tab_test">Тест</string>
+    <string name="script_tab_test_task">Тестирај задатак</string>
+    <string name="script_tab_script">Скрипте</string>
+    <string name="script_tab_true_task_shown">Приказане</string>
+    <string name="script_tab_false_task_not_shown">Неприказане</string>
+
+    <string name="action_pop_up_call">Позови:</string>
+    <string name="action_pop_up_sms">СМС:</string>
+
+    <string name="quick_filter_tag_header_inverted">Обрнуто</string>
+    <string name="saved_filters_exported">Филтери извезени</string>
+    <string name="saved_filters_imported">Филтери увезени</string>
+    <string name="toast_lua_config_imported">Луа конфигурација увезена</string>
+
+    <string name="widget_header_transparency_title">Провидност заглавља</string>
+    <string name="widget_background_transparency_title">Провидност позадине</string>
+
+    <string name="widget_extended_pref_summary">Приказуј датуме на засебној линији</string>
+
+    <string name="taskview_extended_pref_title">Приказује датуме на посебној линији</string>
+
+    <string name="append_tasks_at_end_title">Додај у фајл</string>
+    <string name="append_tasks_at_end_summary">Убацује нове задатке на крај фајла</string>
+
+    <string name="color_due_pref_title">Боја</string>
+    <string name="show_hidden_title">Приказуј сакривене задатке</string>
+    <string name="show_hidden_summary">Приказује скривене (h:1) задатке да их можете изменити. После измене, одштиклирајте ово опет.</string>
+
+    <string name="show_empty_lists_title">Приказуј празна заглавља</string>
+    <string name="show_empty_lists_summary">Приказује заглавља чак иако су сви задаци испод тог заглавља сакривени.</string>
+
+    <string name="save_filter">Сачувај тренутни филтер</string>
+    <string name="lua_error">Луа грешка</string>
+    <string name="lua_config_screen">Луа конфигурација</string>
+    <string name="lua_run">Покрени</string>
     </resources>
