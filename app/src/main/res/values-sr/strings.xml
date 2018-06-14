@@ -229,4 +229,68 @@
     <string name="lua_error">Луа грешка</string>
     <string name="lua_config_screen">Луа конфигурација</string>
     <string name="lua_run">Покрени</string>
+    <string name="unComplete">Поништи завршавање</string>
+    <string name="show_edittext_hint_title">Приказуј савете</string>
+    <string name="show_edittext_hint_summary">Приказује савете за време додавања задатака.</string>
+
+    <string name="show_confirmation_dialogs_title">Дијалози потврђивања</string>
+    <string name="show_confirmation_dialogs_summary">Питај пре архивирања или брисања задатака</string>
+
+    <string name="show_todo_path_title">Прикажи где је todo фајл ускладиштен</string>
+    <string name="show_todo_path_summary">Фасцикле се скраћују на прво слово</string>
+
+    <string name="show_fast_scroll_title">Брзо листање</string>
+    <string name="show_fast_scroll_summary">Користи брзо листање за дуже спискове задатака</string>
+
+    <string name="show_calendarview_title">Користи календар за унос датума</string>
+
+    <string name="about_settings_header">О програму</string>
+    <string name="about_settings_summary">Информације о апликацији</string>
+    <string name="visit_website_title">Помоћ</string>
+    <string name="visit_website_summary">Посетите веб сајт</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
+
+    <string name="visit_tracker_title">Затражите нову функционалности или пријавите грешку</string>
+    <string name="visit_tracker_summary">Затражите нову функционалности или побољшање или пријавите проблем.</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
+    <string name="preference_title_debug_info">Види дневник за исправљање грешака</string>
+    <string name="sync_dialog_title">Ручна синхронизација</string>
+    <string name="sync_dialog_upload">Отпреми на Dropbox</string>
+    <string name="sync_dialog_download">Преузми на уређај</string>
+    <string name="sync_upload_message">Отпремање todo.txt…</string>
+    <string name="sync_download_message">Преузимање todo.txt…</string>
+
+    <string name="sync_conflict_dialog_title">Конфликт са фајлом</string>
+    <string name="login_screen_button">Пријавите се на Dropbox</string>
+    <string name="delete_task_title">Обриши %s задатак(а)</string>
+    <string name="archive_task_title">Архивирај %s задатак(а)</string>
+    <string name="delete_task_message">Ово се не може опозвати. Да ли сте сигурни?</string>
+    <string name="delete_task_confirm">Обриши</string>
+
+    <string name="word_wrap">Прелом речи</string>
+    <string name="search_hint">Претрага…</string>
+
+    <string name="by_prio">Приоритет</string>
+    <string name="by_project">Ознака</string>
+    <string name="by_context">Списак</string>
+    <string name="by_project_todotxt">Пројекат</string>
+    <string name="by_context_todotxt">Контекст</string>
+    <string name="completed">Завршено</string>
+    <string name="by_creation_date">Датум креирања</string>
+    <string name="by_completion_date">Датум завршетка</string>
+    <string name="by_lua">Луа скрипта</string>
+
+    <string name="add_filter_shortcut">На почетни екран</string>
+    <string name="rename_filter_message">Унесите ново име сачуваног филтера:</string>
+    <string name="filter_show_completed">Прикажи завршене задатке</string>
+    <string name="filter_show_future_short">Будућност</string>
+    <string name="filter_show_prompt">Прикажи</string>
+    <string name="filter_saved_prompt">Сачувани филтери</string>
+
+    <string name="none">ништа</string>
+    <string name="keep">задржи</string>
+    <string name="all">сви</string>
+
+    <string name="dates_one_week_ago">претходне недеље</string>
+
     </resources>
