@@ -39,9 +39,7 @@ data class NamedQuery(val name: String, val query: Query) {
 /**
  * Active applyFilter, has methods for serialization in several formats
  */
-class Query(
-        val luaModule: String
-) {
+class Query(val luaModule: String) {
     private val log: Logger = Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
