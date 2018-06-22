@@ -723,7 +723,7 @@ fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
 
 fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
     val iconRes = IconCompat.createWithResource(ctxt, icon)
-    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, id)
+    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, "$id.$name")
             .setIcon(iconRes)
             .setShortLabel(name)
             .setIntent(target)
