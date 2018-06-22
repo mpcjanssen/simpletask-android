@@ -1,0 +1,296 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="invalid_context">Неисправно име листе</string>
+    <string name="invalid_project">Неисправно име ознаке</string>
+    <string name="added_task">Задатак додат</string>
+    <string name="add_task_failed">Није могуће додати задатак</string>
+    <string name="save_task">Сачувај задатак</string>
+    <string name="sort">Сортирај</string>
+    <string name="update_task_failed">Не могу да ажурирам задатак</string>
+    <string name="script">Скрипта</string>
+    <string name="filter">Филтер</string>
+    <string name="main_no_items">Нема задатака за приказ.</string>
+    <string name="set_preferences">Поставке</string>
+    <string name="preferences">Поставке</string>
+    <string name="archive">Архива</string>
+    <string name="help">Помоћ</string>
+    <string name="history">Историјат</string>
+    <string name="debug_info">Информације за исправку грешака</string>
+    <string name="log">Записник</string>
+    <string name="next">Следеће</string>
+    <string name="prev">Претходно</string>
+    <string name="open_file">Отвори фајл са списком задатака</string>
+    <string name="sync">Синхронизација</string>
+    <string name="changelist">Одабери списак</string>
+    <string name="search">Претрага</string>
+    <string name="add">Додај</string>
+    <string name="task">Задатак</string>
+    <string name="addtask">Додај задатак</string>
+    <string name="updatetask">Ажурирај</string>
+    <string name="viewtask">Погледај задатак</string>
+    <string name="cleartask">Очисти задатак</string>
+    <string name="clear_database">Испразни базу</string>
+    <string name="done">Готово</string>
+    <string name="priority">Приоритизуј</string>
+    <string name="select_priority">Одабери приоритет</string>
+    <string name="select_all">Одабери све</string>
+    <string name="add_list_or_tag">Додај спискове и ознаке</string>
+    <string name="update_lists">Ажурирај спискове</string>
+    <string name="update_tags">Ажурирај ознаке</string>
+    <string name="remove_list_or_tag">Уклони спискове и ознаке</string>
+    <string name="update">Ажурирај</string>
+    <string name="delete">Обриши</string>
+    <string name="defer_due">Постави крајњи рок</string>
+    <string name="defer_threshold">Постави датум окидања</string>
+    <string name="insert_due">Убаци крајњи рок</string>
+    <string name="insert_threshold">Убаци датум окидања</string>
+    <string name="share">Подели</string>
+    <string name="share_database">Подели базу</string>
+    <string name="ok">У реду</string>
+    <string name="cancel">Поништи</string>
+    <string name="cancel_changes">Измене ће бити изгубљене.</string>
+    <string name="clear_filter">Очисти филтер</string>
+    <string name="tasktexthint">\@попричати проблем који има +Парис са +Хектор @Троја
+\nРеци +Хектор да не буде гњавеж @Троја
+\nИзбриши овај текст @телефон</string>
+
+    <string name="write_failed">Грешка приликом уписа у фајл. Измене НЕЋЕ бити сачуване.</string>
+
+    <string name="filter_name_empty">Име није наведено, не додајем филтер</string>
+    <string name="widget_name_empty">Име справице није наведено, не додајем је</string>
+    <string name="preference_appearance">Изглед</string>
+    <string name="preference_interface">Интерфејс</string>
+    <string name="preference_widget">Справица</string>
+    <string name="preference_other">Остало</string>
+
+    <string name="ARCHIVE_settings_header">Архива</string>
+    <string name="ARCHIVE_settings_summary">Поставке за архивирање завршених задатака у done.txt</string>
+    <string name="auto_archive_pref_title">Аутоматско архивирање</string>
+    <string name="auto_archive_pref_summary">Архивирај задатке одмах по завршетку.</string>
+    <string name="archive_now_pref_title">Архивирај сада</string>
+    <string name="archive_now_pref_summary">Премести завршене задатаке из todo.txt у done.txt.</string>
+    <string name="dropbox_logout_pref_title">Одјава</string>
+    <string name="dropbox_logout_pref_summary">Одјава са Dropbox-а.</string>
+    <string name="TODOTXTPATH_title">Локација фајла</string>
+    <string name="TODOTXTPATH_summary">Dropbox фасцикла где је смештен todo.txt.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Поставке за Dropbox синхронизацију</string>
+
+    <string name="todotxt_features_settings_header">Могућности</string>
+    <string name="todotxt_features_settings_summary">Укључи или искључи могућности</string>
+
+    <string name="todotxt_configuration_settings_header">Конфигурација</string>
+    <string name="todotxt_configuration_settings_summary">Поставке понашања апликације</string>
+
+    <string name="todotxt_creation_settings_header">Креирање задатака</string>
+
+    <string name="todotxt_ui_settings_header">Могућности</string>
+    <string name="todotxt_ui_settings_summary">Контролиши шта је приказано</string>
+    <string name="todotxt_behavior_settings_header">Понашање</string>
+    <string name="todotxt_settings_summary">Поставке целокупне апликације</string>
+    <string name="sort_complete_last_pref_title">Последње прикажи завршене</string>
+    <string name="filter_select_all">Одабери све</string>
+    <string name="filter_clear_all">Очисти филтер</string>
+    <string name="filter_invert">Обрни филтер</string>
+    <string name="export_filter">Извоз</string>
+    <string name="import_filter">Увоз</string>
+    <string name="rename_filter">Преименуј</string>
+    <string name="title_filter_drawer">Брзи филтер</string>
+    <string name="update_filter">Ажурирај</string>
+    <string name="task_show_all">Све</string>
+
+    <string name="add_task_help_btn">Помоћ</string>
+    <string name="priority_prompt">Приоритет</string>
+    <string name="priority_short_prompt">Прио</string>
+    <string name="project_prompt">Ознака</string>
+    <string name="context_prompt">Списак</string>
+    <string name="project_prompt_todotxt">Пројекат</string>
+    <string name="context_prompt_todotxt">Контекст</string>
+    <string name="priority_format">(прио)</string>
+
+    <string name="separator">Разделник</string>
+
+    <string name="shortcut_addtask_name">Додај задатак</string>
+    <string name="dates_one_day_ago">јуче</string>
+    <string name="dates_one_year_ago">прошле године</string>
+    <string name="dates_one_month_ago">прошлог месеца</string>
+    <string name="dates_one_week">једна недеља</string>
+    <string name="dates_two_weeks">две недеље</string>
+    <string name="dates_one_month">један месец</string>
+
+    <string name="dates_today">данас</string>
+    <string name="date_pick">одабери датум</string>
+    <string name="dates_tomorrow">сутра</string>
+
+    <string name="title_activity_filter">Филтер</string>
+    <string name="selected">означено</string>
+    <string name="no_context">Пријемно сандуче</string>
+    <string name="no_project">Без ознаке</string>
+    <string name="no_creation_date">Без датума креирања</string>
+    <string name="no_threshold_date">Без датума окидања</string>
+    <string name="no_header">Ништа</string>
+    <string name="no_prio">-</string>
+    <string name="add_to_calendar">Додај подсетник</string>
+    <string name="donate_title">Донирај</string>
+    <string name="donated_summary">Хвала Вам на донацији.</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="hello_world">Здраво свете!</string>
+    <string name="action_settings">Поставке</string>
+
+    <string name="help_locale">en</string>
+
+    <string name="name">Име</string>
+    <string name="date">Датум</string>
+    <string name="manual_sync_pref_title">Ручна синхронизација</string>
+    <string name="prepend_date_pref_summary">Аутоматски додај датум креирања</string>
+    <string name="line_breaks_pref_title">Прелом линија добар и за Windows</string>
+    <string name="line_breaks_pref_summary">Користити прелом линија који је добар и за Windows</string>
+    <string name="recur_from_original_date_pref_title">Понављај задатке користећи оригиналне датуме</string>
+    <string name="swipe_complete_pref_title">Превуци за завршетак</string>
+    <string name="swipe_complete_pref_summary">Превуците преко задатка да га завршите.</string>
+    <string name="manual_sync_pref_summary">Немој аутоматски да шаљеш сваку измену на Dropbox.</string>
+    <string name="resume_sync_pref_title">Настави синхронизацију</string>
+    <string name="resume_sync_pref_summary">Синхронизуј са Dropbox-ом при отварању апликације.</string>
+    <string name="font_size_delta_pref_title">Произвољна величина фонта</string>
+    <string name="datebar_relative_size_summary">Релативна величина линије са датумом</string>
+    <string name="font_size_delta_pref_summary">Промени величину фонта.</string>
+    <string name="theme_pref_title">Тема</string>
+    <string name="theme_pref_summary">Промени тему апликације.</string>
+
+    <string name="share_task_show_edit_pref_title">Измени дељене задатке</string>
+    <string name="share_task_append_text_title">Текст у позадини</string>
+    <string name="share_task_append_text_summary">Додај \"%s\" на задатке додате у позадини.</string>
+
+    <string name="local_file_root_title">root:// directory</string>
+    <string name="local_file_root_summary">%s</string>
+
+    <string name="back_saves_pref_title">Дугме за повратак</string>
+    <string name="back_saves_summary">Сачувај отворени списак задатака, или примени филтер када се притисне дугме за назад.</string>
+
+    <string name="show_txt_only_pref_title">Приказуј само TXT фајлове</string>
+    <string name="show_txt_only_summary">Приказуј само .txt фајлове у дијалогу за одабир фајлова.</string>
+
+    <string name="calendar_sync_screen_title">Обавештења</string>
+    <string name="calendar_sync_screen_summary">Подсетници у календару (експериментално)</string>
+    <string name="calendar_reminder_days_title">Дана унапред</string>
+    <string name="calendar_reminder_days_summary">Колико рано да се постави подсетник</string>
+    <string name="calendar_reminder_time_title">Време подсетника</string>
+    <string name="calendar_reminder_time_summary">Време током дана да се постави подсетник</string>
+
+    <string name="widget_theme_pref_title">Тема</string>
+    <string name="widget_theme_pref_summary">Измени тему коју користе виџети.</string>
+
+    <string name="task_text_ellipsizing_pref_title">Скраћивање текста задатка</string>
+    <string name="task_text_ellipsizing_pref_summary">Скраћуј текст задатка у главном прозору ако заузима више од 2 линије.</string>
+    <string name="task_text_ellipsizing_none">Не: веома дугачак текст задатка</string>
+    <string name="task_text_ellipsizing_start">На почетку: …текст задатка</string>
+    <string name="task_text_ellipsizing_middle">У средини: веома… задатка</string>
+    <string name="task_text_ellipsizing_end">На крају: веома дугачак…</string>
+    <string name="task_text_ellipsizing_marquee">Сасечено: веома дугачак тек</string>
+
+    <string name="filter_tab_header_other">Остало</string>
+    <string name="filter_tab_header_sort">Сортирање</string>
+    <string name="filter_tab_header_script">Скрипте</string>
+
+    <string name="script_tab_script_from_file">Скрипте из фајла</string>
+    <string name="script_tab_use_script">Користи скрипте</string>
+    <string name="script_tab_test">Тест</string>
+    <string name="script_tab_test_task">Тестирај задатак</string>
+    <string name="script_tab_script">Скрипте</string>
+    <string name="script_tab_true_task_shown">Приказане</string>
+    <string name="script_tab_false_task_not_shown">Неприказане</string>
+
+    <string name="action_pop_up_call">Позови:</string>
+    <string name="action_pop_up_sms">СМС:</string>
+
+    <string name="quick_filter_tag_header_inverted">Обрнуто</string>
+    <string name="saved_filters_exported">Филтери извезени</string>
+    <string name="saved_filters_imported">Филтери увезени</string>
+    <string name="toast_lua_config_imported">Луа конфигурација увезена</string>
+
+    <string name="widget_header_transparency_title">Провидност заглавља</string>
+    <string name="widget_background_transparency_title">Провидност позадине</string>
+
+    <string name="widget_extended_pref_summary">Приказуј датуме на засебној линији</string>
+
+    <string name="taskview_extended_pref_title">Приказује датуме на посебној линији</string>
+
+    <string name="append_tasks_at_end_title">Додај у фајл</string>
+    <string name="append_tasks_at_end_summary">Убацује нове задатке на крај фајла</string>
+
+    <string name="color_due_pref_title">Боја</string>
+    <string name="show_hidden_title">Приказуј сакривене задатке</string>
+    <string name="show_hidden_summary">Приказује скривене (h:1) задатке да их можете изменити. После измене, одштиклирајте ово опет.</string>
+
+    <string name="show_empty_lists_title">Приказуј празна заглавља</string>
+    <string name="show_empty_lists_summary">Приказује заглавља чак иако су сви задаци испод тог заглавља сакривени.</string>
+
+    <string name="save_filter">Сачувај тренутни филтер</string>
+    <string name="lua_error">Луа грешка</string>
+    <string name="lua_config_screen">Луа конфигурација</string>
+    <string name="lua_run">Покрени</string>
+    <string name="unComplete">Поништи завршавање</string>
+    <string name="show_edittext_hint_title">Приказуј савете</string>
+    <string name="show_edittext_hint_summary">Приказује савете за време додавања задатака.</string>
+
+    <string name="show_confirmation_dialogs_title">Дијалози потврђивања</string>
+    <string name="show_confirmation_dialogs_summary">Питај пре архивирања или брисања задатака</string>
+
+    <string name="show_todo_path_title">Прикажи где је todo фајл ускладиштен</string>
+    <string name="show_todo_path_summary">Фасцикле се скраћују на прво слово</string>
+
+    <string name="show_fast_scroll_title">Брзо листање</string>
+    <string name="show_fast_scroll_summary">Користи брзо листање за дуже спискове задатака</string>
+
+    <string name="show_calendarview_title">Користи календар за унос датума</string>
+
+    <string name="about_settings_header">О програму</string>
+    <string name="about_settings_summary">Информације о апликацији</string>
+    <string name="visit_website_title">Помоћ</string>
+    <string name="visit_website_summary">Посетите веб сајт</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
+
+    <string name="visit_tracker_title">Затражите нову функционалности или пријавите грешку</string>
+    <string name="visit_tracker_summary">Затражите нову функционалности или побољшање или пријавите проблем.</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
+    <string name="preference_title_debug_info">Види дневник за исправљање грешака</string>
+    <string name="sync_dialog_title">Ручна синхронизација</string>
+    <string name="sync_dialog_upload">Отпреми на Dropbox</string>
+    <string name="sync_dialog_download">Преузми на уређај</string>
+    <string name="sync_upload_message">Отпремање todo.txt…</string>
+    <string name="sync_download_message">Преузимање todo.txt…</string>
+
+    <string name="sync_conflict_dialog_title">Конфликт са фајлом</string>
+    <string name="login_screen_button">Пријавите се на Dropbox</string>
+    <string name="delete_task_title">Обриши %s задатак(а)</string>
+    <string name="archive_task_title">Архивирај %s задатак(а)</string>
+    <string name="delete_task_message">Ово се не може опозвати. Да ли сте сигурни?</string>
+    <string name="delete_task_confirm">Обриши</string>
+
+    <string name="word_wrap">Прелом речи</string>
+    <string name="search_hint">Претрага…</string>
+
+    <string name="by_prio">Приоритет</string>
+    <string name="by_project">Ознака</string>
+    <string name="by_context">Списак</string>
+    <string name="by_project_todotxt">Пројекат</string>
+    <string name="by_context_todotxt">Контекст</string>
+    <string name="completed">Завршено</string>
+    <string name="by_creation_date">Датум креирања</string>
+    <string name="by_completion_date">Датум завршетка</string>
+    <string name="by_lua">Луа скрипта</string>
+
+    <string name="add_filter_shortcut">На почетни екран</string>
+    <string name="rename_filter_message">Унесите ново име сачуваног филтера:</string>
+    <string name="filter_show_completed">Прикажи завршене задатке</string>
+    <string name="filter_show_future_short">Будућност</string>
+    <string name="filter_show_prompt">Прикажи</string>
+    <string name="filter_saved_prompt">Сачувани филтери</string>
+
+    <string name="none">ништа</string>
+    <string name="keep">задржи</string>
+    <string name="all">сви</string>
+
+    <string name="dates_one_week_ago">претходне недеље</string>
+
+    </resources>
