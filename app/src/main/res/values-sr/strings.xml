@@ -56,10 +56,10 @@
     <string name="write_failed">Грешка приликом уписа у фајл. Измене НЕЋЕ бити сачуване.</string>
 
     <string name="filter_name_empty">Име није наведено, не додајем филтер</string>
-    <string name="widget_name_empty">Име справице није наведено, не додајем је</string>
+    <string name="widget_name_empty">Име виџета није наведено, не додајем је</string>
     <string name="preference_appearance">Изглед</string>
     <string name="preference_interface">Интерфејс</string>
-    <string name="preference_widget">Справица</string>
+    <string name="preference_widget">Виџет</string>
     <string name="preference_other">Остало</string>
 
     <string name="ARCHIVE_settings_header">Архива</string>
@@ -73,7 +73,7 @@
     <string name="TODOTXTPATH_title">Локација фајла</string>
     <string name="TODOTXTPATH_summary">Dropbox фасцикла где је смештен todo.txt.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
-    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_header">Дропбокс</string>
     <string name="DROPBOX_settings_summary">Поставке за Dropbox синхронизацију</string>
 
     <string name="todotxt_features_settings_header">Могућности</string>
@@ -161,7 +161,7 @@
     <string name="share_task_append_text_title">Текст у позадини</string>
     <string name="share_task_append_text_summary">Додај \"%s\" на задатке додате у позадини.</string>
 
-    <string name="local_file_root_title">root:// directory</string>
+    <string name="local_file_root_title">root:// фасцикла</string>
     <string name="local_file_root_summary">%s</string>
 
     <string name="back_saves_pref_title">Дугме за повратак</string>
@@ -293,4 +293,95 @@
 
     <string name="dates_one_week_ago">претходне недеље</string>
 
-    </resources>
+    <string name="sort_complete_last_pref_summary">Увек приказуј завршене задатке на крају списка</string>
+    <string name="keep_prio_header">Задржи приоритет у завршеним задацима</string>
+    <string name="keep_prio_summary">Todo.txt уклања приоритет при означавању завршетка задатка</string>
+    <string name="prepend_date_pref_title">Лупи датум на нове задатке</string>
+    <string name="menu_capitalize_tasks">Великим словима</string>
+    <string name="calendar_sync_dues_title">Подсетници на крајњи рок</string>
+    <string name="calendar_sync_thresholds_title">Подсетници на датум окидања</string>
+    <string name="drawer_fixed_landscape_title">Отварај фиоке у пејзажном режиму</string>
+    <string name="drawer_fixed_landscape_summary">Увек отварај фиоке у пејзажном режиму.</string>
+
+    <string name="filter_tab_header_prio">Прио</string>
+    <string name="widget_extended_pref_title">Прикажи траку са датумом</string>
+    <string name="color_due_pref_summary">Датуми крајњег рока и окидања</string>
+
+    <string name="show_complete_checkbox_title">Прикажи штиклирање за завршавање задатака</string>
+    <string name="show_complete_checkbox_summary">Приказује кутију за штиклирање испред задатака за завршавање или уклањање завршетка задатка.</string>
+
+    <string name="sort_case_sensitive_title">Разликуј мала и велика слова код сортирања</string>
+    <string name="sort_case_sensitive_summary">Прати да ли су слова мала или велика код сортирања спискова, ознака и сачуваних филтера.</string>
+
+    <string name="use_create_as_threshold_title">Датум прављења је датум окидања</string>
+    <string name="use_create_backup_summary">Приликом сортирања, користи датум прављења задатка као датум окидања ако он није постављен</string>
+
+    <string name="todotxt_terms_title">Користи todo.txt изразе</string>
+    <string name="todotxt_terms_summary">Контекст и пројекат уместо списка и ознака</string>
+
+    <string name="preference_summary_debug_info">Види и дели верзију апликација и дневник.</string>
+
+    <string name="sync_dialog_msg">Да ли желите да отпремите или скинете Ваш todo.txt фајл?</string>
+    <string name="first_title_word">Simpletask</string>
+    <string name="login_folder_screen_button">Пријава на Dropbox
+\n(приступ апликативној фасцикли)</string>
+    <string name="clone_tags">Одмах попуни</string>
+    <string name="sort_help">Превлачите да мењате редослед сортирања. Кликните да ставке да промените смер сортирања.</string>
+    <string name="alphabetical">Абедецно</string>
+    <string name="in_future">Датум окидања у будућности</string>
+    <string name="by_due_date">Крајњи рок</string>
+    <string name="by_threshold_date">Датум окидања</string>
+    <string name="create_widget">Направи виџет</string>
+    <string name="config_widget">Подеси виџет</string>
+    <string name="filter_show_future">Приказуј задатке са датумима окидања у будућности</string>
+    <string name="filter_show_lists">Прикажи спискове у задацима</string>
+    <string name="filter_show_tags">Прикажи ознаке у задацима</string>
+    <string name="filter_show_create_date">Прикажи старост задатака</string>
+
+    <string name="filter_show_completed_short">Завршени</string>
+    <string name="task_select_parts">Одаберите делове задатака</string>
+    <string name="title_filter_applied">Филтрирано:</string>
+    <string name="dates_days_ago">пре %d дана</string>
+    <string name="dates_years_ago">пре %d године(а)</string>
+    <string name="dates_months_ago">пре %d месеца(и)</string>
+    <string name="dates_weeks_ago">пре %d недеље(а)</string>
+    <string name="version_copied">Информације о верзији копиране у клипборд</string>
+
+    <string name="default_sort">Подразумевано сортирање</string>
+    <string name="pull_to_refresh_refreshing_label">Синхронизујем са dropbox-ом…</string>
+    <string name="input_new">Унеси нови</string>
+    <string name="no_filter">Без филтера</string>
+    <string name="dropbox">Дропбокс</string>
+
+    <string name="save_filter_message">Унесите име за тренутни филтер, да се приказује у фиоци са сачуваним филтерима.</string>
+
+    <string name="filter_import_export">Увези/извези филтере</string>
+
+    <string name="sort_reverse">Обрни сортирање</string>
+
+    <string name="calendar_sync_desc_due">Подсетник на крајњи рок, аутоматски генерисан од стране Simpletask-а</string>
+    <string name="calendar_sync_desc_thre">Подсетник на датум окидања, аутоматски генерисан од стране Simpletask-а</string>
+    <string name="calendar_write_error">Грешка: не могу да пишем календар</string>
+
+    <string name="click_to_copy">Кликни за копирање у клипборд.</string>
+
+    <string name="share_history_title">Историјат задатака</string>
+
+    <string name="task_action">Радња</string>
+
+    <string name="experimental_title">Експериментално</string>
+    <string name="experimental_summary">Укључи експерименталне могућности</string>
+
+    <string name="keep_selection_title">Задржи избор</string>
+    <string name="keep_selection_summary">Задржи избор задатака после измена.</string>
+
+
+    <string name="lua_config_export">Сачувај и извези</string>
+    <string name="lua_config_import">Увези</string>
+    <string name="lua_config_share">Подели</string>
+    <string name="lua_open_config">Луа конфигурација</string>
+
+    <string name="use_uuid_title">Додели UUID сваком задатку</string>
+    <string name="nav_drawer_hint">Сачувај тренутни филтер
+\n користећи дугме за чување</string>
+</resources>
