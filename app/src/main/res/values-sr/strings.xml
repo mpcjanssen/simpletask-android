@@ -49,8 +49,8 @@
     <string name="cancel">Поништи</string>
     <string name="cancel_changes">Измене ће бити изгубљене.</string>
     <string name="clear_filter">Очисти филтер</string>
-    <string name="tasktexthint">\@попричати проблем који има +Парис са +Хектор @Троја
-\nРеци +Хектор да не буде гњавеж @Троја
+    <string name="tasktexthint">\@разговор о проблему који +Парис има са +Хектор @Троја
+\nРеци +Хектор да не дави много @Троја
 \nИзбриши овај текст @телефон</string>
 
     <string name="write_failed">Грешка приликом уписа у фајл. Измене НЕЋЕ бити сачуване.</string>
@@ -73,7 +73,7 @@
     <string name="TODOTXTPATH_title">Локација фајла</string>
     <string name="TODOTXTPATH_summary">Dropbox фасцикла где је смештен todo.txt.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
-    <string name="DROPBOX_settings_header">Дропбокс</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Поставке за Dropbox синхронизацију</string>
 
     <string name="todotxt_features_settings_header">Могућности</string>
@@ -351,7 +351,7 @@
     <string name="pull_to_refresh_refreshing_label">Синхронизујем са dropbox-ом…</string>
     <string name="input_new">Унеси нови</string>
     <string name="no_filter">Без филтера</string>
-    <string name="dropbox">Дропбокс</string>
+    <string name="dropbox">Dropbox</string>
 
     <string name="save_filter_message">Унесите име за тренутни филтер, да се приказује у фиоци са сачуваним филтерима.</string>
 
