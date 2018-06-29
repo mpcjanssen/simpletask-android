@@ -160,7 +160,7 @@
 
     <string name="name">名称</string>
     <string name="date">日期</string>
-    <string name="help_locale">英语</string>
+    <string name="help_locale">en</string>
 
     <string name="calendar_write_error">错误︰无法写入日历</string>
 
@@ -356,7 +356,7 @@
     <string name="shortcut_addtask_name">添加任务</string>
     <string name="share_addtask_name">记入事务</string>
 
-    <string name="none">未指定</string>
+    <string name="none">无</string>
     <string name="keep">保留</string>
     <string name="all">全部</string>
 
