@@ -273,8 +273,8 @@
     <string name="login_cloudless">如果您没有 Dropbox 帐户，或者不想使用它来存储您的任务清单，您可以到 Play Store 下载 Simpletask Cloudless。 
 \nhttps://goo.gl/X1C55P</string>
 
-    <string name="delete_task_title">删除 ％s 任务</string>
-    <string name="archive_task_title">存档 ％s 任务</string>
+    <string name="delete_task_title">删除 %s 任务</string>
+    <string name="archive_task_title">存档 %s 任务</string>
     <string name="delete_task_message">这不能撤销。你确定吗？</string>
     <string name="cancel_changes">将丢失己做的更改。</string>
     <string name="tasktexthint">"\@讨论 +巴黎  +Hector 相关事宜 @Troy
@@ -318,7 +318,7 @@
     <string name="filter_select_all">选择全部</string>
     <string name="filter_clear_all">清除筛选器</string>
     <string name="filter_invert">反向筛选</string>
-    <string name="add_filter_shortcut">去主屏幕</string>
+    <string name="add_filter_shortcut">创建桌面快捷方式</string>
     <string name="export_filter">导出</string>
     <string name="import_filter">导入</string>
     <string name="rename_filter">重命名</string>
