@@ -251,6 +251,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                 openNavDrawer()
             }
         }
+        TodoList.reload(reason = "Main activity create")
+        handleIntent()
+        updateFilterDrawer()
+        refreshUI()
     }
 
     private fun refreshUI() {
@@ -464,13 +468,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        log.info(TAG, "onResume")
-        TodoList.reload(reason = "Main activity resume")
-        handleIntent()
-        refreshUI()
-    }
 
     override fun onPause() {
         (listView?.layoutManager as LinearLayoutManager?)?.let { manager ->
@@ -1045,12 +1042,12 @@ class Simpletask : ThemedNoActionBarActivity() {
         intent = Config.mainQuery.saveInIntent(intent)
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+        updateFilterDrawer()
     }
 
     private fun updateDrawers() {
         todoQueue("Update drawers") {
             runOnUiThread {
-                updateFilterDrawer()
                 updateNavDrawer()
             }
         }
@@ -1073,11 +1070,13 @@ class Simpletask : ThemedNoActionBarActivity() {
             nav_drawer.isLongClickable = true
             nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 queries[position].let {
-                    Config.mainQuery = it.second.query
+                    val query = it.second.query
+                    Config.mainQuery = query
+                    taskAdapter.setFilteredTasks(this, query)
+                    closeDrawer(NAV_DRAWER)
+                    updateFilterDrawer()
                 }
-                closeDrawer(NAV_DRAWER)
-                broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
-                broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+
             }
             nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
                 val query = queries[position]
