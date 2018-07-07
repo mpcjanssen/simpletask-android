@@ -39,7 +39,6 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
             // Run the script and refilter
             runScript()
             broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
-            broadcastRefreshWidgets(TodoApplication.app.localBroadCastManager)
             finish()
         }
     }

@@ -716,17 +716,4 @@ fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
 }
 
-fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending widget refresh broadcast")
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
-}
 
-fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
-    val iconRes = IconCompat.createWithResource(ctxt, icon)
-    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, "$id.$name")
-            .setIcon(iconRes)
-            .setShortLabel(name)
-            .setIntent(target)
-            .build()
-    ShortcutManagerCompat.requestPinShortcut(ctxt, pinShortcutInfo, null)
-}

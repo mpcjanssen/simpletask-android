@@ -111,15 +111,6 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".Simpletask"
@@ -130,11 +121,6 @@ You should have received a copy of the GNU General Public License along with Sim
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-            </intent-filter>
-
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="nl.mpcjanssen.simpletask.START_WITH_FILTER" />
             </intent-filter>
 
             <intent-filter>
@@ -158,31 +144,8 @@ You should have received a copy of the GNU General Public License along with Sim
             android:exported="true"
             android:label="@string/title_activity_filter"
             >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
         </activity>
 
-        <receiver android:name=".MyAppWidgetProvider" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="nl.mpcjanssen.simpletask.ADD_TASK_FROM_WIDGET" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info"
-                />
-        </receiver>
-
-        <service
-            android:name=".AppWidgetService"
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            />
         <receiver android:name="nl.mpcjanssen.simpletask.AlarmReceiver"/>
         <uses-library
             android:name="com.sec.android.app.multiwindow"

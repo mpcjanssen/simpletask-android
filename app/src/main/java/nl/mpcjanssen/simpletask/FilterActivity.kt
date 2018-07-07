@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -26,8 +27,6 @@ import java.util.*
 
 class FilterActivity : ThemedNoActionBarActivity() {
 
-    internal var asWidgetConfigure = false
-    internal var asWidgetReConfigure = false
     internal lateinit var mFilter: Query
 
     internal lateinit var m_app: TodoApplication
@@ -41,9 +40,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
     private var m_page = 0
 
     override fun onBackPressed() {
-        if (!asWidgetConfigure && !asWidgetReConfigure) {
-            applyFilter()
-        }
+        applyFilter()
         super.onBackPressed()
     }
 
@@ -61,27 +58,12 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
         val intent = intent
         val environment: String = intent.action?.let {
-            asWidgetConfigure = it == AppWidgetManager.ACTION_APPWIDGET_CONFIGURE
             val id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0)
             "widget" + id.toString()
         } ?: "mainui"
 
 
-        val context = applicationContext
-
-        if (!asWidgetConfigure) {
-            mFilter = Query(intent, luaModule = environment)
-        } else if (intent.getBooleanExtra(Constants.EXTRA_WIDGET_RECONFIGURE, false)) {
-            asWidgetReConfigure = true
-            asWidgetConfigure = false
-            setTitle(R.string.config_widget)
-            val prefsName = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, -1).toString()
-            val preferences = context.getSharedPreferences(prefsName , Context.MODE_PRIVATE)
-            mFilter = Query(preferences, luaModule = environment)
-        } else {
-            setTitle(R.string.create_widget)
-            mFilter = Query(prefs, luaModule = environment)
-        }
+        mFilter = Query(intent, luaModule = environment)
         pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
 
         val contextTab = FilterListFragment()
@@ -187,14 +169,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 return true
             }
             R.id.menu_filter_action -> {
-                if (asWidgetConfigure) {
-                    askWidgetName()
-                } else if (asWidgetReConfigure) {
-                    updateWidget()
-                    finish()
-                } else {
-                    applyFilter()
-                }
+                applyFilter()
             }
             R.id.menu_filter_load_script -> openScript { contents ->
                 runOnMainThread(
@@ -219,16 +194,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 }
             })
             dialog.createFileDialog(this@FilterActivity, FileStore, File(Config.todoFileName).parent, txtOnly = false)
-    }
-
-    private fun createFilterIntent(): Intent {
-        val target = Intent(this, Simpletask::class.java)
-        target.action = Constants.INTENT_START_FILTER
-        updateFilterFromFragments()
-        mFilter.saveInIntent(target)
-
-        target.putExtra("name", mFilter.proposedName)
-        return target
     }
 
     private fun updateFilterFromFragments() {
@@ -284,78 +249,12 @@ class FilterActivity : ThemedNoActionBarActivity() {
         }
     }
 
-    private fun updateWidget() {
-        updateFilterFromFragments()
-        val widgetId = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
-        log.info(TAG, "Saving settings for widget $widgetId")
-        val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
-        mFilter.saveInPrefs(preferences)
-        broadcastRefreshWidgets(m_app.localBroadCastManager)
-    }
-
-    private fun createWidget(name: String) {
-        val mAppWidgetId: Int
-
-        val intent = intent
-        val extras = intent.extras
-        updateFilterFromFragments()
-        if (extras != null) {
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID)
-
-            val context = applicationContext
-
-            // Store widget applyFilter
-            val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)
-            val namedFilter = NamedQuery(name, mFilter)
-            namedFilter.saveInPrefs(preferences)
-
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
-                    mAppWidgetId, name)
-
-            val resultValue = Intent(applicationContext, AppWidgetService::class.java)
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
-            setResult(Activity.RESULT_OK, resultValue)
-            finish()
-        }
-    }
-
     private fun applyFilter() {
-        val data = createFilterIntent()
-        startActivity(data)
+        updateFilterFromFragments()
+        Config.mainQuery = mFilter
         finish()
     }
 
-    private fun askWidgetName() {
-        val name: String
-        val alert = AlertDialog.Builder(this)
-
-        alert.setTitle("Create widget")
-        alert.setMessage("Widget title")
-        updateFilterFromFragments()
-        name = mFilter.proposedName
-
-        // Set an EditText view to get user input
-        val input = EditText(this)
-        alert.setView(input)
-        input.setText(name)
-
-        alert.setPositiveButton("Ok") { _, _ ->
-            val value = input.text.toString()
-            if (value == "") {
-                showToastShort(applicationContext, R.string.widget_name_empty)
-            } else {
-                createWidget(value)
-            }
-        }
-
-        alert.setNegativeButton("Cancel") { _, _ -> }
-
-        alert.show()
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()

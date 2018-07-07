@@ -64,7 +64,7 @@ class TodoApplication : MultiDexApplication() {
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
+
         intentFilter.addAction(Constants.BROADCAST_FILE_SYNC)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
@@ -73,13 +73,6 @@ class TodoApplication : MultiDexApplication() {
                 when {
                     intent.action == Constants.BROADCAST_UPDATE_UI -> TodoList.todoQueue("Refresh external UI") {
                         CalendarSync.syncLater()
-                        redrawWidgets()
-                        updateWidgets()
-                    }
-                    intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
-                        Logger.info(TAG, "Refresh widgets from broadcast")
-                        redrawWidgets()
-                        updateWidgets()
                     }
                     intent.action == Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
                 }
@@ -157,23 +150,6 @@ class TodoApplication : MultiDexApplication() {
     fun loadTodoList(reason: String) {
         Logger.info(TAG, "Loading todolist")
         TodoList.reload(reason = reason)
-    }
-
-    fun updateWidgets() {
-        val mgr = AppWidgetManager.getInstance(applicationContext)
-        for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
-            mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
-            Logger.info(TAG, "Updating widget: $appWidgetId")
-        }
-    }
-
-    fun redrawWidgets() {
-        val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
-        Logger.info(TAG, "Redrawing widgets ")
-        if (appWidgetIds.isNotEmpty()) {
-            MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
-        }
     }
 
     val isAuthenticated: Boolean

@@ -35,7 +35,6 @@ object Constants {
     const val BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT"
     const val BROADCAST_UPDATE_UI = "UPDATE_UI"
     const val BROADCAST_TASKLIST_CHANGED = "TASKLIST_CHANGED"
-    const val BROADCAST_UPDATE_WIDGETS = "UPDATE_WIDGETS"
     const val BROADCAST_FILE_SYNC = "FILE_SYNC"
     const val BROADCAST_THEME_CHANGED = "THEME_CHANGED"
     const val BROADCAST_DATEBAR_SIZE_CHANGED = "DATEBAR_SIZE_CHANGED"
@@ -48,7 +47,6 @@ object Constants {
     const val SHARE_FILE_NAME = "simpletask.txt"
 
     // Public intents
-    const val INTENT_START_FILTER = "nl.mpcjanssen.simpletask.START_WITH_FILTER"
     const val INTENT_BACKGROUND_TASK = "nl.mpcjanssen.simpletask.BACKGROUND_TASK"
 
     // Intent extras
