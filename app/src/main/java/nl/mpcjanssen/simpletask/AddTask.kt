@@ -76,7 +76,7 @@ class AddTask : ThemedActionBarActivity() {
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab?.setOnClickListener {
-            saveTasksAndClose()
+            addPrefilledTask()
         }
 
         // text
@@ -113,47 +113,8 @@ class AddTask : ThemedActionBarActivity() {
                 // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
                 // like Swype where ENTER keyCode is not generated.
 
-                var inputFlags = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-
                 if (Config.isCapitalizeTasks) {
-                    inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                }
-                textInputField.setRawInputType(inputFlags)
-                textInputField.imeOptions = EditorInfo.IME_ACTION_NEXT
-                textInputField.setOnImeAction(EditorInfo.IME_ACTION_NEXT) { _ ->
-                    // Move cursor to end of line
-                    val position = textInputField.selectionStart
-                    val remainingText = textInputField.text.toString().substring(position)
-                    val endOfLineDistance = remainingText.indexOf('\n')
-                    var endOfLine: Int
-                    if (endOfLineDistance == -1) {
-                        endOfLine = textInputField.length()
-                    } else {
-                        endOfLine = position + endOfLineDistance
-                    }
-                    textInputField.setSelection(endOfLine)
-                    replaceTextAtSelection("\n", false)
-
-                    if (Config.isAddTagsCloneTags) {
-                        val precedingText = textInputField.text.toString().substring(0, endOfLine)
-                        val lineStart = precedingText.lastIndexOf('\n')
-                        val line: String
-                        if (lineStart != -1) {
-                            line = precedingText.substring(lineStart, endOfLine)
-                        } else {
-                            line = precedingText
-                        }
-                        val t = Task(line)
-                        val tags = t.lists
-                                .map { "@" + it }
-                                .toMutableSet()
-                        for (prj in t.tags) {
-                            tags.add("+" + prj)
-                        }
-                        replaceTextAtSelection(join(tags, " "), true)
-                    }
-                    endOfLine++
-                    textInputField.setSelection(endOfLine)
+                    textInputField.inputType =  textInputField.inputType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
                 }
 
                 setWordWrap(Config.isWordWrap)
@@ -171,6 +132,40 @@ class AddTask : ThemedActionBarActivity() {
         }
     }
 
+    private fun addPrefilledTask() {
+        val position = textInputField.selectionStart
+        val remainingText = textInputField.text.toString().substring(position)
+        val endOfLineDistance = remainingText.indexOf('\n')
+        var endOfLine: Int
+        if (endOfLineDistance == -1) {
+            endOfLine = textInputField.length()
+        } else {
+            endOfLine = position + endOfLineDistance
+        }
+        textInputField.setSelection(endOfLine)
+        replaceTextAtSelection("\n", false)
+
+        val precedingText = textInputField.text.toString().substring(0, endOfLine)
+        val lineStart = precedingText.lastIndexOf('\n')
+        val line: String
+        if (lineStart != -1) {
+            line = precedingText.substring(lineStart, endOfLine)
+        } else {
+            line = precedingText
+        }
+        val t = Task(line)
+        val tags = t.lists
+                .map { "@" + it }
+                .toMutableSet()
+        for (prj in t.tags) {
+            tags.add("+" + prj)
+        }
+        replaceTextAtSelection(join(tags, " "), true)
+
+        endOfLine++
+        textInputField.setSelection(endOfLine)
+    }
+
     fun setWordWrap(bool: Boolean) {
         textInputField.setHorizontallyScrolling(!bool)
     }
@@ -183,9 +178,6 @@ class AddTask : ThemedActionBarActivity() {
         // Set checkboxes
         val menuWordWrap = menu.findItem(R.id.menu_word_wrap)
         menuWordWrap.isChecked = Config.isWordWrap
-
-        val menuPreFill = menu.findItem(R.id.menu_prefill_next)
-        menuPreFill.isChecked = Config.isAddTagsCloneTags
 
         val menuShowHint = menu.findItem(R.id.menu_show_edittext_hint)
         menuShowHint.isChecked = Config.isShowEditTextHint
@@ -202,9 +194,8 @@ class AddTask : ThemedActionBarActivity() {
             android.R.id.home -> {
                 finishEdit(confirmation = true)
             }
-            R.id.menu_prefill_next -> {
-                Config.isAddTagsCloneTags = !Config.isAddTagsCloneTags
-                item.isChecked = !item.isChecked
+            R.id.menu_save -> {
+                saveTasksAndClose()
             }
             R.id.menu_word_wrap -> {
                 val newVal = !Config.isWordWrap
@@ -304,7 +295,7 @@ class AddTask : ThemedActionBarActivity() {
         if (confirmation && (textInputField.text.toString() != start_text)) {
             showConfirmationDialog(this, R.string.cancel_changes, close, null)
         } else {
-            close.onClick(null,0)
+            close.onClick(null, 0)
         }
 
     }
