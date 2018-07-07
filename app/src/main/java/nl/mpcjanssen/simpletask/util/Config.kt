@@ -98,8 +98,6 @@ object Config : Preferences(TodoApplication.app) {
         }
     }
 
-    var isAddTagsCloneTags by BooleanPreference(R.string.clone_tags_key, false)
-
     val hasAppendAtEnd by BooleanPreference(R.string.append_tasks_at_end, true)
 
     // Takes an argument f, an expression that maps theme strings to IDs
