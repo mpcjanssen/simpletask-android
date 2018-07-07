@@ -14,14 +14,6 @@ object Config : Preferences(TodoApplication.app) {
 
     init {
         registerCallbacks(listOf<String>(
-                getString(R.string.widget_theme_pref_key),
-                getString(R.string.widget_extended_pref_key),
-                getString(R.string.widget_background_transparency),
-                getString(R.string.widget_header_transparency)
-        )) {
-            TodoApplication.app.redrawWidgets()
-        }
-        registerCallbacks(listOf<String>(
                 getString(R.string.calendar_sync_dues),
                 getString(R.string.calendar_sync_thresholds),
                 getString(R.string.calendar_reminder_days),

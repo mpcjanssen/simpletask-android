@@ -363,25 +363,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         // Show search or applyFilter results
         val currentIntent = intent
-        val query = if (Constants.INTENT_START_FILTER == currentIntent.action) {
-            log.info(TAG, "handleIntent")
-            currentIntent.extras?.let { extras ->
-                extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
-                    val debugString = value?.let { v ->
-                        "$v (${v.javaClass.name})"
-                    } ?: "<null>"
-                    log.debug(TAG, "$key $debugString")
-                }
-            }
-            val newQuery = Query(currentIntent, "mainui")
-            Config.mainQuery = newQuery
-            intent = newQuery.saveInIntent(intent)
-            newQuery
-        } else {
-            // Set previous filters and sort
-            log.info(TAG, "handleIntent: from m_prefs state")
-            Config.mainQuery
-        }
+        val query = Config.mainQuery
 
 
         showListViewProgress(true)
@@ -1091,7 +1073,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val menuId = item.itemId
                     when (menuId) {
                         R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
-                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
                         R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
                         R.id.menu_saved_filter_update -> updateSavedQuery(query.second, Config.mainQuery)
                         else -> {
@@ -1105,12 +1086,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 true
             }
         }
-    }
-
-    fun createFilterShortcut(namedQuery: NamedQuery) {
-        val target = Intent(Constants.INTENT_START_FILTER)
-        namedQuery.query.saveInIntent(target)
-        createShortcut(this, "simpletaskLauncher", namedQuery.name, R.drawable.ic_launcher, target)
     }
 
     private fun deleteSavedQuery(id: String) {
