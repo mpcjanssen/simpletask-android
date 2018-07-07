@@ -85,17 +85,17 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
-        taskAdapter =  TaskAdapter(
+        taskAdapter = TaskAdapter(
                 completeAction = {
                     completeTasks(it)
                     // Update the tri state checkbox
-                    handleMode(mapOf(Simpletask.Mode.SELECTION to {invalidateOptionsMenu()}))
+                    handleMode(mapOf(Simpletask.Mode.SELECTION to { invalidateOptionsMenu() }))
                     TodoList.notifyTasklistChanged(Config.todoFileName, false)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
                     // Update the tri state checkbox
-                    handleMode(mapOf( Simpletask.Mode.SELECTION to { invalidateOptionsMenu() } ))
+                    handleMode(mapOf(Simpletask.Mode.SELECTION to { invalidateOptionsMenu() }))
                     TodoList.notifyTasklistChanged(Config.todoFileName, true)
                 },
                 onClickAction = {
@@ -251,9 +251,14 @@ class Simpletask : ThemedNoActionBarActivity() {
                 openNavDrawer()
             }
         }
-        TodoList.reload(reason = "Main activity create")
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        log.info(TAG, "onResume")
+        TodoList.reload(reason = "Main activity resume")
         handleIntent()
-        updateFilterDrawer()
         refreshUI()
     }
 
@@ -828,7 +833,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         Mode.NAV_DRAWER to { closeDrawer(NAV_DRAWER) },
                         Mode.FILTER_DRAWER to { closeDrawer(QUICK_FILTER_DRAWER) },
                         Mode.SELECTION to { closeSelectionMode() },
-                        Mode.MAIN to  { m_drawerToggle?.onOptionsItemSelected(item) }
+                        Mode.MAIN to { m_drawerToggle?.onOptionsItemSelected(item) }
                 ))
                 return true
             }
@@ -936,7 +941,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                         QueryStore.save(newQuery, name)
                     }
                     localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-                    showToastShort(this, R.string.saved_filters_imported) }
+                    showToastShort(this, R.string.saved_filters_imported)
+                }
             } catch (e: Exception) {
                 // Need to catch generic exception because Dropbox errors don't inherit from IOException
                 log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
@@ -995,13 +1001,13 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onBackPressed() {
         handleMode(mapOf(
                 Mode.NAV_DRAWER to {
-            closeDrawer(NAV_DRAWER)
-        },
+                    closeDrawer(NAV_DRAWER)
+                },
                 Mode.FILTER_DRAWER to {
-            closeDrawer(QUICK_FILTER_DRAWER)
-        },             Mode.SELECTION to {
+                    closeDrawer(QUICK_FILTER_DRAWER)
+                }, Mode.SELECTION to {
             closeSelectionMode()
-        },             Mode.MAIN to {
+        }, Mode.MAIN to {
             if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
                 super.onBackPressed()
             }
@@ -1104,7 +1110,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun createFilterShortcut(namedQuery: NamedQuery) {
         val target = Intent(Constants.INTENT_START_FILTER)
         namedQuery.query.saveInIntent(target)
-        createShortcut(this, "simpletaskLauncher", namedQuery.name,  R.drawable.ic_launcher, target)
+        createShortcut(this, "simpletaskLauncher", namedQuery.name, R.drawable.ic_launcher, target)
     }
 
     private fun deleteSavedQuery(id: String) {
@@ -1257,7 +1263,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    companion object  {
+    companion object {
         private val REQUEST_PREFERENCES = 1
 
         private val ACTION_LINK = "link"
