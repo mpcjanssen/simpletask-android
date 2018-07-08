@@ -339,7 +339,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="save_filter_message">Gib einen Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird.</string>
 
     <string name="donate_title">Spenden</string>
-    <string name="donate_summary">Für Sie kostenlos bereitgestellt, dies ist freie Software. Eine Menge harter Arbeit wurde hereingesteckt und weil du die Option hast, ist jede Spende gerne willkommen.</string>
+    <string name="donate_summary">Kostenlos für dich bereitgestellt, ist dies außerdem freie Software. Eine Menge harter Arbeit wurde hereingesteckt und weil du die Option hast, ist jede Spende gerne willkommen.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Umgekehrte Sortierung</string>
 
