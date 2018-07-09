@@ -60,7 +60,6 @@ import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 import java.io.*
@@ -704,10 +703,6 @@ fun broadcastFileSyncDone(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
 }
 
-fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
-}
-
 fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
 }
@@ -719,6 +714,10 @@ fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
     log.info(TAG, "Sending widget refresh broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
+}
+
+fun broadcastUpdateStateIndicator(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_STATE_INDICATOR))
 }
 
 fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {

@@ -6,7 +6,7 @@ import android.content.Intent
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
-import nl.mpcjanssen.simpletask.util.broadcastRefreshUI
+import nl.mpcjanssen.simpletask.util.broadcastUpdateStateIndicator
 
 class ConnectivityReceiver : BroadcastReceiver() {
 
@@ -14,7 +14,7 @@ class ConnectivityReceiver : BroadcastReceiver() {
         val log = Logger
         log.debug(TAG, "Connectivity changed {}" + intent)
 
-        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+        broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
         if (FileStore.isOnline) {
             log.info(TAG, "Device went online")
             broadcastFileSync(TodoApplication.app.localBroadCastManager)

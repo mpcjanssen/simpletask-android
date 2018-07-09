@@ -40,8 +40,6 @@ import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.task.TodoList.fileStoreQueue
-import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import org.json.JSONObject
 import java.io.File
@@ -49,8 +47,14 @@ import java.util.*
 import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
-    enum class Mode {
-        NAV_DRAWER, FILTER_DRAWER, SELECTION, MAIN
+
+
+    companion object {
+        private val REQUEST_PREFERENCES = 1
+
+        val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
+        val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
+        private val TAG = "Simpletask"
     }
 
     private var options_menu: Menu? = null
@@ -67,7 +71,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private var m_savedInstanceState: Bundle? = null
     private var m_scrollPosition = 0
 
-    private var log = Logger
+    var log = Logger
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,26 +80,26 @@ class Simpletask : ThemedNoActionBarActivity() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE)
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
         intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_DATEBAR_SIZE_CHANGED)
+        intentFilter.addAction(Constants.BROADCAST_MAIN_FONTSIZE_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_PENDING_CHANGES)
+        intentFilter.addAction(Constants.BROADCAST_STATE_INDICATOR)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
         taskAdapter = TaskAdapter(
                 completeAction = {
                     completeTasks(it)
                     // Update the tri state checkbox
-                    handleMode(mapOf(Simpletask.Mode.SELECTION to { invalidateOptionsMenu() }))
+                    handleMode(mapOf(Mode.SELECTION to { invalidateOptionsMenu() }))
                     TodoList.notifyTasklistChanged(Config.todoFileName, false)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
                     // Update the tri state checkbox
-                    handleMode(mapOf(Simpletask.Mode.SELECTION to { invalidateOptionsMenu() }))
+                    handleMode(mapOf(Mode.SELECTION to { invalidateOptionsMenu() }))
                     TodoList.notifyTasklistChanged(Config.todoFileName, true)
                 },
                 onClickAction = {
@@ -109,20 +113,20 @@ class Simpletask : ThemedNoActionBarActivity() {
                 },
                 onLongClickAction = {
                     val links = ArrayList<String>()
-                    val actions = ArrayList<String>()
+                    val actions = ArrayList<Action>()
                     val t = it
                     for (link in t.links) {
-                        actions.add(Simpletask.ACTION_LINK)
+                        actions.add(Action.LINK)
                         links.add(link)
                     }
                     for (number in t.phoneNumbers) {
-                        actions.add(Simpletask.ACTION_PHONE)
+                        actions.add(Action.PHONE)
                         links.add(number)
-                        actions.add(Simpletask.ACTION_SMS)
+                        actions.add(Action.SMS)
                         links.add(number)
                     }
                     for (mail in t.mailAddresses) {
-                        actions.add(Simpletask.ACTION_MAIL)
+                        actions.add(Action.MAIL)
                         links.add(mail)
                     }
                     if (actions.size != 0) {
@@ -130,8 +134,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                         val titles = ArrayList<String>()
                         for (i in links.indices) {
                             when (actions[i]) {
-                                Simpletask.ACTION_SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
-                                Simpletask.ACTION_PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
+                                Action.SMS -> titles.add(i, getString(R.string.action_pop_up_sms) + links[i])
+                                Action.PHONE -> titles.add(i, getString(R.string.action_pop_up_call) + links[i])
                                 else -> titles.add(i, links[i])
                             }
                         }
@@ -143,7 +147,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                             val url = links[which]
                             log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
                             when (actions[which]) {
-                                Simpletask.ACTION_LINK -> when {
+                                Action.LINK -> when {
                                     url.startsWith("todo://") -> {
                                         val todoFolder = Config.todoFile.parentFile
                                         val newName = File(todoFolder, url.substring(7))
@@ -167,15 +171,15 @@ class Simpletask : ThemedNoActionBarActivity() {
                                         showToastLong(TodoApplication.app, "No handler for $url")
                                     }
                                 }
-                                Simpletask.ACTION_PHONE -> {
+                                Action.PHONE -> {
                                     actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
                                     startActivity(actionIntent)
                                 }
-                                Simpletask.ACTION_SMS -> {
+                                Action.SMS -> {
                                     actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + Uri.encode(url)))
                                     startActivity(actionIntent)
                                 }
-                                Simpletask.ACTION_MAIL -> {
+                               Action.MAIL -> {
                                     actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
                                     actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                                             arrayOf(url))
@@ -202,7 +206,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
                         log.info(TAG, "Logging out from Dropbox")
                         finish()
-                        fileStoreQueue("Logout") {
+                        FileStoreActionQueue.add("Logout") {
                             try {
                                 FileStore.logout()
                             } catch (e: Exception) {
@@ -217,10 +221,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                             updateFilterBar()
                             updateQuickFilterDrawer()
                         }
-                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
-                        log.info(TAG, "Updating UI because of broadcast")
-                        refreshUI()
-                    } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                    }  else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                         log.info(TAG, "Highligh selection")
                         taskAdapter.notifyDataSetChanged()
                         invalidateOptionsMenu()
@@ -228,8 +229,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                         showListViewProgress(true)
                     } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
                         showListViewProgress(false)
-                    } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_PENDING_CHANGES) {
-                        updateConnectivityIndicator()
+                    } else if (receivedIntent.action == Constants.BROADCAST_STATE_INDICATOR) {
+                        updateUiForEvent(Event.UPDATE_PENDING_CHANGES)
+                    } else if (receivedIntent.action == Constants.BROADCAST_MAIN_FONTSIZE_CHANGED) {
+                        updateUiForEvent(Event.FONT_SIZE_CHANGED)
                     } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                             receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                         recreate()
@@ -283,13 +286,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.info(TAG, "onResume")
         TodoList.reload(reason = "Main activity resume")
         handleIntent()
-        TodoList.todoQueue("Queued UI update") {
-            runOnUiThread {
-                updateQuickFilterDrawer()
-                updateSavedFilterDrawer()
-                refreshUI()
-            }
-        }
+        updateUiForEvent(Event.RESUME)
     }
 
     override fun onSearchRequested(): Boolean {
@@ -350,14 +347,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         ))
     }
 
-    private fun refreshUI() {
-        todoQueue("Refresh UI") {
-            runOnUiThread {
-                updateConnectivityIndicator()
-                invalidateOptionsMenu()
-            }
-        }
-    }
 
     private fun openLuaConfig() {
         val i = Intent(this, ScriptConfigScreen::class.java)
@@ -460,18 +449,17 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         showListViewProgress(true)
         if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-            TodoList.todoQueue("Selection from intent") {
-                val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
-                currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-                setIntent(currentIntent)
-                if (position > -1) {
-                    val itemAtPosition = TodoList.getTaskAt(position)
-                    itemAtPosition?.let {
-                        TodoList.clearSelection()
-                        TodoList.selectTasks(listOf(itemAtPosition))
-                    }
-
+            log.debug(TAG, "Selection from intent")
+            val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
+            currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
+            setIntent(currentIntent)
+            if (position > -1) {
+                val itemAtPosition = TodoList.getTaskAt(position)
+                itemAtPosition?.let {
+                    TodoList.clearSelection()
+                    TodoList.selectTasks(listOf(itemAtPosition))
                 }
+
             }
         }
         taskAdapter.setFilteredTasks(this, query)
@@ -486,54 +474,15 @@ class Simpletask : ThemedNoActionBarActivity() {
         // next scroll to the first selected item
 
 
-        TodoActionQueue.add("Scroll selection", Runnable {
-            val selection = TodoList.selectedTasks
-            if (selection.isNotEmpty()) {
-                val selectedTask = selection[0]
-                m_scrollPosition = taskAdapter.getPosition(selectedTask)
-            }
-        })
-    }
-
-    private fun updateConnectivityIndicator() {
-        // Show connectivity status indicator
-        // Red -> changes pending
-        // Yellow -> offline
-        if (Config.changesPending) {
-            pendingchanges.visibility = View.VISIBLE
-            offline.visibility = View.GONE
-        } else if (!FileStore.isOnline) {
-            pendingchanges.visibility = View.GONE
-            offline.visibility = View.VISIBLE
-        } else {
-            pendingchanges.visibility = View.GONE
-            offline.visibility = View.GONE
+        log.debug(TAG, "Scroll selection")
+        val selection = TodoList.selectedTasks
+        if (selection.isNotEmpty()) {
+            val selectedTask = selection[0]
+            m_scrollPosition = taskAdapter.getPosition(selectedTask)
         }
     }
 
-    private fun updateFilterBar() {
 
-        actionbar.visibility = when {
-            Config.mainQuery.hasFilter() -> View.VISIBLE
-            else -> View.GONE
-        }
-        TodoList.todoQueue("Update applyFilter bar") {
-            runOnUiThread {
-                val count = taskAdapter.countVisibleTasks
-                val total = taskAdapter.countTotalTasks
-                filter_text.text = Config.mainQuery.getTitle(
-                        count,
-                        total,
-                        getText(R.string.priority_prompt),
-                        Config.tagTerm,
-                        Config.listTerm,
-                        getText(R.string.search),
-                        getText(R.string.script),
-                        getText(R.string.title_filter_applied),
-                        getText(R.string.no_filter))
-            }
-        }
-    }
 
     private fun startLogin() {
         TodoApplication.app.startLogin(this)
@@ -668,14 +617,13 @@ class Simpletask : ThemedNoActionBarActivity() {
      * if this returns either _DRAWER, m_drawerLayout!!. calls are safe to make
      */
     private fun handleMode(actions: Map<Mode, () -> Any?>) {
-        todoQueue("Handle mode") {
-            runOnUiThread {
-                when {
-                    isDrawerOpen(NAV_DRAWER) -> actions[Mode.NAV_DRAWER]?.invoke()
-                    isDrawerOpen(QUICK_FILTER_DRAWER) -> actions[Mode.FILTER_DRAWER]?.invoke()
-                    TodoList.selectedTasks.isNotEmpty() -> actions[Mode.SELECTION]?.invoke()
-                    else -> actions[Mode.MAIN]?.invoke()
-                }
+        log.debug(TAG, "Handle mode")
+        runOnUiThread {
+            when {
+                isDrawerOpen(NAV_DRAWER) -> actions[Mode.NAV_DRAWER]?.invoke()
+                isDrawerOpen(QUICK_FILTER_DRAWER) -> actions[Mode.FILTER_DRAWER]?.invoke()
+                TodoList.selectedTasks.isNotEmpty() -> actions[Mode.SELECTION]?.invoke()
+                else -> actions[Mode.MAIN]?.invoke()
             }
         }
     }
@@ -996,7 +944,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         val newQuery = Query(json, luaModule = "mainui")
                         QueryStore.save(newQuery, name)
                     }
-                    localBroadcastManager?.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
+                    updateUiForEvent(Event.IMPORTED_FILTERS)
                     showToastShort(this, R.string.saved_filters_imported)
                 }
             } catch (e: Exception) {
@@ -1045,7 +993,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
                 QueryStore.save(Config.mainQuery, it)
-                refreshUI()
+                updateUiForEvent(Event.ADDED_SAVED_FILTER)
             }
             value ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
@@ -1057,59 +1005,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun clearFilter() {
         Config.mainQuery = Config.mainQuery.clear()
         intent = Config.mainQuery.saveInIntent(intent)
-        broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
-        broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
-        updateQuickFilterDrawer()
-    }
-
-    private fun updateSavedFilterDrawer() {
-        val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
-        val hasQueries = !idQueryPairs.isEmpty()
-        val queries = idQueryPairs.sortedBy { it.second.name }
-        val names = if (hasQueries) {
-            queries.map { it.second.name }
-        } else {
-            val result = ArrayList<String>()
-            result.add(getString(R.string.nav_drawer_hint))
-            result
-        }
-        nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
-        if (hasQueries) {
-            nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
-            nav_drawer.isLongClickable = true
-            nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                queries[position].let {
-                    val query = it.second.query
-                    Config.mainQuery = query
-                    taskAdapter.setFilteredTasks(this, query)
-                    runOnUiThread {
-                        closeDrawer(NAV_DRAWER)
-                        updateQuickFilterDrawer()
-                    }
-                }
-
-            }
-            nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
-                val query = queries[position]
-                val popupMenu = PopupMenu(this@Simpletask, view)
-                popupMenu.setOnMenuItemClickListener { item ->
-                    val menuId = item.itemId
-                    when (menuId) {
-                        R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
-                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
-                        R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
-                        R.id.menu_saved_filter_update -> updateSavedQuery(query.second, Config.mainQuery)
-                        else -> {
-                        }
-                    }
-                    true
-                }
-                val inflater = popupMenu.menuInflater
-                inflater.inflate(R.menu.saved_filter, popupMenu.menu)
-                popupMenu.show()
-                true
-            }
-        }
+        updateUiForEvent(Event.CLEAR_FILTER)
     }
 
     fun createFilterShortcut(namedQuery: NamedQuery) {
@@ -1154,7 +1050,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.show()
     }
 
-    private fun updateQuickFilterDrawer() {
+    internal fun updateQuickFilterDrawer() {
         updateFilterBar()
         val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
         val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
@@ -1263,23 +1159,101 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
-            taskAdapter.setFilteredTasks(this@Simpletask, query)
-            runOnUiThread {
-                updateFilterBar()
+            updateUiForEvent(Event.QUICK_FILTER_ITEM_CLICK)
+        }
+    }
+
+    internal fun updateConnectivityIndicator() {
+        // Show connectivity status indicator
+        // Red -> changes pending
+        // Yellow -> offline
+        if (Config.changesPending) {
+            pendingchanges.visibility = View.VISIBLE
+            offline.visibility = View.GONE
+        } else if (!FileStore.isOnline) {
+            pendingchanges.visibility = View.GONE
+            offline.visibility = View.VISIBLE
+        } else {
+            pendingchanges.visibility = View.GONE
+            offline.visibility = View.GONE
+        }
+    }
+
+    internal fun updateFilterBar() {
+        actionbar.visibility = when {
+            Config.mainQuery.hasFilter() -> View.VISIBLE
+            else -> View.GONE
+        }
+        log.debug(TAG, "Update applyFilter bar")
+        val count = taskAdapter.countVisibleTasks
+        val total = taskAdapter.countTotalTasks
+        filter_text.text = Config.mainQuery.getTitle(
+                count,
+                total,
+                getText(R.string.priority_prompt),
+                Config.tagTerm,
+                Config.listTerm,
+                getText(R.string.search),
+                getText(R.string.script),
+                getText(R.string.title_filter_applied),
+                getText(R.string.no_filter))
+    }
+
+    internal fun updateSavedFilterDrawer() {
+        val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
+        val hasQueries = !idQueryPairs.isEmpty()
+        val queries = idQueryPairs.sortedBy { it.second.name }
+        val names = if (hasQueries) {
+            queries.map { it.second.name }
+        } else {
+            val result = ArrayList<String>()
+            result.add(getString(R.string.nav_drawer_hint))
+            result
+        }
+        nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
+        if (hasQueries) {
+            nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
+            nav_drawer.isLongClickable = true
+            nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                queries[position].let {
+                    val query = it.second.query
+                    Config.mainQuery = query
+                    taskAdapter.setFilteredTasks(this, query)
+                    runOnUiThread {
+                        closeDrawer(NAV_DRAWER)
+                        updateQuickFilterDrawer()
+                    }
+                }
+
+            }
+            nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
+                val query = queries[position]
+                val popupMenu = PopupMenu(this@Simpletask, view)
+                popupMenu.setOnMenuItemClickListener { item ->
+                    val menuId = item.itemId
+                    when (menuId) {
+                        R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
+                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
+                        R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
+                        R.id.menu_saved_filter_update -> updateSavedQuery(query.second, Config.mainQuery)
+                        else -> {
+                        }
+                    }
+                    true
+                }
+                val inflater = popupMenu.menuInflater
+                inflater.inflate(R.menu.saved_filter, popupMenu.menu)
+                popupMenu.show()
+                true
             }
         }
     }
 
-    companion object {
-        private val REQUEST_PREFERENCES = 1
-
-        private val ACTION_LINK = "link"
-        private val ACTION_SMS = "sms"
-        private val ACTION_PHONE = "phone"
-        private val ACTION_MAIL = "mail"
-
-        val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
-        val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
-        private val TAG = "Simpletask"
+    internal fun updateTaskList(query: Query) {
+        runOnMainThread (Runnable {
+            taskAdapter.setFilteredTasks(this@Simpletask, query)
+        })
     }
+
 }
+

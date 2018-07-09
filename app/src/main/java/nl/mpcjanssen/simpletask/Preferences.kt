@@ -37,7 +37,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.MenuItem
 import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.FontManager
 import java.util.*
 
 class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -84,7 +83,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             }
             getString(R.string.custom_font_size),
             getString(R.string.font_size) -> {
-                val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
+                val broadcastIntent = Intent(Constants.BROADCAST_MAIN_FONTSIZE_CHANGED)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
             }
         }

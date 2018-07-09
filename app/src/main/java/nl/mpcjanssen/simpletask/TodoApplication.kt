@@ -63,7 +63,6 @@ class TodoApplication : MultiDexApplication() {
         setupUncaughtExceptionHandler()
 
         val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
         intentFilter.addAction(Constants.BROADCAST_FILE_SYNC)
 
@@ -71,7 +70,7 @@ class TodoApplication : MultiDexApplication() {
             override fun onReceive(context: Context, intent: Intent) {
                 Logger.info(TAG, "Received broadcast ${intent.action}")
                 when {
-                    intent.action == Constants.BROADCAST_UPDATE_UI -> TodoList.todoQueue("Refresh external UI") {
+                    intent.action == Constants.BROADCAST_TASKLIST_CHANGED -> {
                         CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
@@ -85,8 +84,6 @@ class TodoApplication : MultiDexApplication() {
                 }
             }
         }
-
-        TodoActionQueue.start()
         FileStoreActionQueue.start()
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
